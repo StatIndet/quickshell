@@ -20,6 +20,7 @@ Singleton {
     property QtObject colors
     property QtObject rounding
     property QtObject spacing
+    property QtObject scrollBar
 
     function clamp01(value) {
         return Math.max(0, Math.min(1, value));
@@ -250,6 +251,7 @@ Singleton {
     animation: Animations.animation
 
     rounding: QtObject {
+        property int extraSmall: 4
         property int small: 12
         property int normal: 17
         property int large: 23
@@ -259,6 +261,16 @@ Singleton {
 
     spacing: QtObject {
         property int panelPadding: 20
+    }
+
+    scrollBar: QtObject {
+        property int width: 8
+        property int margin: 4
+        property int minLength: 24
+        property int radius: root.rounding.full
+        property real activeOpacity: 0.5
+        property real inactiveOpacity: 0
+        property color thumbColor: root.colors.colOnSurfaceVariant
     }
 
     FileView {

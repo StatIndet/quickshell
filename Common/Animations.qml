@@ -130,6 +130,7 @@ Singleton {
 
         readonly property QtObject expressiveEffects: expressiveDefaultEffects
         readonly property QtObject elementMoveFast: expressiveFastSpatial
+        readonly property QtObject scroll: standardDecel
         readonly property QtObject clickBounce: QtObject {
             readonly property int duration: root.durations.normal
             readonly property int type: Easing.BezierSpline
