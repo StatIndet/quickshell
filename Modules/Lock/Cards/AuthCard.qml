@@ -4,6 +4,7 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Shapes
 import qs.Common
+import qs.Widgets.common
 
 FocusScope {
     id: root
@@ -296,7 +297,7 @@ FocusScope {
                     id: dotsModel
                 }
 
-                ListView {
+                StyledListView {
                     id: dotsList
 
                     readonly property int fullWidth: count === 0 ? 0 : count * (dotSize + spacing) - spacing
@@ -315,6 +316,10 @@ FocusScope {
                     orientation: ListView.Horizontal
                     spacing: Math.round(Sizes.lockCardGap / 2)
                     interactive: false
+                    animateAppearance: false
+                    animateMovement: false
+                    showVerticalScrollBar: false
+                    smoothWheelEnabled: false
                     model: dotsModel
 
                     Behavior on implicitWidth {

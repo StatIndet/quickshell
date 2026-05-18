@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Services.Notifications
 import qs.Common
 import qs.Services
+import qs.Widgets.common
 
 Item {
     id: root
@@ -27,8 +28,8 @@ Item {
         : dragIndexDiff === 1 ? parentDragDistance * 0.3
         : dragIndexDiff === 2 ? parentDragDistance * 0.1
         : 0
-
-    signal clicked()
+    readonly property var notificationActions: notificationObject && notificationObject.actions ? notificationObject.actions : []
+    readonly property string notificationUrgency: notificationObject ? notificationObject.urgency : NotificationUrgency.Normal.toString()
 
     implicitHeight: background.implicitHeight
 
@@ -40,11 +41,21 @@ Item {
         text: root.notificationObject ? root.notificationObject.summary : ""
     }
 
+    function isCriticalUrgency(urgency) {
+        return urgency === NotificationUrgency.Critical || urgency === NotificationUrgency.Critical.toString();
+    }
+
+    function processedBody() {
+        const body = root.notificationObject ? root.notificationObject.body : "";
+        const sourceName = root.notificationObject ? (root.notificationObject.appName || root.notificationObject.summary || "") : "";
+        return notifUtils.processNotificationBody(body, sourceName).replace(/\n/g, "<br/>");
+    }
+
     function destroyWithAnimation(left = false) {
-        background.anchors.leftMargin = background.anchors.leftMargin;
         if (root.dragHost)
             root.dragHost.resetDrag();
         dragManager.resetDrag();
+        background.anchors.leftMargin = background.anchors.leftMargin;
         destroyAnimation.left = left;
         destroyAnimation.running = true;
     }
@@ -63,14 +74,17 @@ Item {
             easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
         }
 
-        onFinished: NotificationManager.discardNotification(root.notificationObject.notificationId)
+        onFinished: {
+            if (root.notificationObject)
+                NotificationManager.discardNotification(root.notificationObject.notificationId);
+        }
     }
 
     DragManager {
         id: dragManager
         anchors.fill: root
         anchors.leftMargin: root.expanded ? -notificationIcon.implicitWidth : 0
-        interactive: root.expanded && !root.onlyNotification
+        interactive: root.expanded
         automaticallyReset: false
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
 
@@ -90,9 +104,9 @@ Item {
         }
 
         onDragReleased: (diffX) => {
-            if (Math.abs(diffX) > root.dragConfirmThreshold)
+            if (Math.abs(diffX) > root.dragConfirmThreshold) {
                 root.destroyWithAnimation(diffX < 0);
-            else {
+            } else {
                 dragManager.resetDrag();
                 if (root.dragHost)
                     root.dragHost.resetDrag();
@@ -107,32 +121,35 @@ Item {
         image: root.notificationObject ? root.notificationObject.image : ""
         appIcon: root.notificationObject ? root.notificationObject.appIcon : ""
         summary: root.notificationObject ? root.notificationObject.summary : ""
-        urgency: root.notificationObject ? root.notificationObject.urgency : NotificationUrgency.Normal.toString()
+        urgency: root.notificationUrgency
         anchors.right: background.left
         anchors.top: background.top
         anchors.rightMargin: 10
 
         Behavior on opacity {
             NumberAnimation {
-                duration: Appearance.animation.expressiveEffects.duration
-                easing.type: Appearance.animation.expressiveEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                duration: Appearance.animation.expressiveFastEffects.duration
+                easing.type: Appearance.animation.expressiveFastEffects.type
+                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
             }
         }
     }
 
     Rectangle {
         id: background
+
         width: parent.width
         anchors.left: parent.left
         anchors.leftMargin: root.xOffset
         radius: Appearance.rounding.small
         color: (root.expanded && !root.onlyNotification)
-            ? (root.notificationObject && root.notificationObject.urgency === NotificationUrgency.Critical.toString()
+            ? (root.isCriticalUrgency(root.notificationUrgency)
                 ? Appearance.mix(Appearance.colors.colSecondaryContainer, Appearance.colors.colLayer2, 0.35)
                 : Appearance.colors.colLayer3)
-            : "transparent"
-        implicitHeight: root.expanded ? contentColumn.implicitHeight + root.padding * 2 : summaryRow.implicitHeight
+            : Appearance.transparentize(Appearance.colors.colLayer3, 1)
+        implicitHeight: root.expanded
+            ? contentColumn.implicitHeight + root.padding * 2
+            : summaryRow.implicitHeight
 
         Behavior on anchors.leftMargin {
             enabled: !dragManager.dragging && !destroyAnimation.running
@@ -151,17 +168,17 @@ Item {
             }
         }
 
-            ColumnLayout {
-                id: contentColumn
-                anchors.fill: parent
-                anchors.margins: root.expanded ? root.padding : 0
-                spacing: 3
+        ColumnLayout {
+            id: contentColumn
+            anchors.fill: parent
+            anchors.margins: root.expanded ? root.padding : 0
+            spacing: 3
 
             Behavior on anchors.margins {
                 NumberAnimation {
-                    duration: Appearance.animation.expressiveEffects.duration
-                    easing.type: Appearance.animation.expressiveEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                    duration: Appearance.animation.expressiveFastEffects.duration
+                    easing.type: Appearance.animation.expressiveFastEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                 }
             }
 
@@ -173,8 +190,8 @@ Item {
 
                 Text {
                     id: summaryText
-                    visible: !root.onlyNotification
                     Layout.fillWidth: summaryTextMetrics.width >= summaryRow.implicitWidth * root.summaryElideRatio
+                    visible: !root.onlyNotification
                     text: root.notificationObject ? root.notificationObject.summary : ""
                     font.family: Sizes.fontFamily
                     font.pixelSize: root.fontSize
@@ -184,11 +201,10 @@ Item {
                 }
 
                 Text {
-                    id: bodyPreview
-                    visible: opacity > 0
                     opacity: !root.expanded ? 1 : 0
+                    visible: opacity > 0
                     Layout.fillWidth: true
-                    text: notifUtils.processNotificationBody(root.notificationObject ? root.notificationObject.body : "", root.notificationObject ? root.notificationObject.appName : "").replace(/\n/g, "<br/>")
+                    text: root.processedBody()
                     textFormat: Text.StyledText
                     wrapMode: Text.Wrap
                     maximumLineCount: 1
@@ -199,9 +215,9 @@ Item {
 
                     Behavior on opacity {
                         NumberAnimation {
-                            duration: Appearance.animation.expressiveEffects.duration
-                            easing.type: Appearance.animation.expressiveEffects.type
-                            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            duration: Appearance.animation.expressiveFastEffects.duration
+                            easing.type: Appearance.animation.expressiveFastEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                         }
                     }
                 }
@@ -215,30 +231,29 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.animation.expressiveEffects.duration
-                        easing.type: Appearance.animation.expressiveEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                        duration: Appearance.animation.expressiveFastEffects.duration
+                        easing.type: Appearance.animation.expressiveFastEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                     }
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    text: `<style>img{max-width:${expandedContentColumn.width}px;}</style>` +
-                        notifUtils.processNotificationBody(root.notificationObject ? root.notificationObject.body : "", root.notificationObject ? root.notificationObject.appName : "").replace(/\n/g, "<br/>")
+                    text: `<style>img{max-width:${expandedContentColumn.width}px;}</style>${root.processedBody()}`
                     textFormat: Text.RichText
                     wrapMode: Text.Wrap
+                    elide: Text.ElideRight
                     font.family: Sizes.fontFamily
                     font.pixelSize: root.fontSize
                     color: Appearance.colors.colSubtext
+
                     onLinkActivated: (link) => Qt.openUrlExternally(link)
                 }
 
                 Item {
-                    id: actionsContainer
                     Layout.fillWidth: true
                     implicitWidth: actionsFlickable.implicitWidth
                     implicitHeight: actionsFlickable.implicitHeight
-                    clip: true
 
                     layer.enabled: true
                     layer.effect: OpacityMask {
@@ -249,59 +264,77 @@ Item {
                         }
                     }
 
-                    Flickable {
+                    StyledFlickable {
                         id: actionsFlickable
                         anchors.fill: parent
-                        implicitHeight: actionRow.implicitHeight
-                        contentWidth: actionRow.implicitWidth
+                        implicitHeight: actionRowLayout.implicitHeight
+                        contentWidth: actionRowLayout.implicitWidth
                         boundsBehavior: Flickable.StopAtBounds
                         flickableDirection: Flickable.HorizontalFlick
-                        clip: true
+                        showVerticalScrollBar: false
+                        smoothWheelEnabled: false
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveFastEffects.duration
+                                easing.type: Appearance.animation.expressiveFastEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                            }
+                        }
 
                         Behavior on height {
                             NumberAnimation {
-                                duration: Appearance.animation.expressiveEffects.duration
-                                easing.type: Appearance.animation.expressiveEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                                duration: Appearance.animation.expressiveFastEffects.duration
+                                easing.type: Appearance.animation.expressiveFastEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                             }
                         }
 
                         Behavior on implicitHeight {
                             NumberAnimation {
-                                duration: Appearance.animation.expressiveEffects.duration
-                                easing.type: Appearance.animation.expressiveEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                                duration: Appearance.animation.expressiveFastEffects.duration
+                                easing.type: Appearance.animation.expressiveFastEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                             }
                         }
 
                         RowLayout {
-                            id: actionRow
+                            id: actionRowLayout
+                            Layout.alignment: Qt.AlignBottom
                             spacing: 6
 
                             NotificationActionButton {
-                                buttonText: root.notificationObject && root.notificationObject.actions.length > 0 ? "" : "Close"
-                                iconName: root.notificationObject && root.notificationObject.actions.length > 0 ? "close" : ""
-                                urgency: root.notificationObject ? root.notificationObject.urgency : NotificationUrgency.Normal.toString()
+                                Layout.fillWidth: true
+                                buttonText: root.notificationActions.length === 0 ? "Close" : ""
+                                iconName: root.notificationActions.length === 0 ? "" : "close"
+                                urgency: root.notificationUrgency
                                 onClicked: root.destroyWithAnimation()
                             }
 
                             Repeater {
-                                model: root.notificationObject ? root.notificationObject.actions : []
+                                model: root.notificationActions
 
                                 NotificationActionButton {
                                     required property var modelData
+
+                                    Layout.fillWidth: true
                                     buttonText: modelData.text
-                                    urgency: root.notificationObject ? root.notificationObject.urgency : NotificationUrgency.Normal.toString()
-                                    onClicked: NotificationManager.attemptInvokeAction(root.notificationObject.notificationId, modelData.identifier)
+                                    urgency: root.notificationUrgency
+                                    onClicked: {
+                                        if (root.notificationObject)
+                                            NotificationManager.attemptInvokeAction(root.notificationObject.notificationId, modelData.identifier);
+                                    }
                                 }
                             }
 
                             NotificationActionButton {
+                                id: copyButton
+                                Layout.fillWidth: true
                                 iconName: "content_copy"
-                                urgency: root.notificationObject ? root.notificationObject.urgency : NotificationUrgency.Normal.toString()
+                                urgency: root.notificationUrgency
                                 onClicked: {
                                     Quickshell.clipboardText = root.notificationObject ? root.notificationObject.body : "";
-                                    iconName = "inventory";
+                                    copyButton.iconName = "inventory";
                                     copyIconTimer.restart();
                                 }
 
@@ -309,7 +342,7 @@ Item {
                                     id: copyIconTimer
                                     interval: 1500
                                     repeat: false
-                                    onTriggered: parent.iconName = "content_copy"
+                                    onTriggered: copyButton.iconName = "content_copy"
                                 }
                             }
                         }

@@ -908,13 +908,15 @@ Item {
                         Rectangle { Layout.fillWidth: true; height: 1; color: Appearance.colors.colLayer4 }
                         
                         // 列表区域
-                        ListView {
+                        StyledListView {
                             id: processList
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             clip: true
                             spacing: 4
                             interactive: true
+                            animateAppearance: false
+                            animateMovement: false
 
                             model: procSection.filteredList.length
                             
@@ -1005,7 +1007,7 @@ Item {
                                     
                                     background: Rectangle {
                                         implicitWidth: 200
-                                        color: Appearance.colors.colLayer3
+                                        color: Appearance.m3colors.m3surfaceContainer
                                         radius: 12
                                     }
                                     

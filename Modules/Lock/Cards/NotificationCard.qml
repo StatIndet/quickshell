@@ -4,6 +4,7 @@ import Qt5Compat.GraphicalEffects
 import Quickshell
 import qs.Common
 import qs.Services
+import qs.Widgets.common
 
 Rectangle {
     id: root
@@ -129,7 +130,7 @@ Rectangle {
                 }
             }
 
-            ListView {
+            StyledListView {
                 id: listView
 
                 anchors.fill: parent

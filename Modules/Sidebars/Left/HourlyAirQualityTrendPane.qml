@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import qs.Common
+import qs.Widgets.common
 
 Item {
     id: root
@@ -206,7 +207,7 @@ Item {
         }
     }
 
-    Flickable {
+    StyledFlickable {
         id: trendFlick
 
         anchors.fill: parent
@@ -214,6 +215,8 @@ Item {
         interactive: true
         boundsBehavior: Flickable.StopAtBounds
         flickableDirection: Flickable.HorizontalFlick
+        showVerticalScrollBar: false
+        smoothWheelEnabled: false
         contentWidth: root.contentWidth
         contentHeight: height
 

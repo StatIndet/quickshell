@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
+import qs.Widgets.common
 
 Rectangle {
     id: root
@@ -120,7 +121,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            Flickable {
+            StyledFlickable {
                 id: trendFlick
 
                 anchors.fill: parent
@@ -128,6 +129,8 @@ Rectangle {
                 interactive: root.currentTab === 0
                 boundsBehavior: Flickable.StopAtBounds
                 flickableDirection: Flickable.HorizontalFlick
+                showVerticalScrollBar: false
+                smoothWheelEnabled: false
                 contentWidth: Math.max(width, root.modelCount() * root.itemWidth)
                 contentHeight: height
                 visible: root.currentTab === 0

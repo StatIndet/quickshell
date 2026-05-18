@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import qs.Common
+import qs.Widgets.common
 
 import "../../Common/functions/AppManager.js" as AppManager
 
@@ -98,13 +99,17 @@ Item {
         return resolved && resolved !== "" ? resolved : fallbackIconSource();
     }
 
-    ListView {
+    StyledListView {
         id: appsList
         width: parent.width
         height: rofiStyle.listHeight
         anchors.top: parent.top
         clip: true
         spacing: rofiStyle.listSpacing
+        animateAppearance: false
+        animateMovement: false
+        showVerticalScrollBar: false
+        smoothWheelEnabled: false
 
         model: filteredAppsModel
 

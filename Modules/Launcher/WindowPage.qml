@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Clavis.Niri 1.0
 import qs.Common
+import qs.Widgets.common
 
 Item {
     id: root
@@ -97,13 +98,17 @@ Item {
         visible: root.filteredWindows.length === 0
     }
 
-    ListView {
+    StyledListView {
         id: windowsList
         width: parent.width
         height: rofiStyle.listHeight
         anchors.top: parent.top
         clip: true
         spacing: rofiStyle.listSpacing
+        animateAppearance: false
+        animateMovement: false
+        showVerticalScrollBar: false
+        smoothWheelEnabled: false
         visible: root.filteredWindows.length > 0
 
         model: root.filteredWindows

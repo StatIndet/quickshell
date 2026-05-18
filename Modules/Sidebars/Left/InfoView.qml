@@ -19,37 +19,13 @@ Item {
         }
     }
 
-    Flickable {
+    StyledFlickable {
         id: flick
         anchors.fill: parent
-        clip: true
         boundsBehavior: Flickable.StopAtBounds
         interactive: false
         contentWidth: width
         contentHeight: contentColumn.implicitHeight + 2
-
-        function wheelPage(angleDeltaY) {
-            if (angleDeltaY === 0)
-                return;
-            const direction = angleDeltaY > 0 ? -1 : 1;
-            const target = flick.contentY + direction * Math.max(120, flick.height * 0.85);
-            flick.contentY = Math.max(0, Math.min(target, Math.max(0, flick.contentHeight - flick.height)));
-        }
-
-        Behavior on contentY {
-            NumberAnimation {
-                duration: 180
-                easing.type: Easing.OutCubic
-            }
-        }
-
-        WheelHandler {
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-            onWheel: event => {
-                flick.wheelPage(event.angleDelta.y);
-                event.accepted = true;
-            }
-        }
 
         ColumnLayout {
             id: contentColumn
@@ -72,7 +48,7 @@ Item {
                 distroId: SysmonPlugin.distroId
             }
 
-            NotificationCenterCard {
+            NotificationList {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Math.max(360, flick.height - root.fetchCardHeight - contentColumn.spacing)
             }

@@ -94,11 +94,11 @@ PopupWindow {
     Rectangle {
         anchors.fill: parent
         // [背景] 深色容器背景
-        color: Appearance.colors.colLayer2Base
+        color: Appearance.m3colors.m3surfaceContainer
         radius: 12
         border.width: 1
         // [边框] 使用 Outline 颜色
-        border.color: Appearance.colors.colOutlineVariant
+        border.color: Appearance.m3colors.m3outlineVariant
         clip: true 
 
         ColumnLayout {

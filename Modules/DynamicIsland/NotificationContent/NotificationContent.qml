@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Common
 import qs.Services
+import qs.Widgets.common
 
 Item {
     id: root
@@ -11,12 +12,13 @@ Item {
 
     visible: !UiPreferences.dndEnabled && manager.hasNotifs
 
-    ListView {
+    StyledListView {
         anchors.fill: parent
         model: root.manager.popupList
         spacing: 10
         clip: true
         interactive: false
+        showVerticalScrollBar: false
 
         delegate: Rectangle {
             id: delegateRoot

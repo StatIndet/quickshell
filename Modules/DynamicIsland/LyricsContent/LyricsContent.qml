@@ -6,6 +6,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import qs.Common 
 import qs.Services 
+import qs.Widgets.common
 
 Item {
     id: root
@@ -133,7 +134,7 @@ Item {
         }
 
         // --- 歌词列表 ---
-        ListView {
+        StyledListView {
             id: lyricsView
             anchors.left: albumCoverContainer.right
             anchors.leftMargin: 12
@@ -143,6 +144,10 @@ Item {
             width: root.currentTextWidth
             
             interactive: false
+            animateAppearance: false
+            animateMovement: false
+            showVerticalScrollBar: false
+            smoothWheelEnabled: false
             model: root.lyricsModel
             currentIndex: root.currentLineIndex
             

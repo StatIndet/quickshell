@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
+import qs.Widgets.common
 
 Item {
     id: root
@@ -156,13 +157,17 @@ Item {
         visible: !root.isLoading && filteredWallpaperModel.count === 0
     }
 
-    ListView {
+    StyledListView {
         id: wallpaperList
         width: parent.width
         height: rofiStyle.listHeight
         anchors.top: parent.top
         clip: true
         spacing: rofiStyle.listSpacing
+        animateAppearance: false
+        animateMovement: false
+        showVerticalScrollBar: false
+        smoothWheelEnabled: false
         visible: !root.isLoading && filteredWallpaperModel.count > 0
         model: filteredWallpaperModel
 

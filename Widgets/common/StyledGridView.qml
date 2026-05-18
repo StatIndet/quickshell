@@ -3,11 +3,11 @@ import QtQuick.Controls
 import qs.Common
 import qs.Services
 
-ListView {
+GridView {
     id: root
 
-    spacing: 0
     clip: true
+    keyNavigationWraps: true
     maximumFlickVelocity: 3500
     boundsBehavior: Flickable.DragOverBounds
 
@@ -107,7 +107,7 @@ ListView {
     addDisplaced: Transition {
         animations: root.animateAppearance ? [
             elementMoveAnimation.createObject(this, {
-                property: "y",
+                properties: "x,y",
             }),
             elementMoveAnimation.createObject(this, {
                 properties: root.popin ? "opacity,scale" : "opacity",
@@ -119,7 +119,7 @@ ListView {
     displaced: Transition {
         animations: root.animateMovement ? [
             elementMoveAnimation.createObject(this, {
-                property: "y",
+                properties: "x,y",
             }),
             elementMoveAnimation.createObject(this, {
                 properties: "opacity,scale",
@@ -131,7 +131,7 @@ ListView {
     move: Transition {
         animations: root.animateMovement ? [
             elementMoveAnimation.createObject(this, {
-                property: "y",
+                properties: "x,y",
             }),
             elementMoveAnimation.createObject(this, {
                 properties: "opacity,scale",
@@ -143,7 +143,7 @@ ListView {
     moveDisplaced: Transition {
         animations: root.animateMovement ? [
             elementMoveAnimation.createObject(this, {
-                property: "y",
+                properties: "x,y",
             }),
             elementMoveAnimation.createObject(this, {
                 properties: "opacity,scale",
@@ -168,7 +168,7 @@ ListView {
     removeDisplaced: Transition {
         animations: root.animateAppearance ? [
             elementMoveAnimation.createObject(this, {
-                property: "y",
+                properties: "x,y",
             }),
             elementMoveAnimation.createObject(this, {
                 properties: "opacity,scale",

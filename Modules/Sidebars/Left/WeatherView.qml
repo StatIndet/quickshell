@@ -409,7 +409,7 @@ Item {
             }
         }
 
-        Flickable {
+        StyledFlickable {
             id: flick
             anchors.left: parent.left
             anchors.right: parent.right
@@ -418,8 +418,6 @@ Item {
             anchors.leftMargin: root.contentMargin
             anchors.rightMargin: root.contentMargin
             anchors.bottomMargin: root.contentMargin
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
             contentWidth: width
             contentHeight: contentColumn.implicitHeight + 4
 
