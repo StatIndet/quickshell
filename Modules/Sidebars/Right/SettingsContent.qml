@@ -225,6 +225,10 @@ WidgetPanel {
         Layout.fillHeight: true
         spacing: 14
 
+        QuickSliders {
+            Layout.fillWidth: true
+        }
+
         Rectangle {
             id: togglePanel
 

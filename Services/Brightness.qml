@@ -9,8 +9,8 @@ Singleton {
 
     property real brightnessValue: 0.5
 
-    function setBrightness(val) {
-        let safeVal = Math.max(0.01, Math.min(1.0, val));
+    function setBrightness(val, allowZero) {
+        let safeVal = Math.max(allowZero ? 0.0 : 0.01, Math.min(1.0, val));
         let pct = Math.round(safeVal * 100);
         Quickshell.execDetached(["brightnessctl", "set", pct + "%"]);
         root.brightnessValue = safeVal;
