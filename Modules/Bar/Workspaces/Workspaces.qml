@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Clavis.Niri 1.0
 import qs.Common
+import qs.Widgets.common
 
 Item {
     id: root
@@ -84,6 +85,11 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: Niri.focusWorkspaceById(model.id)
+                }
+
+                PopupToolTip {
+                    extraVisibleCondition: mouseArea.containsMouse
+                    text: "工作区 " + model.id + (delegateRoot.hasWindows ? "\n窗口: " + model.windowCount : "")
                 }
             }
         }

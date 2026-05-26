@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Widgets.common
 
 Rectangle {
     id: root
@@ -33,5 +34,10 @@ Rectangle {
         font.pixelSize: root.isHovered ? 14 : 12
         color: Appearance.colors.colOnSecondaryContainer 
         Behavior on font.pixelSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    }
+
+    PopupToolTip {
+        extraVisibleCondition: mouseArea.containsMouse
+        text: "通知"
     }
 }

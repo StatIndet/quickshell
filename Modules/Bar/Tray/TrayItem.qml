@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Widgets.common
 
 MouseArea {
     id: root
@@ -79,5 +80,10 @@ MouseArea {
         // 微小的交互细节：平时稍微降低一点点透明度融入背景，鼠标悬浮时恢复 100% 亮度
         opacity: root.containsMouse ? 1.0 : 0.85
         Behavior on opacity { NumberAnimation { duration: 150 } }
+    }
+
+    PopupToolTip {
+        extraVisibleCondition: root.containsMouse
+        text: root.modelData.tooltipTitle || root.modelData.id || "托盘"
     }
 }

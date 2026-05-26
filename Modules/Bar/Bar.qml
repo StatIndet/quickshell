@@ -49,7 +49,7 @@ Variants {
                 anchors { left: parent.left; leftMargin: 10; bottom: parent.bottom }
                 width: implicitWidth
                 height: implicitHeight
-                spacing: 10
+                spacing: 8
 
                 Workspaces { screenName: barWindow.screen.name }
                 SidebarButton {}
@@ -63,7 +63,7 @@ Variants {
                 anchors { right: parent.right; rightMargin: 10; bottom: parent.bottom }
                 width: implicitWidth
                 height: implicitHeight
-                spacing: 10
+                spacing: 8
 
                 Tray {}
                 SysMonitor { Layout.alignment: Qt.AlignVCenter }

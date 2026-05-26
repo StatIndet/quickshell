@@ -264,20 +264,8 @@ Rectangle {
         }
     }
 
-    ToolTip {
-        visible: root.tooltipText.length > 0 && (buttonMouse.containsMouse || iconMouseArea.containsMouse)
-        delay: 350
+    StyledToolTip {
+        extraVisibleCondition: root.tooltipText.length > 0 && (buttonMouse.containsMouse || iconMouseArea.containsMouse)
         text: root.tooltipText
-        contentItem: Text {
-            text: root.tooltipText
-            color: Appearance.colors.colOnTooltip
-            font.family: Sizes.fontFamily
-            font.pixelSize: 12
-            wrapMode: Text.Wrap
-        }
-        background: Rectangle {
-            color: Appearance.colors.colTooltip
-            radius: 8
-        }
     }
 }

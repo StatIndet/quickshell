@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Services
 import qs.Common
+import qs.Widgets.common
 
 Rectangle {
     id: root
@@ -66,5 +67,12 @@ Rectangle {
                 WidgetState.qsOpen = true;
             }
         }
+    }
+
+    PopupToolTip {
+        extraVisibleCondition: mouseArea.containsMouse
+        text: Network.connected
+              ? ((Network.activeConnection || "网络已连接") + "\n点击打开网络设置")
+              : "网络未连接\n点击打开网络设置"
     }
 }

@@ -1,18 +1,37 @@
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Widgets.common
 
-Rectangle {
+Item {
     id: root
     property bool isHovered: mouseArea.containsMouse
+    readonly property int buttonSize: 28
+    readonly property int hoverButtonSize: 34
 
-    color: Appearance.colors.colError
-    radius: height / 2
-    implicitHeight: isHovered ? 34 : 28
-    implicitWidth: isHovered ? 34 : 28
+    implicitHeight: buttonSize
+    implicitWidth: buttonSize
 
-    Behavior on implicitHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-    Behavior on implicitWidth { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    Rectangle {
+        id: background
+        anchors.centerIn: parent
+        width: root.isHovered ? root.hoverButtonSize : root.buttonSize
+        height: width
+        radius: height / 2
+        color: Appearance.colors.colError
+
+        Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+
+        Text {
+            id: icon
+            anchors.centerIn: parent
+            text: "⏻"
+            font.pixelSize: root.isHovered ? 16 : 14
+            font.bold: true
+            color: Appearance.colors.colOnError
+            Behavior on font.pixelSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        }
+    }
 
     MouseArea {
         id: mouseArea
@@ -22,13 +41,8 @@ Rectangle {
         onClicked: Quickshell.execDetached(["wlogout", "-p", "layer-shell", "-b", "2"])
     }
 
-    Text {
-        id: icon
-        anchors.centerIn: parent
-        text: "⏻"
-        font.pixelSize: root.isHovered ? 16 : 14
-        font.bold: true
-        color: Appearance.colors.colOnError 
-        Behavior on font.pixelSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    PopupToolTip {
+        extraVisibleCondition: mouseArea.containsMouse
+        text: "电源"
     }
 }

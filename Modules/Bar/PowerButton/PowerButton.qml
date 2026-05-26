@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Widgets.common
 
 Rectangle {
     id: root
@@ -12,7 +13,9 @@ Rectangle {
     implicitWidth: 28
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: Quickshell.execDetached(["wlogout", "-p", "layer-shell", "-b", "2"])
     }
@@ -24,5 +27,10 @@ Rectangle {
         font.pixelSize: 14 
         font.bold: true
         color: Appearance.colors.colOnError 
+    }
+
+    PopupToolTip {
+        extraVisibleCondition: mouseArea.containsMouse
+        text: "电源菜单"
     }
 }

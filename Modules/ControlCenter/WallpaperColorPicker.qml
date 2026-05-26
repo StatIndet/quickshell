@@ -585,10 +585,6 @@ Item {
             fill: iconMouse.containsMouse ? 1 : 0
         }
 
-        ToolTip.visible: iconMouse.containsMouse && iconButton.tooltipText !== ""
-        ToolTip.text: iconButton.tooltipText
-        ToolTip.delay: 450
-
         MouseArea {
             id: iconMouse
 
@@ -596,6 +592,11 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: iconButton.clicked()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: iconMouse.containsMouse && iconButton.tooltipText !== ""
+            text: iconButton.tooltipText
         }
     }
 

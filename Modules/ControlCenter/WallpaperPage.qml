@@ -148,16 +148,17 @@ StyledFlickable {
             fill: 1
         }
 
-        ToolTip.visible: actionMouse.containsMouse
-        ToolTip.text: action.tooltipText
-        ToolTip.delay: 450
-
         MouseArea {
             id: actionMouse
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: action.clicked()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: actionMouse.containsMouse && action.tooltipText !== ""
+            text: action.tooltipText
         }
     }
 
@@ -247,10 +248,6 @@ StyledFlickable {
             color: groupButton.active ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSecondaryContainer
         }
 
-        ToolTip.visible: buttonMouse.containsMouse && groupButton.tooltipText !== ""
-        ToolTip.text: groupButton.tooltipText
-        ToolTip.delay: 450
-
         MouseArea {
             id: buttonMouse
 
@@ -259,6 +256,11 @@ StyledFlickable {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: groupButton.clicked()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: buttonMouse.containsMouse && groupButton.tooltipText !== ""
+            text: groupButton.tooltipText
         }
     }
 

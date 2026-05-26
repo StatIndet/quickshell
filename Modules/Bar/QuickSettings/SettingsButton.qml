@@ -2,21 +2,39 @@ import QtQuick
 import Quickshell
 import qs.Common
 import qs.Components
+import qs.Widgets.common
 
-Rectangle {
+Item {
     id: root
 
     property bool isHovered: mouseArea.containsMouse
     readonly property bool active: WidgetState.qsOpen && WidgetState.qsView === "settings"
+    readonly property int buttonSize: 28
+    readonly property int hoverButtonSize: 34
 
-    color: active ? Appearance.colors.colPrimary : Appearance.colors.colLayer3
-    radius: height / 2
-    implicitHeight: isHovered ? 34 : 28
-    implicitWidth: isHovered ? 34 : 28
+    implicitHeight: buttonSize
+    implicitWidth: buttonSize
 
-    Behavior on color { ColorAnimation { duration: 180 } }
-    Behavior on implicitHeight { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
-    Behavior on implicitWidth { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+    Rectangle {
+        id: background
+        anchors.centerIn: parent
+        width: root.isHovered ? root.hoverButtonSize : root.buttonSize
+        height: width
+        radius: height / 2
+        color: Appearance.colors.colPrimaryContainer
+
+        Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+
+        MaterialSymbol {
+            anchors.centerIn: parent
+            text: "settings"
+            iconSize: root.isHovered ? 20 : 18
+            fill: 0
+            color: Appearance.colors.colOnPrimaryContainer
+
+            Behavior on iconSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        }
+    }
 
     MouseArea {
         id: mouseArea
@@ -33,11 +51,8 @@ Rectangle {
         }
     }
 
-    MaterialSymbol {
-        anchors.centerIn: parent
-        text: "settings"
-        iconSize: root.isHovered ? 20 : 18
-        fill: root.active ? 1 : 0
-        color: root.active ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer3
+    PopupToolTip {
+        extraVisibleCondition: mouseArea.containsMouse
+        text: "设置"
     }
 }

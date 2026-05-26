@@ -603,10 +603,6 @@ Item {
             color: iconButton.active ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurface
         }
 
-        ToolTip.visible: iconMouse.containsMouse && iconButton.tooltipText !== ""
-        ToolTip.text: iconButton.tooltipText
-        ToolTip.delay: 450
-
         MouseArea {
             id: iconMouse
             anchors.fill: parent
@@ -614,6 +610,11 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: iconButton.clicked()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: iconMouse.containsMouse && iconButton.tooltipText !== ""
+            text: iconButton.tooltipText
         }
     }
 
@@ -715,16 +716,17 @@ Item {
             }
         }
 
-        ToolTip.visible: sidebarButton.compact && sideMouse.containsMouse
-        ToolTip.text: sidebarButton.label
-        ToolTip.delay: 450
-
         MouseArea {
             id: sideMouse
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: sidebarButton.clicked()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: sidebarButton.compact && sideMouse.containsMouse
+            text: sidebarButton.label
         }
     }
 }
