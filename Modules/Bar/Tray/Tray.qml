@@ -18,6 +18,11 @@ Item {
     property real overflowY: 10
     property real overflowEdgeMargin: 10
     property real overflowAnchorGap: 4
+    property real overflowAnchorX: 10
+    property real overflowAnchorY: 10
+    property real overflowAnchorWidth: 0
+    property real overflowAnchorHeight: 0
+    property bool overflowAnchorReady: false
     readonly property var pinnedItems: TrayService.pinnedItems
     readonly property var unpinnedItems: TrayService.unpinnedItems
 
@@ -25,34 +30,54 @@ Item {
     implicitWidth: content.implicitWidth + 24
 
     onUnpinnedItemsChanged: {
-        if (root.unpinnedItems.length === 0)
+        if (root.unpinnedItems.length === 0) {
             root.trayOverflowOpen = false;
-        else
+            root.overflowAnchorReady = false;
+        } else if (root.trayOverflowOpen) {
             Qt.callLater(root.updateOverflowPosition);
+        }
     }
 
     function clamp(value, minimum, maximum) {
         return Math.max(minimum, Math.min(maximum, value));
     }
 
-    function updateOverflowPosition() {
-        const surfaceWidth = Math.max(1, overflowSurface.implicitWidth);
-        const surfaceHeight = Math.max(1, overflowSurface.implicitHeight);
-        const availableWidth = Math.max(surfaceWidth + root.overflowEdgeMargin * 2, overflowPopup.width);
-        const availableHeight = Math.max(surfaceHeight + root.overflowEdgeMargin * 2, overflowPopup.height);
+    function captureOverflowAnchor() {
+        if (!trayOverflowButton.visible || trayOverflowButton.width <= 0 || trayOverflowButton.height <= 0) {
+            root.overflowAnchorReady = false;
+            return;
+        }
+
         const globalPos = trayOverflowButton.mapToGlobal(0, 0);
         const screenX = root.screen ? (root.screen.x || 0) : 0;
         const screenY = root.screen ? (root.screen.y || 0) : 0;
-        const anchorX = globalPos.x - screenX;
-        const anchorY = globalPos.y - screenY;
+
+        root.overflowAnchorX = globalPos.x - screenX;
+        root.overflowAnchorY = globalPos.y - screenY;
+        root.overflowAnchorWidth = trayOverflowButton.width || 0;
+        root.overflowAnchorHeight = trayOverflowButton.height || 0;
+        root.overflowAnchorReady = true;
+    }
+
+    function updateOverflowPosition() {
+        const surfaceWidth = Math.max(1, overflowSurface.implicitWidth);
+        const surfaceHeight = Math.max(1, overflowSurface.implicitHeight);
+        const screenWidth = root.screen ? (root.screen.width || 0) : 0;
+        const screenHeight = root.screen ? (root.screen.height || 0) : 0;
+        const availableWidth = Math.max(surfaceWidth + root.overflowEdgeMargin * 2, overflowPopup.width, screenWidth);
+        const availableHeight = Math.max(surfaceHeight + root.overflowEdgeMargin * 2, overflowPopup.height, screenHeight);
+        const anchorX = root.overflowAnchorReady ? root.overflowAnchorX : root.overflowEdgeMargin;
+        const anchorY = root.overflowAnchorReady ? root.overflowAnchorY : root.overflowEdgeMargin;
+        const anchorWidth = root.overflowAnchorReady ? root.overflowAnchorWidth : 0;
+        const anchorHeight = root.overflowAnchorReady ? root.overflowAnchorHeight : 0;
 
         root.overflowX = root.clamp(
-            anchorX + trayOverflowButton.width / 2 - surfaceWidth / 2,
+            anchorX + anchorWidth / 2 - surfaceWidth / 2,
             root.overflowEdgeMargin,
             availableWidth - surfaceWidth - root.overflowEdgeMargin
         );
 
-        const belowY = anchorY + trayOverflowButton.height + root.overflowAnchorGap;
+        const belowY = anchorY + anchorHeight + root.overflowAnchorGap;
         const aboveY = anchorY - surfaceHeight - root.overflowAnchorGap;
         const maxY = availableHeight - surfaceHeight - root.overflowEdgeMargin;
         root.overflowY = belowY <= maxY || aboveY < root.overflowEdgeMargin
@@ -75,6 +100,11 @@ Item {
         if (root.activeMenu && typeof root.activeMenu.close === "function")
             root.activeMenu.close();
         root.activeMenu = null;
+    }
+
+    onTrayOverflowOpenChanged: {
+        if (!root.trayOverflowOpen)
+            root.overflowAnchorReady = false;
     }
 
     Rectangle {
@@ -111,22 +141,31 @@ Item {
             implicitHeight: 24
             buttonRadius: Appearance.rounding.full
             colBackground: Appearance.transparentize(Appearance.colors.colLayer0, 1)
-            colBackgroundHover: Appearance.colors.colLayer0Hover
+            colBackgroundHover: Appearance.colors.colSecondaryContainer
             colBackgroundToggled: Appearance.colors.colSecondaryContainer
             colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
-            colRipple: Appearance.colors.colLayer0Active
+            colRipple: Appearance.colors.colSecondaryContainerActive
             colRippleToggled: Appearance.colors.colSecondaryContainerActive
+            rippleEnabled: false
             Layout.alignment: Qt.AlignVCenter
             releaseAction: () => {
+                if (root.trayOverflowOpen) {
+                    root.trayOverflowOpen = false;
+                    root.closeActiveMenu();
+                    return;
+                }
+
                 root.closeActiveMenu();
-                root.trayOverflowOpen = !root.trayOverflowOpen;
+                root.captureOverflowAnchor();
+                root.updateOverflowPosition();
+                root.trayOverflowOpen = true;
             }
 
             contentItem: MaterialSymbol {
                 anchors.centerIn: parent
                 text: "expand_more"
                 iconSize: 19
-                color: root.trayOverflowOpen
+                color: root.trayOverflowOpen || trayOverflowButton.pointerHovered
                     ? Appearance.colors.colOnSecondaryContainer
                     : Appearance.colors.colOnLayer0
                 rotation: root.trayOverflowOpen ? 180 : 0

@@ -92,7 +92,6 @@ PanelWindow {
         if (!root.visible && stackView.depth <= 1)
             return;
 
-        actionCloseTimer.stop();
         root.visible = false;
         while (stackView.depth > 1)
             stackView.pop();
@@ -145,13 +144,6 @@ PanelWindow {
         QsMenuAnchor {
             id: submenuHydrator
             anchor.window: root
-        }
-
-        Timer {
-            id: actionCloseTimer
-            interval: 80
-            repeat: false
-            onTriggered: root.close()
         }
 
         Item {
@@ -286,8 +278,9 @@ PanelWindow {
 
                 buttonRadius: popupBackground.radius - popupBackground.popupPadding
                 colBackground: Appearance.transparentize(Appearance.colors.colLayer0, 1)
-                colBackgroundHover: Appearance.colors.colLayer0Hover
-                colRipple: Appearance.colors.colLayer0Active
+                colBackgroundHover: Appearance.colors.colSecondaryContainer
+                colRipple: Appearance.colors.colSecondaryContainerActive
+                rippleEnabled: false
                 implicitWidth: backContent.implicitWidth + 24
                 implicitHeight: 36
                 Layout.fillWidth: true
@@ -308,12 +301,12 @@ PanelWindow {
                     MaterialSymbol {
                         text: "chevron_left"
                         iconSize: 20
-                        color: Appearance.colors.colOnLayer0
+                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
                     }
 
                     Text {
                         text: "Back"
-                        color: Appearance.colors.colOnLayer0
+                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
                         font.family: Sizes.fontFamily
                         font.pixelSize: 13
                         Layout.fillWidth: true
@@ -328,8 +321,9 @@ PanelWindow {
             visible: root.trayItemId.length > 0 && stackView.depth === 1
             buttonRadius: popupBackground.radius - popupBackground.popupPadding
             colBackground: Appearance.transparentize(Appearance.colors.colLayer0, 1)
-            colBackgroundHover: Appearance.colors.colLayer0Hover
-            colRipple: Appearance.colors.colLayer0Active
+            colBackgroundHover: Appearance.colors.colSecondaryContainer
+            colRipple: Appearance.colors.colSecondaryContainerActive
+            rippleEnabled: false
             implicitWidth: pinContent.implicitWidth + 24
             implicitHeight: 36
             Layout.fillWidth: true
@@ -350,12 +344,12 @@ PanelWindow {
                 MaterialSymbol {
                     text: "push_pin"
                     iconSize: 18
-                    color: Appearance.colors.colOnLayer0
+                    color: pinEntry.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
                 }
 
                 Text {
                     text: TrayService.isPinned(root.trayItemId) ? "Unpin" : "Pin"
-                    color: Appearance.colors.colOnLayer0
+                    color: pinEntry.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
                     font.family: Sizes.fontFamily
                     font.pixelSize: 13
                     Layout.fillWidth: true
@@ -399,7 +393,7 @@ PanelWindow {
                 forceSpecialInteractionColumn: menuEntriesRepeater.specialInteractionColumnNeeded
                 buttonRadius: popupBackground.radius - popupBackground.popupPadding
 
-                onDismiss: actionCloseTimer.restart()
+                onDismiss: root.close()
                 onOpenSubmenu: handle => {
                     const menuHandle = handle ? (handle.menu || handle) : null;
                     if (menuHandle && typeof menuHandle.updateLayout === "function")

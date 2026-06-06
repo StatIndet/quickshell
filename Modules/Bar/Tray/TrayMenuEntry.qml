@@ -17,16 +17,18 @@ MaterialRippleButton {
     readonly property bool hasIcon: entryIcon.length > 0
     readonly property int entryButtonType: root.menuEntry.buttonType === undefined ? QsMenuButtonType.None : root.menuEntry.buttonType
     readonly property bool hasSpecialInteraction: entryButtonType !== QsMenuButtonType.None
+    readonly property color entryForeground: root.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
+    readonly property color entrySubtleForeground: root.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurfaceVariant
 
     signal dismiss()
     signal openSubmenu(var handle)
 
     colBackground: isSeparator ? Appearance.m3colors.m3outlineVariant : Appearance.transparentize(Appearance.colors.colLayer0, 1)
-    colBackgroundHover: Appearance.colors.colLayer0Hover
-    colRipple: Appearance.colors.colLayer0Active
+    colBackgroundHover: Appearance.colors.colSecondaryContainer
+    colRipple: Appearance.colors.colSecondaryContainerActive
     enabled: !isSeparator && root.menuEntry.enabled !== false
     opacity: isSeparator ? 1 : (enabled ? 1 : 0.4)
-    rippleEnabled: !isSeparator
+    rippleEnabled: false
     buttonRadius: 14
 
     implicitWidth: isSeparator ? 96 : contentRow.implicitWidth + 24
@@ -41,9 +43,7 @@ MaterialRippleButton {
             return;
         }
 
-        if (typeof root.menuEntry.activate === "function")
-            root.menuEntry.activate();
-        else if (typeof root.menuEntry.triggered === "function")
+        if (typeof root.menuEntry.triggered === "function")
             root.menuEntry.triggered();
 
         root.dismiss();
@@ -86,7 +86,7 @@ MaterialRippleButton {
                         border.width: 2
                         border.color: root.menuEntry.checkState === Qt.Checked
                             ? Appearance.colors.colPrimary
-                            : Appearance.colors.colOnSurfaceVariant
+                            : root.entrySubtleForeground
 
                         Rectangle {
                             anchors.centerIn: parent
@@ -130,7 +130,7 @@ MaterialRippleButton {
                     anchors.centerIn: parent
                     text: root.menuEntry.checkState === Qt.PartiallyChecked ? "check_indeterminate_small" : "check"
                     iconSize: 20
-                    color: Appearance.colors.colOnLayer0
+                    color: root.entryForeground
                 }
             }
         }
@@ -158,7 +158,7 @@ MaterialRippleButton {
 
         Text {
             text: root.menuEntry.text || ""
-            color: Appearance.colors.colOnLayer0
+            color: root.entryForeground
             font.family: Sizes.fontFamily
             font.pixelSize: 13
             verticalAlignment: Text.AlignVCenter
@@ -172,7 +172,7 @@ MaterialRippleButton {
             sourceComponent: MaterialSymbol {
                 text: "chevron_right"
                 iconSize: 20
-                color: Appearance.colors.colOnLayer0
+                color: root.entryForeground
             }
         }
     }
