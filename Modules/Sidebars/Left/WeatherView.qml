@@ -27,7 +27,7 @@ Item {
     }
 
     function fmtTempPlain(value) {
-        return validNumber(value) ? Math.round(value).toString() : "--"
+        return validNumber(value) ? Math.round(value) + "°" : "--"
     }
 
     function fmtTime(epoch) {
@@ -426,11 +426,11 @@ Item {
             Column {
                 id: contentColumn
                 width: flick.width
-                spacing: 14
+                spacing: 50
 
                 Item {
                     width: parent.width
-                    height: Math.max(220, flick.height - 452 - 286 - contentColumn.spacing * 2)
+                    height: Math.max(220, flick.height - 452 - 286 - contentColumn.spacing * 3)
 
                     Column {
                         anchors.left: parent.left
@@ -457,7 +457,7 @@ Item {
 
                             Text {
                                 id: tempText
-                                anchors.left: parent.left
+                                anchors.horizontalCenter: parent.horizontalCenter
                                 anchors.bottom: parent.bottom
                                 text: fmtTempPlain(WeatherPlugin.currentTemperatureC)
                                 color: Appearance.colors.colOnLayer0
@@ -465,6 +465,7 @@ Item {
                                 font.pixelSize: 132
                                 font.bold: true
                                 font.letterSpacing: 0
+                                horizontalAlignment: Text.AlignHCenter
                             }
 
                             MeteoIcon {
@@ -675,24 +676,34 @@ Item {
         }
     }
 
-    // 地点搜索弹窗
-    Popup {
+    // 地点搜索弹窗 (Rectangle-based, contained in weather card)
+    Rectangle {
         id: locationPicker
-        anchors.centerIn: Overlay.overlay
-        width: 320
-        height: 400
-        modal: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        anchors.fill: parent
+        anchors.margins: 8
+        radius: 12
+        color: Appearance.colors.colLayer0
+        border.color: Appearance.colors.colLayer0Border
+        border.width: 1
+        visible: false
+        z: 100
 
         property string searchText: ""
         property var searchResults: []
         property bool searching: false
 
-        onOpened: {
+        function open() {
+            locationPicker.visible = true
             searchField.text = ""
             searchText = ""
             searchResults = []
-            searchField.forceFocus()
+            searchField.forceActiveFocus()
+        }
+
+        function close() {
+            locationPicker.visible = false
+            searchText = ""
+            searchResults = []
         }
 
         function searchLocation(query) {
@@ -729,14 +740,16 @@ Item {
             locationPicker.close()
         }
 
-        background: Rectangle {
-            radius: 12
-            color: Appearance.colors.colLayer0
-            border.color: Appearance.colors.colLayer0Border
-            border.width: 1
+        Keys.onEscapePressed: locationPicker.close()
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {}
         }
 
-        contentItem: ColumnLayout {
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 12
             spacing: 12
 
             Text {
