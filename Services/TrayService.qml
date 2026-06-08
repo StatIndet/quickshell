@@ -13,7 +13,7 @@ Singleton {
     readonly property string filePath: configDir + "/tray.json"
 
     property bool storeReady: false
-    property bool monochromeIcons: true
+    property bool monochromeIcons: false
     property bool showItemId: false
     property bool invertPinnedItems: true
     property bool filterPassive: true
@@ -27,7 +27,7 @@ Singleton {
 
     function defaultConfig() {
         return {
-            "monochromeIcons": true,
+            "monochromeIcons": false,
             "showItemId": false,
             "invertPinnedItems": true,
             "pinnedItems": ["Fcitx"],
