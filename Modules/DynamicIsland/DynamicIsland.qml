@@ -241,7 +241,7 @@ Variants {
                 property int hubTabIndex: 0
                 property bool isRecording: false
 
-                property bool isLyricsMode: showLyrics
+                property bool isLyricsMode: showLyrics && !isNotifMode
                 property bool isToolsMode: showTools && !isLyricsMode
                 property bool isHubMode: showHub && !isToolsMode && !isLyricsMode
                 property bool isAudioMode: showAudio && !isHubMode && !isToolsMode && !isLyricsMode
