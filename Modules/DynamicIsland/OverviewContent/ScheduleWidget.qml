@@ -56,10 +56,38 @@ Item {
     }
 
     Component.onCompleted: scheduleLoader.running = true
-    onVisibleChanged: { 
-        if (visible) { 
-            scheduleLoader.running = false; scheduleLoader.running = true; 
-        } 
+    onVisibleChanged: {
+        if (visible) {
+            scheduleLoader.running = false; scheduleLoader.running = true;
+        }
+    }
+
+    // 无数据时显示占位提示
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        visible: root.scheduleItems.length === 0
+
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 8
+
+            Text {
+                text: "calendar_month"
+                font.family: "Material Symbols Outlined"
+                font.pixelSize: 32
+                color: Appearance.colors.colOnSurfaceVariant
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            Text {
+                text: "暂无课表数据"
+                font.family: Sizes.fontFamily
+                font.pixelSize: 13
+                color: Appearance.colors.colOnSurfaceVariant
+                Layout.alignment: Qt.AlignHCenter
+            }
+        }
     }
 
     Rectangle {

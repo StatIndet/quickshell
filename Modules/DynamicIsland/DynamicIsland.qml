@@ -514,24 +514,31 @@ Variants {
                 }
 
                 MouseArea {
-                    id: islandMouseArea  
+                    id: islandMouseArea
                     anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                    hoverEnabled: true   
-                    enabled: !root.isNotifMode && !root.isVolumeMode 
-                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                    
+                    hoverEnabled: true
+                    enabled: !root.isNotifMode && !root.isVolumeMode
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+
                     onClicked: (mouse) => {
                         if (mouse.button === Qt.MiddleButton) {
-                            if (root.showHub) root.showHub = false 
-                            else if (root.showTools) root.showTools = false 
+                            // 中键：切换歌词
+                            if (root.showHub) root.showHub = false
+                            else if (root.showTools) root.showTools = false
                             else if (root.showAudio) root.showAudio = false
-                            
                             root.showLyrics = !root.showLyrics
                             if (root.showLyrics) root.expanded = false
+                        } else if (mouse.button === Qt.RightButton) {
+                            // 右键：切换 Hub 控制中心
+                            if (root.showTools) root.showTools = false
+                            if (root.showAudio) root.showAudio = false
+                            if (root.showLyrics) root.showLyrics = false
+                            if (root.expanded) root.expanded = false
+                            root.showHub = !root.showHub
                         } else {
+                            // 左键：展开媒体播放器
                             if (root.isLyricsMode || root.isHubMode || root.isToolsMode || root.isAudioMode)
                                 return;
-
                             root.expanded = !root.expanded;
                         }
                     }
