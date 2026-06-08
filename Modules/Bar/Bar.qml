@@ -51,7 +51,7 @@ Variants {
                 height: implicitHeight
                 spacing: 8
 
-                Workspaces { screenName: barWindow.screen.name }
+                Workspaces {}
                 SidebarButton {}
                 ActiveWindow {}
                 

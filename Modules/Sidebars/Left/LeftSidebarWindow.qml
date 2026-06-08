@@ -16,6 +16,7 @@ PanelWindow {
     readonly property int sidebarY: Sizes.barHeight + gap
     readonly property int closedSlideOffset: -sidebarWidth - 100
     readonly property bool contentActive: WidgetState.leftSidebarOpen || animController.slideOffset > closedSlideOffset
+    readonly property bool inputActive: WidgetState.leftSidebarOpen || animController.slideOffset > closedSlideOffset + 0.5
 
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.namespace: "qs-unified-left-sidebar"
@@ -25,7 +26,8 @@ PanelWindow {
 
     anchors { left: true; top: true; bottom: true }
     
-    implicitWidth: sidebarWidth + 100
+    implicitWidth: root.contentActive ? 3840 : sidebarWidth + 100
+    visible: root.inputActive
     color: "transparent"
 
     readonly property int qsTargetHeight: root.height - sidebarY - gap
@@ -68,7 +70,15 @@ PanelWindow {
         height: root.qsTargetHeight 
     }
 
-    mask: Region { item: hitBoxRegion }
+    // mask 始终覆盖整个窗口以捕获外部点击
+    mask: Region {
+        x: 0; y: 0
+        width: root.width
+        height: root.height
+        regions: [
+            Region { item: hitBoxRegion }
+        ]
+    }
 
     Item {
         id: renderCanvas
@@ -146,13 +156,26 @@ PanelWindow {
             event.accepted = true;
         }
 
+        // 点击外部关闭侧边栏
+        MouseArea {
+            anchors.fill: parent
+            enabled: WidgetState.leftSidebarOpen
+            onClicked: WidgetState.leftSidebarOpen = false
+        }
+
         Item {
             width: root.sidebarWidth
             height: root.qsTargetHeight
             // 【修正】：内容挂载区也必须使用绝对屏幕坐标
-            x: animController.slideOffset + root.gap 
+            x: animController.slideOffset + root.gap
             y: root.sidebarY
-            clip: true 
+            clip: true
+
+            // 阻止点击事件穿透到外部 MouseArea
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {} // 消费点击事件，不传播
+            }
 
             Loader {
                 anchors.fill: parent

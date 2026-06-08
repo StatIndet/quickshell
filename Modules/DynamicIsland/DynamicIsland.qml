@@ -25,18 +25,17 @@ Variants {
         required property var modelData
         screen: modelData
 
-        property int topEdgeCurveWidth: 8
-        property int topEdgeCurveDepth: 14
-        property real topEdgeCurveSideControlY: 0.58
-        property real topEdgeCurveTopControlX: 0.42
+        property int earRadius: 16
 
         anchors {
             top: true
             left: true
             right: true
         }
-        implicitHeight: Screen.height 
-        margins { top: 0 } 
+        // 只覆盖灵动岛实际需要的高度，避免全屏透明层阻塞输入
+        // barHeight + 灵动岛最大展开高度 + 弹出内容空间 + 阴影偏移
+        implicitHeight: Sizes.barHeight + 500
+        margins { top: 0 }
         
         color: "transparent"
         exclusiveZone: -1
@@ -58,12 +57,26 @@ Variants {
             anchors.left: detachedRecordContainer.left 
         }
 
+        // 有弹出内容时 mask 覆盖整个窗口以捕获外部点击，否则只覆盖岛区域
         mask: Region {
-            item: hitBoxRegion
+            x: 0; y: 0
+            width: root.hasClosablePopup ? islandWindow.width : 0
+            height: root.hasClosablePopup ? islandWindow.height : 0
+            regions: [
+                Region { item: hitBoxRegion }
+            ]
+        }
+
+        // 点击灵动岛外部关闭弹出内容
+        MouseArea {
+            anchors.fill: parent
+            enabled: root.hasClosablePopup
+            z: -1
+            onClicked: root.closeIslandPopups()
         }
 
         // ============================================================
-        // 【阴影源 (Shadow Source)】 
+        // 【阴影源 (Shadow Source)】
         // ============================================================
         Item {
             id: shadowSource
@@ -74,25 +87,21 @@ Variants {
             visible: false 
 
             Canvas {
-                id: shadowLeftTopCurve
+                id: shadowLeftEar 
                 anchors.right: rootShadow.left
                 anchors.top: rootShadow.top
-                width: islandWindow.topEdgeCurveWidth
-                height: islandWindow.topEdgeCurveDepth
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
+                width: islandWindow.earRadius
+                height: islandWindow.earRadius
                 onPaint: {
                     var ctx = getContext("2d");
-                    ctx.reset();
-                    ctx.fillStyle = "black";
-                    ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.lineTo(width, 0);
-                    ctx.lineTo(width, height);
-                    ctx.bezierCurveTo(width, height * islandWindow.topEdgeCurveSideControlY,
-                                      width * islandWindow.topEdgeCurveTopControlX, 0,
-                                      0, 0);
-                    ctx.fill();
+                    ctx.reset(); ctx.fillStyle = "black";
+                    ctx.beginPath(); ctx.moveTo(0, 0);
+                    ctx.lineTo(width, 0); ctx.lineTo(width, height);
+                    ctx.arc(0, height, width, 0, -Math.PI/2, true); ctx.fill();
+                }
+                Connections { 
+                    target: Appearance.colors
+                    function onColLayer0Changed() { shadowLeftEar.requestPaint() }
                 }
             }
 
@@ -106,12 +115,17 @@ Variants {
                 Rectangle {
                     id: solidShadowBg
                     anchors.fill: parent
-                    topLeftRadius: 0
-                    topRightRadius: 0
-                    bottomLeftRadius: root.radius
-                    bottomRightRadius: root.radius
+                    radius: root.radius
                     color: "black"
                     visible: false
+                    
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: parent.radius
+                        color: "black"
+                    }
                 }
 
                 Item {
@@ -140,25 +154,21 @@ Variants {
             }
 
             Canvas {
-                id: shadowRightTopCurve
+                id: shadowRightEar 
                 anchors.left: rootShadow.right
                 anchors.top: rootShadow.top
-                width: islandWindow.topEdgeCurveWidth
-                height: islandWindow.topEdgeCurveDepth
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
+                width: islandWindow.earRadius
+                height: islandWindow.earRadius
                 onPaint: {
                     var ctx = getContext("2d");
                     ctx.reset();
                     ctx.fillStyle = "black";
-                    ctx.beginPath();
-                    ctx.moveTo(width, 0);
-                    ctx.lineTo(0, 0);
-                    ctx.lineTo(0, height);
-                    ctx.bezierCurveTo(0, height * islandWindow.topEdgeCurveSideControlY,
-                                      width * (1 - islandWindow.topEdgeCurveTopControlX), 0,
-                                      width, 0);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.moveTo(width, 0); ctx.lineTo(0, 0); ctx.lineTo(0, height);
+                    ctx.arc(width, height, width, Math.PI, Math.PI*1.5, false); ctx.fill();
+                }
+                Connections { 
+                    target: Appearance.colors
+                    function onColLayer0Changed() { shadowRightEar.requestPaint() }
                 }
             }
         }
@@ -181,33 +191,29 @@ Variants {
             id: maskContainer
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            width: root.width + (islandWindow.topEdgeCurveWidth * 2)
+            width: root.width + (islandWindow.earRadius * 2)
             height: root.height
 
             Canvas {
-                id: leftTopCurve
+                id: leftEar
                 anchors.right: root.left
                 anchors.top: root.top
-                width: islandWindow.topEdgeCurveWidth
-                height: islandWindow.topEdgeCurveDepth
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
+                width: islandWindow.earRadius
+                height: islandWindow.earRadius
                 onPaint: {
                     var ctx = getContext("2d");
                     ctx.reset();
                     ctx.fillStyle = Appearance.colors.colLayer0;
                     ctx.beginPath();
-                    ctx.moveTo(0, 0);
-                    ctx.lineTo(width, 0);
+                    ctx.moveTo(0, 0);                 
+                    ctx.lineTo(width, 0);             
                     ctx.lineTo(width, height);
-                    ctx.bezierCurveTo(width, height * islandWindow.topEdgeCurveSideControlY,
-                                      width * islandWindow.topEdgeCurveTopControlX, 0,
-                                      0, 0);
+                    ctx.arc(0, height, width, 0, -Math.PI/2, true);
                     ctx.fill();
                 }
                 Connections {
                     target: Appearance.colors
-                    function onColLayer0Changed() { leftTopCurve.requestPaint() }
+                    function onColLayer0Changed() { leftEar.requestPaint() }
                 }
             }
 
@@ -252,7 +258,9 @@ Variants {
                 clip: true
                 z: 100
 
-                property int targetR: 12
+                property int targetR: (expanded || isNotifMode || isVolumeMode || 
+                      isLyricsMode || isHubMode || isToolsMode || isAudioMode) 
+                      ? 24 : (isCollapsedHovered ? 18 : 16)
 
                 property int targetW: isAudioMode ? audioW :
                     isToolsMode ? toolsW :
@@ -272,12 +280,9 @@ Variants {
                         isNotifMode ? notifH : 
                         (collapsedH + (isCollapsedHovered ? 6 : 0))
 
-                property int wDuration: DynamicIslandMotion.expandingDuration
-                property int hDuration: DynamicIslandMotion.expandingDuration
-                property int rDuration: DynamicIslandMotion.radiusDuration
-                property var wBezier: DynamicIslandMotion.expandingBezier
-                property var hBezier: DynamicIslandMotion.expandingBezier
-                property var rBezier: DynamicIslandMotion.radiusBezier
+                property real wDamping: DynamicIslandMotion.initialDamping
+                property real hDamping: DynamicIslandMotion.initialDamping
+                property real rDamping: DynamicIslandMotion.initialDamping
 
                 width: targetW
                 height: targetH
@@ -286,12 +291,17 @@ Variants {
                 Rectangle {
                     id: solidRootBg
                     anchors.fill: parent
-                    topLeftRadius: 0
-                    topRightRadius: 0
-                    bottomLeftRadius: parent.radius
-                    bottomRightRadius: parent.radius
+                    radius: parent.radius
                     color: Appearance.colors.colLayer0
                     visible: false 
+                    
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: parent.radius
+                        color: parent.color
+                    }
                 }
 
                 Item {
@@ -319,70 +329,18 @@ Variants {
                 }
 
                 onTargetWChanged: {
-                    if (root.isHoverWidthMotion(targetW)) {
-                        wDuration = DynamicIslandMotion.hoverDuration;
-                        wBezier = DynamicIslandMotion.hoverBezier;
-                        return;
-                    }
-
-                    const isExpanding = targetW > width;
-                    wDuration = isExpanding ? DynamicIslandMotion.expandingDuration : DynamicIslandMotion.shrinkingDuration;
-                    wBezier = isExpanding ? DynamicIslandMotion.expandingBezier : DynamicIslandMotion.shrinkingBezier;
+                    let isExpanding = (targetW > width); wDamping = isExpanding ? DynamicIslandMotion.expandingDamping : DynamicIslandMotion.shrinkingDamping;
                 }
                 onTargetHChanged: {
-                    if (root.isHoverHeightMotion(targetH)) {
-                        hDuration = DynamicIslandMotion.hoverDuration;
-                        hBezier = DynamicIslandMotion.hoverBezier;
-                        return;
-                    }
-
-                    const isExpanding = targetH > height;
-                    hDuration = isExpanding ? DynamicIslandMotion.expandingDuration : DynamicIslandMotion.shrinkingDuration;
-                    hBezier = isExpanding ? DynamicIslandMotion.expandingBezier : DynamicIslandMotion.shrinkingBezier;
+                    let isExpanding = (targetH > height); hDamping = isExpanding ? DynamicIslandMotion.expandingDamping : DynamicIslandMotion.shrinkingDamping;
                 }
                 onTargetRChanged: {
-                    if (root.isHoverRadiusMotion(targetR)) {
-                        rDuration = DynamicIslandMotion.hoverDuration;
-                        rBezier = DynamicIslandMotion.hoverBezier;
-                    } else {
-                        rDuration = DynamicIslandMotion.radiusDuration;
-                        rBezier = DynamicIslandMotion.radiusBezier;
-                    }
+                    let isExpanding = (targetR > radius); rDamping = isExpanding ? DynamicIslandMotion.expandingDamping : DynamicIslandMotion.shrinkingDamping;
                 }
 
-                function isHoverWidthMotion(nextW) {
-                    return isCollapsedMode && Math.abs(nextW - width) <= DynamicIslandMotion.hoverWidthDelta;
-                }
-
-                function isHoverHeightMotion(nextH) {
-                    return isCollapsedMode && Math.abs(nextH - height) <= DynamicIslandMotion.hoverHeightDelta;
-                }
-
-                function isHoverRadiusMotion(nextR) {
-                    return isCollapsedMode && Math.abs(nextR - radius) <= DynamicIslandMotion.hoverRadiusDelta;
-                }
-
-                Behavior on width {
-                    NumberAnimation {
-                        duration: root.wDuration
-                        easing.type: DynamicIslandMotion.type
-                        easing.bezierCurve: root.wBezier
-                    }
-                }
-                Behavior on height {
-                    NumberAnimation {
-                        duration: root.hDuration
-                        easing.type: DynamicIslandMotion.type
-                        easing.bezierCurve: root.hBezier
-                    }
-                }
-                Behavior on radius {
-                    NumberAnimation {
-                        duration: root.rDuration
-                        easing.type: DynamicIslandMotion.type
-                        easing.bezierCurve: root.rBezier
-                    }
-                }
+                Behavior on width { SpringAnimation { spring: DynamicIslandMotion.spring; mass: DynamicIslandMotion.mass; damping: root.wDamping; epsilon: DynamicIslandMotion.epsilon } }
+                Behavior on height { SpringAnimation { spring: DynamicIslandMotion.spring; mass: DynamicIslandMotion.mass; damping: root.hDamping; epsilon: DynamicIslandMotion.epsilon } }
+                Behavior on radius { SpringAnimation { spring: DynamicIslandMotion.spring; mass: DynamicIslandMotion.mass; damping: root.rDamping; epsilon: DynamicIslandMotion.epsilon } }
 
                 focus: root.hasClosablePopup
 
@@ -429,11 +387,9 @@ Variants {
                     }
                 }
 
-                PwObjectTracker { objects: [ Pipewire.defaultAudioSink, Pipewire.defaultAudioSource ] }
+                PwObjectTracker { objects: [ Pipewire.defaultAudioSink ] }
                
                 property var audioNode: Pipewire.defaultAudioSink ? Pipewire.defaultAudioSink.audio : null
-                property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio : null
-                property string sliderMode: "volume"
 
                 Timer { 
                     id: volHideTimer
@@ -446,29 +402,13 @@ Variants {
             
                 Connections {
                     target: root.audioNode; ignoreUnknownSignals: true
-                    function onVolumeChanged() { root.triggerSliderOSD("volume") } 
-                    function onMutedChanged() { root.triggerSliderOSD("volume") }  
+                    function onVolumeChanged() { root.triggerVolumeOSD() } 
+                    function onMutedChanged() { root.triggerVolumeOSD() }  
                 }
-
-                Connections {
-                    target: root.sourceAudioNode; ignoreUnknownSignals: true
-                    function onVolumeChanged() { root.triggerSliderOSD("mic") }
-                    function onMutedChanged() { root.triggerSliderOSD("mic") }
-                }
-
-                Connections {
-                    target: Brightness
-                    function onBrightnessChanged() { root.triggerSliderOSD("brightness") }
-                }
-
-                function triggerSliderOSD(mode) {
-                    if (root.showHub || root.showTools || root.showAudio || root.expanded || root.showLyrics) return
-                    root.sliderMode = mode
-                    root.showVolume = true; volHideTimer.restart()
-                }
-
+            
                 function triggerVolumeOSD() {
-                    root.triggerSliderOSD("volume")
+                    if (root.showHub || root.showTools || root.showAudio || root.expanded || root.showLyrics) return
+                    root.showVolume = true; volHideTimer.restart()
                 }
                 
                 property var currentPlayer: null
@@ -499,11 +439,18 @@ Variants {
                     }
                 }
 
+                // 阻止点击事件穿透到外部全屏 MouseArea
                 MouseArea {
-                    id: islandMouseArea  
+                    anchors.fill: parent
+                    z: -1
+                    onClicked: {} // 消费点击事件，不传播
+                }
+
+                MouseArea {
+                    id: islandMouseArea
                     anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                    hoverEnabled: true   
-                    enabled: !root.isNotifMode && !root.isVolumeMode 
+                    hoverEnabled: true
+                    enabled: !root.isNotifMode && !root.isVolumeMode
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     
                     onClicked: (mouse) => {
@@ -549,17 +496,9 @@ Variants {
                         width: root.volW
                         height: root.volH
 
-                        mode: root.sliderMode
-                        audioNode: root.sliderMode === "volume" ? root.audioNode : root.sliderMode === "mic" ? root.sourceAudioNode : null
-                        externalValue: Brightness.brightnessValue
-                        iconName: root.sliderMode === "brightness" ? "brightness_medium" : ""
+                        audioNode: root.audioNode
                         opacity: root.isVolumeMode ? 1 : 0
                         visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
-
-                        onMoved: value => {
-                            if (root.sliderMode === "brightness")
-                                Brightness.setBrightness(value);
-                        }
                     }
                         
                     NotificationContent { 
@@ -679,29 +618,25 @@ Variants {
             }
 
             Canvas {
-                id: rightTopCurve
+                id: rightEar
                 anchors.left: root.right
                 anchors.top: root.top
-                width: islandWindow.topEdgeCurveWidth
-                height: islandWindow.topEdgeCurveDepth
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
+                width: islandWindow.earRadius
+                height: islandWindow.earRadius
                 onPaint: {
                     var ctx = getContext("2d");
                     ctx.reset();
                     ctx.fillStyle = Appearance.colors.colLayer0;
                     ctx.beginPath();
-                    ctx.moveTo(width, 0);
-                    ctx.lineTo(0, 0);
+                    ctx.moveTo(width, 0);             
+                    ctx.lineTo(0, 0);                 
                     ctx.lineTo(0, height);
-                    ctx.bezierCurveTo(0, height * islandWindow.topEdgeCurveSideControlY,
-                                      width * (1 - islandWindow.topEdgeCurveTopControlX), 0,
-                                      width, 0);
+                    ctx.arc(width, height, width, Math.PI, Math.PI*1.5, false);
                     ctx.fill();
                 }
                 Connections {
                     target: Appearance.colors
-                    function onColLayer0Changed() { rightTopCurve.requestPaint() }
+                    function onColLayer0Changed() { rightEar.requestPaint() }
                 }
             }
         }
@@ -716,11 +651,7 @@ Variants {
             z: maskContainer.z - 1 
 
             Behavior on anchors.rightMargin {
-                NumberAnimation {
-                    duration: DynamicIslandMotion.recordIndicatorDuration
-                    easing.type: DynamicIslandMotion.type
-                    easing.bezierCurve: DynamicIslandMotion.recordIndicatorBezier
-                }
+                SpringAnimation { spring: 4.0; damping: 0.8; mass: 1.0 }
             }
             
             opacity: root.isRecording ? 1 : 0

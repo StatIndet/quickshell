@@ -652,7 +652,10 @@ Item {
                 }
                 
                 RootCard {}
-                BatteryCard {}
+                BatteryCard {
+                    visible: SysmonPlugin.hasBattery
+                    height: visible ? 86 : 0
+                }
             }
 
             // --- Section 5: 进程监控视图 ---

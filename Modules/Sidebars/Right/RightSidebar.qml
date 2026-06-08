@@ -54,7 +54,15 @@ PanelWindow {
         height: root.inputActive ? root.qsTargetHeight : 0
     }
 
-    mask: Region { item: hitBoxRegion }
+    // 展开时 mask 覆盖整个窗口以捕获外部点击
+    mask: Region {
+        x: 0; y: 0
+        width: root.width
+        height: root.height
+        regions: [
+            Region { item: hitBoxRegion }
+        ]
+    }
 
     Item {
         id: renderCanvas
@@ -115,9 +123,22 @@ PanelWindow {
             event.accepted = true;
         }
 
+        // 点击外部关闭侧边栏
+        MouseArea {
+            anchors.fill: parent
+            enabled: WidgetState.qsOpen
+            onClicked: WidgetState.qsOpen = false
+        }
+
         Item {
             width: qsShadow.width; height: qsShadow.height
-            x: qsShadow.x; y: qsShadow.y; clip: true 
+            x: qsShadow.x; y: qsShadow.y; clip: true
+
+            // 阻止点击事件穿透到外部 MouseArea
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {} // 消费点击事件，不传播
+            }
 
             Loader {
                 anchors.fill: parent

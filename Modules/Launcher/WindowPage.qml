@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Clavis.Niri 1.0
+import Quickshell.Wayland
 import qs.Common
 import qs.Widgets.common
 
@@ -61,14 +61,35 @@ Item {
     }
 
     function search(text) {
-        filteredWindows = Niri.searchWindows(text)
+        const results = []
+        const toplevels = ToplevelManager.toplevels
+        const lowerQuery = text ? text.toLowerCase() : ""
+
+        for (let i = 0; i < toplevels.count; i++) {
+            const tl = toplevels.objectAt(i)
+            if (!tl) continue
+
+            const title = tl.title || ""
+            const appId = tl.appId || ""
+
+            if (!lowerQuery || title.toLowerCase().indexOf(lowerQuery) >= 0 || appId.toLowerCase().indexOf(lowerQuery) >= 0) {
+                results.push({
+                    toplevel: tl,
+                    title: title,
+                    appId: appId,
+                    iconPath: appId ? "image://icon/" + appId : ""
+                })
+            }
+        }
+
+        filteredWindows = results
         windowsList.contentY = 0
         setCurrentIndex(0)
     }
 
     Connections {
-        target: Niri
-        function onWindowsChanged() {
+        target: ToplevelManager
+        function onToplevelsChanged() {
             if (root.visible)
                 root.search(root.query)
         }
@@ -175,7 +196,7 @@ Item {
                 }
 
                 Text {
-                    text: root.highlightText(root.cleanAppName(modelData.appName || modelData.appId, true), root.query)
+                    text: root.highlightText(root.cleanAppName(modelData.appId, true), root.query)
                     textFormat: Text.StyledText
                     color: delegateItem.ListView.isCurrentItem
                            ? Appearance.applyAlpha(Appearance.colors.colOnPrimary, 0.72)
@@ -193,7 +214,8 @@ Item {
     function focusSelectedWindow() {
         if (root.filteredWindows.length > 0 && windowsList.currentIndex >= 0) {
             let win = root.filteredWindows[windowsList.currentIndex]
-            Niri.focusWindow(win.id)
+            if (win.toplevel)
+                win.toplevel.activate()
         }
     }
 }

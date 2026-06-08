@@ -14,6 +14,7 @@ Singleton {
     property real fallbackBrightnessValue: 0.5
     property var monitors: []
     property string focusedScreenName: ""
+    readonly property bool isNiriSession: Quickshell.env("NIRI_SOCKET") !== "" || Quickshell.env("XDG_CURRENT_DESKTOP") === "niri" || Quickshell.env("XDG_SESSION_DESKTOP") === "niri"
     readonly property var activeScreen: root.getScreenByName(root.focusedScreenName) || (Quickshell.screens.length > 0 ? Quickshell.screens[0] : null)
     readonly property var activeMonitor: root.getMonitorByName(root.focusedScreenName) || (root.monitors.length > 0 ? root.monitors[0] : null)
     readonly property real brightnessValue: root.activeMonitor ? root.activeMonitor.brightness : root.fallbackBrightnessValue
@@ -173,10 +174,13 @@ Singleton {
     Process {
         id: focusedOutputProcess
 
-        command: ["niri", "msg", "focused-output"]
+        command: root.isNiriSession ? ["niri", "msg", "focused-output"] : ["true"]
 
         stdout: StdioCollector {
-            onStreamFinished: root.parseFocusedOutput(this.text)
+            onStreamFinished: {
+                if (root.isNiriSession)
+                    root.parseFocusedOutput(this.text)
+            }
         }
     }
 
@@ -194,7 +198,7 @@ Singleton {
 
     Timer {
         interval: 1000
-        running: true
+        running: root.isNiriSession
         repeat: true
         onTriggered: root.refreshFocusedOutput()
     }

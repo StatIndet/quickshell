@@ -1,26 +1,107 @@
 import Quickshell
+import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import Clavis.Niri 1.0
 import qs.Common
 import qs.Widgets.common
 
 Item {
     id: root
 
-    property string screenName: ""
-    readonly property bool hasMultipleOutputs: Niri.outputs.count > 1
+    property string currentDesktopId: ""
+    property var desktops: []
+    property string desktopsRaw: ""
+    property string currentRaw: ""
 
     implicitHeight: 36
     implicitWidth: layout.width + 24
 
-    function acceptsOutput(outputName) {
-        if (root.screenName === "")
-            return true
-        if (!root.hasMultipleOutputs && outputName === "")
-            return true
-        return outputName === root.screenName
+    Component.onCompleted: refreshDesktops()
+
+    function refreshDesktops() {
+        desktopListProcess.running = true
+        currentDesktopProcess.running = true
+    }
+
+    function switchDesktop(desktopIndex) {
+        switchDesktopProcess.command = ["gdbus", "call", "--session", "--dest", "org.kde.KWin", "--object-path", "/KWin", "--method", "org.kde.KWin.setCurrentDesktop", desktopIndex.toString()]
+        switchDesktopProcess.running = true
+    }
+
+    function parseDesktopsOutput(text) {
+        desktopsRaw = text
+        tryParseDesktops()
+    }
+
+    function parseCurrentOutput(text) {
+        currentRaw = text
+        tryParseCurrent()
+    }
+
+    function tryParseDesktops() {
+        const text = desktopsRaw
+        if (!text || text.length === 0) return
+
+        const result = []
+        // 匹配 (uint32 N, 'id', 'name') 或 (N, 'id', 'name')
+        const structRegex = /\(?(?:uint32\s+)?(\d+),\s*'([^']+)',\s*'([^']+)'\)?/g
+        let match
+        while ((match = structRegex.exec(text)) !== null) {
+            result.push({
+                index: parseInt(match[1]),
+                id: match[2],
+                name: match[3]
+            })
+        }
+
+        if (result.length > 0) {
+            root.desktops = result
+        }
+    }
+
+    function tryParseCurrent() {
+        const text = currentRaw
+        if (!text || text.length === 0) return
+
+        // 匹配 ('id',) 或直接的 UUID
+        const match = text.match(/'([0-9a-f-]+)'/)
+        if (match) {
+            root.currentDesktopId = match[1]
+        }
+    }
+
+    // 获取桌面列表
+    Process {
+        id: desktopListProcess
+        command: ["gdbus", "call", "--session", "--dest", "org.kde.KWin", "--object-path", "/VirtualDesktopManager", "--method", "org.freedesktop.DBus.Properties.Get", "org.kde.KWin.VirtualDesktopManager", "desktops"]
+
+        stdout: StdioCollector {
+            onStreamFinished: root.parseDesktopsOutput(this.text)
+        }
+    }
+
+    // 获取当前桌面
+    Process {
+        id: currentDesktopProcess
+        command: ["gdbus", "call", "--session", "--dest", "org.kde.KWin", "--object-path", "/VirtualDesktopManager", "--method", "org.freedesktop.DBus.Properties.Get", "org.kde.KWin.VirtualDesktopManager", "current"]
+
+        stdout: StdioCollector {
+            onStreamFinished: root.parseCurrentOutput(this.text)
+        }
+    }
+
+    // 切换桌面
+    Process {
+        id: switchDesktopProcess
+    }
+
+    // 定时刷新
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: root.refreshDesktops()
     }
 
     Rectangle {
@@ -47,19 +128,17 @@ Item {
         spacing: 8
 
         Repeater {
-            model: Niri.workspaces
+            model: root.desktops
 
             delegate: Item {
                 id: delegateRoot
 
-                property bool belongsToScreen: root.acceptsOutput(model.output)
-                property bool active: model.isActive
-                property bool hasWindows: model.windowCount > 0
-                property bool isHovered: mouseArea.containsMouse
+                required property var modelData
+                readonly property bool active: modelData.id === root.currentDesktopId
+                readonly property bool isHovered: mouseArea.containsMouse
 
-                visible: belongsToScreen
-                implicitWidth: !belongsToScreen ? 0 : ((active || isHovered) ? 32 : 12)
-                implicitHeight: belongsToScreen ? 12 : 0
+                implicitWidth: (active || isHovered) ? 32 : 12
+                implicitHeight: 12
 
                 Behavior on implicitWidth {
                     NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
@@ -72,7 +151,6 @@ Item {
                     radius: height / 2
 
                     color: delegateRoot.active ? Appearance.colors.colPrimary
-                         : delegateRoot.hasWindows ? Appearance.colors.colOnSurface
                          : delegateRoot.isHovered ? Appearance.colors.colLayer2Hover
                          : Appearance.colors.colLayer4
 
@@ -84,7 +162,12 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Niri.focusWorkspaceById(model.id)
+                    onClicked: root.switchDesktop(modelData.index)
+                }
+
+                PopupToolTip {
+                    extraVisibleCondition: mouseArea.containsMouse
+                    text: "工作区 " + (modelData.name || (modelData.index + 1).toString())
                 }
 
                 PopupToolTip {

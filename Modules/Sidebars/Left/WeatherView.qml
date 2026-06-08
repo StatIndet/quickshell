@@ -254,7 +254,7 @@ Item {
         clip: true
         color: "transparent"
         border.width: 1
-        border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.34)
+        border.color: Qt.rgba(Appearance.colors.colLayer0Border.r, Appearance.colors.colLayer0Border.g, Appearance.colors.colLayer0Border.b, 0.34)
         layer.enabled: true
         layer.effect: OpacityMask {
             maskSource: Rectangle {
@@ -329,7 +329,7 @@ Item {
                         implicitWidth: 38
                         implicitHeight: 38
                         Layout.alignment: Qt.AlignVCenter
-                        onClicked: console.log("Open weather settings")
+                        onClicked: locationPicker.open()
 
                         background: Rectangle {
                             radius: width / 2
@@ -409,7 +409,7 @@ Item {
             }
         }
 
-        StyledFlickable {
+        Flickable {
             id: flick
             anchors.left: parent.left
             anchors.right: parent.right
@@ -418,6 +418,8 @@ Item {
             anchors.leftMargin: root.contentMargin
             anchors.rightMargin: root.contentMargin
             anchors.bottomMargin: root.contentMargin
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
             contentWidth: width
             contentHeight: contentColumn.implicitHeight + 4
 
@@ -439,7 +441,7 @@ Item {
                         Text {
                             width: parent.width
                             text: WeatherPlugin.currentWeatherText || "Unknown"
-                            color: Appearance.colors.colOnImage
+                            color: Appearance.colors.colOnLayer0
                             font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 26
                             font.bold: true
@@ -458,7 +460,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.bottom: parent.bottom
                                 text: fmtTempPlain(WeatherPlugin.currentTemperatureC)
-                                color: Appearance.colors.colOnImage
+                                color: Appearance.colors.colOnLayer0
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 132
                                 font.bold: true
@@ -480,7 +482,7 @@ Item {
                         Text {
                             width: parent.width
                             text: "体感温度: " + fmtTemp(WeatherPlugin.currentFeelsLikeC)
-                            color: Appearance.colors.colOnImage
+                            color: Appearance.colors.colOnLayer0
                             font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
@@ -491,7 +493,7 @@ Item {
                             width: parent.width
                             text: "最高 " + fmtTemp(today().temperatureMaxC)
                                   + " · 最低 " + fmtTemp(today().temperatureMinC)
-                            color: Appearance.colors.colOnImage
+                            color: Appearance.colors.colOnLayer0
                             font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
@@ -639,7 +641,7 @@ Item {
         radius: 26
         color: Qt.rgba(Appearance.colors.colLayer2.r, Appearance.colors.colLayer2.g, Appearance.colors.colLayer2.b, 0.78)
         border.width: 1
-        border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.55)
+        border.color: Qt.rgba(Appearance.colors.colLayer0Border.r, Appearance.colors.colLayer0Border.g, Appearance.colors.colLayer0Border.b, 0.55)
 
         Row {
             anchors.left: parent.left
@@ -650,7 +652,7 @@ Item {
 
             Text {
                 text: card.icon
-                color: Appearance.colors.colOnSurface
+                color: Appearance.colors.colOnLayer0
                 font.family: "Material Symbols Outlined"
                 font.pixelSize: 20
                 anchors.verticalCenter: parent.verticalCenter
@@ -658,7 +660,7 @@ Item {
 
             Text {
                 text: card.title
-                color: Appearance.colors.colOnSurface
+                color: Appearance.colors.colOnLayer0
                 font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 15
@@ -670,6 +672,271 @@ Item {
             id: contentLayer
             anchors.fill: parent
             anchors.margins: 14
+        }
+    }
+
+    // 地点搜索弹窗
+    Popup {
+        id: locationPicker
+        anchors.centerIn: Overlay.overlay
+        width: 320
+        height: 400
+        modal: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        property string searchText: ""
+        property var searchResults: []
+        property bool searching: false
+
+        onOpened: {
+            searchField.text = ""
+            searchText = ""
+            searchResults = []
+            searchField.forceFocus()
+        }
+
+        function searchLocation(query) {
+            if (!query || query.trim().length === 0) {
+                searchResults = []
+                return
+            }
+            searching = true
+            var xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    searching = false
+                    if (xhr.status === 200) {
+                        try {
+                            var data = JSON.parse(xhr.responseText)
+                            searchResults = data.results || []
+                        } catch (e) {
+                            searchResults = []
+                        }
+                    } else {
+                        searchResults = []
+                    }
+                }
+            }
+            xhr.open("GET", "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(query) + "&count=8&language=zh")
+            xhr.send()
+        }
+
+        function selectLocation(item) {
+            var name = item.name
+            if (item.admin1) name += ", " + item.admin1
+            if (item.country) name += ", " + item.country
+            WeatherPlugin.setManualLocation(item.latitude, item.longitude, name)
+            locationPicker.close()
+        }
+
+        background: Rectangle {
+            radius: 12
+            color: Appearance.colors.colLayer0
+            border.color: Appearance.colors.colLayer0Border
+            border.width: 1
+        }
+
+        contentItem: ColumnLayout {
+            spacing: 12
+
+            Text {
+                text: "设置天气地区"
+                font.family: "LXGW WenKai GB Screen"
+                font.pixelSize: 16
+                font.bold: true
+                color: Appearance.colors.colOnLayer0
+                Layout.fillWidth: true
+            }
+
+            RowLayout {
+                spacing: 8
+                Layout.fillWidth: true
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    radius: 8
+                    color: Appearance.colors.colLayer1
+                    border.color: searchField.activeFocus ? Appearance.colors.colPrimary : Appearance.colors.colLayer0Border
+                    border.width: searchField.activeFocus ? 2 : 1
+
+
+                    TextInput {
+                        id: searchField
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        font.family: "LXGW WenKai GB Screen"
+                        font.pixelSize: 14
+                        color: Appearance.colors.colOnLayer0
+                        clip: true
+                        selectByMouse: true
+                        selectionColor: Appearance.colors.colPrimary
+
+                        property string placeholderText: "输入城市名称..."
+
+                        function forceFocus() {
+                            forceActiveFocus()
+                        }
+
+                        onTextChanged: {
+                            locationPicker.searchText = text
+                            searchDebounce.restart()
+                        }
+
+                        Keys.onReturnPressed: locationPicker.searchLocation(text)
+                        Keys.onEnterPressed: locationPicker.searchLocation(text)
+
+                        Text {
+                            anchors.fill: parent
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: searchField.placeholderText
+                            font: searchField.font
+                            color: Appearance.colors.colOnLayer1
+                            visible: !searchField.text && !searchField.activeFocus
+
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                    }
+                }
+
+                ToolButton {
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    enabled: locationPicker.searchText.length > 0 && !locationPicker.searching
+                    onClicked: locationPicker.searchLocation(locationPicker.searchText)
+
+                    background: Rectangle {
+                        radius: 8
+                        color: parent.down ? Appearance.colors.colPrimary
+                             : parent.hovered ? Appearance.colors.colLayer1
+                             : "transparent"
+                    }
+
+                    contentItem: Text {
+                        text: "search"
+                        color: Appearance.colors.colOnLayer0
+                        font.family: "Material Symbols Outlined"
+                        font.pixelSize: 22
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+
+            // 搜索状态
+            Text {
+                text: locationPicker.searching ? "搜索中..." : (locationPicker.searchResults.length === 0 && locationPicker.searchText.length > 0 ? "未找到结果" : "")
+                font.family: "LXGW WenKai GB Screen"
+                font.pixelSize: 12
+                color: Appearance.colors.colOnLayer1
+                Layout.fillWidth: true
+                visible: text.length > 0
+            }
+
+            // 当前位置
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 36
+                radius: 8
+                color: Appearance.colors.colLayer1
+                visible: WeatherPlugin.hasManualLocation
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 8
+                    spacing: 8
+
+                    Text {
+                        text: "当前: " + WeatherPlugin.locationName
+                        font.family: "LXGW WenKai GB Screen"
+                        font.pixelSize: 12
+                        color: Appearance.colors.colOnLayer1
+                        Layout.fillWidth: true
+                        elide: Text.ElideRight
+                    }
+
+                    Text {
+                        text: "恢复默认"
+                        font.family: "LXGW WenKai GB Screen"
+                        font.pixelSize: 12
+                        color: Appearance.colors.colPrimary
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                WeatherPlugin.clearManualLocation()
+                                locationPicker.close()
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 搜索结果列表
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 2
+                model: locationPicker.searchResults
+
+                delegate: Rectangle {
+                    width: ListView.view.width
+                    height: 48
+                    radius: 8
+                    color: resultMouseArea.containsMouse ? Appearance.colors.colLayer1 : "transparent"
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 8
+
+                        Text {
+                            text: "location_on"
+                            color: Appearance.colors.colPrimary
+                            font.family: "Material Symbols Outlined"
+                            font.pixelSize: 18
+                        }
+
+                        Column {
+                            Layout.fillWidth: true
+                            spacing: 2
+
+                            Text {
+                                text: modelData.name || ""
+                                font.family: "LXGW WenKai GB Screen"
+                                font.pixelSize: 14
+                                color: Appearance.colors.colOnLayer0
+                            }
+
+                            Text {
+                                text: [modelData.admin1, modelData.country].filter(function(v) { return v }).join(", ")
+                                font.family: "LXGW WenKai GB Screen"
+                                font.pixelSize: 11
+                                color: Appearance.colors.colOnLayer1
+                                visible: text.length > 0
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        id: resultMouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: locationPicker.selectLocation(modelData)
+                    }
+                }
+            }
+        }
+
+        Timer {
+            id: searchDebounce
+            interval: 500
+            running: false
+            repeat: false
+            onTriggered: locationPicker.searchLocation(locationPicker.searchText)
         }
     }
 
