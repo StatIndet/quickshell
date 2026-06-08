@@ -246,10 +246,10 @@ Variants {
                 property bool isHubMode: showHub && !isToolsMode && !isLyricsMode
                 property bool isAudioMode: showAudio && !isHubMode && !isToolsMode && !isLyricsMode
                 property bool isVolumeMode: showVolume && !expanded && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isNotifMode: NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isNotifMode: NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode
                 property bool isCollapsedMode: !expanded && !isNotifMode && !isVolumeMode && !isAudioMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (islandMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                property bool hasClosablePopup: expanded || showLyrics || showHub || showTools || showAudio
+                property bool hasClosablePopup: expanded || showHub || showTools || showAudio
                 
                 property bool showOverviewHole: isHubMode && hubTabIndex === 0
 
@@ -270,20 +270,20 @@ Variants {
 
                 property int targetW: isAudioMode ? audioW :
                     isToolsMode ? toolsW :
-                    isHubMode ? hub.implicitWidth : 
-                    isLyricsMode ? lyricsW : 
-                    expanded ? expandedW : 
-                    isVolumeMode ? volW : 
-                    isNotifMode ? notifW : 
+                    isHubMode ? hub.implicitWidth :
+                    isNotifMode ? notifW :
+                    isLyricsMode ? lyricsW :
+                    expanded ? expandedW :
+                    isVolumeMode ? volW :
                     (collapsedW + (root.isRecording ? recordExtraW : 0) + (isCollapsedHovered ? 16 : 0))
 
                 property int targetH: isAudioMode ? audioH :
-                        isToolsMode ? toolsH : 
-                        isHubMode ? hub.implicitHeight : 
-                        isLyricsMode ? lyricsH : 
-                        expanded ? expandedH : 
-                        isVolumeMode ? volH : 
-                        isNotifMode ? notifH : 
+                        isToolsMode ? toolsH :
+                        isHubMode ? hub.implicitHeight :
+                        isNotifMode ? notifH :
+                        isLyricsMode ? lyricsH :
+                        expanded ? expandedH :
+                        isVolumeMode ? volH :
                         (collapsedH + (isCollapsedHovered ? 6 : 0))
 
                 property int wDuration: DynamicIslandMotion.expandingDuration
@@ -412,7 +412,8 @@ Variants {
 
                 function closeIslandPopups() {
                     root.expanded = false;
-                    root.showLyrics = false;
+                    // 歌词保持显示，不关闭
+                    // root.showLyrics = false;
                     root.showVolume = false;
                     root.showHub = false;
                     root.showTools = false;
@@ -625,11 +626,17 @@ Variants {
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: implicitWidth
                         height: implicitHeight
-                        
+
                         player: root.currentPlayer
                         currentIndex: root.hubTabIndex
                         onCurrentIndexChanged: root.hubTabIndex = currentIndex
                         onCloseRequested: root.showHub = false
+                        onRequestSetRecording: (state) => { root.isRecording = state }
+                        onRequestShowAudio: (mode) => {
+                            root.currentAudioMode = mode
+                            root.showHub = false
+                            root.showAudio = true
+                        }
 
                         opacity: root.isHubMode ? 1 : 0
                         visible: opacity > 0.01
@@ -637,8 +644,9 @@ Variants {
                     }
 
                     ToolsContent {
-                        id: toolsWidget 
+                        id: toolsWidget
                         anchors.top: parent.top
+                        anchors.topMargin: 0
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: root.toolsW
                         height: root.toolsH

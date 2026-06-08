@@ -7,35 +7,40 @@ import qs.Modules.DynamicIsland.OverviewContent
 import qs.Modules.DynamicIsland.Media
 import qs.Modules.DynamicIsland.WallpaperContent
 import qs.Modules.DynamicIsland.WeatherContent
+import qs.Modules.DynamicIsland.Tools
 
 Item {
     id: root
     signal closeRequested()
-    
+    signal requestSetRecording(bool state)
+    signal requestShowAudio(string mode)
+
     property var player: null
     property int currentIndex: 0
     
     Shortcut {
         sequence: "Tab"
-        onActivated: root.currentIndex = (root.currentIndex + 1) % 4
+        onActivated: root.currentIndex = (root.currentIndex + 1) % 5
     }
 
     Shortcut {
         sequence: "Shift+Tab"
-        onActivated: root.currentIndex = (root.currentIndex + 3) % 4
+        onActivated: root.currentIndex = (root.currentIndex + 4) % 5
     }
     
     // 【恢复 860 总宽】
-    implicitWidth: currentIndex === 0 ? 860 : 
-                   currentIndex === 2 ? 960 : 
+    implicitWidth: currentIndex === 0 ? 860 :
+                   currentIndex === 2 ? 960 :
+                   currentIndex === 4 ? 480 :
                    760
     Behavior on implicitWidth { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
-    
+
     implicitHeight: 80 + 20 + (
-        currentIndex === 0 ? 520 : 
-        currentIndex === 1 ? 480 : 
-        currentIndex === 2 ? 300 : 
-        540             
+        currentIndex === 0 ? 520 :
+        currentIndex === 1 ? 480 :
+        currentIndex === 2 ? 300 :
+        currentIndex === 4 ? 72 :
+        540
     )
     Behavior on implicitHeight { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
 
@@ -105,6 +110,7 @@ Item {
         TabBtn { icon: ""; title: "Media"; index: 1 }
         TabBtn { icon: ""; title: "Wallpapers"; index: 2 }
         TabBtn { icon: ""; title: "Weather"; index: 3 }
+        TabBtn { icon: ""; title: "Tools"; index: 4 }
     }
 
     Item {
@@ -149,6 +155,18 @@ Item {
             visible: root.currentIndex === 3
             opacity: visible ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 300 } }
+        }
+
+        ToolsContent {
+            anchors.top: parent.top
+            anchors.topMargin: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: root.currentIndex === 4
+            opacity: visible ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: 300 } }
+            onRequestHideIsland: root.closeRequested()
+            onRequestSetRecording: (state) => root.requestSetRecording(state)
+            onRequestShowAudio: (mode) => root.requestShowAudio(mode)
         }
     }
 }

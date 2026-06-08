@@ -39,8 +39,8 @@ Variants {
         // --- 内容容器 ---
         Item {
             id: barContent
-            
-            anchors { top: parent.top; left: parent.left; right: parent.right }
+
+            anchors { top: parent.top; topMargin: -5; left: parent.left; right: parent.right }
             height: barWindow.barHeight 
 
             // --- 左侧组件 ---
