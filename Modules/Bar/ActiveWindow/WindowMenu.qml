@@ -6,8 +6,6 @@ import Quickshell.Wayland
 import qs.Common
 import qs.Components
 
-import "../../../Common/functions/IconResolver.js" as IconResolver
-
 PanelWindow {
     id: root
 

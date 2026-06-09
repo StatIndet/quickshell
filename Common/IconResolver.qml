@@ -1,0 +1,72 @@
+pragma Singleton
+
+import QtQuick
+import Quickshell
+
+QtObject {
+    id: root
+
+    // 窗口类名 → 图标名的已知映射
+    readonly property var knownMappings: ({
+        "Code": "visual-studio-code",
+        "code": "visual-studio-code",
+        "codium": "vscodium",
+        "footclient": "foot",
+        "QQ": "qq",
+        "spotify": "spotify-client",
+        "org.kde.konsole": "utilities-terminal"
+    })
+
+    // 从 reverse-DNS app_id 提取候选图标名
+    function candidates(appId) {
+        if (!appId || appId === "")
+            return []
+
+        var result = []
+
+        // 已知映射
+        if (knownMappings[appId]) {
+            result.push(knownMappings[appId])
+        }
+
+        // 前缀匹配 (steam_app_440 → steam_icon_440)
+        if (appId.startsWith("steam_app_"))
+            result.push("steam_icon_" + appId.substring(10))
+        if (appId.startsWith("jetbrains-"))
+            result.push("jetbrains-toolbox")
+
+        // 原始 appId
+        result.push(appId)
+
+        // 小写版本
+        if (appId !== appId.toLowerCase())
+            result.push(appId.toLowerCase())
+
+        // reverse-DNS: 取最后一段
+        var lastDot = appId.lastIndexOf(".")
+        if (lastDot >= 0 && lastDot < appId.length - 1) {
+            var lastSegment = appId.substring(lastDot + 1)
+            if (result.indexOf(lastSegment) < 0)
+                result.push(lastSegment)
+            if (lastSegment !== lastSegment.toLowerCase() && result.indexOf(lastSegment.toLowerCase()) < 0)
+                result.push(lastSegment.toLowerCase())
+        }
+
+        return result
+    }
+
+    // 解析图标路径，返回可用的文件路径或 image:// URL
+    function resolveIcon(appId) {
+        if (!appId || appId === "")
+            return "image://icon/application-x-executable"
+
+        var cands = candidates(appId)
+        for (var i = 0; i < cands.length; i++) {
+            var resolved = Quickshell.iconPath(cands[i], "")
+            if (resolved && resolved !== "")
+                return resolved
+        }
+
+        return "image://icon/application-x-executable"
+    }
+}

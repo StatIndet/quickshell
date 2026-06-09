@@ -5,8 +5,6 @@ import Quickshell.Io
 import qs.Common
 import qs.Widgets.common
 
-import "../../../Common/functions/IconResolver.js" as IconResolver
-
 WidgetPanel {
     id: root
     title: "窗口"
