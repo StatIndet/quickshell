@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 
-import "../../Common/functions/IconResolver.js" as IconResolver
+import "../../../Common/functions/IconResolver.js" as IconResolver
 
 Item {
     id: root
