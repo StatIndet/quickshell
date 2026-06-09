@@ -13,34 +13,26 @@ QtObject {
         "codium": "vscodium",
         "footclient": "foot",
         "QQ": "qq",
-        "spotify": "spotify-client",
-        "org.kde.konsole": "utilities-terminal"
+        "org.kde.konsole": "konsole",
+        "org.kde.dolphin": "dolphin"
     })
 
-    // 从 reverse-DNS app_id 提取候选图标名
+    // 从 reverse-DNS app_id 提取候选图标名列表
     function candidates(appId) {
         if (!appId || appId === "")
             return []
 
         var result = []
 
-        // 已知映射
-        if (knownMappings[appId]) {
+        // 已知映射优先
+        if (knownMappings[appId])
             result.push(knownMappings[appId])
-        }
 
-        // 前缀匹配 (steam_app_440 → steam_icon_440)
+        // 前缀匹配
         if (appId.startsWith("steam_app_"))
             result.push("steam_icon_" + appId.substring(10))
         if (appId.startsWith("jetbrains-"))
             result.push("jetbrains-toolbox")
-
-        // 原始 appId
-        result.push(appId)
-
-        // 小写版本
-        if (appId !== appId.toLowerCase())
-            result.push(appId.toLowerCase())
 
         // reverse-DNS: 取最后一段
         var lastDot = appId.lastIndexOf(".")
@@ -48,14 +40,20 @@ QtObject {
             var lastSegment = appId.substring(lastDot + 1)
             if (result.indexOf(lastSegment) < 0)
                 result.push(lastSegment)
-            if (lastSegment !== lastSegment.toLowerCase() && result.indexOf(lastSegment.toLowerCase()) < 0)
-                result.push(lastSegment.toLowerCase())
         }
+
+        // 原始 appId
+        if (result.indexOf(appId) < 0)
+            result.push(appId)
+
+        // 小写版本
+        if (appId !== appId.toLowerCase() && result.indexOf(appId.toLowerCase()) < 0)
+            result.push(appId.toLowerCase())
 
         return result
     }
 
-    // 解析图标路径，返回可用的文件路径或 image:// URL
+    // 解析图标路径，返回 Quickshell.iconPath 或 image:// 回退
     function resolveIcon(appId) {
         if (!appId || appId === "")
             return "image://icon/application-x-executable"
