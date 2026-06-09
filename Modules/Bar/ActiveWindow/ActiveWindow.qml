@@ -129,11 +129,14 @@ Item {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         onClicked: {
-            if (WidgetState.qsOpen && WidgetState.qsView === "windows") {
-                WidgetState.qsOpen = false
+            if (WidgetState.windowMenuOpen) {
+                WidgetState.windowMenuOpen = false
             } else {
-                WidgetState.qsView = "windows"
-                WidgetState.qsOpen = true
+                // 计算菜单位置：指示器下方
+                const pos = mapToGlobal(0, height)
+                WidgetState.windowMenuX = pos.x
+                WidgetState.windowMenuY = pos.y
+                WidgetState.windowMenuOpen = true
             }
         }
     }

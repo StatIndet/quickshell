@@ -8,6 +8,8 @@
 .codex
 .codex/
 .vscode/
+.claude/
+.marscode/
 
 # Vendored/generated icon packs
 assets/icons/weather/meteocons/

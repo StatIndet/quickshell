@@ -12,6 +12,10 @@ QtObject {
     property bool leftSidebarOpen: false
     property string leftSidebarView: "info"
 
+    property bool windowMenuOpen: false
+    property real windowMenuX: 0
+    property real windowMenuY: 0
+
     onQsOpenChanged: {
         if (!qsOpen)
             qsScreenName = "";
@@ -20,5 +24,6 @@ QtObject {
     function closeAllPopups() {
         qsOpen = false;
         leftSidebarOpen = false;
+        windowMenuOpen = false;
     }
 }

@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Modules.Bar
+import qs.Modules.Bar.ActiveWindow
 import qs.Modules.DynamicIsland
 import qs.Modules.Launcher
 import qs.Modules.Lock
@@ -18,6 +19,8 @@ Item {
     WallpaperBackground {}
 
     Bar {}
+
+    WindowMenu {}
 
     DynamicIsland {}
 

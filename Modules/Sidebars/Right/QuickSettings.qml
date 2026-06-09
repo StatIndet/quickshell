@@ -62,17 +62,6 @@ Item {
             Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
         }
 
-        WindowsContent {
-            anchors.fill: parent
-
-            opacity: WidgetState.qsView === "windows" ? 1.0 : 0.0
-            scale: WidgetState.qsView === "windows" ? 1.0 : 0.95
-            visible: opacity > 0
-
-            Behavior on opacity { NumberAnimation { duration: 200; easing.type: Easing.OutQuint } }
-            Behavior on scale { NumberAnimation { duration: 250; easing.type: Easing.OutBack; easing.overshoot: 0.5 } }
-        }
-
         SettingsContent {
             anchors.fill: parent
             screen: root.screen
