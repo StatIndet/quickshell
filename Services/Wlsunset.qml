@@ -29,10 +29,12 @@ Singleton {
             return;
         }
 
+        // Map gamma 25-100 to color temp 3000K-6500K
+        var temp = Math.round(3000 + (root.gamma - 25) / (100 - 25) * 3500);
         Quickshell.execDetached([
             "bash",
             "-c",
-            "pkill -x wlsunset 2>/dev/null || true; wlsunset -T 6501 -t 6500 -S 00:00 -s 00:00 -g " + root.gammaArgument() + " >/dev/null 2>&1 &"
+            "pkill -x wlsunset 2>/dev/null || true; wlsunset -t " + temp + " -S 00:00 -s 00:00 >/dev/null 2>&1 &"
         ]);
     }
 
