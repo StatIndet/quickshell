@@ -1,5 +1,3 @@
-.pragma library
-
 // 窗口类名 → 图标名的已知映射
 var knownMappings = {
     "Code": "visual-studio-code",

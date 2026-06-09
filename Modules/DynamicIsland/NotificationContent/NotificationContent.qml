@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.Common
-import qs.Common.functions
 import qs.Services
 import qs.Widgets.common
+
+import "../../../Common/functions/IconResolver.js" as IconResolver
 
 Item {
     id: root

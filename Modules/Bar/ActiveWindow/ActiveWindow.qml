@@ -4,7 +4,8 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import qs.Common
-import qs.Common.functions
+
+import "../../Common/functions/IconResolver.js" as IconResolver
 
 Item {
     id: root
