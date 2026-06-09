@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import qs.Common
+import qs.Common.functions
 import qs.Components
 
 PanelWindow {
@@ -205,7 +206,7 @@ done
                                 Image {
                                     id: delegateIcon
                                     anchors.fill: parent
-                                    source: modelData.appId ? "image://icon/" + modelData.appId : ""
+                                    source: modelData.appId ? IconResolver.resolveIcon(modelData.appId) : ""
                                     sourceSize.width: 48
                                     sourceSize.height: 48
                                     fillMode: Image.PreserveAspectFit

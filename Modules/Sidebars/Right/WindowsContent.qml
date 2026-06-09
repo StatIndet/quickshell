@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import qs.Common.functions
 import qs.Widgets.common
 
 WidgetPanel {
@@ -117,7 +118,7 @@ done
                     Image {
                         id: delegateIcon
                         anchors.fill: parent
-                        source: modelData.appId ? "image://icon/" + modelData.appId : ""
+                        source: modelData.appId ? IconResolver.resolveIcon(modelData.appId) : ""
                         sourceSize.width: 56
                         sourceSize.height: 56
                         fillMode: Image.PreserveAspectFit

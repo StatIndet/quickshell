@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import qs.Common
+import qs.Common.functions
 import qs.Services
 import qs.Widgets.common
 
@@ -30,7 +31,7 @@ Item {
             color: "transparent"
 
             readonly property string imageSource: modelData && modelData.image ? modelData.image : ""
-            readonly property string appIconSource: modelData && modelData.appIcon ? Quickshell.iconPath(modelData.appIcon, "image-missing") : ""
+            readonly property string appIconSource: modelData && modelData.appIcon ? IconResolver.resolveIcon(modelData.appIcon) : ""
             readonly property string iconSource: imageSource !== "" ? imageSource : appIconSource
             readonly property bool hasImage: imageSource !== ""
             readonly property bool hasIcon: iconSource !== ""

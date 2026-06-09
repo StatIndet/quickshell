@@ -4,6 +4,7 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import qs.Common.functions
 
 Item {
     id: root
@@ -92,7 +93,7 @@ Item {
             Image {
                 id: appIcon
                 anchors.fill: parent
-                source: root.windowAppId ? "image://icon/" + root.windowAppId : ""
+                source: root.windowAppId ? IconResolver.resolveIcon(root.windowAppId) : ""
                 sourceSize.width: 36
                 sourceSize.height: 36
                 fillMode: Image.PreserveAspectFit
