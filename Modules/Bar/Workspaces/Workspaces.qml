@@ -24,8 +24,8 @@ Item {
         currentDesktopProcess.running = true
     }
 
-    function switchDesktop(desktopIndex) {
-        switchDesktopProcess.command = ["gdbus", "call", "--session", "--dest", "org.kde.KWin", "--object-path", "/KWin", "--method", "org.kde.KWin.setCurrentDesktop", desktopIndex.toString()]
+    function switchDesktopById(desktopId) {
+        switchDesktopProcess.command = ["gdbus", "call", "--session", "--dest", "org.kde.KWin", "--object-path", "/VirtualDesktopManager", "--method", "org.freedesktop.DBus.Properties.Set", "org.kde.KWin.VirtualDesktopManager", "current", "<" + desktopId + ">"]
         switchDesktopProcess.running = true
     }
 
@@ -162,7 +162,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: root.switchDesktop(modelData.index)
+                    onClicked: root.switchDesktopById(modelData.id)
                 }
 
                 PopupToolTip {
