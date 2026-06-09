@@ -31,6 +31,17 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
 
+        onClicked: {
+            if (root.screen && root.screen.name)
+                WidgetState.qsScreenName = root.screen.name;
+            if (WidgetState.qsOpen && WidgetState.qsView === "brightness") {
+                WidgetState.qsOpen = false;
+            } else {
+                WidgetState.qsView = "brightness";
+                WidgetState.qsOpen = true;
+            }
+        }
+
         onWheel: (wheel) => {
             const step = 0.05
             let newBri = root.brightnessValue
