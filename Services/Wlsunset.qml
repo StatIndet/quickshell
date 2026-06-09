@@ -20,7 +20,10 @@ Singleton {
     }
 
     function stopWlsunset() {
-        Quickshell.execDetached(["bash", "-c", "pkill -x wlsunset 2>/dev/null || true"]);
+        Quickshell.execDetached([
+            "qdbus", "org.kde.KWin", "/org/kde/KWin/NightLight",
+            "org.kde.KWin.NightLight.stopPreview"
+        ]);
     }
 
     function applyGamma() {
@@ -32,9 +35,8 @@ Singleton {
         // Map gamma 25-100 to color temp 3000K-6500K
         var temp = Math.round(3000 + (root.gamma - 25) / (100 - 25) * 3500);
         Quickshell.execDetached([
-            "bash",
-            "-c",
-            "pkill -x wlsunset 2>/dev/null || true; wlsunset -t " + temp + " -S 00:00 -s 00:00 >/dev/null 2>&1 &"
+            "qdbus", "org.kde.KWin", "/org/kde/KWin/NightLight",
+            "org.kde.KWin.NightLight.preview", String(temp)
         ]);
     }
 
