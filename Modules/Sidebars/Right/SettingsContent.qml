@@ -53,7 +53,7 @@ WidgetPanel {
     }
 
     function hasAltActionForType(type) {
-        return type === "network" || type === "audio" || type === "mic";
+        return type === "network" || type === "audio" || type === "mic" || type === "bluetooth";
     }
 
     function titleForType(type) {
@@ -168,6 +168,9 @@ WidgetPanel {
         } else if (type === "audio" || type === "mic") {
             WidgetState.qsView = "audio";
             WidgetState.qsOpen = true;
+        } else if (type === "bluetooth") {
+            WidgetState.qsView = "bluetooth";
+            WidgetState.qsOpen = true;
         }
     }
 
@@ -175,7 +178,7 @@ WidgetPanel {
         const base = titleForType(type) + " | " + subtitleForType(type);
         if (root.editMode)
             return base + "\n左键启用/隐藏，右键切换形状，滚轮调整顺序";
-        if (type === "network" || type === "audio" || type === "mic")
+        if (type === "network" || type === "audio" || type === "mic" || type === "bluetooth")
             return base + "\n右键打开详情面板";
         return base;
     }

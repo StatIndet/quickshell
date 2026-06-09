@@ -38,6 +38,9 @@ Item {
         Network {
             screen: root.screen
         }
+        Bluetooth {
+            screen: root.screen
+        }
         Brightness {
             screen: root.screen
         }
