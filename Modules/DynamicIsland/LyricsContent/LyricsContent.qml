@@ -129,7 +129,7 @@ Item {
             }
             Text {
                 visible: root.artUrl === ""; anchors.centerIn: parent
-                text: "\uf001"; font.family: "Symbols Nerd Font Mono"; font.pixelSize: 14; color: "#80ffffff"
+                text: "\uf001"; font.family: "Symbols Nerd Font Mono"; font.pixelSize: 14; color: Appearance.applyAlpha(Appearance.colors.colOnLayer0, 0.50)
             }
         }
 
@@ -171,7 +171,7 @@ Item {
                     id: lyricText
                     anchors.centerIn: parent
                     text: modelData.text
-                    color: "white"
+                    color: Appearance.colors.colOnLayer0
                     font.family: Sizes.fontFamily
                     font.pixelSize: 15
                     font.weight: Font.Bold
