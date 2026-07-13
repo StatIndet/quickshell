@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import Qt.labs.folderlistmodel
 import QtCore
 import QtQuick
@@ -65,17 +67,25 @@ ApplicationWindow {
     }
 
     function encodeFileUrl(path) {
-        if (!path)
+        const normalized = normalizePath(path);
+        if (normalized === "")
             return "";
-        return "file://" + path.split("/").map(segment => encodeURIComponent(segment)).join("/");
+        return "file://" + normalized.split("/").map(segment => encodeURIComponent(segment)).join("/");
     }
 
     function normalizePath(path) {
         let value = String(path || "").trim();
+        if (value.startsWith("file://")) {
+            try {
+                value = decodeURIComponent(value.substring(7));
+            } catch (error) {
+                value = value.substring(7);
+            }
+        }
         if (value === "~")
-            value = homeDir;
+            value = normalizePath(homeDir);
         else if (value.startsWith("~/"))
-            value = homeDir + value.substring(1);
+            value = normalizePath(homeDir) + value.substring(1);
         if (!value.startsWith("/"))
             return "";
 
@@ -159,7 +169,9 @@ ApplicationWindow {
     }
 
     function openAt(path) {
-        currentPath = normalizePath(path && path !== "" ? path : picturesDir) || picturesDir;
+        currentPath = normalizePath(path && path !== "" ? path : picturesDir)
+            || normalizePath(picturesDir)
+            || "/";
         pathEditing = false;
         pathDraft = currentPath;
         refreshBreadcrumbs();
@@ -958,7 +970,8 @@ ApplicationWindow {
         required property string label
         required property string iconName
         required property string path
-        readonly property bool active: root.currentPath === path
+        readonly property string normalizedPath: root.normalizePath(path)
+        readonly property bool active: root.currentPath === normalizedPath
 
         Layout.fillWidth: true
         Layout.preferredHeight: 44
@@ -971,7 +984,7 @@ ApplicationWindow {
         colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
         colRipple: Appearance.colors.colOnSurface
         colRippleToggled: Appearance.colors.colOnSecondaryContainer
-        releaseAction: () => root.navigateTo(locationButton.path)
+        releaseAction: () => root.navigateTo(locationButton.normalizedPath)
 
         contentItem: RowLayout {
             spacing: 10
