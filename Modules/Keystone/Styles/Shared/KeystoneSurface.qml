@@ -16,6 +16,7 @@ import qs.Modules.Keystone.LyricsContent
 import qs.Modules.Keystone.Hub
 import qs.Modules.Keystone.Tools
 import qs.Modules.Keystone.audio 
+import qs.Modules.FilePicker
 
 Variants {
     id: styleSurface
@@ -197,7 +198,7 @@ Variants {
                         anchors.top: parent.top
                         anchors.topMargin: 132
                         radius: 24
-                        color: root.showOverviewHole ? "black" : "transparent"
+                        color: root.showDashboardHole ? "black" : "transparent"
                     }
                 }
 
@@ -310,7 +311,7 @@ Variants {
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
                 property bool hasClosablePopup: expanded || showLyrics || showHub || showTools || showAudio
                 
-                property bool showOverviewHole: isHubMode && hubTabIndex === 0
+                property bool showDashboardHole: isHubMode && hubTabIndex === 0
 
                 property int lyricsW: lyricsWidget.implicitWidth; property int lyricsH: 42 
                 property int expandedW: 540; property int expandedH: 210
@@ -382,7 +383,7 @@ Variants {
                         anchors.top: parent.top
                         anchors.topMargin: 132
                         radius: 24
-                        color: root.showOverviewHole ? "black" : "transparent"
+                        color: root.showDashboardHole ? "black" : "transparent"
                     }
                 }
 
@@ -660,6 +661,14 @@ Variants {
                         currentIndex: root.hubTabIndex
                         onCurrentIndexChanged: root.hubTabIndex = currentIndex
                         onCloseRequested: root.showHub = false
+                        onAvatarEditRequested: {
+                            root.showHub = false
+                            Qt.callLater(() => avatarFilePicker.openAt(
+                                avatarFilePicker.picturesDir !== ""
+                                    ? avatarFilePicker.picturesDir
+                                    : Paths.homeDir
+                            ))
+                        }
 
                         opacity: root.isHubMode ? 1 : 0
                         visible: opacity > 0.01
@@ -727,6 +736,15 @@ Variants {
                         mouse.accepted = true;
                     }
                 }
+            }
+
+            FilePickerWindow {
+                id: avatarFilePicker
+
+                targetScreen: keystoneWindow.screen
+                title: "选择用户头像"
+                description: "图片将复制到 ~/.face，并同步用于 Dashboard 与锁屏"
+                onAccepted: path => AvatarService.setAvatar(path)
             }
 
             Canvas {

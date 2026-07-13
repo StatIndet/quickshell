@@ -2,8 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import qs.Common
+import qs.Components
 
-import qs.Modules.Keystone.OverviewContent
+import qs.Modules.Keystone.DashboardContent
 import qs.Modules.Keystone.Media
 import qs.Modules.Keystone.WallpaperContent
 import qs.Modules.Keystone.WeatherContent
@@ -11,6 +12,7 @@ import qs.Modules.Keystone.WeatherContent
 Item {
     id: root
     signal closeRequested()
+    signal avatarEditRequested()
     
     property var player: null
     property int currentIndex: 0
@@ -60,10 +62,10 @@ Item {
             Column {
                 anchors.centerIn: parent
                 spacing: 6
-                Text {
+                MaterialSymbol {
                     text: parent.parent.icon
-                    font.family: "Font Awesome 6 Free Solid"
-                    font.pixelSize: 20
+                    iconSize: 22
+                    fill: parent.parent.active ? 1 : 0
                     color: parent.parent.active
                            ? Appearance.colors.colOnLayer0
                            : Appearance.applyAlpha(Appearance.colors.colOnLayer0, 0.50)
@@ -101,10 +103,10 @@ Item {
             }
         }
 
-        TabBtn { icon: ""; title: "Overview"; index: 0 }
-        TabBtn { icon: ""; title: "Media"; index: 1 }
-        TabBtn { icon: ""; title: "Wallpapers"; index: 2 }
-        TabBtn { icon: ""; title: "Weather"; index: 3 }
+        TabBtn { icon: "dashboard"; title: "Dashboard"; index: 0 }
+        TabBtn { icon: "queue_music"; title: "Media"; index: 1 }
+        TabBtn { icon: "wallpaper"; title: "Wallpapers"; index: 2 }
+        TabBtn { icon: "sunny"; title: "Weather"; index: 3 }
     }
 
     Item {
@@ -114,13 +116,14 @@ Item {
         anchors.bottom: parent.bottom
         anchors.topMargin: 10 
 
-        OverviewContent {
+        DashboardContent {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             visible: root.currentIndex === 0
             opacity: visible ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 300 } }
             onCloseRequested: root.closeRequested()
+            onAvatarEditRequested: root.avatarEditRequested()
         }
 
         Media {

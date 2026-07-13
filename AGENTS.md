@@ -4,6 +4,10 @@
 
 这是一个主要使用 QML 构建的 Quickshell 桌面 shell。`shell.qml` 是主入口，只负责加载 `AppShell.qml`；`AppShell.qml` 负责挂载 Bar、Keystone、Sidebars、Launcher 与 Lock 等顶层模块。`demo.qml`、`test_list.qml` 和 `test_proc.qml` 是本地 smoke-test 入口。
 
+## Keystone 术语约定
+
+本项目中的 `Keystone` 是仿照 iOS Dynamic Island 制作的顶部交互区域。后续交流中出现的“灵动岛”、“Dynamic Island”、“dynamic island”、“dynamic”、“daynamic”或“钥石”，除非另有明确说明，均指当前项目的 `Modules/Keystone/` 模块。
+
 当前目录结构约定如下：
 
 ```text
@@ -23,7 +27,9 @@
 ├── Services/                 # 数据逻辑与系统状态单例
 ├── Modules/                  # 业务功能模块
 │   ├── Bar/
+│   ├── FilePicker/           # 主题化文件选择窗口
 │   ├── Keystone/
+│   │   ├── DashboardContent/
 │   │   └── Styles/
 │   │       ├── Bangs/
 │   │       └── Pill/

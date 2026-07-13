@@ -26,6 +26,7 @@ Singleton {
     readonly property string homeDir: Quickshell.env("HOME")
     readonly property string currentWallpaper: homeDir + "/.cache/wallpaper_rofi/current"
     readonly property string scheduleCache: homeDir + "/.cache/quickshell/schedule.json"
+    readonly property string profileAvatar: homeDir + "/.face"
     readonly property string defaultAvatar: homeDir + "/Pictures/avatar/shelby.jpg"
 
     function fileUrl(path) {
