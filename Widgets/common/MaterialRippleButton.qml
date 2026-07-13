@@ -12,7 +12,8 @@ Button {
     property real buttonRadius: Appearance.rounding.small
     property real buttonRadiusPressed: buttonRadius
     readonly property real buttonEffectiveRadius: root.down ? root.buttonRadiusPressed : root.buttonRadius
-    property int rippleDuration: 1200
+    property int rippleDuration: Appearance.animation.expressiveSlowEffects.duration * 2
+    property int rippleFadeDuration: Appearance.animation.expressiveSlowEffects.duration
     property real rippleOpacity: 0.1
     property bool rippleEnabled: true
     property var downAction
@@ -40,8 +41,23 @@ Button {
 
     opacity: root.enabled ? 1 : 0.4
     hoverEnabled: true
+    onToggledChanged: {
+        if (!toggled)
+            clearRipple();
+    }
+
+    function clearRipple() {
+        rippleAnim.stop();
+        rippleFadeAnim.stop();
+        ripple.clearing = true;
+        ripple.opacity = 0;
+        ripple.implicitWidth = 0;
+        ripple.implicitHeight = 0;
+        ripple.clearing = false;
+    }
 
     function startRipple(x, y) {
+        clearRipple();
         const stateY = buttonBackground.y;
         rippleAnim.x = x;
         rippleAnim.y = y - stateY;
@@ -55,7 +71,6 @@ Button {
             dist(width, stateEndY)
         ));
 
-        rippleFadeAnim.complete();
         ripple.activeColor = root.rippleColor;
         rippleAnim.restart();
     }
@@ -96,6 +111,7 @@ Button {
             property real implicitWidth: 0
             property real implicitHeight: 0
             property color activeColor: root.rippleColor
+            property bool clearing: false
 
             width: implicitWidth
             height: implicitHeight
@@ -103,6 +119,7 @@ Button {
             visible: width > 0 && height > 0
 
             Behavior on opacity {
+                enabled: !ripple.clearing
                 NumberAnimation {
                     duration: Appearance.animation.expressiveEffects.duration
                     easing.type: Appearance.animation.expressiveEffects.type
@@ -189,7 +206,7 @@ Button {
 
     RippleAnim {
         id: rippleFadeAnim
-        duration: root.rippleDuration * 2
+        duration: root.rippleFadeDuration
         target: ripple
         property: "opacity"
         to: 0
