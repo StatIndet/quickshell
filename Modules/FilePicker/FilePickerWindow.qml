@@ -193,10 +193,8 @@ ApplicationWindow {
 
         Rectangle {
             anchors.fill: parent
-            radius: 8
-            color: Appearance.m3colors.m3surfaceContainerLow
-            border.width: 1
-            border.color: Appearance.m3colors.m3outlineVariant
+            radius: Appearance.rounding.veryLarge
+            color: Appearance.m3colors.m3surface
         }
 
         MouseArea {
@@ -209,65 +207,66 @@ ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            spacing: 0
+            anchors.margins: 12
+            spacing: 12
 
             Item {
                 id: titleBar
 
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 74
+                Layout.fillWidth: true
+                Layout.preferredHeight: 58
 
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: 22
-                        anchors.rightMargin: 16
-                        spacing: 14
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.leftMargin: 8
+                    anchors.rightMargin: 2
+                    spacing: 14
 
-                        Rectangle {
-                            Layout.preferredWidth: 42
-                            Layout.preferredHeight: 42
-                            radius: 8
-                            color: Appearance.colors.colPrimaryContainer
+                    Rectangle {
+                        Layout.preferredWidth: 44
+                        Layout.preferredHeight: 44
+                        radius: Appearance.rounding.normal
+                        color: Appearance.colors.colPrimaryContainer
 
-                            MaterialSymbol {
-                                anchors.centerIn: parent
-                                text: "add_photo_alternate"
-                                iconSize: 24
-                                fill: 1
-                                color: Appearance.colors.colOnPrimaryContainer
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 1
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: root.title
-                                color: Appearance.colors.colOnSurface
-                                font.family: Sizes.fontFamily
-                                font.pixelSize: 20
-                                font.weight: Font.DemiBold
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: root.description
-                                color: Appearance.colors.colSubtext
-                                font.family: Sizes.fontFamily
-                                font.pixelSize: 12
-                                elide: Text.ElideRight
-                            }
-                        }
-
-                        PickerToolButton {
-                            iconName: "close"
-                            tooltipText: "关闭"
-                            onClicked: root.dismiss()
+                        MaterialSymbol {
+                            anchors.centerIn: parent
+                            text: "add_photo_alternate"
+                            iconSize: 25
+                            fill: 1
+                            color: Appearance.colors.colOnPrimaryContainer
                         }
                     }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 1
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: root.title
+                            color: Appearance.colors.colOnSurface
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 19
+                            font.weight: Font.DemiBold
+                            elide: Text.ElideRight
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: root.description
+                            color: Appearance.colors.colSubtext
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 12
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    PickerToolButton {
+                        iconName: "close"
+                        tooltipText: "关闭"
+                        onClicked: root.dismiss()
+                    }
+                }
 
                 DragHandler {
                     target: null
@@ -279,215 +278,211 @@ ApplicationWindow {
                 }
             }
 
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                spacing: 12
+
                 Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 1
-                    color: Appearance.colors.colOutlineVariant
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
+                    Layout.preferredWidth: 184
                     Layout.fillHeight: true
-                    spacing: 0
+                    radius: Appearance.rounding.large
+                    color: Appearance.colors.colSurfaceContainer
 
-                    Rectangle {
-                        Layout.preferredWidth: 172
-                        Layout.fillHeight: true
-                        color: Appearance.colors.colLayer1
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 12
+                        spacing: 5
 
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 10
-                            anchors.rightMargin: 10
-                            anchors.topMargin: 14
-                            anchors.bottomMargin: 14
-                            spacing: 4
+                        Text {
+                            Layout.leftMargin: 12
+                            Layout.topMargin: 4
+                            Layout.bottomMargin: 6
+                            text: "位置"
+                            color: Appearance.colors.colOnSurface
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 15
+                            font.weight: Font.DemiBold
+                        }
+
+                        LocationButton { label: "Home"; iconName: "home"; path: root.homeDir }
+                        LocationButton { label: "Desktop"; iconName: "desktop_windows"; path: root.desktopDir; visible: path !== "" }
+                        LocationButton { label: "Documents"; iconName: "description"; path: root.documentsDir; visible: path !== "" }
+                        LocationButton { label: "Pictures"; iconName: "image"; path: root.picturesDir; visible: path !== "" }
+                        LocationButton { label: "Downloads"; iconName: "download"; path: root.downloadsDir; visible: path !== "" }
+
+                        Item { Layout.fillHeight: true }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: formatLabel.implicitHeight + 20
+                            radius: Appearance.rounding.normal
+                            color: Appearance.colors.colSurfaceContainerHigh
 
                             Text {
-                                Layout.leftMargin: 10
-                                Layout.bottomMargin: 5
-                                text: "位置"
+                                id: formatLabel
+
+                                anchors.fill: parent
+                                anchors.leftMargin: 12
+                                anchors.rightMargin: 12
+                                text: "JPG · PNG · WebP\nBMP · GIF"
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Sizes.fontFamily
-                                font.pixelSize: 12
-                                font.weight: Font.DemiBold
-                            }
-
-                            LocationButton { label: "Home"; iconName: "home"; path: root.homeDir }
-                            LocationButton { label: "Desktop"; iconName: "desktop_windows"; path: root.desktopDir; visible: path !== "" }
-                            LocationButton { label: "Documents"; iconName: "description"; path: root.documentsDir; visible: path !== "" }
-                            LocationButton { label: "Pictures"; iconName: "image"; path: root.picturesDir; visible: path !== "" }
-                            LocationButton { label: "Downloads"; iconName: "download"; path: root.downloadsDir; visible: path !== "" }
-
-                            Item { Layout.fillHeight: true }
-
-                            Text {
-                                Layout.fillWidth: true
-                                Layout.leftMargin: 10
-                                Layout.rightMargin: 10
-                                text: "支持 JPG、PNG、WebP、BMP、GIF"
-                                color: Appearance.colors.colSubtext
-                                font.family: Sizes.fontFamily
                                 font.pixelSize: 11
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
                                 wrapMode: Text.WordWrap
                             }
                         }
                     }
+                }
 
-                    ColumnLayout {
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 12
+
+                    Rectangle {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 0
+                        Layout.preferredHeight: 54
+                        radius: Appearance.rounding.full
+                        color: Appearance.colors.colSurfaceContainerHigh
 
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 58
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 7
+                            spacing: 8
 
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 14
-                                anchors.rightMargin: 14
-                                spacing: 8
-
-                                PickerToolButton {
-                                    iconName: "arrow_upward"
-                                    tooltipText: "上一级"
-                                    enabled: root.currentPath !== "/"
-                                    onClicked: root.navigateUp()
-                                }
-
-                                Rectangle {
-                                    Layout.fillWidth: true
-                                    Layout.preferredHeight: 36
-                                    radius: 8
-                                    color: Appearance.colors.colLayer2
-                                    border.width: 1
-                                    border.color: Appearance.colors.colOutlineVariant
-
-                                    Text {
-                                        anchors.fill: parent
-                                        anchors.leftMargin: 12
-                                        anchors.rightMargin: 12
-                                        text: root.currentPath
-                                        color: Appearance.colors.colOnSurface
-                                        font.family: Sizes.fontFamilyMono
-                                        font.pixelSize: 12
-                                        verticalAlignment: Text.AlignVCenter
-                                        elide: Text.ElideMiddle
-                                    }
-                                }
-
-                                PickerToolButton {
-                                    iconName: root.showHiddenFiles ? "visibility_off" : "visibility"
-                                    tooltipText: root.showHiddenFiles ? "隐藏隐藏文件" : "显示隐藏文件"
-                                    active: root.showHiddenFiles
-                                    onClicked: root.showHiddenFiles = !root.showHiddenFiles
-                                }
+                            PickerToolButton {
+                                iconName: "arrow_upward"
+                                tooltipText: "上一级"
+                                enabled: root.currentPath !== "/"
+                                onClicked: root.navigateUp()
                             }
-                        }
 
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 1
-                            color: Appearance.colors.colOutlineVariant
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            clip: true
-
-                            ColumnLayout {
-                                anchors.centerIn: parent
-                                spacing: 8
-                                visible: folderModel.count === 0
-
-                                MaterialSymbol {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: "scan_delete"
-                                    iconSize: 52
-                                    color: Appearance.colors.colOutline
-                                }
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                radius: Appearance.rounding.full
+                                color: Appearance.colors.colSurfaceContainerHighest
 
                                 Text {
-                                    text: "当前文件夹没有可选择的图片"
-                                    color: Appearance.colors.colSubtext
-                                    font.family: Sizes.fontFamily
-                                    font.pixelSize: 14
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 14
+                                    anchors.rightMargin: 14
+                                    text: root.currentPath
+                                    color: Appearance.colors.colOnSurface
+                                    font.family: Sizes.fontFamilyMono
+                                    font.pixelSize: 12
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideMiddle
                                 }
                             }
 
-                            StyledGridView {
-                                id: fileGrid
+                            PickerToolButton {
+                                iconName: root.showHiddenFiles ? "visibility_off" : "visibility"
+                                tooltipText: root.showHiddenFiles ? "隐藏隐藏文件" : "显示隐藏文件"
+                                active: root.showHiddenFiles
+                                onClicked: root.showHiddenFiles = !root.showHiddenFiles
+                            }
+                        }
+                    }
 
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                clip: true
-                                cellWidth: width > 0 ? width / Math.max(1, Math.floor(width / 146)) : 146
-                                cellHeight: 142
-                                model: folderModel
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        radius: Appearance.rounding.large
+                        color: Appearance.colors.colSurfaceContainer
+                        clip: true
 
-                                delegate: Item {
-                                    id: fileItem
+                        ColumnLayout {
+                            anchors.centerIn: parent
+                            spacing: 8
+                            visible: folderModel.count === 0
 
-                                    required property int index
-                                    required property string fileName
-                                    required property string filePath
-                                    required property bool fileIsDir
+                            MaterialSymbol {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "scan_delete"
+                                iconSize: 52
+                                color: Appearance.colors.colOutline
+                            }
 
-                                    property bool appeared: false
-                                    readonly property bool selected: root.selectedPath === filePath
-                                    readonly property real initialX: ((index * 37) % 3 - 1) * 24
-                                    readonly property real initialY: ((index * 53) % 5 - 2) * 10
+                            Text {
+                                text: "当前文件夹没有可选择的图片"
+                                color: Appearance.colors.colSubtext
+                                font.family: Sizes.fontFamily
+                                font.pixelSize: 14
+                            }
+                        }
 
-                                    width: fileGrid.cellWidth - 8
-                                    height: fileGrid.cellHeight - 8
-                                    opacity: appeared ? 1 : 0
-                                    scale: appeared ? 1 : 0.76
-                                    rotation: appeared ? 0 : ((index % 3) - 1) * 3
-                                    transform: Translate {
-                                        x: fileItem.appeared ? 0 : fileItem.initialX
-                                        y: fileItem.appeared ? 0 : fileItem.initialY
+                        StyledGridView {
+                            id: fileGrid
+
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            clip: true
+                            cellWidth: width > 0 ? width / Math.max(1, Math.floor(width / 146)) : 146
+                            cellHeight: 142
+                            model: folderModel
+
+                            delegate: MaterialRippleButton {
+                                id: fileItem
+
+                                required property int index
+                                required property string fileName
+                                required property string filePath
+                                required property bool fileIsDir
+
+                                property bool appeared: false
+                                readonly property bool selected: root.selectedPath === filePath
+                                readonly property real initialX: ((index * 37) % 3 - 1) * 24
+                                readonly property real initialY: ((index * 53) % 5 - 2) * 10
+
+                                width: fileGrid.cellWidth - 8
+                                height: fileGrid.cellHeight - 8
+                                padding: 0
+                                opacity: appeared ? 1 : 0
+                                scale: appeared ? 1 : 0.76
+                                rotation: appeared ? 0 : ((index % 3) - 1) * 3
+                                toggled: selected
+                                buttonRadius: Appearance.rounding.large
+                                buttonRadiusPressed: Appearance.rounding.normal
+                                colBackground: "transparent"
+                                colBackgroundHover: Appearance.colors.colLayer3Hover
+                                colBackgroundToggled: Appearance.colors.colSecondaryContainer
+                                colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
+                                colRipple: Appearance.colors.colLayer3Active
+                                colRippleToggled: Appearance.colors.colSecondaryContainerActive
+                                releaseAction: () => root.selectEntry(filePath, fileName, fileIsDir)
+                                doubleClickAction: () => root.openEntry(filePath, fileIsDir)
+                                transform: Translate {
+                                    x: fileItem.appeared ? 0 : fileItem.initialX
+                                    y: fileItem.appeared ? 0 : fileItem.initialY
+                                }
+
+                                Behavior on opacity { NumberAnimation { duration: 190 } }
+                                Behavior on scale {
+                                    NumberAnimation {
+                                        duration: Appearance.animation.expressiveDefaultSpatial.duration
+                                        easing.type: Appearance.animation.expressiveDefaultSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
-
-                                    Behavior on opacity { NumberAnimation { duration: 190 } }
-                                    Behavior on scale {
-                                        NumberAnimation {
-                                            duration: Appearance.animation.expressiveDefaultSpatial.duration
-                                            easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                                            easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
-                                        }
+                                }
+                                Behavior on rotation {
+                                    NumberAnimation {
+                                        duration: Appearance.animation.expressiveDefaultSpatial.duration
+                                        easing.type: Appearance.animation.expressiveDefaultSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
-                                    Behavior on rotation {
-                                        NumberAnimation {
-                                            duration: Appearance.animation.expressiveDefaultSpatial.duration
-                                            easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                                            easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
-                                        }
-                                    }
+                                }
 
-                                    Timer {
-                                        interval: Math.min(260, fileItem.index * 18) + ((fileItem.index * 29) % 5) * 8
-                                        running: true
-                                        onTriggered: fileItem.appeared = true
-                                    }
+                                Timer {
+                                    interval: Math.min(260, fileItem.index * 18) + ((fileItem.index * 29) % 5) * 8
+                                    running: true
+                                    onTriggered: fileItem.appeared = true
+                                }
 
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        radius: 8
-                                        color: fileItem.selected
-                                            ? Appearance.colors.colSecondaryContainer
-                                            : fileMouse.pressed
-                                              ? Appearance.colors.colLayer3Active
-                                              : fileMouse.containsMouse
-                                                ? Appearance.colors.colLayer3Hover
-                                                : "transparent"
-                                        border.width: fileItem.selected ? 1 : 0
-                                        border.color: Appearance.colors.colPrimary
-
-                                        Behavior on color { ColorAnimation { duration: 140 } }
-                                    }
-
+                                contentItem: Item {
                                     Item {
                                         anchors.left: parent.left
                                         anchors.right: parent.right
@@ -510,7 +505,7 @@ ApplicationWindow {
                                             id: previewMask
 
                                             anchors.fill: parent
-                                            radius: 8
+                                            radius: Appearance.rounding.normal
                                             color: "black"
                                             visible: false
                                             layer.enabled: true
@@ -528,8 +523,8 @@ ApplicationWindow {
 
                                         Rectangle {
                                             anchors.fill: parent
-                                            radius: 8
-                                            color: Appearance.colors.colLayer2
+                                            radius: Appearance.rounding.normal
+                                            color: Appearance.colors.colSurfaceContainerHighest
                                             visible: fileItem.fileIsDir || previewImage.status !== Image.Ready
 
                                             MaterialSymbol {
@@ -547,16 +542,16 @@ ApplicationWindow {
                                             anchors.right: parent.right
                                             anchors.top: parent.top
                                             anchors.margins: 6
-                                            width: 25
-                                            height: 25
-                                            radius: 13
+                                            width: 27
+                                            height: 27
+                                            radius: Appearance.rounding.full
                                             visible: fileItem.selected
                                             color: Appearance.colors.colPrimary
 
                                             MaterialSymbol {
                                                 anchors.centerIn: parent
                                                 text: "check"
-                                                iconSize: 16
+                                                iconSize: 17
                                                 color: Appearance.colors.colOnPrimary
                                             }
                                         }
@@ -579,105 +574,99 @@ ApplicationWindow {
                                         horizontalAlignment: Text.AlignHCenter
                                         elide: Text.ElideMiddle
                                     }
-
-                                    MouseArea {
-                                        id: fileMouse
-
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: root.selectEntry(fileItem.filePath, fileItem.fileName, fileItem.fileIsDir)
-                                        onDoubleClicked: root.openEntry(fileItem.filePath, fileItem.fileIsDir)
-                                    }
-                                }
-                            }
-                        }
-
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 1
-                            color: Appearance.colors.colOutlineVariant
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 64
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 16
-                                anchors.rightMargin: 16
-                                spacing: 10
-
-                                MaterialSymbol {
-                                    Layout.preferredWidth: 22
-                                    Layout.preferredHeight: 22
-                                    text: root.selectedIsDir ? "folder" : root.selectionValid ? "image" : "info"
-                                    iconSize: 20
-                                    color: root.selectionValid
-                                        ? Appearance.colors.colPrimary
-                                        : Appearance.colors.colOnSurfaceVariant
-                                }
-
-                                Text {
-                                    Layout.fillWidth: true
-                                    text: root.selectedPath === ""
-                                        ? "选择一张图片"
-                                        : root.selectedIsDir
-                                          ? "双击进入 " + root.selectedName
-                                          : root.selectedName
-                                    color: Appearance.colors.colOnSurfaceVariant
-                                    font.family: Sizes.fontFamily
-                                    font.pixelSize: 13
-                                    elide: Text.ElideMiddle
-                                }
-
-                                Button {
-                                    text: "取消"
-                                    flat: true
-                                    font.family: Sizes.fontFamily
-                                    onClicked: root.dismiss()
-                                }
-
-                                Button {
-                                    id: acceptButton
-
-                                    text: "选择"
-                                    enabled: root.selectionValid
-                                    highlighted: true
-                                    font.family: Sizes.fontFamily
-                                    Material.background: Appearance.colors.colPrimary
-                                    Material.foreground: Appearance.colors.colOnPrimary
-                                    onClicked: root.acceptSelection()
                                 }
                             }
                         }
                     }
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 64
+                        radius: Appearance.rounding.large
+                        color: Appearance.colors.colSurfaceContainerHigh
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 10
+
+                            Rectangle {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                radius: Appearance.rounding.full
+                                color: Appearance.colors.colSurfaceContainerHighest
+
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 13
+                                    anchors.rightMargin: 13
+                                    spacing: 8
+
+                                    MaterialSymbol {
+                                        Layout.preferredWidth: 22
+                                        Layout.preferredHeight: 22
+                                        text: root.selectedIsDir ? "folder" : root.selectionValid ? "image" : "info"
+                                        iconSize: 20
+                                        color: root.selectionValid
+                                            ? Appearance.colors.colPrimary
+                                            : Appearance.colors.colOnSurfaceVariant
+                                    }
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: root.selectedPath === ""
+                                            ? "选择一张图片"
+                                            : root.selectedIsDir
+                                              ? "双击进入 " + root.selectedName
+                                              : root.selectedName
+                                        color: Appearance.colors.colOnSurfaceVariant
+                                        font.family: Sizes.fontFamily
+                                        font.pixelSize: 13
+                                        elide: Text.ElideMiddle
+                                    }
+                                }
+                            }
+
+                            PickerActionButton {
+                                label: "取消"
+                                iconName: "close"
+                                onClicked: root.dismiss()
+                            }
+
+                            PickerActionButton {
+                                label: "选择"
+                                iconName: "check"
+                                primary: true
+                                enabled: root.selectionValid
+                                onClicked: root.acceptSelection()
+                            }
+                        }
+                    }
                 }
+            }
         }
     }
 
-    component PickerToolButton: ToolButton {
+    component PickerToolButton: MaterialRippleButton {
         id: toolButton
 
         property string iconName: ""
         property string tooltipText: ""
         property bool active: false
 
-        implicitWidth: 36
-        implicitHeight: 36
+        implicitWidth: 40
+        implicitHeight: 40
         padding: 0
-        opacity: enabled ? 1 : 0.35
-        background: Rectangle {
-            radius: 8
-            color: toolButton.active
-                ? Appearance.colors.colSecondaryContainer
-                : toolButton.down
-                  ? Appearance.colors.colLayer3Active
-                  : toolButton.hovered
-                    ? Appearance.colors.colLayer3Hover
-                    : "transparent"
-        }
+        toggled: active
+        buttonRadius: Appearance.rounding.full
+        buttonRadiusPressed: Appearance.rounding.normal
+        colBackground: "transparent"
+        colBackgroundHover: Appearance.colors.colLayer3Hover
+        colBackgroundToggled: Appearance.colors.colSecondaryContainer
+        colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
+        colRipple: Appearance.colors.colLayer3Active
+        colRippleToggled: Appearance.colors.colSecondaryContainerActive
+
         contentItem: MaterialSymbol {
             text: toolButton.iconName
             iconSize: 20
@@ -686,13 +675,14 @@ ApplicationWindow {
                 ? Appearance.colors.colOnSecondaryContainer
                 : Appearance.colors.colOnSurface
         }
+
         StyledToolTip {
-            extraVisibleCondition: toolButton.hovered && toolButton.tooltipText !== ""
+            extraVisibleCondition: toolButton.pointerHovered && toolButton.tooltipText !== ""
             text: toolButton.tooltipText
         }
     }
 
-    component LocationButton: Item {
+    component LocationButton: MaterialRippleButton {
         id: locationButton
 
         required property string label
@@ -701,25 +691,23 @@ ApplicationWindow {
         readonly property bool active: root.currentPath === path
 
         Layout.fillWidth: true
-        Layout.preferredHeight: 42
+        Layout.preferredHeight: 44
+        padding: 0
+        toggled: active
+        buttonRadius: Appearance.rounding.full
+        buttonRadiusPressed: Appearance.rounding.normal
+        colBackground: "transparent"
+        colBackgroundHover: Appearance.colors.colLayer2Hover
+        colBackgroundToggled: Appearance.colors.colSecondaryContainer
+        colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
+        colRipple: Appearance.colors.colLayer2Active
+        colRippleToggled: Appearance.colors.colSecondaryContainerActive
+        onClicked: root.navigateTo(locationButton.path)
 
-        Rectangle {
-            anchors.fill: parent
-            radius: 8
-            color: locationButton.active
-                ? Appearance.colors.colSecondaryContainer
-                : locationMouse.pressed
-                  ? Appearance.colors.colLayer2Active
-                  : locationMouse.containsMouse
-                    ? Appearance.colors.colLayer2Hover
-                    : "transparent"
-        }
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.leftMargin: 12
-            anchors.rightMargin: 10
+        contentItem: RowLayout {
             spacing: 10
+
+            Item { Layout.preferredWidth: 2 }
 
             MaterialSymbol {
                 Layout.preferredWidth: 22
@@ -743,15 +731,52 @@ ApplicationWindow {
                 font.weight: locationButton.active ? Font.DemiBold : Font.Normal
                 elide: Text.ElideRight
             }
+
+            Item { Layout.preferredWidth: 4 }
         }
+    }
 
-        MouseArea {
-            id: locationMouse
+    component PickerActionButton: MaterialRippleButton {
+        id: actionButton
 
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: root.navigateTo(locationButton.path)
+        required property string label
+        property string iconName: ""
+        property bool primary: false
+
+        implicitWidth: Math.max(92, actionContent.implicitWidth + 30)
+        implicitHeight: 44
+        padding: 0
+        buttonRadius: Appearance.rounding.full
+        buttonRadiusPressed: Appearance.rounding.normal
+        colBackground: primary ? Appearance.colors.colPrimary : Appearance.colors.colSurfaceContainerHighest
+        colBackgroundHover: primary ? Appearance.colors.colPrimaryHover : Appearance.colors.colSurfaceContainerHighestHover
+        colRipple: primary ? Appearance.colors.colPrimaryActive : Appearance.colors.colSurfaceContainerHighestActive
+
+        contentItem: RowLayout {
+            id: actionContent
+
+            spacing: 7
+
+            MaterialSymbol {
+                Layout.preferredWidth: actionButton.iconName === "" ? 0 : 19
+                Layout.preferredHeight: 19
+                visible: actionButton.iconName !== ""
+                text: actionButton.iconName
+                iconSize: 18
+                color: actionButton.primary
+                    ? Appearance.colors.colOnPrimary
+                    : Appearance.colors.colOnSurface
+            }
+
+            Text {
+                text: actionButton.label
+                color: actionButton.primary
+                    ? Appearance.colors.colOnPrimary
+                    : Appearance.colors.colOnSurface
+                font.family: Sizes.fontFamily
+                font.pixelSize: 13
+                font.weight: Font.DemiBold
+            }
         }
     }
 }

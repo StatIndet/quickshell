@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Effects
+import Qt5Compat.GraphicalEffects
 import M3Shapes
 import Clavis.Sysmon 1.0
 import qs.Common
@@ -44,8 +44,8 @@ Rectangle {
     Item {
         id: avatarContainer
 
-        anchors.left: parent.left
-        anchors.leftMargin: 34
+        anchors.left: distroBadge.right
+        anchors.leftMargin: -24
         anchors.verticalCenter: parent.verticalCenter
         width: 126
         height: 126
@@ -57,94 +57,101 @@ Rectangle {
             implicitSize: parent.height
             shape: MaterialShape.Pill
             color: Appearance.colors.colLayer4
-            layer.enabled: true
-        }
-
-        Image {
-            id: fallbackAvatar
-
-            anchors.fill: parent
-            source: Paths.fileUrl(Paths.defaultAvatar)
-            sourceSize: Qt.size(252, 252)
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            visible: false
-        }
-
-        Image {
-            id: profileAvatar
-
-            anchors.fill: parent
-            source: AvatarService.avatarUrl
-            sourceSize: Qt.size(252, 252)
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            cache: false
-            visible: false
-        }
-
-        MultiEffect {
-            anchors.fill: parent
-            source: profileAvatar.status === Image.Ready ? profileAvatar : fallbackAvatar
-            maskEnabled: true
-            maskSource: avatarShape
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1
-        }
-
-        MaterialSymbol {
-            anchors.centerIn: parent
-            visible: profileAvatar.status !== Image.Ready && fallbackAvatar.status !== Image.Ready
-            text: "person_add"
-            iconSize: 40
-            fill: 1
-            color: Appearance.colors.colOnSurfaceVariant
         }
 
         MaterialShape {
+            id: avatarMask
+
             anchors.centerIn: parent
             implicitSize: parent.height
             shape: MaterialShape.Pill
-            color: Appearance.applyAlpha(Appearance.colors.colScrim, 0.42)
-            opacity: avatarMouse.containsMouse ? 1 : 0
-
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.animation.expressiveEffects.duration
-                    easing.type: Appearance.animation.expressiveEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
-                }
-            }
+            color: "white"
+            visible: false
+            layer.enabled: true
         }
 
-        MaterialShape {
-            anchors.centerIn: parent
-            implicitSize: parent.height * 0.52
-            shape: MaterialShape.Diamond
-            color: Appearance.colors.colPrimary
-            opacity: avatarMouse.containsMouse ? 1 : 0
-            scale: avatarMouse.pressed ? 0.88 : avatarMouse.containsMouse ? 1 : 0.7
+        Item {
+            id: avatarContent
 
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Appearance.animation.expressiveEffects.duration
-                }
+            anchors.fill: parent
+            layer.enabled: true
+            layer.effect: OpacityMask {
+                maskSource: avatarMask
             }
 
-            Behavior on scale {
-                NumberAnimation {
-                    duration: Appearance.animation.elementMoveFast.duration
-                    easing.type: Appearance.animation.elementMoveFast.type
-                    easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
-                }
+            Image {
+                id: fallbackAvatar
+
+                anchors.fill: parent
+                source: Paths.fileUrl(Paths.defaultAvatar)
+                sourceSize: Qt.size(252, 252)
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: true
+            }
+
+            Image {
+                id: profileAvatar
+
+                anchors.fill: parent
+                source: AvatarService.avatarUrl
+                sourceSize: Qt.size(252, 252)
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: true
+                cache: false
             }
 
             MaterialSymbol {
                 anchors.centerIn: parent
-                text: "person_edit"
-                iconSize: 25
+                visible: profileAvatar.status !== Image.Ready && fallbackAvatar.status !== Image.Ready
+                text: "person_add"
+                iconSize: 40
                 fill: 1
-                color: Appearance.colors.colOnPrimary
+                color: Appearance.colors.colOnSurfaceVariant
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                color: Appearance.applyAlpha(Appearance.colors.colScrim, 0.42)
+                opacity: avatarMouse.containsMouse ? 1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Appearance.animation.expressiveEffects.duration
+                        easing.type: Appearance.animation.expressiveEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                    }
+                }
+            }
+
+            MaterialShape {
+                anchors.centerIn: parent
+                implicitSize: parent.height * 0.52
+                shape: MaterialShape.Diamond
+                color: Appearance.colors.colPrimary
+                opacity: avatarMouse.containsMouse ? 1 : 0
+                scale: avatarMouse.pressed ? 0.88 : avatarMouse.containsMouse ? 1 : 0.7
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Appearance.animation.expressiveEffects.duration
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.animation.elementMoveFast.duration
+                        easing.type: Appearance.animation.elementMoveFast.type
+                        easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
+                    }
+                }
+
+                MaterialSymbol {
+                    anchors.centerIn: parent
+                    text: "person_edit"
+                    iconSize: 25
+                    fill: 1
+                    color: Appearance.colors.colOnPrimary
+                }
             }
         }
 
@@ -154,7 +161,9 @@ Rectangle {
             anchors.fill: parent
             containmentMask: QtObject {
                 function contains(pt: point): bool {
-                    return avatarShape.contains(pt);
+                    return avatarShape.contains(pt)
+                        && !distroBadge.contains(avatarMouse.mapToItem(distroBadge, pt))
+                        && !uptimeShape.contains(avatarMouse.mapToItem(uptimeShape, pt));
                 }
             }
             hoverEnabled: true
@@ -166,9 +175,9 @@ Rectangle {
     MaterialShape {
         id: distroBadge
 
-        x: 10
-        y: 10
-        implicitSize: 52
+        x: 16
+        y: 16
+        implicitSize: 46
         shape: MaterialShape.Gem
         color: Appearance.colors.colPrimaryContainer
 
@@ -187,8 +196,8 @@ Rectangle {
 
         anchors.left: avatarContainer.right
         anchors.bottom: parent.bottom
-        anchors.leftMargin: -23
-        anchors.bottomMargin: 1
+        anchors.leftMargin: -32
+        anchors.bottomMargin: 4
         implicitSize: 46
         shape: MaterialShape.ClamShell
         color: Appearance.colors.colTertiaryContainer

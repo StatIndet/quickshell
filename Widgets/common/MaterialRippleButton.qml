@@ -16,6 +16,7 @@ Button {
     property bool rippleEnabled: true
     property var downAction
     property var releaseAction
+    property var doubleClickAction
     property var altAction
     property var middleClickAction
 
@@ -165,6 +166,11 @@ Button {
 
             if (root.rippleEnabled)
                 rippleFadeAnim.restart();
+        }
+
+        onDoubleClicked: event => {
+            if (event.button === Qt.LeftButton && root.doubleClickAction)
+                root.doubleClickAction(event);
         }
 
         onCanceled: {
