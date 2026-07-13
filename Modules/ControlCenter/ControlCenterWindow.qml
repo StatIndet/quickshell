@@ -29,7 +29,8 @@ ApplicationWindow {
     readonly property var pages: [
         ({ "title": "通用", "icon": "settings" }),
         ({ "title": "壁纸", "icon": "wallpaper" }),
-        ({ "title": "主题", "icon": "palette" })
+        ({ "title": "主题", "icon": "palette" }),
+        ({ "title": "钥石", "icon": "pill" })
     ]
 
     function pageComponent(index) {
@@ -40,6 +41,8 @@ ApplicationWindow {
             return wallpaperPage;
         case 2:
             return themePage;
+        case 3:
+            return keystonePage;
         default:
             return generalPage;
         }
@@ -223,5 +226,10 @@ ApplicationWindow {
     Component {
         id: themePage
         ThemePage {}
+    }
+
+    Component {
+        id: keystonePage
+        KeystonePage {}
     }
 }
