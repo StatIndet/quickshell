@@ -16,10 +16,11 @@ import qs.Modules.Keystone.LyricsContent
 import qs.Modules.Keystone.Hub
 import qs.Modules.Keystone.Tools
 import qs.Modules.Keystone.audio 
-import qs.Modules.FilePicker
 
 Variants {
     id: styleSurface
+
+    signal avatarEditRequested(var screen)
 
     property bool detached: false
     property int topMargin: 0
@@ -663,11 +664,7 @@ Variants {
                         onCloseRequested: root.showHub = false
                         onAvatarEditRequested: {
                             root.showHub = false
-                            Qt.callLater(() => avatarFilePicker.openAt(
-                                avatarFilePicker.picturesDir !== ""
-                                    ? avatarFilePicker.picturesDir
-                                    : Paths.homeDir
-                            ))
+                            styleSurface.avatarEditRequested(keystoneWindow.screen)
                         }
 
                         opacity: root.isHubMode ? 1 : 0
@@ -736,15 +733,6 @@ Variants {
                         mouse.accepted = true;
                     }
                 }
-            }
-
-            FilePickerWindow {
-                id: avatarFilePicker
-
-                targetScreen: keystoneWindow.screen
-                title: "选择用户头像"
-                description: "图片将复制到 ~/.face，并同步用于 Dashboard 与锁屏"
-                onAccepted: path => AvatarService.setAvatar(path)
             }
 
             Canvas {

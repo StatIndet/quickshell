@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Layouts
+import M3Shapes
 import Clavis.Sysmon 1.0
 import qs.Common
 import qs.Components
@@ -45,17 +45,27 @@ Rectangle {
         id: avatarContainer
 
         anchors.left: parent.left
-        anchors.leftMargin: 42
+        anchors.leftMargin: 34
         anchors.verticalCenter: parent.verticalCenter
-        width: 118
-        height: 118
+        width: 126
+        height: 126
+
+        MaterialShape {
+            id: avatarShape
+
+            anchors.centerIn: parent
+            implicitSize: parent.height
+            shape: MaterialShape.Pill
+            color: Appearance.colors.colLayer4
+            layer.enabled: true
+        }
 
         Image {
             id: fallbackAvatar
 
             anchors.fill: parent
             source: Paths.fileUrl(Paths.defaultAvatar)
-            sourceSize: Qt.size(236, 236)
+            sourceSize: Qt.size(252, 252)
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             visible: false
@@ -66,75 +76,75 @@ Rectangle {
 
             anchors.fill: parent
             source: AvatarService.avatarUrl
-            sourceSize: Qt.size(236, 236)
+            sourceSize: Qt.size(252, 252)
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: false
             visible: false
         }
 
-        Rectangle {
-            id: avatarMask
-
-            anchors.fill: parent
-            radius: width / 2
-            color: "black"
-            visible: false
-            layer.enabled: true
-        }
-
         MultiEffect {
             anchors.fill: parent
             source: profileAvatar.status === Image.Ready ? profileAvatar : fallbackAvatar
             maskEnabled: true
-            maskSource: avatarMask
+            maskSource: avatarShape
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1
         }
 
-        Rectangle {
-            anchors.fill: parent
-            radius: width / 2
-            color: Appearance.applyAlpha(Appearance.colors.colScrim, avatarMouse.containsMouse ? 0.42 : 0)
+        MaterialSymbol {
+            anchors.centerIn: parent
+            visible: profileAvatar.status !== Image.Ready && fallbackAvatar.status !== Image.Ready
+            text: "person_add"
+            iconSize: 40
+            fill: 1
+            color: Appearance.colors.colOnSurfaceVariant
+        }
 
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.animation.elementMoveFast.duration
+        MaterialShape {
+            anchors.centerIn: parent
+            implicitSize: parent.height
+            shape: MaterialShape.Pill
+            color: Appearance.applyAlpha(Appearance.colors.colScrim, 0.42)
+            opacity: avatarMouse.containsMouse ? 1 : 0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Appearance.animation.expressiveEffects.duration
+                    easing.type: Appearance.animation.expressiveEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                }
+            }
+        }
+
+        MaterialShape {
+            anchors.centerIn: parent
+            implicitSize: parent.height * 0.52
+            shape: MaterialShape.Diamond
+            color: Appearance.colors.colPrimary
+            opacity: avatarMouse.containsMouse ? 1 : 0
+            scale: avatarMouse.pressed ? 0.88 : avatarMouse.containsMouse ? 1 : 0.7
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Appearance.animation.expressiveEffects.duration
                 }
             }
 
-            Rectangle {
+            Behavior on scale {
+                NumberAnimation {
+                    duration: Appearance.animation.elementMoveFast.duration
+                    easing.type: Appearance.animation.elementMoveFast.type
+                    easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
+                }
+            }
+
+            MaterialSymbol {
                 anchors.centerIn: parent
-                width: 48
-                height: 48
-                radius: 12
-                rotation: 45
-                scale: avatarMouse.pressed ? 0.84 : avatarMouse.containsMouse ? 1 : 0.72
-                opacity: avatarMouse.containsMouse ? 1 : 0
-                color: Appearance.colors.colPrimary
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.animation.elementMoveFast.duration
-                        easing.type: Appearance.animation.elementMoveFast.type
-                        easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
-                    }
-                }
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: Appearance.animation.expressiveEffects.duration
-                    }
-                }
-
-                MaterialSymbol {
-                    anchors.centerIn: parent
-                    rotation: -45
-                    text: "person_edit"
-                    iconSize: 24
-                    fill: 1
-                    color: Appearance.colors.colOnPrimary
-                }
+                text: "person_edit"
+                iconSize: 25
+                fill: 1
+                color: Appearance.colors.colOnPrimary
             }
         }
 
@@ -142,28 +152,28 @@ Rectangle {
             id: avatarMouse
 
             anchors.fill: parent
+            containmentMask: QtObject {
+                function contains(pt: point): bool {
+                    return avatarShape.contains(pt);
+                }
+            }
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: root.avatarEditRequested()
         }
     }
 
-    Rectangle {
+    MaterialShape {
         id: distroBadge
 
-        anchors.left: avatarContainer.left
-        anchors.top: avatarContainer.top
-        anchors.leftMargin: -18
-        anchors.topMargin: -8
-        width: 50
-        height: 50
-        radius: 13
-        rotation: 45
+        x: 10
+        y: 10
+        implicitSize: 52
+        shape: MaterialShape.Gem
         color: Appearance.colors.colPrimaryContainer
 
         Text {
             anchors.centerIn: parent
-            rotation: -45
             text: root.distroLogo()
             color: Appearance.colors.colOnPrimaryContainer
             font.family: Sizes.fontFamilyMono
@@ -172,14 +182,15 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        anchors.right: avatarContainer.right
-        anchors.bottom: avatarContainer.bottom
-        anchors.rightMargin: -8
-        anchors.bottomMargin: -5
-        width: 42
-        height: 42
-        radius: 21
+    MaterialShape {
+        id: uptimeShape
+
+        anchors.left: avatarContainer.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: -23
+        anchors.bottomMargin: 1
+        implicitSize: 46
+        shape: MaterialShape.ClamShell
         color: Appearance.colors.colTertiaryContainer
 
         MaterialSymbol {
@@ -191,90 +202,113 @@ Rectangle {
         }
     }
 
-    ColumnLayout {
+    Rectangle {
+        id: bubble1
+
         anchors.left: avatarContainer.right
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 24
-        anchors.rightMargin: 18
-        anchors.topMargin: 18
-        anchors.bottomMargin: 17
-        spacing: 5
+        anchors.top: bubble2.bottom
+        anchors.leftMargin: 5
+        anchors.topMargin: -3
+        width: 10
+        height: 10
+        radius: 5
+        color: Appearance.colors.colSecondaryContainer
+    }
 
-        Text {
-            Layout.fillWidth: true
-            text: root.systemUser + " @ " + root.hostName
-            color: Appearance.colors.colOnSurface
-            font.family: Sizes.fontFamily
-            font.pixelSize: 16
-            font.weight: Font.DemiBold
-            elide: Text.ElideRight
-        }
+    Rectangle {
+        id: bubble2
 
-        Text {
-            Layout.fillWidth: true
-            text: root.distroName + " · " + root.chassis
-            color: Appearance.colors.colOnSurfaceVariant
-            font.family: Sizes.fontFamily
-            font.pixelSize: 12
-            elide: Text.ElideRight
-        }
+        anchors.left: bubble1.right
+        anchors.verticalCenter: wmContainer.bottom
+        anchors.leftMargin: 4
+        width: 15
+        height: 15
+        radius: 8
+        color: Appearance.colors.colSecondaryContainer
+    }
 
-        Rectangle {
-            Layout.preferredWidth: Math.min(wmRow.implicitWidth + 20, parent.width)
-            Layout.preferredHeight: 32
-            radius: 16
-            color: Appearance.colors.colSecondaryContainer
+    Rectangle {
+        id: wmContainer
 
-            Row {
-                id: wmRow
+        anchors.left: bubble2.left
+        anchors.leftMargin: -8
+        y: 12
+        width: Math.min(152, Math.max(94, wmRow.implicitWidth + 20))
+        height: 34
+        radius: 17
+        color: Appearance.colors.colSecondaryContainer
 
-                anchors.centerIn: parent
-                spacing: 6
+        Row {
+            id: wmRow
 
-                MaterialSymbol {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "select_window"
-                    iconSize: 18
-                    color: Appearance.colors.colOnSecondaryContainer
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: root.wmName
-                    color: Appearance.colors.colOnSecondaryContainer
-                    font.family: Sizes.fontFamily
-                    font.pixelSize: 12
-                    font.weight: Font.Medium
-                }
-            }
-        }
-
-        Item {
-            Layout.fillHeight: true
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 7
+            anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            spacing: 6
 
             MaterialSymbol {
-                Layout.preferredWidth: 20
-                Layout.preferredHeight: 20
-                text: "schedule"
+                anchors.verticalCenter: parent.verticalCenter
+                text: "select_window"
                 iconSize: 18
-                color: Appearance.colors.colTertiary
+                color: Appearance.colors.colOnSecondaryContainer
             }
 
             Text {
-                Layout.fillWidth: true
-                text: "up " + root.uptime
-                color: Appearance.colors.colOnSurfaceVariant
-                font.family: Sizes.fontFamilyMono
+                id: wmText
+
+                anchors.verticalCenter: parent.verticalCenter
+                width: Math.max(0, wmContainer.width - 44)
+                text: root.wmName + "..."
+                color: Appearance.colors.colOnSecondaryContainer
+                font.family: Sizes.fontFamily
                 font.pixelSize: 12
+                font.weight: Font.Medium
+                font.italic: true
                 elide: Text.ElideRight
             }
         }
+    }
+
+    Text {
+        id: userLabel
+
+        anchors.left: wmContainer.left
+        anchors.right: parent.right
+        anchors.top: wmContainer.bottom
+        anchors.leftMargin: 8
+        anchors.rightMargin: 16
+        anchors.topMargin: 10
+        text: root.systemUser + " @ " + root.hostName
+        color: Appearance.colors.colOnSurface
+        font.family: Sizes.fontFamily
+        font.pixelSize: 15
+        font.weight: Font.DemiBold
+        elide: Text.ElideRight
+    }
+
+    Text {
+        anchors.left: userLabel.left
+        anchors.right: parent.right
+        anchors.top: userLabel.bottom
+        anchors.rightMargin: 16
+        anchors.topMargin: 3
+        text: root.distroName + " · " + root.chassis
+        color: Appearance.colors.colOnSurfaceVariant
+        font.family: Sizes.fontFamily
+        font.pixelSize: 12
+        elide: Text.ElideRight
+    }
+
+    Text {
+        anchors.left: uptimeShape.right
+        anchors.right: parent.right
+        anchors.verticalCenter: uptimeShape.verticalCenter
+        anchors.leftMargin: 5
+        anchors.rightMargin: 16
+        text: "up " + root.uptime
+        color: Appearance.colors.colOnSurfaceVariant
+        font.family: Sizes.fontFamilyMono
+        font.pixelSize: 12
+        elide: Text.ElideRight
     }
 }

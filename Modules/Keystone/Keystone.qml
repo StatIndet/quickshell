@@ -1,6 +1,8 @@
 import QtQuick
 import Quickshell.Io
+import qs.Common
 import qs.Services
+import qs.Modules.FilePicker
 import qs.Modules.Keystone.Styles.Bangs
 import qs.Modules.Keystone.Styles.Pill
 
@@ -13,12 +15,29 @@ Item {
         return styleLoader.item[methodName]();
     }
 
+    function openAvatarPicker(screen) {
+        avatarFilePicker.targetScreen = screen;
+        Qt.callLater(() => avatarFilePicker.openAt(
+            avatarFilePicker.picturesDir !== ""
+                ? avatarFilePicker.picturesDir
+                : Paths.homeDir
+        ));
+    }
+
     Loader {
         id: styleLoader
 
         sourceComponent: PersonalizationConfig.keystoneStyle === "pill"
             ? pillStyle
             : bangsStyle
+    }
+
+    FilePickerWindow {
+        id: avatarFilePicker
+
+        title: "选择用户头像"
+        description: "图片将复制到 ~/.face，并同步用于 Dashboard 与锁屏"
+        onAccepted: path => AvatarService.setAvatar(path)
     }
 
     IpcHandler {
@@ -44,12 +63,16 @@ Item {
     Component {
         id: bangsStyle
 
-        Bangs {}
+        Bangs {
+            onAvatarEditRequested: screen => root.openAvatarPicker(screen)
+        }
     }
 
     Component {
         id: pillStyle
 
-        Pill {}
+        Pill {
+            onAvatarEditRequested: screen => root.openAvatarPicker(screen)
+        }
     }
 }

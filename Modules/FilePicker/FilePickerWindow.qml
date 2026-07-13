@@ -5,17 +5,16 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Effects
 import QtQuick.Layouts
+import QtQuick.Window
 import Quickshell
-import Quickshell.Wayland
 import qs.Common
 import qs.Components
 import qs.Widgets.common
 
-Item {
+ApplicationWindow {
     id: root
 
     property var targetScreen: null
-    property string title: "选择图片"
     property string description: "选择一张图片作为用户头像"
     property string startPath: picturesDir
     property var nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
@@ -24,21 +23,37 @@ Item {
     property string selectedName: ""
     property bool selectedIsDir: false
     property bool showHiddenFiles: false
-    property bool shouldBeVisible: false
 
     readonly property string homeDir: StandardPaths.writableLocation(StandardPaths.HomeLocation)
     readonly property string desktopDir: StandardPaths.writableLocation(StandardPaths.DesktopLocation)
     readonly property string documentsDir: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
     readonly property string picturesDir: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
     readonly property string downloadsDir: StandardPaths.writableLocation(StandardPaths.DownloadLocation)
-    readonly property real screenWidth: pickerWindow.screen ? pickerWindow.screen.width : 1920
-    readonly property real screenHeight: pickerWindow.screen ? pickerWindow.screen.height : 1080
-    readonly property real dialogWidth: Math.min(920, screenWidth - 32)
-    readonly property real dialogHeight: Math.min(600, screenHeight - 64)
     readonly property bool selectionValid: selectedPath !== "" && !selectedIsDir
 
     signal accepted(string path)
     signal rejected()
+
+    visible: false
+    title: "选择图片"
+    flags: Qt.Window | Qt.FramelessWindowHint
+    width: 920
+    height: 600
+    minimumWidth: 680
+    minimumHeight: 440
+    color: "transparent"
+    Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
+    Material.accent: Appearance.colors.colPrimary
+
+    onTargetScreenChanged: {
+        const mappedScreen = qtScreenFor(targetScreen);
+        if (mappedScreen)
+            screen = mappedScreen;
+    }
+    onClosing: event => {
+        event.accepted = false;
+        dismiss();
+    }
 
     function encodeFileUrl(path) {
         if (!path)
@@ -46,15 +61,36 @@ Item {
         return "file://" + path.split("/").map(segment => encodeURIComponent(segment)).join("/");
     }
 
+    function qtScreenFor(shellScreen) {
+        if (!shellScreen)
+            return null;
+        for (let i = 0; i < Application.screens.length; ++i) {
+            const candidate = Application.screens[i];
+            if (candidate.name === shellScreen.name)
+                return candidate;
+        }
+        return null;
+    }
+
     function openAt(path) {
         currentPath = path && path !== "" ? path : picturesDir;
         clearSelection();
-        shouldBeVisible = true;
-        Qt.callLater(() => dialogFocus.forceActiveFocus());
+        const mappedScreen = qtScreenFor(targetScreen);
+        if (mappedScreen)
+            screen = mappedScreen;
+        show();
+        raise();
+        requestActivate();
+        Qt.callLater(() => {
+            dialogFocus.forceActiveFocus();
+            fileGrid.forceActiveFocus();
+        });
     }
 
     function dismiss() {
-        shouldBeVisible = false;
+        if (!visible)
+            return;
+        visible = false;
         clearSelection();
         rejected();
     }
@@ -63,7 +99,7 @@ Item {
         if (!selectionValid)
             return;
         const path = selectedPath;
-        shouldBeVisible = false;
+        visible = false;
         clearSelection();
         accepted(path);
     }
@@ -118,97 +154,66 @@ Item {
         sortField: FolderListModel.Name
     }
 
-    PanelWindow {
-        id: pickerWindow
+    FocusScope {
+        id: dialogFocus
 
-        screen: root.targetScreen
-        visible: root.shouldBeVisible
-        color: "transparent"
-        exclusiveZone: 0
+        property real revealProgress: root.visible ? 1 : 0
 
-        anchors {
-            top: true
-            bottom: true
-            left: true
-            right: true
+        anchors.fill: parent
+        focus: root.visible
+        opacity: revealProgress
+        scale: 0.97 + revealProgress * 0.03
+
+        Behavior on revealProgress {
+            NumberAnimation {
+                duration: Appearance.animation.expressiveDefaultSpatial.duration
+                easing.type: Appearance.animation.expressiveDefaultSpatial.type
+                easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
+            }
         }
 
-        WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "clavis-image-file-picker"
-        WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        WlrLayershell.exclusionMode: ExclusionMode.Ignore
+        Keys.onEscapePressed: event => {
+            root.dismiss();
+            event.accepted = true;
+        }
+        Keys.onReturnPressed: event => {
+            root.acceptSelection();
+            event.accepted = root.selectionValid;
+        }
+        Keys.onEnterPressed: event => {
+            root.acceptSelection();
+            event.accepted = root.selectionValid;
+        }
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_Backspace) {
+                root.navigateUp();
+                event.accepted = true;
+            }
+        }
 
         Rectangle {
             anchors.fill: parent
-            color: Appearance.applyAlpha(Appearance.m3colors.m3scrim, 0.58)
-
-            MouseArea {
-                anchors.fill: parent
-                enabled: root.shouldBeVisible
-                onClicked: root.dismiss()
-            }
+            radius: 8
+            color: Appearance.m3colors.m3surfaceContainerLow
+            border.width: 1
+            border.color: Appearance.m3colors.m3outlineVariant
         }
 
-        FocusScope {
-            id: dialogFocus
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            z: -1
+            onPressed: event => event.accepted = true
+            onClicked: event => event.accepted = true
+        }
 
-            property real revealProgress: root.shouldBeVisible ? 1 : 0
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 0
 
-            anchors.centerIn: parent
-            width: root.dialogWidth
-            height: root.dialogHeight
-            focus: root.shouldBeVisible
-            opacity: revealProgress
-            scale: 0.94 + revealProgress * 0.06
+            Item {
+                id: titleBar
 
-            Behavior on revealProgress {
-                NumberAnimation {
-                    duration: Appearance.animation.expressiveDefaultSpatial.duration
-                    easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                    easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
-                }
-            }
-
-            Keys.onEscapePressed: event => {
-                root.dismiss();
-                event.accepted = true;
-            }
-            Keys.onReturnPressed: event => {
-                root.acceptSelection();
-                event.accepted = root.selectionValid;
-            }
-            Keys.onEnterPressed: event => {
-                root.acceptSelection();
-                event.accepted = root.selectionValid;
-            }
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_Backspace) {
-                    root.navigateUp();
-                    event.accepted = true;
-                }
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                radius: 8
-                color: Appearance.m3colors.m3surfaceContainerLow
-                border.width: 1
-                border.color: Appearance.m3colors.m3outlineVariant
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.AllButtons
-                z: -1
-                onPressed: event => event.accepted = true
-                onClicked: event => event.accepted = true
-            }
-
-            ColumnLayout {
-                anchors.fill: parent
-                spacing: 0
-
-                Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 74
 
@@ -263,7 +268,16 @@ Item {
                             onClicked: root.dismiss()
                         }
                     }
+
+                DragHandler {
+                    target: null
+                    acceptedButtons: Qt.LeftButton
+                    onActiveChanged: {
+                        if (active)
+                            root.startSystemMove();
+                    }
                 }
+            }
 
                 Rectangle {
                     Layout.fillWidth: true
@@ -640,7 +654,6 @@ Item {
                         }
                     }
                 }
-            }
         }
     }
 
