@@ -71,7 +71,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                ScheduleWidget {
+                HoleCardCarousel {
                     anchors.fill: parent
                 }
             }

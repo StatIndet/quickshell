@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import qs.Common 
@@ -71,7 +70,7 @@ Item {
     Item {
         x: root.timeW + root.gridSpacing; y: 0; width: parent.width - x; height: root.headerH; clip: true
         Row {
-            x: -scheduleScroll.contentItem.contentX; spacing: root.gridSpacing
+            x: -scheduleScroll.contentX; spacing: root.gridSpacing
             Repeater {
                 model: root.headers
                 Rectangle { width: root.cellW; height: root.headerH; color: "transparent"; Text { anchors.centerIn: parent; text: modelData; color: Appearance.colors.colOnSurfaceVariant; font.pixelSize: 11; font.bold: true; font.family: Sizes.fontFamily } }
@@ -82,7 +81,7 @@ Item {
     Item {
         x: 0; y: root.headerH + root.gridSpacing; width: root.timeW; height: parent.height - y; clip: true
         Column {
-            y: -scheduleScroll.contentItem.contentY; spacing: root.gridSpacing
+            y: -scheduleScroll.contentY; spacing: root.gridSpacing
             Repeater {
                 model: root.timeHeaders
                 Rectangle { width: root.timeW; height: root.cellH; color: "transparent"; Text { anchors.centerIn: parent; text: modelData.replace(" - ", "\n"); color: Appearance.colors.colOutline; font.pixelSize: 9; font.family: Sizes.fontFamily; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } }
@@ -90,13 +89,17 @@ Item {
         }
     }
 
-    ScrollView {
+    Flickable {
         id: scheduleScroll
         x: root.timeW + root.gridSpacing; y: root.headerH + root.gridSpacing
         width: parent.width - x; height: parent.height - y; clip: true
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff; ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+        contentWidth: scheduleGrid.implicitWidth
+        contentHeight: scheduleGrid.implicitHeight
+        interactive: false
+        boundsBehavior: Flickable.StopAtBounds
 
         GridLayout {
+            id: scheduleGrid
             width: implicitWidth; height: implicitHeight; columns: 7; rowSpacing: root.gridSpacing; columnSpacing: root.gridSpacing
             Repeater {
                 model: root.scheduleItems
@@ -121,16 +124,14 @@ Item {
     MouseArea {
         x: root.timeW + root.gridSpacing; y: root.headerH + root.gridSpacing
         width: parent.width - x; height: parent.height - y
-        // 【核心恢复】：重现仅接受右键交互，无缝绕开左键全局冲突
         acceptedButtons: Qt.RightButton; cursorShape: pressed ? Qt.ClosedHandCursor : Qt.ArrowCursor
         property real startX: 0; property real startY: 0; property real startContentX: 0; property real startContentY: 0
-        onPressed: (mouse) => { startX = mouse.x; startY = mouse.y; startContentX = scheduleScroll.contentItem.contentX; startContentY = scheduleScroll.contentItem.contentY }
+        onPressed: (mouse) => { startX = mouse.x; startY = mouse.y; startContentX = scheduleScroll.contentX; startContentY = scheduleScroll.contentY }
         onPositionChanged: (mouse) => {
             if (pressed) {
-                let flickable = scheduleScroll.contentItem;
                 let targetX = startContentX - (mouse.x - startX); let targetY = startContentY - (mouse.y - startY);
-                let maxX = Math.max(0, flickable.contentWidth - scheduleScroll.width); let maxY = Math.max(0, flickable.contentHeight - scheduleScroll.height);
-                flickable.contentX = Math.max(0, Math.min(targetX, maxX)); flickable.contentY = Math.max(0, Math.min(targetY, maxY));
+                let maxX = Math.max(0, scheduleScroll.contentWidth - scheduleScroll.width); let maxY = Math.max(0, scheduleScroll.contentHeight - scheduleScroll.height);
+                scheduleScroll.contentX = Math.max(0, Math.min(targetX, maxX)); scheduleScroll.contentY = Math.max(0, Math.min(targetY, maxY));
             }
         }
     }
