@@ -9,26 +9,20 @@ WidgetPanel {
     id: root
 
     property var screen: null
-    property bool compact: false
-    title: "快捷设置"
+    title: ""
     icon: "settings"
-    panelPadding: compact ? 12 : Appearance.spacing.panelPadding
-    sectionSpacing: compact ? 10 : 16
-    headerIconSize: compact ? 20 : 22
-    headerTitleSize: compact ? 16 : 18
-    headerTitleLeftMargin: compact ? 7 : 10
 
     property bool editMode: false
-    readonly property bool capturesWheel: compact && editMode
+    readonly property bool capturesWheel: editMode
     property int toggleColumns: 5
-    property real toggleSpacing: compact ? 4 : 6
-    property real togglePadding: compact ? 4 : 6
-    property real baseCellHeight: compact ? 44 : 56
-    property real contentSpacing: compact ? 8 : 14
-    property real editSectionSpacing: compact ? 8 : 12
-    property real headerButtonSize: compact ? 32 : 40
-    property real headerButtonSpacing: compact ? 4 : 5
-    property real headerButtonPadding: compact ? 4 : 5
+    property real toggleSpacing: 6
+    property real togglePadding: 6
+    property real baseCellHeight: 56
+    property real contentSpacing: 14
+    property real editSectionSpacing: 12
+    property real headerButtonSize: 40
+    property real headerButtonSpacing: 5
+    property real headerButtonPadding: 5
     readonly property var toggleRows: rowsForToggles(QuickToggleConfig.toggles)
     readonly property var unusedToggleRows: rowsForToggles(QuickToggleConfig.unusedToggleTypes.map(type => ({ "type": type, "size": 1 })))
 
@@ -248,7 +242,6 @@ WidgetPanel {
 
         QuickSliders {
             screen: root.screen
-            compact: root.compact
             Layout.fillWidth: true
         }
 
@@ -387,7 +380,7 @@ WidgetPanel {
                                     cellSpacing: root.toggleSpacing
                                     cellSize: 1
                                     opacity: 0.6
-                                    tooltipText: root.titleForType(toggleType) + "\n左键添加到快捷设置，右键添加为长条"
+                                    tooltipText: root.titleForType(toggleType) + "\n左键添加，右键添加为长条"
 
                                     onTriggered: QuickToggleConfig.toggleEnabled(toggleType)
                                     onAltTriggered: {

@@ -1,6 +1,5 @@
 import QtQuick
 import qs.Common
-import qs.Modules.QuickSettings
 
 Item {
     id: root
@@ -148,12 +147,11 @@ Item {
         x: root.cardX(3)
         contentMargin: 0
 
-        QuickSettingsSurface {
+        DashboardQuickSettingsCard {
             id: quickSettingsCard
 
             anchors.fill: parent
             screen: root.screen
-            compact: true
         }
     }
 
