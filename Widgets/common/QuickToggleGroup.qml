@@ -57,7 +57,7 @@ Rectangle {
             childrenCount = buttonItems().length;
         }
 
-        Component.onCompleted: Qt.callLater(refreshChildrenCount)
-        onChildrenChanged: Qt.callLater(refreshChildrenCount)
+        Component.onCompleted: refreshChildrenCount()
+        onChildrenChanged: refreshChildrenCount()
     }
 }

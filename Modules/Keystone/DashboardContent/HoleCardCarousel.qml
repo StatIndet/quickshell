@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Common
+import qs.Modules.QuickSettings
 
 Item {
     id: root
@@ -8,6 +9,7 @@ Item {
 
     property int currentIndex: 0
     property var player: null
+    property var screen: null
     readonly property int cardCount: 4
     readonly property real switchThreshold: width * 0.2
 
@@ -106,14 +108,6 @@ Item {
         }
     }
 
-    component PlaceholderText: Text {
-        anchors.centerIn: parent
-        color: Appearance.colors.colOnSurfaceVariant
-        font.family: Sizes.fontFamily
-        font.pixelSize: 18
-        font.bold: true
-    }
-
     CarouselCard {
         width: root.width
         height: root.height
@@ -152,9 +146,14 @@ Item {
         width: root.width
         height: root.height
         x: root.cardX(3)
+        contentMargin: 0
 
-        PlaceholderText {
-            text: "快捷设置"
+        QuickSettingsSurface {
+            id: quickSettingsCard
+
+            anchors.fill: parent
+            screen: root.screen
+            compact: true
         }
     }
 
@@ -207,6 +206,14 @@ Item {
         }
 
         onWheel: event => {
+            if (root.currentIndex === 3) {
+                const point = quickSettingsCard.mapFromItem(root, event.x, event.y);
+                if (quickSettingsCard.capturesWheelAt(point.x, point.y)) {
+                    event.accepted = false;
+                    return;
+                }
+            }
+
             const angleDelta = event.angleDelta.y !== 0
                                ? event.angleDelta.y
                                : event.angleDelta.x;

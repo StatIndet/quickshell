@@ -9,6 +9,7 @@ Item {
     signal avatarEditRequested()
 
     property var player: null
+    property var screen: null
 
     implicitWidth: 860
     implicitHeight: 520
@@ -48,6 +49,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 player: root.player
+                screen: root.screen
             }
         }
     }

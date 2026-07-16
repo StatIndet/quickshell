@@ -15,6 +15,7 @@ Item {
     signal avatarEditRequested()
     
     property var player: null
+    property var screen: null
     property int currentIndex: 0
     
     Shortcut {
@@ -120,6 +121,7 @@ Item {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             player: root.player
+            screen: root.screen
             visible: root.currentIndex === 0
             opacity: visible ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 300 } }

@@ -659,6 +659,7 @@ Variants {
                         height: implicitHeight
                         
                         player: root.currentPlayer
+                        screen: keystoneWindow.screen
                         currentIndex: root.hubTabIndex
                         onCurrentIndexChanged: root.hubTabIndex = currentIndex
                         onCloseRequested: root.showHub = false

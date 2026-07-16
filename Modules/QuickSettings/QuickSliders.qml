@@ -9,10 +9,11 @@ Rectangle {
 
     readonly property real gammaCutoff: 0.3
     property var screen: null
+    property bool compact: false
     readonly property var brightnessMonitor: Brightness.getMonitorForScreen(screen)
     readonly property real brightnessValue: brightnessMonitor ? brightnessMonitor.brightness : Brightness.brightnessValue
-    property real verticalPadding: 4
-    property real horizontalPadding: 12
+    property real verticalPadding: compact ? 2 : 4
+    property real horizontalPadding: compact ? 8 : 12
 
     Layout.fillWidth: true
     implicitWidth: contentItem.implicitWidth + horizontalPadding * 2
