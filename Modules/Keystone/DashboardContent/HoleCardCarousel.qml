@@ -82,20 +82,35 @@ Item {
         Qt.callLater(startQueuedStep);
     }
 
-    component PlaceholderCard: Item {
-        required property string label
+    component CarouselCard: Item {
+        default property alias content: innerContainer.data
 
-        Text {
-            anchors.centerIn: parent
-            text: parent.label
-            color: Appearance.colors.colOnSurfaceVariant
-            font.family: Sizes.fontFamily
-            font.pixelSize: 18
-            font.bold: true
+        Rectangle {
+            id: cardBackground
+
+            anchors.fill: parent
+            anchors.margins: 10
+            radius: 20
+            color: Appearance.colors.colLayer0
+        }
+
+        Item {
+            id: innerContainer
+
+            anchors.fill: cardBackground
+            anchors.margins: 14
         }
     }
 
-    Item {
+    component PlaceholderText: Text {
+        anchors.centerIn: parent
+        color: Appearance.colors.colOnSurfaceVariant
+        font.family: Sizes.fontFamily
+        font.pixelSize: 18
+        font.bold: true
+    }
+
+    CarouselCard {
         width: root.width
         height: root.height
         x: root.cardX(0)
@@ -105,25 +120,34 @@ Item {
         }
     }
 
-    PlaceholderCard {
+    CarouselCard {
         width: root.width
         height: root.height
         x: root.cardX(1)
-        label: "音乐"
+
+        PlaceholderText {
+            text: "音乐"
+        }
     }
 
-    PlaceholderCard {
+    CarouselCard {
         width: root.width
         height: root.height
         x: root.cardX(2)
-        label: "天气"
+
+        PlaceholderText {
+            text: "天气"
+        }
     }
 
-    PlaceholderCard {
+    CarouselCard {
         width: root.width
         height: root.height
         x: root.cardX(3)
-        label: "快捷设置"
+
+        PlaceholderText {
+            text: "快捷设置"
+        }
     }
 
     NumberAnimation {
@@ -131,9 +155,9 @@ Item {
 
         target: root
         property: "cardOffset"
-        duration: Appearance.animation.elementMoveFast.duration
-        easing.type: Appearance.animation.elementMoveFast.type
-        easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
+        duration: Appearance.animation.standard.duration
+        easing.type: Appearance.animation.standard.type
+        easing.bezierCurve: Appearance.animation.standard.bezierCurve
         onStopped: root.finishTransition()
     }
 
