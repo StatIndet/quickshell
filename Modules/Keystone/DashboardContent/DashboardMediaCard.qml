@@ -124,9 +124,17 @@ Item {
                 anchors.centerIn: parent
                 implicitSize: parent.width
                 shape: MaterialShape.Cookie12Sided
-                color: Appearance.colors.colSurfaceContainerHighest
+                color: "white"
                 rotation: root.coverRotation
             }
+        }
+
+        MaterialShape {
+            anchors.centerIn: parent
+            implicitSize: parent.width
+            shape: MaterialShape.Cookie12Sided
+            color: Appearance.colors.colSurfaceContainerHighest
+            rotation: root.coverRotation
         }
 
         Image {
