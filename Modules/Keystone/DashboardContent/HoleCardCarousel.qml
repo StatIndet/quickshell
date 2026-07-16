@@ -84,7 +84,10 @@ Item {
     }
 
     component CarouselCard: Item {
+        id: cardRoot
+
         default property alias content: innerContainer.data
+        property real contentMargin: 14
 
         Rectangle {
             id: cardBackground
@@ -99,7 +102,7 @@ Item {
             id: innerContainer
 
             anchors.fill: cardBackground
-            anchors.margins: 14
+            anchors.margins: cardRoot.contentMargin
         }
     }
 
@@ -137,9 +140,11 @@ Item {
         width: root.width
         height: root.height
         x: root.cardX(2)
+        contentMargin: 0
 
-        PlaceholderText {
-            text: "天气"
+        DashboardWeatherCard {
+            anchors.fill: parent
+            active: root.visible && root.currentIndex === 2
         }
     }
 

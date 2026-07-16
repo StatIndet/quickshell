@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Widgets.common
+import qs.Widgets.weather
 import Clavis.Weather 1.0
 
 Item {

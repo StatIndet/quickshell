@@ -10,8 +10,10 @@ Item {
     property real windGustsMs: 0
     property real scrollProgress: 0
     property bool animate: visible
-    readonly property string weatherType: classifyWeatherType()
-    readonly property bool windy: classifyWindy()
+    property bool fullCardParticleBounds: false
+    property string weatherType: "overcast"
+    property bool windy: false
+    property bool componentReady: false
 
     property real pointerX: width * 0.5
     property real pointerY: height * 0.28
@@ -32,30 +34,50 @@ Item {
     property var snowflakes: []
 
     function classifyWeatherType() {
-        const name = (iconName || "").toLowerCase()
-        if (weatherCode >= 95 || name.indexOf("thunder") >= 0)
+        const name = (root.iconName || "").toLowerCase()
+        if (root.weatherCode >= 95 || name.indexOf("thunder") >= 0)
             return "storm"
-        if ((weatherCode >= 71 && weatherCode <= 77) || weatherCode === 85 || weatherCode === 86 || name.indexOf("snow") >= 0)
+        if ((root.weatherCode >= 71 && root.weatherCode <= 77) || root.weatherCode === 85 || root.weatherCode === 86 || name.indexOf("snow") >= 0)
             return "snow"
-        if ((weatherCode >= 51 && weatherCode <= 67) || (weatherCode >= 80 && weatherCode <= 82)
+        if ((root.weatherCode >= 51 && root.weatherCode <= 67) || (root.weatherCode >= 80 && root.weatherCode <= 82)
                 || name.indexOf("rain") >= 0 || name.indexOf("drizzle") >= 0
                 || name.indexOf("shower") >= 0 || name.indexOf("sleet") >= 0)
             return "rain"
-        if (weatherCode === 0 || name.indexOf("clear") >= 0 || name.indexOf("sunny") >= 0 || name.indexOf("sun") >= 0)
+        if (root.weatherCode === 0 || name.indexOf("clear") >= 0 || name.indexOf("sunny") >= 0 || name.indexOf("sun") >= 0)
             return "clear"
-        if (weatherCode === 1 || weatherCode === 2 || name.indexOf("partly") >= 0 || name.indexOf("mostly") >= 0)
+        if (root.weatherCode === 1 || root.weatherCode === 2 || name.indexOf("partly") >= 0 || name.indexOf("mostly") >= 0)
             return "partly"
-        if (weatherCode === 45 || weatherCode === 48 || weatherCode === 3 || name.indexOf("fog") >= 0
+        if (root.weatherCode === 45 || root.weatherCode === 48 || root.weatherCode === 3 || name.indexOf("fog") >= 0
                 || name.indexOf("overcast") >= 0 || name.indexOf("cloud") >= 0)
             return "overcast"
         return "overcast"
     }
 
-    function classifyWindy() {
-        const sustained = isNaN(windSpeedMs) ? 0 : windSpeedMs
-        const gusts = isNaN(windGustsMs) ? 0 : windGustsMs
+    function classifyWindy(type) {
+        const sustained = isNaN(root.windSpeedMs) ? 0 : root.windSpeedMs
+        const gusts = isNaN(root.windGustsMs) ? 0 : root.windGustsMs
         const strength = Math.max(sustained, gusts)
-        return strength >= 8.0 && (weatherType === "clear" || weatherType === "partly" || weatherType === "overcast")
+        return strength >= 8.0 && (type === "clear" || type === "partly" || type === "overcast")
+    }
+
+    function updateWeatherClassification() {
+        const nextType = root.classifyWeatherType()
+        const nextWindy = root.classifyWindy(nextType)
+        const sceneChanged = nextType !== root.weatherType || nextWindy !== root.windy
+
+        root.weatherType = nextType
+        root.windy = nextWindy
+        if (root.componentReady && sceneChanged)
+            root.resetVisualScenes()
+    }
+
+    function resetVisualScenes() {
+        root.initCloudBands()
+        root.resetRainScene()
+        root.resetLightningScene()
+        root.resetMeteorScene()
+        root.resetSnowScene()
+        root.resetLeafScene()
     }
 
     function palette() {
@@ -408,6 +430,8 @@ Item {
 
     function snowFloorY(radius) {
         const margin = radius === undefined ? 0 : radius
+        if (fullCardParticleBounds)
+            return height + margin * 2
         return Math.max(margin, Math.min(height, rainBounceY - margin))
     }
 
@@ -1056,9 +1080,11 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: Math.max(150,
-                         Math.min(parent.height * 0.56,
-                                  rainBounceY > 0 ? rainBounceY - 18 : parent.height * 0.56))
+        height: root.fullCardParticleBounds
+            ? parent.height
+            : Math.max(150,
+                       Math.min(parent.height * 0.56,
+                                rainBounceY > 0 ? rainBounceY - 18 : parent.height * 0.56))
         clip: true
         opacity: Math.max(0, 0.90 - root.scrollProgress * 0.34)
         visible: root.hasLeafScene() || leafModel.count > 0
@@ -1177,12 +1203,9 @@ Item {
     }
 
     Component.onCompleted: {
-        initCloudBands()
-        resetRainScene()
-        resetLightningScene()
-        resetMeteorScene()
-        resetSnowScene()
-        resetLeafScene()
+        updateWeatherClassification()
+        componentReady = true
+        resetVisualScenes()
     }
     onWidthChanged: {
         initCloudBands()
@@ -1200,19 +1223,10 @@ Item {
         resetSnowScene()
         resetLeafScene()
     }
-    onWeatherTypeChanged: {
-        initCloudBands()
-        resetRainScene()
-        resetLightningScene()
-        resetMeteorScene()
-        resetSnowScene()
-        resetLeafScene()
-    }
-    onWindyChanged: {
-        initCloudBands()
-        resetMeteorScene()
-        resetLeafScene()
-    }
+    onWeatherCodeChanged: updateWeatherClassification()
+    onIconNameChanged: updateWeatherClassification()
+    onWindSpeedMsChanged: updateWeatherClassification()
+    onWindGustsMsChanged: updateWeatherClassification()
     onNightChanged: {
         resetMeteorScene()
         canvas.requestPaint()
@@ -1225,6 +1239,12 @@ Item {
         }
     }
     onRainBounceYChanged: {
+        if (hasSnowScene())
+            resetSnowScene()
+        if (hasLeafScene())
+            resetLeafScene()
+    }
+    onFullCardParticleBoundsChanged: {
         if (hasSnowScene())
             resetSnowScene()
         if (hasLeafScene())

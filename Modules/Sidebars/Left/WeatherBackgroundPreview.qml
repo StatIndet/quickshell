@@ -1,4 +1,5 @@
 import QtQuick
+import qs.Widgets.weather
 
 Item {
     id: root
