@@ -23,6 +23,8 @@ Rectangle {
     property bool initialized: false
     property int viewportGeneration: 0
     property var visibleTiles: []
+    property string tileSetSignature: ""
+    property string gridViewportSignature: ""
     property real dragOffsetX: 0
     property real dragOffsetY: 0
     property bool dragging: false
@@ -221,13 +223,23 @@ Rectangle {
             || mapViewport.width < 2
             || mapViewport.height < 2) {
             root.visibleTiles = []
+            root.tileSetSignature = ""
+            root.gridViewportSignature = ""
             return
         }
 
-        const centerX = longitudeToWorldX(centerLongitude, zoomLevel)
-        const centerY = latitudeToWorldY(centerLatitude, zoomLevel)
-        const left = centerX - mapViewport.width / 2
-        const top = centerY - mapViewport.height / 2
+        const anchorCenterX = longitudeToWorldX(
+            centerLongitude,
+            zoomLevel
+        )
+        const anchorCenterY = latitudeToWorldY(
+            centerLatitude,
+            zoomLevel
+        )
+        const effectiveCenterX = anchorCenterX - dragOffsetX
+        const effectiveCenterY = anchorCenterY - dragOffsetY
+        const left = effectiveCenterX - mapViewport.width / 2
+        const top = effectiveCenterY - mapViewport.height / 2
         const minimumX = Math.floor(left / tileSize) - 1
         const maximumX = Math.floor(
             (left + mapViewport.width) / tileSize
@@ -239,31 +251,51 @@ Rectangle {
             Math.floor((top + mapViewport.height) / tileSize) + 1
         )
         const nextTiles = []
+        const nextKeys = []
 
         for (let rawY = minimumY; rawY <= maximumY; ++rawY) {
             for (let rawX = minimumX; rawX <= maximumX; ++rawX) {
-                const screenX = rawX * tileSize - centerX
+                const tileX = wrappedTileX(rawX, zoomLevel)
+                const key = zoomLevel + "/" + tileX + "/" + rawY
+                const screenX = rawX * tileSize - anchorCenterX
                     + mapViewport.width / 2
-                const screenY = rawY * tileSize - centerY
+                const screenY = rawY * tileSize - anchorCenterY
                     + mapViewport.height / 2
+                nextKeys.push(key)
                 nextTiles.push({
-                    x: wrappedTileX(rawX, zoomLevel),
+                    key: key,
+                    zoom: zoomLevel,
+                    x: tileX,
                     y: rawY,
                     screenX: screenX,
-                    screenY: screenY,
-                    inViewport: screenX < mapViewport.width
-                        && screenX + tileSize > 0
-                        && screenY < mapViewport.height
-                        && screenY + tileSize > 0
+                    screenY: screenY
                 })
             }
         }
 
-        root.viewportGeneration += 1
-        WeatherMapPlugin.beginViewport(root.viewportGeneration)
+        const nextSignature = nextKeys.join("|")
+        const nextGridViewportSignature = root.selectedMode === "aqi"
+            && !root.dragging
+            ? zoomLevel
+                + "/" + Number(centerLatitude).toFixed(5)
+                + "/" + Number(centerLongitude).toFixed(5)
+                + "/" + Math.round(mapViewport.width)
+                + "/" + Math.round(mapViewport.height)
+            : root.gridViewportSignature
+        const gridViewportChanged = root.selectedMode === "aqi"
+            && !root.dragging
+            && nextGridViewportSignature !== root.gridViewportSignature
+        if (nextSignature !== root.tileSetSignature
+            || gridViewportChanged) {
+            root.viewportGeneration += 1
+            WeatherMapPlugin.beginViewport(root.viewportGeneration)
+            root.tileSetSignature = nextSignature
+        }
+        if (gridViewportChanged)
+            root.gridViewportSignature = nextGridViewportSignature
         root.visibleTiles = nextTiles
         root.projectedGridSamples = projectSamples(root.rawGridSamples)
-        if (root.selectedMode === "aqi")
+        if (root.selectedMode === "aqi" && !root.dragging)
             gridDebounce.restart()
     }
 
@@ -377,12 +409,12 @@ Rectangle {
     onSelectedModeChanged: {
         rawGridSamples = []
         projectedGridSamples = []
+        gridViewportSignature = ""
         gridErrorCode = ""
         gridStale = false
         gridDebounce.stop()
-        if (active && selectedMode === "aqi") {
-            gridDebounce.restart()
-        }
+        if (active)
+            rebuildTiles()
     }
 
     Component.onCompleted: {
@@ -401,6 +433,14 @@ Rectangle {
         id: rebuildTimer
         interval: 40
         repeat: false
+        onTriggered: root.rebuildTiles()
+    }
+
+    Timer {
+        id: panSyncTimer
+        interval: 32
+        repeat: true
+        running: root.active && root.dragging
         onTriggered: root.rebuildTiles()
     }
 
@@ -558,8 +598,8 @@ Rectangle {
                 }
 
                 onReleased: mouse => {
-                    root.commitPan()
                     root.dragging = false
+                    root.commitPan()
                     mouse.accepted = true
                 }
 
@@ -636,7 +676,6 @@ Rectangle {
                 z: 20
                 backdropSource: mapBackdrop
                 backdropRect: Qt.rect(x, y, width, height)
-                backdropLive: !root.dragging
                 mode: root.selectedMode
                 updatedAt: root.selectedMode === "aqi"
                         ? root.gridUpdatedAt
@@ -669,7 +708,6 @@ Rectangle {
                         recenterButton.width,
                         recenterButton.height
                     )
-                    backdropLive: !root.dragging
                     radius: Appearance.rounding.full
                     blurAmount: 0.66
                     tint: recenterButton.down
