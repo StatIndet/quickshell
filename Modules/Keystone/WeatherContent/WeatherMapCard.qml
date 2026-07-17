@@ -518,7 +518,7 @@ Rectangle {
                             text: "location_on"
                             iconSize: 30
                             fill: 1
-                            color: "#B3261E"
+                            color: Appearance.colors.colPrimary
                             style: Text.Outline
                             styleColor: Appearance.colors.colSurfaceContainerHighest
                         }
