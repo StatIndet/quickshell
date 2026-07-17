@@ -1,19 +1,22 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtQuick.Layouts
 import Clavis.Weather 1.0
 import qs.Common
-import "../../../Common/functions/astro.js" as AstroJS
+import qs.Components
+import qs.Widgets.common
 
 Item {
     id: root
-    width: 720
-    height: 540
-    
-    property string materialFont: "Material Symbols Outlined" 
-    
+
+    width: 820
+    height: 560
+
+    property bool active: false
     property real latitude: 0
     property real longitude: 0
-    property string locationName: "LOCATING..."
-
+    property string locationName: "Weather"
     property string currentTemp: "--"
     property string currentIcon: "cloud"
     property string currentDesc: "--"
@@ -21,63 +24,174 @@ Item {
     property string humidity: "--"
     property string windSpeed: "--"
     property string pressure: "--"
-    
     property bool isHourly: true
     property var hourlyData: []
     property var dailyData: []
-    property real sunAzimuth: 0
-    property real sunAltitude: 0
 
-    Component.onCompleted: {
-        syncWeatherData()
-        if (!WeatherPlugin.hasValidData)
-            WeatherPlugin.refresh()
-    }
+    readonly property bool hasWeather: WeatherPlugin.hasValidData
 
-    Connections {
-        target: WeatherPlugin
+    Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
+    Material.accent: Appearance.colors.colPrimary
 
-        function onDataChanged() {
-            root.syncWeatherData()
-            root.stopRefreshAnim()
+    component MetricTile: Rectangle {
+        property string iconName: ""
+        property string label: ""
+        property string value: "--"
+        property color containerColor: Appearance.colors.colSecondaryContainer
+        property color contentColor: Appearance.colors.colOnSecondaryContainer
+        property color accentColor: Appearance.colors.colOnSecondaryContainer
+
+        implicitHeight: 44
+        radius: Appearance.rounding.small
+        color: containerColor
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            spacing: 6
+
+            MaterialSymbol {
+                text: parent.parent.iconName
+                iconSize: 17
+                color: parent.parent.accentColor
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 0
+
+                Text {
+                    Layout.fillWidth: true
+                    text: parent.parent.parent.label
+                    color: Appearance.applyAlpha(
+                        parent.parent.parent.contentColor,
+                        0.72
+                    )
+                    font.family: Sizes.fontFamily
+                    font.pixelSize: 10
+                    elide: Text.ElideRight
+                    textFormat: Text.PlainText
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: parent.parent.parent.value
+                    color: parent.parent.parent.contentColor
+                    font.family: Sizes.fontFamilyMono
+                    font.pixelSize: 12
+                    font.weight: Font.Medium
+                    elide: Text.ElideRight
+                    textFormat: Text.PlainText
+                }
+            }
         }
+    }
 
-        function onLoadingChanged() {
-            if (!WeatherPlugin.loading)
-                root.stopRefreshAnim()
+    function validNumber(value) {
+        return value !== undefined && value !== null && !isNaN(Number(value))
+    }
+
+    function hasCoordinates() {
+        return root.hasWeather
+            && root.validNumber(root.latitude)
+            && root.validNumber(root.longitude)
+    }
+
+    function cssColor(colorValue, alphaMultiplier) {
+        const alpha = alphaMultiplier === undefined
+            ? colorValue.a
+            : colorValue.a * alphaMultiplier
+        return "rgba("
+            + Math.round(colorValue.r * 255) + ","
+            + Math.round(colorValue.g * 255) + ","
+            + Math.round(colorValue.b * 255) + ","
+            + Math.max(0, Math.min(1, alpha)).toFixed(3) + ")"
+    }
+
+    function updatedText() {
+        if (WeatherPlugin.loading)
+            return root.hasWeather ? "Refreshing" : "Locating"
+        if (WeatherPlugin.status === "stale")
+            return "Data may be stale"
+        if (WeatherPlugin.status === "partial")
+            return "Partially updated"
+        if (WeatherPlugin.status === "error")
+            return "Update failed"
+        if (WeatherPlugin.lastUpdated) {
+            const updated = new Date(WeatherPlugin.lastUpdated)
+            if (!isNaN(updated.getTime()))
+                return "Updated " + Qt.formatDateTime(updated, "hh:mm")
         }
+        return "Live weather"
     }
 
-    // ================== 全局 UI 超时控制 ==================
-    Timer {
-        id: forceStopTimer
-        interval: 5000 // 强制 5 秒超时
-        onTriggered: root.stopRefreshAnim()
+    function weatherErrorText() {
+        return WeatherPlugin.errorMessage || "Weather data is unavailable"
     }
 
-    function stopRefreshAnim() {
+    function hourlyTemperatureBound(findMaximum) {
+        if (!root.hourlyData || root.hourlyData.length === 0)
+            return 0
+
+        let bound = Number(root.hourlyData[0].temp)
+        for (let index = 1; index < root.hourlyData.length; ++index) {
+            const value = Number(root.hourlyData[index].temp)
+            bound = findMaximum ? Math.max(bound, value) : Math.min(bound, value)
+        }
+        return bound
+    }
+
+    function hourlyPointY(temperature, top, bottom) {
+        let minimum = root.hourlyTemperatureBound(false)
+        let maximum = root.hourlyTemperatureBound(true)
+        if (Math.abs(maximum - minimum) < 0.1) {
+            maximum += 1
+            minimum -= 1
+        }
+        const normalized = (Number(temperature) - minimum) / (maximum - minimum)
+        return bottom - normalized * (bottom - top)
+    }
+
+    function stopRefreshAnimation() {
         forceStopTimer.stop()
-        if (spinAnim.running) {
-            spinAnim.stop()
-        }
-        // 触发顺滑归位动画
-        resetAnim.start()
+        if (spinAnimation.running)
+            spinAnimation.stop()
+        resetAnimation.start()
     }
 
     function fetchData() {
+        if (WeatherPlugin.loading)
+            return
+
+        resetAnimation.stop()
+        refreshIcon.rotation = 0
+        spinAnimation.start()
+        forceStopTimer.restart()
         WeatherPlugin.refresh()
     }
 
     function syncWeatherData() {
         if (!WeatherPlugin.hasValidData) {
-            root.locationName = WeatherPlugin.loading ? "LOADING..." : "UNAVAILABLE"
+            root.locationName = WeatherPlugin.locationName || "Weather"
+            root.currentTemp = "--"
+            root.currentIcon = "cloud"
+            root.currentDesc = "--"
+            root.feelsLike = "--"
+            root.humidity = "--"
+            root.windSpeed = "--"
+            root.pressure = "--"
+            root.hourlyData = []
+            root.dailyData = []
+            hourlyCanvas.requestPaint()
             return
         }
 
-        root.latitude = WeatherPlugin.latitude
-        root.longitude = WeatherPlugin.longitude
-        root.locationName = WeatherPlugin.locationName || "UNKNOWN"
-
+        root.latitude = Number(WeatherPlugin.latitude)
+        root.longitude = Number(WeatherPlugin.longitude)
+        root.locationName = WeatherPlugin.locationName || "Unknown"
         root.currentTemp = Math.round(WeatherPlugin.currentTemperatureC) + "°"
         root.currentIcon = WeatherPlugin.currentIconName || "cloud"
         root.currentDesc = WeatherPlugin.currentWeatherText || "Unknown"
@@ -86,467 +200,835 @@ Item {
         root.windSpeed = Math.round(WeatherPlugin.currentWindSpeedMs * 3.6) + " km/h"
         root.pressure = Math.round(WeatherPlugin.currentPressureHpa) + " hPa"
 
-        const tempHourly = []
-        const hourlyCount = Math.min(12, WeatherPlugin.hourlyForecast.count())
-        for (let h = 0; h < hourlyCount; h++) {
-            const item = WeatherPlugin.hourlyForecast.get(h)
-            const timeObj = new Date(Number(item.time || 0) * 1000)
-            tempHourly.push({
-                time: timeObj.getHours().toString().padStart(2, "0") + ":00",
+        const nextHourly = []
+        const hourlyCount = Math.min(8, WeatherPlugin.hourlyForecast.count())
+        for (let hourIndex = 0; hourIndex < hourlyCount; ++hourIndex) {
+            const item = WeatherPlugin.hourlyForecast.get(hourIndex)
+            const timeObject = new Date(Number(item.time || 0) * 1000)
+            nextHourly.push({
+                time: Qt.formatDateTime(timeObject, "hh:00"),
                 temp: Math.round(Number(item.temperatureC || 0)),
-                icon: item.iconName || "cloud"
+                icon: item.iconName || "cloud",
+                description: item.weatherText || "Unknown",
+                isDaylight: item.isDaylight === undefined ? true : item.isDaylight
             })
         }
-        root.hourlyData = tempHourly
+        root.hourlyData = nextHourly
 
-        const tempDaily = []
+        const nextDaily = []
         const dailyCount = Math.min(7, WeatherPlugin.dailyForecast.count())
-        for (let d = 0; d < dailyCount; d++) {
-            const item = WeatherPlugin.dailyForecast.get(d)
-            const dateObj = item.date ? new Date(item.date + "T00:00:00") : new Date(Number(item.time || 0) * 1000)
+        for (let dayIndex = 0; dayIndex < dailyCount; ++dayIndex) {
+            const item = WeatherPlugin.dailyForecast.get(dayIndex)
+            const dateObject = item.date
+                ? new Date(item.date + "T00:00:00")
+                : new Date(Number(item.time || 0) * 1000)
             const dayPart = item.day || ({})
-            tempDaily.push({
-                day: d === 0 ? "Today" : Qt.formatDate(dateObj, "ddd"),
+            nextDaily.push({
+                day: dayIndex === 0 ? "Today" : Qt.formatDate(dateObject, "ddd"),
                 icon: dayPart.iconName || item.iconName || "cloud",
-                maxTemp: Math.round(Number(item.temperatureMaxC || dayPart.temperatureC || 0)) + "°",
+                maxTemp: Math.round(
+                    Number(item.temperatureMaxC || dayPart.temperatureC || 0)
+                ) + "°",
                 minTemp: Math.round(Number(item.temperatureMinC || 0)) + "°"
             })
         }
-        root.dailyData = tempDaily
+        root.dailyData = nextDaily
 
-        updateAstroData()
         hourlyCanvas.requestPaint()
     }
 
-    function updateAstroData() {
-        if(root.latitude === 0 && root.longitude === 0) return;
-        var pos = AstroJS.getSunPosition(new Date(), root.latitude, root.longitude);
-        root.sunAzimuth = pos.az;
-        root.sunAltitude = pos.alt;
-        skyCanvas.requestPaint();
+    Component.onCompleted: {
+        root.syncWeatherData()
+        if (!WeatherPlugin.hasValidData && !WeatherPlugin.loading)
+            WeatherPlugin.refresh()
     }
 
-    Timer { interval: 60000; running: true; repeat: true; onTriggered: updateAstroData() }
-    Timer { interval: 1800000; running: true; repeat: true; onTriggered: fetchData() }
+    Connections {
+        target: WeatherPlugin
 
-    // ==========================================
-    // 布局设计
-    // ==========================================
-    
-    // 1. 左上：综合天气信息
-    Item {
-        id: infoSection
-        width: 220
-        height: 220
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.margins: 25
-        
-        Column {
-            spacing: 8
-            
-            Row {
-                spacing: 8
-                Text {
-                    text: root.locationName 
-                    font.family: Sizes.fontFamily
-                    font.pixelSize: 15; font.bold: true; font.letterSpacing: 2
-                    color: Appearance.colors.colOnSurfaceVariant
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-                
-                // 刷新按钮组件
-                Rectangle {
-                    width: 24
-                    height: 24
-                    radius: 12
-                    color: refreshMouseArea.pressed ? Appearance.colors.colLayer2Hover : "transparent"
-                    anchors.verticalCenter: parent.verticalCenter
-                    
-                    Text {
-                        id: refreshIcon
-                        anchors.centerIn: parent
-                        text: "refresh"
-                        font.family: root.materialFont
-                        font.pixelSize: 16
-                        color: refreshMouseArea.containsMouse ? Appearance.colors.colPrimary : Appearance.colors.colOnSurfaceVariant
-                        
-                        // 1. 无限循环的转圈动画
-                        NumberAnimation {
-                            id: spinAnim
-                            target: refreshIcon
-                            property: "rotation"
-                            from: 0; to: 360
-                            duration: 800
-                            loops: Animation.Infinite
+        function onDataChanged() {
+            root.syncWeatherData()
+            root.stopRefreshAnimation()
+        }
+
+        function onLoadingChanged() {
+            if (!WeatherPlugin.loading)
+                root.stopRefreshAnimation()
+        }
+    }
+
+    Timer {
+        id: forceStopTimer
+
+        interval: 5000
+        onTriggered: root.stopRefreshAnimation()
+    }
+
+    Timer {
+        interval: 1800000
+        running: root.active
+        repeat: true
+        onTriggered: {
+            if (!WeatherPlugin.loading)
+                WeatherPlugin.refresh()
+        }
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 16
+        spacing: 16
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.minimumHeight: 292
+            Layout.preferredHeight: 292
+            Layout.maximumHeight: 292
+            spacing: 16
+
+            Rectangle {
+                id: currentCard
+
+                Layout.preferredWidth: 272
+                Layout.fillHeight: true
+                radius: Appearance.rounding.large
+                color: root.hasWeather
+                    ? Appearance.colors.colPrimaryContainer
+                    : Appearance.colors.colSurfaceContainerHigh
+                clip: true
+
+                Accessible.name: root.hasWeather
+                    ? root.locationName + ", " + root.currentDesc + ", " + root.currentTemp
+                    : root.weatherErrorText()
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 16
+                    spacing: 8
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 48
+                        Layout.preferredHeight: 48
+                        Layout.maximumHeight: 48
+                        spacing: 8
+
+                        MaterialSymbol {
+                            text: "location_on"
+                            iconSize: 20
+                            fill: 1
+                            color: root.hasWeather
+                                ? Appearance.colors.colOnPrimaryContainer
+                                : Appearance.colors.colPrimary
+                            Layout.alignment: Qt.AlignVCenter
                         }
 
-                        // 2. 抄近道顺滑归位动画 (利用 RotationAnimation.Shortest 算法)
-                        RotationAnimation {
-                            id: resetAnim
-                            target: refreshIcon
-                            property: "rotation"
-                            to: 0
-                            duration: 300
-                            direction: RotationAnimation.Shortest
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            Layout.minimumWidth: 0
+                            Layout.alignment: Qt.AlignVCenter
+                            spacing: 0
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: root.locationName
+                                color: root.hasWeather
+                                    ? Appearance.colors.colOnPrimaryContainer
+                                    : Appearance.colors.colOnSurface
+                                font.family: Sizes.fontFamily
+                                font.pixelSize: 15
+                                font.weight: Font.DemiBold
+                                elide: Text.ElideRight
+                                textFormat: Text.PlainText
+                            }
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: root.updatedText()
+                                color: root.hasWeather
+                                    ? Appearance.applyAlpha(
+                                        Appearance.colors.colOnPrimaryContainer,
+                                        0.72
+                                    )
+                                    : Appearance.colors.colOnSurfaceVariant
+                                font.family: Sizes.fontFamilyMono
+                                font.pixelSize: 10
+                                elide: Text.ElideRight
+                                textFormat: Text.PlainText
+                            }
+                        }
+
+                        ToolButton {
+                            id: refreshButton
+
+                            Layout.preferredWidth: 48
+                            Layout.preferredHeight: 48
+                            Layout.alignment: Qt.AlignVCenter
+                            enabled: !WeatherPlugin.loading
+                            hoverEnabled: true
+                            focusPolicy: Qt.StrongFocus
+
+                            Accessible.name: "Refresh weather"
+
+                            onClicked: root.fetchData()
+
+                            background: Rectangle {
+                                radius: Appearance.rounding.full
+                                color: refreshButton.down
+                                    ? root.hasWeather
+                                        ? Appearance.colors.colPrimaryContainerActive
+                                        : Appearance.colors.colLayer4Active
+                                    : refreshButton.hovered || refreshButton.activeFocus
+                                        ? root.hasWeather
+                                            ? Appearance.colors.colPrimaryContainerHover
+                                            : Appearance.colors.colLayer4
+                                        : Appearance.transparentize(
+                                            root.hasWeather
+                                                ? Appearance.colors.colPrimaryContainer
+                                                : Appearance.colors.colLayer4,
+                                            1
+                                        )
+
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Appearance.animation.expressiveEffects.duration
+                                        easing.type: Appearance.animation.expressiveEffects.type
+                                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                                    }
+                                }
+                            }
+
+                            contentItem: MaterialSymbol {
+                                id: refreshIcon
+
+                                text: "refresh"
+                                iconSize: 21
+                                color: refreshButton.enabled
+                                    ? root.hasWeather
+                                        ? Appearance.colors.colOnPrimaryContainer
+                                        : Appearance.colors.colOnSurfaceVariant
+                                    : Appearance.applyAlpha(
+                                        root.hasWeather
+                                            ? Appearance.colors.colOnPrimaryContainer
+                                            : Appearance.colors.colOnSurface,
+                                        0.38
+                                    )
+                            }
+
+                            StyledToolTip {
+                                extraVisibleCondition: refreshButton.hovered
+                                text: WeatherPlugin.loading
+                                    ? "Refreshing weather"
+                                    : "Refresh weather"
+                            }
+
+                            RotationAnimation {
+                                id: spinAnimation
+
+                                target: refreshIcon
+                                property: "rotation"
+                                from: 0
+                                to: 360
+                                duration: 800
+                                loops: Animation.Infinite
+                            }
+
+                            RotationAnimation {
+                                id: resetAnimation
+
+                                target: refreshIcon
+                                property: "rotation"
+                                to: 0
+                                duration: Appearance.animation.expressiveEffects.duration
+                                direction: RotationAnimation.Shortest
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
                         }
                     }
-                    
-                    MouseArea {
-                        id: refreshMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            if (!spinAnim.running) {
-                                resetAnim.stop() // 打断可能正在进行的归位
-                                refreshIcon.rotation = 0 // 重置起始点
-                                spinAnim.start()
-                                forceStopTimer.restart() // 启动 5 秒强制打断定时器
-                                fetchData()
+
+                    StackLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        currentIndex: root.hasWeather ? 0 : 1
+
+                        ColumnLayout {
+                            spacing: 8
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 72
+                                spacing: 10
+
+                                MaterialSymbol {
+                                    text: root.currentIcon
+                                    iconSize: 52
+                                    fill: 1
+                                    color: Appearance.colors.colOnPrimaryContainer
+                                    Layout.alignment: Qt.AlignVCenter
+                                }
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    spacing: -2
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: root.currentDesc
+                                        color: Appearance.colors.colOnPrimaryContainer
+                                        font.family: Sizes.fontFamily
+                                        font.pixelSize: 16
+                                        font.weight: Font.Medium
+                                        elide: Text.ElideRight
+                                        textFormat: Text.PlainText
+                                    }
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: root.currentTemp
+                                        color: Appearance.colors.colOnPrimaryContainer
+                                        font.family: Sizes.fontFamilyMono
+                                        font.pixelSize: 46
+                                        font.weight: Font.DemiBold
+                                        elide: Text.ElideRight
+                                        textFormat: Text.PlainText
+                                    }
+                                }
+                            }
+
+                            GridLayout {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                columns: 2
+                                columnSpacing: 8
+                                rowSpacing: 8
+
+                                MetricTile {
+                                    Layout.fillWidth: true
+                                    iconName: "thermostat"
+                                    label: "Feels like"
+                                    value: root.feelsLike
+                                    containerColor: Appearance.colors.colSecondaryContainer
+                                    contentColor: Appearance.colors.colOnSecondaryContainer
+                                    accentColor: Appearance.colors.colOnSecondaryContainer
+                                }
+
+                                MetricTile {
+                                    Layout.fillWidth: true
+                                    iconName: "water_drop"
+                                    label: "Humidity"
+                                    value: root.humidity
+                                    containerColor: Appearance.colors.colSecondaryContainer
+                                    contentColor: Appearance.colors.colOnSecondaryContainer
+                                    accentColor: Appearance.colors.colOnSecondaryContainer
+                                }
+
+                                MetricTile {
+                                    Layout.fillWidth: true
+                                    iconName: "air"
+                                    label: "Wind"
+                                    value: root.windSpeed
+                                    containerColor: Appearance.colors.colSecondaryContainer
+                                    contentColor: Appearance.colors.colOnSecondaryContainer
+                                    accentColor: Appearance.colors.colOnSecondaryContainer
+                                }
+
+                                MetricTile {
+                                    Layout.fillWidth: true
+                                    iconName: "compress"
+                                    label: "Pressure"
+                                    value: root.pressure
+                                    containerColor: Appearance.colors.colSecondaryContainer
+                                    contentColor: Appearance.colors.colOnSecondaryContainer
+                                    accentColor: Appearance.colors.colOnSecondaryContainer
+                                }
+                            }
+                        }
+
+                        Item {
+                            ColumnLayout {
+                                anchors.centerIn: parent
+                                width: Math.min(parent.width, 210)
+                                spacing: 10
+
+                                BusyIndicator {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    Layout.preferredWidth: 42
+                                    Layout.preferredHeight: 42
+                                    running: WeatherPlugin.loading
+                                    visible: running
+                                    Material.accent: Appearance.colors.colPrimary
+                                }
+
+                                MaterialSymbol {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    text: "cloud_off"
+                                    iconSize: 38
+                                    color: Appearance.colors.colError
+                                    visible: !WeatherPlugin.loading
+                                }
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: WeatherPlugin.loading
+                                        ? "Loading weather"
+                                        : "Weather unavailable"
+                                    color: Appearance.colors.colOnSurface
+                                    font.family: Sizes.fontFamily
+                                    font.pixelSize: 16
+                                    font.weight: Font.Medium
+                                    horizontalAlignment: Text.AlignHCenter
+                                    textFormat: Text.PlainText
+                                }
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: WeatherPlugin.loading
+                                        ? "Finding your local forecast…"
+                                        : root.weatherErrorText()
+                                    color: Appearance.colors.colOnSurfaceVariant
+                                    font.family: Sizes.fontFamily
+                                    font.pixelSize: 12
+                                    horizontalAlignment: Text.AlignHCenter
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 3
+                                    elide: Text.ElideRight
+                                    textFormat: Text.PlainText
+                                }
                             }
                         }
                     }
                 }
             }
-            
-            Row {
-                spacing: 12
-                Text { 
-                    text: root.currentIcon; font.family: root.materialFont; 
-                    font.pixelSize: 56; color: Appearance.colors.colPrimary 
-                }
-                Text { 
-                    text: root.currentTemp; font.family: Sizes.fontFamilyMono; 
-                    font.pixelSize: 56; font.bold: true; color: Appearance.colors.colOnSurface 
-                }
-            }
-            Text { text: root.currentDesc; font.family: Sizes.fontFamily; font.pixelSize: 18; font.bold: true; color: Appearance.colors.colOnSurface }
-            
-            Item { height: 10; width: 1 } 
-            
-            Grid {
-                columns: 2
-                spacing: 12
-                columnSpacing: 24
-                
-                Row { spacing: 6; Text { text: "thermometer"; font.family: root.materialFont; color: Appearance.colors.colOnSurfaceVariant; font.pixelSize: 15 } Text { text: root.feelsLike; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamilyMono; font.pixelSize: 13 } }
-                Row { spacing: 6; Text { text: "water_drop"; font.family: root.materialFont; color: Appearance.colors.colOnSurfaceVariant; font.pixelSize: 15 } Text { text: root.humidity; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamilyMono; font.pixelSize: 13 } }
-                Row { spacing: 6; Text { text: "air"; font.family: root.materialFont; color: Appearance.colors.colOnSurfaceVariant; font.pixelSize: 15 } Text { text: root.windSpeed; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamilyMono; font.pixelSize: 13 } }
-                Row { spacing: 6; Text { text: "compress"; font.family: root.materialFont; color: Appearance.colors.colOnSurfaceVariant; font.pixelSize: 15 } Text { text: root.pressure; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamilyMono; font.pixelSize: 13 } }
-            }
-        }
-    }
 
-    // 2. 左侧下方：完美的 Material 3 分段形变按钮
-    Item {
-        id: segmentedContainer
-        width: 200
-        height: 40
-        anchors.top: infoSection.bottom
-        anchors.left: parent.left
-        anchors.margins: 25
+            Loader {
+                id: weatherMapLoader
 
-        Row {
-            anchors.fill: parent
-            spacing: 4 
-
-            // 12 Hrs 按键
-            Rectangle {
-                width: (parent.width - 4) / 2; height: parent.height
-                color: root.isHourly ? Appearance.colors.colPrimary : Appearance.colors.colLayer2Hover
-                
-                topLeftRadius: 20; bottomLeftRadius: 20
-                topRightRadius: root.isHourly ? 20 : 6
-                bottomRightRadius: root.isHourly ? 20 : 6
-                
-                Behavior on topRightRadius { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-                Behavior on bottomRightRadius { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-                Behavior on color { ColorAnimation { duration: 200 } }
-
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 4
-                    Text { text: "check"; font.family: root.materialFont; font.pixelSize: 14; color: Appearance.colors.colOnPrimary; visible: root.isHourly }
-                    Text { text: "12 Hrs"; font.family: Sizes.fontFamily; font.bold: true; font.pixelSize: 13; color: root.isHourly ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurfaceVariant }
-                }
-                MouseArea { anchors.fill: parent; onClicked: root.isHourly = true }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                active: root.active
+                asynchronous: true
+                source: active
+                    ? Qt.resolvedUrl("WeatherMapCard.qml")
+                    : ""
             }
 
-            // 7 Days 按键
-            Rectangle {
-                width: (parent.width - 4) / 2; height: parent.height
-                color: !root.isHourly ? Appearance.colors.colPrimary : Appearance.colors.colLayer2Hover
-                
-                topRightRadius: 20; bottomRightRadius: 20
-                topLeftRadius: !root.isHourly ? 20 : 6
-                bottomLeftRadius: !root.isHourly ? 20 : 6
-                
-                Behavior on topLeftRadius { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-                Behavior on bottomLeftRadius { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-                Behavior on color { ColorAnimation { duration: 200 } }
+            Binding {
+                target: weatherMapLoader.item
+                property: "latitude"
+                value: root.latitude
+                when: weatherMapLoader.status === Loader.Ready
+            }
 
-                Row {
-                    anchors.centerIn: parent
-                    spacing: 4
-                    Text { text: "check"; font.family: root.materialFont; font.pixelSize: 14; color: Appearance.colors.colOnPrimary; visible: !root.isHourly }
-                    Text { text: "7 Days"; font.family: Sizes.fontFamily; font.bold: true; font.pixelSize: 13; color: !root.isHourly ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurfaceVariant }
-                }
-                MouseArea { anchors.fill: parent; onClicked: root.isHourly = false }
+            Binding {
+                target: weatherMapLoader.item
+                property: "longitude"
+                value: root.longitude
+                when: weatherMapLoader.status === Loader.Ready
+            }
+
+            Binding {
+                target: weatherMapLoader.item
+                property: "locationAvailable"
+                value: root.hasCoordinates()
+                when: weatherMapLoader.status === Loader.Ready
+            }
+
+            Binding {
+                target: weatherMapLoader.item
+                property: "active"
+                value: root.active && root.visible
+                when: weatherMapLoader.status === Loader.Ready
             }
         }
-    }
 
-    // 3. 右半场：天穹图
-    Item {
-        id: astroArea
-        anchors.top: parent.top
-        anchors.bottom: forecastCard.top
-        anchors.left: infoSection.right
-        anchors.right: parent.right
-        anchors.margins: 10
-        
-        Canvas {
-            id: skyCanvas
-            anchors.fill: parent
-            renderTarget: Canvas.FramebufferObject
+        Rectangle {
+            id: forecastCard
 
-            // 【新增：监听主题色变化并强制重绘】
-            Connections {
-                target: Appearance.colors
-                function onColPrimaryChanged() {
-                    skyCanvas.requestPaint()
-                }
-            }
+            Layout.fillWidth: true
+            Layout.minimumHeight: 220
+            Layout.preferredHeight: 220
+            Layout.maximumHeight: 220
+            radius: Appearance.rounding.large
+            color: Appearance.colors.colSurfaceContainerHigh
+            border.width: 1
+            border.color: Appearance.applyAlpha(
+                Appearance.colors.colOutlineVariant,
+                0.55
+            )
+            clip: true
 
-            onPaint: {
-                if(root.latitude === 0) return;
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                var cx = width / 2;
-                var cy = height / 2;
-                var R = 125; 
+            Accessible.name: root.isHourly
+                ? "Eight hour weather forecast"
+                : "Seven day weather forecast"
 
-                function project(az, alt) {
-                    var r = R * (1 - alt / (Math.PI / 2));
-                    return {x: cx + r * Math.sin(az), y: cy - r * Math.cos(az)};
-                }
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 16
+                spacing: 8
 
-                ctx.lineWidth = 1.5;
-                ctx.strokeStyle = Appearance.colors.colOutlineVariant; 
-                
-                [0, 30, 60].forEach(function(deg) {
-                    ctx.beginPath();
-                    ctx.arc(cx, cy, R * (1 - deg / 90), 0, Math.PI * 2);
-                    ctx.stroke();
-                    if(deg > 0) {
-                        ctx.fillStyle = Appearance.colors.colOnSurfaceVariant;
-                        ctx.font = "11px '" + Sizes.fontFamilyMono + "'";
-                        ctx.fillText(deg + "°", cx + 4, cy - R * (1 - deg / 90) - 4);
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    spacing: 8
+
+                    MaterialSymbol {
+                        text: root.isHourly ? "schedule" : "calendar_month"
+                        iconSize: 22
+                        fill: 1
+                        color: Appearance.colors.colPrimary
+                        Layout.alignment: Qt.AlignVCenter
                     }
-                });
-                
-                ctx.beginPath();
-                ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R);
-                ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy);
-                ctx.stroke();
 
-                var y = new Date().getFullYear();
-                var terms = [
-                    { date: new Date(y, 5, 21), color: "rgba(239, 68, 68, 0.6)" }, 
-                    { date: new Date(y, 2, 21), color: "rgba(34, 197, 94, 0.6)" }, 
-                    { date: new Date(y, 11, 21), color: "rgba(56, 189, 248, 0.6)" }
-                ];
-                
-                ctx.setLineDash([4, 6]);
-                ctx.lineWidth = 1.5;
-                for(var j=0; j<terms.length; j++) {
-                    ctx.strokeStyle = terms[j].color;
-                    ctx.beginPath();
-                    var isFirstRef = true;
-                    for (var min = 0; min <= 24 * 60; min += 20) {
-                        var t = new Date(terms[j].date.getTime() + min * 60000);
-                        var pos = AstroJS.getSunPosition(t, root.latitude, root.longitude);
-                        if (pos.alt >= 0) {
-                            var pt = project(pos.az, pos.alt);
-                            if (isFirstRef) { ctx.moveTo(pt.x, pt.y); isFirstRef = false; } 
-                            else { ctx.lineTo(pt.x, pt.y); }
-                        } else {
-                            isFirstRef = true; 
+                    Text {
+                        text: "Forecast"
+                        color: Appearance.colors.colOnSurface
+                        font.family: Sizes.fontFamily
+                        font.pixelSize: 18
+                        font.weight: Font.DemiBold
+                        textFormat: Text.PlainText
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledButtonGroup {
+                        currentValue: root.isHourly ? "hourly" : "daily"
+                        style: StyledButtonGroup.Style.Primary
+                        buttonHeight: 40
+                        horizontalPadding: 20
+                        textPixelSize: 13
+                        model: [
+                            ({
+                                "value": "hourly",
+                                "label": "8 Hours",
+                                "tooltip": "Show the next eight hours"
+                            }),
+                            ({
+                                "value": "daily",
+                                "label": "7 Days",
+                                "tooltip": "Show the next seven days"
+                            })
+                        ]
+                        Accessible.name: "Forecast range"
+                        onValueSelected: value => root.isHourly = value === "hourly"
+                    }
+                }
+
+                Item {
+                    id: forecastBody
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    Item {
+                        id: hourlyPane
+
+                        anchors.fill: parent
+                        opacity: root.isHourly ? 1 : 0
+                        visible: opacity > 0
+
+                        readonly property real chartTop: 50
+                        readonly property real chartBottom: Math.max(
+                            chartTop + 24,
+                            height - 24
+                        )
+
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
+
+                        Canvas {
+                            id: hourlyCanvas
+
+                            anchors.fill: parent
+                            antialiasing: true
+                            renderTarget: Canvas.FramebufferObject
+                            visible: root.hourlyData && root.hourlyData.length >= 2
+
+                            property color lineColor: Appearance.colors.colPrimary
+
+                            onLineColorChanged: requestPaint()
+                            onWidthChanged: requestPaint()
+                            onHeightChanged: requestPaint()
+
+                            onPaint: {
+                                const ctx = getContext("2d")
+                                ctx.clearRect(0, 0, width, height)
+                                const count = root.hourlyData
+                                    ? root.hourlyData.length
+                                    : 0
+                                if (count < 2)
+                                    return
+
+                                const columnWidth = width / count
+
+                                function pointX(index) {
+                                    return columnWidth * index + columnWidth / 2
+                                }
+
+                                function pointY(index) {
+                                    return root.hourlyPointY(
+                                        root.hourlyData[index].temp,
+                                        hourlyPane.chartTop,
+                                        hourlyPane.chartBottom
+                                    )
+                                }
+
+                                const fillGradient = ctx.createLinearGradient(
+                                    0,
+                                    hourlyPane.chartTop,
+                                    0,
+                                    hourlyPane.chartBottom
+                                )
+                                fillGradient.addColorStop(
+                                    0,
+                                    root.cssColor(lineColor, 0.20)
+                                )
+                                fillGradient.addColorStop(
+                                    1,
+                                    root.cssColor(lineColor, 0.02)
+                                )
+
+                                ctx.beginPath()
+                                ctx.moveTo(pointX(0), hourlyPane.chartBottom)
+                                ctx.lineTo(pointX(0), pointY(0))
+                                for (let index = 1; index < count; ++index)
+                                    ctx.lineTo(pointX(index), pointY(index))
+                                ctx.lineTo(
+                                    pointX(count - 1),
+                                    hourlyPane.chartBottom
+                                )
+                                ctx.closePath()
+                                ctx.fillStyle = fillGradient
+                                ctx.fill()
+
+                                ctx.beginPath()
+                                ctx.moveTo(pointX(0), pointY(0))
+                                for (let lineIndex = 1; lineIndex < count; ++lineIndex)
+                                    ctx.lineTo(pointX(lineIndex), pointY(lineIndex))
+                                ctx.strokeStyle = lineColor
+                                ctx.lineWidth = 3
+                                ctx.lineCap = "round"
+                                ctx.lineJoin = "round"
+                                ctx.stroke()
+
+                                for (let pointIndex = 0; pointIndex < count; ++pointIndex) {
+                                    const x = pointX(pointIndex)
+                                    const y = pointY(pointIndex)
+                                    ctx.beginPath()
+                                    ctx.arc(x, y, 4.5, 0, Math.PI * 2)
+                                    ctx.fillStyle = lineColor
+                                    ctx.fill()
+                                }
+                            }
+                        }
+
+                        Repeater {
+                            model: root.hourlyData
+
+                            delegate: Item {
+                                required property int index
+                                required property var modelData
+
+                                width: hourlyPane.width / Math.max(
+                                    1,
+                                    root.hourlyData.length
+                                )
+                                height: hourlyPane.height
+                                x: index * width
+
+                                readonly property real pointY: root.hourlyPointY(
+                                    modelData.temp,
+                                    hourlyPane.chartTop,
+                                    hourlyPane.chartBottom
+                                )
+
+                                Accessible.name: modelData.time
+                                    + ", " + modelData.description
+                                    + ", " + modelData.temp + " degrees"
+
+                                MaterialSymbol {
+                                    anchors.top: parent.top
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: parent.modelData.icon
+                                    iconSize: 22
+                                    fill: parent.modelData.isDaylight ? 1 : 0
+                                    color: Appearance.colors.colOnSurfaceVariant
+                                }
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    y: Math.max(25, parent.pointY - implicitHeight - 6)
+                                    text: parent.modelData.temp + "°"
+                                    color: Appearance.colors.colOnSurface
+                                    font.family: Sizes.fontFamilyMono
+                                    font.pixelSize: 12
+                                    font.weight: Font.DemiBold
+                                    textFormat: Text.PlainText
+                                }
+
+                                Text {
+                                    anchors.bottom: parent.bottom
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: parent.modelData.time
+                                    color: Appearance.colors.colOnSurfaceVariant
+                                    font.family: Sizes.fontFamilyMono
+                                    font.pixelSize: 11
+                                    textFormat: Text.PlainText
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            anchors.centerIn: parent
+                            spacing: 8
+                            visible: !root.hourlyData || root.hourlyData.length === 0
+
+                            MaterialSymbol {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "hourglass_empty"
+                                iconSize: 30
+                                color: Appearance.colors.colOnSurfaceVariant
+                            }
+
+                            Text {
+                                text: "Hourly forecast unavailable"
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: Sizes.fontFamily
+                                font.pixelSize: 13
+                                textFormat: Text.PlainText
+                            }
                         }
                     }
-                    ctx.stroke();
-                }
-                ctx.setLineDash([]);
 
-                var startOfDay = new Date(); startOfDay.setHours(0,0,0,0);
-                
-                
+                    Item {
+                        id: dailyPane
 
-                ctx.beginPath();
-                ctx.lineWidth = 2.5;
-                ctx.strokeStyle = "#fbbf24"; 
-                ctx.setLineDash([6, 6]); 
-                var isFirstDay = true;
-                for (var md = 0; md <= 24 * 60; md += 10) {
-                    var td = new Date(startOfDay.getTime() + md * 60000);
-                    var pd = AstroJS.getSunPosition(td, root.latitude, root.longitude);
-                    if (pd.alt >= 0) {
-                        var pttd = project(pd.az, pd.alt);
-                        if (isFirstDay) { ctx.moveTo(pttd.x, pttd.y); isFirstDay = false; } 
-                        else { ctx.lineTo(pttd.x, pttd.y); }
-                    } else { 
-                        isFirstDay = true; 
-                    }
-                }
-                ctx.stroke();
-                ctx.setLineDash([]);
+                        anchors.fill: parent
+                        opacity: root.isHourly ? 0 : 1
+                        visible: opacity > 0
 
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
 
-                if (root.sunAltitude >= 0) {
-                    var currentPt = project(root.sunAzimuth, root.sunAltitude);
-                    
-                    var glowRadius = 22; 
-                    var gradient = ctx.createRadialGradient(currentPt.x, currentPt.y, 4, currentPt.x, currentPt.y, glowRadius);
-                    
-                    gradient.addColorStop(0, "rgba(253, 224, 71, 0.8)");   
-                    gradient.addColorStop(0.4, "rgba(253, 224, 71, 0.3)"); 
-                    gradient.addColorStop(1, "rgba(253, 224, 71, 0.0)");   
+                        RowLayout {
+                            anchors.fill: parent
+                            spacing: 8
+                            visible: root.dailyData && root.dailyData.length > 0
 
-                    ctx.beginPath(); 
-                    ctx.arc(currentPt.x, currentPt.y, glowRadius, 0, Math.PI*2);
-                    ctx.fillStyle = gradient; 
-                    ctx.fill();
-                    
-                    ctx.beginPath(); 
-                    ctx.arc(currentPt.x, currentPt.y, 5, 0, Math.PI*2);
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fill();
-                } 
-                
-                ctx.fillStyle = Appearance.colors.colOnSurface;
-                ctx.font = "bold 16px '" + Sizes.fontFamilyMono + "'";
-                ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                ctx.fillText("N", cx, cy - R - 20);
-                ctx.fillText("E", cx + R + 22, cy);
-                ctx.fillText("S", cx, cy + R + 20);
-                ctx.fillText("W", cx - R - 22, cy);
-            }
-        }
-    }
+                            Repeater {
+                                model: root.dailyData
 
-    // 4. 下方：天气预报长卡片
-    Rectangle {
-        id: forecastCard
-        height: 200
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 15
-        color: Appearance.colors.colLayer2
-        radius: Sizes.lockCardRadius
+                                delegate: Rectangle {
+                                    required property int index
+                                    required property var modelData
 
-        Item {
-            anchors.fill: parent
-            anchors.margins: 20
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    Layout.minimumWidth: 72
+                                    radius: Appearance.rounding.normal
+                                    color: index === 0
+                                        ? Appearance.colors.colSecondaryContainer
+                                        : Appearance.colors.colSurfaceContainerHighest
 
-            // 12 小时折线图
-            Canvas {
-                id: hourlyCanvas
-                anchors.fill: parent
-                renderTarget: Canvas.FramebufferObject
-                opacity: root.isHourly ? 1.0 : 0.0
-                visible: opacity > 0
-                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutSine } }
+                                    Accessible.name: modelData.day
+                                        + ", high " + modelData.maxTemp
+                                        + ", low " + modelData.minTemp
 
-                // 【新增：监听主题色变化并强制重绘】
-                Connections {
-                    target: Appearance.colors
-                    function onColPrimaryChanged() {
-                        hourlyCanvas.requestPaint()
-                    }
-                }
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.topMargin: 8
+                                        anchors.bottomMargin: 8
+                                        spacing: 2
 
-                onPaint: {
-                    if (!root.hourlyData || root.hourlyData.length === 0) return;
-                    var ctx = getContext("2d");
-                    ctx.clearRect(0, 0, width, height);
+                                        Text {
+                                            Layout.fillWidth: true
+                                            text: parent.parent.modelData.day
+                                            color: parent.parent.index === 0
+                                                ? Appearance.colors.colOnSecondaryContainer
+                                                : Appearance.colors.colOnSurfaceVariant
+                                            font.family: Sizes.fontFamily
+                                            font.pixelSize: 12
+                                            font.weight: Font.Medium
+                                            horizontalAlignment: Text.AlignHCenter
+                                            elide: Text.ElideRight
+                                            textFormat: Text.PlainText
+                                        }
 
-                    var minTemp = 999, maxTemp = -999;
-                    for (var i = 0; i < root.hourlyData.length; i++) {
-                        var t = root.hourlyData[i].temp;
-                        if (t < minTemp) minTemp = t;
-                        if (t > maxTemp) maxTemp = t;
-                    }
-                    if (maxTemp - minTemp < 4) { maxTemp += 2; minTemp -= 2; }
+                                        MaterialSymbol {
+                                            Layout.alignment: Qt.AlignHCenter
+                                            Layout.fillHeight: true
+                                            text: parent.parent.modelData.icon
+                                            iconSize: 27
+                                            fill: 1
+                                            color: parent.parent.index === 0
+                                                ? Appearance.colors.colOnSecondaryContainer
+                                                : Appearance.colors.colPrimary
+                                        }
 
-                    var points = [];
-                    var padTop = 65, padBottom = 20; 
-                    var padSide = 35; 
-                    var drawHeight = height - padTop - padBottom;
-                    var drawWidth = width - padSide * 2;
-                    var stepX = drawWidth / (root.hourlyData.length - 1);
+                                        Row {
+                                            Layout.alignment: Qt.AlignHCenter
+                                            spacing: 5
 
-                    for (var j = 0; j < root.hourlyData.length; j++) {
-                        var normalized = (root.hourlyData[j].temp - minTemp) / (maxTemp - minTemp);
-                        points.push({ 
-                            x: padSide + j * stepX, 
-                            y: padTop + (1 - normalized) * drawHeight, 
-                            data: root.hourlyData[j] 
-                        });
-                    }
+                                            Text {
+                                                text: parent.parent.parent.modelData.maxTemp
+                                                color: parent.parent.parent.index === 0
+                                                    ? Appearance.colors.colOnSecondaryContainer
+                                                    : Appearance.colors.colOnSurface
+                                                font.family: Sizes.fontFamilyMono
+                                                font.pixelSize: 13
+                                                font.weight: Font.DemiBold
+                                                textFormat: Text.PlainText
+                                            }
 
-                    ctx.beginPath();
-                    ctx.moveTo(points[0].x, points[0].y);
-                    for (var k = 1; k < points.length; k++) { ctx.lineTo(points[k].x, points[k].y); }
-                    ctx.lineWidth = 2.5;
-                    ctx.strokeStyle = Appearance.colors.colPrimary; 
-                    ctx.stroke();
+                                            Text {
+                                                text: parent.parent.parent.modelData.minTemp
+                                                color: parent.parent.parent.index === 0
+                                                    ? Appearance.applyAlpha(
+                                                        Appearance.colors.colOnSecondaryContainer,
+                                                        0.72
+                                                    )
+                                                    : Appearance.colors.colOnSurfaceVariant
+                                                font.family: Sizes.fontFamilyMono
+                                                font.pixelSize: 12
+                                                textFormat: Text.PlainText
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-                    ctx.textAlign = "center";
-                    for (var p = 0; p < points.length; p++) {
-                        var pt = points[p];
-                        ctx.beginPath();
-                        ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
-                        ctx.fillStyle = Appearance.colors.colLayer2; ctx.fill();
-                        ctx.lineWidth = 2; ctx.strokeStyle = Appearance.colors.colPrimary; ctx.stroke();
-                        
-                        ctx.fillStyle = Appearance.colors.colOnSurface;
-                        ctx.font = "18px '" + root.materialFont + "'";
-                        ctx.fillText(pt.data.icon, pt.x, pt.y - 22);
-                        
-                        ctx.font = "bold 13px '" + Sizes.fontFamilyMono + "'";
-                        ctx.fillText(pt.data.temp + "°", pt.x, pt.y - 44);
-                        
-                        ctx.fillStyle = Appearance.colors.colOnSurfaceVariant;
-                        ctx.font = "12px '" + Sizes.fontFamily + "'";
-                        ctx.fillText(pt.data.time, pt.x, height - 2);
-                    }
-                }
-            }
-
-            // 7 天排版
-            Row {
-                anchors.centerIn: parent
-                spacing: 10
-                opacity: root.isHourly ? 0.0 : 1.0
-                visible: opacity > 0
-                Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutSine } }
-
-                Repeater {
-                    model: root.dailyData
-                    Rectangle {
-                        width: 82; height: 140; radius: 16
-                        color: Appearance.colors.colLayer4
-                        
-                        Column {
+                        ColumnLayout {
                             anchors.centerIn: parent
-                            spacing: 12
-                            Text { text: modelData.day; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamily; font.pixelSize: 14; font.bold: true; anchors.horizontalCenter: parent.horizontalCenter }
-                            Text { text: modelData.icon; color: Appearance.colors.colPrimary; font.family: root.materialFont; font.pixelSize: 32; anchors.horizontalCenter: parent.horizontalCenter }
-                            Column {
-                                spacing: 2; anchors.horizontalCenter: parent.horizontalCenter
-                                Text { text: modelData.maxTemp; color: Appearance.colors.colOnSurface; font.family: Sizes.fontFamilyMono; font.pixelSize: 16; font.bold: true; anchors.horizontalCenter: parent.horizontalCenter }
-                                Text { text: modelData.minTemp; color: Appearance.colors.colOnSurfaceVariant; font.family: Sizes.fontFamilyMono; font.pixelSize: 14; anchors.horizontalCenter: parent.horizontalCenter }
+                            spacing: 8
+                            visible: !root.dailyData || root.dailyData.length === 0
+
+                            MaterialSymbol {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: "event_busy"
+                                iconSize: 30
+                                color: Appearance.colors.colOnSurfaceVariant
+                            }
+
+                            Text {
+                                text: "Daily forecast unavailable"
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: Sizes.fontFamily
+                                font.pixelSize: 13
+                                textFormat: Text.PlainText
                             }
                         }
                     }

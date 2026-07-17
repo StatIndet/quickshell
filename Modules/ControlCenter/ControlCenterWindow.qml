@@ -27,25 +27,17 @@ ApplicationWindow {
     property int currentPage: 0
     property bool navExpanded: width > 900
     readonly property var pages: [
-        ({ "title": "通用", "icon": "settings" }),
-        ({ "title": "壁纸", "icon": "wallpaper" }),
-        ({ "title": "主题", "icon": "palette" }),
-        ({ "title": "钥石", "icon": "pill" })
+        ({ "title": "通用", "icon": "settings", "source": "GeneralPage.qml" }),
+        ({ "title": "壁纸", "icon": "wallpaper", "source": "WallpaperPage.qml" }),
+        ({ "title": "主题", "icon": "palette", "source": "ThemePage.qml" }),
+        ({ "title": "钥石", "icon": "pill", "source": "KeystonePage.qml" }),
+        ({ "title": "天气", "icon": "partly_cloudy_day", "source": "WeatherPage.qml" })
     ]
 
-    function pageComponent(index) {
-        switch (index) {
-        case 0:
-            return generalPage;
-        case 1:
-            return wallpaperPage;
-        case 2:
-            return themePage;
-        case 3:
-            return keystonePage;
-        default:
-            return generalPage;
-        }
+    function pageSource(index) {
+        if (index < 0 || index >= pages.length)
+            return Qt.resolvedUrl("GeneralPage.qml");
+        return Qt.resolvedUrl(pages[index].source);
     }
 
     function openConfig() {
@@ -207,29 +199,9 @@ ApplicationWindow {
                     Loader {
                         id: pageLoader
                         anchors.fill: parent
-                        sourceComponent: root.pageComponent(root.currentPage)
+                        source: root.pageSource(root.currentPage)
                     }
             }
         }
-    }
-
-    Component {
-        id: generalPage
-        GeneralPage {}
-    }
-
-    Component {
-        id: wallpaperPage
-        WallpaperPage {}
-    }
-
-    Component {
-        id: themePage
-        ThemePage {}
-    }
-
-    Component {
-        id: keystonePage
-        KeystonePage {}
     }
 }

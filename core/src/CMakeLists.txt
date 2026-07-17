@@ -52,6 +52,21 @@ target_link_libraries(ClavisWeatherCore PRIVATE
 )
 target_include_directories(ClavisWeatherCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+qt_add_library(ClavisWeatherMapCore STATIC)
+target_sources(ClavisWeatherMapCore PRIVATE
+    weather_map_provider.h
+    weather_map_provider.cpp
+)
+
+set_target_properties(ClavisWeatherMapCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(ClavisWeatherMapCore PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Network
+)
+target_include_directories(ClavisWeatherMapCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 qt_add_library(ClavisNiriCore STATIC)
 target_sources(ClavisNiriCore PRIVATE
     niri_types.h

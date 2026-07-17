@@ -28,17 +28,17 @@ Item {
         onActivated: root.currentIndex = (root.currentIndex + 3) % 4
     }
     
-    // 【恢复 860 总宽】
-    implicitWidth: currentIndex === 0 ? 860 : 
-                   currentIndex === 2 ? 960 : 
+    implicitWidth: currentIndex === 0 ? 860 :
+                   currentIndex === 2 ? 960 :
+                   currentIndex === 3 ? 860 :
                    760
     Behavior on implicitWidth { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
     
     implicitHeight: 80 + 20 + (
         currentIndex === 0 ? 520 : 
         currentIndex === 1 ? 480 : 
-        currentIndex === 2 ? 300 : 
-        540             
+        currentIndex === 2 ? 300 :
+        560
     )
     Behavior on implicitHeight { NumberAnimation { duration: 400; easing.type: Easing.OutQuint } }
 
@@ -153,6 +153,7 @@ Item {
         WeatherContent {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
+            active: root.currentIndex === 3 && root.visible
             visible: root.currentIndex === 3
             opacity: visible ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 300 } }

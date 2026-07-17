@@ -22,6 +22,7 @@ add_subdirectory(src)
 # Quickshell plugins
 add_subdirectory(plugin/sysmon)
 add_subdirectory(plugin/weather)
+add_subdirectory(plugin/weathermap)
 add_subdirectory(plugin/niri)
 add_subdirectory(plugin/audio)
 add_subdirectory(plugin/media)

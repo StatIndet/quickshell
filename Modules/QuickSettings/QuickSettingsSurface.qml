@@ -26,6 +26,15 @@ WidgetPanel {
     readonly property var toggleRows: rowsForToggles(QuickToggleConfig.toggles)
     readonly property var unusedToggleRows: rowsForToggles(QuickToggleConfig.unusedToggleTypes.map(type => ({ "type": type, "size": 1 })))
 
+    function openControlCenter() {
+        WidgetState.qsOpen = false;
+        Quickshell.execDetached([
+            "qs",
+            "--path",
+            Paths.shellDir + "/controlcenter.qml"
+        ]);
+    }
+
     function sizeForToggle(toggle) {
         return Number(toggle && toggle.size) === 2 ? 2 : 1;
     }
@@ -222,7 +231,7 @@ WidgetPanel {
             padding: root.headerButtonPadding
             iconName: "settings"
             tooltipText: "设置"
-            onTriggered: Quickshell.execDetached(["qs", "-p", Quickshell.shellPath("controlcenter.qml")])
+            onTriggered: root.openControlCenter()
         }
 
         QuickToggleButton {
