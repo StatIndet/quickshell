@@ -651,11 +651,6 @@ Item {
             Layout.maximumHeight: 220
             radius: Appearance.rounding.large
             color: Appearance.colors.colSurfaceContainerHigh
-            border.width: 1
-            border.color: Appearance.applyAlpha(
-                Appearance.colors.colOutlineVariant,
-                0.55
-            )
             clip: true
 
             Accessible.name: root.isHourly

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import Clavis.WeatherMap 1.0
 import qs.Common
 import qs.Components
@@ -55,6 +56,14 @@ Rectangle {
     radius: Appearance.rounding.large
     color: Appearance.colors.colSurfaceContainerHigh
     clip: true
+    layer.enabled: true
+    layer.effect: OpacityMask {
+        maskSource: Rectangle {
+            width: root.width
+            height: root.height
+            radius: root.radius
+        }
+    }
 
     Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
     Material.accent: Appearance.colors.colPrimary
@@ -459,55 +468,60 @@ Rectangle {
             onWidthChanged: root.scheduleRebuild()
             onHeightChanged: root.scheduleRebuild()
 
-            Rectangle {
-                anchors.fill: parent
-                radius: Appearance.rounding.large
-                color: Appearance.colors.colWeatherCardSurface
-            }
-
             Item {
-                id: panningLayer
+                id: mapBackdrop
 
                 anchors.fill: parent
-                x: root.dragOffsetX
-                y: root.dragOffsetY
 
-                WeatherTileLayer {
-                    id: tileLayer
-
+                Rectangle {
                     anchors.fill: parent
-                    active: root.active && root.hasCoordinates
-                    tiles: root.visibleTiles
-                    weatherEnabled: root.weatherEnabled
-                    weatherLayer: root.weatherLayer
-                    weatherOpacity: root.weatherOpacity
-                    zoomLevel: root.zoomLevel
-                    generation: root.viewportGeneration
-                    onFirstWeatherTileReady: root.layerUpdatedAt = new Date()
-                }
-
-                AirQualityOverlay {
-                    anchors.fill: parent
-                    visible: root.selectedMode === "aqi"
-                        && root.projectedGridSamples.length > 0
-                    samples: root.projectedGridSamples
+                    color: Appearance.colors.colWeatherCardSurface
                 }
 
                 Item {
-                    x: root.markerX() - width / 2
-                    y: root.markerY() - height
-                    width: 32
-                    height: 32
-                    visible: root.hasCoordinates
+                    id: panningLayer
 
-                    MaterialSymbol {
+                    anchors.fill: parent
+                    x: root.dragOffsetX
+                    y: root.dragOffsetY
+
+                    WeatherTileLayer {
+                        id: tileLayer
+
                         anchors.fill: parent
-                        text: "location_on"
-                        iconSize: 30
-                        fill: 1
-                        color: Appearance.colors.colPrimary
-                        style: Text.Outline
-                        styleColor: Appearance.colors.colSurfaceContainerHighest
+                        active: root.active && root.hasCoordinates
+                        tiles: root.visibleTiles
+                        weatherEnabled: root.weatherEnabled
+                        weatherLayer: root.weatherLayer
+                        weatherOpacity: root.weatherOpacity
+                        zoomLevel: root.zoomLevel
+                        generation: root.viewportGeneration
+                        onFirstWeatherTileReady: root.layerUpdatedAt = new Date()
+                    }
+
+                    AirQualityOverlay {
+                        anchors.fill: parent
+                        visible: root.selectedMode === "aqi"
+                            && root.projectedGridSamples.length > 0
+                        samples: root.projectedGridSamples
+                    }
+
+                    Item {
+                        x: root.markerX() - width / 2
+                        y: root.markerY() - height
+                        width: 32
+                        height: 32
+                        visible: root.hasCoordinates
+
+                        MaterialSymbol {
+                            anchors.fill: parent
+                            text: "location_on"
+                            iconSize: 30
+                            fill: 1
+                            color: Appearance.colors.colPrimary
+                            style: Text.Outline
+                            styleColor: Appearance.colors.colSurfaceContainerHighest
+                        }
                     }
                 }
             }
@@ -608,10 +622,14 @@ Rectangle {
             }
 
             MapLegend {
+                id: mapLegend
+
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.margins: 12
                 z: 20
+                backdropSource: mapBackdrop
+                backdropRect: Qt.rect(x, y, width, height)
                 mode: root.selectedMode
                 updatedAt: root.selectedMode === "aqi"
                         ? root.gridUpdatedAt
@@ -636,18 +654,30 @@ Rectangle {
                 Accessible.name: "Back to current location"
                 onClicked: root.recenter()
 
-                background: Rectangle {
+                background: FrostedMapSurface {
+                    sourceItem: mapBackdrop
+                    sourceRect: Qt.rect(
+                        recenterButton.x,
+                        recenterButton.y,
+                        recenterButton.width,
+                        recenterButton.height
+                    )
                     radius: Appearance.rounding.full
-                    color: recenterButton.down
-                        ? Appearance.colors.colSurfaceContainerHighestActive
+                    blurAmount: 0.66
+                    tint: recenterButton.down
+                        ? Appearance.applyAlpha(
+                            Appearance.colors.colSurfaceContainerHighestActive,
+                            0.78
+                        )
                         : recenterButton.hovered || recenterButton.activeFocus
-                            ? Appearance.colors.colSurfaceContainerHighestHover
+                            ? Appearance.applyAlpha(
+                                Appearance.colors.colSurfaceContainerHighestHover,
+                                0.74
+                            )
                             : Appearance.applyAlpha(
                                 Appearance.colors.colSurfaceContainerHighest,
-                                0.96
+                                0.60
                             )
-                    border.width: recenterButton.activeFocus ? 1 : 0
-                    border.color: Appearance.colors.colPrimary
                 }
 
                 contentItem: MaterialSymbol {
@@ -680,33 +710,24 @@ Rectangle {
                 Material.accent: Appearance.colors.colPrimary
             }
 
-            Rectangle {
+            Text {
+                id: attributionText
+
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.leftMargin: 12
                 anchors.bottomMargin: 12
                 z: 20
-                width: attributionText.implicitWidth + 16
-                height: 24
-                radius: Appearance.rounding.full
-                color: Appearance.applyAlpha(
-                    Appearance.colors.colSurfaceContainerHighest,
-                    0.92
-                )
-
-                Text {
-                    id: attributionText
-
-                    anchors.centerIn: parent
-                    text: "© OpenStreetMap contributors · "
-                        + (root.selectedMode === "aqi"
-                            ? "Open-Meteo"
-                            : "OpenWeather")
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Sizes.fontFamily
-                    font.pixelSize: 10
-                    textFormat: Text.PlainText
-                }
+                text: "© OpenStreetMap contributors · "
+                    + (root.selectedMode === "aqi"
+                        ? "Open-Meteo"
+                        : "OpenWeather")
+                color: Appearance.colors.colOnImage
+                font.family: Sizes.fontFamily
+                font.pixelSize: 10
+                style: Text.Outline
+                styleColor: Appearance.colors.colScrim
+                textFormat: Text.PlainText
             }
 
             Rectangle {
@@ -743,96 +764,6 @@ Rectangle {
                 }
             }
 
-            Canvas {
-                id: cornerMask
-
-                anchors.fill: parent
-                z: 100
-                antialiasing: true
-                property color maskColor: Appearance.colors.colSurfaceContainerHigh
-                property real cornerRadius: Appearance.rounding.large
-
-                onMaskColorChanged: requestPaint()
-                onCornerRadiusChanged: requestPaint()
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
-
-                onPaint: {
-                    const ctx = getContext("2d")
-                    const radius = Math.min(
-                        cornerRadius,
-                        width / 2,
-                        height / 2
-                    )
-                    ctx.clearRect(0, 0, width, height)
-                    ctx.fillStyle = maskColor
-
-                    ctx.beginPath()
-                    ctx.moveTo(0, radius)
-                    ctx.lineTo(0, 0)
-                    ctx.lineTo(radius, 0)
-                    ctx.arc(radius, radius, radius, -Math.PI / 2, -Math.PI, true)
-                    ctx.closePath()
-                    ctx.fill()
-
-                    ctx.beginPath()
-                    ctx.moveTo(width - radius, 0)
-                    ctx.lineTo(width, 0)
-                    ctx.lineTo(width, radius)
-                    ctx.arc(
-                        width - radius,
-                        radius,
-                        radius,
-                        0,
-                        -Math.PI / 2,
-                        true
-                    )
-                    ctx.closePath()
-                    ctx.fill()
-
-                    ctx.beginPath()
-                    ctx.moveTo(width, height - radius)
-                    ctx.lineTo(width, height)
-                    ctx.lineTo(width - radius, height)
-                    ctx.arc(
-                        width - radius,
-                        height - radius,
-                        radius,
-                        Math.PI / 2,
-                        0,
-                        true
-                    )
-                    ctx.closePath()
-                    ctx.fill()
-
-                    ctx.beginPath()
-                    ctx.moveTo(radius, height)
-                    ctx.lineTo(0, height)
-                    ctx.lineTo(0, height - radius)
-                    ctx.arc(
-                        radius,
-                        height - radius,
-                        radius,
-                        Math.PI,
-                        Math.PI / 2,
-                        true
-                    )
-                    ctx.closePath()
-                    ctx.fill()
-                }
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                z: 101
-                radius: Appearance.rounding.large
-                color: "transparent"
-                border.width: 1
-                border.color: Appearance.applyAlpha(
-                    Appearance.colors.colOutlineVariant,
-                    0.72
-                )
-            }
         }
     }
 }

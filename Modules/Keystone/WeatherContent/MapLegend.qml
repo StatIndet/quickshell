@@ -8,19 +8,25 @@ Rectangle {
     property string mode: "temp"
     property date updatedAt
     property bool stale: false
+    property Item backdropSource: null
+    property rect backdropRect: Qt.rect(0, 0, width, height)
 
     implicitWidth: 184
     implicitHeight: 70
     radius: Appearance.rounding.normal
-    color: Appearance.applyAlpha(
-        Appearance.colors.colSurfaceContainerHighest,
-        0.96
-    )
-    border.width: 1
-    border.color: Appearance.applyAlpha(
-        Appearance.colors.colOutlineVariant,
-        0.72
-    )
+    color: "transparent"
+
+    FrostedMapSurface {
+        anchors.fill: parent
+        sourceItem: root.backdropSource
+        sourceRect: root.backdropRect
+        radius: root.radius
+        blurAmount: 0.64
+        tint: Appearance.applyAlpha(
+            Appearance.colors.colSurfaceContainerHighest,
+            0.66
+        )
+    }
 
     function colorsForMode() {
         if (mode === "temp")
