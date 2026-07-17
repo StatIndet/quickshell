@@ -18,13 +18,14 @@ Rectangle {
 
     FrostedMapSurface {
         anchors.fill: parent
+        z: 0
         sourceItem: root.backdropSource
         sourceRect: root.backdropRect
         radius: root.radius
         blurAmount: 0.64
         tint: Appearance.applyAlpha(
-            Appearance.colors.colSurfaceContainerHighest,
-            0.66
+            Appearance.colors.colScrim,
+            0.52
         )
     }
 
@@ -79,6 +80,7 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
+        z: 1
         anchors.leftMargin: 10
         anchors.rightMargin: 10
         anchors.topMargin: 7
@@ -92,9 +94,9 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 text: root.titleText()
-                color: Appearance.colors.colOnSurface
+                color: Appearance.colors.colOnImage
                 font.family: Sizes.fontFamily
-                font.pixelSize: 11
+                font.pixelSize: 12
                 font.weight: Font.DemiBold
                 elide: Text.ElideRight
                 textFormat: Text.PlainText
@@ -103,9 +105,12 @@ Rectangle {
             Text {
                 text: root.updateText()
                 visible: text !== ""
-                color: Appearance.colors.colOnSurfaceVariant
+                color: Appearance.applyAlpha(
+                    Appearance.colors.colOnImage,
+                    0.82
+                )
                 font.family: Sizes.fontFamilyMono
-                font.pixelSize: 9
+                font.pixelSize: 10
                 textFormat: Text.PlainText
             }
         }
@@ -128,8 +133,31 @@ Rectangle {
                         colors[index]
                     )
                 }
+
+                const radius = Math.min(height / 2, width / 2)
+                ctx.beginPath()
+                ctx.moveTo(radius, 0)
+                ctx.lineTo(width - radius, 0)
+                ctx.arc(
+                    width - radius,
+                    radius,
+                    radius,
+                    -Math.PI / 2,
+                    Math.PI / 2,
+                    false
+                )
+                ctx.lineTo(radius, height)
+                ctx.arc(
+                    radius,
+                    radius,
+                    radius,
+                    Math.PI / 2,
+                    Math.PI * 1.5,
+                    false
+                )
+                ctx.closePath()
                 ctx.fillStyle = gradient
-                ctx.fillRect(0, 0, width, height)
+                ctx.fill()
             }
 
             onWidthChanged: requestPaint()
@@ -148,9 +176,10 @@ Rectangle {
 
             Text {
                 text: root.minimumLabel()
-                color: Appearance.colors.colOnSurfaceVariant
+                color: Appearance.colors.colOnImage
                 font.family: Sizes.fontFamily
                 font.pixelSize: 10
+                font.weight: Font.Medium
                 textFormat: Text.PlainText
             }
 
@@ -160,9 +189,10 @@ Rectangle {
 
             Text {
                 text: root.maximumLabel()
-                color: Appearance.colors.colOnSurfaceVariant
+                color: Appearance.colors.colOnImage
                 font.family: Sizes.fontFamily
                 font.pixelSize: 10
+                font.weight: Font.Medium
                 textFormat: Text.PlainText
             }
         }

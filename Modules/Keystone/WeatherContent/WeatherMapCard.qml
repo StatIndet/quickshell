@@ -518,7 +518,7 @@ Rectangle {
                             text: "location_on"
                             iconSize: 30
                             fill: 1
-                            color: Appearance.colors.colPrimary
+                            color: "#B3261E"
                             style: Text.Outline
                             styleColor: Appearance.colors.colSurfaceContainerHighest
                         }
@@ -666,17 +666,17 @@ Rectangle {
                     blurAmount: 0.66
                     tint: recenterButton.down
                         ? Appearance.applyAlpha(
-                            Appearance.colors.colSurfaceContainerHighestActive,
-                            0.78
+                            Appearance.colors.colScrim,
+                            0.68
                         )
                         : recenterButton.hovered || recenterButton.activeFocus
                             ? Appearance.applyAlpha(
-                                Appearance.colors.colSurfaceContainerHighestHover,
-                                0.74
+                                Appearance.colors.colScrim,
+                                0.60
                             )
                             : Appearance.applyAlpha(
-                                Appearance.colors.colSurfaceContainerHighest,
-                                0.60
+                                Appearance.colors.colScrim,
+                                0.52
                             )
                 }
 
@@ -685,9 +685,9 @@ Rectangle {
                     iconSize: 20
                     fill: root.followingLocation ? 1 : 0
                     color: recenterButton.enabled
-                        ? Appearance.colors.colOnSurfaceVariant
+                        ? Appearance.colors.colOnImage
                         : Appearance.applyAlpha(
-                            Appearance.colors.colOnSurface,
+                            Appearance.colors.colOnImage,
                             0.38
                         )
                 }
@@ -722,11 +722,10 @@ Rectangle {
                     + (root.selectedMode === "aqi"
                         ? "Open-Meteo"
                         : "OpenWeather")
-                color: Appearance.colors.colOnImage
+                color: Appearance.colors.colOnPrimaryFixed
                 font.family: Sizes.fontFamily
-                font.pixelSize: 10
-                style: Text.Outline
-                styleColor: Appearance.colors.colScrim
+                font.pixelSize: 11
+                font.weight: Font.Medium
                 textFormat: Text.PlainText
             }
 
