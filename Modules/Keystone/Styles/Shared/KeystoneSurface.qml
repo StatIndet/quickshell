@@ -320,15 +320,15 @@ Variants {
                     || recordingActionProgress > 0.01
                     || processingContentProgress > 0.01
 
-                property bool audioWasActive: false
-                property bool audioExitActive: false
-                property bool audioGeometryExitActive: false
-                property bool audioWidthCollapsing: false
+                readonly property int audioPhaseHidden: 0
+                readonly property int audioPhaseExpanded: 1
+                readonly property int audioPhaseCollapsing: 2
+                property int audioPresentationPhase: audioPhaseHidden
                 readonly property bool audioSessionActive: AudioRecordingService.isActive
                 readonly property bool audioPresentationActive: audioSessionActive
-                    || audioExitActive
+                    || audioPresentationPhase !== audioPhaseHidden
                 readonly property bool audioGeometryActive: audioSessionActive
-                    || audioGeometryExitActive
+                    || audioPresentationPhase === audioPhaseExpanded
                 readonly property bool contentPresentationActive:
                     recordingPresentationActive || audioPresentationActive
 
@@ -359,7 +359,7 @@ Variants {
                 property int notifW: 380; property int notifH: (NotificationManager.popupList.length * 70) + 20
                 property int volW: 320; property int volH: 64
                 property int audioW: KeystoneMotion.audioRecordingWidth
-                property int audioH: collapsedH + KeystoneMotion.audioRecordingHeightDelta
+                property int audioH: KeystoneMotion.audioRecordingHeight
                 
                 property color color: Appearance.colors.colLayer0
                 clip: true
@@ -406,10 +406,7 @@ Variants {
 
                 onAudioSessionActiveChanged: {
                     if (root.audioSessionActive) {
-                        root.audioWasActive = true;
-                        root.audioExitActive = false;
-                        root.audioGeometryExitActive = false;
-                        root.audioWidthCollapsing = false;
+                        root.audioPresentationPhase = root.audioPhaseExpanded;
                         root.expanded = false;
                         root.showLyrics = false;
                         root.showVolume = false;
@@ -419,14 +416,8 @@ Variants {
                         return;
                     }
 
-                    if (!root.audioWasActive)
-                        return;
-
-                    root.audioWasActive = false;
-                    root.audioExitActive = true;
-                    root.audioGeometryExitActive = true;
-                    root.audioWidthCollapsing = false;
-                    audioRecordingVisual.beginExit();
+                    if (root.audioPresentationPhase === root.audioPhaseExpanded)
+                        audioRecordingVisual.beginExit();
                 }
 
                 onIsRecordingChanged: {
@@ -513,10 +504,9 @@ Variants {
                     root.recordingInfoProgress = root.isRecording ? 1 : 0;
                     root.recordingActionProgress = root.isRecording ? 1 : 0;
                     root.processingContentProgress = root.isFinalizing ? 1 : 0;
-                    root.audioWasActive = root.audioSessionActive;
-                    root.audioExitActive = false;
-                    root.audioGeometryExitActive = false;
-                    root.audioWidthCollapsing = false;
+                    root.audioPresentationPhase = root.audioSessionActive
+                        ? root.audioPhaseExpanded
+                        : root.audioPhaseHidden;
                     if (root.audioSessionActive)
                         Qt.callLater(audioRecordingVisual.beginEntry);
                 }
@@ -751,9 +741,15 @@ Variants {
                 }
 
                 onTargetWChanged: {
-                    if (root.audioWidthCollapsing) {
+                    if (root.audioPresentationPhase === root.audioPhaseCollapsing) {
                         wDuration = KeystoneMotion.audioCollapseDuration;
-                        wBezier = KeystoneMotion.shrinkingBezier;
+                        wBezier = KeystoneMotion.hoverBezier;
+                        return;
+                    }
+
+                    if (targetW === root.audioW && root.audioGeometryActive) {
+                        wDuration = KeystoneMotion.audioExpandDuration;
+                        wBezier = KeystoneMotion.hoverBezier;
                         return;
                     }
 
@@ -768,9 +764,15 @@ Variants {
                     wBezier = isExpanding ? KeystoneMotion.expandingBezier : KeystoneMotion.shrinkingBezier;
                 }
                 onTargetHChanged: {
-                    if (root.audioWidthCollapsing) {
+                    if (root.audioPresentationPhase === root.audioPhaseCollapsing) {
                         hDuration = KeystoneMotion.audioCollapseDuration;
-                        hBezier = KeystoneMotion.shrinkingBezier;
+                        hBezier = KeystoneMotion.hoverBezier;
+                        return;
+                    }
+
+                    if (targetH === root.audioH && root.audioGeometryActive) {
+                        hDuration = KeystoneMotion.audioExpandDuration;
+                        hBezier = KeystoneMotion.hoverBezier;
                         return;
                     }
 
@@ -1126,19 +1128,18 @@ Variants {
                 captureSink: AudioRecordingService.captureSink
                 elapsedMs: AudioRecordingService.elapsedMs
                 visible: root.audioPresentationActive
-                    || waveformProgress > 0.01
-                    || controlsProgress > 0.01
+                    || contentProgress > 0.01
                 z: root.z + 3
 
                 onStopRequested: AudioRecordingService.stop()
                 onCollapseRequested: {
-                    root.audioWidthCollapsing = true;
-                    root.audioGeometryExitActive = false;
+                    if (!root.audioSessionActive)
+                        root.audioPresentationPhase = root.audioPhaseCollapsing;
                 }
                 onExitFinished: {
-                    root.audioExitActive = false;
-                    root.audioGeometryExitActive = false;
-                    root.audioWidthCollapsing = false;
+                    root.audioPresentationPhase = root.audioSessionActive
+                        ? root.audioPhaseExpanded
+                        : root.audioPhaseHidden;
                 }
             }
 

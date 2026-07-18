@@ -16,24 +16,23 @@ RoundButton {
     enabled: canStop && !stopping
     hoverEnabled: true
     display: AbstractButton.IconOnly
-    Material.theme: Material.Dark
+    Material.accent: Appearance.colors.colError
     onClicked: stopRequested()
 
     background: Item {
         Rectangle {
             anchors.centerIn: parent
-            width: 34
-            height: 34
+            width: 32
+            height: 32
             radius: Appearance.rounding.full
             color: root.down
-                ? Appearance.colors.colLayer2Active
+                ? Appearance.colors.colSurfaceContainerHighestActive
                 : (root.hovered
-                    ? Appearance.colors.colLayer2Hover
+                    ? Appearance.colors.colSurfaceContainerHighestHover
                     : "transparent")
-            border.width: 2
-            border.color: root.enabled
-                ? Appearance.colors.colOnSurface
-                : Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.55)
+            border.width: 1
+            border.color: Appearance.colors.colOutlineVariant
+            opacity: root.stopping ? 1 : (root.enabled ? 1 : 0.38)
 
             Behavior on color {
                 ColorAnimation {
@@ -43,11 +42,11 @@ RoundButton {
 
             Rectangle {
                 anchors.centerIn: parent
-                width: root.down ? 12 : 14
+                width: root.down ? 10 : 12
                 height: width
                 radius: Appearance.rounding.extraSmall
                 color: Appearance.colors.colError
-                opacity: root.stopping ? 0.32 : 1
+                opacity: root.stopping ? 0.16 : 1
 
                 Behavior on width {
                     NumberAnimation {
@@ -60,8 +59,8 @@ RoundButton {
 
             BusyIndicator {
                 anchors.centerIn: parent
-                width: 24
-                height: 24
+                width: 22
+                height: 22
                 running: root.stopping
                 visible: running
             }

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 import Clavis.Audio 1.0
 import qs.Common
 
@@ -14,11 +13,7 @@ Item {
     required property bool captureSink
     required property double elapsedMs
 
-    property real waveformProgress: 0
-    property real controlsProgress: 0
-    property real exitCompression: 0
-    readonly property real contentBlur: Math.max(
-        1 - waveformProgress, exitCompression) * 0.55
+    property real contentProgress: 0
 
     signal stopRequested()
     signal collapseRequested()
@@ -36,21 +31,15 @@ Item {
     }
 
     function beginEntry() {
-        exitAnimation.stop();
-        collapseTimer.stop();
-        exitFinishTimer.stop();
-        root.waveformProgress = 0;
-        root.controlsProgress = 0;
-        root.exitCompression = 0;
+        exitSequence.stop();
+        entryAnimation.stop();
+        root.contentProgress = 0;
         entryAnimation.restart();
     }
 
     function beginExit() {
         entryAnimation.stop();
-        root.exitCompression = 0;
-        collapseTimer.restart();
-        exitFinishTimer.restart();
-        exitAnimation.restart();
+        exitSequence.restart();
     }
 
     AudioLevelProvider {
@@ -70,48 +59,34 @@ Item {
         id: contentLayer
 
         anchors.fill: parent
-        opacity: Math.max(root.waveformProgress, root.controlsProgress)
-        transform: Scale {
-            origin.x: contentLayer.width / 2
-            origin.y: contentLayer.height / 2
-            xScale: 0.92 + root.waveformProgress * 0.08
-                - root.exitCompression * 0.06
-            yScale: 1
-        }
-        layer.enabled: root.contentBlur > 0.001
-        layer.effect: MultiEffect {
-            blurEnabled: true
-            blurMax: 16
-            blur: root.contentBlur
-        }
+        opacity: root.contentProgress
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 18
-            anchors.rightMargin: 10
-            spacing: 12
+            anchors.leftMargin: 12
+            anchors.rightMargin: 8
+            spacing: 8
 
             AudioWaveform {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 34
+                Layout.preferredHeight: 32
                 active: root.sessionActive
                 acceptSamples: root.recording
                 sourceAvailable: levelProvider.available
                 amplitude: levelProvider.normalizedAmplitude
                 sampleTimestampMs: levelProvider.timestampMs
-                opacity: root.waveformProgress
             }
 
             Text {
-                Layout.preferredWidth: 76
+                Layout.preferredWidth: 72
                 Layout.alignment: Qt.AlignVCenter
                 text: root.formatElapsed(root.elapsedMs)
                 horizontalAlignment: Text.AlignRight
-                color: Appearance.colors.colError
-                font.family: "JetBrainsMono Nerd Font"
-                font.pixelSize: 16
+                color: Appearance.colors.colOnSurface
+                font.family: Sizes.fontFamilyMono
+                font.pixelSize: 14
                 font.weight: Font.DemiBold
-                opacity: root.controlsProgress
+                font.features: { "tnum": 1 }
             }
 
             AudioStopButton {
@@ -120,79 +95,41 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 stopping: root.stopping
                 canStop: root.recording
-                opacity: root.controlsProgress
                 onStopRequested: root.stopRequested()
             }
         }
     }
 
-    ParallelAnimation {
+    NumberAnimation {
         id: entryAnimation
 
-        SequentialAnimation {
-            PauseAnimation { duration: KeystoneMotion.audioContentDelay }
-            NumberAnimation {
-                target: root
-                property: "waveformProgress"
-                to: 1
-                duration: KeystoneMotion.audioContentEnterDuration
-                easing.type: Appearance.animation.expressiveSlowEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-            }
-        }
-        SequentialAnimation {
-            PauseAnimation { duration: KeystoneMotion.audioControlsDelay }
-            NumberAnimation {
-                target: root
-                property: "controlsProgress"
-                to: 1
-                duration: KeystoneMotion.audioControlsEnterDuration
-                easing.type: Appearance.animation.expressiveSlowEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-            }
-        }
+        target: root
+        property: "contentProgress"
+        to: 1
+        duration: KeystoneMotion.audioContentEnterDuration
+        easing.type: KeystoneMotion.type
+        easing.bezierCurve: KeystoneMotion.hoverBezier
     }
 
-    ParallelAnimation {
-        id: exitAnimation
+    SequentialAnimation {
+        id: exitSequence
 
         NumberAnimation {
             target: root
-            property: "waveformProgress"
+            property: "contentProgress"
             to: 0
             duration: KeystoneMotion.audioContentExitDuration
             easing.type: Appearance.animation.emphasizedAccel.type
             easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
         }
-        NumberAnimation {
-            target: root
-            property: "controlsProgress"
-            to: 0
-            duration: KeystoneMotion.audioContentExitDuration
-            easing.type: Appearance.animation.emphasizedAccel.type
-            easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
+        ScriptAction {
+            script: root.collapseRequested()
         }
-        NumberAnimation {
-            target: root
-            property: "exitCompression"
-            to: 1
-            duration: KeystoneMotion.audioContentExitDuration
-            easing.type: Appearance.animation.emphasizedAccel.type
-            easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
+        PauseAnimation {
+            duration: KeystoneMotion.audioCollapseDuration
         }
-    }
-
-    Timer {
-        id: collapseTimer
-
-        interval: KeystoneMotion.audioCollapseDelay
-        onTriggered: root.collapseRequested()
-    }
-
-    Timer {
-        id: exitFinishTimer
-
-        interval: KeystoneMotion.audioExitDuration
-        onTriggered: root.exitFinished()
+        ScriptAction {
+            script: root.exitFinished()
+        }
     }
 }
