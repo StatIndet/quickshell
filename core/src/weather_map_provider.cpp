@@ -13,18 +13,19 @@
 #include <QJsonObject>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QProcess>
-#include <QProcessEnvironment>
 #include <QSaveFile>
 #include <QStandardPaths>
 #include <QUrlQuery>
 #include <QtMath>
+#include <qt6keychain/keychain.h>
 
 namespace {
 constexpr auto kOsmTileHost = "https://tile.openstreetmap.org";
 constexpr auto kOpenWeatherTileHost = "https://tile.openweathermap.org";
 constexpr auto kOpenMeteoAirQualityHost = "https://air-quality-api.open-meteo.com";
 constexpr auto kUserAgent = "ClavisWeatherMap/1.0 (native Quickshell weather map)";
+constexpr auto kKeychainService = "Clavis.Quickshell.WeatherMap";
+constexpr auto kKeychainEntry = "openweather-api-key";
 
 qint64 cacheControlMaxAge(const QByteArray &header)
 {
@@ -44,8 +45,7 @@ qint64 cacheControlMaxAge(const QByteArray &header)
 }
 
 WeatherMapProvider::WeatherMapProvider(QObject *parent)
-    : QObject(parent),
-      m_apiKey(qEnvironmentVariable("OPENWEATHER_API_KEY").trimmed().toUtf8())
+    : QObject(parent)
 {
     const QString genericCache = QStandardPaths::writableLocation(
         QStandardPaths::GenericCacheLocation
@@ -56,10 +56,8 @@ WeatherMapProvider::WeatherMapProvider(QObject *parent)
         + QStringLiteral("/quickshell/weather-map");
     QDir().mkpath(m_cacheRoot);
 
-    if (m_apiKey.isEmpty()) {
-        m_status = QStringLiteral("not_configured");
-        m_errorMessage = QStringLiteral("地图服务未配置");
-    }
+    m_status = QStringLiteral("loading_credentials");
+    loadApiKey();
 }
 
 bool WeatherMapProvider::active() const
@@ -83,6 +81,8 @@ void WeatherMapProvider::setActive(bool active)
             m_pendingKeys.remove(m_gridQueue.dequeue().key);
         }
         updateBusy();
+    } else if (!m_credentialsReady) {
+        setStatus(QStringLiteral("loading_credentials"));
     } else if (m_apiKey.isEmpty()) {
         setStatus(
             QStringLiteral("not_configured"),
@@ -95,6 +95,16 @@ void WeatherMapProvider::setActive(bool active)
 bool WeatherMapProvider::apiConfigured() const
 {
     return !m_apiKey.isEmpty();
+}
+
+bool WeatherMapProvider::credentialsReady() const
+{
+    return m_credentialsReady;
+}
+
+bool WeatherMapProvider::credentialBusy() const
+{
+    return m_credentialBusy;
 }
 
 bool WeatherMapProvider::busy() const
@@ -154,7 +164,8 @@ QVariantMap WeatherMapProvider::requestTile(
     int zoom,
     int x,
     int y,
-    int generation
+    int generation,
+    bool forceRefresh
 )
 {
     QVariantMap result;
@@ -188,6 +199,18 @@ QVariantMap WeatherMapProvider::requestTile(
     if (hasCache)
         result = cacheResult(task, !fresh);
 
+    if (weather && !m_credentialsReady) {
+        result.insert(
+            QStringLiteral("state"),
+            hasCache ? QStringLiteral("stale") : QStringLiteral("loading")
+        );
+        result.insert(
+            QStringLiteral("errorCode"),
+            QStringLiteral("credentials_loading")
+        );
+        return result;
+    }
+
     if (weather && m_apiKey.isEmpty()) {
         result.insert(QStringLiteral("state"), hasCache
             ? QStringLiteral("stale")
@@ -200,8 +223,11 @@ QVariantMap WeatherMapProvider::requestTile(
         return result;
     }
 
-    if (!m_active || generation != m_generation || fresh)
+    if (!m_active
+        || generation != m_generation
+        || (fresh && !forceRefresh)) {
         return result;
+    }
 
     TileSubscriber subscriber;
     subscriber.kind = task.kind;
@@ -220,7 +246,8 @@ QVariantMap WeatherMapProvider::requestTile(
 QVariantMap WeatherMapProvider::requestGrid(
     const QString &kind,
     const QVariantList &points,
-    int generation
+    int generation,
+    bool forceRefresh
 )
 {
     QVariantMap result;
@@ -257,8 +284,11 @@ QVariantMap WeatherMapProvider::requestGrid(
         result.insert(QStringLiteral("stale"), !fresh);
     }
 
-    if (!m_active || generation != m_generation || fresh)
+    if (!m_active
+        || generation != m_generation
+        || (fresh && !forceRefresh)) {
         return result;
+    }
 
     GridSubscriber subscriber;
     subscriber.kind = safeKind;
@@ -271,25 +301,15 @@ QVariantMap WeatherMapProvider::requestGrid(
     return result;
 }
 
-QVariantMap WeatherMapProvider::setSessionApiKey(const QString &apiKey)
+QVariantMap WeatherMapProvider::storeApiKey(const QString &apiKey)
 {
     QVariantMap result {
         { QStringLiteral("ok"), false },
-        { QStringLiteral("restartRequired"), false }
+        { QStringLiteral("pending"), false }
     };
 
     const QString normalized = apiKey.trimmed();
-    bool printableAscii = true;
-    for (const QChar character : normalized) {
-        const ushort value = character.unicode();
-        if (value < 0x21 || value > 0x7e) {
-            printableAscii = false;
-            break;
-        }
-    }
-    if (normalized.size() < 16
-        || normalized.size() > 128
-        || !printableAscii) {
+    if (!validApiKey(normalized)) {
         result.insert(
             QStringLiteral("message"),
             QStringLiteral("请输入有效的 OpenWeather API key")
@@ -297,103 +317,129 @@ QVariantMap WeatherMapProvider::setSessionApiKey(const QString &apiKey)
         return result;
     }
 
-    QProcess process;
-    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-    environment.insert(QStringLiteral("OPENWEATHER_API_KEY"), normalized);
-    process.setProcessEnvironment(environment);
-    process.setProcessChannelMode(QProcess::SeparateChannels);
-    process.start(
-        QStringLiteral("systemctl"),
-        {
-            QStringLiteral("--user"),
-            QStringLiteral("import-environment"),
-            QStringLiteral("OPENWEATHER_API_KEY")
-        },
-        QIODevice::ReadOnly
-    );
-
-    if (!process.waitForStarted(2000)
-        || !process.waitForFinished(5000)
-        || process.exitStatus() != QProcess::NormalExit
-        || process.exitCode() != 0) {
-        if (process.state() != QProcess::NotRunning) {
-            process.kill();
-            process.waitForFinished(1000);
-        }
+    if (m_credentialBusy) {
         result.insert(
             QStringLiteral("message"),
-            QStringLiteral("无法写入当前用户会话环境")
+            QStringLiteral("系统密钥环正在处理另一项操作")
         );
         return result;
     }
 
-    const bool wasConfigured = apiConfigured();
-    m_apiKey = normalized.toUtf8();
-    qputenv("OPENWEATHER_API_KEY", m_apiKey);
-    if (!wasConfigured)
-        emit apiConfiguredChanged();
-    setStatus(QStringLiteral("idle"));
+    auto *job = new QKeychain::WritePasswordJob(
+        QString::fromLatin1(kKeychainService),
+        this
+    );
+    job->setKey(QString::fromLatin1(kKeychainEntry));
+    job->setTextData(normalized);
+    job->setInsecureFallback(false);
+    connect(
+        job,
+        &QKeychain::Job::finished,
+        this,
+        [this, normalized](QKeychain::Job *finishedJob) {
+            if (finishedJob->error() != QKeychain::NoError) {
+                finishCredentialOperation();
+                emit credentialOperationFinished(
+                    QStringLiteral("store"),
+                    false,
+                    QStringLiteral("无法将密钥写入系统密钥环")
+                );
+                return;
+            }
+
+            setCredentialsReady(true);
+            setStatus(QStringLiteral("idle"));
+            replaceApiKey(normalized.toUtf8(), true);
+            finishCredentialOperation();
+            emit credentialOperationFinished(
+                QStringLiteral("store"),
+                true,
+                QStringLiteral("密钥已安全保存并立即生效")
+            );
+        }
+    );
+    setCredentialBusy(true);
+    job->start();
 
     result.insert(QStringLiteral("ok"), true);
-    result.insert(QStringLiteral("restartRequired"), true);
+    result.insert(QStringLiteral("pending"), true);
     result.insert(
         QStringLiteral("message"),
-        QStringLiteral("已写入当前用户会话；重启 Quickshell 后生效")
+        QStringLiteral("正在安全保存到系统密钥环")
     );
     return result;
 }
 
-QVariantMap WeatherMapProvider::clearSessionApiKey()
+QVariantMap WeatherMapProvider::clearApiKey()
 {
     QVariantMap result {
         { QStringLiteral("ok"), false },
-        { QStringLiteral("restartRequired"), false }
+        { QStringLiteral("pending"), false }
     };
 
-    QProcess process;
-    process.setProcessChannelMode(QProcess::SeparateChannels);
-    process.start(
-        QStringLiteral("systemctl"),
-        {
-            QStringLiteral("--user"),
-            QStringLiteral("unset-environment"),
-            QStringLiteral("OPENWEATHER_API_KEY")
-        },
-        QIODevice::ReadOnly
-    );
-
-    if (!process.waitForStarted(2000)
-        || !process.waitForFinished(5000)
-        || process.exitStatus() != QProcess::NormalExit
-        || process.exitCode() != 0) {
-        if (process.state() != QProcess::NotRunning) {
-            process.kill();
-            process.waitForFinished(1000);
-        }
+    if (m_credentialBusy) {
         result.insert(
             QStringLiteral("message"),
-            QStringLiteral("无法清除当前用户会话环境")
+            QStringLiteral("系统密钥环正在处理另一项操作")
         );
         return result;
     }
 
-    const bool wasConfigured = apiConfigured();
-    m_apiKey.clear();
-    qunsetenv("OPENWEATHER_API_KEY");
-    if (wasConfigured)
-        emit apiConfiguredChanged();
-    setStatus(
-        QStringLiteral("not_configured"),
-        QStringLiteral("地图服务未配置")
+    auto *job = new QKeychain::DeletePasswordJob(
+        QString::fromLatin1(kKeychainService),
+        this
     );
+    job->setKey(QString::fromLatin1(kKeychainEntry));
+    job->setInsecureFallback(false);
+    connect(
+        job,
+        &QKeychain::Job::finished,
+        this,
+        [this](QKeychain::Job *finishedJob) {
+            if (finishedJob->error() != QKeychain::NoError
+                && finishedJob->error() != QKeychain::EntryNotFound) {
+                finishCredentialOperation();
+                emit credentialOperationFinished(
+                    QStringLiteral("clear"),
+                    false,
+                    QStringLiteral("无法从系统密钥环清除密钥")
+                );
+                return;
+            }
+
+            setCredentialsReady(true);
+            setStatus(
+                QStringLiteral("not_configured"),
+                QStringLiteral("地图服务未配置")
+            );
+            replaceApiKey({}, true);
+            finishCredentialOperation();
+            emit credentialOperationFinished(
+                QStringLiteral("clear"),
+                true,
+                QStringLiteral("已从系统密钥环清除密钥")
+            );
+        }
+    );
+    setCredentialBusy(true);
+    job->start();
 
     result.insert(QStringLiteral("ok"), true);
-    result.insert(QStringLiteral("restartRequired"), true);
+    result.insert(QStringLiteral("pending"), true);
     result.insert(
         QStringLiteral("message"),
-        QStringLiteral("已从当前用户会话清除；重启 Quickshell 后生效")
+        QStringLiteral("正在从系统密钥环清除密钥")
     );
     return result;
+}
+
+void WeatherMapProvider::reloadCredentials()
+{
+    if (m_credentialBusy) {
+        m_reloadCredentialsPending = true;
+        return;
+    }
+    loadApiKey(true);
 }
 
 int WeatherMapProvider::wrappedX(int x, int zoom)
@@ -422,6 +468,18 @@ QString WeatherMapProvider::normalizedLayer(const QString &layer)
 QString WeatherMapProvider::normalizedGridKind(const QString &kind)
 {
     return kind == QStringLiteral("aqi") ? kind : QString();
+}
+
+bool WeatherMapProvider::validApiKey(const QString &apiKey)
+{
+    if (apiKey.size() < 16 || apiKey.size() > 128)
+        return false;
+    for (const QChar character : apiKey) {
+        const ushort value = character.unicode();
+        if (value < 0x21 || value > 0x7e)
+            return false;
+    }
+    return true;
 }
 
 QString WeatherMapProvider::tileCachePath(
@@ -1022,6 +1080,139 @@ void WeatherMapProvider::pruneObsoleteQueue()
     }
     m_gridQueue = currentGrids;
     updateBusy();
+}
+
+void WeatherMapProvider::loadApiKey(bool forceRefresh)
+{
+    auto *job = new QKeychain::ReadPasswordJob(
+        QString::fromLatin1(kKeychainService),
+        this
+    );
+    job->setKey(QString::fromLatin1(kKeychainEntry));
+    job->setInsecureFallback(false);
+    connect(
+        job,
+        &QKeychain::Job::finished,
+        this,
+        [this, forceRefresh](QKeychain::Job *finishedJob) {
+            const auto *readJob = static_cast<QKeychain::ReadPasswordJob *>(
+                finishedJob
+            );
+            setCredentialsReady(true);
+
+            if (finishedJob->error() == QKeychain::EntryNotFound) {
+                replaceApiKey({}, forceRefresh);
+                setStatus(
+                    QStringLiteral("not_configured"),
+                    QStringLiteral("地图服务未配置")
+                );
+                finishCredentialOperation();
+                return;
+            }
+
+            if (finishedJob->error() != QKeychain::NoError) {
+                replaceApiKey({}, forceRefresh);
+                setStatus(
+                    QStringLiteral("keychain_error"),
+                    QStringLiteral("无法访问系统密钥环")
+                );
+                finishCredentialOperation();
+                return;
+            }
+
+            const QString storedKey = readJob->textData().trimmed();
+            if (!validApiKey(storedKey)) {
+                replaceApiKey({}, forceRefresh);
+                setStatus(
+                    QStringLiteral("not_configured"),
+                    QStringLiteral("地图服务未配置")
+                );
+                finishCredentialOperation();
+                return;
+            }
+
+            setStatus(QStringLiteral("idle"));
+            replaceApiKey(storedKey.toUtf8(), forceRefresh);
+            finishCredentialOperation();
+        }
+    );
+    setCredentialBusy(true);
+    job->start();
+}
+
+void WeatherMapProvider::finishCredentialOperation()
+{
+    setCredentialBusy(false);
+    if (!m_reloadCredentialsPending)
+        return;
+
+    m_reloadCredentialsPending = false;
+    loadApiKey(true);
+}
+
+void WeatherMapProvider::replaceApiKey(
+    const QByteArray &apiKey,
+    bool forceRefresh
+)
+{
+    if (m_apiKey == apiKey && !forceRefresh)
+        return;
+
+    const bool wasConfigured = apiConfigured();
+    m_apiKey = apiKey;
+    cancelWeatherRequests();
+    if (wasConfigured != apiConfigured())
+        emit apiConfiguredChanged();
+    emit apiKeyChanged();
+}
+
+void WeatherMapProvider::cancelWeatherRequests()
+{
+    QQueue<TileTask> retainedQueue;
+    while (!m_queue.isEmpty()) {
+        const TileTask task = m_queue.dequeue();
+        if (task.osm) {
+            retainedQueue.enqueue(task);
+            continue;
+        }
+        m_pendingKeys.remove(task.key);
+        m_subscribers.remove(task.key);
+    }
+    m_queue = retainedQueue;
+
+    for (auto iterator = m_inFlight.begin(); iterator != m_inFlight.end();) {
+        if (iterator.value().osm) {
+            ++iterator;
+            continue;
+        }
+
+        QNetworkReply *reply = iterator.key();
+        const TileTask task = iterator.value();
+        iterator = m_inFlight.erase(iterator);
+        m_pendingKeys.remove(task.key);
+        m_subscribers.remove(task.key);
+        QObject::disconnect(reply, nullptr, this, nullptr);
+        reply->abort();
+        reply->deleteLater();
+    }
+    updateBusy();
+    startQueuedRequests();
+}
+
+void WeatherMapProvider::setCredentialsReady(bool ready)
+{
+    if (m_credentialsReady == ready)
+        return;
+    m_credentialsReady = ready;
+    emit credentialsReadyChanged();
+}
+
+void WeatherMapProvider::setCredentialBusy(bool busy)
+{
+    if (m_credentialBusy == busy)
+        return;
+    m_credentialBusy = busy;
+    emit credentialBusyChanged();
 }
 
 void WeatherMapProvider::updateBusy()

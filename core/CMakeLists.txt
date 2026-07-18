@@ -8,6 +8,7 @@ set(CMAKE_AUTOMOC ON)
 
 # Find Qt 6 basics
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Network)
+find_package(Qt6Keychain REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(Pipewire IMPORTED_TARGET libpipewire-0.3 REQUIRED)
 pkg_check_modules(Cava IMPORTED_TARGET libcava QUIET)

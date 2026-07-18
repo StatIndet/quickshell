@@ -2,9 +2,11 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import Quickshell
 import Clavis.WeatherMap 1.0
 import qs.Common
 import qs.Components
+import qs.Services
 import qs.Widgets.common
 
 // Loaded on demand so a missing native plugin cannot block Control Center.
@@ -29,22 +31,41 @@ StyledFlickable {
             return
         }
 
-        const result = WeatherMapPlugin.setSessionApiKey(value)
+        const result = WeatherMapPlugin.storeApiKey(value)
         feedbackError = !result.ok
         feedbackText = result.message || "无法更新 API key"
-        if (result.ok) {
-            apiKeyField.clear()
-            revealApiKey = false
-        }
     }
 
     function clearApiKey() {
-        const result = WeatherMapPlugin.clearSessionApiKey()
+        const result = WeatherMapPlugin.clearApiKey()
         feedbackError = !result.ok
         feedbackText = result.message || "无法清除 API key"
-        if (result.ok) {
-            apiKeyField.clear()
-            revealApiKey = false
+    }
+
+    function notifyMainShell() {
+        Quickshell.execDetached([
+            "qs",
+            "--path",
+            Paths.shellDir + "/shell.qml",
+            "ipc",
+            "call",
+            "weather-map",
+            "reloadCredentials"
+        ])
+    }
+
+    Connections {
+        target: WeatherMapPlugin
+
+        function onCredentialOperationFinished(operation, success, message) {
+            root.feedbackError = !success
+            root.feedbackText = message
+            if (success
+                && (operation === "store" || operation === "clear")) {
+                apiKeyField.clear()
+                root.revealApiKey = false
+                root.notifyMainShell()
+            }
         }
     }
 
@@ -98,12 +119,7 @@ StyledFlickable {
             Layout.fillWidth: true
             Layout.preferredHeight: serviceContent.implicitHeight + 48
             radius: Appearance.rounding.large
-            color: Appearance.m3colors.m3surfaceContainer
-            border.width: 1
-            border.color: Appearance.applyAlpha(
-                Appearance.colors.colOutlineVariant,
-                0.72
-            )
+            color: Appearance.colors.colSurfaceContainer
 
             ColumnLayout {
                 id: serviceContent
@@ -147,7 +163,7 @@ StyledFlickable {
 
                         Text {
                             Layout.fillWidth: true
-                            text: "用于 Temperature 与 Rain 地图覆盖层"
+                            text: "用于温度和降水图层"
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Sizes.fontFamily
                             font.pixelSize: 12
@@ -170,9 +186,12 @@ StyledFlickable {
                             spacing: 6
 
                             MaterialSymbol {
-                                text: WeatherMapPlugin.apiConfigured
-                                    ? "check_circle"
-                                    : "key_off"
+                                text: !WeatherMapPlugin.credentialsReady
+                                    || WeatherMapPlugin.credentialBusy
+                                    ? "sync"
+                                    : WeatherMapPlugin.apiConfigured
+                                        ? "check_circle"
+                                        : "key_off"
                                 iconSize: 17
                                 fill: WeatherMapPlugin.apiConfigured ? 1 : 0
                                 color: WeatherMapPlugin.apiConfigured
@@ -183,9 +202,13 @@ StyledFlickable {
                             Text {
                                 id: serviceStatus
 
-                                text: WeatherMapPlugin.apiConfigured
-                                    ? "已配置"
-                                    : "未配置"
+                                text: !WeatherMapPlugin.credentialsReady
+                                    ? "正在检查"
+                                    : WeatherMapPlugin.credentialBusy
+                                        ? "处理中"
+                                        : WeatherMapPlugin.apiConfigured
+                                            ? "已配置"
+                                            : "未配置"
                                 color: WeatherMapPlugin.apiConfigured
                                     ? Appearance.colors.colOnPrimaryContainer
                                     : Appearance.colors.colOnSurfaceVariant
@@ -222,7 +245,7 @@ StyledFlickable {
                         id: apiKeyField
 
                         anchors.fill: parent
-                        placeholderText: "输入 OPENWEATHER_API_KEY"
+                        placeholderText: "输入 OpenWeather API key"
                         echoMode: root.revealApiKey
                             ? TextInput.Normal
                             : TextInput.Password
@@ -231,8 +254,17 @@ StyledFlickable {
                             | Qt.ImhNoAutoUppercase
                         maximumLength: 128
                         rightPadding: 52
+                        enabled: WeatherMapPlugin.credentialsReady
+                            && !WeatherMapPlugin.credentialBusy
+                        color: Appearance.colors.colOnSurface
+                        placeholderTextColor: Appearance.colors.colOnSurfaceVariant
+                        Material.theme: PersonalizationConfig.themeMode === "light"
+                            ? Material.Light
+                            : Material.Dark
+                        Material.containerStyle: Material.Outlined
+                        Material.foreground: Appearance.colors.colOnSurface
                         Accessible.name: "OpenWeather API key"
-                        Accessible.description: "会话级密钥，不写入磁盘"
+                        Accessible.description: "安全保存到系统密钥环"
                         onTextChanged: {
                             if (root.feedbackError) {
                                 root.feedbackError = false
@@ -286,7 +318,7 @@ StyledFlickable {
 
                 Text {
                     Layout.fillWidth: true
-                    text: "密钥只导入当前 systemd 用户会话环境，不写入项目或普通配置文件。保存或清除后需重启 Quickshell；注销后需要重新设置。"
+                    text: "密钥保存在系统密钥环中，保存后立即生效。"
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Sizes.fontFamily
                     font.pixelSize: 12
@@ -312,11 +344,13 @@ StyledFlickable {
                         spacing: 8
 
                         MaterialSymbol {
-                            text: root.feedbackError
-                                ? "error"
-                                : "check_circle"
+                            text: WeatherMapPlugin.credentialBusy
+                                ? "sync"
+                                : root.feedbackError
+                                    ? "error"
+                                    : "check_circle"
                             iconSize: 18
-                            fill: 1
+                            fill: WeatherMapPlugin.credentialBusy ? 0 : 1
                             color: root.feedbackError
                                 ? Appearance.colors.colOnErrorContainer
                                 : Appearance.colors.colOnPrimaryContainer
@@ -345,24 +379,44 @@ StyledFlickable {
                     }
 
                     Button {
-                        text: "清除会话密钥"
+                        text: "清除密钥"
                         flat: true
                         enabled: WeatherMapPlugin.apiConfigured
+                            && !WeatherMapPlugin.credentialBusy
                         focusPolicy: Qt.StrongFocus
                         Material.foreground: Appearance.colors.colOnSurfaceVariant
-                        Accessible.description: "从当前 systemd 用户会话移除环境变量"
+                        Accessible.description: "从系统密钥环移除 OpenWeather API key"
                         onClicked: root.clearApiKey()
                     }
 
                     Button {
-                        text: "保存到本次会话"
+                        id: saveButton
+
+                        text: "保存密钥"
                         highlighted: true
-                        enabled: apiKeyField.text.trim().length >= 16
+                        enabled: WeatherMapPlugin.credentialsReady
+                            && !WeatherMapPlugin.credentialBusy
+                            && apiKeyField.text.trim().length >= 16
                         focusPolicy: Qt.StrongFocus
                         Material.background: Appearance.colors.colPrimary
                         Material.foreground: Appearance.colors.colOnPrimary
-                        Accessible.description: "保存后重启 Quickshell 生效"
+                        Material.elevation: 2
+                        Accessible.description: "安全保存并立即应用，无需重启"
                         onClicked: root.applyApiKey()
+
+                        contentItem: Text {
+                            text: saveButton.text
+                            color: saveButton.enabled
+                                ? Appearance.colors.colOnPrimary
+                                : Appearance.applyAlpha(
+                                    Appearance.colors.colOnSurface,
+                                    0.72
+                                )
+                            font: saveButton.font
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            textFormat: Text.PlainText
+                        }
                     }
                 }
             }
@@ -390,7 +444,7 @@ StyledFlickable {
 
                 Text {
                     Layout.fillWidth: true
-                    text: "AQI 数据仍由 Open-Meteo 提供，不需要此密钥。环境变量名称固定为 OPENWEATHER_API_KEY；界面不会读取或回显已经保存的明文。"
+                    text: "AQI 使用 Open-Meteo，无需此密钥。已保存的密钥不会显示在界面中。"
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Sizes.fontFamily
                     font.pixelSize: 12

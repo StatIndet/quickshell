@@ -171,6 +171,10 @@ Item {
         spinAnimation.start()
         forceStopTimer.restart()
         WeatherPlugin.refresh()
+        if (weatherMapLoader.status === Loader.Ready
+            && weatherMapLoader.item) {
+            weatherMapLoader.item.refreshMap()
+        }
     }
 
     function syncWeatherData() {

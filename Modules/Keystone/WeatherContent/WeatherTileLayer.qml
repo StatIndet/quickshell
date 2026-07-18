@@ -116,7 +116,7 @@ Item {
         for (let index = 0; index < tileRepeater.count; ++index) {
             const item = tileRepeater.itemAt(index)
             if (item)
-                item.requestWeather(true, true)
+                item.requestWeather(true, true, false)
         }
     }
 
@@ -125,14 +125,18 @@ Item {
         clearPreviousTimer.restart()
     }
 
-    function refreshWeather() {
+    function refreshWeather(forceNetwork) {
         if (!root.active || !root.weatherEnabled)
             return
         root.readyWeatherTiles = 0
         for (let index = 0; index < tileRepeater.count; ++index) {
             const item = tileRepeater.itemAt(index)
             if (item)
-                item.requestWeather(false, true)
+                item.requestWeather(
+                    false,
+                    true,
+                    forceNetwork === true
+                )
         }
     }
 
@@ -225,17 +229,22 @@ Item {
                         tile.tileZoom,
                         tile.tileX,
                         tile.tileY,
-                        tile.baseRequestGeneration
+                        tile.baseRequestGeneration,
+                        false
                     )
                     const nextBaseSource = root.sourceFrom(baseResult)
                     if (nextBaseSource !== "")
                         baseSource = nextBaseSource
                 }
 
-                requestWeather(false, forceRequest)
+                requestWeather(false, forceRequest, false)
             }
 
-            function requestWeather(preserveCurrent, forceRequest) {
+            function requestWeather(
+                preserveCurrent,
+                forceRequest,
+                forceNetwork
+            ) {
                 const nextLayer = root.weatherLayer
                 const layerChanged = requestedLayer !== ""
                     && requestedLayer !== nextLayer
@@ -270,7 +279,8 @@ Item {
                     tile.tileZoom,
                     tile.tileX,
                     tile.tileY,
-                    tile.weatherRequestGeneration
+                    tile.weatherRequestGeneration,
+                    forceNetwork === true
                 )
                 const nextWeatherSource = root.sourceFrom(weatherResult)
                 if (nextWeatherSource !== "")

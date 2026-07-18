@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Clavis.WeatherMap 1.0
 import qs.Modules.Bar
 import qs.Modules.Keystone
 import qs.Modules.Launcher
@@ -81,6 +82,15 @@ Item {
 
         function setFolder(path) {
             return WallpaperService.setWallpaperFolder(path || "", true) ? "OK" : "PENDING";
+        }
+    }
+
+    IpcHandler {
+        target: "weather-map"
+
+        function reloadCredentials(): string {
+            WeatherMapPlugin.reloadCredentials()
+            return "RELOADING"
         }
     }
 }

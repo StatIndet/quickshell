@@ -16,6 +16,8 @@ class WeatherMapProvider : public QObject {
 
     Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged)
     Q_PROPERTY(bool apiConfigured READ apiConfigured NOTIFY apiConfiguredChanged)
+    Q_PROPERTY(bool credentialsReady READ credentialsReady NOTIFY credentialsReadyChanged)
+    Q_PROPERTY(bool credentialBusy READ credentialBusy NOTIFY credentialBusyChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_PROPERTY(QString status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY statusChanged)
@@ -26,6 +28,8 @@ public:
     bool active() const;
     void setActive(bool active);
     bool apiConfigured() const;
+    bool credentialsReady() const;
+    bool credentialBusy() const;
     bool busy() const;
     QString status() const;
     QString errorMessage() const;
@@ -37,19 +41,30 @@ public:
         int zoom,
         int x,
         int y,
-        int generation
+        int generation,
+        bool forceRefresh
     );
     QVariantMap requestGrid(
         const QString &kind,
         const QVariantList &points,
-        int generation
+        int generation,
+        bool forceRefresh
     );
-    QVariantMap setSessionApiKey(const QString &apiKey);
-    QVariantMap clearSessionApiKey();
+    QVariantMap storeApiKey(const QString &apiKey);
+    QVariantMap clearApiKey();
+    void reloadCredentials();
 
 signals:
     void activeChanged();
     void apiConfiguredChanged();
+    void credentialsReadyChanged();
+    void credentialBusyChanged();
+    void apiKeyChanged();
+    void credentialOperationFinished(
+        const QString &operation,
+        bool success,
+        const QString &message
+    );
     void busyChanged();
     void statusChanged();
     void tileReady(
@@ -152,11 +167,15 @@ private:
     int m_generation = 0;
     bool m_active = false;
     bool m_busy = false;
+    bool m_credentialsReady = false;
+    bool m_credentialBusy = false;
+    bool m_reloadCredentialsPending = false;
 
     static int wrappedX(int x, int zoom);
     static bool validTileCoordinate(int zoom, int y);
     static QString normalizedLayer(const QString &layer);
     static QString normalizedGridKind(const QString &kind);
+    static bool validApiKey(const QString &apiKey);
 
     QString tileCachePath(
         const QString &kind,
@@ -213,6 +232,12 @@ private:
     void notifySuccess(const TileTask &task, bool stale);
     void notifyFailure(const TileTask &task, const QString &errorCode);
     void pruneObsoleteQueue();
+    void loadApiKey(bool forceRefresh = false);
+    void finishCredentialOperation();
+    void replaceApiKey(const QByteArray &apiKey, bool forceRefresh = false);
+    void cancelWeatherRequests();
+    void setCredentialsReady(bool ready);
+    void setCredentialBusy(bool busy);
     void updateBusy();
     void setStatus(const QString &status, const QString &message = {});
 

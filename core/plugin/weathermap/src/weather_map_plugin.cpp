@@ -18,6 +18,30 @@ WeatherMapPlugin::WeatherMapPlugin(QObject *parent)
     );
     connect(
         &m_provider,
+        &WeatherMapProvider::credentialsReadyChanged,
+        this,
+        &WeatherMapPlugin::credentialsReadyChanged
+    );
+    connect(
+        &m_provider,
+        &WeatherMapProvider::credentialBusyChanged,
+        this,
+        &WeatherMapPlugin::credentialBusyChanged
+    );
+    connect(
+        &m_provider,
+        &WeatherMapProvider::apiKeyChanged,
+        this,
+        &WeatherMapPlugin::apiKeyChanged
+    );
+    connect(
+        &m_provider,
+        &WeatherMapProvider::credentialOperationFinished,
+        this,
+        &WeatherMapPlugin::credentialOperationFinished
+    );
+    connect(
+        &m_provider,
         &WeatherMapProvider::busyChanged,
         this,
         &WeatherMapPlugin::busyChanged
@@ -75,6 +99,16 @@ bool WeatherMapPlugin::apiConfigured() const
     return m_provider.apiConfigured();
 }
 
+bool WeatherMapPlugin::credentialsReady() const
+{
+    return m_provider.credentialsReady();
+}
+
+bool WeatherMapPlugin::credentialBusy() const
+{
+    return m_provider.credentialBusy();
+}
+
 bool WeatherMapPlugin::busy() const
 {
     return m_provider.busy();
@@ -101,7 +135,8 @@ QVariantMap WeatherMapPlugin::requestTile(
     int zoom,
     int x,
     int y,
-    int generation
+    int generation,
+    bool forceRefresh
 )
 {
     return m_provider.requestTile(
@@ -110,25 +145,37 @@ QVariantMap WeatherMapPlugin::requestTile(
         zoom,
         x,
         y,
-        generation
+        generation,
+        forceRefresh
     );
 }
 
 QVariantMap WeatherMapPlugin::requestGrid(
     const QString &kind,
     const QVariantList &points,
-    int generation
+    int generation,
+    bool forceRefresh
 )
 {
-    return m_provider.requestGrid(kind, points, generation);
+    return m_provider.requestGrid(
+        kind,
+        points,
+        generation,
+        forceRefresh
+    );
 }
 
-QVariantMap WeatherMapPlugin::setSessionApiKey(const QString &apiKey)
+QVariantMap WeatherMapPlugin::storeApiKey(const QString &apiKey)
 {
-    return m_provider.setSessionApiKey(apiKey);
+    return m_provider.storeApiKey(apiKey);
 }
 
-QVariantMap WeatherMapPlugin::clearSessionApiKey()
+QVariantMap WeatherMapPlugin::clearApiKey()
 {
-    return m_provider.clearSessionApiKey();
+    return m_provider.clearApiKey();
+}
+
+void WeatherMapPlugin::reloadCredentials()
+{
+    m_provider.reloadCredentials();
 }

@@ -192,7 +192,7 @@ Rectangle {
             tileLayer.finishTransition()
     }
 
-    function requestActiveGrid() {
+    function requestActiveGrid(forceRefresh) {
         if (!root.active
             || !root.hasCoordinates
             || root.selectedMode !== "aqi") {
@@ -202,7 +202,8 @@ Rectangle {
         const result = WeatherMapPlugin.requestGrid(
             root.selectedMode,
             gridPoints(),
-            root.viewportGeneration
+            root.viewportGeneration,
+            forceRefresh === true
         )
         const samples = result && result.samples !== undefined
             ? result.samples
@@ -215,6 +216,16 @@ Rectangle {
                 result.stale === true
             )
         }
+    }
+
+    function refreshMap() {
+        if (!root.active || !root.hasCoordinates)
+            return
+
+        if (root.selectedMode === "aqi")
+            root.requestActiveGrid(true)
+        else
+            tileLayer.refreshWeather(true)
     }
 
     function rebuildTiles() {
@@ -456,7 +467,7 @@ Rectangle {
         running: root.active
         repeat: true
         onTriggered: {
-            tileLayer.refreshWeather()
+            tileLayer.refreshWeather(false)
             if (root.selectedMode === "aqi") {
                 gridDebounce.restart()
             }
@@ -465,6 +476,11 @@ Rectangle {
 
     Connections {
         target: WeatherMapPlugin
+
+        function onApiKeyChanged() {
+            if (root.active)
+                tileLayer.refreshWeather(true)
+        }
 
         function onGridReady(kind, generation, samples, updatedAt, stale) {
             if (generation !== root.viewportGeneration
@@ -645,7 +661,9 @@ Rectangle {
                     Appearance.colors.colSurfaceContainerHighest,
                     0.94
                 )
-                visible: !WeatherMapPlugin.apiConfigured
+                visible: (WeatherMapPlugin.credentialsReady
+                    && !WeatherMapPlugin.apiConfigured)
+                    || WeatherMapPlugin.status === "keychain_error"
                     || WeatherMapPlugin.status === "invalid_key"
                     || WeatherMapPlugin.status === "rate_limited"
                     || WeatherMapPlugin.status === "network_error"
@@ -751,7 +769,9 @@ Rectangle {
                 z: 20
                 width: 24
                 height: 24
-                running: root.active && WeatherMapPlugin.busy
+                running: root.active
+                    && (WeatherMapPlugin.busy
+                        || WeatherMapPlugin.credentialBusy)
                 visible: running
                 Material.accent: Appearance.colors.colPrimary
             }

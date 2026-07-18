@@ -64,6 +64,7 @@ target_link_libraries(ClavisWeatherMapCore PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Network
+    Qt6Keychain::Qt6Keychain
 )
 target_include_directories(ClavisWeatherMapCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
