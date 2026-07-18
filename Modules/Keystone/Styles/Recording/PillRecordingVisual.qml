@@ -13,6 +13,7 @@ Item {
     required property bool finalizing
     required property string recordingType
     required property double elapsedMs
+    required property real satelliteProgress
 
     property real mainWidth: 160
     property real mainHeight: 48
@@ -20,8 +21,11 @@ Item {
 
     readonly property int effectBleed: 18
     readonly property real satelliteSize: mainHeight
-    readonly property int satelliteGap: 16
+    readonly property int satelliteGap: 24
     readonly property real satelliteExtent: satelliteSize + satelliteGap
+    readonly property real normalizedSatelliteProgress: Math.max(0, Math.min(1, satelliteProgress))
+    readonly property real gooTailProgress: Math.sin(Math.PI * normalizedSatelliteProgress)
+    readonly property real gooTailLength: 12 * gooTailProgress
     readonly property real mainX: effectBleed + satelliteExtent
     readonly property real mainY: effectBleed
     readonly property real satelliteY: effectBleed + (mainHeight - satelliteSize) / 2
@@ -42,7 +46,6 @@ Item {
     height: Math.max(mainHeight, satelliteSize) + effectBleed * 2
     opacity: active ? 1 : 0
 
-    property real satelliteProgress: recording ? 1 : 0
     property double heldElapsedMs: 0
 
     function formatElapsed(milliseconds) {
@@ -77,14 +80,6 @@ Item {
         }
     }
 
-    Behavior on satelliteProgress {
-        NumberAnimation {
-            duration: Appearance.animation.expressiveSlowSpatial.duration
-            easing.type: Appearance.animation.expressiveSlowSpatial.type
-            easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
-        }
-    }
-
     // CSS-Tricks 的 SVG goo 滤镜在 QML 中的对应实现：
     // 同一容器内的形状 -> GaussianBlur -> alpha threshold -> 叠回清晰形状。
     Item {
@@ -106,9 +101,9 @@ Item {
         Rectangle {
             x: root.satelliteX
             y: root.satelliteY
-            width: root.satelliteSize
+            width: root.satelliteSize + root.gooTailLength
             height: root.satelliteSize
-            radius: width / 2
+            radius: height / 2
             color: "white"
             antialiasing: true
         }
@@ -161,7 +156,7 @@ Item {
         height: root.satelliteSize
         radius: width / 2
         color: "black"
-        opacity: Math.min(1, root.satelliteProgress * 1.7)
+        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
         visible: false
     }
 
@@ -173,7 +168,7 @@ Item {
         radius: 10
         samples: 21
         color: Appearance.colors.colShadow
-        opacity: Math.min(1, root.satelliteProgress * 1.7)
+        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
         cached: false
     }
 
@@ -186,7 +181,7 @@ Item {
         height: root.satelliteSize
         radius: width / 2
         color: root.surfaceColor
-        opacity: Math.min(1, root.satelliteProgress * 1.7)
+        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
         scale: satelliteMouse.pressed ? 0.9 : (satelliteMouse.containsMouse ? 1.04 : 1)
         antialiasing: true
 
@@ -230,7 +225,7 @@ Item {
             id: satelliteMouse
 
             anchors.fill: parent
-            enabled: root.recording && root.satelliteProgress > 0.6
+            enabled: root.recording && root.normalizedSatelliteProgress > 0.6
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
 

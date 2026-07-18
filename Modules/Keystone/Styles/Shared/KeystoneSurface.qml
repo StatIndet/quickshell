@@ -28,6 +28,18 @@ Variants {
     property int maxPillRadius: 24
     property bool showTopEdgeCurves: !detached
 
+    component PillFastSpatialAnimation: NumberAnimation {
+        duration: Appearance.animation.expressiveFastSpatial.duration
+        easing.type: Appearance.animation.expressiveFastSpatial.type
+        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+    }
+
+    component PillSlowSpatialAnimation: NumberAnimation {
+        duration: Appearance.animation.expressiveSlowSpatial.duration
+        easing.type: Appearance.animation.expressiveSlowSpatial.type
+        easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
+    }
+
     function invoke(methodName) {
         if (instances.length === 0)
             return "KEYSTONE_UNAVAILABLE";
@@ -129,7 +141,8 @@ Variants {
             anchors.right: maskContainer.right
             width: maskContainer.width
                 + (styleSurface.detached
-                    ? pillRecordingVisual.satelliteExtent * pillRecordingVisual.satelliteProgress
+                    ? pillRecordingVisual.satelliteExtent
+                        * pillRecordingVisual.normalizedSatelliteProgress
                     : 0)
         }
 
@@ -259,19 +272,11 @@ Variants {
             anchors.top: parent.top
             anchors.topMargin: styleSurface.topMargin
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: styleSurface.detached && root.isRecording
-                ? (root.collapsedW - root.recordingPillW) / 2
+            anchors.horizontalCenterOffset: styleSurface.detached && root.isRecordingMode
+                ? (root.collapsedW - root.width) / 2
                 : 0
             width: root.width + (keystoneWindow.topEdgeCurveWidth * 2)
             height: root.height
-
-            Behavior on anchors.horizontalCenterOffset {
-                NumberAnimation {
-                    duration: Appearance.animation.expressiveSlowSpatial.duration
-                    easing.type: Appearance.animation.expressiveSlowSpatial.type
-                    easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
-                }
-            }
 
             Canvas {
                 id: leftTopCurve
@@ -336,7 +341,10 @@ Variants {
                 property int expandedW: 540; property int expandedH: 210
                 property int collapsedW: 220; property int collapsedH: 42
                 property int recordingPillW: 160
+                property int recordingPillExtendedW: 240
                 property int recordingBangsW: 220
+                property real pillMainWidth: collapsedW
+                property real pillSatelliteProgress: 0
                 property int toolsW: 480; property int toolsH: 72
                 property int notifW: 380; property int notifH: (NotificationManager.popupList.length * 70) + 20
                 property int volW: 320; property int volH: 64
@@ -350,9 +358,9 @@ Variants {
                     ? Math.min(targetH / 2, styleSurface.maxPillRadius)
                     : 12
 
-                property int targetW: isRecordingMode
+                property real targetW: isRecordingMode
                     ? (styleSurface.detached
-                        ? (isFinalizing ? collapsedW : recordingPillW)
+                        ? pillMainWidth
                         : recordingBangsW) :
                     isAudioMode ? audioW :
                     isToolsMode ? toolsW :
@@ -384,6 +392,89 @@ Variants {
                 width: targetW
                 height: targetH
                 property real radius: targetR
+
+                onIsRecordingChanged: {
+                    if (!styleSurface.detached || !root.isRecording)
+                        return;
+
+                    pillRecordingExit.stop();
+                    pillRecordingEntry.restart();
+                }
+
+                onIsFinalizingChanged: {
+                    if (!styleSurface.detached || !root.isFinalizing)
+                        return;
+
+                    pillRecordingEntry.stop();
+                    pillRecordingExit.restart();
+                }
+
+                onIsRecordingModeChanged: {
+                    if (root.isRecordingMode)
+                        return;
+
+                    pillRecordingEntry.stop();
+                    pillRecordingExit.stop();
+                    root.pillMainWidth = root.collapsedW;
+                    root.pillSatelliteProgress = 0;
+                }
+
+                Component.onCompleted: {
+                    if (!styleSurface.detached)
+                        return;
+
+                    root.pillMainWidth = root.isRecording
+                        ? root.recordingPillW
+                        : root.collapsedW;
+                    root.pillSatelliteProgress = root.isRecording ? 1 : 0;
+                }
+
+                SequentialAnimation {
+                    id: pillRecordingEntry
+
+                    PropertyAction {
+                        target: root
+                        property: "pillMainWidth"
+                        value: root.collapsedW
+                    }
+                    PropertyAction {
+                        target: root
+                        property: "pillSatelliteProgress"
+                        value: 0
+                    }
+                    PillFastSpatialAnimation {
+                        target: root
+                        property: "pillMainWidth"
+                        to: root.recordingPillExtendedW
+                    }
+                    ParallelAnimation {
+                        PillSlowSpatialAnimation {
+                            target: root
+                            property: "pillMainWidth"
+                            to: root.recordingPillW
+                        }
+                        PillSlowSpatialAnimation {
+                            target: root
+                            property: "pillSatelliteProgress"
+                            to: 1
+                        }
+                    }
+                }
+
+                ParallelAnimation {
+                    id: pillRecordingExit
+
+                    PillSlowSpatialAnimation {
+                        target: root
+                        property: "pillMainWidth"
+                        to: root.collapsedW
+                    }
+                    PillSlowSpatialAnimation {
+                        target: root
+                        property: "pillSatelliteProgress"
+                        to: 0
+                    }
+                }
 
                 Rectangle {
                     id: solidRootBg
@@ -432,12 +523,6 @@ Variants {
                 }
 
                 onTargetWChanged: {
-                    if (styleSurface.detached && root.isRecordingMode) {
-                        wDuration = Appearance.animation.expressiveSlowSpatial.duration;
-                        wBezier = Appearance.animation.expressiveSlowSpatial.bezierCurve;
-                        return;
-                    }
-
                     if (root.isHoverWidthMotion(targetW)) {
                         wDuration = KeystoneMotion.hoverDuration;
                         wBezier = KeystoneMotion.hoverBezier;
@@ -482,6 +567,8 @@ Variants {
                 }
 
                 Behavior on width {
+                    enabled: !(styleSurface.detached && root.isRecordingMode)
+
                     NumberAnimation {
                         duration: root.wDuration
                         easing.type: KeystoneMotion.type
@@ -843,6 +930,7 @@ Variants {
                 finalizing: styleSurface.detached && root.isFinalizing
                 recordingType: RecordingService.recordingType
                 elapsedMs: RecordingService.elapsedMs
+                satelliteProgress: root.pillSatelliteProgress
                 visible: styleSurface.detached && (active || opacity > 0.01)
                 z: root.z + 2
 
