@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Window 
 import qs.Common
+import qs.Widgets.common
 
 Item {
     id: toolsRoot
@@ -124,6 +125,11 @@ Item {
                         toolsRoot.selectedIndex = index
                         toolsRoot.triggerSelected()
                     }
+                }
+
+                StyledToolTip {
+                    extraVisibleCondition: toolsMouse.containsMouse
+                    text: modelData.tip
                 }
             }
         }
