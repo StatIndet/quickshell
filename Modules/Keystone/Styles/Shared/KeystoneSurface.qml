@@ -16,6 +16,7 @@ import qs.Modules.Keystone.LyricsContent
 import qs.Modules.Keystone.Hub
 import qs.Modules.Keystone.Tools
 import qs.Modules.Keystone.audio 
+import qs.Modules.Keystone.Styles.Recording
 
 Variants {
     id: styleSurface
@@ -126,7 +127,10 @@ Variants {
             anchors.top: maskContainer.top
             anchors.bottom: maskContainer.bottom
             anchors.right: maskContainer.right
-            anchors.left: detachedRecordContainer.left 
+            width: maskContainer.width
+                + (styleSurface.detached && root.isRecordingMode
+                    ? pillRecordingVisual.satelliteExtent
+                    : 0)
         }
 
         mask: Region {
@@ -255,8 +259,23 @@ Variants {
             anchors.top: parent.top
             anchors.topMargin: styleSurface.topMargin
             anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: styleSurface.detached && root.isRecordingMode
+                ? (root.collapsedW - root.recordingPillW) / 2
+                : 0
             width: root.width + (keystoneWindow.topEdgeCurveWidth * 2)
             height: root.height
+
+            Behavior on anchors.horizontalCenterOffset {
+                NumberAnimation {
+                    duration: root.isRecordingMode
+                        ? KeystoneMotion.shrinkingDuration
+                        : KeystoneMotion.expandingDuration
+                    easing.type: KeystoneMotion.type
+                    easing.bezierCurve: root.isRecordingMode
+                        ? KeystoneMotion.shrinkingBezier
+                        : KeystoneMotion.expandingBezier
+                }
+            }
 
             Canvas {
                 id: leftTopCurve
@@ -300,24 +319,28 @@ Variants {
                 
                 property string currentAudioMode: "mic" 
                 property int hubTabIndex: 0
-                readonly property bool isRecording: RecordingCoordinator.ownRecordingActive
+                readonly property bool isRecording: RecordingService.isRecording
+                readonly property bool isFinalizing: RecordingService.isFinalizing
+                readonly property bool isRecordingMode: isRecording || isFinalizing
 
-                property bool isLyricsMode: showLyrics
-                property bool isToolsMode: showTools && !isLyricsMode
-                property bool isHubMode: showHub && !isToolsMode && !isLyricsMode
-                property bool isAudioMode: showAudio && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isVolumeMode: showVolume && !expanded && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isNotifMode: NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isCollapsedMode: !expanded && !isNotifMode && !isVolumeMode && !isAudioMode && !isLyricsMode && !isHubMode && !isToolsMode
+                property bool isLyricsMode: showLyrics && !isRecordingMode
+                property bool isToolsMode: !isRecordingMode && showTools && !isLyricsMode
+                property bool isHubMode: !isRecordingMode && showHub && !isToolsMode && !isLyricsMode
+                property bool isAudioMode: !isRecordingMode && showAudio && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isVolumeMode: !isRecordingMode && showVolume && !expanded && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isNotifMode: !isRecordingMode && NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isCollapsedMode: !isRecordingMode && !expanded && !isNotifMode && !isVolumeMode && !isAudioMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                property bool hasClosablePopup: expanded || showLyrics || showHub || showTools || showAudio
+                property bool hasClosablePopup: !isRecordingMode
+                    && (expanded || isLyricsMode || isHubMode || isToolsMode || isAudioMode)
                 
                 property bool showDashboardHole: isHubMode && hubTabIndex === 0
 
                 property int lyricsW: lyricsWidget.implicitWidth; property int lyricsH: 42 
                 property int expandedW: 540; property int expandedH: 210
                 property int collapsedW: 220; property int collapsedH: 42
-                property int recordExtraW: 0 
+                property int recordingPillW: 160; property int recordingPillH: 48
+                property int recordingBangsW: 220; property int recordingBangsH: 48
                 property int toolsW: 480; property int toolsH: 72
                 property int notifW: 380; property int notifH: (NotificationManager.popupList.length * 70) + 20
                 property int volW: 320; property int volH: 64
@@ -331,16 +354,20 @@ Variants {
                     ? Math.min(targetH / 2, styleSurface.maxPillRadius)
                     : 12
 
-                property int targetW: isAudioMode ? audioW :
+                property int targetW: isRecordingMode
+                    ? (styleSurface.detached ? recordingPillW : recordingBangsW) :
+                    isAudioMode ? audioW :
                     isToolsMode ? toolsW :
                     isHubMode ? hub.implicitWidth : 
                     isLyricsMode ? lyricsW : 
                     expanded ? expandedW : 
                     isVolumeMode ? volW : 
                     isNotifMode ? notifW : 
-                    (collapsedW + (root.isRecording ? recordExtraW : 0) + (isCollapsedHovered ? 16 : 0))
+                    (collapsedW + (isCollapsedHovered ? 16 : 0))
 
-                property int targetH: isAudioMode ? audioH :
+                property int targetH: isRecordingMode
+                    ? (styleSurface.detached ? recordingPillH : recordingBangsH) :
+                        isAudioMode ? audioH :
                         isToolsMode ? toolsH : 
                         isHubMode ? hub.implicitHeight : 
                         isLyricsMode ? lyricsH : 
@@ -389,10 +416,21 @@ Variants {
                 }
 
                 OpacityMask {
+                    id: rootSurface
+
                     anchors.fill: parent
                     source: solidRootBg
                     maskSource: rootHoleWrapper
                     invert: true 
+                    opacity: styleSurface.detached && root.isRecordingMode ? 0 : 1
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.animation.expressiveEffects.duration
+                            easing.type: Appearance.animation.expressiveEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                        }
+                    }
                 }
 
                 onTargetWChanged: {
@@ -556,7 +594,7 @@ Variants {
                     id: keystoneMouseArea  
                     anchors.fill: parent; cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true   
-                    enabled: !root.isNotifMode && !root.isVolumeMode 
+                    enabled: !root.isRecordingMode && !root.isNotifMode && !root.isVolumeMode
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     
                     onClicked: (mouse) => {
@@ -586,13 +624,20 @@ Variants {
                     ClockContent { 
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: root.collapsedW + (root.isRecording ? root.recordExtraW : 0)
+                        width: root.collapsedW
                         height: root.collapsedH
                         
                         player: root.currentPlayer
                         
-                        opacity: (!root.expanded && !root.isNotifMode && !root.isVolumeMode && !root.isLyricsMode && !root.isHubMode && !root.isToolsMode && !root.isAudioMode) ? 1 : 0
-                        visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
+                        opacity: root.isCollapsedMode ? 1 : 0
+                        visible: opacity > 0.01
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
                     }
                         
                     VolumeContent {
@@ -607,7 +652,14 @@ Variants {
                         externalValue: Brightness.brightnessValue
                         iconName: root.sliderMode === "brightness" ? "brightness_medium" : ""
                         opacity: root.isVolumeMode ? 1 : 0
-                        visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
+                        visible: opacity > 0.01
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
 
                         onMoved: value => {
                             if (root.sliderMode === "brightness")
@@ -625,7 +677,14 @@ Variants {
                         manager: NotificationManager
                         
                         opacity: root.isNotifMode ? 1 : 0
-                        visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
+                        visible: opacity > 0.01
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
                     }
                         
                     LyricsContent { 
@@ -637,7 +696,14 @@ Variants {
 
                         player: root.currentPlayer; active: root.isLyricsMode
                         opacity: root.isLyricsMode ? 1 : 0
-                        visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
+                        visible: opacity > 0.01
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
                     }
                     
                     MediaContent { 
@@ -647,8 +713,15 @@ Variants {
                         width: root.expandedW - 40
                         height: root.expandedH - 40
 
-                        opacity: (root.expanded && !root.isLyricsMode && !root.isHubMode) ? 1 : 0
-                        visible: opacity > 0.01; Behavior on opacity { NumberAnimation { duration: 200 } } 
+                        opacity: (!root.isRecordingMode && root.expanded && !root.isLyricsMode && !root.isHubMode) ? 1 : 0
+                        visible: opacity > 0.01
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
                     }
                         
                     HubContent {
@@ -670,7 +743,13 @@ Variants {
 
                         opacity: root.isHubMode ? 1 : 0
                         visible: opacity > 0.01
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
                     }
 
                     ToolsContent {
@@ -682,7 +761,13 @@ Variants {
 
                         opacity: root.isToolsMode ? 1 : 0
                         visible: opacity > 0.01
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
 
                         onRequestHideKeystone: { root.showTools = false }
                         onRequestShowAudio: (mode) => { 
@@ -703,7 +788,13 @@ Variants {
                         audioMode: root.currentAudioMode
                         opacity: root.isAudioMode ? 1 : 0
                         visible: opacity > 0.01
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: Appearance.animation.expressiveEffects.duration
+                                easing.type: Appearance.animation.expressiveEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                            }
+                        }
 
                         onRequestStop: {
                             root.showAudio = false
@@ -735,6 +826,42 @@ Variants {
                 }
             }
 
+            PillRecordingVisual {
+                id: pillRecordingVisual
+
+                anchors.right: root.right
+                anchors.rightMargin: -effectBleed
+                anchors.verticalCenter: root.verticalCenter
+                mainWidth: root.width
+                mainHeight: root.height
+                active: styleSurface.detached && root.isRecordingMode
+                recording: styleSurface.detached && root.isRecording
+                finalizing: styleSurface.detached && root.isFinalizing
+                recordingType: RecordingService.recordingType
+                elapsedMs: RecordingService.elapsedMs
+                visible: styleSurface.detached && (active || opacity > 0.01)
+                z: root.z + 2
+
+                onStopRequested: RecordingService.stop()
+            }
+
+            BangsRecordingVisual {
+                id: bangsRecordingVisual
+
+                anchors.centerIn: root
+                width: root.width
+                height: root.height
+                active: !styleSurface.detached && root.isRecordingMode
+                recording: !styleSurface.detached && root.isRecording
+                finalizing: !styleSurface.detached && root.isFinalizing
+                recordingType: RecordingService.recordingType
+                elapsedMs: RecordingService.elapsedMs
+                visible: !styleSurface.detached && (active || opacity > 0.01)
+                z: root.z + 2
+
+                onStopRequested: RecordingService.stop()
+            }
+
             Canvas {
                 id: rightTopCurve
                 visible: styleSurface.showTopEdgeCurves
@@ -764,80 +891,5 @@ Variants {
             }
         }
 
-        Item {
-            id: detachedRecordContainer
-            width: 36
-            height: 36
-            anchors.verticalCenter: maskContainer.verticalCenter
-            anchors.right: maskContainer.left
-            anchors.rightMargin: root.isRecording ? 5 : -width
-            z: maskContainer.z - 1 
-
-            Behavior on anchors.rightMargin {
-                NumberAnimation {
-                    duration: KeystoneMotion.recordIndicatorDuration
-                    easing.type: KeystoneMotion.type
-                    easing.bezierCurve: KeystoneMotion.recordIndicatorBezier
-                }
-            }
-            
-            opacity: root.isRecording ? 1 : 0
-            Behavior on opacity { 
-                SequentialAnimation {
-                    PauseAnimation { duration: root.isRecording ? 0 : 400 }
-                    NumberAnimation { duration: root.isRecording ? 200 : 0 } 
-                }
-            }
-            visible: root.isRecording || opacity > 0
-
-            Rectangle {
-                id: detachedBtnBg
-                anchors.fill: parent
-                radius: width / 2
-                color: Appearance.colors.colLayer0
-                visible: false 
-            }
-
-            DropShadow {
-                anchors.fill: detachedBtnBg
-                source: detachedBtnBg
-                horizontalOffset: 0
-                verticalOffset: 6
-                radius: 20
-                samples: 32
-                color: "#80000000"
-                cached: true
-            }
-
-            Rectangle {
-                anchors.fill: parent
-                radius: width / 2
-                color: Appearance.colors.colLayer0
-                
-                Rectangle {
-                    anchors.centerIn: parent
-                    width: 14
-                    height: 14
-                    radius: 7
-                    color: "#ff3333"
-                    antialiasing: true
-                    
-                    SequentialAnimation on opacity {
-                        loops: Animation.Infinite
-                        running: root.isRecording
-                        NumberAnimation { to: 0.2; duration: 800; easing.type: Easing.InOutSine }
-                        NumberAnimation { to: 1.0; duration: 800; easing.type: Easing.InOutSine }
-                    }
-                }
-                
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        toolsWidget.stopRecording() 
-                    }
-                }
-            }
-        }
     }
 }
