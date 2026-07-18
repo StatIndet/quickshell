@@ -25,7 +25,8 @@ Item {
     readonly property real satelliteExtent: satelliteSize + satelliteGap
     readonly property real normalizedSatelliteProgress: Math.max(0, Math.min(1, satelliteProgress))
     readonly property real gooTailProgress: Math.sin(Math.PI * normalizedSatelliteProgress)
-    readonly property real gooTailLength: 12 * gooTailProgress
+    readonly property real gooTailMaxLength: finalizing ? 18 : 14
+    readonly property real gooTailLength: gooTailMaxLength * gooTailProgress
     readonly property real mainX: effectBleed + satelliteExtent
     readonly property real mainY: effectBleed
     readonly property real satelliteY: effectBleed + (mainHeight - satelliteSize) / 2

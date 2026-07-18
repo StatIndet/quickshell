@@ -28,12 +28,6 @@ Variants {
     property int maxPillRadius: 24
     property bool showTopEdgeCurves: !detached
 
-    component PillFastSpatialAnimation: NumberAnimation {
-        duration: Appearance.animation.expressiveFastSpatial.duration
-        easing.type: Appearance.animation.expressiveFastSpatial.type
-        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-    }
-
     component PillSlowSpatialAnimation: NumberAnimation {
         duration: Appearance.animation.expressiveSlowSpatial.duration
         easing.type: Appearance.animation.expressiveSlowSpatial.type
@@ -320,8 +314,13 @@ Variants {
                 
                 property string currentAudioMode: "mic" 
                 property int hubTabIndex: 0
+                property bool pillStopFusionMinimumActive: false
+                readonly property bool pillStopFusionActive: styleSurface.detached
+                    && (pillStopFusionMinimumActive || RecordingService.isStopPending)
                 readonly property bool isRecording: RecordingService.isRecording
+                    && !pillStopFusionActive
                 readonly property bool isFinalizing: RecordingService.isFinalizing
+                    || pillStopFusionActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
 
                 property bool isLyricsMode: showLyrics && !isRecordingMode
@@ -341,7 +340,6 @@ Variants {
                 property int expandedW: 540; property int expandedH: 210
                 property int collapsedW: 220; property int collapsedH: 42
                 property int recordingPillW: 160
-                property int recordingPillExtendedW: 240
                 property int recordingBangsW: 220
                 property real pillMainWidth: collapsedW
                 property real pillSatelliteProgress: 0
@@ -429,35 +427,18 @@ Variants {
                     root.pillSatelliteProgress = root.isRecording ? 1 : 0;
                 }
 
-                SequentialAnimation {
+                ParallelAnimation {
                     id: pillRecordingEntry
 
-                    PropertyAction {
+                    PillSlowSpatialAnimation {
                         target: root
                         property: "pillMainWidth"
-                        value: root.collapsedW
+                        to: root.recordingPillW
                     }
-                    PropertyAction {
+                    PillSlowSpatialAnimation {
                         target: root
                         property: "pillSatelliteProgress"
-                        value: 0
-                    }
-                    PillFastSpatialAnimation {
-                        target: root
-                        property: "pillMainWidth"
-                        to: root.recordingPillExtendedW
-                    }
-                    ParallelAnimation {
-                        PillSlowSpatialAnimation {
-                            target: root
-                            property: "pillMainWidth"
-                            to: root.recordingPillW
-                        }
-                        PillSlowSpatialAnimation {
-                            target: root
-                            property: "pillSatelliteProgress"
-                            to: 1
-                        }
+                        to: 1
                     }
                 }
 
@@ -474,6 +455,13 @@ Variants {
                         property: "pillSatelliteProgress"
                         to: 0
                     }
+                }
+
+                Timer {
+                    id: pillStopFusionTimer
+
+                    interval: Appearance.animation.expressiveSlowSpatial.duration
+                    onTriggered: root.pillStopFusionMinimumActive = false
                 }
 
                 Rectangle {
@@ -934,7 +922,13 @@ Variants {
                 visible: styleSurface.detached && (active || opacity > 0.01)
                 z: root.z + 2
 
-                onStopRequested: RecordingService.stop()
+                onStopRequested: {
+                    if (!RecordingService.stop())
+                        return;
+
+                    root.pillStopFusionMinimumActive = true;
+                    pillStopFusionTimer.restart();
+                }
             }
 
             BangsRecordingVisual {

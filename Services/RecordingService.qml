@@ -28,6 +28,7 @@ Singleton {
     readonly property bool isFinalizing: state === "finalizing"
     readonly property bool isCompleted: state === "completed"
     readonly property bool isActive: isSelecting || isStarting || isRecording || isFinalizing
+    readonly property bool isStopPending: stopProcess.running
     readonly property double elapsedMs: isRecording && startedAtMs > 0
         ? Math.max(0, _nowMs - startedAtMs)
         : 0
