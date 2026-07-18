@@ -47,17 +47,29 @@ Item {
     Keys.onReturnPressed: triggerSelected()
     Keys.onEnterPressed: triggerSelected()
 
+    function requestRecording(mode) {
+        const accepted = toolsBackend.startRecord(mode)
+        toolsRoot.requestHideKeystone()
+        if (!accepted)
+            console.warn("无法启动录制：当前已有录制命令或会话")
+    }
+
     function triggerSelected() {
         console.log("触发工具: " + toolsModel[selectedIndex].tip)
-        
+
+        if (selectedIndex === 1) {
+            toolsRoot.requestRecording("video")
+            return
+        }
+        if (selectedIndex === 2) {
+            toolsRoot.requestRecording("gif")
+            return
+        }
+
         toolsRoot.requestHideKeystone()
         
         if (selectedIndex === 0) {
             toolsBackend.pickColor()
-        } else if (selectedIndex === 1) { // 录屏
-            toolsBackend.startRecord("video")
-        } else if (selectedIndex === 2) { // 录制 GIF
-            toolsBackend.startRecord("gif")
         } else if (selectedIndex === 3) {
             toolsBackend.takeScreenshot()
         } else if (selectedIndex === 6) { // 录音 - 麦克风

@@ -3,6 +3,7 @@
 #include "recording_types.h"
 
 #include <QString>
+#include <QStringList>
 
 namespace Clavis::Recording {
 
@@ -16,6 +17,7 @@ struct SelectionResult {
 class SlurpSelector {
 public:
     SelectionResult selectRegion(int timeoutMs = 300000) const;
+    static QStringList buildArguments();
     static bool normalizeGeometry(const QString &value, QString *normalized = nullptr);
 };
 

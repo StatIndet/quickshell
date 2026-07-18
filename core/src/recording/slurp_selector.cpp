@@ -22,7 +22,7 @@ SelectionResult SlurpSelector::selectRegion(int timeoutMs) const
 
     QProcess process;
     process.setProgram(program);
-    process.setArguments({QStringLiteral("-f"), QStringLiteral("%wx%h+%x+%y")});
+    process.setArguments(buildArguments());
     process.start();
     if (!process.waitForStarted(3000)) {
         return {
@@ -76,6 +76,27 @@ SelectionResult SlurpSelector::selectRegion(int timeoutMs) const
         };
     }
     return {true, false, geometry, {}};
+}
+
+QStringList SlurpSelector::buildArguments()
+{
+    // slurp 的默认背景可以完全透明。显式设置对比色和尺寸提示，
+    // 确保从无终端的 Quickshell 子进程启动时也有明确的选区反馈。
+    return {
+        QStringLiteral("-d"),
+        QStringLiteral("-b"),
+        QStringLiteral("#00000088"),
+        QStringLiteral("-c"),
+        QStringLiteral("#88d0ecff"),
+        QStringLiteral("-s"),
+        QStringLiteral("#88d0ec40"),
+        QStringLiteral("-B"),
+        QStringLiteral("#0f1416e6"),
+        QStringLiteral("-w"),
+        QStringLiteral("3"),
+        QStringLiteral("-f"),
+        QStringLiteral("%wx%h+%x+%y"),
+    };
 }
 
 bool SlurpSelector::normalizeGeometry(const QString &value, QString *normalized)

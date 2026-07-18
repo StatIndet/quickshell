@@ -5,15 +5,19 @@ import qs.Services
 
 Item {
     id: backendRoot
+
+    property string pendingRecordMode: ""
     
     function pickColor() { colorPickerProcess.running = false; colorPickerProcess.running = true }
     function takeScreenshot() { screenshotProcess.running = false; screenshotProcess.running = true }
 
     function startRecord(mode) {
-        RecordingService.start(mode, {
-            audio: "none",
-            fps: 60
-        })
+        if (recordLaunchTimer.running)
+            return false
+
+        pendingRecordMode = mode === "gif" ? "gif" : "video"
+        recordLaunchTimer.restart()
+        return true
     }
 
     function stopRecord() {
@@ -42,4 +46,24 @@ Item {
     // 【新增：录音专用的 Process 节点】
     Process { id: startAudioProcess }
     Process { id: stopAudioProcess }
+
+    // 工具栏关闭后，等待 layer-shell 提交键盘焦点释放。
+    // 立即启动 slurp 会与仍持有 Exclusive 焦点的 Keystone 表面竞争，
+    // 导致 selector 进程存在但选区层不可见。
+    Timer {
+        id: recordLaunchTimer
+
+        interval: 450
+        repeat: false
+        onTriggered: {
+            const mode = backendRoot.pendingRecordMode
+            backendRoot.pendingRecordMode = ""
+            if (!RecordingService.start(mode, {
+                audio: "none",
+                fps: 60
+            })) {
+                console.warn("无法启动录制：当前已有录制命令或会话")
+            }
+        }
+    }
 }

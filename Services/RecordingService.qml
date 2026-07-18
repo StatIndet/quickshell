@@ -81,7 +81,9 @@ Singleton {
     }
 
     function start(type, options) {
-        if (startProcess.running || root.isActive)
+        // 会话冲突由 key 的状态存储与进程身份校验裁决。
+        // QML 缓存可能落后于 session.json，不能用 isActive 拒绝新命令。
+        if (startProcess.running)
             return false;
 
         const settings = options || {};

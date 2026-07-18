@@ -14,6 +14,7 @@ class RecordingCoreTest : public QObject {
 private slots:
     void normalizesRegionGeometry();
     void rejectsInvalidRegionGeometry();
+    void buildsVisibleSlurpArguments();
     void roundTripsRecordingState();
     void buildsShellFreeGsrArguments();
     void parsesNiriCastSchema();
@@ -33,6 +34,18 @@ void RecordingCoreTest::rejectsInvalidRegionGeometry()
     QVERIFY(!SlurpSelector::normalizeGeometry(QStringLiteral("0x1080+0+0")));
     QVERIFY(!SlurpSelector::normalizeGeometry(QStringLiteral("1920,1080 0x0")));
     QVERIFY(!SlurpSelector::normalizeGeometry(QStringLiteral("anything")));
+}
+
+void RecordingCoreTest::buildsVisibleSlurpArguments()
+{
+    const QStringList arguments = SlurpSelector::buildArguments();
+    QVERIFY(arguments.contains(QStringLiteral("-d")));
+    QVERIFY(arguments.contains(QStringLiteral("-b")));
+    QVERIFY(arguments.contains(QStringLiteral("#00000088")));
+    QVERIFY(arguments.contains(QStringLiteral("-c")));
+    QVERIFY(arguments.contains(QStringLiteral("#88d0ecff")));
+    QVERIFY(arguments.contains(QStringLiteral("-f")));
+    QCOMPARE(arguments.last(), QStringLiteral("%wx%h+%x+%y"));
 }
 
 void RecordingCoreTest::roundTripsRecordingState()
