@@ -23,6 +23,10 @@ SelectionResult SlurpSelector::selectRegion(int timeoutMs) const
     QProcess process;
     process.setProgram(program);
     process.setArguments(buildArguments());
+    // slurp consumes non-terminal stdin as a list of predefined regions before
+    // creating its Wayland surfaces. QProcess otherwise leaves a managed input
+    // pipe open, causing slurp to wait forever for EOF without mapping a layer.
+    process.setStandardInputFile(QProcess::nullDevice());
     process.start();
     if (!process.waitForStarted(3000)) {
         return {
