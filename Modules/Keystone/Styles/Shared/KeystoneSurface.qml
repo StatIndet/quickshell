@@ -249,7 +249,7 @@ Variants {
             samples: 32
             color: "#80000000" 
             cached: true
-            opacity: styleSurface.detached && root.isRecordingMode ? 0 : 1
+            opacity: styleSurface.detached && root.recordingPresentationActive ? 0 : 1
         }
 
         // ============================================================
@@ -260,7 +260,8 @@ Variants {
             anchors.top: parent.top
             anchors.topMargin: styleSurface.topMargin
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.horizontalCenterOffset: styleSurface.detached && root.isRecordingMode
+            anchors.horizontalCenterOffset: styleSurface.detached
+                && root.recordingPresentationActive
                 ? -0.15 * Math.max(0, root.width - root.collapsedW)
                 : 0
             width: root.width + (keystoneWindow.topEdgeCurveWidth * 2)
@@ -317,16 +318,22 @@ Variants {
                 readonly property bool isFinalizing: backendFinalizing
                     || stopPresentationActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
+                property bool recordingExitActive: false
+                readonly property bool recordingPresentationActive: isRecordingMode
+                    || recordingExitActive
+                    || recordingInfoProgress > 0.01
+                    || recordingActionProgress > 0.01
+                    || processingContentProgress > 0.01
 
-                property bool isLyricsMode: showLyrics && !isRecordingMode
-                property bool isToolsMode: !isRecordingMode && showTools && !isLyricsMode
-                property bool isHubMode: !isRecordingMode && showHub && !isToolsMode && !isLyricsMode
-                property bool isAudioMode: !isRecordingMode && showAudio && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isVolumeMode: !isRecordingMode && showVolume && !expanded && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isNotifMode: !isRecordingMode && NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isCollapsedMode: !isRecordingMode && !expanded && !isNotifMode && !isVolumeMode && !isAudioMode && !isLyricsMode && !isHubMode && !isToolsMode
+                property bool isLyricsMode: showLyrics && !recordingPresentationActive
+                property bool isToolsMode: !recordingPresentationActive && showTools && !isLyricsMode
+                property bool isHubMode: !recordingPresentationActive && showHub && !isToolsMode && !isLyricsMode
+                property bool isAudioMode: !recordingPresentationActive && showAudio && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isVolumeMode: !recordingPresentationActive && showVolume && !expanded && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isNotifMode: !recordingPresentationActive && NotificationManager.hasNotifs && !expanded && !showVolume && !isAudioMode && !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isCollapsedMode: !recordingPresentationActive && !expanded && !isNotifMode && !isVolumeMode && !isAudioMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                property bool hasClosablePopup: !isRecordingMode
+                property bool hasClosablePopup: !recordingPresentationActive
                     && (expanded || isLyricsMode || isHubMode || isToolsMode || isAudioMode)
                 
                 property bool showDashboardHole: isHubMode && hubTabIndex === 0
@@ -355,7 +362,7 @@ Variants {
                     ? Math.min(targetH / 2, styleSurface.maxPillRadius)
                     : 12
 
-                property real targetW: isRecordingMode
+                property real targetW: recordingPresentationActive
                     ? (styleSurface.detached
                         ? pillRecordingVisual.mainLayoutWidth
                         : recordingBangsW) :
@@ -368,7 +375,7 @@ Variants {
                     isNotifMode ? notifW : 
                     (collapsedW + (isCollapsedHovered ? 16 : 0))
 
-                property int targetH: isRecordingMode
+                property int targetH: recordingPresentationActive
                     ? collapsedH :
                         isAudioMode ? audioH :
                         isToolsMode ? toolsH : 
@@ -395,10 +402,13 @@ Variants {
                         return;
 
                     contentResetTimer.stop();
+                    recordingPresentationOut.stop();
                     recordingActionOut.stop();
                     pillRecordingInfoOut.stop();
                     bangsRecordingInfoOut.stop();
                     processingContentIn.stop();
+                    bangsProcessingContentIn.stop();
+                    root.recordingExitActive = false;
                     recordingContentIn.restart();
 
                     if (styleSurface.detached) {
@@ -413,6 +423,7 @@ Variants {
 
                     recordingContentIn.stop();
                     processingContentIn.stop();
+                    bangsProcessingContentIn.stop();
                     recordingActionOut.restart();
 
                     if (styleSurface.detached) {
@@ -425,15 +436,19 @@ Variants {
                         pillGeometryExit.restart();
                     } else {
                         bangsRecordingInfoOut.restart();
-                        processingContentIn.restart();
+                        bangsProcessingContentIn.restart();
                     }
                 }
 
                 onBackendFinalizingChanged: {
                     if (root.backendFinalizing
                             && (!styleSurface.detached || root.pillMorphProgress <= 0.01)
-                            && root.processingContentProgress < 0.99)
-                        processingContentIn.restart();
+                            && root.processingContentProgress < 0.99) {
+                        if (styleSurface.detached)
+                            processingContentIn.restart();
+                        else
+                            bangsProcessingContentIn.restart();
+                    }
                 }
 
                 onIsRecordingModeChanged: {
@@ -441,17 +456,25 @@ Variants {
                         return;
 
                     root.pillStopFusionMinimumActive = false;
-                    contentResetTimer.restart();
+                    pillRecordingInfoOut.stop();
+                    bangsRecordingInfoOut.stop();
+                    processingContentIn.stop();
+                    bangsProcessingContentIn.stop();
+                    root.recordingExitActive = true;
+                    recordingPresentationOut.restart();
                 }
 
                 Component.onCompleted: {
                     recordingContentIn.stop();
+                    recordingPresentationOut.stop();
                     recordingActionOut.stop();
                     pillRecordingInfoOut.stop();
                     bangsRecordingInfoOut.stop();
                     processingContentIn.stop();
+                    bangsProcessingContentIn.stop();
                     pillGeometryEntry.stop();
                     pillGeometryExit.stop();
+                    root.recordingExitActive = false;
                     root.pillMorphProgress = styleSurface.detached && root.isRecording
                         ? 1
                         : 0;
@@ -465,27 +488,34 @@ Variants {
 
                     NumberAnimation {
                         target: root
-                        property: "recordingInfoProgress"
-                        to: 1
-                        duration: Appearance.animation.expressiveSlowEffects.duration
-                        easing.type: Appearance.animation.expressiveSlowEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-                    }
-                    NumberAnimation {
-                        target: root
-                        property: "recordingActionProgress"
-                        to: 1
-                        duration: Appearance.animation.expressiveSlowEffects.duration
-                        easing.type: Appearance.animation.expressiveSlowEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-                    }
-                    NumberAnimation {
-                        target: root
                         property: "processingContentProgress"
                         to: 0
                         duration: Appearance.animation.expressiveFastEffects.duration
                         easing.type: Appearance.animation.expressiveFastEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                    }
+                    SequentialAnimation {
+                        PauseAnimation {
+                            duration: Appearance.animation.expressiveFastEffects.duration
+                        }
+                        ParallelAnimation {
+                            NumberAnimation {
+                                target: root
+                                property: "recordingInfoProgress"
+                                to: 1
+                                duration: Appearance.animation.expressiveSlowEffects.duration
+                                easing.type: Appearance.animation.expressiveSlowEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                            }
+                            NumberAnimation {
+                                target: root
+                                property: "recordingActionProgress"
+                                to: 1
+                                duration: Appearance.animation.expressiveSlowEffects.duration
+                                easing.type: Appearance.animation.expressiveSlowEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                            }
+                        }
                     }
                 }
 
@@ -514,7 +544,11 @@ Variants {
                     id: pillRecordingInfoOut
 
                     PauseAnimation {
-                        duration: Math.max(0, root.pillActiveFusionDuration - 200)
+                        duration: Math.max(
+                            0,
+                            root.pillActiveFusionDuration
+                                - Appearance.animation.expressiveSlowEffects.duration
+                        )
                     }
                     NumberAnimation {
                         target: root
@@ -566,19 +600,71 @@ Variants {
                     easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                 }
 
+                SequentialAnimation {
+                    id: bangsProcessingContentIn
+
+                    PauseAnimation {
+                        duration: Appearance.animation.emphasizedAccel.duration
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "processingContentProgress"
+                        to: 1
+                        duration: Appearance.animation.expressiveSlowEffects.duration
+                        easing.type: Appearance.animation.expressiveSlowEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                    }
+                }
+
+                ParallelAnimation {
+                    id: recordingPresentationOut
+
+                    NumberAnimation {
+                        target: root
+                        property: "recordingInfoProgress"
+                        to: 0
+                        duration: Appearance.animation.emphasizedAccel.duration
+                        easing.type: Appearance.animation.emphasizedAccel.type
+                        easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "recordingActionProgress"
+                        to: 0
+                        duration: Appearance.animation.expressiveFastEffects.duration
+                        easing.type: Appearance.animation.expressiveFastEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "processingContentProgress"
+                        to: 0
+                        duration: Appearance.animation.emphasizedAccel.duration
+                        easing.type: Appearance.animation.emphasizedAccel.type
+                        easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
+                    }
+
+                    onFinished: {
+                        root.recordingExitActive = false;
+                        contentResetTimer.restart();
+                    }
+                }
+
                 Timer {
                     id: contentResetTimer
 
-                    interval: Appearance.animation.expressiveSlowEffects.duration + 60
+                    interval: 60
                     onTriggered: {
-                        if (root.isRecordingMode)
+                        if (root.recordingPresentationActive)
                             return;
 
                         recordingContentIn.stop();
+                        recordingPresentationOut.stop();
                         recordingActionOut.stop();
                         pillRecordingInfoOut.stop();
                         bangsRecordingInfoOut.stop();
                         processingContentIn.stop();
+                        bangsProcessingContentIn.stop();
                         pillGeometryEntry.stop();
                         pillGeometryExit.stop();
                         root.pillMorphProgress = 0;
@@ -623,15 +709,7 @@ Variants {
                     source: solidRootBg
                     maskSource: rootHoleWrapper
                     invert: true 
-                    opacity: styleSurface.detached && root.isRecordingMode ? 0 : 1
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: Appearance.animation.expressiveEffects.duration
-                            easing.type: Appearance.animation.expressiveEffects.type
-                            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
-                        }
-                    }
+                    opacity: styleSurface.detached && root.recordingPresentationActive ? 0 : 1
                 }
 
                 onTargetWChanged: {
@@ -679,7 +757,7 @@ Variants {
                 }
 
                 Behavior on width {
-                    enabled: !(styleSurface.detached && root.isRecordingMode)
+                    enabled: !(styleSurface.detached && root.recordingPresentationActive)
 
                     NumberAnimation {
                         duration: root.wDuration
@@ -797,7 +875,9 @@ Variants {
                     id: keystoneMouseArea  
                     anchors.fill: parent; cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true   
-                    enabled: !root.isRecordingMode && !root.isNotifMode && !root.isVolumeMode
+                    enabled: !root.recordingPresentationActive
+                        && !root.isNotifMode
+                        && !root.isVolumeMode
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     
                     onClicked: (mouse) => {
@@ -824,31 +904,6 @@ Variants {
                     width: 1600 
                     height: 1200
 
-                    ClockContent { 
-                        id: clockContent
-
-                        anchors.top: parent.top
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        width: root.collapsedW
-                        height: root.collapsedH
-                        
-                        player: root.currentPlayer
-                        
-                        opacity: root.isCollapsedMode ? 1 : 0
-                        scale: 0.96 + 0.04 * opacity
-                        transform: Translate {
-                            y: (1 - clockContent.opacity) * 4
-                        }
-                        visible: opacity > 0.01
-                        Behavior on opacity {
-                            NumberAnimation {
-                                duration: Appearance.animation.expressiveSlowEffects.duration
-                                easing.type: Appearance.animation.expressiveSlowEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-                            }
-                        }
-                    }
-                        
                     VolumeContent {
                         id: volumeWidget
                         anchors.top: parent.top
@@ -922,7 +977,10 @@ Variants {
                         width: root.expandedW - 40
                         height: root.expandedH - 40
 
-                        opacity: (!root.isRecordingMode && root.expanded && !root.isLyricsMode && !root.isHubMode) ? 1 : 0
+                        opacity: (!root.recordingPresentationActive
+                            && root.expanded
+                            && !root.isLyricsMode
+                            && !root.isHubMode) ? 1 : 0
                         visible: opacity > 0.01
                         Behavior on opacity {
                             NumberAnimation {
@@ -1035,13 +1093,46 @@ Variants {
                 }
             }
 
+            ClockContent {
+                id: clockContent
+
+                anchors.top: root.top
+                anchors.horizontalCenter: root.horizontalCenter
+                width: root.collapsedW
+                height: root.collapsedH
+
+                player: root.currentPlayer
+
+                opacity: root.isCollapsedMode ? 1 : 0
+                scale: 0.96 + 0.04 * opacity
+                transform: Translate {
+                    y: (1 - clockContent.opacity) * 4
+                }
+                visible: opacity > 0.01
+                z: root.z + 4
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: root.isCollapsedMode
+                            ? Appearance.animation.expressiveSlowEffects.duration
+                            : Appearance.animation.expressiveFastEffects.duration
+                        easing.type: root.isCollapsedMode
+                            ? Appearance.animation.expressiveSlowEffects.type
+                            : Appearance.animation.expressiveFastEffects.type
+                        easing.bezierCurve: root.isCollapsedMode
+                            ? Appearance.animation.expressiveSlowEffects.bezierCurve
+                            : Appearance.animation.expressiveFastEffects.bezierCurve
+                    }
+                }
+            }
+
             PillRecordingVisual {
                 id: pillRecordingVisual
 
                 anchors.right: root.right
                 anchors.rightMargin: -rightOverflow
                 anchors.verticalCenter: root.verticalCenter
-                active: styleSurface.detached && root.isRecordingMode
+                active: styleSurface.detached && root.recordingPresentationActive
                 recording: styleSurface.detached && root.isRecording
                 finalizing: styleSurface.detached && root.isFinalizing
                 recordingType: RecordingService.recordingType
@@ -1069,7 +1160,7 @@ Variants {
                 anchors.centerIn: root
                 width: root.width
                 height: root.height
-                active: !styleSurface.detached && root.isRecordingMode
+                active: !styleSurface.detached && root.recordingPresentationActive
                 recording: !styleSurface.detached && root.isRecording
                 finalizing: !styleSurface.detached && root.isFinalizing
                 recordingType: RecordingService.recordingType

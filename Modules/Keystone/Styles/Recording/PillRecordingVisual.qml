@@ -137,14 +137,6 @@ Item {
             heldElapsedMs = 0;
     }
 
-    Behavior on opacity {
-        NumberAnimation {
-            duration: Appearance.animation.expressiveSlowEffects.duration
-            easing.type: Appearance.animation.expressiveSlowEffects.type
-            easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-        }
-    }
-
     PillMorphSurface {
         anchors.fill: parent
         mainCenter: Qt.vector2d(root.mainCenterX, root.shapeCenterY)

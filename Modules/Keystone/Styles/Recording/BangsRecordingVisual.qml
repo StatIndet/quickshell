@@ -95,14 +95,6 @@ Item {
             heldElapsedMs = 0;
     }
 
-    Behavior on entryProgress {
-        NumberAnimation {
-            duration: Appearance.animation.expressiveSlowEffects.duration
-            easing.type: Appearance.animation.expressiveSlowEffects.type
-            easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
-        }
-    }
-
     SessionTypeIndicator {
         anchors.left: parent.left
         anchors.leftMargin: 12
