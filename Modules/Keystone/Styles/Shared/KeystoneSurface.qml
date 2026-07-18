@@ -261,7 +261,7 @@ Variants {
             anchors.topMargin: styleSurface.topMargin
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.horizontalCenterOffset: styleSurface.detached && root.isRecordingMode
-                ? (root.collapsedW - root.width) / 2
+                ? -0.15 * Math.max(0, root.width - root.collapsedW)
                 : 0
             width: root.width + (keystoneWindow.topEdgeCurveWidth * 2)
             height: root.height
@@ -310,12 +310,12 @@ Variants {
                 property int hubTabIndex: 0
                 property bool pillStopFusionMinimumActive: false
                 readonly property bool backendFinalizing: RecordingService.isFinalizing
-                readonly property bool pillStopFusionActive: styleSurface.detached
-                    && (pillStopFusionMinimumActive || RecordingService.isStopPending)
+                readonly property bool stopPresentationActive: RecordingService.isStopPending
+                    || (styleSurface.detached && pillStopFusionMinimumActive)
                 readonly property bool isRecording: RecordingService.isRecording
-                    && !pillStopFusionActive
+                    && !stopPresentationActive
                 readonly property bool isFinalizing: backendFinalizing
-                    || pillStopFusionActive
+                    || stopPresentationActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
 
                 property bool isLyricsMode: showLyrics && !isRecordingMode
@@ -336,9 +336,10 @@ Variants {
                 property int collapsedW: 220; property int collapsedH: 42
                 property int recordingBangsW: 220
                 property real pillMorphProgress: 0
-                property real pillContentProgress: 0
+                property real recordingInfoProgress: 0
+                property real recordingActionProgress: 0
+                property real processingContentProgress: 0
                 readonly property int pillEntryDuration: 1100
-                readonly property int pillContentEntryDuration: 180
                 readonly property int pillFusionDuration: 900
                 property int pillActiveFusionDuration: pillFusionDuration
                 property int toolsW: 480; property int toolsH: 72
@@ -390,119 +391,201 @@ Variants {
                 property real radius: targetR
 
                 onIsRecordingChanged: {
-                    if (!styleSurface.detached || !root.isRecording)
+                    if (!root.isRecording)
                         return;
 
-                    pillRecordingExit.stop();
-                    pillProcessingContentIn.stop();
-                    pillRecordingEntry.restart();
+                    contentResetTimer.stop();
+                    recordingActionOut.stop();
+                    pillRecordingInfoOut.stop();
+                    bangsRecordingInfoOut.stop();
+                    processingContentIn.stop();
+                    recordingContentIn.restart();
+
+                    if (styleSurface.detached) {
+                        pillGeometryExit.stop();
+                        pillGeometryEntry.restart();
+                    }
                 }
 
                 onIsFinalizingChanged: {
-                    if (!styleSurface.detached || !root.isFinalizing)
+                    if (!root.isFinalizing)
                         return;
 
-                    pillRecordingEntry.stop();
-                    pillProcessingContentIn.stop();
-                    root.pillActiveFusionDuration = Math.max(
-                        220,
-                        Math.round(root.pillFusionDuration * root.pillMorphProgress)
-                    );
-                    pillRecordingExit.restart();
+                    recordingContentIn.stop();
+                    processingContentIn.stop();
+                    recordingActionOut.restart();
+
+                    if (styleSurface.detached) {
+                        pillGeometryEntry.stop();
+                        root.pillActiveFusionDuration = Math.max(
+                            220,
+                            Math.round(root.pillFusionDuration * root.pillMorphProgress)
+                        );
+                        pillRecordingInfoOut.restart();
+                        pillGeometryExit.restart();
+                    } else {
+                        bangsRecordingInfoOut.restart();
+                        processingContentIn.restart();
+                    }
                 }
 
                 onBackendFinalizingChanged: {
-                    if (root.backendFinalizing && root.pillMorphProgress <= 0.01)
-                        pillProcessingContentIn.restart();
+                    if (root.backendFinalizing
+                            && (!styleSurface.detached || root.pillMorphProgress <= 0.01)
+                            && root.processingContentProgress < 0.99)
+                        processingContentIn.restart();
                 }
 
                 onIsRecordingModeChanged: {
                     if (root.isRecordingMode)
                         return;
 
-                    pillRecordingEntry.stop();
-                    pillRecordingExit.stop();
-                    pillProcessingContentIn.stop();
                     root.pillStopFusionMinimumActive = false;
-                    root.pillMorphProgress = 0;
-                    root.pillContentProgress = 0;
+                    contentResetTimer.restart();
                 }
 
                 Component.onCompleted: {
-                    if (!styleSurface.detached)
-                        return;
-
-                    root.pillMorphProgress = root.isRecording ? 1 : 0;
-                    root.pillContentProgress = root.isRecording || root.backendFinalizing
+                    recordingContentIn.stop();
+                    recordingActionOut.stop();
+                    pillRecordingInfoOut.stop();
+                    bangsRecordingInfoOut.stop();
+                    processingContentIn.stop();
+                    pillGeometryEntry.stop();
+                    pillGeometryExit.stop();
+                    root.pillMorphProgress = styleSurface.detached && root.isRecording
                         ? 1
                         : 0;
-                }
-
-                SequentialAnimation {
-                    id: pillRecordingEntry
-
-                    PropertyAction {
-                        target: root
-                        property: "pillMorphProgress"
-                        value: 0
-                    }
-                    PropertyAction {
-                        target: root
-                        property: "pillContentProgress"
-                        value: 0
-                    }
-                    NumberAnimation {
-                        target: root
-                        property: "pillMorphProgress"
-                        to: 1
-                        duration: root.pillEntryDuration
-                        easing.type: Easing.Linear
-                    }
-                    NumberAnimation {
-                        target: root
-                        property: "pillContentProgress"
-                        to: 1
-                        duration: root.pillContentEntryDuration
-                        easing.type: Appearance.animation.expressiveDefaultEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
-                    }
+                    root.recordingInfoProgress = root.isRecording ? 1 : 0;
+                    root.recordingActionProgress = root.isRecording ? 1 : 0;
+                    root.processingContentProgress = root.isFinalizing ? 1 : 0;
                 }
 
                 ParallelAnimation {
-                    id: pillRecordingExit
+                    id: recordingContentIn
 
                     NumberAnimation {
                         target: root
-                        property: "pillContentProgress"
+                        property: "recordingInfoProgress"
+                        to: 1
+                        duration: Appearance.animation.expressiveSlowEffects.duration
+                        easing.type: Appearance.animation.expressiveSlowEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "recordingActionProgress"
+                        to: 1
+                        duration: Appearance.animation.expressiveSlowEffects.duration
+                        easing.type: Appearance.animation.expressiveSlowEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "processingContentProgress"
                         to: 0
                         duration: Appearance.animation.expressiveFastEffects.duration
                         easing.type: Appearance.animation.expressiveFastEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                     }
+                }
+
+                NumberAnimation {
+                    id: pillGeometryEntry
+
+                    target: root
+                    property: "pillMorphProgress"
+                    to: 1
+                    duration: root.pillEntryDuration
+                    easing.type: Easing.Linear
+                }
+
+                NumberAnimation {
+                    id: recordingActionOut
+
+                    target: root
+                    property: "recordingActionProgress"
+                    to: 0
+                    duration: Appearance.animation.expressiveFastEffects.duration
+                    easing.type: Appearance.animation.expressiveFastEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                }
+
+                SequentialAnimation {
+                    id: pillRecordingInfoOut
+
+                    PauseAnimation {
+                        duration: Math.max(0, root.pillActiveFusionDuration - 200)
+                    }
                     NumberAnimation {
                         target: root
-                        property: "pillMorphProgress"
+                        property: "recordingInfoProgress"
                         to: 0
-                        duration: root.pillActiveFusionDuration
-                        easing.type: Easing.Linear
-                    }
-
-                    onFinished: {
-                        root.pillStopFusionMinimumActive = false;
-                        if (root.backendFinalizing)
-                            pillProcessingContentIn.restart();
+                        duration: Appearance.animation.expressiveSlowEffects.duration
+                        easing.type: Appearance.animation.expressiveSlowEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                     }
                 }
 
                 NumberAnimation {
-                    id: pillProcessingContentIn
+                    id: bangsRecordingInfoOut
 
                     target: root
-                    property: "pillContentProgress"
+                    property: "recordingInfoProgress"
+                    to: 0
+                    duration: Appearance.animation.emphasizedAccel.duration
+                    easing.type: Appearance.animation.emphasizedAccel.type
+                    easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
+                }
+
+                NumberAnimation {
+                    id: pillGeometryExit
+
+                    target: root
+                    property: "pillMorphProgress"
+                    to: 0
+                    duration: root.pillActiveFusionDuration
+                    easing.type: Easing.Linear
+
+                    onFinished: {
+                        const shouldShowProcessing = root.backendFinalizing
+                            || RecordingService.isStopPending;
+                        root.pillStopFusionMinimumActive = false;
+                        if (shouldShowProcessing)
+                            processingContentIn.restart();
+                    }
+                }
+
+                NumberAnimation {
+                    id: processingContentIn
+
+                    target: root
+                    property: "processingContentProgress"
                     to: 1
-                    duration: Appearance.animation.expressiveEffects.duration
-                    easing.type: Appearance.animation.expressiveEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                    duration: Appearance.animation.expressiveSlowEffects.duration
+                    easing.type: Appearance.animation.expressiveSlowEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                }
+
+                Timer {
+                    id: contentResetTimer
+
+                    interval: Appearance.animation.expressiveSlowEffects.duration + 60
+                    onTriggered: {
+                        if (root.isRecordingMode)
+                            return;
+
+                        recordingContentIn.stop();
+                        recordingActionOut.stop();
+                        pillRecordingInfoOut.stop();
+                        bangsRecordingInfoOut.stop();
+                        processingContentIn.stop();
+                        pillGeometryEntry.stop();
+                        pillGeometryExit.stop();
+                        root.pillMorphProgress = 0;
+                        root.recordingInfoProgress = 0;
+                        root.recordingActionProgress = 0;
+                        root.processingContentProgress = 0;
+                    }
                 }
 
                 Rectangle {
@@ -742,6 +825,8 @@ Variants {
                     height: 1200
 
                     ClockContent { 
+                        id: clockContent
+
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: root.collapsedW
@@ -750,12 +835,16 @@ Variants {
                         player: root.currentPlayer
                         
                         opacity: root.isCollapsedMode ? 1 : 0
+                        scale: 0.96 + 0.04 * opacity
+                        transform: Translate {
+                            y: (1 - clockContent.opacity) * 4
+                        }
                         visible: opacity > 0.01
                         Behavior on opacity {
                             NumberAnimation {
-                                duration: Appearance.animation.expressiveEffects.duration
-                                easing.type: Appearance.animation.expressiveEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                                duration: Appearance.animation.expressiveSlowEffects.duration
+                                easing.type: Appearance.animation.expressiveSlowEffects.type
+                                easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                             }
                         }
                     }
@@ -958,7 +1047,9 @@ Variants {
                 recordingType: RecordingService.recordingType
                 elapsedMs: RecordingService.elapsedMs
                 morphProgress: root.pillMorphProgress
-                contentProgress: root.pillContentProgress
+                recordingInfoProgress: root.recordingInfoProgress
+                recordingActionProgress: root.recordingActionProgress
+                processingContentProgress: root.processingContentProgress
                 baseMainWidth: root.collapsedW
                 layoutHeight: root.collapsedH
                 visible: styleSurface.detached && (active || opacity > 0.01)
@@ -983,6 +1074,9 @@ Variants {
                 finalizing: !styleSurface.detached && root.isFinalizing
                 recordingType: RecordingService.recordingType
                 elapsedMs: RecordingService.elapsedMs
+                recordingInfoProgress: root.recordingInfoProgress
+                recordingActionProgress: root.recordingActionProgress
+                processingContentProgress: root.processingContentProgress
                 visible: !styleSurface.detached && (active || opacity > 0.01)
                 z: root.z + 2
 

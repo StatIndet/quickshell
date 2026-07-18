@@ -13,43 +13,55 @@ Item {
     required property string recordingType
     required property double elapsedMs
     required property real morphProgress
-    required property real contentProgress
+    required property real recordingInfoProgress
+    required property real recordingActionProgress
+    required property real processingContentProgress
 
     property real baseMainWidth: 220
     property real layoutHeight: 42
     property color surfaceColor: Appearance.colors.colLayer0
 
     readonly property int effectBleed: 18
-    readonly property real maxMainWidth: 340
-    readonly property real maxRightExtent: 80
+    readonly property real maxMainWidth: 280
+    readonly property real maxRightExtent: 70
     readonly property real maxVisualHeight: 52
     readonly property real mainRightX: effectBleed + maxMainWidth
     readonly property real shapeCenterY: height / 2
     readonly property real normalizedMorphProgress: Math.max(0, Math.min(1, morphProgress))
-    readonly property real normalizedContentProgress: Math.max(0, Math.min(1, contentProgress))
+    readonly property real normalizedRecordingInfoProgress: Math.max(
+        0,
+        Math.min(1, recordingInfoProgress)
+    )
+    readonly property real normalizedRecordingActionProgress: Math.max(
+        0,
+        Math.min(1, recordingActionProgress)
+    )
+    readonly property real normalizedProcessingContentProgress: Math.max(
+        0,
+        Math.min(1, processingContentProgress)
+    )
 
     // Reference-video keyframes:
     // idle -> maximum connected hull -> narrow neck -> detached -> settled.
-    readonly property real mainLayoutWidth: morphValue(baseMainWidth, 340, 285, 278, 270)
+    readonly property real mainLayoutWidth: morphValue(baseMainWidth, 280, 250, 246, 240)
     readonly property real mainVisualHeight: morphValue(layoutHeight, 52, 46, 44, 42)
-    readonly property real satelliteWidth: satelliteMorphValue(layoutHeight, 64, 58, 56, 52)
+    readonly property real satelliteWidth: satelliteMorphValue(layoutHeight, 60, 56, 54, 52)
     readonly property real satelliteHeight: satelliteMorphValue(layoutHeight, 50, 46, 44, 42)
     readonly property real satelliteCenterOffset: satelliteMorphValue(
         -layoutHeight / 2,
-        48,
-        42,
         40,
+        38,
+        38,
         38
     )
-    readonly property real blendRadius: satelliteMorphValue(0, 56, 28, 20, 0)
+    readonly property real blendRadius: satelliteMorphValue(0, 50, 28, 18, 0)
     readonly property real mainCenterX: mainRightX - mainLayoutWidth / 2
     readonly property real satelliteCenterX: mainRightX + satelliteCenterOffset
     readonly property real satelliteRightExtent: Math.max(
         0,
         satelliteCenterOffset + satelliteWidth / 2
     )
-    readonly property real interactiveRightExtent: recording
-        && normalizedContentProgress > 0.01
+    readonly property real interactiveRightExtent: normalizedRecordingActionProgress > 0.01
         ? satelliteRightExtent
         : 0
     readonly property real rightOverflow: maxRightExtent + effectBleed
@@ -127,9 +139,9 @@ Item {
 
     Behavior on opacity {
         NumberAnimation {
-            duration: Appearance.animation.expressiveEffects.duration
-            easing.type: Appearance.animation.expressiveEffects.type
-            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+            duration: Appearance.animation.expressiveSlowEffects.duration
+            easing.type: Appearance.animation.expressiveSlowEffects.type
+            easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
         }
     }
 
@@ -146,14 +158,17 @@ Item {
     }
 
     Item {
-        id: mainContent
+        id: recordingContent
 
         x: root.mainRightX - root.mainLayoutWidth
         y: root.shapeCenterY - root.layoutHeight / 2
         width: root.mainLayoutWidth
         height: root.layoutHeight
-        opacity: root.normalizedContentProgress
-        scale: 0.94 + 0.06 * root.normalizedContentProgress
+        opacity: root.normalizedRecordingInfoProgress
+        scale: 0.94 + 0.06 * root.normalizedRecordingInfoProgress
+        transform: Translate {
+            y: (1 - root.normalizedRecordingInfoProgress) * -4
+        }
 
         Row {
             anchors.centerIn: parent
@@ -167,15 +182,102 @@ Item {
 
                 MaterialSymbol {
                     anchors.centerIn: parent
-                    text: root.finalizing
-                        ? "hourglass_top"
-                        : (root.recordingType === "gif" ? "gif_box" : "videocam")
+                    text: root.recordingType === "gif" ? "gif_box" : "videocam"
+                    iconSize: 18
+                    fill: 1
+                    color: root.typeContentColor
+                }
+
+                Item {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    width: 8
+                    height: 8
+                    opacity: root.recording ? 1 : 0
+                    visible: opacity > 0.01
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.animation.expressiveFastEffects.duration
+                            easing.type: Appearance.animation.expressiveFastEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: width / 2
+                        color: Appearance.colors.colError
+
+                        SequentialAnimation on opacity {
+                            running: root.recording
+                            loops: Animation.Infinite
+
+                            NumberAnimation {
+                                to: 0.35
+                                duration: 720
+                                easing.type: Easing.InOutSine
+                            }
+                            NumberAnimation {
+                                to: 1
+                                duration: 720
+                                easing.type: Easing.InOutSine
+                            }
+                        }
+                    }
+                }
+            }
+
+            Text {
+                width: 86
+                anchors.verticalCenter: parent.verticalCenter
+                text: root.formatElapsed(root.heldElapsedMs)
+                color: Appearance.colors.colOnLayer0
+                font {
+                    family: "JetBrainsMono Nerd Font"
+                    pixelSize: 18
+                    weight: Font.DemiBold
+                }
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                renderType: Text.NativeRendering
+            }
+        }
+    }
+
+    Item {
+        id: processingContent
+
+        x: root.mainRightX - root.mainLayoutWidth
+        y: root.shapeCenterY - root.layoutHeight / 2
+        width: root.mainLayoutWidth
+        height: root.layoutHeight
+        opacity: root.normalizedProcessingContentProgress
+        scale: 0.94 + 0.06 * root.normalizedProcessingContentProgress
+        transform: Translate {
+            y: (1 - root.normalizedProcessingContentProgress) * 4
+        }
+
+        Row {
+            anchors.centerIn: parent
+            spacing: 10
+
+            Rectangle {
+                width: 30
+                height: 30
+                radius: width / 2
+                color: root.typeContainerColor
+
+                MaterialSymbol {
+                    anchors.centerIn: parent
+                    text: "hourglass_top"
                     iconSize: 18
                     fill: 1
                     color: root.typeContentColor
 
                     SequentialAnimation on opacity {
                         running: root.finalizing
+                            && root.normalizedProcessingContentProgress > 0.01
                         loops: Animation.Infinite
 
                         NumberAnimation {
@@ -190,46 +292,16 @@ Item {
                         }
                     }
                 }
-
-                Rectangle {
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    width: 8
-                    height: 8
-                    radius: width / 2
-                    color: Appearance.colors.colError
-                    visible: root.recording
-
-                    SequentialAnimation on opacity {
-                        running: root.recording
-                        loops: Animation.Infinite
-
-                        NumberAnimation {
-                            to: 0.35
-                            duration: 720
-                            easing.type: Easing.InOutSine
-                        }
-                        NumberAnimation {
-                            to: 1
-                            duration: 720
-                            easing.type: Easing.InOutSine
-                        }
-                    }
-                }
             }
 
             Text {
-                width: root.finalizing ? 70 : 86
+                width: 70
                 anchors.verticalCenter: parent.verticalCenter
-                text: root.finalizing
-                    ? "正在处理"
-                    : root.formatElapsed(root.heldElapsedMs)
+                text: "正在处理"
                 color: Appearance.colors.colOnLayer0
                 font {
-                    family: root.finalizing
-                        ? "LXGW WenKai GB Screen"
-                        : "JetBrainsMono Nerd Font"
-                    pixelSize: root.finalizing ? 15 : 18
+                    family: "LXGW WenKai GB Screen"
+                    pixelSize: 15
                     weight: Font.DemiBold
                 }
                 horizontalAlignment: Text.AlignHCenter
@@ -246,8 +318,8 @@ Item {
         y: root.shapeCenterY - root.satelliteHeight / 2
         width: root.satelliteWidth
         height: root.satelliteHeight
-        opacity: root.recording ? root.normalizedContentProgress : 0
-        scale: 0.86 + 0.14 * root.normalizedContentProgress
+        opacity: root.normalizedRecordingActionProgress
+        scale: 0.86 + 0.14 * root.normalizedRecordingActionProgress
 
         Rectangle {
             anchors.centerIn: parent
@@ -291,8 +363,7 @@ Item {
 
             anchors.fill: parent
             enabled: root.recording
-                && root.normalizedMorphProgress > 0.98
-                && root.normalizedContentProgress > 0.95
+                && root.normalizedRecordingActionProgress > 0.55
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
 
