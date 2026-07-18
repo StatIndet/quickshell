@@ -28,12 +28,6 @@ Variants {
     property int maxPillRadius: 24
     property bool showTopEdgeCurves: !detached
 
-    component PillSlowSpatialAnimation: NumberAnimation {
-        duration: Appearance.animation.expressiveSlowSpatial.duration
-        easing.type: Appearance.animation.expressiveSlowSpatial.type
-        easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
-    }
-
     function invoke(methodName) {
         if (instances.length === 0)
             return "KEYSTONE_UNAVAILABLE";
@@ -132,11 +126,10 @@ Variants {
             id: hitBoxRegion
             anchors.top: maskContainer.top
             anchors.bottom: maskContainer.bottom
-            anchors.right: maskContainer.right
+            anchors.left: maskContainer.left
             width: maskContainer.width
                 + (styleSurface.detached
-                    ? pillRecordingVisual.satelliteExtent
-                        * pillRecordingVisual.normalizedSatelliteProgress
+                    ? pillRecordingVisual.interactiveRightExtent
                     : 0)
         }
 
@@ -256,6 +249,7 @@ Variants {
             samples: 32
             color: "#80000000" 
             cached: true
+            opacity: styleSurface.detached && root.isRecordingMode ? 0 : 1
         }
 
         // ============================================================
@@ -315,11 +309,12 @@ Variants {
                 property string currentAudioMode: "mic" 
                 property int hubTabIndex: 0
                 property bool pillStopFusionMinimumActive: false
+                readonly property bool backendFinalizing: RecordingService.isFinalizing
                 readonly property bool pillStopFusionActive: styleSurface.detached
                     && (pillStopFusionMinimumActive || RecordingService.isStopPending)
                 readonly property bool isRecording: RecordingService.isRecording
                     && !pillStopFusionActive
-                readonly property bool isFinalizing: RecordingService.isFinalizing
+                readonly property bool isFinalizing: backendFinalizing
                     || pillStopFusionActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
 
@@ -339,10 +334,13 @@ Variants {
                 property int lyricsW: lyricsWidget.implicitWidth; property int lyricsH: 42 
                 property int expandedW: 540; property int expandedH: 210
                 property int collapsedW: 220; property int collapsedH: 42
-                property int recordingPillW: 160
                 property int recordingBangsW: 220
-                property real pillMainWidth: collapsedW
-                property real pillSatelliteProgress: 0
+                property real pillMorphProgress: 0
+                property real pillContentProgress: 0
+                readonly property int pillEntryDuration: 1100
+                readonly property int pillContentEntryDuration: 180
+                readonly property int pillFusionDuration: 900
+                property int pillActiveFusionDuration: pillFusionDuration
                 property int toolsW: 480; property int toolsH: 72
                 property int notifW: 380; property int notifH: (NotificationManager.popupList.length * 70) + 20
                 property int volW: 320; property int volH: 64
@@ -358,7 +356,7 @@ Variants {
 
                 property real targetW: isRecordingMode
                     ? (styleSurface.detached
-                        ? pillMainWidth
+                        ? pillRecordingVisual.mainLayoutWidth
                         : recordingBangsW) :
                     isAudioMode ? audioW :
                     isToolsMode ? toolsW :
@@ -396,6 +394,7 @@ Variants {
                         return;
 
                     pillRecordingExit.stop();
+                    pillProcessingContentIn.stop();
                     pillRecordingEntry.restart();
                 }
 
@@ -404,7 +403,17 @@ Variants {
                         return;
 
                     pillRecordingEntry.stop();
+                    pillProcessingContentIn.stop();
+                    root.pillActiveFusionDuration = Math.max(
+                        220,
+                        Math.round(root.pillFusionDuration * root.pillMorphProgress)
+                    );
                     pillRecordingExit.restart();
+                }
+
+                onBackendFinalizingChanged: {
+                    if (root.backendFinalizing && root.pillMorphProgress <= 0.01)
+                        pillProcessingContentIn.restart();
                 }
 
                 onIsRecordingModeChanged: {
@@ -413,55 +422,87 @@ Variants {
 
                     pillRecordingEntry.stop();
                     pillRecordingExit.stop();
-                    root.pillMainWidth = root.collapsedW;
-                    root.pillSatelliteProgress = 0;
+                    pillProcessingContentIn.stop();
+                    root.pillStopFusionMinimumActive = false;
+                    root.pillMorphProgress = 0;
+                    root.pillContentProgress = 0;
                 }
 
                 Component.onCompleted: {
                     if (!styleSurface.detached)
                         return;
 
-                    root.pillMainWidth = root.isRecording
-                        ? root.recordingPillW
-                        : root.collapsedW;
-                    root.pillSatelliteProgress = root.isRecording ? 1 : 0;
+                    root.pillMorphProgress = root.isRecording ? 1 : 0;
+                    root.pillContentProgress = root.isRecording || root.backendFinalizing
+                        ? 1
+                        : 0;
                 }
 
-                ParallelAnimation {
+                SequentialAnimation {
                     id: pillRecordingEntry
 
-                    PillSlowSpatialAnimation {
+                    PropertyAction {
                         target: root
-                        property: "pillMainWidth"
-                        to: root.recordingPillW
+                        property: "pillMorphProgress"
+                        value: 0
                     }
-                    PillSlowSpatialAnimation {
+                    PropertyAction {
                         target: root
-                        property: "pillSatelliteProgress"
+                        property: "pillContentProgress"
+                        value: 0
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "pillMorphProgress"
                         to: 1
+                        duration: root.pillEntryDuration
+                        easing.type: Easing.Linear
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "pillContentProgress"
+                        to: 1
+                        duration: root.pillContentEntryDuration
+                        easing.type: Appearance.animation.expressiveDefaultEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                     }
                 }
 
                 ParallelAnimation {
                     id: pillRecordingExit
 
-                    PillSlowSpatialAnimation {
+                    NumberAnimation {
                         target: root
-                        property: "pillMainWidth"
-                        to: root.collapsedW
-                    }
-                    PillSlowSpatialAnimation {
-                        target: root
-                        property: "pillSatelliteProgress"
+                        property: "pillContentProgress"
                         to: 0
+                        duration: Appearance.animation.expressiveFastEffects.duration
+                        easing.type: Appearance.animation.expressiveFastEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                    }
+                    NumberAnimation {
+                        target: root
+                        property: "pillMorphProgress"
+                        to: 0
+                        duration: root.pillActiveFusionDuration
+                        easing.type: Easing.Linear
+                    }
+
+                    onFinished: {
+                        root.pillStopFusionMinimumActive = false;
+                        if (root.backendFinalizing)
+                            pillProcessingContentIn.restart();
                     }
                 }
 
-                Timer {
-                    id: pillStopFusionTimer
+                NumberAnimation {
+                    id: pillProcessingContentIn
 
-                    interval: Appearance.animation.expressiveSlowSpatial.duration
-                    onTriggered: root.pillStopFusionMinimumActive = false
+                    target: root
+                    property: "pillContentProgress"
+                    to: 1
+                    duration: Appearance.animation.expressiveEffects.duration
+                    easing.type: Appearance.animation.expressiveEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                 }
 
                 Rectangle {
@@ -909,16 +950,17 @@ Variants {
                 id: pillRecordingVisual
 
                 anchors.right: root.right
-                anchors.rightMargin: -effectBleed
+                anchors.rightMargin: -rightOverflow
                 anchors.verticalCenter: root.verticalCenter
-                mainWidth: root.width
-                mainHeight: root.height
                 active: styleSurface.detached && root.isRecordingMode
                 recording: styleSurface.detached && root.isRecording
                 finalizing: styleSurface.detached && root.isFinalizing
                 recordingType: RecordingService.recordingType
                 elapsedMs: RecordingService.elapsedMs
-                satelliteProgress: root.pillSatelliteProgress
+                morphProgress: root.pillMorphProgress
+                contentProgress: root.pillContentProgress
+                baseMainWidth: root.collapsedW
+                layoutHeight: root.collapsedH
                 visible: styleSurface.detached && (active || opacity > 0.01)
                 z: root.z + 2
 
@@ -927,7 +969,6 @@ Variants {
                         return;
 
                     root.pillStopFusionMinimumActive = true;
-                    pillStopFusionTimer.restart();
                 }
             }
 

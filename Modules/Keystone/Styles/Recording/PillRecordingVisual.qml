@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Components
 import qs.Widgets.common
@@ -13,27 +12,47 @@ Item {
     required property bool finalizing
     required property string recordingType
     required property double elapsedMs
-    required property real satelliteProgress
+    required property real morphProgress
+    required property real contentProgress
 
-    property real mainWidth: 160
-    property real mainHeight: 48
+    property real baseMainWidth: 220
+    property real layoutHeight: 42
     property color surfaceColor: Appearance.colors.colLayer0
 
     readonly property int effectBleed: 18
-    readonly property real satelliteSize: mainHeight
-    readonly property int satelliteGap: 24
-    readonly property real satelliteExtent: satelliteSize + satelliteGap
-    readonly property real normalizedSatelliteProgress: Math.max(0, Math.min(1, satelliteProgress))
-    readonly property real gooTailProgress: Math.sin(Math.PI * normalizedSatelliteProgress)
-    readonly property real gooTailMaxLength: finalizing ? 18 : 14
-    readonly property real gooTailLength: gooTailMaxLength * gooTailProgress
-    readonly property real mainX: effectBleed + satelliteExtent
-    readonly property real mainY: effectBleed
-    readonly property real satelliteY: effectBleed + (mainHeight - satelliteSize) / 2
-    readonly property real satelliteDockedX: mainX + 4
-    readonly property real satelliteRestX: mainX - satelliteSize - satelliteGap
-    readonly property real satelliteX: satelliteDockedX
-        + (satelliteRestX - satelliteDockedX) * satelliteProgress
+    readonly property real maxMainWidth: 340
+    readonly property real maxRightExtent: 80
+    readonly property real maxVisualHeight: 52
+    readonly property real mainRightX: effectBleed + maxMainWidth
+    readonly property real shapeCenterY: height / 2
+    readonly property real normalizedMorphProgress: Math.max(0, Math.min(1, morphProgress))
+    readonly property real normalizedContentProgress: Math.max(0, Math.min(1, contentProgress))
+
+    // Reference-video keyframes:
+    // idle -> maximum connected hull -> narrow neck -> detached -> settled.
+    readonly property real mainLayoutWidth: morphValue(baseMainWidth, 340, 285, 278, 270)
+    readonly property real mainVisualHeight: morphValue(layoutHeight, 52, 46, 44, 42)
+    readonly property real satelliteWidth: satelliteMorphValue(layoutHeight, 64, 58, 56, 52)
+    readonly property real satelliteHeight: satelliteMorphValue(layoutHeight, 50, 46, 44, 42)
+    readonly property real satelliteCenterOffset: satelliteMorphValue(
+        -layoutHeight / 2,
+        48,
+        42,
+        40,
+        38
+    )
+    readonly property real blendRadius: satelliteMorphValue(0, 56, 28, 20, 0)
+    readonly property real mainCenterX: mainRightX - mainLayoutWidth / 2
+    readonly property real satelliteCenterX: mainRightX + satelliteCenterOffset
+    readonly property real satelliteRightExtent: Math.max(
+        0,
+        satelliteCenterOffset + satelliteWidth / 2
+    )
+    readonly property real interactiveRightExtent: recording
+        && normalizedContentProgress > 0.01
+        ? satelliteRightExtent
+        : 0
+    readonly property real rightOverflow: maxRightExtent + effectBleed
     readonly property color typeContainerColor: recordingType === "gif"
         ? Appearance.colors.colTertiaryContainer
         : Appearance.colors.colErrorContainer
@@ -43,11 +62,44 @@ Item {
 
     signal stopRequested()
 
-    width: mainWidth + satelliteExtent + effectBleed * 2
-    height: Math.max(mainHeight, satelliteSize) + effectBleed * 2
+    width: maxMainWidth + maxRightExtent + effectBleed * 2
+    height: maxVisualHeight + effectBleed * 2
     opacity: active ? 1 : 0
 
     property double heldElapsedMs: 0
+
+    function smoothStep(value) {
+        const clamped = Math.max(0, Math.min(1, value));
+        return clamped * clamped * (3 - 2 * clamped);
+    }
+
+    function interpolate(from, to, progress) {
+        return from + (to - from) * smoothStep(progress);
+    }
+
+    function morphValue(idle, peak, neck, split, settled) {
+        const progress = normalizedMorphProgress;
+        if (progress <= 0.58)
+            return interpolate(idle, peak, progress / 0.58);
+        if (progress <= 0.76)
+            return interpolate(peak, neck, (progress - 0.58) / 0.18);
+        if (progress <= 0.8)
+            return interpolate(neck, split, (progress - 0.76) / 0.04);
+        return interpolate(split, settled, (progress - 0.8) / 0.2);
+    }
+
+    function satelliteMorphValue(idle, peak, neck, split, settled) {
+        const progress = normalizedMorphProgress;
+        if (progress <= 0.32)
+            return idle;
+        if (progress <= 0.58)
+            return interpolate(idle, peak, (progress - 0.32) / 0.26);
+        if (progress <= 0.76)
+            return interpolate(peak, neck, (progress - 0.58) / 0.18);
+        if (progress <= 0.8)
+            return interpolate(neck, split, (progress - 0.76) / 0.04);
+        return interpolate(split, settled, (progress - 0.8) / 0.2);
+    }
 
     function formatElapsed(milliseconds) {
         const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
@@ -81,172 +133,27 @@ Item {
         }
     }
 
-    // CSS-Tricks 的 SVG goo 滤镜在 QML 中的对应实现：
-    // 同一容器内的形状 -> GaussianBlur -> alpha threshold -> 叠回清晰形状。
-    Item {
-        id: rawGooShapes
-
+    PillMorphSurface {
         anchors.fill: parent
-        visible: false
-
-        Rectangle {
-            x: root.mainX
-            y: root.mainY
-            width: root.mainWidth
-            height: root.mainHeight
-            radius: height / 2
-            color: "white"
-            antialiasing: true
-        }
-
-        Rectangle {
-            x: root.satelliteX
-            y: root.satelliteY
-            width: root.satelliteSize + root.gooTailLength
-            height: root.satelliteSize
-            radius: height / 2
-            color: "white"
-            antialiasing: true
-        }
-    }
-
-    GaussianBlur {
-        id: blurredGooShapes
-
-        anchors.fill: parent
-        source: rawGooShapes
-        radius: 14
-        samples: 29
-        visible: false
-        cached: false
-    }
-
-    Rectangle {
-        id: gooColorField
-
-        anchors.fill: parent
-        color: root.surfaceColor
-        visible: false
-    }
-
-    ThresholdMask {
-        anchors.fill: parent
-        source: gooColorField
-        maskSource: blurredGooShapes
-        threshold: 0.44
-        spread: 0.06
-        cached: false
-    }
-
-    Rectangle {
-        x: root.mainX
-        y: root.mainY
-        width: root.mainWidth
-        height: root.mainHeight
-        radius: height / 2
-        color: root.surfaceColor
-        antialiasing: true
-    }
-
-    Rectangle {
-        id: satelliteShadowSource
-
-        x: root.satelliteX
-        y: root.satelliteY
-        width: root.satelliteSize
-        height: root.satelliteSize
-        radius: width / 2
-        color: "black"
-        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
-        visible: false
-    }
-
-    DropShadow {
-        anchors.fill: satelliteShadowSource
-        source: satelliteShadowSource
-        horizontalOffset: 0
-        verticalOffset: 4
-        radius: 10
-        samples: 21
-        color: Appearance.colors.colShadow
-        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
-        cached: false
-    }
-
-    Rectangle {
-        id: satelliteSurface
-
-        x: root.satelliteX
-        y: root.satelliteY
-        width: root.satelliteSize
-        height: root.satelliteSize
-        radius: width / 2
-        color: root.surfaceColor
-        opacity: Math.min(1, root.normalizedSatelliteProgress * 1.7)
-        scale: satelliteMouse.pressed ? 0.9 : (satelliteMouse.containsMouse ? 1.04 : 1)
-        antialiasing: true
-
-        Behavior on scale {
-            NumberAnimation {
-                duration: Appearance.animation.expressiveFastSpatial.duration
-                easing.type: Appearance.animation.expressiveFastSpatial.type
-                easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-            }
-        }
-
-        Rectangle {
-            anchors.centerIn: parent
-            width: 36
-            height: 36
-            radius: width / 2
-            color: satelliteMouse.pressed
-                ? Appearance.colors.colErrorContainerActive
-                : (satelliteMouse.containsMouse
-                    ? Appearance.colors.colErrorContainerHover
-                    : Appearance.colors.colErrorContainer)
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.animation.expressiveEffects.duration
-                    easing.type: Appearance.animation.expressiveEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
-                }
-            }
-        }
-
-        MaterialSymbol {
-            anchors.centerIn: parent
-            text: "stop"
-            iconSize: 20
-            fill: 1
-            color: Appearance.colors.colOnErrorContainer
-        }
-
-        MouseArea {
-            id: satelliteMouse
-
-            anchors.fill: parent
-            enabled: root.recording && root.normalizedSatelliteProgress > 0.6
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-
-            Accessible.name: "停止录制"
-            Accessible.role: Accessible.Button
-
-            onClicked: root.stopRequested()
-        }
-
-        StyledToolTip {
-            extraVisibleCondition: satelliteMouse.containsMouse && satelliteMouse.enabled
-            text: "停止录制"
-        }
+        mainCenter: Qt.vector2d(root.mainCenterX, root.shapeCenterY)
+        mainSize: Qt.vector2d(root.mainLayoutWidth, root.mainVisualHeight)
+        mainRadius: root.mainVisualHeight / 2
+        satelliteCenter: Qt.vector2d(root.satelliteCenterX, root.shapeCenterY)
+        satelliteSize: Qt.vector2d(root.satelliteWidth, root.satelliteHeight)
+        satelliteRadius: root.satelliteHeight / 2
+        blendRadius: root.blendRadius
+        surfaceColor: root.surfaceColor
     }
 
     Item {
-        x: root.mainX
-        y: root.mainY
-        width: root.mainWidth
-        height: root.mainHeight
+        id: mainContent
+
+        x: root.mainRightX - root.mainLayoutWidth
+        y: root.shapeCenterY - root.layoutHeight / 2
+        width: root.mainLayoutWidth
+        height: root.layoutHeight
+        opacity: root.normalizedContentProgress
+        scale: 0.94 + 0.06 * root.normalizedContentProgress
 
         Row {
             anchors.centerIn: parent
@@ -329,6 +236,75 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 renderType: Text.NativeRendering
             }
+        }
+    }
+
+    Item {
+        id: satelliteButton
+
+        x: root.satelliteCenterX - root.satelliteWidth / 2
+        y: root.shapeCenterY - root.satelliteHeight / 2
+        width: root.satelliteWidth
+        height: root.satelliteHeight
+        opacity: root.recording ? root.normalizedContentProgress : 0
+        scale: 0.86 + 0.14 * root.normalizedContentProgress
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: 36
+            height: 36
+            radius: width / 2
+            scale: satelliteMouse.pressed ? 0.9 : (satelliteMouse.containsMouse ? 1.04 : 1)
+            color: satelliteMouse.pressed
+                ? Appearance.colors.colErrorContainerActive
+                : (satelliteMouse.containsMouse
+                    ? Appearance.colors.colErrorContainerHover
+                    : Appearance.colors.colErrorContainer)
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: Appearance.animation.expressiveFastSpatial.duration
+                    easing.type: Appearance.animation.expressiveFastSpatial.type
+                    easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+                }
+            }
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.animation.expressiveEffects.duration
+                    easing.type: Appearance.animation.expressiveEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                }
+            }
+        }
+
+        MaterialSymbol {
+            anchors.centerIn: parent
+            text: "stop"
+            iconSize: 20
+            fill: 1
+            color: Appearance.colors.colOnErrorContainer
+        }
+
+        MouseArea {
+            id: satelliteMouse
+
+            anchors.fill: parent
+            enabled: root.recording
+                && root.normalizedMorphProgress > 0.98
+                && root.normalizedContentProgress > 0.95
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+
+            Accessible.name: "停止录制"
+            Accessible.role: Accessible.Button
+
+            onClicked: root.stopRequested()
+        }
+
+        StyledToolTip {
+            extraVisibleCondition: satelliteMouse.containsMouse && satelliteMouse.enabled
+            text: "停止录制"
         }
     }
 }

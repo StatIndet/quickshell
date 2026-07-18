@@ -62,8 +62,8 @@ Item {
     ToolButton {
         id: closeButton
 
-        anchors.left: parent.left
-        anchors.leftMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
         anchors.verticalCenter: parent.verticalCenter
         width: 48
         height: 48
@@ -138,8 +138,10 @@ Item {
     }
 
     Row {
-        anchors.left: closeButton.right
-        anchors.leftMargin: 8
+        id: typeIndicator
+
+        anchors.left: parent.left
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         spacing: 7
 
@@ -166,10 +168,11 @@ Item {
     }
 
     Item {
-        anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.left: typeIndicator.right
+        anchors.leftMargin: 8
+        anchors.right: closeButton.left
+        anchors.rightMargin: 4
         anchors.verticalCenter: parent.verticalCenter
-        width: root.finalizing ? 68 : 86
         height: 32
 
         Text {
