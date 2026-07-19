@@ -26,6 +26,8 @@ Item {
     property double _convertingBornAt: 0
     property double _lastSourceTimestamp: 0
     property double _lastPushAt: 0
+    property double _frozenAt: 0
+    property real _frozenPhase: 0
     readonly property int _sampleInterval: 160
     readonly property int _totalBars: activeBars + waitingBars
 
@@ -44,7 +46,18 @@ Item {
         _convertingBornAt = 0;
         _lastSourceTimestamp = 0;
         _lastPushAt = Date.now();
+        _frozenAt = 0;
+        _frozenPhase = 0;
         waveformCanvas.requestPaint();
+    }
+
+    function movementPhase(now) {
+        if (!_hasConvertingSample)
+            return 0;
+        return Math.max(
+            0,
+            Math.min(1, (now - _lastPushAt) / _sampleInterval)
+        );
     }
 
     function pushSample(value, timestamp) {
@@ -62,6 +75,8 @@ Item {
         _hasConvertingSample = true;
         _lastSourceTimestamp = timestamp;
         _lastPushAt = now;
+        _frozenAt = 0;
+        _frozenPhase = 0;
         waveformCanvas.requestPaint();
     }
 
@@ -115,12 +130,22 @@ Item {
         if (active)
             resetHistory();
     }
+    onAcceptSamplesChanged: {
+        if (acceptSamples) {
+            _frozenAt = 0;
+            _frozenPhase = 0;
+        } else if (active) {
+            _frozenAt = Date.now();
+            _frozenPhase = movementPhase(_frozenAt);
+        }
+        waveformCanvas.requestPaint();
+    }
     onActiveBarsChanged: resetHistory()
     onWaitingBarsChanged: resetHistory()
     Component.onCompleted: resetHistory()
 
     FrameAnimation {
-        running: root.active
+        running: root.active && root.acceptSamples
         onTriggered: waveformCanvas.requestPaint()
     }
 
@@ -135,17 +160,13 @@ Item {
         onPaint: {
             const context = getContext("2d");
             context.reset();
-            const now = Date.now();
+            const now = root._frozenAt > 0 ? root._frozenAt : Date.now();
             const pitch = root.barWidth + root.barGap;
             const trackWidth = root._totalBars * pitch - root.barGap;
             const centerY = height / 2;
-            const phase = root._hasConvertingSample
-                ? Math.max(
-                    0,
-                    Math.min(1, (now - root._lastPushAt)
-                        / root._sampleInterval)
-                )
-                : 0;
+            const phase = root._frozenAt > 0
+                ? root._frozenPhase
+                : root.movementPhase(now);
 
             context.save();
             context.beginPath();

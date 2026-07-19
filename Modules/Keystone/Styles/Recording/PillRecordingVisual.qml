@@ -40,10 +40,12 @@ Item {
         0,
         Math.min(1, processingContentProgress)
     )
+    readonly property real settledMainWidth: baseMainWidth + 12
 
     // Reference-video keyframes:
     // idle -> maximum connected hull -> narrow neck -> detached -> settled.
-    readonly property real mainLayoutWidth: morphValue(baseMainWidth, 280, 250, 246, 240)
+    readonly property real mainLayoutWidth: morphValue(
+        baseMainWidth, 280, 250, 246, settledMainWidth)
     readonly property real mainVisualHeight: morphValue(layoutHeight, 52, 46, 44, 42)
     readonly property real satelliteWidth: satelliteMorphValue(layoutHeight, 60, 56, 54, 52)
     readonly property real satelliteHeight: satelliteMorphValue(layoutHeight, 50, 46, 44, 42)
