@@ -33,6 +33,7 @@ Item {
     function beginEntry() {
         exitSequence.stop();
         entryAnimation.stop();
+        waveform.resetHistory();
         root.contentProgress = 0;
         entryAnimation.restart();
     }
@@ -68,6 +69,8 @@ Item {
             spacing: 8
 
             AudioWaveform {
+                id: waveform
+
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
                 active: root.sessionActive

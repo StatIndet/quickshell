@@ -21,7 +21,6 @@ Item {
 
     property var _levels: []
     property var _bornAt: []
-    property int _head: 0
     property double _lastSourceTimestamp: 0
     property double _lastPushAt: 0
     readonly property int _sampleInterval: 160
@@ -30,36 +29,22 @@ Item {
         return Math.max(0, Math.min(1, Number(value) || 0));
     }
 
-    function logicalLevel(index) {
-        if (_levels.length !== activeBars)
-            return 0;
-        return _levels[(_head + index) % activeBars] || 0;
-    }
-
-    function initialize() {
-        const levels = [];
-        const born = [];
-        for (let index = 0; index < activeBars; ++index) {
-            levels.push(0);
-            born.push(0);
-        }
-        _levels = levels;
-        _bornAt = born;
-        _head = 0;
+    function resetHistory() {
+        _levels = [];
+        _bornAt = [];
         _lastSourceTimestamp = 0;
         _lastPushAt = Date.now();
         waveformCanvas.requestPaint();
     }
 
     function pushSample(value, timestamp) {
-        if (_levels.length !== activeBars)
-            initialize();
-
         const now = Date.now();
-        const replacement = _head;
-        _levels[replacement] = sourceAvailable ? clamp01(value) : 0;
-        _bornAt[replacement] = now + Math.max(0, _sampleInterval - 90);
-        _head = (_head + 1) % activeBars;
+        if (_levels.length >= activeBars) {
+            _levels.shift();
+            _bornAt.shift();
+        }
+        _levels.push(sourceAvailable ? clamp01(value) : 0);
+        _bornAt.push(now + Math.max(0, _sampleInterval - 90));
         _lastSourceTimestamp = timestamp;
         _lastPushAt = now;
         waveformCanvas.requestPaint();
@@ -67,10 +52,10 @@ Item {
 
     function animatedHeight(slot, now) {
         const targetHeight = minimumHeight
-            + logicalLevel(slot) * (maximumHeight - minimumHeight);
-        const physicalIndex = (_head + slot) % activeBars;
-        const age = Math.max(0, now - (_bornAt[physicalIndex] || 0));
-        if (_bornAt[physicalIndex] <= 0)
+            + (_levels[slot] || 0) * (maximumHeight - minimumHeight);
+        const bornAt = _bornAt[slot] || 0;
+        const age = Math.max(0, now - bornAt);
+        if (bornAt <= 0)
             return minimumHeight;
 
         if (age < 90) {
@@ -93,16 +78,14 @@ Item {
             pushSample(amplitude, sampleTimestampMs);
         }
     }
-    onAcceptSamplesChanged: {
-        if (acceptSamples)
-            initialize();
+    onActiveChanged: {
+        if (active)
+            resetHistory();
     }
-    onActiveBarsChanged: initialize()
-    Component.onCompleted: initialize()
+    onActiveBarsChanged: resetHistory()
+    Component.onCompleted: resetHistory()
 
-    Timer {
-        interval: 16
-        repeat: true
+    FrameAnimation {
         running: root.active
         onTriggered: waveformCanvas.requestPaint()
     }
@@ -132,9 +115,10 @@ Item {
             context.rect(0, 0, activeWidth, height);
             context.clip();
             context.fillStyle = root.activeColor;
-            for (let slot = 0; slot < root.activeBars; ++slot) {
+            const firstSlot = root.activeBars - root._levels.length;
+            for (let slot = 0; slot < root._levels.length; ++slot) {
                 const barHeight = root.animatedHeight(slot, now);
-                const x = (slot + 1 - phase) * pitch;
+                const x = (firstSlot + slot + 1 - phase) * pitch;
                 const y = centerY - barHeight / 2;
                 const radius = Math.min(root.barWidth / 2, barHeight / 2);
                 context.beginPath();
