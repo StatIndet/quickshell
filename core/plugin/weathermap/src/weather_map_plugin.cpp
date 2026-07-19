@@ -88,18 +88,6 @@ WeatherMapPlugin::WeatherMapPlugin(QObject *parent)
         this,
         &WeatherMapPlugin::tileActivity
     );
-    connect(
-        &m_provider,
-        &WeatherMapProvider::gridReady,
-        this,
-        &WeatherMapPlugin::gridReady
-    );
-    connect(
-        &m_provider,
-        &WeatherMapProvider::gridFailed,
-        this,
-        &WeatherMapPlugin::gridFailed
-    );
 }
 
 bool WeatherMapPlugin::active() const
@@ -173,21 +161,6 @@ QVariantMap WeatherMapPlugin::requestTile(
         zoom,
         x,
         y,
-        generation,
-        forceRefresh
-    );
-}
-
-QVariantMap WeatherMapPlugin::requestGrid(
-    const QString &kind,
-    const QVariantList &points,
-    int generation,
-    bool forceRefresh
-)
-{
-    return m_provider.requestGrid(
-        kind,
-        points,
         generation,
         forceRefresh
     );

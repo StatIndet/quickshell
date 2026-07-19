@@ -44,12 +44,6 @@ public:
         int generation,
         bool forceRefresh
     );
-    Q_INVOKABLE QVariantMap requestGrid(
-        const QString &kind,
-        const QVariantList &points,
-        int generation,
-        bool forceRefresh
-    );
     Q_INVOKABLE QVariantMap storeApiKey(const QString &apiKey);
     Q_INVOKABLE QVariantMap clearApiKey();
     Q_INVOKABLE QVariantMap storeMapTilerApiKey(const QString &apiKey);
@@ -99,19 +93,6 @@ signals:
         int generation,
         bool hasSignal
     );
-    void gridReady(
-        const QString &kind,
-        int generation,
-        const QVariantList &samples,
-        const QString &updatedAt,
-        bool stale
-    );
-    void gridFailed(
-        const QString &kind,
-        int generation,
-        const QString &errorCode
-    );
-
 private:
     WeatherMapProvider m_provider;
 };

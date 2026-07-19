@@ -6,7 +6,6 @@
 #include <QQueue>
 #include <QSet>
 #include <QUrl>
-#include <QVariantList>
 #include <QVariantMap>
 
 class QNetworkReply;
@@ -45,12 +44,6 @@ public:
         int zoom,
         int x,
         int y,
-        int generation,
-        bool forceRefresh
-    );
-    QVariantMap requestGrid(
-        const QString &kind,
-        const QVariantList &points,
         int generation,
         bool forceRefresh
     );
@@ -103,19 +96,6 @@ signals:
         int generation,
         bool hasSignal
     );
-    void gridReady(
-        const QString &kind,
-        int generation,
-        const QVariantList &samples,
-        const QString &updatedAt,
-        bool stale
-    );
-    void gridFailed(
-        const QString &kind,
-        int generation,
-        const QString &errorCode
-    );
-
 private:
     struct TileSubscriber {
         QString kind;
@@ -135,39 +115,17 @@ private:
         int zoom = 0;
         int x = 0;
         int y = 0;
-        bool osm = false;
-    };
-
-    struct GridSubscriber {
-        QString kind;
-        int generation = 0;
-    };
-
-    struct GridPoint {
-        double latitude = 0.0;
-        double longitude = 0.0;
-    };
-
-    struct GridTask {
-        QString key;
-        QString kind;
-        QString cachePath;
-        QUrl remoteUrl;
-        QList<GridPoint> points;
+        bool base = false;
     };
 
     static constexpr int kMaximumConcurrentRequests = 6;
     static constexpr qint64 kWeatherTileTtlSeconds = 15 * 60;
-    static constexpr qint64 kOsmFallbackTtlSeconds = 7 * 24 * 60 * 60;
-    static constexpr qint64 kAirQualityGridTtlSeconds = 30 * 60;
+    static constexpr qint64 kBaseFallbackTtlSeconds = 7 * 24 * 60 * 60;
 
     QNetworkAccessManager m_network;
     QQueue<TileTask> m_queue;
     QHash<QNetworkReply *, TileTask> m_inFlight;
-    QQueue<GridTask> m_gridQueue;
-    QHash<QNetworkReply *, GridTask> m_gridInFlight;
     QHash<QString, QList<TileSubscriber>> m_subscribers;
-    QHash<QString, QList<GridSubscriber>> m_gridSubscribers;
     QSet<QString> m_pendingKeys;
     QByteArray m_apiKey;
     QByteArray m_mapTilerApiKey;
@@ -185,7 +143,6 @@ private:
     static int wrappedX(int x, int zoom);
     static bool validTileCoordinate(int zoom, int y);
     static QString normalizedLayer(const QString &layer);
-    static QString normalizedGridKind(const QString &kind);
     static bool validApiKey(const QString &apiKey);
 
     QString tileCachePath(
@@ -210,36 +167,12 @@ private:
         int x,
         int y
     ) const;
-    QString gridCachePath(
-        const QString &kind,
-        const QList<GridPoint> &points
-    ) const;
-    QUrl remoteGridUrl(
-        const QString &kind,
-        const QList<GridPoint> &points
-    ) const;
-    QList<GridPoint> normalizedGridPoints(const QVariantList &points) const;
 
     bool cacheIsFresh(const TileTask &task) const;
     QVariantMap cacheResult(const TileTask &task, bool stale) const;
     void enqueue(const TileTask &task, const TileSubscriber &subscriber);
     void startQueuedRequests();
     void finishRequest(QNetworkReply *reply);
-    void enqueueGrid(
-        const GridTask &task,
-        const GridSubscriber &subscriber
-    );
-    void finishGridRequest(QNetworkReply *reply);
-    void notifyGridSuccess(
-        const GridTask &task,
-        const QVariantList &samples,
-        const QString &updatedAt,
-        bool stale
-    );
-    void notifyGridFailure(
-        const GridTask &task,
-        const QString &errorCode
-    );
     void notifySuccess(const TileTask &task, bool stale);
     void notifyFailure(const TileTask &task, const QString &errorCode);
     void pruneObsoleteQueue();
@@ -253,6 +186,7 @@ private:
         bool forceRefresh = false
     );
     void cancelWeatherRequests();
+    void cancelBaseRequests();
     void setCredentialsReady(bool ready);
     void setCredentialBusy(bool busy);
     void setMapTilerStatus(const QString &status);
@@ -275,17 +209,5 @@ private:
     void writeWeatherMetadata(
         const QString &cachePath,
         bool hasSignal
-    ) const;
-    QVariantMap readGridCache(const QString &path) const;
-    bool writeGridCache(
-        const QString &path,
-        const QVariantList &samples,
-        const QString &updatedAt
-    ) const;
-    bool gridCacheIsFresh(const GridTask &task) const;
-    QVariantList parseGridResponse(
-        const GridTask &task,
-        const QByteArray &body,
-        bool *ok
     ) const;
 };

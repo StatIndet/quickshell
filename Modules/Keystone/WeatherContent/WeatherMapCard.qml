@@ -24,30 +24,33 @@ Rectangle {
     property int viewportGeneration: 0
     property var visibleTiles: []
     property string tileSetSignature: ""
-    property string gridViewportSignature: ""
     property real dragOffsetX: 0
     property real dragOffsetY: 0
     property bool dragging: false
     property date layerUpdatedAt
-    property date gridUpdatedAt
-    property bool gridStale: false
-    property string gridErrorCode: ""
-    property var rawGridSamples: []
-    property var projectedGridSamples: []
 
     readonly property real maximumMercatorLatitude: 85.05112878
     readonly property int tileSize: 256
-    readonly property bool weatherEnabled: selectedMode !== "aqi"
     readonly property string weatherLayer: selectedMode === "temp"
         ? "temp_new"
         : selectedMode === "rain"
             ? "precipitation_new"
-            : ""
+            : selectedMode === "clouds"
+                ? "clouds_new"
+                : selectedMode === "wind"
+                    ? "wind_new"
+                    : selectedMode === "pressure"
+                        ? "pressure_new"
+                        : "temp_new"
     readonly property real weatherOpacity: selectedMode === "temp"
         ? 0.56
         : selectedMode === "rain"
             ? 0.72
-            : 0
+            : selectedMode === "clouds"
+                ? 0.64
+                : selectedMode === "wind"
+                    ? 0.62
+                    : 0.62
     readonly property bool hasCoordinates: locationAvailable
         && isFinite(latitude)
         && isFinite(longitude)
@@ -67,9 +70,13 @@ Rectangle {
         ? "Temperature weather map"
         : selectedMode === "rain"
             ? "Current precipitation weather map"
-            : selectedMode === "aqi"
-                ? "Estimated regional air quality map"
-                : "Weather map"
+            : selectedMode === "clouds"
+                ? "Cloud cover weather map"
+                : selectedMode === "wind"
+                    ? "Wind speed weather map"
+                    : selectedMode === "pressure"
+                        ? "Atmospheric pressure weather map"
+                        : "Weather map"
     Accessible.description: "Drag to move the map, or use the mouse wheel to zoom"
 
     function clampLatitude(value) {
@@ -118,114 +125,45 @@ Rectangle {
         return ((value % count) + count) % count
     }
 
-    function gridPoints() {
-        if (!root.hasCoordinates
-            || mapViewport.width < 2
-            || mapViewport.height < 2) {
-            return []
-        }
-
-        const columns = 6
-        const rows = 4
-        const centerX = longitudeToWorldX(centerLongitude, zoomLevel)
-        const centerY = latitudeToWorldY(centerLatitude, zoomLevel)
-        const points = []
-        for (let row = 0; row < rows; ++row) {
-            const screenY = (row + 0.5) * mapViewport.height / rows
-            const worldY = centerY + screenY - mapViewport.height / 2
-            for (let column = 0; column < columns; ++column) {
-                const screenX = (column + 0.5) * mapViewport.width / columns
-                const worldX = centerX + screenX - mapViewport.width / 2
-                points.push({
-                    latitude: worldYToLatitude(worldY, zoomLevel),
-                    longitude: worldXToLongitude(worldX, zoomLevel)
-                })
-            }
-        }
-        return points
-    }
-
-    function projectSamples(samples) {
-        if (!samples || samples.length === 0)
-            return []
-
-        const size = worldSize(zoomLevel)
-        const centerX = longitudeToWorldX(centerLongitude, zoomLevel)
-        const centerY = latitudeToWorldY(centerLatitude, zoomLevel)
-        const projected = []
-        for (let index = 0; index < samples.length; ++index) {
-            const sample = samples[index]
-            let deltaX = longitudeToWorldX(
-                Number(sample.longitude),
-                zoomLevel
-            ) - centerX
-            if (deltaX > size / 2)
-                deltaX -= size
-            else if (deltaX < -size / 2)
-                deltaX += size
-
-            const next = Object.assign({}, sample)
-            next.x = mapViewport.width / 2 + deltaX
-            next.y = mapViewport.height / 2
-                + latitudeToWorldY(
-                    Number(sample.latitude),
-                    zoomLevel
-                )
-                - centerY
-            projected.push(next)
-        }
-        return projected
-    }
-
-    function applyGridData(kind, samples, updatedAt, stale) {
-        if (kind !== root.selectedMode)
-            return
-
-        root.rawGridSamples = samples || []
-        root.projectedGridSamples = projectSamples(root.rawGridSamples)
-        const parsedTime = new Date(updatedAt)
-        if (!isNaN(parsedTime.getTime()))
-            root.gridUpdatedAt = parsedTime
-        root.gridStale = stale
-        root.gridErrorCode = ""
-        if (kind === "aqi")
-            tileLayer.finishTransition()
-    }
-
-    function requestActiveGrid(forceRefresh) {
-        if (!root.active
-            || !root.hasCoordinates
-            || root.selectedMode !== "aqi") {
-            return
-        }
-
-        const result = WeatherMapPlugin.requestGrid(
-            root.selectedMode,
-            gridPoints(),
-            root.viewportGeneration,
-            forceRefresh === true
-        )
-        const samples = result && result.samples !== undefined
-            ? result.samples
-            : []
-        if (samples && samples.length > 0) {
-            applyGridData(
-                root.selectedMode,
-                samples,
-                result.updatedAt || "",
-                result.stale === true
-            )
-        }
-    }
-
     function refreshMap() {
         if (!root.active || !root.hasCoordinates)
             return
 
-        if (root.selectedMode === "aqi")
-            root.requestActiveGrid(true)
-        else
-            tileLayer.refreshWeather(true)
+        tileLayer.refreshBase(true)
+        tileLayer.refreshWeather(true)
+    }
+
+    function mapStatusText() {
+        switch (WeatherMapPlugin.mapTilerStatus) {
+        case "not_configured":
+            return "MapTiler 底图未配置"
+        case "keychain_error":
+            return "无法访问 MapTiler 密钥"
+        case "invalid_key":
+            return "MapTiler API key 无效"
+        case "rate_limited":
+            return "MapTiler 请求频率受限"
+        case "network_error":
+            return "底图网络不可用，正在使用缓存"
+        default:
+            return WeatherMapPlugin.errorMessage
+        }
+    }
+
+    function hasMapError() {
+        const baseStatus = WeatherMapPlugin.mapTilerStatus
+        return (WeatherMapPlugin.credentialsReady
+                && !WeatherMapPlugin.mapTilerConfigured)
+            || baseStatus === "keychain_error"
+            || baseStatus === "invalid_key"
+            || baseStatus === "rate_limited"
+            || baseStatus === "network_error"
+            || (WeatherMapPlugin.credentialsReady
+                && !WeatherMapPlugin.apiConfigured)
+            || WeatherMapPlugin.status === "keychain_error"
+            || WeatherMapPlugin.status === "invalid_key"
+            || WeatherMapPlugin.status === "rate_limited"
+            || WeatherMapPlugin.status === "network_error"
     }
 
     function rebuildTiles() {
@@ -235,7 +173,6 @@ Rectangle {
             || mapViewport.height < 2) {
             root.visibleTiles = []
             root.tileSetSignature = ""
-            root.gridViewportSignature = ""
             return
         }
 
@@ -285,29 +222,12 @@ Rectangle {
         }
 
         const nextSignature = nextKeys.join("|")
-        const nextGridViewportSignature = root.selectedMode === "aqi"
-            && !root.dragging
-            ? zoomLevel
-                + "/" + Number(centerLatitude).toFixed(5)
-                + "/" + Number(centerLongitude).toFixed(5)
-                + "/" + Math.round(mapViewport.width)
-                + "/" + Math.round(mapViewport.height)
-            : root.gridViewportSignature
-        const gridViewportChanged = root.selectedMode === "aqi"
-            && !root.dragging
-            && nextGridViewportSignature !== root.gridViewportSignature
-        if (nextSignature !== root.tileSetSignature
-            || gridViewportChanged) {
+        if (nextSignature !== root.tileSetSignature) {
             root.viewportGeneration += 1
             WeatherMapPlugin.beginViewport(root.viewportGeneration)
             root.tileSetSignature = nextSignature
         }
-        if (gridViewportChanged)
-            root.gridViewportSignature = nextGridViewportSignature
         root.visibleTiles = nextTiles
-        root.projectedGridSamples = projectSamples(root.rawGridSamples)
-        if (root.selectedMode === "aqi" && !root.dragging)
-            gridDebounce.restart()
     }
 
     function scheduleRebuild() {
@@ -399,7 +319,6 @@ Rectangle {
             scheduleRebuild()
         } else {
             rebuildTimer.stop()
-            gridDebounce.stop()
         }
     }
 
@@ -415,17 +334,6 @@ Rectangle {
             centerLongitude = longitude
             scheduleRebuild()
         }
-    }
-
-    onSelectedModeChanged: {
-        rawGridSamples = []
-        projectedGridSamples = []
-        gridViewportSignature = ""
-        gridErrorCode = ""
-        gridStale = false
-        gridDebounce.stop()
-        if (active)
-            rebuildTiles()
     }
 
     Component.onCompleted: {
@@ -456,22 +364,10 @@ Rectangle {
     }
 
     Timer {
-        id: gridDebounce
-        interval: 450
-        repeat: false
-        onTriggered: root.requestActiveGrid()
-    }
-
-    Timer {
         interval: 15 * 60 * 1000
         running: root.active
         repeat: true
-        onTriggered: {
-            tileLayer.refreshWeather(false)
-            if (root.selectedMode === "aqi") {
-                gridDebounce.restart()
-            }
-        }
+        onTriggered: tileLayer.refreshWeather(false)
     }
 
     Connections {
@@ -482,24 +378,9 @@ Rectangle {
                 tileLayer.refreshWeather(true)
         }
 
-        function onGridReady(kind, generation, samples, updatedAt, stale) {
-            if (generation !== root.viewportGeneration
-                || kind !== root.selectedMode) {
-                return
-            }
-            root.applyGridData(kind, samples, updatedAt, stale)
-        }
-
-        function onGridFailed(kind, generation, errorCode) {
-            if (generation !== root.viewportGeneration
-                || kind !== root.selectedMode) {
-                return
-            }
-            root.rawGridSamples = []
-            root.projectedGridSamples = []
-            root.gridErrorCode = errorCode
-            if (kind === "aqi")
-                tileLayer.finishTransition()
+        function onMapTilerApiKeyChanged() {
+            if (root.active)
+                tileLayer.refreshBase(true)
         }
     }
 
@@ -550,19 +431,11 @@ Rectangle {
                         anchors.fill: parent
                         active: root.active && root.hasCoordinates
                         tiles: root.visibleTiles
-                        weatherEnabled: root.weatherEnabled
                         weatherLayer: root.weatherLayer
                         weatherOpacity: root.weatherOpacity
                         zoomLevel: root.zoomLevel
                         generation: root.viewportGeneration
                         onFirstWeatherTileReady: root.layerUpdatedAt = new Date()
-                    }
-
-                    AirQualityOverlay {
-                        anchors.fill: parent
-                        visible: root.selectedMode === "aqi"
-                            && root.projectedGridSamples.length > 0
-                        samples: root.projectedGridSamples
                     }
 
                     Item {
@@ -661,21 +534,14 @@ Rectangle {
                     Appearance.colors.colSurfaceContainerHighest,
                     0.94
                 )
-                visible: (WeatherMapPlugin.credentialsReady
-                    && !WeatherMapPlugin.apiConfigured)
-                    || WeatherMapPlugin.status === "keychain_error"
-                    || WeatherMapPlugin.status === "invalid_key"
-                    || WeatherMapPlugin.status === "rate_limited"
-                    || WeatherMapPlugin.status === "network_error"
-                    || root.gridErrorCode !== ""
+                visible: root.hasMapError()
 
                 Text {
                     id: statusText
                     anchors.fill: parent
                     anchors.leftMargin: 8
                     anchors.rightMargin: 8
-                    text: WeatherMapPlugin.errorMessage
-                        || "Regional model data unavailable"
+                    text: root.mapStatusText()
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Sizes.fontFamily
                     font.pixelSize: 10
@@ -695,12 +561,8 @@ Rectangle {
                 backdropSource: mapBackdrop
                 backdropRect: Qt.rect(x, y, width, height)
                 mode: root.selectedMode
-                updatedAt: root.selectedMode === "aqi"
-                        ? root.gridUpdatedAt
-                        : root.layerUpdatedAt
-                stale: root.selectedMode === "aqi"
-                        ? root.gridStale
-                        : WeatherMapPlugin.status === "network_error"
+                updatedAt: root.layerUpdatedAt
+                stale: WeatherMapPlugin.status === "network_error"
             }
 
             ToolButton {
@@ -784,10 +646,8 @@ Rectangle {
                 anchors.leftMargin: 12
                 anchors.bottomMargin: 12
                 z: 20
-                text: "© OpenStreetMap contributors · "
-                    + (root.selectedMode === "aqi"
-                        ? "Open-Meteo"
-                        : "OpenWeather")
+                text: "© MapTiler · © OpenStreetMap contributors"
+                    + " · Weather: OpenWeather"
                 color: Appearance.colors.colOnPrimaryFixed
                 font.family: Sizes.fontFamily
                 font.pixelSize: 11

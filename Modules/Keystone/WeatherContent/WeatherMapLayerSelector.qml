@@ -9,11 +9,11 @@ StyledButtonGroup {
 
     currentValue: currentMode
     style: StyledButtonGroup.Style.Primary
-    buttonHeight: 36
-    horizontalPadding: 18
-    buttonMinWidth: 48
-    pressedExpansion: 6
-    textPixelSize: 12
+    buttonHeight: 34
+    horizontalPadding: 11
+    buttonMinWidth: 42
+    pressedExpansion: 4
+    textPixelSize: 11
     model: [
         ({
             "value": "temp",
@@ -26,9 +26,19 @@ StyledButtonGroup {
             "tooltip": "Current precipitation map"
         }),
         ({
-            "value": "aqi",
-            "label": "AQI",
-            "tooltip": "Estimated regional air quality"
+            "value": "clouds",
+            "label": "Clouds",
+            "tooltip": "Current cloud cover map"
+        }),
+        ({
+            "value": "wind",
+            "label": "Wind",
+            "tooltip": "Current wind speed map"
+        }),
+        ({
+            "value": "pressure",
+            "label": "Pressure",
+            "tooltip": "Current atmospheric pressure map"
         })
     ]
 

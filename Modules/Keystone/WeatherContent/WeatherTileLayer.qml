@@ -7,7 +7,6 @@ Item {
 
     property bool active: false
     property var tiles: []
-    property bool weatherEnabled: true
     property string weatherLayer: "temp_new"
     property int zoomLevel: 6
     property int generation: 0
@@ -126,7 +125,7 @@ Item {
     }
 
     function refreshWeather(forceNetwork) {
-        if (!root.active || !root.weatherEnabled)
+        if (!root.active)
             return
         root.readyWeatherTiles = 0
         for (let index = 0; index < tileRepeater.count; ++index) {
@@ -137,6 +136,16 @@ Item {
                     true,
                     forceNetwork === true
                 )
+        }
+    }
+
+    function refreshBase(forceNetwork) {
+        if (!root.active)
+            return
+        for (let index = 0; index < tileRepeater.count; ++index) {
+            const item = tileRepeater.itemAt(index)
+            if (item)
+                item.requestBase(true, forceNetwork === true)
         }
     }
 
@@ -151,7 +160,6 @@ Item {
         scheduleVisibleTileRequests(false)
     }
     onWeatherLayerChanged: transitionTimer.restart()
-    onWeatherEnabledChanged: transitionTimer.restart()
 
     Component.onCompleted: syncTiles(tiles)
 
@@ -220,24 +228,31 @@ Item {
                 if (!root.active)
                     return
 
-                if (forceRequest
-                    || baseRequestGeneration !== root.generation) {
-                    baseRequestGeneration = root.generation
-                    const baseResult = WeatherMapPlugin.requestTile(
-                        "base",
-                        "",
-                        tile.tileZoom,
-                        tile.tileX,
-                        tile.tileY,
-                        tile.baseRequestGeneration,
-                        false
-                    )
-                    const nextBaseSource = root.sourceFrom(baseResult)
-                    if (nextBaseSource !== "")
-                        baseSource = nextBaseSource
+                requestBase(forceRequest, false)
+                requestWeather(false, forceRequest, false)
+            }
+
+            function requestBase(forceRequest, forceNetwork) {
+                if (!root.active)
+                    return
+                if (!forceRequest
+                    && baseRequestGeneration === root.generation) {
+                    return
                 }
 
-                requestWeather(false, forceRequest, false)
+                baseRequestGeneration = root.generation
+                const baseResult = WeatherMapPlugin.requestTile(
+                    "base",
+                    "",
+                    tile.tileZoom,
+                    tile.tileX,
+                    tile.tileY,
+                    tile.baseRequestGeneration,
+                    forceNetwork === true
+                )
+                const nextBaseSource = root.sourceFrom(baseResult)
+                if (nextBaseSource !== "")
+                    baseSource = nextBaseSource
             }
 
             function requestWeather(
@@ -249,14 +264,14 @@ Item {
                 const layerChanged = requestedLayer !== ""
                     && requestedLayer !== nextLayer
                 if (preserveCurrent
-                    && (layerChanged || !root.weatherEnabled)
+                    && layerChanged
                     && weatherSource !== "") {
                     previousWeatherSource = weatherSource
                 }
-                if (layerChanged || !root.weatherEnabled)
+                if (layerChanged)
                     weatherSource = ""
 
-                if (!root.active || !root.weatherEnabled) {
+                if (!root.active) {
                     weatherCounted = false
                     requestedLayer = ""
                     weatherRequestGeneration = -1

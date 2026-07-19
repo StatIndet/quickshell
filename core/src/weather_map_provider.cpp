@@ -1,14 +1,12 @@
 #include "weather_map_provider.h"
 
 #include <QBuffer>
-#include <QCryptographicHash>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QImage>
 #include <QImageReader>
-#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkReply>
@@ -16,13 +14,11 @@
 #include <QSaveFile>
 #include <QStandardPaths>
 #include <QUrlQuery>
-#include <QtMath>
 #include <qt6keychain/keychain.h>
 
 namespace {
-constexpr auto kOsmTileHost = "https://tile.openstreetmap.org";
+constexpr auto kMapTilerTileHost = "https://api.maptiler.com";
 constexpr auto kOpenWeatherTileHost = "https://tile.openweathermap.org";
-constexpr auto kOpenMeteoAirQualityHost = "https://air-quality-api.open-meteo.com";
 constexpr auto kUserAgent = "ClavisWeatherMap/1.0 (native Quickshell weather map)";
 constexpr auto kKeychainService = "Clavis.Quickshell.WeatherMap";
 constexpr auto kOpenWeatherKeychainEntry = "openweather-api-key";
@@ -74,12 +70,8 @@ void WeatherMapProvider::setActive(bool active)
     m_active = active;
     if (!m_active) {
         m_subscribers.clear();
-        m_gridSubscribers.clear();
         while (!m_queue.isEmpty()) {
             m_pendingKeys.remove(m_queue.dequeue().key);
-        }
-        while (!m_gridQueue.isEmpty()) {
-            m_pendingKeys.remove(m_gridQueue.dequeue().key);
         }
         updateBusy();
     } else if (!m_credentialsReady) {
@@ -87,7 +79,7 @@ void WeatherMapProvider::setActive(bool active)
     } else if (m_apiKey.isEmpty()) {
         setStatus(
             QStringLiteral("not_configured"),
-            QStringLiteral("地图服务未配置")
+            QStringLiteral("OpenWeather 地图服务未配置")
         );
     }
     emit activeChanged();
@@ -152,20 +144,6 @@ void WeatherMapProvider::beginViewport(int generation)
             ++iterator;
         }
     }
-    for (auto iterator = m_gridSubscribers.begin();
-        iterator != m_gridSubscribers.end();) {
-        QList<GridSubscriber> current;
-        for (const GridSubscriber &subscriber : std::as_const(iterator.value())) {
-            if (subscriber.generation == m_generation)
-                current.append(subscriber);
-        }
-        if (current.isEmpty())
-            iterator = m_gridSubscribers.erase(iterator);
-        else {
-            iterator.value() = current;
-            ++iterator;
-        }
-    }
     pruneObsoleteQueue();
 }
 
@@ -182,11 +160,11 @@ QVariantMap WeatherMapProvider::requestTile(
     QVariantMap result;
     result.insert(QStringLiteral("state"), QStringLiteral("invalid"));
 
-    const bool osm = kind == QStringLiteral("base");
+    const bool base = kind == QStringLiteral("base");
     const bool weather = kind == QStringLiteral("weather");
     const QString safeLayer = weather ? normalizedLayer(layer) : QString();
 
-    if ((!osm && !weather)
+    if ((!base && !weather)
         || (weather && safeLayer.isEmpty())
         || !validTileCoordinate(zoom, y)) {
         result.insert(QStringLiteral("errorCode"), QStringLiteral("invalid_request"));
@@ -195,12 +173,12 @@ QVariantMap WeatherMapProvider::requestTile(
 
     x = wrappedX(x, zoom);
     TileTask task;
-    task.kind = osm ? QStringLiteral("base") : QStringLiteral("weather");
+    task.kind = base ? QStringLiteral("base") : QStringLiteral("weather");
     task.layer = safeLayer;
     task.zoom = zoom;
     task.x = x;
     task.y = y;
-    task.osm = osm;
+    task.base = base;
     task.key = taskKey(task.kind, task.layer, zoom, x, y);
     task.cachePath = tileCachePath(task.kind, task.layer, zoom, x, y);
     task.remoteUrl = remoteTileUrl(task.kind, task.layer, zoom, x, y);
@@ -210,7 +188,7 @@ QVariantMap WeatherMapProvider::requestTile(
     if (hasCache)
         result = cacheResult(task, !fresh);
 
-    if (weather && !m_credentialsReady) {
+    if (!m_credentialsReady) {
         result.insert(
             QStringLiteral("state"),
             hasCache ? QStringLiteral("stale") : QStringLiteral("loading")
@@ -222,15 +200,21 @@ QVariantMap WeatherMapProvider::requestTile(
         return result;
     }
 
-    if (weather && m_apiKey.isEmpty()) {
+    const bool missingApiKey = weather && m_apiKey.isEmpty();
+    const bool missingMapTilerKey = base && m_mapTilerApiKey.isEmpty();
+    if (missingApiKey || missingMapTilerKey) {
         result.insert(QStringLiteral("state"), hasCache
             ? QStringLiteral("stale")
             : QStringLiteral("not_configured"));
         result.insert(QStringLiteral("errorCode"), QStringLiteral("not_configured"));
-        setStatus(
-            QStringLiteral("not_configured"),
-            QStringLiteral("地图服务未配置")
-        );
+        if (missingMapTilerKey)
+            setMapTilerStatus(QStringLiteral("not_configured"));
+        else {
+            setStatus(
+                QStringLiteral("not_configured"),
+                QStringLiteral("OpenWeather 地图服务未配置")
+            );
+        }
         return result;
     }
 
@@ -251,64 +235,6 @@ QVariantMap WeatherMapProvider::requestTile(
     result.insert(QStringLiteral("state"), hasCache
         ? QStringLiteral("stale")
         : QStringLiteral("loading"));
-    return result;
-}
-
-QVariantMap WeatherMapProvider::requestGrid(
-    const QString &kind,
-    const QVariantList &points,
-    int generation,
-    bool forceRefresh
-)
-{
-    QVariantMap result;
-    result.insert(QStringLiteral("state"), QStringLiteral("invalid"));
-
-    const QString safeKind = normalizedGridKind(kind);
-    const QList<GridPoint> safePoints = normalizedGridPoints(points);
-    if (safeKind.isEmpty() || safePoints.size() < 2) {
-        result.insert(QStringLiteral("errorCode"), QStringLiteral("invalid_request"));
-        return result;
-    }
-
-    GridTask task;
-    task.kind = safeKind;
-    task.points = safePoints;
-    task.cachePath = gridCachePath(safeKind, safePoints);
-    task.remoteUrl = remoteGridUrl(safeKind, safePoints);
-    task.key = QStringLiteral("grid:%1:%2")
-        .arg(safeKind, QFileInfo(task.cachePath).baseName());
-
-    const QVariantMap cache = readGridCache(task.cachePath);
-    const bool hasCache = !cache
-        .value(QStringLiteral("samples"))
-        .toList()
-        .isEmpty();
-    const bool fresh = hasCache && gridCacheIsFresh(task);
-    if (hasCache) {
-        result = cache;
-        result.insert(
-            QStringLiteral("state"),
-            fresh ? QStringLiteral("ready") : QStringLiteral("stale")
-        );
-        result.insert(QStringLiteral("cached"), true);
-        result.insert(QStringLiteral("stale"), !fresh);
-    }
-
-    if (!m_active
-        || generation != m_generation
-        || (fresh && !forceRefresh)) {
-        return result;
-    }
-
-    GridSubscriber subscriber;
-    subscriber.kind = safeKind;
-    subscriber.generation = generation;
-    enqueueGrid(task, subscriber);
-    result.insert(
-        QStringLiteral("state"),
-        hasCache ? QStringLiteral("stale") : QStringLiteral("loading")
-    );
     return result;
 }
 
@@ -421,7 +347,7 @@ QVariantMap WeatherMapProvider::clearApiKey()
             setCredentialsReady(true);
             setStatus(
                 QStringLiteral("not_configured"),
-                QStringLiteral("地图服务未配置")
+                QStringLiteral("OpenWeather 地图服务未配置")
             );
             replaceApiKey({}, true);
             finishCredentialOperation();
@@ -602,14 +528,12 @@ QString WeatherMapProvider::normalizedLayer(const QString &layer)
 {
     static const QSet<QString> allowed {
         QStringLiteral("temp_new"),
-        QStringLiteral("precipitation_new")
+        QStringLiteral("precipitation_new"),
+        QStringLiteral("clouds_new"),
+        QStringLiteral("wind_new"),
+        QStringLiteral("pressure_new")
     };
     return allowed.contains(layer) ? layer : QString();
-}
-
-QString WeatherMapProvider::normalizedGridKind(const QString &kind)
-{
-    return kind == QStringLiteral("aqi") ? kind : QString();
 }
 
 bool WeatherMapProvider::validApiKey(const QString &apiKey)
@@ -633,7 +557,7 @@ QString WeatherMapProvider::tileCachePath(
 ) const
 {
     if (kind == QStringLiteral("base")) {
-        return QStringLiteral("%1/tiles/osm/%2/%3/%4.png")
+        return QStringLiteral("%1/tiles/maptiler/dataviz/%2/%3/%4.png")
             .arg(m_cacheRoot)
             .arg(zoom)
             .arg(x)
@@ -680,11 +604,18 @@ QUrl WeatherMapProvider::remoteTileUrl(
 ) const
 {
     if (kind == QStringLiteral("base")) {
-        return QUrl(QStringLiteral("%1/%2/%3/%4.png")
-            .arg(QString::fromLatin1(kOsmTileHost))
+        QUrl url(QStringLiteral("%1/maps/dataviz/256/%2/%3/%4.png")
+            .arg(QString::fromLatin1(kMapTilerTileHost))
             .arg(zoom)
             .arg(x)
             .arg(y));
+        QUrlQuery query;
+        query.addQueryItem(
+            QStringLiteral("key"),
+            QString::fromUtf8(m_mapTilerApiKey)
+        );
+        url.setQuery(query);
+        return url;
     }
 
     QUrl url(QStringLiteral("%1/map/%2/%3/%4/%5.png")
@@ -698,93 +629,6 @@ QUrl WeatherMapProvider::remoteTileUrl(
     return url;
 }
 
-QString WeatherMapProvider::gridCachePath(
-    const QString &kind,
-    const QList<GridPoint> &points
-) const
-{
-    QByteArray identity = kind.toUtf8();
-    for (const GridPoint &point : points) {
-        identity += '|';
-        identity += QByteArray::number(point.latitude, 'f', 4);
-        identity += ',';
-        identity += QByteArray::number(point.longitude, 'f', 4);
-    }
-    const QByteArray digest = QCryptographicHash::hash(
-        identity,
-        QCryptographicHash::Sha256
-    ).toHex();
-    return QStringLiteral("%1/grids/%2/%3.json")
-        .arg(m_cacheRoot, kind, QString::fromLatin1(digest));
-}
-
-QUrl WeatherMapProvider::remoteGridUrl(
-    const QString &kind,
-    const QList<GridPoint> &points
-) const
-{
-    QUrl url(
-        QString::fromLatin1(kOpenMeteoAirQualityHost)
-        + QStringLiteral("/v1/air-quality")
-    );
-    QStringList latitudes;
-    QStringList longitudes;
-    latitudes.reserve(points.size());
-    longitudes.reserve(points.size());
-    for (const GridPoint &point : points) {
-        latitudes.append(QString::number(point.latitude, 'f', 4));
-        longitudes.append(QString::number(point.longitude, 'f', 4));
-    }
-
-    QUrlQuery query;
-    query.addQueryItem(QStringLiteral("latitude"), latitudes.join(','));
-    query.addQueryItem(QStringLiteral("longitude"), longitudes.join(','));
-    query.addQueryItem(QStringLiteral("timezone"), QStringLiteral("GMT"));
-    query.addQueryItem(
-        QStringLiteral("current"),
-        QStringLiteral("us_aqi,pm2_5")
-    );
-    url.setQuery(query);
-    return url;
-}
-
-QList<WeatherMapProvider::GridPoint>
-WeatherMapProvider::normalizedGridPoints(const QVariantList &points) const
-{
-    QList<GridPoint> normalized;
-    normalized.reserve(qMin(points.size(), 35));
-    for (const QVariant &value : points) {
-        if (normalized.size() >= 35)
-            break;
-
-        const QVariantMap point = value.toMap();
-        bool latitudeOk = false;
-        bool longitudeOk = false;
-        const double latitude = point
-            .value(QStringLiteral("latitude"))
-            .toDouble(&latitudeOk);
-        const double longitude = point
-            .value(QStringLiteral("longitude"))
-            .toDouble(&longitudeOk);
-        if (!latitudeOk
-            || !longitudeOk
-            || !qIsFinite(latitude)
-            || !qIsFinite(longitude)
-            || latitude < -85.05112878
-            || latitude > 85.05112878
-            || longitude < -180.0
-            || longitude > 180.0) {
-            continue;
-        }
-
-        normalized.append({
-            qRound64(latitude * 10000.0) / 10000.0,
-            qRound64(longitude * 10000.0) / 10000.0
-        });
-    }
-    return normalized;
-}
-
 bool WeatherMapProvider::cacheIsFresh(const TileTask &task) const
 {
     const QFileInfo info(task.cachePath);
@@ -792,7 +636,7 @@ bool WeatherMapProvider::cacheIsFresh(const TileTask &task) const
         return false;
 
     const QDateTime now = QDateTime::currentDateTimeUtc();
-    if (!task.osm)
+    if (!task.base)
         return info.lastModified().toUTC().secsTo(now) < kWeatherTileTtlSeconds;
 
     const QVariantMap metadata = readMetadata(task.cachePath);
@@ -803,7 +647,7 @@ bool WeatherMapProvider::cacheIsFresh(const TileTask &task) const
     if (expiresAt.isValid())
         return now < expiresAt;
 
-    return info.lastModified().toUTC().secsTo(now) < kOsmFallbackTtlSeconds;
+    return info.lastModified().toUTC().secsTo(now) < kBaseFallbackTtlSeconds;
 }
 
 QVariantMap WeatherMapProvider::cacheResult(
@@ -819,7 +663,7 @@ QVariantMap WeatherMapProvider::cacheResult(
         {QStringLiteral("cached"), true},
         {QStringLiteral("stale"), stale}
     };
-    if (!task.osm) {
+    if (!task.base) {
         result.insert(
             QStringLiteral("hasSignal"),
             cachedWeatherTileHasSignal(task)
@@ -853,68 +697,16 @@ void WeatherMapProvider::enqueue(
         m_pendingKeys.insert(task.key);
         m_queue.enqueue(task);
     }
-    setStatus(QStringLiteral("loading"));
-    startQueuedRequests();
-}
-
-void WeatherMapProvider::enqueueGrid(
-    const GridTask &task,
-    const GridSubscriber &subscriber
-)
-{
-    QList<GridSubscriber> &subscribers = m_gridSubscribers[task.key];
-    bool duplicate = false;
-    for (const GridSubscriber &existing : std::as_const(subscribers)) {
-        if (existing.generation == subscriber.generation
-            && existing.kind == subscriber.kind) {
-            duplicate = true;
-            break;
-        }
-    }
-    if (!duplicate)
-        subscribers.append(subscriber);
-
-    if (!m_pendingKeys.contains(task.key)) {
-        m_pendingKeys.insert(task.key);
-        m_gridQueue.enqueue(task);
-    }
-    setStatus(QStringLiteral("loading"));
+    if (!task.base)
+        setStatus(QStringLiteral("loading"));
     startQueuedRequests();
 }
 
 void WeatherMapProvider::startQueuedRequests()
 {
     while (m_active
-        && m_inFlight.size() + m_gridInFlight.size()
-            < kMaximumConcurrentRequests
-        && (!m_gridQueue.isEmpty() || !m_queue.isEmpty())) {
-        if (!m_gridQueue.isEmpty()) {
-            const GridTask task = m_gridQueue.dequeue();
-            if (!m_gridSubscribers.contains(task.key)) {
-                m_pendingKeys.remove(task.key);
-                continue;
-            }
-
-            QNetworkRequest request(task.remoteUrl);
-            request.setHeader(
-                QNetworkRequest::UserAgentHeader,
-                QByteArray(kUserAgent)
-            );
-            request.setRawHeader("Accept", "application/json");
-            request.setAttribute(
-                QNetworkRequest::RedirectPolicyAttribute,
-                QNetworkRequest::NoLessSafeRedirectPolicy
-            );
-            request.setTransferTimeout(15000);
-
-            QNetworkReply *reply = m_network.get(request);
-            m_gridInFlight.insert(reply, task);
-            connect(reply, &QNetworkReply::finished, this, [this, reply]() {
-                finishGridRequest(reply);
-            });
-            continue;
-        }
-
+        && m_inFlight.size() < kMaximumConcurrentRequests
+        && !m_queue.isEmpty()) {
         const TileTask task = m_queue.dequeue();
         if (!m_subscribers.contains(task.key)) {
             m_pendingKeys.remove(task.key);
@@ -933,7 +725,7 @@ void WeatherMapProvider::startQueuedRequests()
         );
         request.setTransferTimeout(15000);
 
-        if (task.osm && QFileInfo::exists(task.cachePath)) {
+        if (task.base && QFileInfo::exists(task.cachePath)) {
             const QVariantMap metadata = readMetadata(task.cachePath);
             const QByteArray etag = metadata
                 .value(QStringLiteral("etag"))
@@ -982,7 +774,7 @@ void WeatherMapProvider::finishRequest(QNetworkReply *reply)
         && httpStatus < 300
         && responseIsImage(reply, body)
         && writeTileAtomically(task.cachePath, body)) {
-        if (task.osm) {
+        if (task.base) {
             writeMetadata(task.cachePath, reply);
         } else {
             writeWeatherMetadata(
@@ -993,24 +785,36 @@ void WeatherMapProvider::finishRequest(QNetworkReply *reply)
         success = true;
     } else {
         stale = QFileInfo::exists(task.cachePath);
-        if (httpStatus == 401) {
+        if (httpStatus == 401 || (task.base && httpStatus == 403)) {
             errorCode = QStringLiteral("invalid_key");
-            setStatus(
-                QStringLiteral("invalid_key"),
-                QStringLiteral("OpenWeather API key 无效或尚未激活")
-            );
+            if (task.base)
+                setMapTilerStatus(QStringLiteral("invalid_key"));
+            else {
+                setStatus(
+                    QStringLiteral("invalid_key"),
+                    QStringLiteral("OpenWeather API key 无效或尚未激活")
+                );
+            }
         } else if (httpStatus == 429) {
             errorCode = QStringLiteral("rate_limited");
-            setStatus(
-                QStringLiteral("rate_limited"),
-                QStringLiteral("请求频率受限")
-            );
+            if (task.base)
+                setMapTilerStatus(QStringLiteral("rate_limited"));
+            else {
+                setStatus(
+                    QStringLiteral("rate_limited"),
+                    QStringLiteral("OpenWeather 请求频率受限")
+                );
+            }
         } else {
             errorCode = QStringLiteral("network_error");
-            setStatus(
-                QStringLiteral("network_error"),
-                QStringLiteral("地图网络不可用，正在使用已有缓存")
-            );
+            if (task.base)
+                setMapTilerStatus(QStringLiteral("network_error"));
+            else {
+                setStatus(
+                    QStringLiteral("network_error"),
+                    QStringLiteral("天气图层网络不可用，正在使用已有缓存")
+                );
+            }
         }
     }
 
@@ -1023,124 +827,15 @@ void WeatherMapProvider::finishRequest(QNetworkReply *reply)
     m_subscribers.remove(task.key);
     reply->deleteLater();
 
-    if (success && m_status == QStringLiteral("loading"))
-        setStatus(QStringLiteral("ready"));
-
-    startQueuedRequests();
-    updateBusy();
-}
-
-void WeatherMapProvider::finishGridRequest(QNetworkReply *reply)
-{
-    if (!m_gridInFlight.contains(reply)) {
-        reply->deleteLater();
-        return;
-    }
-
-    const GridTask task = m_gridInFlight.take(reply);
-    const int httpStatus = reply->attribute(
-        QNetworkRequest::HttpStatusCodeAttribute
-    ).toInt();
-    const QByteArray body = reply->readAll();
-    bool parsed = false;
-    QVariantList samples;
-    QString updatedAt;
-    bool stale = false;
-    QString errorCode;
-
-    if (reply->error() == QNetworkReply::NoError
-        && httpStatus >= 200
-        && httpStatus < 300) {
-        samples = parseGridResponse(task, body, &parsed);
-    }
-
-    if (parsed && !samples.isEmpty()) {
-        updatedAt = QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
-        writeGridCache(task.cachePath, samples, updatedAt);
-        notifyGridSuccess(task, samples, updatedAt, false);
-        if (m_status == QStringLiteral("loading"))
+    if (success) {
+        if (task.base)
+            setMapTilerStatus(QStringLiteral("ready"));
+        else if (m_status == QStringLiteral("loading"))
             setStatus(QStringLiteral("ready"));
-    } else {
-        const QVariantMap cache = readGridCache(task.cachePath);
-        samples = cache.value(QStringLiteral("samples")).toList();
-        updatedAt = cache.value(QStringLiteral("updatedAt")).toString();
-        stale = !samples.isEmpty();
-
-        if (httpStatus == 429) {
-            errorCode = QStringLiteral("rate_limited");
-            setStatus(
-                QStringLiteral("rate_limited"),
-                QStringLiteral("请求频率受限")
-            );
-        } else if (parsed && samples.isEmpty()) {
-            errorCode = QStringLiteral("empty_data");
-            setStatus(
-                QStringLiteral("empty_data"),
-                QStringLiteral("区域模型暂无可用数据")
-            );
-        } else {
-            errorCode = QStringLiteral("network_error");
-            setStatus(
-                QStringLiteral("network_error"),
-                QStringLiteral("地图网络不可用，正在使用已有缓存")
-            );
-        }
-
-        if (stale)
-            notifyGridSuccess(task, samples, updatedAt, true);
-        else
-            notifyGridFailure(task, errorCode);
     }
 
-    m_pendingKeys.remove(task.key);
-    m_gridSubscribers.remove(task.key);
-    reply->deleteLater();
     startQueuedRequests();
     updateBusy();
-}
-
-void WeatherMapProvider::notifyGridSuccess(
-    const GridTask &task,
-    const QVariantList &samples,
-    const QString &updatedAt,
-    bool stale
-)
-{
-    if (!m_active)
-        return;
-
-    const QList<GridSubscriber> subscribers = m_gridSubscribers.value(task.key);
-    for (const GridSubscriber &subscriber : subscribers) {
-        if (subscriber.generation != m_generation)
-            continue;
-        emit gridReady(
-            subscriber.kind,
-            subscriber.generation,
-            samples,
-            updatedAt,
-            stale
-        );
-    }
-}
-
-void WeatherMapProvider::notifyGridFailure(
-    const GridTask &task,
-    const QString &errorCode
-)
-{
-    if (!m_active)
-        return;
-
-    const QList<GridSubscriber> subscribers = m_gridSubscribers.value(task.key);
-    for (const GridSubscriber &subscriber : subscribers) {
-        if (subscriber.generation != m_generation)
-            continue;
-        emit gridFailed(
-            subscriber.kind,
-            subscriber.generation,
-            errorCode
-        );
-    }
 }
 
 void WeatherMapProvider::notifySuccess(const TileTask &task, bool stale)
@@ -1211,21 +906,12 @@ void WeatherMapProvider::pruneObsoleteQueue()
             m_pendingKeys.remove(task.key);
     }
     m_queue = current;
-
-    QQueue<GridTask> currentGrids;
-    while (!m_gridQueue.isEmpty()) {
-        const GridTask task = m_gridQueue.dequeue();
-        if (m_gridSubscribers.contains(task.key))
-            currentGrids.enqueue(task);
-        else
-            m_pendingKeys.remove(task.key);
-    }
-    m_gridQueue = currentGrids;
     updateBusy();
 }
 
 void WeatherMapProvider::loadCredentials(bool forceRefresh)
 {
+    setCredentialsReady(false);
     setCredentialBusy(true);
     setMapTilerStatus(QStringLiteral("loading_credentials"));
     loadOpenWeatherApiKey(forceRefresh);
@@ -1247,13 +933,11 @@ void WeatherMapProvider::loadOpenWeatherApiKey(bool forceRefresh)
             const auto *readJob = static_cast<QKeychain::ReadPasswordJob *>(
                 finishedJob
             );
-            setCredentialsReady(true);
-
             if (finishedJob->error() == QKeychain::EntryNotFound) {
                 replaceApiKey({}, forceRefresh);
                 setStatus(
                     QStringLiteral("not_configured"),
-                    QStringLiteral("地图服务未配置")
+                    QStringLiteral("OpenWeather 地图服务未配置")
                 );
                 loadMapTilerApiKey(forceRefresh);
                 return;
@@ -1274,7 +958,7 @@ void WeatherMapProvider::loadOpenWeatherApiKey(bool forceRefresh)
                 replaceApiKey({}, forceRefresh);
                 setStatus(
                     QStringLiteral("not_configured"),
-                    QStringLiteral("地图服务未配置")
+                    QStringLiteral("OpenWeather 地图服务未配置")
                 );
                 loadMapTilerApiKey(forceRefresh);
                 return;
@@ -1368,6 +1052,7 @@ void WeatherMapProvider::replaceMapTilerApiKey(
 
     const bool wasConfigured = mapTilerConfigured();
     m_mapTilerApiKey = apiKey;
+    cancelBaseRequests();
     if (wasConfigured != mapTilerConfigured())
         emit mapTilerConfiguredChanged();
     emit mapTilerApiKeyChanged();
@@ -1378,7 +1063,7 @@ void WeatherMapProvider::cancelWeatherRequests()
     QQueue<TileTask> retainedQueue;
     while (!m_queue.isEmpty()) {
         const TileTask task = m_queue.dequeue();
-        if (task.osm) {
+        if (task.base) {
             retainedQueue.enqueue(task);
             continue;
         }
@@ -1388,7 +1073,40 @@ void WeatherMapProvider::cancelWeatherRequests()
     m_queue = retainedQueue;
 
     for (auto iterator = m_inFlight.begin(); iterator != m_inFlight.end();) {
-        if (iterator.value().osm) {
+        if (iterator.value().base) {
+            ++iterator;
+            continue;
+        }
+
+        QNetworkReply *reply = iterator.key();
+        const TileTask task = iterator.value();
+        iterator = m_inFlight.erase(iterator);
+        m_pendingKeys.remove(task.key);
+        m_subscribers.remove(task.key);
+        QObject::disconnect(reply, nullptr, this, nullptr);
+        reply->abort();
+        reply->deleteLater();
+    }
+    updateBusy();
+    startQueuedRequests();
+}
+
+void WeatherMapProvider::cancelBaseRequests()
+{
+    QQueue<TileTask> retainedQueue;
+    while (!m_queue.isEmpty()) {
+        const TileTask task = m_queue.dequeue();
+        if (!task.base) {
+            retainedQueue.enqueue(task);
+            continue;
+        }
+        m_pendingKeys.remove(task.key);
+        m_subscribers.remove(task.key);
+    }
+    m_queue = retainedQueue;
+
+    for (auto iterator = m_inFlight.begin(); iterator != m_inFlight.end();) {
+        if (!iterator.value().base) {
             ++iterator;
             continue;
         }
@@ -1432,10 +1150,7 @@ void WeatherMapProvider::setMapTilerStatus(const QString &status)
 
 void WeatherMapProvider::updateBusy()
 {
-    const bool nextBusy = !m_queue.isEmpty()
-        || !m_inFlight.isEmpty()
-        || !m_gridQueue.isEmpty()
-        || !m_gridInFlight.isEmpty();
+    const bool nextBusy = !m_queue.isEmpty() || !m_inFlight.isEmpty();
     if (m_busy == nextBusy)
         return;
     m_busy = nextBusy;
@@ -1489,7 +1204,7 @@ void WeatherMapProvider::writeMetadata(
     }
     if (!expiresAt.isValid()) {
         expiresAt = QDateTime::currentDateTimeUtc().addSecs(
-            kOsmFallbackTtlSeconds
+            kBaseFallbackTtlSeconds
         );
     }
 
@@ -1611,109 +1326,4 @@ void WeatherMapProvider::writeWeatherMetadata(
         QJsonDocument::fromVariant(metadata).toJson(QJsonDocument::Compact)
     );
     file.commit();
-}
-
-QVariantMap WeatherMapProvider::readGridCache(const QString &path) const
-{
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly))
-        return {};
-
-    const QJsonDocument document = QJsonDocument::fromJson(file.readAll());
-    return document.isObject()
-        ? document.object().toVariantMap()
-        : QVariantMap();
-}
-
-bool WeatherMapProvider::writeGridCache(
-    const QString &path,
-    const QVariantList &samples,
-    const QString &updatedAt
-) const
-{
-    QVariantMap cache;
-    cache.insert(QStringLiteral("samples"), samples);
-    cache.insert(QStringLiteral("updatedAt"), updatedAt);
-
-    QDir().mkpath(QFileInfo(path).absolutePath());
-    QSaveFile file(path);
-    if (!file.open(QIODevice::WriteOnly))
-        return false;
-    file.write(
-        QJsonDocument::fromVariant(cache).toJson(QJsonDocument::Compact)
-    );
-    return file.commit();
-}
-
-bool WeatherMapProvider::gridCacheIsFresh(const GridTask &task) const
-{
-    const QFileInfo info(task.cachePath);
-    if (!info.exists())
-        return false;
-
-    return info.lastModified()
-        .toUTC()
-        .secsTo(QDateTime::currentDateTimeUtc())
-        < kAirQualityGridTtlSeconds;
-}
-
-QVariantList WeatherMapProvider::parseGridResponse(
-    const GridTask &task,
-    const QByteArray &body,
-    bool *ok
-) const
-{
-    if (ok)
-        *ok = false;
-
-    QJsonParseError error;
-    const QJsonDocument document = QJsonDocument::fromJson(body, &error);
-    if (error.error != QJsonParseError::NoError)
-        return {};
-
-    QJsonArray locations;
-    if (document.isArray()) {
-        locations = document.array();
-    } else if (document.isObject()) {
-        locations.append(document.object());
-    } else {
-        return {};
-    }
-
-    if (ok)
-        *ok = true;
-
-    QVariantList samples;
-    const int count = qMin(locations.size(), task.points.size());
-    samples.reserve(count);
-    for (int index = 0; index < count; ++index) {
-        const QJsonObject current = locations
-            .at(index)
-            .toObject()
-            .value(QStringLiteral("current"))
-            .toObject();
-        QVariantMap sample;
-        sample.insert(
-            QStringLiteral("latitude"),
-            task.points.at(index).latitude
-        );
-        sample.insert(
-            QStringLiteral("longitude"),
-            task.points.at(index).longitude
-        );
-
-        const double aqi = current
-            .value(QStringLiteral("us_aqi"))
-            .toDouble(qQNaN());
-        const double pm25 = current
-            .value(QStringLiteral("pm2_5"))
-            .toDouble(qQNaN());
-        if (!qIsFinite(aqi))
-            continue;
-        sample.insert(QStringLiteral("aqi"), aqi);
-        if (qIsFinite(pm25))
-            sample.insert(QStringLiteral("pm25"), pm25);
-        samples.append(sample);
-    }
-    return samples;
 }

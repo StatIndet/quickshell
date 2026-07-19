@@ -36,8 +36,12 @@ Rectangle {
             return ["#6e40aa", "#3b82f6", "#55c667", "#fde725", "#ef4444"]
         if (mode === "rain")
             return ["#dbeafe", "#60a5fa", "#2563eb", "#7c3aed"]
-        if (mode === "aqi")
-            return ["#00e400", "#ffff00", "#ff7e00", "#ff0000", "#8f3f97", "#7e0023"]
+        if (mode === "clouds")
+            return ["#eef2f6", "#b9c3cf", "#66717f"]
+        if (mode === "wind")
+            return ["#dbeafe", "#5eead4", "#facc15", "#f97316", "#dc2626"]
+        if (mode === "pressure")
+            return ["#7c3aed", "#3b82f6", "#22c55e", "#facc15", "#ef4444"]
         return ["#6e40aa", "#3b82f6", "#55c667", "#fde725", "#ef4444"]
     }
 
@@ -46,8 +50,12 @@ Rectangle {
             return "Temperature"
         if (mode === "rain")
             return "Precipitation"
-        if (mode === "aqi")
-            return "AQI"
+        if (mode === "clouds")
+            return "Cloud cover"
+        if (mode === "wind")
+            return "Wind speed"
+        if (mode === "pressure")
+            return "Pressure"
         return "Weather"
     }
 
@@ -56,8 +64,12 @@ Rectangle {
             return "Cold"
         if (mode === "rain")
             return "Light"
-        if (mode === "aqi")
-            return "Good"
+        if (mode === "clouds")
+            return "Clear"
+        if (mode === "wind")
+            return "Calm"
+        if (mode === "pressure")
+            return "Low"
         return ""
     }
 
@@ -66,8 +78,12 @@ Rectangle {
             return "Hot"
         if (mode === "rain")
             return "Heavy"
-        if (mode === "aqi")
-            return "Hazardous"
+        if (mode === "clouds")
+            return "Overcast"
+        if (mode === "wind")
+            return "Strong"
+        if (mode === "pressure")
+            return "High"
         return ""
     }
 
