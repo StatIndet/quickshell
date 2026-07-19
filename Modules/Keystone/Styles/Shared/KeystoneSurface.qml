@@ -353,8 +353,8 @@ Variants {
                 property real recordingInfoProgress: 0
                 property real recordingActionProgress: 0
                 property real processingContentProgress: 0
-                readonly property int pillEntryDuration: 1100
-                readonly property int pillFusionDuration: 900
+                readonly property int pillEntryDuration: 1000
+                readonly property int pillFusionDuration: 820
                 property int pillActiveFusionDuration: pillFusionDuration
                 property int toolsW: 480; property int toolsH: 72
                 property int notifW: 380; property int notifH: (NotificationManager.popupList.length * 70) + 20
