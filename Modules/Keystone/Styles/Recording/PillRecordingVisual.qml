@@ -40,7 +40,7 @@ Item {
         0,
         Math.min(1, processingContentProgress)
     )
-    readonly property real settledMainWidth: baseMainWidth + 12
+    readonly property real settledMainWidth: 200
 
     // Reference-video keyframes:
     // idle -> maximum connected hull -> narrow neck -> detached -> settled.

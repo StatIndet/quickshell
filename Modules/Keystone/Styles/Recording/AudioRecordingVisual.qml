@@ -33,7 +33,6 @@ Item {
     function beginEntry() {
         exitSequence.stop();
         entryAnimation.stop();
-        waveform.resetHistory();
         entryAnimation.restart();
     }
 
