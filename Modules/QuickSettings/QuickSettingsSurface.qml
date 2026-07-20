@@ -19,12 +19,10 @@ WidgetPanel {
     property real togglePadding: 6
     property real baseCellHeight: 56
     property real contentSpacing: 14
-    property real editSectionSpacing: 12
     property real headerButtonSize: 40
     property real headerButtonSpacing: 5
     property real headerButtonPadding: 5
     readonly property var toggleRows: rowsForToggles(QuickToggleConfig.toggles)
-    readonly property var unusedToggleRows: rowsForToggles(QuickToggleConfig.unusedToggleTypes.map(type => ({ "type": type, "size": 1 })))
 
     function openControlCenter() {
         WidgetState.qsOpen = false;
@@ -188,7 +186,7 @@ WidgetPanel {
     function tooltipForType(type) {
         const base = titleForType(type) + " | " + subtitleForType(type);
         if (root.editMode)
-            return base + "\n左键启用/隐藏，右键切换形状，滚轮调整顺序";
+            return base + "\n右键切换形状，滚轮调整顺序";
         if (type === "network" || type === "audio" || type === "mic")
             return base + "\n右键打开详情面板";
         return base;
@@ -212,7 +210,7 @@ WidgetPanel {
             padding: root.headerButtonPadding
             iconName: "edit"
             toggled: root.editMode
-            tooltipText: root.editMode ? "编辑快捷按钮\n左键启用/隐藏，右键切换形状，滚轮调整顺序" : "编辑快捷按钮"
+            tooltipText: root.editMode ? "编辑快捷按钮\n右键切换形状，滚轮调整顺序" : "编辑快捷按钮"
             onTriggered: root.editMode = !root.editMode
         }
 
@@ -284,7 +282,7 @@ WidgetPanel {
                     top: parent.top
                     margins: root.togglePadding
                 }
-                spacing: root.editMode ? root.editSectionSpacing : root.toggleSpacing
+                spacing: root.toggleSpacing
 
                 Column {
                     id: usedRows
@@ -323,9 +321,7 @@ WidgetPanel {
                                     tooltipText: root.tooltipForType(toggleType)
 
                                     onTriggered: {
-                                        if (root.editMode)
-                                            QuickToggleConfig.toggleEnabled(toggleType);
-                                        else
+                                        if (!root.editMode)
                                             root.triggerType(toggleType);
                                     }
 
@@ -340,61 +336,6 @@ WidgetPanel {
                                         if (!root.editMode)
                                             return;
                                         QuickToggleConfig.move(toggleType, delta < 0 ? 1 : -1);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Rectangle {
-                    width: Math.max(0, togglePanel.baseCellWidth * 4)
-                    height: 1
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    visible: root.editMode
-                    color: Appearance.colors.colOutlineVariant
-                }
-
-                Column {
-                    id: unusedRows
-
-                    visible: root.editMode && root.unusedToggleRows.length > 0
-                    spacing: root.toggleSpacing
-
-                    Repeater {
-                        model: root.unusedToggleRows
-
-                        QuickToggleGroup {
-                            required property var modelData
-
-                            spacing: root.toggleSpacing
-
-                            Repeater {
-                                model: modelData
-
-                                QuickToggleButton {
-                                    required property var modelData
-
-                                    readonly property string toggleType: modelData.type
-
-                                    title: root.titleForType(toggleType)
-                                    subtitle: "已隐藏"
-                                    iconName: root.iconForType(toggleType)
-                                    toggled: false
-                                    available: root.availableForType(toggleType)
-                                    expanded: false
-                                    editMode: true
-                                    baseCellWidth: togglePanel.baseCellWidth
-                                    baseCellHeight: root.baseCellHeight
-                                    cellSpacing: root.toggleSpacing
-                                    cellSize: 1
-                                    opacity: 0.6
-                                    tooltipText: root.titleForType(toggleType) + "\n左键添加，右键添加为长条"
-
-                                    onTriggered: QuickToggleConfig.toggleEnabled(toggleType)
-                                    onAltTriggered: {
-                                        QuickToggleConfig.toggleEnabled(toggleType);
-                                        QuickToggleConfig.toggleSize(toggleType);
                                     }
                                 }
                             }

@@ -30,7 +30,8 @@ Rectangle {
     readonly property int indexInParent: parentGroup && parentGroup.indexOfButton ? parentGroup.indexOfButton(root) : -1
     readonly property int clickIndex: parentGroup && parentGroup.clickIndex !== undefined ? parentGroup.clickIndex : -1
     readonly property bool isAtSide: indexInParent === 0 || (parentGroup && indexInParent === parentGroup.childrenCount - 1)
-    readonly property bool expandedAltAction: expanded && hasAltAction && !editMode
+    readonly property bool expandedSplitStyle: expanded && hasAltAction
+    readonly property bool expandedAltAction: expandedSplitStyle && !editMode
     property bool down: false
     property bool suppressRelease: false
     property real baseWidth: (expanded && expandedWidth > 0) ? expandedWidth : baseCellWidth * cellSize + cellSpacing * (cellSize - 1)
@@ -52,19 +53,17 @@ Rectangle {
     clip: true
     enabled: available || editMode
 
-    readonly property color textColor: toggled && !expandedAltAction && enabled ? Appearance.colors.colOnPrimary : Appearance.transparentize(Appearance.colors.colOnLayer2, enabled ? 0 : 0.7)
+    readonly property color textColor: toggled && !expandedSplitStyle && enabled ? Appearance.colors.colOnPrimary : Appearance.transparentize(Appearance.colors.colOnLayer2, enabled ? 0 : 0.7)
     readonly property color iconColor: expanded ? (toggled ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer3) : textColor
     readonly property color backgroundColor: {
         if (!root.enabled)
             return Appearance.colors.colLayer2Disabled;
-        if (root.toggled && !root.expandedAltAction)
+        if (root.toggled && !root.expandedSplitStyle)
             return root.down ? Appearance.colors.colPrimaryActive : buttonMouse.containsMouse ? Appearance.colors.colPrimaryHover : Appearance.colors.colPrimary;
         return root.down ? Appearance.colors.colLayer2Active : buttonMouse.containsMouse ? Appearance.colors.colLayer2Hover : Appearance.colors.colLayer2;
     }
 
     color: backgroundColor
-    border.width: editMode ? 1 : 0
-    border.color: toggled ? Appearance.colors.colPrimary : Appearance.colors.colOutlineVariant
 
     Behavior on color {
         ColorAnimation {
@@ -136,7 +135,7 @@ Rectangle {
 
                 anchors.fill: parent
                 radius: Math.max(0, root.radius - root.padding)
-                color: root.expandedAltAction ? (root.toggled ? Appearance.colors.colPrimary : Appearance.colors.colLayer3) : "transparent"
+                color: root.expandedSplitStyle ? (root.toggled ? Appearance.colors.colPrimary : Appearance.colors.colLayer3) : "transparent"
 
                 Behavior on radius {
                     NumberAnimation {
@@ -233,6 +232,8 @@ Rectangle {
                 root.altTriggered();
                 return;
             }
+            if (root.editMode)
+                return;
             root.suppressRelease = false;
             root.down = true;
             setGroupClickIndex();
@@ -241,6 +242,8 @@ Rectangle {
         onReleased: (event) => {
             root.down = false;
             if (event.button !== Qt.LeftButton)
+                return;
+            if (root.editMode)
                 return;
             if (root.suppressRelease) {
                 root.suppressRelease = false;
@@ -254,6 +257,8 @@ Rectangle {
         }
         onCanceled: root.down = false
         onPressAndHold: {
+            if (root.editMode)
+                return;
             root.down = false;
             root.suppressRelease = true;
             root.altTriggered();

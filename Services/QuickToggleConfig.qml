@@ -10,11 +10,9 @@ Singleton {
 
     readonly property string configDir: Paths.homeDir + "/.cache/quickshell"
     readonly property string filePath: configDir + "/quick-toggles.json"
-    readonly property var availableTypes: ["network", "bluetooth", "caffeine", "mic", "audio", "theme", "dnd"]
 
     property bool storeReady: false
     property var toggles: defaultToggles()
-    readonly property var unusedToggleTypes: root.availableTypes.filter(type => root.toggles.findIndex(toggle => toggle.type === type) === -1)
 
     function defaultToggles() {
         return [
@@ -32,11 +30,12 @@ Singleton {
         if (!Array.isArray(rawToggles))
             return root.defaultToggles();
 
+        const validTypes = root.defaultToggles().map(toggle => toggle.type);
         const seen = {};
         const normalized = [];
         for (const item of rawToggles) {
             const type = item && typeof item.type === "string" ? item.type : "";
-            if (root.availableTypes.indexOf(type) === -1 || seen[type])
+            if (validTypes.indexOf(type) === -1 || seen[type])
                 continue;
 
             seen[type] = true;
@@ -52,23 +51,9 @@ Singleton {
         return root.toggles.findIndex(toggle => toggle.type === type);
     }
 
-    function isEnabled(type) {
-        return root.indexOfType(type) !== -1;
-    }
-
     function refreshBindings() {
         root.toggles = root.toggles.slice();
         root.save();
-    }
-
-    function toggleEnabled(type) {
-        const index = root.indexOfType(type);
-        if (index === -1) {
-            root.toggles.push({ "type": type, "size": 1 });
-        } else {
-            root.toggles.splice(index, 1);
-        }
-        root.refreshBindings();
     }
 
     function toggleSize(type) {
