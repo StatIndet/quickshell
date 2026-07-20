@@ -1,9 +1,7 @@
 import QtQuick
-import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
-import qs.Common
 import qs.Services
 import qs.Widgets.common
 
@@ -86,53 +84,12 @@ MouseArea {
     IconImage {
         id: trayIcon
 
-        visible: !TrayService.monochromeIcons
         source: root.modelData.icon || ""
         anchors.centerIn: parent
         width: parent.width
         height: parent.height
         asynchronous: true
         mipmap: true
-    }
-
-    Loader {
-        active: TrayService.monochromeIcons
-        anchors.fill: trayIcon
-
-        sourceComponent: Item {
-            IconImage {
-                id: monoSource
-
-                visible: false
-                source: root.modelData.icon || ""
-                anchors.fill: parent
-                asynchronous: true
-                mipmap: true
-            }
-
-            Desaturate {
-                id: desaturatedIcon
-
-                visible: false
-                anchors.fill: parent
-                source: monoSource
-                desaturation: 0.8
-            }
-
-            ColorOverlay {
-                anchors.fill: desaturatedIcon
-                source: desaturatedIcon
-                color: Appearance.transparentize(Appearance.colors.colOnLayer0, root.containsMouse ? 0.0 : 0.1)
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.animation.expressiveEffects.duration
-                        easing.type: Appearance.animation.expressiveEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
-                    }
-                }
-            }
-        }
     }
 
     PopupToolTip {

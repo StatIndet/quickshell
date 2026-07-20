@@ -141,11 +141,6 @@ PanelWindow {
             event.accepted = true;
         }
 
-        QsMenuAnchor {
-            id: submenuHydrator
-            anchor.window: root
-        }
-
         Item {
             id: menuSurface
 
@@ -396,16 +391,15 @@ PanelWindow {
                 onDismiss: root.close()
                 onOpenSubmenu: handle => {
                     const menuHandle = handle ? (handle.menu || handle) : null;
-                    if (menuHandle && typeof menuHandle.updateLayout === "function")
-                        menuHandle.updateLayout();
-                    submenuHydrator.menu = menuHandle;
-                    submenuHydrator.open();
-                    Qt.callLater(() => submenuHydrator.close());
                     stackView.push(subMenuComponent.createObject(null, {
                         "handle": handle,
                         "isSubMenu": true
                     }));
-                    Qt.callLater(root.updatePosition);
+                    Qt.callLater(() => {
+                        if (menuHandle && typeof menuHandle.updateLayout === "function")
+                            menuHandle.updateLayout();
+                        root.updatePosition();
+                    });
                 }
             }
         }

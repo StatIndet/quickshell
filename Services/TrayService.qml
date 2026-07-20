@@ -13,7 +13,6 @@ Singleton {
     readonly property string filePath: configDir + "/tray.json"
 
     property bool storeReady: false
-    property bool monochromeIcons: true
     property bool showItemId: false
     property bool invertPinnedItems: true
     property bool filterPassive: true
@@ -27,7 +26,6 @@ Singleton {
 
     function defaultConfig() {
         return {
-            "monochromeIcons": true,
             "showItemId": false,
             "invertPinnedItems": true,
             "pinnedItems": ["Fcitx"],
@@ -43,7 +41,6 @@ Singleton {
 
     function loadFromObject(parsed) {
         const defaults = root.defaultConfig();
-        root.monochromeIcons = typeof parsed.monochromeIcons === "boolean" ? parsed.monochromeIcons : defaults.monochromeIcons;
         root.showItemId = typeof parsed.showItemId === "boolean" ? parsed.showItemId : defaults.showItemId;
         root.invertPinnedItems = typeof parsed.invertPinnedItems === "boolean" ? parsed.invertPinnedItems : defaults.invertPinnedItems;
         root.filterPassive = typeof parsed.filterPassive === "boolean" ? parsed.filterPassive : defaults.filterPassive;
@@ -55,7 +52,6 @@ Singleton {
             return;
 
         configFile.setText(JSON.stringify({
-            "monochromeIcons": root.monochromeIcons,
             "showItemId": root.showItemId,
             "invertPinnedItems": root.invertPinnedItems,
             "pinnedItems": root.pinnedItemIds,
