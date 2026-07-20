@@ -51,7 +51,7 @@ void OpenMeteoClient::requestAirQuality(double latitude, double longitude, JsonC
     query.addQueryItem("longitude", QString::number(longitude, 'f', 6));
     query.addQueryItem("forecast_days", "7");
     query.addQueryItem("past_days", "1");
-    query.addQueryItem("hourly", "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen");
+    query.addQueryItem("hourly", "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone");
     url.setQuery(query);
     getJson(url, callback);
 }

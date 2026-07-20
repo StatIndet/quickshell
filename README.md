@@ -6,7 +6,7 @@
 这是我的 Quickshell 桌面 shell 配置目录，放置在标准的 `~/.config/quickshell` 路径下。仓库包含主入口 `shell.qml`、`AppShell.qml`、`Modules/` 业务模块、`Widgets/` 可复用控件、`Common/` 全局基础设施、共享资源，以及 `core/` 下用于向 QML 暴露系统监控和天气数据的 Qt/C++ 自制插件源码。
 
 ### 预览
-灵动岛媒体
+Keystone 媒体
 <p align="center">
   <img src="https://raw.githubusercontent.com/Archirithm/picture/main/gif1.gif" width="500">
 </p>
@@ -14,7 +14,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/Archirithm/picture/main/gif2.gif" width="500">
 </p>
-灵动岛dashboard
+Keystone dashboard
 <p align="center">
   <img src="https://raw.githubusercontent.com/Archirithm/picture/main/gif3.gif" width="500">
 </p>

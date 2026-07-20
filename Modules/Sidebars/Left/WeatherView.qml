@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Widgets.common
+import qs.Widgets.weather
 import Clavis.Weather 1.0
 
 Item {
@@ -546,17 +547,6 @@ Item {
                         accent: aqiSummary().color
                     }
 
-                    WeatherPollenCard {
-                        Layout.preferredWidth: (parent.width - parent.spacing) / 2
-                        Layout.preferredHeight: Layout.preferredWidth
-                        pollenMap: today().pollen || ({})
-                    }
-                }
-
-                RowLayout {
-                    width: parent.width
-                    spacing: 10
-
                     WeatherHumidityCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2
                         Layout.preferredHeight: Layout.preferredWidth
@@ -565,6 +555,11 @@ Item {
                         dewPointText: fmtTemp(WeatherPlugin.currentDewPointC)
                         accent: humidityWaveAccent()
                     }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 10
 
                     WeatherUvCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2
@@ -573,17 +568,17 @@ Item {
                         level: uvLevel(WeatherPlugin.currentUvIndex)
                         activeIndex: uvIndexBucket(WeatherPlugin.currentUvIndex)
                     }
-                }
-
-                RowLayout {
-                    width: parent.width
-                    spacing: 10
 
                     WeatherVisibilityCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2
                         Layout.preferredHeight: Layout.preferredWidth
                         visibilityMeters: WeatherPlugin.currentVisibilityM
                     }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 10
 
                     WeatherPressureCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2
@@ -592,11 +587,6 @@ Item {
                         valueText: pressureValueText(WeatherPlugin.currentPressureHpa)
                         unitText: "hPa"
                     }
-                }
-
-                RowLayout {
-                    width: parent.width
-                    spacing: 10
 
                     WeatherAstroCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2
@@ -608,6 +598,11 @@ Item {
                         setEpoch: today().sunset || 0
                         currentEpoch: root.currentEpoch
                     }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing: 10
 
                     WeatherAstroCard {
                         Layout.preferredWidth: (parent.width - parent.spacing) / 2

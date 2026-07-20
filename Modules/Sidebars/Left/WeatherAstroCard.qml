@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Shapes
 import qs.Common
+import qs.Widgets.weather
 
 Rectangle {
     id: root

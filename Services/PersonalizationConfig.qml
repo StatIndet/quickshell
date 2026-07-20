@@ -59,9 +59,13 @@ Singleton {
         ({ "value": "scheme-rainbow", "label": "彩虹" })
     ]
 
+    readonly property var keystoneStyles: [
+        ({ "value": "bangs", "label": "刘海" }),
+        ({ "value": "pill", "label": "药丸" })
+    ]
+
     property bool storeReady: false
     property bool loading: false
-    property bool selfWrite: false
 
     property string wallpaperFolder: Paths.homeDir + "/.config/wallpaper"
     property string wallpaperPath: ""
@@ -92,6 +96,7 @@ Singleton {
     property bool cursorHideWhenTyping: false
     property int cursorHideAfterInactiveMs: 0
     property string iconTheme: ""
+    property string keystoneStyle: "bangs"
 
     property bool scrollSmoothEnabled: true
     property int scrollMouseFactor: 50
@@ -345,6 +350,10 @@ Singleton {
         setValue("iconTheme", value || "");
     }
 
+    function setKeystoneStyle(value) {
+        setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "bangs"));
+    }
+
     function setScrollSmoothEnabled(value) {
         setValue("scrollSmoothEnabled", !!value);
     }
@@ -397,6 +406,9 @@ Singleton {
                 "cursorHideAfterInactiveMs": root.cursorHideAfterInactiveMs,
                 "iconTheme": root.iconTheme
             },
+            "keystone": {
+                "style": root.keystoneStyle
+            },
             "interactions": {
                 "scrolling": {
                     "smoothEnabled": root.scrollSmoothEnabled,
@@ -411,6 +423,7 @@ Singleton {
     function loadFromObject(parsed) {
         const wallpaper = parsed.wallpaper || {};
         const theme = parsed.theme || {};
+        const keystone = parsed.keystone || {};
         const interactions = parsed.interactions || {};
         const scrolling = interactions.scrolling || {};
         const transition = wallpaper.transition || {};
@@ -443,6 +456,7 @@ Singleton {
         root.cursorHideWhenTyping = !!theme.cursorHideWhenTyping;
         root.cursorHideAfterInactiveMs = Math.max(0, Math.min(5000, Math.round(Number(theme.cursorHideAfterInactiveMs) || 0)));
         root.iconTheme = theme.iconTheme || "";
+        root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
         root.scrollSmoothEnabled = scrolling.smoothEnabled === undefined ? true : !!scrolling.smoothEnabled;
         root.scrollMouseFactor = normalizedBoundedInt(scrolling.mouseFactor, 50, 10, 240);
         root.scrollTouchpadFactor = normalizedBoundedInt(scrolling.touchpadFactor, 100, 10, 300);
@@ -452,7 +466,6 @@ Singleton {
     function save() {
         if (!root.storeReady || root.loading)
             return;
-        root.selfWrite = true;
         configFile.setText(JSON.stringify(root.toJson(), null, 2));
     }
 
@@ -482,13 +495,7 @@ Singleton {
         atomicWrites: true
         watchChanges: true
 
-        onFileChanged: {
-            if (root.selfWrite) {
-                root.selfWrite = false;
-                return;
-            }
-            configReloadDebounce.restart();
-        }
+        onFileChanged: configReloadDebounce.restart()
 
         onLoaded: {
             let shouldRepair = false;

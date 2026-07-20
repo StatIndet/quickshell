@@ -2,7 +2,11 @@
 
 ## 项目结构与模块组织
 
-这是一个主要使用 QML 构建的 Quickshell 桌面 shell。`shell.qml` 是主入口，只负责加载 `AppShell.qml`；`AppShell.qml` 负责挂载 Bar、DynamicIsland、Sidebars、Launcher 与 Lock 等顶层模块。`demo.qml`、`test_list.qml` 和 `test_proc.qml` 是本地 smoke-test 入口。
+这是一个主要使用 QML 构建的 Quickshell 桌面 shell。`shell.qml` 是主入口，只负责加载 `AppShell.qml`；`AppShell.qml` 负责挂载 Bar、Keystone、Sidebars、Launcher 与 Lock 等顶层模块。`demo.qml`、`test_list.qml` 和 `test_proc.qml` 是本地 smoke-test 入口。
+
+## Keystone 术语约定
+
+本项目中的 `Keystone` 是仿照 iOS Dynamic Island 制作的顶部交互区域。后续交流中出现的“灵动岛”、“Dynamic Island”、“dynamic island”、“dynamic”、“daynamic”或“钥石”，除非另有明确说明，均指当前项目的 `Modules/Keystone/` 模块。
 
 当前目录结构约定如下：
 
@@ -23,7 +27,12 @@
 ├── Services/                 # 数据逻辑与系统状态单例
 ├── Modules/                  # 业务功能模块
 │   ├── Bar/
-│   ├── DynamicIsland/
+│   ├── FilePicker/           # 主题化文件选择窗口
+│   ├── Keystone/
+│   │   ├── DashboardContent/
+│   │   └── Styles/
+│   │       ├── Bangs/
+│   │       └── Pill/
 │   ├── Launcher/
 │   ├── Lock/
 │   └── Sidebars/
@@ -47,7 +56,7 @@
 
 分层规则：
 
-- `Modules/` 是业务层，存放大型、独立的功能区块；侧边栏、灵动岛、启动器、锁屏等都归入这里。
+- `Modules/` 是业务层，存放大型、独立的功能区块；侧边栏、Keystone、启动器、锁屏等都归入这里。
 - `Widgets/` 是展示层，只放可复用 UI 控件和小型面板外壳；不要在这里直接使用 `Process`、`Quickshell.execDetached` 或其他系统命令调用。
 - `Common/` 是全局基础设施；主题色、尺寸 token、共享状态、路径和纯工具函数都放这里。QML 中引用静态资源或脚本时优先通过 `Common/Paths.qml`。
 - `Services/` 是数据逻辑层，保持单例模式；UI 需要系统状态或系统操作时优先通过 `Services/` 暴露的属性/函数访问。
@@ -113,7 +122,25 @@ Qt/C++ plugin 统一位于 `core/`：可复用 backend 代码在 `core/src/`，Q
 
 ## Commit 与 Pull Request 指南
 
-近期历史使用较短消息，例如 `update`、`Update README.md` 和中文摘要。建议使用简洁的祈使句 subject，并点明变更区域，例如 `Update launcher filtering` 或 `修复系统监控温度读取`。Pull request 应包含简要描述、受影响模块、运行过的命令，以及可见 UI 改动的截图或录屏。如有相关 issue 请链接，并明确说明新增 runtime dependency。
+Git commit subject 必须使用 `type: 描述` 格式。`type` 使用小写英文类型，后接英文冒号和一个空格；描述使用简洁、明确的语言说明本次提交，例如 `feat: 新增 Keystone 样式切换` 或 `fix: 修复文件选择器导航失效`。
+
+允许使用的类型如下：
+
+| type | 含义 |
+| --- | --- |
+| `feat` | 新功能 |
+| `fix` | 修复 bug |
+| `docs` | 文档修改 |
+| `style` | 代码格式、缩进或样式整理，不改变逻辑 |
+| `refactor` | 重构代码，不新增功能且不修复具体 bug |
+| `perf` | 性能优化 |
+| `test` | 测试相关 |
+| `build` | 构建系统、依赖或打包配置 |
+| `ci` | GitHub Actions、Cloudflare Pages 等 CI 配置 |
+| `chore` | 不属于以上类型的杂项维护 |
+| `revert` | 回滚提交 |
+
+后续所有 Git 提交均应遵循此约定。Pull request 应包含简要描述、受影响模块、运行过的命令，以及可见 UI 改动的截图或录屏。如有相关 issue 请链接，并明确说明新增 runtime dependency。
 
 ## 安全与配置提示
 

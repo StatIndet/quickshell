@@ -9,6 +9,7 @@ class NiriIpcClient : public QObject {
 
 public:
     explicit NiriIpcClient(QObject *parent = nullptr);
+    ~NiriIpcClient() override;
 
     QString socketPath() const;
     bool isConnected() const;

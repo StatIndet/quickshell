@@ -10,6 +10,8 @@ qt_add_qml_module(ClavisAudio
     SOURCES
         src/cava_provider.h
         src/cava_provider.cpp
+        src/audio_level_provider.h
+        src/audio_level_provider.cpp
     OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Clavis/Audio
 )
 

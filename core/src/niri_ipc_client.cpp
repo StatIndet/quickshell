@@ -14,6 +14,14 @@ NiriIpcClient::NiriIpcClient(QObject *parent)
     connect(&m_eventSocket, &QLocalSocket::errorOccurred, this, &NiriIpcClient::onSocketError);
 }
 
+NiriIpcClient::~NiriIpcClient()
+{
+    QObject::disconnect(&m_eventSocket, nullptr, this, nullptr);
+    QObject::disconnect(&m_requestSocket, nullptr, this, nullptr);
+    m_eventSocket.abort();
+    m_requestSocket.abort();
+}
+
 QString NiriIpcClient::socketPath() const
 {
     return m_socketPath;
@@ -100,9 +108,19 @@ QJsonValue NiriIpcClient::sendRequest(const QJsonValue &request, bool *ok)
         return {};
     }
 
+    QJsonValue value = reply.value(QStringLiteral("Ok"));
+    // Newer niri versions retain the Response enum variant inside Ok,
+    // for example {"Ok":{"Casts":[]}}. Older versions returned the
+    // payload directly, so support both wire formats in the shared client.
+    if (request.isString() && value.isObject()) {
+        const QJsonObject wrapped = value.toObject();
+        if (wrapped.contains(request.toString()))
+            value = wrapped.value(request.toString());
+    }
+
     if (ok)
         *ok = true;
-    return reply.value(QStringLiteral("Ok"));
+    return value;
 }
 
 void NiriIpcClient::onEventReadyRead()

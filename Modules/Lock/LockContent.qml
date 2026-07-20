@@ -127,7 +127,7 @@ Item {
                 }
 
                 Image {
-                    id: avatarImg
+                    id: fallbackAvatarImg
                     anchors.fill: parent
                     source: Paths.fileUrl(Paths.defaultAvatar)
                     sourceSize: Qt.size(width, height)
@@ -136,16 +136,26 @@ Item {
                     cache: true
                 }
 
+                Image {
+                    id: avatarImg
+                    anchors.fill: parent
+                    source: AvatarService.avatarUrl
+                    sourceSize: Qt.size(width, height)
+                    fillMode: Image.PreserveAspectCrop
+                    visible: false
+                    cache: false
+                }
+
                 OpacityMask {
                     anchors.fill: parent
-                    source: avatarImg
+                    source: avatarImg.status === Image.Ready ? avatarImg : fallbackAvatarImg
                     maskSource: avatarMask
                 }
 
                 Text {
                     anchors.centerIn: parent
                     text: "person"
-                    visible: avatarImg.status !== Image.Ready
+                    visible: avatarImg.status !== Image.Ready && fallbackAvatarImg.status !== Image.Ready
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: "Material Symbols Rounded"
                     font.pixelSize: parent.width * 0.45

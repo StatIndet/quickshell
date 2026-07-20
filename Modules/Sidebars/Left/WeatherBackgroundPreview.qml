@@ -1,4 +1,5 @@
 import QtQuick
+import qs.Widgets.weather
 
 Item {
     id: root
@@ -777,26 +778,6 @@ Item {
         return palette.cloud3
     }
 
-    function drawSunOrMoon(ctx, fade, palette) {
-        if (night)
-            return
-
-        const cx = width * 0.80 + parallaxX * 0.8 + Math.sin(canvas.phase * 0.18) * 9
-        const cy = height * 0.17 + parallaxY * 0.5 + Math.cos(canvas.phase * 0.15) * 7
-        const radius = Math.min(width, height) * 0.13
-
-        ctx.fillStyle = alphaColor(palette.glow, 0.22 * fade)
-        ctx.beginPath()
-        ctx.arc(cx, cy, radius * 2.0, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.fillStyle = alphaColor(palette.accent, 0.90 * fade)
-        ctx.beginPath()
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2)
-        ctx.fill()
-
-    }
-
     function drawMeteors(ctx, fade) {
         ctx.lineCap = "round"
         for (let i = 0; i < meteors.length; ++i) {
@@ -1013,9 +994,6 @@ Item {
 
             if (root.night)
                 root.drawStars(ctx, fade, colors)
-
-            if (root.visualWeatherType() === "clear" || root.visualWeatherType() === "partly")
-                root.drawSunOrMoon(ctx, fade, colors)
 
             if (root.hasMeteorScene())
                 root.drawMeteors(ctx, fade)

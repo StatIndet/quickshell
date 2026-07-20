@@ -52,9 +52,27 @@ target_link_libraries(ClavisWeatherCore PRIVATE
 )
 target_include_directories(ClavisWeatherCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+qt_add_library(ClavisWeatherMapCore STATIC)
+target_sources(ClavisWeatherMapCore PRIVATE
+    weather_map_provider.h
+    weather_map_provider.cpp
+)
+
+set_target_properties(ClavisWeatherMapCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(ClavisWeatherMapCore PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Network
+    Qt6Keychain::Qt6Keychain
+)
+target_include_directories(ClavisWeatherMapCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 qt_add_library(ClavisNiriCore STATIC)
 target_sources(ClavisNiriCore PRIVATE
     niri_types.h
+    niri_cast_parser.h
+    niri_cast_parser.cpp
     niri_icon_lookup.h
     niri_icon_lookup.cpp
     niri_ipc_client.h
@@ -75,10 +93,51 @@ target_link_libraries(ClavisNiriCore PRIVATE
 )
 target_include_directories(ClavisNiriCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+qt_add_library(ClavisRecordingCore STATIC)
+target_sources(ClavisRecordingCore PRIVATE
+    recording/recording_types.h
+    recording/recording_types.cpp
+    recording/process_identity.h
+    recording/process_identity.cpp
+    recording/capture_session_guard.h
+    recording/capture_session_guard.cpp
+    recording/recording_state_store.h
+    recording/recording_state_store.cpp
+    recording/gsr_backend.h
+    recording/gsr_backend.cpp
+    recording/ffmpeg_postprocessor.h
+    recording/ffmpeg_postprocessor.cpp
+    recording/dependency_probe.h
+    recording/dependency_probe.cpp
+    recording/recorder_controller.h
+    recording/recorder_controller.cpp
+    recording/audio/audio_recording_types.h
+    recording/audio/audio_recording_types.cpp
+    recording/audio/audio_recording_state_store.h
+    recording/audio/audio_recording_state_store.cpp
+    recording/audio/audio_source_resolver.h
+    recording/audio/audio_source_resolver.cpp
+    recording/audio/ffmpeg_audio_backend.h
+    recording/audio/ffmpeg_audio_backend.cpp
+    recording/audio/audio_file_finalizer.h
+    recording/audio/audio_file_finalizer.cpp
+    recording/audio/audio_recorder_controller.h
+    recording/audio/audio_recorder_controller.cpp
+)
+
+set_target_properties(ClavisRecordingCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(ClavisRecordingCore PRIVATE Qt6::Core)
+target_include_directories(ClavisRecordingCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 qt_add_library(ClavisAudioCore STATIC)
 target_sources(ClavisAudioCore PRIVATE
     audio_collector.h
     audio_collector.cpp
+    audio_level_collector.h
+    audio_level_collector.cpp
+    audio_visual_analyzer.h
+    audio_visual_analyzer.cpp
 )
 
 set_target_properties(ClavisAudioCore PROPERTIES POSITION_INDEPENDENT_CODE ON)

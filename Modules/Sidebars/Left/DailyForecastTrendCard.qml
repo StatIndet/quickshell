@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.Widgets.common
+import qs.Widgets.weather
 
 Rectangle {
     id: root

@@ -43,16 +43,6 @@ QVariantMap airAt(const QJsonObject &hourly, int index) {
     return air;
 }
 
-QVariantMap pollenAt(const QJsonObject &hourly, int index) {
-    QVariantMap pollen;
-    pollen["alder"] = numberAt(hourly, "alder_pollen", index, qQNaN());
-    pollen["birch"] = numberAt(hourly, "birch_pollen", index, qQNaN());
-    pollen["grass"] = numberAt(hourly, "grass_pollen", index, qQNaN());
-    pollen["mugwort"] = numberAt(hourly, "mugwort_pollen", index, qQNaN());
-    pollen["olive"] = numberAt(hourly, "olive_pollen", index, qQNaN());
-    pollen["ragweed"] = numberAt(hourly, "ragweed_pollen", index, qQNaN());
-    return pollen;
-}
 }
 
 WeatherBackend::WeatherBackend(QObject *parent)
@@ -260,8 +250,6 @@ void WeatherBackend::applyForecast(const WeatherLocation &location, const QJsonO
     for (int i = 0; i < airCount; ++i) {
         const qint64 time = timeAt(airHourly, i);
         QVariantMap air = airAt(airHourly, i);
-        QVariantMap pollen = pollenAt(airHourly, i);
-        air["pollen"] = pollen;
         airByTime.insert(time, air);
         dailyAir[QDateTime::fromSecsSinceEpoch(time).date().toString(Qt::ISODate)].append(air);
     }
@@ -274,9 +262,7 @@ void WeatherBackend::applyForecast(const WeatherLocation &location, const QJsonO
             const auto values = dailyAir.value(day.value("date").toString());
             if (values.isEmpty()) continue;
             QVariantMap avgAir;
-            QVariantMap maxPollen;
             QStringList airKeys{"pm10", "pm25", "carbonMonoxide", "nitrogenDioxide", "sulphurDioxide", "ozone"};
-            QStringList pollenKeys{"alder", "birch", "grass", "mugwort", "olive", "ragweed"};
             for (const auto &key : airKeys) {
                 double total = 0.0;
                 int count = 0;
@@ -286,16 +272,7 @@ void WeatherBackend::applyForecast(const WeatherLocation &location, const QJsonO
                 }
                 if (count > 0) avgAir[key] = total / count;
             }
-            for (const auto &key : pollenKeys) {
-                double maxValue = qQNaN();
-                for (const auto &value : values) {
-                    const double n = variantDouble(value.value("pollen").toMap().value(key));
-                    if (!qIsNaN(n) && (qIsNaN(maxValue) || n > maxValue)) maxValue = n;
-                }
-                if (!qIsNaN(maxValue)) maxPollen[key] = maxValue;
-            }
             day["airQuality"] = avgAir;
-            day["pollen"] = maxPollen;
         }
     };
     applyDailyAir(next.daily);

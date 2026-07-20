@@ -14,7 +14,7 @@ WeatherListModel::WeatherListModel(QObject *parent) : QAbstractListModel(parent)
         "cloudCoverMax", "cloudCoverMin", "visibilityM", "visibilityMeanM",
         "visibilityMaxM", "visibilityMinM", "sunshineDurationS", "sunrise",
         "sunset", "dawn", "dusk", "moonrise", "moonset", "moonPhaseAngle",
-        "day", "night", "airQuality", "pollen", "minuteInterval"
+        "day", "night", "airQuality", "minuteInterval"
     };
     for (int i = 0; i < names.size(); ++i) {
         m_roles[Qt::UserRole + 1 + i] = names[i];

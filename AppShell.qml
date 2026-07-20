@@ -1,10 +1,12 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Clavis.WeatherMap 1.0
 import qs.Modules.Bar
-import qs.Modules.DynamicIsland
+import qs.Modules.Keystone
 import qs.Modules.Launcher
 import qs.Modules.Lock
+import qs.Modules.RegionSelector
 import qs.Modules.Sidebars.Left
 import qs.Modules.Sidebars.Right
 import qs.Modules.Wallpaper
@@ -19,7 +21,9 @@ Item {
 
     Bar {}
 
-    DynamicIsland {}
+    Keystone {}
+
+    RegionSelector {}
 
     LeftSidebarWindow {}
 
@@ -50,7 +54,7 @@ Item {
     IpcHandler {
         target: "launcher"
 
-        function toggle() {
+        function toggle(): string {
             rofiLauncher.toggleWindow();
             return "LAUNCHER_TOGGLED";
         }
@@ -81,6 +85,19 @@ Item {
 
         function setFolder(path) {
             return WallpaperService.setWallpaperFolder(path || "", true) ? "OK" : "PENDING";
+        }
+    }
+
+    IpcHandler {
+        target: "weather-map"
+
+        function reloadCredentials(): string {
+            WeatherMapPlugin.reloadCredentials()
+            return "RELOADING"
+        }
+
+        function mapTilerStatus(): string {
+            return WeatherMapPlugin.mapTilerStatus
         }
     }
 }

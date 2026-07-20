@@ -1,0 +1,32 @@
+qt_add_executable(key
+    src/main.cpp
+    src/command_result.h
+    src/command_router.h
+    src/command_router.cpp
+    src/commands/doctor_command.h
+    src/commands/doctor_command.cpp
+    src/commands/audio_command.h
+    src/commands/audio_command.cpp
+    src/commands/record_command.h
+    src/commands/record_command.cpp
+    src/commands/cast_command.h
+    src/commands/cast_command.cpp
+)
+
+set_target_properties(key PROPERTIES
+    OUTPUT_NAME key
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+target_link_libraries(key PRIVATE
+    ClavisRecordingCore
+    ClavisNiriCore
+    Qt6::Core
+    Qt6::Network
+)
+
+target_include_directories(key PRIVATE src)
+
+install(TARGETS key
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

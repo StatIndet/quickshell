@@ -24,7 +24,7 @@ Variants {
         
         property real barHeight: Sizes.barHeight
         
-        // 高度不再受灵动岛影响
+        // 高度不再受 Keystone 影响
         implicitHeight: barWindow.barHeight
         
         exclusiveZone: barHeight
