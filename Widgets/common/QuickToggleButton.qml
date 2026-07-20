@@ -80,6 +80,8 @@ Rectangle {
         }
     }
     Behavior on implicitWidth {
+        enabled: !root.editMode
+
         NumberAnimation {
             duration: Appearance.animation.clickBounce.duration
             easing.type: Appearance.animation.clickBounce.type
@@ -87,6 +89,8 @@ Rectangle {
         }
     }
     Behavior on implicitHeight {
+        enabled: !root.editMode
+
         NumberAnimation {
             duration: Appearance.animation.clickBounce.duration
             easing.type: Appearance.animation.clickBounce.type

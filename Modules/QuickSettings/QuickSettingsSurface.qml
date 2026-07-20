@@ -23,6 +23,7 @@ WidgetPanel {
     property real headerButtonSpacing: 5
     property real headerButtonPadding: 5
     readonly property var toggleRows: rowsForToggles(QuickToggleConfig.toggles)
+    readonly property var toggleRowKeys: toggleRows.map((row, index) => index)
 
     function openControlCenter() {
         WidgetState.qsOpen = false;
@@ -290,15 +291,23 @@ WidgetPanel {
                     spacing: root.toggleSpacing
 
                     Repeater {
-                        model: root.toggleRows
+                        model: ScriptModel {
+                            values: root.toggleRowKeys
+                        }
 
                         QuickToggleGroup {
-                            required property var modelData
+                            id: toggleRow
+
+                            required property int modelData
+                            readonly property var rowData: root.toggleRows[modelData] || []
 
                             spacing: root.toggleSpacing
 
                             Repeater {
-                                model: modelData
+                                model: ScriptModel {
+                                    values: toggleRow.rowData
+                                    objectProp: "type"
+                                }
 
                                 QuickToggleButton {
                                     required property var modelData

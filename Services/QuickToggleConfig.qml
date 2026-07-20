@@ -61,7 +61,11 @@ Singleton {
         if (index === -1)
             return;
 
-        root.toggles[index].size = root.toggles[index].size === 2 ? 1 : 2;
+        const current = root.toggles[index];
+        root.toggles[index] = {
+            "type": current.type,
+            "size": current.size === 2 ? 1 : 2
+        };
         root.refreshBindings();
     }
 
