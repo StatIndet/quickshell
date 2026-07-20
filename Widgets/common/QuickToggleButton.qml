@@ -30,8 +30,8 @@ Rectangle {
     readonly property int indexInParent: parentGroup && parentGroup.indexOfButton ? parentGroup.indexOfButton(root) : -1
     readonly property int clickIndex: parentGroup && parentGroup.clickIndex !== undefined ? parentGroup.clickIndex : -1
     readonly property bool isAtSide: indexInParent === 0 || (parentGroup && indexInParent === parentGroup.childrenCount - 1)
-    readonly property bool expandedSplitStyle: expanded && hasAltAction
-    readonly property bool expandedAltAction: expandedSplitStyle && !editMode
+    readonly property bool expandedSplitStyle: expanded
+    readonly property bool expandedAltAction: expandedSplitStyle && hasAltAction && !editMode
     property bool down: false
     property bool suppressRelease: false
     property real baseWidth: (expanded && expandedWidth > 0) ? expandedWidth : baseCellWidth * cellSize + cellSpacing * (cellSize - 1)
