@@ -21,6 +21,7 @@ FocusScope {
     property bool showActiveIndicator: true
     property real fieldHeight: 40
     property real itemHeight: 40
+    property Item popupBoundsItem: null
 
     property int highlightedIndex: -1
     readonly property var filteredOptions: options
@@ -102,11 +103,34 @@ FocusScope {
         if (!popupParentItem)
             return false;
 
-        const origin = fieldFrame.mapToItem(popupParentItem, 0, height + menuGap);
-        optionsPopup.width = Math.min(width, popupParentItem.width - 24);
-        optionsPopup.height = menuPadding * 2 + listTargetHeight;
-        optionsPopup.x = Math.max(12, Math.min(origin.x, popupParentItem.width - optionsPopup.width - 12));
-        optionsPopup.y = Math.max(12, Math.min(origin.y, popupParentItem.height - optionsPopup.height - 12));
+        const boundsItem = popupBoundsItem || popupParentItem;
+        const boundsOrigin = boundsItem.mapToItem(popupParentItem, 0, 0);
+        const edgeMargin = 12;
+        const boundsLeft = boundsOrigin.x + edgeMargin;
+        const boundsTop = boundsOrigin.y + edgeMargin;
+        const boundsRight = boundsOrigin.x + boundsItem.width - edgeMargin;
+        const boundsBottom = boundsOrigin.y + boundsItem.height - edgeMargin;
+        const availableWidth = Math.max(0, boundsRight - boundsLeft);
+        const availableHeight = Math.max(0, boundsBottom - boundsTop);
+        if (availableWidth <= 0 || availableHeight <= menuPadding * 2)
+            return false;
+
+        const naturalHeight = menuPadding * 2 + listTargetHeight;
+        optionsPopup.width = Math.min(width, availableWidth);
+        optionsPopup.height = Math.min(naturalHeight, availableHeight);
+        optionsPopup.effectiveListHeight = Math.max(0, optionsPopup.height - menuPadding * 2);
+
+        const belowOrigin = fieldFrame.mapToItem(popupParentItem, 0, height + menuGap);
+        const aboveOrigin = fieldFrame.mapToItem(popupParentItem, 0, -optionsPopup.height - menuGap);
+        const maxX = boundsRight - optionsPopup.width;
+        optionsPopup.x = Math.max(boundsLeft, Math.min(belowOrigin.x, maxX));
+
+        if (belowOrigin.y + optionsPopup.height <= boundsBottom)
+            optionsPopup.y = belowOrigin.y;
+        else if (aboveOrigin.y >= boundsTop)
+            optionsPopup.y = aboveOrigin.y;
+        else
+            optionsPopup.y = Math.max(boundsTop, Math.min(belowOrigin.y, boundsBottom - optionsPopup.height));
         return true;
     }
 
@@ -293,6 +317,7 @@ FocusScope {
         id: optionsPopup
 
         property real revealProgress: 0
+        property real effectiveListHeight: root.listTargetHeight
 
         parent: root.popupParentItem
         padding: 0
@@ -368,7 +393,7 @@ FocusScope {
                 id: maskedSurface
 
                 width: parent.width
-                height: root.menuPadding * 2 + root.listTargetHeight * optionsPopup.revealProgress
+                height: root.menuPadding * 2 + optionsPopup.effectiveListHeight * optionsPopup.revealProgress
                 visible: height > 0
                 layer.enabled: true
                 layer.effect: OpacityMask {
@@ -391,14 +416,14 @@ FocusScope {
                     x: root.menuPadding
                     y: root.menuPadding
                     width: parent.width - root.menuPadding * 2
-                    height: root.listTargetHeight * optionsPopup.revealProgress
+                    height: optionsPopup.effectiveListHeight * optionsPopup.revealProgress
                     clip: true
 
                     StyledListView {
                         id: menuList
 
                         width: parent.width
-                        height: root.listTargetHeight
+                        height: optionsPopup.effectiveListHeight
                         clip: true
                         boundsBehavior: Flickable.StopAtBounds
                         model: root.filteredOptions

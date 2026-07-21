@@ -82,6 +82,7 @@ Item {
             enabled: root.available
             configuration: MaterialSplitSlider.Configuration.XS
             stopIndicatorValues: []
+            showTooltipOnHover: true
             tooltipContent: Math.round(value * 100) + "%"
             Accessible.name: root.title + "音量"
 

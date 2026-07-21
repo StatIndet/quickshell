@@ -40,6 +40,7 @@ Slider {
     property real trackDotSize: 3
     property bool usePercentTooltip: true
     property string tooltipContent: usePercentTooltip ? `${Math.round(((value - from) / (to - from)) * 100)}%` : `${Math.round(value)}`
+    property bool showTooltipOnHover: false
     property bool wavy: configuration === MaterialSplitSlider.Configuration.Wavy
     property bool animateWave: true
     property real waveAmplitudeMultiplier: wavy ? 0.5 : 0
@@ -51,6 +52,7 @@ Slider {
     from: 0
     to: 1
     implicitHeight: Math.max(trackWidth, handleHeight)
+    hoverEnabled: true
     leftPadding: handleMargins
     rightPadding: handleMargins
     Layout.fillWidth: true
@@ -230,7 +232,7 @@ Slider {
         }
 
         StyledToolTip {
-            extraVisibleCondition: root.pressed
+            extraVisibleCondition: root.showTooltipOnHover ? root.hovered : root.pressed
             text: root.tooltipContent
             font.family: Sizes.fontFamilyMono
         }

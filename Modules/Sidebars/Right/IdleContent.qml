@@ -284,6 +284,7 @@ WidgetPanel {
                             textRole: "label"
                             valueRole: "seconds"
                             maxVisibleItems: 5
+                            popupBoundsItem: panelRoot
                             closeOnAccept: true
                             Accessible.name: stageEditor.stageTitle + "等待时间"
                             onAccepted: value => IdleService.configureStage(
@@ -317,6 +318,7 @@ WidgetPanel {
                             to: 0.8
                             stepSize: 0.05
                             stopIndicatorValues: []
+                            showTooltipOnHover: true
                             usePercentTooltip: false
                             tooltipContent: Math.round(value * 100) + "%"
                             Accessible.name: "屏幕调暗比例"
