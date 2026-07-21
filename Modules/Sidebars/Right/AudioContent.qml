@@ -163,32 +163,41 @@ WidgetPanel {
 
                     Item {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.showOutputDevices ? outputDeviceList.implicitHeight : 0
+                        Layout.preferredHeight: root.showOutputDevices
+                            ? outputDeviceList.targetHeight : 0
                         opacity: root.showOutputDevices ? 1 : 0
                         clip: true
 
                         Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
                         Behavior on opacity { ElementMoveAnimation {} }
 
-                        ColumnLayout {
+                        StyledListView {
                             id: outputDeviceList
 
-                            width: parent.width
+                            readonly property real baseContentHeight: count * 56
+                                + Math.max(0, count - 1) * spacing
+                            readonly property real targetHeight: Math.min(
+                                Sizes.sidebarScrollableListMaxHeight,
+                                Math.max(baseContentHeight, contentHeight)
+                            )
+
+                            anchors.fill: parent
                             spacing: Appearance.spacing.xSmall
+                            clip: true
+                            boundsBehavior: Flickable.StopAtBounds
+                            interactive: root.showOutputDevices && contentHeight > height
+                            smoothWheelEnabled: interactive
+                            model: Volume.outputDevices
 
-                            Repeater {
-                                model: Volume.outputDevices
+                            delegate: SettingsRow {
+                                required property var modelData
 
-                                SettingsRow {
-                                    required property var modelData
-
-                                    Layout.fillWidth: true
-                                    iconName: Volume.nodeIconName(modelData)
-                                    title: Volume.nodeDisplayName(modelData)
-                                    interactive: !Volume.isDefaultOutput(modelData)
-                                    highlighted: Volume.isDefaultOutput(modelData)
-                                    onClicked: Volume.setDefaultOutput(modelData)
-                                }
+                                width: ListView.view.width
+                                iconName: Volume.nodeIconName(modelData)
+                                title: Volume.nodeDisplayName(modelData)
+                                interactive: !Volume.isDefaultOutput(modelData)
+                                highlighted: Volume.isDefaultOutput(modelData)
+                                onClicked: Volume.setDefaultOutput(modelData)
                             }
                         }
                     }
@@ -199,13 +208,29 @@ WidgetPanel {
                     visible: Volume.ready && Volume.outputAvailable
                     title: "应用音量"
 
-                    Repeater {
+                    StyledListView {
+                        id: playbackStreamList
+
+                        readonly property real baseContentHeight: count * 48
+                            + Math.max(0, count - 1) * spacing
+
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: Math.min(
+                            Sizes.sidebarScrollableListMaxHeight,
+                            Math.max(baseContentHeight, contentHeight)
+                        )
+                        visible: count > 0
+                        spacing: Appearance.spacing.xSmall
+                        clip: true
+                        boundsBehavior: Flickable.StopAtBounds
+                        interactive: contentHeight > height
+                        smoothWheelEnabled: interactive
                         model: Volume.playbackStreams
 
-                        ApplicationVolumeRow {
+                        delegate: ApplicationVolumeRow {
                             required property var modelData
 
-                            Layout.fillWidth: true
+                            width: ListView.view.width
                             title: Volume.applicationDisplayName(modelData)
                             iconSource: Volume.applicationIconSource(modelData)
                             volume: Volume.nodeVolume(modelData)
@@ -213,6 +238,8 @@ WidgetPanel {
                             onVolumeMoved: value => Volume.setNodeVolume(modelData, value)
                             onMuteRequested: Volume.toggleNodeMute(modelData)
                         }
+
+                        Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
                     }
 
                     SettingsRow {

@@ -163,32 +163,41 @@ WidgetPanel {
 
                     Item {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.showInputDevices ? inputDeviceList.implicitHeight : 0
+                        Layout.preferredHeight: root.showInputDevices
+                            ? inputDeviceList.targetHeight : 0
                         opacity: root.showInputDevices ? 1 : 0
                         clip: true
 
                         Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
                         Behavior on opacity { ElementMoveAnimation {} }
 
-                        ColumnLayout {
+                        StyledListView {
                             id: inputDeviceList
 
-                            width: parent.width
+                            readonly property real baseContentHeight: count * 56
+                                + Math.max(0, count - 1) * spacing
+                            readonly property real targetHeight: Math.min(
+                                Sizes.sidebarScrollableListMaxHeight,
+                                Math.max(baseContentHeight, contentHeight)
+                            )
+
+                            anchors.fill: parent
                             spacing: Appearance.spacing.xSmall
+                            clip: true
+                            boundsBehavior: Flickable.StopAtBounds
+                            interactive: root.showInputDevices && contentHeight > height
+                            smoothWheelEnabled: interactive
+                            model: Volume.inputDevices
 
-                            Repeater {
-                                model: Volume.inputDevices
+                            delegate: SettingsRow {
+                                required property var modelData
 
-                                SettingsRow {
-                                    required property var modelData
-
-                                    Layout.fillWidth: true
-                                    iconName: Volume.nodeIconName(modelData)
-                                    title: Volume.nodeDisplayName(modelData)
-                                    interactive: !Volume.isDefaultInput(modelData)
-                                    highlighted: Volume.isDefaultInput(modelData)
-                                    onClicked: Volume.setDefaultInput(modelData)
-                                }
+                                width: ListView.view.width
+                                iconName: Volume.nodeIconName(modelData)
+                                title: Volume.nodeDisplayName(modelData)
+                                interactive: !Volume.isDefaultInput(modelData)
+                                highlighted: Volume.isDefaultInput(modelData)
+                                onClicked: Volume.setDefaultInput(modelData)
                             }
                         }
                     }

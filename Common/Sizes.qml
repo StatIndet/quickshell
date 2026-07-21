@@ -8,7 +8,7 @@ Singleton {
     readonly property string fontIcon: "LXGW WenKai GB Screen"
     readonly property real cornerRadius: 10
     readonly property real barHeight: 44
-    readonly property real sidebarChoiceListMaxHeight: 224
+    readonly property real sidebarScrollableListMaxHeight: 224
 
     readonly property real lockReferenceScale: 4 / 3
     readonly property real lockCardRadius: 33

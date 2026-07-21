@@ -329,7 +329,7 @@ WidgetPanel {
 
                         Layout.fillWidth: true
                         Layout.preferredHeight: Math.min(
-                            Sizes.sidebarChoiceListMaxHeight,
+                            Sizes.sidebarScrollableListMaxHeight,
                             Math.max(baseContentHeight, contentHeight)
                         )
                         visible: count > 0
