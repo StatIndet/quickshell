@@ -187,10 +187,7 @@ WidgetPanel {
                                     title: Volume.nodeDisplayName(modelData)
                                     interactive: !Volume.isDefaultOutput(modelData)
                                     highlighted: Volume.isDefaultOutput(modelData)
-                                    onClicked: {
-                                        Volume.setDefaultOutput(modelData);
-                                        root.outputDevicesExpanded = false;
-                                    }
+                                    onClicked: Volume.setDefaultOutput(modelData)
                                 }
                             }
                         }

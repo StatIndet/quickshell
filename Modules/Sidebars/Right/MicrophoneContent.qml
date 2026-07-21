@@ -187,10 +187,7 @@ WidgetPanel {
                                     title: Volume.nodeDisplayName(modelData)
                                     interactive: !Volume.isDefaultInput(modelData)
                                     highlighted: Volume.isDefaultInput(modelData)
-                                    onClicked: {
-                                        Volume.setDefaultInput(modelData);
-                                        root.inputDevicesExpanded = false;
-                                    }
+                                    onClicked: Volume.setDefaultInput(modelData)
                                 }
                             }
                         }

@@ -9,7 +9,24 @@ ToolTip {
     property bool extraVisibleCondition: true
     property bool alternativeVisibleCondition: false
 
-    readonly property bool internalVisibleCondition: (extraVisibleCondition && (parent === null || parent.hovered === undefined || parent.hovered)) || alternativeVisibleCondition
+    function hierarchyAvailable(item) {
+        let current = item;
+        while (current !== null && current !== undefined) {
+            if (current.enabled !== undefined && !current.enabled)
+                return false;
+            if (current.visible !== undefined && !current.visible)
+                return false;
+            if (current.opacity !== undefined && current.opacity <= 0.001)
+                return false;
+            current = current.parent;
+        }
+        return true;
+    }
+
+    readonly property bool parentHierarchyAvailable: root.hierarchyAvailable(root.parent)
+    readonly property bool internalVisibleCondition: parentHierarchyAvailable
+        && ((extraVisibleCondition && (parent === null || parent.hovered === undefined || parent.hovered))
+            || alternativeVisibleCondition)
 
     verticalPadding: 5
     horizontalPadding: 10

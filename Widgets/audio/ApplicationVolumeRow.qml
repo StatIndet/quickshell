@@ -52,8 +52,9 @@ Item {
         }
 
         Text {
-            Layout.preferredWidth: 92
-            Layout.maximumWidth: 104
+            Layout.minimumWidth: 52
+            Layout.preferredWidth: Math.min(72, Math.max(52, implicitWidth))
+            Layout.maximumWidth: 72
             Layout.alignment: Qt.AlignVCenter
             text: root.title
             color: Appearance.colors.colOnLayer2
@@ -76,6 +77,7 @@ Item {
             id: volumeControl
 
             Layout.fillWidth: true
+            Layout.minimumWidth: 156
             Layout.alignment: Qt.AlignVCenter
             enabled: root.available
             configuration: MaterialSplitSlider.Configuration.XS
