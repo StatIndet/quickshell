@@ -1,170 +1,248 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Services.Pipewire
-import qs.Widgets.common
 import qs.Common
+import qs.Components
 import qs.Services
+import qs.Widgets.audio
+import qs.Widgets.common
 
 WidgetPanel {
     id: root
-    title: "混音器"
-    icon: "tune"
-    closeAction: () => WidgetState.qsOpen = false
+
+    title: "声音"
+    icon: "volume_up"
     showBackButton: true
     backAction: () => WidgetState.qsView = "settings"
+
     property bool isActive: WidgetState.qsOpen && WidgetState.qsView === "audio"
-
-    headerTools: Text {
-        text: "\uf013"
-        font.family: "Font Awesome 6 Free Solid"; font.pixelSize: 20
-        color: Appearance.colors.colOnLayer1
-        MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: Volume.openMixer() }
+    readonly property string stateMessage: {
+        if (Volume.lastError.length > 0)
+            return Volume.lastError;
+        if (!Volume.ready)
+            return "正在连接 PipeWire 音频服务";
+        if (!Volume.available)
+            return "未检测到可用的音频设备";
+        return "";
     }
 
-    property var defaultSink: Pipewire.defaultAudioSink
-    PwObjectTracker { objects: [ root.defaultSink ] }
-    PwNodeLinkTracker { id: appTracker; node: root.defaultSink }
-    
-    function isHeadphone(node) {
-        if (!node) return false;
-        const icon = node.properties["device.icon-name"] || ""; 
-        const desc = node.description || "";
-        return icon.includes("headphone") || desc.toLowerCase().includes("headphone") || desc.toLowerCase().includes("耳机");
-    }
+    headerTools: ToolButton {
+        Layout.preferredWidth: 40
+        Layout.preferredHeight: 40
+        hoverEnabled: true
+        Accessible.name: "打开高级声音设置"
+        onClicked: Volume.openMixer()
 
-    Rectangle {
-        Layout.fillWidth: true
-        height: 104 
-        color: Appearance.colors.colLayer1; radius: Appearance.rounding.large
-
-        ColumnLayout {
-            anchors.fill: parent; anchors.margins: 16; spacing: 12
-
-            RowLayout {
-                Layout.fillWidth: true
-                Text { 
-                    text: isHeadphone(root.defaultSink) ? "\uf025" : "\uf028"
-                    font.family: "Font Awesome 6 Free Solid"; font.pixelSize: 20; color: Appearance.colors.colPrimary 
-                }
-                Text { 
-                    text: root.defaultSink ? (root.defaultSink.description || root.defaultSink.name) : "未找到设备"
-                    font.bold: true; font.pixelSize: 15; color: Appearance.colors.colOnLayer2; elide: Text.ElideRight; Layout.fillWidth: true 
-                }
-                Text { 
-                    text: root.defaultSink ? Math.round(root.defaultSink.audio.volume * 100) + "%" : "0%"
-                    font.bold: true; font.pixelSize: 15; color: Appearance.colors.colPrimary 
-                }
-            }
-
-            QuickMaterialSlider {
-                enabled: root.defaultSink !== null
-                materialSymbol: root.isHeadphone(root.defaultSink) ? "headphones" : "volume_up"
-                value: root.defaultSink ? (root.defaultSink.audio.muted ? 0 : root.defaultSink.audio.volume) : 0
-                percentText: root.defaultSink ? `${Math.round(value * 100)}%` : "0%"
-                tooltipContent: percentText
-                onMoved: Volume.setSinkVolume(value)
-            }
+        background: Rectangle {
+            radius: Appearance.rounding.full
+            color: parent.down
+                ? Appearance.colors.colLayer2Active
+                : parent.hovered ? Appearance.colors.colLayer2Hover : "transparent"
         }
+
+        contentItem: MaterialSymbol {
+            text: "open_in_new"
+            iconSize: 20
+            color: Appearance.colors.colOnLayer2
+        }
+
+        ToolTip.visible: hovered
+        ToolTip.text: "高级声音设置"
     }
 
-    Text { text: "应用程序"; font.pixelSize: 14; color: Appearance.colors.colOnLayer1; font.bold: true; Layout.topMargin: 12 }
+    ColumnLayout {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        spacing: Appearance.spacing.small
 
-    StyledListView {
-        id: appList
-        Layout.fillWidth: true; Layout.fillHeight: true
-        clip: true; spacing: 12;
-        model: appTracker.linkGroups
-        animateAppearance: false
-        animateMovement: false
-        interactive: false 
+        ProgressBar {
+            Layout.fillWidth: true
+            Layout.preferredHeight: Volume.ready ? 0 : 4
+            opacity: Volume.ready ? 0 : 1
+            indeterminate: true
+            Material.accent: Appearance.colors.colPrimary
 
-        delegate: Rectangle {
-            required property PwLinkGroup modelData
-            property var appNode: modelData.source
+            Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
+            Behavior on opacity { ElementMoveAnimation {} }
+        }
 
-            width: ListView.view.width; height: 68
-            radius: 12; color: "transparent"
-            border.width: 1; border.color: "transparent" 
-            PwObjectTracker { objects: [ appNode ] }
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: root.stateMessage.length > 0
+            tone: Volume.lastError.length > 0 ? "error" : "info"
+            iconName: !Volume.ready
+                ? "hourglass_top"
+                : Volume.lastError.length > 0 ? "error" : "info"
+            message: root.stateMessage
+        }
 
-            RowLayout {
-                anchors.fill: parent; anchors.margins: 14; spacing: 14
+        StyledFlickable {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            contentWidth: width
+            contentHeight: audioContent.implicitHeight
 
-                Image {
-                    Layout.preferredWidth: 32; Layout.preferredHeight: 32
-                    visible: source != ""
-                    source: {
-                        const iconProperty = (appNode.properties["application.icon-name"] || "").toLowerCase();
-                        const binaryName = (appNode.properties["application.process.binary"] || "").toLowerCase();
+            ColumnLayout {
+                id: audioContent
 
-                        const iconMap = {
-                            "zen": "zen-browser",
-                            "zen-bin": "zen-browser",
-                            "zen-alpha": "zen-browser",
-                            "splayer": "file:///usr/share/icons/hicolor/512x512/apps/SPlayer.png"
-                        };
+                width: parent.width - Appearance.spacing.small
+                spacing: Appearance.spacing.small
 
-                        let finalIcon = iconMap[binaryName] || iconMap[iconProperty] || iconProperty || binaryName || "audio-card";
-                        
-                        if (finalIcon.startsWith("file://") || finalIcon.startsWith("/")) {
-                            return finalIcon.startsWith("/") ? "file://" + finalIcon : finalIcon;
-                        }
-                        
-                        return `image://icon/${finalIcon}`;
+                SettingsSection {
+                    Layout.fillWidth: true
+                    visible: Volume.ready && (Volume.outputDevices.length > 0 || Volume.outputAvailable)
+                    title: "输出"
+                    supportingText: Volume.outputAvailable
+                        ? "当前通过“" + Volume.sinkName + "”播放声音"
+                        : "请选择声音输出设备"
+
+                    VolumeSlider {
+                        Layout.fillWidth: true
+                        visible: Volume.outputAvailable
+                        title: Volume.sinkName || "默认输出"
+                        supportingText: Volume.sinkMuted ? "已静音" : "主音量"
+                        iconName: Volume.nodeIconName(Volume.sink)
+                        volume: Volume.sinkVolume
+                        muted: Volume.sinkMuted
+                        available: Volume.outputAvailable
+                        onVolumeMoved: value => Volume.setSinkVolume(value)
+                        onMuteRequested: Volume.toggleSinkMute()
                     }
-                    onStatusChanged: { if (status === Image.Error) source = "image://icon/audio-card"; }
+
+                    Text {
+                        Layout.fillWidth: true
+                        visible: Volume.outputDevices.length > 1 || !Volume.outputAvailable
+                        text: "选择输出设备"
+                        color: Appearance.colors.colOnLayer1
+                        font.family: Sizes.fontFamily
+                        font.pixelSize: 12
+                        font.weight: Font.Medium
+                    }
+
+                    Repeater {
+                        model: Volume.outputDevices.length > 1 || !Volume.outputAvailable
+                            ? Volume.outputDevices
+                            : []
+
+                        SettingsRow {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            iconName: Volume.nodeIconName(modelData)
+                            title: Volume.nodeDisplayName(modelData)
+                            supportingText: Volume.nodeSupportingText(modelData)
+                            interactive: !Volume.isDefaultOutput(modelData)
+                            highlighted: Volume.isDefaultOutput(modelData)
+                            onClicked: Volume.setDefaultOutput(modelData)
+
+                            trailing: MaterialSymbol {
+                                visible: Volume.isDefaultOutput(modelData)
+                                text: "check_circle"
+                                iconSize: 21
+                                fill: 1
+                                color: Appearance.colors.colPrimary
+                            }
+                        }
+                    }
                 }
 
-                ColumnLayout {
-                    Layout.fillWidth: true; spacing: 6
-                    RowLayout {
+                SettingsSection {
+                    Layout.fillWidth: true
+                    visible: Volume.ready && (Volume.inputDevices.length > 0 || Volume.inputAvailable)
+                    title: "输入"
+                    supportingText: Volume.inputAvailable
+                        ? "当前使用“" + Volume.sourceName + "”采集声音"
+                        : "请选择声音输入设备"
+
+                    VolumeSlider {
                         Layout.fillWidth: true
-                        Text { text: appNode.properties["application.name"] || appNode.name; font.bold: true; font.pixelSize: 14; color: Appearance.colors.colOnLayer2; elide: Text.ElideRight; Layout.fillWidth: true }
+                        visible: Volume.inputAvailable
+                        title: Volume.sourceName || "默认输入"
+                        supportingText: Volume.sourceMuted ? "已静音" : "输入音量"
+                        iconName: "mic"
+                        volume: Volume.sourceVolume
+                        muted: Volume.sourceMuted
+                        available: Volume.inputAvailable
+                        onVolumeMoved: value => Volume.setSourceVolume(value)
+                        onMuteRequested: Volume.toggleSourceMute()
                     }
 
-                    Item {
-                        Layout.fillWidth: true; height: 16
-                        Rectangle {
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: parent.width; height: 6; radius: 3
-                            color: Qt.rgba(Appearance.colors.colOnLayer2.r, Appearance.colors.colOnLayer2.g, Appearance.colors.colOnLayer2.b, 0.1)
-                            Rectangle { height: parent.height; width: parent.width * appNode.audio.volume; radius: 3; color: Appearance.colors.colPrimary }
-                        }
+                    Text {
+                        Layout.fillWidth: true
+                        visible: Volume.inputDevices.length > 1 || !Volume.inputAvailable
+                        text: "选择输入设备"
+                        color: Appearance.colors.colOnLayer1
+                        font.family: Sizes.fontFamily
+                        font.pixelSize: 12
+                        font.weight: Font.Medium
+                    }
 
-                        Rectangle {
-                            width: 6; height: 16; radius: 3; color: Appearance.colors.colOnLayer2 
-                            x: Math.max(0, Math.min(parent.width * appNode.audio.volume - width / 2, parent.width - width))
-                            anchors.verticalCenter: parent.verticalCenter
+                    Repeater {
+                        model: Volume.inputDevices.length > 1 || !Volume.inputAvailable
+                            ? Volume.inputDevices
+                            : []
 
-                            Item {
-                                width: 32; height: 32
-                                anchors.bottom: parent.top; anchors.bottomMargin: 4; anchors.horizontalCenter: parent.horizontalCenter
-                                visible: sliderMouseArea.containsMouse || sliderMouseArea.pressed
-                                
-                                Rectangle {
-                                    anchors.fill: parent; radius: 16; color: Appearance.colors.colPrimary; rotation: 45 
-                                    Rectangle { width: 16; height: 16; x: 16; y: 16; color: parent.color }
-                                }
-                                Text { anchors.centerIn: parent; text: Math.round(appNode.audio.volume * 100); color: Appearance.colors.colOnPrimary; font.pixelSize: 11; font.bold: true }
+                        SettingsRow {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            iconName: Volume.nodeIconName(modelData)
+                            title: Volume.nodeDisplayName(modelData)
+                            supportingText: Volume.nodeSupportingText(modelData)
+                            interactive: !Volume.isDefaultInput(modelData)
+                            highlighted: Volume.isDefaultInput(modelData)
+                            onClicked: Volume.setDefaultInput(modelData)
+
+                            trailing: MaterialSymbol {
+                                visible: Volume.isDefaultInput(modelData)
+                                text: "check_circle"
+                                iconSize: 21
+                                fill: 1
+                                color: Appearance.colors.colPrimary
                             }
-                        }
-
-                        MouseArea {
-                            id: sliderMouseArea; anchors.fill: parent;
-                            hoverEnabled: true; cursorShape: Qt.PointingHandCursor
-                            
-                            // 【代码精简】：这里不再需要 preventStealing: true 了，因为外层的列表已经彻底失去了抢夺焦点的能力！
-                            
-                            function updateVolume(mouse) { 
-                                let v = mouse.x / width;
-                                if (v < 0) v = 0; if (v > 1) v = 1;
-                                appNode.audio.volume = v 
-                            }
-                            onPressed: (mouse) => updateVolume(mouse)
-                            onPositionChanged: (mouse) => { if (pressed) updateVolume(mouse) }
                         }
                     }
+                }
+
+                SettingsSection {
+                    Layout.fillWidth: true
+                    visible: Volume.ready && Volume.outputAvailable
+                    title: "应用音量"
+                    supportingText: Volume.playbackStreams.length > 0
+                        ? "分别调整正在向当前输出设备播放声音的应用"
+                        : "当前没有应用正在播放声音"
+
+                    Repeater {
+                        model: Volume.playbackStreams
+
+                        VolumeSlider {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            title: Volume.nodeDisplayName(modelData)
+                            supportingText: Volume.nodeSupportingText(modelData)
+                            iconName: "music_note"
+                            iconSource: Volume.applicationIconSource(modelData)
+                            volume: Volume.nodeVolume(modelData)
+                            muted: Volume.nodeMuted(modelData)
+                            onVolumeMoved: value => Volume.setNodeVolume(modelData, value)
+                            onMuteRequested: Volume.toggleNodeMute(modelData)
+                        }
+                    }
+
+                    SettingsRow {
+                        Layout.fillWidth: true
+                        visible: Volume.playbackStreams.length === 0
+                        iconName: "music_off"
+                        title: "没有活动的应用音频"
+                        supportingText: "开始播放媒体后，应用音量会自动出现在这里"
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: Appearance.spacing.small
                 }
             }
         }
