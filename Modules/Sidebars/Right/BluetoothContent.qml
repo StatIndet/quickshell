@@ -17,8 +17,11 @@ WidgetPanel {
 
     property bool isActive: WidgetState.qsOpen && WidgetState.qsView === "bluetooth"
     property bool discoveryLeaseAcquired: false
-    property bool discoveryPulse: false
+    property bool initialLoadAttempted: false
+    property bool initialLoading: false
+    property bool refreshLoading: false
     property var pendingForgetDevice: null
+    readonly property bool linearLoading: refreshLoading || BluetoothService.busy
     readonly property string stateMessage: {
         if (BluetoothService.lastError.length > 0)
             return BluetoothService.lastError;
@@ -26,30 +29,60 @@ WidgetPanel {
             return "未检测到蓝牙适配器或 BlueZ 不可用";
         if (!BluetoothService.enabled)
             return "蓝牙已关闭";
-        if (BluetoothService.devices.length === 0 && !BluetoothService.discovering)
+        if (!root.initialLoading
+                && !root.refreshLoading
+                && BluetoothService.devices.length === 0)
             return "尚未发现蓝牙设备";
         return "";
+    }
+
+    function beginInitialLoad() {
+        if (!root.isActive
+                || !BluetoothService.available
+                || !BluetoothService.enabled
+                || root.initialLoadAttempted)
+            return;
+
+        initialLoadTimer.stop();
+        root.initialLoadAttempted = true;
+        root.initialLoading = BluetoothService.availableDevices.length === 0;
+        if (root.initialLoading)
+            initialLoadTimer.restart();
+    }
+
+    function finishInitialLoad() {
+        initialLoading = false;
+        initialLoadTimer.stop();
+    }
+
+    function finishTransientLoading() {
+        finishInitialLoad();
+        refreshLoading = false;
+        refreshTimer.stop();
     }
 
     function updateDiscoveryLease() {
         if (isActive && !discoveryLeaseAcquired) {
             BluetoothService.acquireDiscovery("right-sidebar-bluetooth");
             discoveryLeaseAcquired = true;
+            Qt.callLater(root.beginInitialLoad);
         } else if (!isActive && discoveryLeaseAcquired) {
             BluetoothService.releaseDiscovery("right-sidebar-bluetooth");
             discoveryLeaseAcquired = false;
-            discoveryPulse = false;
-            discoveryPulseTimer.stop();
+            finishTransientLoading();
         }
     }
 
     function restartDiscoveryLease() {
-        if (!root.discoveryLeaseAcquired || !BluetoothService.enabled)
+        if (!root.discoveryLeaseAcquired
+                || !BluetoothService.enabled
+                || root.refreshLoading)
             return;
+        finishInitialLoad();
         BluetoothService.releaseDiscovery("right-sidebar-bluetooth");
         BluetoothService.acquireDiscovery("right-sidebar-bluetooth");
-        discoveryPulse = true;
-        discoveryPulseTimer.restart();
+        refreshLoading = true;
+        refreshTimer.restart();
     }
 
     function iconForDevice(device) {
@@ -95,11 +128,41 @@ WidgetPanel {
             BluetoothService.releaseDiscovery("right-sidebar-bluetooth");
     }
 
+    Connections {
+        target: BluetoothService
+
+        function onAvailableDevicesChanged() {
+            if (BluetoothService.availableDevices.length > 0)
+                root.finishInitialLoad();
+        }
+
+        function onEnabledChanged() {
+            if (!BluetoothService.enabled)
+                root.finishTransientLoading();
+            else if (root.isActive)
+                Qt.callLater(root.beginInitialLoad);
+        }
+
+        function onOperationFailed(operation, message) {
+            if (operation === "discovery") {
+                root.refreshLoading = false;
+                refreshTimer.stop();
+            }
+        }
+    }
+
     Timer {
-        id: discoveryPulseTimer
-        interval: 1200
+        id: initialLoadTimer
+        interval: 4000
         repeat: false
-        onTriggered: root.discoveryPulse = false
+        onTriggered: root.initialLoading = false
+    }
+
+    Timer {
+        id: refreshTimer
+        interval: 1600
+        repeat: false
+        onTriggered: root.refreshLoading = false
     }
 
     headerTools: RowLayout {
@@ -111,6 +174,7 @@ WidgetPanel {
             enabled: BluetoothService.available
                 && BluetoothService.enabled
                 && !BluetoothService.busy
+                && !root.refreshLoading
             hoverEnabled: true
             Accessible.name: "重新扫描蓝牙设备"
             onClicked: root.restartDiscoveryLease()
@@ -132,7 +196,7 @@ WidgetPanel {
                     to: 360
                     duration: 800
                     loops: Animation.Infinite
-                    running: root.discoveryPulse
+                    running: root.refreshLoading
                 }
             }
         }
@@ -153,8 +217,8 @@ WidgetPanel {
 
         ProgressBar {
             Layout.fillWidth: true
-            Layout.preferredHeight: BluetoothService.busy ? 4 : 0
-            opacity: BluetoothService.busy ? 1 : 0
+            Layout.preferredHeight: root.linearLoading ? 4 : 0
+            opacity: root.linearLoading ? 1 : 0
             indeterminate: true
             Material.accent: Appearance.colors.colPrimary
 
@@ -180,6 +244,79 @@ WidgetPanel {
 
                 width: parent.width - Appearance.spacing.small
                 spacing: Appearance.spacing.small
+
+                DeviceSection {
+                    Layout.fillWidth: true
+                    visible: BluetoothService.enabled && BluetoothService.connectedDevices.length > 0
+                    sectionTitle: "已连接"
+                    devicesModel: BluetoothService.connectedDevices
+                    category: "connected"
+                }
+
+                DeviceSection {
+                    Layout.fillWidth: true
+                    visible: BluetoothService.enabled && BluetoothService.pairedDevices.length > 0
+                    sectionTitle: "已配对"
+                    devicesModel: BluetoothService.pairedDevices
+                    category: "paired"
+                }
+
+                SettingsSection {
+                    Layout.fillWidth: true
+                    visible: BluetoothService.enabled
+                    title: "可用设备"
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: root.initialLoading
+                            && BluetoothService.availableDevices.length === 0 ? 116 : 0
+                        opacity: root.initialLoading ? 1 : 0
+                        clip: true
+
+                        Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
+                        Behavior on opacity { ElementMoveAnimation {} }
+
+                        Column {
+                            anchors.centerIn: parent
+                            spacing: Appearance.spacing.small
+
+                            MaterialLoadingIndicator {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                running: root.initialLoading
+                                accessibleName: "正在查找可用蓝牙设备"
+                            }
+
+                            Text {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: "正在查找附近设备"
+                                color: Appearance.colors.colOnLayer1
+                                font.family: Sizes.fontFamily
+                                font.pixelSize: 12
+                            }
+                        }
+                    }
+
+                    Repeater {
+                        model: BluetoothService.availableDevices
+
+                        BluetoothDeviceRow {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            deviceData: modelData
+                            deviceCategory: "available"
+                        }
+                    }
+
+                    SettingsRow {
+                        Layout.fillWidth: true
+                        visible: !root.initialLoading
+                            && !root.refreshLoading
+                            && BluetoothService.availableDevices.length === 0
+                        iconName: "search_off"
+                        title: "未发现可用设备"
+                    }
+                }
 
                 SettingsSection {
                     Layout.fillWidth: true
@@ -245,30 +382,6 @@ WidgetPanel {
                             onToggled: BluetoothService.setPairable(checked)
                         }
                     }
-                }
-
-                DeviceSection {
-                    Layout.fillWidth: true
-                    visible: BluetoothService.enabled && BluetoothService.connectedDevices.length > 0
-                    sectionTitle: "已连接"
-                    devicesModel: BluetoothService.connectedDevices
-                    category: "connected"
-                }
-
-                DeviceSection {
-                    Layout.fillWidth: true
-                    visible: BluetoothService.enabled && BluetoothService.pairedDevices.length > 0
-                    sectionTitle: "已配对"
-                    devicesModel: BluetoothService.pairedDevices
-                    category: "paired"
-                }
-
-                DeviceSection {
-                    Layout.fillWidth: true
-                    visible: BluetoothService.enabled && BluetoothService.availableDevices.length > 0
-                    sectionTitle: "可用设备"
-                    devicesModel: BluetoothService.availableDevices
-                    category: "available"
                 }
 
                 Item {

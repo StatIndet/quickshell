@@ -17,13 +17,14 @@ WidgetPanel {
 
     property bool isActive: WidgetState.qsOpen && WidgetState.qsView === "network"
     property bool scanLeaseAcquired: false
+    property bool initialLoadAttempted: false
     property bool initialLoading: false
     property bool refreshLoading: false
     property var pendingForgetNetwork: null
     readonly property bool networkUsable: NetworkService.available
         && NetworkService.wifiAvailable
         && NetworkService.wifiEnabled
-    readonly property bool globalLoading: initialLoading || refreshLoading || NetworkService.busy
+    readonly property bool linearLoading: refreshLoading || NetworkService.busy
     readonly property string stateMessage: {
         if (NetworkService.lastError.length > 0)
             return NetworkService.lastError;
@@ -35,16 +36,20 @@ WidgetPanel {
             return "Wi-Fi 已被硬件开关或 rfkill 阻止";
         if (!NetworkService.wifiEnabled)
             return "Wi-Fi 已关闭";
-        if (!root.globalLoading && NetworkService.friendlyWifiNetworks.length === 0)
+        if (!root.initialLoading
+                && !root.refreshLoading
+                && NetworkService.friendlyWifiNetworks.length === 0)
             return "未发现可用网络";
         return "";
     }
 
     function beginInitialLoad() {
+        if (!root.isActive || !root.networkUsable || root.initialLoadAttempted)
+            return;
+
         initialLoadTimer.stop();
-        initialLoading = root.isActive
-            && root.networkUsable
-            && NetworkService.friendlyWifiNetworks.length === 0;
+        root.initialLoadAttempted = true;
+        initialLoading = NetworkService.friendlyWifiNetworks.length === 0;
         if (initialLoading)
             initialLoadTimer.restart();
     }
@@ -72,6 +77,8 @@ WidgetPanel {
     function requestRefresh() {
         if (!root.networkUsable || root.refreshLoading)
             return;
+        initialLoading = false;
+        initialLoadTimer.stop();
         refreshLoading = true;
         refreshTimer.restart();
         NetworkService.requestScan();
@@ -187,8 +194,8 @@ WidgetPanel {
 
         ProgressBar {
             Layout.fillWidth: true
-            Layout.preferredHeight: root.globalLoading ? 4 : 0
-            opacity: root.globalLoading ? 1 : 0
+            Layout.preferredHeight: root.linearLoading ? 4 : 0
+            opacity: root.linearLoading ? 1 : 0
             indeterminate: true
             Material.accent: Appearance.colors.colPrimary
 
@@ -263,6 +270,7 @@ WidgetPanel {
             }
 
             Text {
+                visible: !root.initialLoading
                 text: NetworkService.friendlyWifiNetworks.length + " 个"
                 color: Appearance.colors.colOnLayer1
                 font.family: Sizes.fontFamilyMono
@@ -270,19 +278,44 @@ WidgetPanel {
             }
         }
 
-        StyledListView {
-            id: wifiList
-
+        Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             visible: root.networkUsable
-            spacing: Appearance.spacing.xSmall
-            model: NetworkService.friendlyWifiNetworks
 
-            delegate: WifiNetworkItem {
-                required property var modelData
-                width: ListView.view.width
-                wifiNetwork: modelData
+            StyledListView {
+                id: wifiList
+
+                anchors.fill: parent
+                visible: !root.initialLoading
+                spacing: Appearance.spacing.xSmall
+                model: NetworkService.friendlyWifiNetworks
+
+                delegate: WifiNetworkItem {
+                    required property var modelData
+                    width: ListView.view.width
+                    wifiNetwork: modelData
+                }
+            }
+
+            Column {
+                anchors.centerIn: parent
+                visible: root.initialLoading
+                spacing: Appearance.spacing.small
+
+                MaterialLoadingIndicator {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    running: root.initialLoading
+                    accessibleName: "正在查找可用网络"
+                }
+
+                Text {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "正在查找可用网络"
+                    color: Appearance.colors.colOnLayer1
+                    font.family: Sizes.fontFamily
+                    font.pixelSize: 12
+                }
             }
         }
     }
