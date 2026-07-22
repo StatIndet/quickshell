@@ -128,9 +128,9 @@ Item {
 
         Behavior on opacity {
             NumberAnimation {
-                duration: Appearance.animation.expressiveFastEffects.duration
-                easing.type: Appearance.animation.expressiveFastEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                duration: Appearance.animation.expressiveDefaultEffects.duration
+                easing.type: Appearance.animation.expressiveDefaultEffects.type
+                easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
             }
         }
     }
@@ -149,7 +149,9 @@ Item {
             : Appearance.transparentize(Appearance.colors.colLayer3, 1)
         implicitHeight: root.expanded
             ? contentColumn.implicitHeight + root.padding * 2
-            : summaryRow.implicitHeight
+            : root.onlyNotification
+                ? notificationBodyText.implicitHeight
+                : summaryRow.implicitHeight
 
         Behavior on anchors.leftMargin {
             enabled: !dragManager.dragging && !destroyAnimation.running
@@ -157,14 +159,6 @@ Item {
                 duration: Appearance.animation.expressiveDefaultSpatial.duration
                 easing.type: Appearance.animation.expressiveFastSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-            }
-        }
-
-        Behavior on implicitHeight {
-            NumberAnimation {
-                duration: Appearance.animation.expressiveDefaultSpatial.duration
-                easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
             }
         }
 
@@ -176,15 +170,15 @@ Item {
 
             Behavior on anchors.margins {
                 NumberAnimation {
-                    duration: Appearance.animation.expressiveFastEffects.duration
-                    easing.type: Appearance.animation.expressiveFastEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                    duration: Appearance.animation.expressiveDefaultEffects.duration
+                    easing.type: Appearance.animation.expressiveDefaultEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                 }
             }
 
             RowLayout {
                 id: summaryRow
-                visible: !root.onlyNotification || !root.expanded
+                visible: !root.onlyNotification
                 Layout.fillWidth: true
                 implicitHeight: summaryText.implicitHeight
 
@@ -215,9 +209,9 @@ Item {
 
                     Behavior on opacity {
                         NumberAnimation {
-                            duration: Appearance.animation.expressiveFastEffects.duration
-                            easing.type: Appearance.animation.expressiveFastEffects.type
-                            easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                            duration: Appearance.animation.expressiveDefaultEffects.duration
+                            easing.type: Appearance.animation.expressiveDefaultEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                         }
                     }
                 }
@@ -226,23 +220,26 @@ Item {
             ColumnLayout {
                 id: expandedContentColumn
                 Layout.fillWidth: true
-                opacity: root.expanded ? 1 : 0
-                visible: opacity > 0
+                opacity: root.onlyNotification || root.expanded ? 1 : 0
+                visible: root.onlyNotification || opacity > 0
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: Appearance.animation.expressiveFastEffects.duration
-                        easing.type: Appearance.animation.expressiveFastEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                        duration: Appearance.animation.expressiveDefaultEffects.duration
+                        easing.type: Appearance.animation.expressiveDefaultEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                     }
                 }
 
                 Text {
+                    id: notificationBodyText
+
                     Layout.fillWidth: true
                     text: `<style>img{max-width:${expandedContentColumn.width}px;}</style>${root.processedBody()}`
                     textFormat: Text.RichText
                     wrapMode: Text.Wrap
-                    elide: Text.ElideRight
+                    maximumLineCount: root.onlyNotification && !root.expanded ? 1 : 2147483647
+                    elide: root.onlyNotification && !root.expanded ? Text.ElideRight : Text.ElideNone
                     font.family: Sizes.fontFamily
                     font.pixelSize: root.fontSize
                     color: Appearance.colors.colSubtext
@@ -254,6 +251,16 @@ Item {
                     Layout.fillWidth: true
                     implicitWidth: actionsFlickable.implicitWidth
                     implicitHeight: actionsFlickable.implicitHeight
+                    opacity: root.expanded ? 1 : 0
+                    visible: root.expanded || opacity > 0
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Appearance.animation.expressiveDefaultEffects.duration
+                            easing.type: Appearance.animation.expressiveDefaultEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+                        }
+                    }
 
                     layer.enabled: true
                     layer.effect: OpacityMask {
@@ -273,30 +280,6 @@ Item {
                         flickableDirection: Flickable.HorizontalFlick
                         showVerticalScrollBar: false
                         smoothWheelEnabled: false
-
-                        Behavior on opacity {
-                            NumberAnimation {
-                                duration: Appearance.animation.expressiveFastEffects.duration
-                                easing.type: Appearance.animation.expressiveFastEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-                            }
-                        }
-
-                        Behavior on height {
-                            NumberAnimation {
-                                duration: Appearance.animation.expressiveFastEffects.duration
-                                easing.type: Appearance.animation.expressiveFastEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-                            }
-                        }
-
-                        Behavior on implicitHeight {
-                            NumberAnimation {
-                                duration: Appearance.animation.expressiveFastEffects.duration
-                                easing.type: Appearance.animation.expressiveFastEffects.type
-                                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-                            }
-                        }
 
                         RowLayout {
                             id: actionRowLayout

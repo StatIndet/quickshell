@@ -6,6 +6,8 @@ import qs.Widgets.common
 Item {
     id: root
 
+    property string screenName: ""
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Appearance.spacing.panelPadding
@@ -103,6 +105,7 @@ Item {
             InfoView {
                 anchors.fill: parent
                 visible: WidgetState.leftSidebarView === "info"
+                screenName: root.screenName
             }
 
             SystemView {

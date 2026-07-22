@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
+import M3Shapes
 import qs.Common
 import qs.Services
 
@@ -34,36 +35,50 @@ Rectangle {
     }
 
     Item {
+        id: emptyState
+
+        readonly property bool shown: NotificationManager.list.length === 0
+
         anchors.fill: listView
-        opacity: NotificationManager.list.length === 0 ? 1 : 0
+        anchors.topMargin: -30 * (1 - opacity)
+        anchors.bottomMargin: 30 * (1 - opacity)
+        opacity: shown ? 1 : 0
         visible: opacity > 0
 
         Behavior on opacity {
             NumberAnimation {
-                duration: Appearance.animation.expressiveDefaultEffects.duration
-                easing.type: Appearance.animation.expressiveDefaultEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+                duration: Appearance.animation.standard.duration
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.animationCurves.emphasizedDecel
             }
         }
 
-        Column {
+        ColumnLayout {
             anchors.centerIn: parent
-            spacing: 6
+            spacing: 5
 
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "notifications_active"
-                font.family: "Material Symbols Rounded"
-                font.pixelSize: 34
-                color: Appearance.colors.colOnSurfaceVariant
+            MaterialShape {
+                Layout.alignment: Qt.AlignHCenter
+                implicitSize: 80
+                shape: MaterialShape.Ghostish
+                color: Appearance.colors.colSecondaryContainer
+                rotation: -30 * (1 - emptyState.opacity)
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "notifications_active"
+                    font.family: "Material Symbols Rounded"
+                    font.pixelSize: 42
+                    color: Appearance.colors.colOnSecondaryContainer
+                }
             }
 
             Text {
-                anchors.horizontalCenter: parent.horizontalCenter
+                Layout.alignment: Qt.AlignHCenter
                 text: "Nothing"
                 font.family: Sizes.fontFamily
                 font.pixelSize: 14
-                font.bold: true
+                font.weight: Font.Medium
                 color: Appearance.colors.colOnSurfaceVariant
             }
         }

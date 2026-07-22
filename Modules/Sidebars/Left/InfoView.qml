@@ -1,15 +1,13 @@
 import QtQuick
 import QtQuick.Layouts
-import Clavis.Sysmon 1.0
 import qs.Common
 import qs.Services
-import qs.Widgets.common
 import "./notifications"
 
 Item {
     id: root
 
-    readonly property int fetchCardHeight: 252
+    property string screenName: ""
 
     readonly property bool isForeground: WidgetState.leftSidebarOpen && WidgetState.leftSidebarView === "info"
     onIsForegroundChanged: {
@@ -19,40 +17,19 @@ Item {
         }
     }
 
-    StyledFlickable {
-        id: flick
+    ColumnLayout {
         anchors.fill: parent
-        boundsBehavior: Flickable.StopAtBounds
-        interactive: false
-        contentWidth: width
-        contentHeight: contentColumn.implicitHeight + 2
+        spacing: 12
 
-        ColumnLayout {
-            id: contentColumn
-            width: flick.width
-            spacing: 12
+        ProfileHeaderCard {
+            Layout.fillWidth: true
+            Layout.preferredHeight: implicitHeight
+            screenName: root.screenName
+        }
 
-            SystemFetchCard {
-                Layout.fillWidth: true
-                Layout.preferredHeight: root.fetchCardHeight
-                radius: 24
-                cardPadding: 16
-                systemUser: SysmonPlugin.systemUser
-                hostName: SysmonPlugin.hostName
-                chassis: SysmonPlugin.chassis
-                uptime: SysmonPlugin.uptime
-                osAge: SysmonPlugin.osAgeText
-                kernelRelease: SysmonPlugin.kernelRelease
-                wmName: SysmonPlugin.wmName
-                shellName: SysmonPlugin.shellName
-                distroId: SysmonPlugin.distroId
-            }
-
-            NotificationList {
-                Layout.fillWidth: true
-                Layout.preferredHeight: Math.max(360, flick.height - root.fetchCardHeight - contentColumn.spacing)
-            }
+        NotificationList {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
-
 }

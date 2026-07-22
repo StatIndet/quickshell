@@ -167,6 +167,7 @@ PanelWindow {
 
         LeftSidebarContent {
             anchors.fill: parent
+            screenName: root.screen ? root.screen.name : ""
         }
     }
 }

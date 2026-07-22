@@ -12,6 +12,7 @@ StyledListView {
     property real dragDistance: 0
 
     spacing: 3
+    animateMovement: false
 
     model: ScriptModel {
         values: root.popup ? NotificationManager.popupAppNameList : NotificationManager.appNameList

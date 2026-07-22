@@ -50,7 +50,7 @@ MouseArea {
     }
 
     function toggleExpanded() {
-        implicitHeightAnim.enabled = root.expanded;
+        implicitHeightAnim.enabled = !root.multipleNotifications || root.expanded;
         root.expanded = !root.expanded;
     }
 
@@ -149,9 +149,9 @@ MouseArea {
         Behavior on implicitHeight {
             id: implicitHeightAnim
             NumberAnimation {
-                duration: Appearance.animation.expressiveFastEffects.duration
-                easing.type: Appearance.animation.expressiveFastEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                duration: Appearance.animation.expressiveDefaultEffects.duration
+                easing.type: Appearance.animation.expressiveDefaultEffects.type
+                easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
             }
         }
 
@@ -181,9 +181,9 @@ MouseArea {
 
                 Behavior on spacing {
                     NumberAnimation {
-                        duration: Appearance.animation.expressiveFastEffects.duration
-                        easing.type: Appearance.animation.expressiveFastEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                        duration: Appearance.animation.expressiveDefaultEffects.duration
+                        easing.type: Appearance.animation.expressiveDefaultEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                     }
                 }
 
@@ -233,6 +233,7 @@ MouseArea {
                         expanded: root.expanded
                         fontSize: topRow.fontSize
                         onClicked: root.toggleExpanded()
+                        altAction: () => root.toggleExpanded()
                     }
                 }
 
@@ -246,7 +247,7 @@ MouseArea {
                     implicitHeight: contentHeight
                     spacing: root.expanded ? 5 : 3
                     interactive: false
-                    animateAppearance: false
+                    animateAppearance: true
                     animateMovement: false
                     showVerticalScrollBar: false
                     smoothWheelEnabled: false
@@ -259,9 +260,9 @@ MouseArea {
 
                     Behavior on spacing {
                         NumberAnimation {
-                            duration: Appearance.animation.expressiveFastEffects.duration
-                            easing.type: Appearance.animation.expressiveFastEffects.type
-                            easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                            duration: Appearance.animation.expressiveDefaultEffects.duration
+                            easing.type: Appearance.animation.expressiveDefaultEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                         }
                     }
 
