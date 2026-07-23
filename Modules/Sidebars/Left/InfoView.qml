@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import qs.Common
 import qs.Services
 import "./notifications"
+import "./infoTools"
 
 Item {
     id: root
@@ -30,6 +31,12 @@ Item {
         NotificationList {
             Layout.fillWidth: true
             Layout.fillHeight: true
+        }
+
+        InfoToolDrawer {
+            Layout.fillWidth: true
+            Layout.preferredHeight: implicitHeight
+            active: root.isForeground
         }
     }
 }

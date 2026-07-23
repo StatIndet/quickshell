@@ -98,6 +98,8 @@ Singleton {
     property string iconTheme: ""
     property string keystoneStyle: "bangs"
 
+    property bool pomodoroSoundEnabled: false
+
     property bool scrollSmoothEnabled: true
     property int scrollMouseFactor: 50
     property int scrollTouchpadFactor: 100
@@ -354,6 +356,10 @@ Singleton {
         setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "bangs"));
     }
 
+    function setPomodoroSoundEnabled(value) {
+        setValue("pomodoroSoundEnabled", !!value);
+    }
+
     function setScrollSmoothEnabled(value) {
         setValue("scrollSmoothEnabled", !!value);
     }
@@ -409,6 +415,9 @@ Singleton {
             "keystone": {
                 "style": root.keystoneStyle
             },
+            "sounds": {
+                "pomodoro": root.pomodoroSoundEnabled
+            },
             "interactions": {
                 "scrolling": {
                     "smoothEnabled": root.scrollSmoothEnabled,
@@ -424,6 +433,7 @@ Singleton {
         const wallpaper = parsed.wallpaper || {};
         const theme = parsed.theme || {};
         const keystone = parsed.keystone || {};
+        const sounds = parsed.sounds || {};
         const interactions = parsed.interactions || {};
         const scrolling = interactions.scrolling || {};
         const transition = wallpaper.transition || {};
@@ -457,6 +467,7 @@ Singleton {
         root.cursorHideAfterInactiveMs = Math.max(0, Math.min(5000, Math.round(Number(theme.cursorHideAfterInactiveMs) || 0)));
         root.iconTheme = theme.iconTheme || "";
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
+        root.pomodoroSoundEnabled = !!sounds.pomodoro;
         root.scrollSmoothEnabled = scrolling.smoothEnabled === undefined ? true : !!scrolling.smoothEnabled;
         root.scrollMouseFactor = normalizedBoundedInt(scrolling.mouseFactor, 50, 10, 240);
         root.scrollTouchpadFactor = normalizedBoundedInt(scrolling.touchpadFactor, 100, 10, 300);

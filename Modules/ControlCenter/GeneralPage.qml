@@ -312,6 +312,18 @@ StyledFlickable {
         spacing: 30
 
         Section {
+            title: "提示音"
+            iconName: "notification_sound"
+
+            ToggleSettingRow {
+                title: "番茄钟"
+                description: "专注与休息阶段切换时播放系统提示音"
+                checked: PersonalizationConfig.pomodoroSoundEnabled
+                onToggled: checked => PersonalizationConfig.setPomodoroSoundEnabled(checked)
+            }
+        }
+
+        Section {
             title: "滚动交互"
             iconName: "swipe"
 
