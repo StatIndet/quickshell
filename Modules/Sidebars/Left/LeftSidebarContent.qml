@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
+import qs.Components
 import qs.Widgets.common
 
 Item {
@@ -23,10 +24,9 @@ Item {
             spacing: 15
 
             Repeater {
-                // 【核心修改】：将 label 替换为纯英文/缩写
                 model: [
                     { id: "info", icon: "info", label: "Info" },
-                    { id: "sys", icon: "memory", label: "System" },
+                    { id: "sys", icon: "monitoring", label: "System" },
                     { id: "weather", icon: "cloud", label: "Weather" }
                 ]
                 
@@ -45,10 +45,10 @@ Item {
                         anchors.verticalCenterOffset: -4
                         spacing: 4 
                         
-                        Text {
+                        MaterialSymbol {
                             text: modelData.icon
-                            font.family: "Material Symbols Outlined" 
-                            font.pixelSize: 20 
+                            iconSize: 20
+                            fill: tabBtn.isActive ? 1 : 0
                             color: tabBtn.contentColor
                             anchors.horizontalCenter: parent.horizontalCenter
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -93,9 +93,6 @@ Item {
             }
         }
 
-        // ============================================================
-        // 2. 侧边栏内容区
-        // ============================================================
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true 

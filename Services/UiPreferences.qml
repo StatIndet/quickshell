@@ -14,6 +14,9 @@ Singleton {
     property bool dndEnabled: false
     property bool darkMode: false
     property bool storeReady: false
+    property bool preferencesReady: false
+    property bool savePending: false
+    property var systemGridLayout: ({})
 
     function setDndEnabled(value) {
         root.dndEnabled = value;
@@ -35,12 +38,31 @@ Singleton {
         root.setDarkMode(!root.darkMode);
     }
 
-    function save() {
-        if (!root.storeReady)
+    function setSystemGridLayout(layout) {
+        try {
+            root.systemGridLayout = JSON.parse(
+                JSON.stringify(layout || {})
+            );
+        } catch (error) {
+            console.log(
+                "UiPreferences rejected system grid layout:",
+                error
+            );
             return;
+        }
+        root.save();
+    }
 
+    function save() {
+        if (!root.storeReady) {
+            root.savePending = true;
+            return;
+        }
+
+        root.savePending = false;
         prefsFile.setText(JSON.stringify({
-            "dndEnabled": root.dndEnabled
+            "dndEnabled": root.dndEnabled,
+            "systemGridLayout": root.systemGridLayout
         }, null, 2));
     }
 
@@ -51,6 +73,8 @@ Singleton {
         onExited: {
             root.storeReady = true;
             prefsFile.reload();
+            if (root.savePending)
+                root.save();
         }
     }
 
@@ -63,12 +87,20 @@ Singleton {
                 const parsed = JSON.parse(prefsFile.text().trim() || "{}");
                 if (typeof parsed.dndEnabled === "boolean")
                     root.dndEnabled = parsed.dndEnabled;
+                if (parsed.systemGridLayout
+                        && typeof parsed.systemGridLayout === "object") {
+                    root.systemGridLayout =
+                        parsed.systemGridLayout;
+                }
             } catch (error) {
                 console.log("UiPreferences failed to load:", error);
+            } finally {
+                root.preferencesReady = true;
             }
         }
 
         onLoadFailed: {
+            root.preferencesReady = true;
             root.save();
         }
     }

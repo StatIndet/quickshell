@@ -6,6 +6,23 @@ Singleton {
     readonly property string fontFamily: "LXGW WenKai GB Screen"
     readonly property string fontFamilyMono: "JetBrainsMono Nerd Font"
     readonly property string fontIcon: "LXGW WenKai GB Screen"
+    readonly property string fontMaterialSymbols: "Material Symbols Rounded"
+
+    // Material 3 type scale used by shell surfaces. Keep numeric metrics on
+    // fontFamilyMono and prose/labels on fontFamily.
+    readonly property real typeDisplaySmall: 36
+    readonly property real typeHeadlineMedium: 28
+    readonly property real typeHeadlineSmall: 24
+    readonly property real typeTitleLarge: 22
+    readonly property real typeTitleMedium: 16
+    readonly property real typeTitleSmall: 14
+    readonly property real typeBodyLarge: 16
+    readonly property real typeBodyMedium: 14
+    readonly property real typeBodySmall: 12
+    readonly property real typeLabelLarge: 14
+    readonly property real typeLabelMedium: 12
+    readonly property real typeLabelSmall: 11
+
     readonly property real cornerRadius: 10
     readonly property real barHeight: 44
     readonly property real sidebarScrollableListMaxHeight: 224

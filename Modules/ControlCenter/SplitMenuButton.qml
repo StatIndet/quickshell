@@ -24,11 +24,12 @@ Item {
     readonly property int leadingLeftPadding: 10
     readonly property int leadingRightPadding: 8
     readonly property int trailingWidth: 34
-    readonly property color buttonColor: Appearance.colors.colPrimary
-    readonly property color buttonHoverColor: Appearance.colors.colPrimaryHover
-    readonly property color buttonPressedColor: Appearance.colors.colPrimaryActive
-    readonly property color buttonTextColor: Appearance.colors.colOnPrimary
-    readonly property color menuSurfaceColor: Appearance.m3colors.m3surfaceContainerHighest
+    property color buttonColor: Appearance.colors.colPrimary
+    property color buttonHoverColor: Appearance.colors.colPrimaryHover
+    property color buttonPressedColor: Appearance.colors.colPrimaryActive
+    property color buttonTextColor: Appearance.colors.colOnPrimary
+    property color menuSurfaceColor:
+        Appearance.m3colors.m3surfaceContainerHighest
     property real popupX: 0
     property real popupY: 0
     property real popupHeight: menuPreferredHeight
@@ -225,7 +226,7 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: root.openMenu()
+                onClicked: root.toggleMenu()
             }
         }
 
@@ -311,7 +312,8 @@ Item {
         width: root.menuPreferredWidth
         height: root.popupHeight
         padding: root.menuPadding
-        modal: false
+        modal: true
+        dim: false
         focus: true
         clip: true
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside

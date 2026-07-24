@@ -8,6 +8,7 @@ Singleton {
 
     readonly property string shellDir: Quickshell.shellDir
     readonly property string assetsDir: shellDir + "/assets"
+    readonly property string fontsDir: assetsDir + "/fonts"
     readonly property string iconsDir: assetsDir + "/icons"
     readonly property string appIconsDir: iconsDir + "/apps"
     readonly property string weatherIconsDir: iconsDir + "/weather"

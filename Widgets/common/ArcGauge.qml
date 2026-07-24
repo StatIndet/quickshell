@@ -21,6 +21,7 @@ Item {
     property real handleSpacing: 4
     property real handleInner: 1.5
     property real handleOuter: 3
+    property bool showHandle: true
     property int animDuration: 200
 
     implicitWidth: 28
@@ -55,10 +56,13 @@ Item {
             // 基础起始角：6 点钟方向 + gapAngle
             let baseStartAngle = (Math.PI / 2) + (root.gapAngle * Math.PI / 180);
             let progressAngleRad = root._animAngle * Math.PI / 180;
-            let handleGapRad = root.handleSpacing * (360 / (2 * Math.PI * radius)) * Math.PI / 180;
+            // Round caps consume half a stroke at either end. Include a full
+            // stroke width in the centre-line separation so handleSpacing is
+            // the visible gap rather than being swallowed by those caps.
+            let segmentGapRad = (lw + root.handleSpacing) / radius;
 
             // ① 进度弧
-            let progressEndAngle = baseStartAngle + progressAngleRad - handleGapRad;
+            let progressEndAngle = baseStartAngle + progressAngleRad;
             if (root._animAngle > 1 && progressEndAngle > (baseStartAngle + 0.01)) {
                 ctx.strokeStyle = root.progressColor;
                 ctx.lineWidth = lw;
@@ -68,7 +72,7 @@ Item {
             }
 
             // ② Handle 指针
-            if (root._animAngle >= 0) {
+            if (root.showHandle && root._animAngle >= 0) {
                 let handleAngle = baseStartAngle + progressAngleRad;
                 let innerR = radius - root.handleInner;
                 let outerR = radius + root.handleOuter;
@@ -87,7 +91,7 @@ Item {
             }
 
             // ③ 剩余轨道弧
-            let remainingStart = baseStartAngle + progressAngleRad + handleGapRad;
+            let remainingStart = baseStartAngle + progressAngleRad + segmentGapRad;
             let totalAngle = (360 - 2 * root.gapAngle) * Math.PI / 180;
             let remainingEnd = baseStartAngle + totalAngle;
 
@@ -121,5 +125,10 @@ Item {
     onProgressColorChanged: canvas.requestPaint()
     onTrackColorChanged: canvas.requestPaint()
     onHandleColorChanged: canvas.requestPaint()
+    onShowHandleChanged: canvas.requestPaint()
+    onHandleSpacingChanged: canvas.requestPaint()
+    onLineWidthChanged: canvas.requestPaint()
+    onArcRadiusChanged: canvas.requestPaint()
+    onGapAngleChanged: canvas.requestPaint()
     on_AnimAngleChanged: canvas.requestPaint()
 }
