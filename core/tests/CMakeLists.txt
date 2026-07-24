@@ -25,6 +25,18 @@ target_link_libraries(audio_visual_analyzer_tests PRIVATE
 
 add_test(NAME audio_visual_analyzer_tests COMMAND audio_visual_analyzer_tests)
 
+qt_add_executable(sysmon_core_tests
+    sysmon_core_test.cpp
+)
+
+target_link_libraries(sysmon_core_tests PRIVATE
+    ClavisSysmonCore
+    Qt6::Core
+    Qt6::Test
+)
+
+add_test(NAME sysmon_core_tests COMMAND sysmon_core_tests)
+
 qt_add_executable(m3shapes_tests
     m3shapes_test.cpp
 )
@@ -89,3 +101,19 @@ add_dependencies(key_integration_tests
 )
 
 add_test(NAME key_integration_tests COMMAND key_integration_tests)
+
+qt_add_executable(key_sysmon_integration_tests
+    key_sysmon_integration_test.cpp
+)
+
+target_link_libraries(key_sysmon_integration_tests PRIVATE
+    Qt6::Core
+    Qt6::Test
+)
+
+target_compile_definitions(key_sysmon_integration_tests PRIVATE
+    KEY_EXECUTABLE="$<TARGET_FILE:key>"
+)
+
+add_dependencies(key_sysmon_integration_tests key)
+add_test(NAME key_sysmon_integration_tests COMMAND key_sysmon_integration_tests)

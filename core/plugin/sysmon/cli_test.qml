@@ -35,9 +35,7 @@ Item {
             console.log("\n--- Medium Tick ---")
             console.log("Core Temp: " + SysmonPlugin.coreTemp.toFixed(1) + "°C")
             console.log("GPU Temp: " + SysmonPlugin.gpuTemp.toFixed(1) + "°C | GPU Usage: " + SysmonPlugin.gpuUsage.toFixed(1) + "%")
-            console.log("Load: " + SysmonPlugin.load1.toFixed(2) + " / " + SysmonPlugin.load5.toFixed(2) + " / " + SysmonPlugin.load15.toFixed(2))
             console.log("CPU Freq: " + SysmonPlugin.cpuFreqGHz.toFixed(2) + " GHz")
-            console.log("Tasks: " + SysmonPlugin.taskRunning + " / " + SysmonPlugin.taskTotal)
         }
         function onSlowDataChanged() {
             console.log("\n--- Slow Tick ---")

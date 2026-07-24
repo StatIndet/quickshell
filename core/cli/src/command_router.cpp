@@ -4,6 +4,8 @@
 #include "commands/cast_command.h"
 #include "commands/doctor_command.h"
 #include "commands/record_command.h"
+#include "commands/sysmon_command.h"
+#include "commands/top_command.h"
 #include "recording/recording_types.h"
 
 #include <QCoreApplication>
@@ -37,6 +39,10 @@ CommandResult CommandRouter::route(const QStringList &arguments) const
         return RecordCommand().run(rest);
     if (command == QStringLiteral("cast"))
         return CastCommand().run(rest);
+    if (command == QStringLiteral("sysmon"))
+        return SysmonCommand().run(rest);
+    if (command == QStringLiteral("top"))
+        return TopCommand().run(rest);
     return usageError(QStringLiteral("Unknown command: %1").arg(command),
                       arguments.contains(QStringLiteral("--json")));
 }
@@ -57,6 +63,11 @@ QString CommandRouter::helpText()
         "  key record stop [--json]\n"
         "  key cast list [--json]\n"
         "  key cast status [--json]\n"
+        "  key sysmon snapshot [--format json] [--modules LIST]\n"
+        "  key sysmon stream [--format jsonl] [--interval MS] [--modules LIST]\n"
+        "  key sysmon system|cpu|memory|gpu|disk|network|battery [--format json]\n"
+        "  key sysmon processes [--sort FIELD] [--limit N] [--filter TEXT] [--tree]\n"
+        "  key top\n"
         "\n"
         "Recording options:\n"
         "  --type TYPE         video or gif (default: video)\n"
@@ -68,7 +79,8 @@ QString CommandRouter::helpText()
         "  --json              stable machine-readable output\n"
         "\n"
         "Exit codes:\n"
-        "  0 success, 2 usage, 3 dependency/output, 4 session conflict\n"
+        "  0 success, 1 runtime/TUI, 2 usage, 3 dependency/output\n"
+        "  4 session conflict\n"
         "  5 state, 6 recorder start, 7 recorder stop, 8 post-process\n"
         "  11 niri unavailable\n");
 }

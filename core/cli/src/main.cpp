@@ -12,12 +12,23 @@ int main(int argc, char *argv[])
 
     const CommandResult result =
         CommandRouter().route(QCoreApplication::arguments().mid(1));
+    if (result.outputHandled) {
+        return result.exitCode;
+    }
+    FILE *destination = result.jsonRequested
+        ? stdout
+        : (result.textIsError ? stderr : stdout);
+    QTextStream output(destination);
     if (result.jsonRequested) {
-        QTextStream(stdout) << QJsonDocument(result.json).toJson(QJsonDocument::Compact)
-                            << Qt::endl;
+        output << QJsonDocument(result.json).toJson(QJsonDocument::Compact)
+               << Qt::endl;
     } else {
-        QTextStream stream(result.textIsError ? stderr : stdout);
-        stream << result.text << Qt::endl;
+        output << result.text << Qt::endl;
+    }
+    if (output.status() != QTextStream::Ok) {
+        QTextStream(stderr) << "key: unable to write command output"
+                            << Qt::endl;
+        return 3;
     }
     return result.exitCode;
 }

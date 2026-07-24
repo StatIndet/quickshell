@@ -1,27 +1,20 @@
 # 纯底层可复用的架构层
 qt_add_library(ClavisSysmonCore STATIC)
 target_sources(ClavisSysmonCore PRIVATE
+    sysmon/types.h
+    sysmon/parsers.h
+    sysmon/parsers.cpp
+    sysmon/collector.h
+    sysmon/collector_system.cpp
+    sysmon/collector_devices.cpp
+    sysmon/collector_processes.cpp
+    sysmon/sampler.h
+    sysmon/sampler.cpp
+    sysmon/serialization.h
+    sysmon/serialization.cpp
     sysmon_types.h
     sysmon_backend.h
     sysmon_backend.cpp
-    sysmon_cpu.h
-    sysmon_cpu.cpp
-    sysmon_ram.h
-    sysmon_ram.cpp
-    sysmon_disk.h
-    sysmon_disk.cpp
-    sysmon_temp.h
-    sysmon_temp.cpp
-    sysmon_net.h
-    sysmon_net.cpp
-    sysmon_load.h
-    sysmon_load.cpp
-    sysmon_battery.h
-    sysmon_battery.cpp
-    sysmon_gpu.h
-    sysmon_gpu.cpp
-    sysmon_misc.h
-    sysmon_misc.cpp
 )
 
 # 确保在共享库被链接时开启 -fPIC

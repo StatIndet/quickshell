@@ -11,6 +11,12 @@ qt_add_executable(key
     src/commands/record_command.cpp
     src/commands/cast_command.h
     src/commands/cast_command.cpp
+    src/commands/sysmon_command.h
+    src/commands/sysmon_command.cpp
+    src/commands/top_command.h
+    src/commands/top_command.cpp
+    src/tui/top_tui.h
+    src/tui/top_tui.cpp
 )
 
 set_target_properties(key PROPERTIES
@@ -19,10 +25,12 @@ set_target_properties(key PROPERTIES
 )
 
 target_link_libraries(key PRIVATE
+    ClavisSysmonCore
     ClavisRecordingCore
     ClavisNiriCore
     Qt6::Core
     Qt6::Network
+    PkgConfig::NCursesW
 )
 
 target_include_directories(key PRIVATE src)

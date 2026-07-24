@@ -3,15 +3,7 @@
 #include <QObject>
 #include <vector>
 #include "sysmon_types.h"
-#include "sysmon_cpu.h"
-#include "sysmon_ram.h"
-#include "sysmon_disk.h"
-#include "sysmon_temp.h"
-#include "sysmon_net.h"
-#include "sysmon_load.h"
-#include "sysmon_battery.h"
-#include "sysmon_gpu.h"
-#include "sysmon_misc.h"
+#include "sysmon/sampler.h"
 
 // The central HUB (Facade Pattern) for accessing isolated micro-services
 class SysmonBackend : public QObject {
@@ -21,8 +13,8 @@ public:
     static SysmonBackend& instance();
     
     // 分级更新接口
-    void updateFast();      // 1s: CPU, RAM, Net, Processes
-    void updateMedium();    // 2s: Temp, GPU, Load, CPU Freq
+    void updateFast();      // 1s: CPU, RAM, Net
+    void updateMedium();    // 2s: Temp, GPU, CPU Freq
     void updateSlow();      // 5s: Fan, Battery
     void updateGlacial();   // 30s: Disk, Uptime
     
@@ -40,13 +32,6 @@ public:
     // --- New: Network ---
     double getNetDownBps() const;
     double getNetUpBps() const;
-    
-    // --- New: Load ---
-    double getLoad1() const;
-    double getLoad5() const;
-    double getLoad15() const;
-    int getRunningTasks() const;
-    int getTotalTasks() const;
     
     // --- New: Battery ---
     double getBatteryPercent() const;
@@ -80,13 +65,8 @@ private:
     SysmonBackend(const SysmonBackend&) = delete;
     SysmonBackend& operator=(const SysmonBackend&) = delete;
 
-    SysmonCpu m_cpuProvider;
-    SysmonRam m_ramProvider;
-    SysmonDisk m_diskProvider;
-    SysmonTemp m_tempProvider;
-    SysmonNet m_netProvider;
-    SysmonLoad m_loadProvider;
-    SysmonBattery m_batteryProvider;
-    SysmonGpu m_gpuProvider;
-    SysmonMisc m_miscProvider;
+    void mergeSnapshot(Clavis::Sysmon::Snapshot snapshot);
+
+    mutable Clavis::Sysmon::Sampler m_sampler;
+    Clavis::Sysmon::Snapshot m_snapshot;
 };

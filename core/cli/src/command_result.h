@@ -9,4 +9,5 @@ struct CommandResult {
     QJsonObject json;
     QString text;
     bool textIsError = false;
+    bool outputHandled = false;
 };

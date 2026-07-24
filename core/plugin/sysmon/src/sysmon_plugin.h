@@ -23,9 +23,6 @@ class SysmonPlugin : public QObject {
     Q_PROPERTY(double coreTemp READ coreTemp NOTIFY mediumDataChanged)
     Q_PROPERTY(double gpuTemp READ gpuTemp NOTIFY mediumDataChanged)
     Q_PROPERTY(double gpuUsage READ gpuUsage NOTIFY mediumDataChanged)
-    Q_PROPERTY(double load1 READ load1 NOTIFY mediumDataChanged)
-    Q_PROPERTY(double load5 READ load5 NOTIFY mediumDataChanged)
-    Q_PROPERTY(double load15 READ load15 NOTIFY mediumDataChanged)
     Q_PROPERTY(double cpuFreqGHz READ cpuFreqGHz NOTIFY mediumDataChanged)
     
     // === 慢速组 (5s) ===
@@ -41,8 +38,6 @@ class SysmonPlugin : public QObject {
     Q_PROPERTY(double diskUsedGB READ diskUsedGB NOTIFY glacialDataChanged)
     Q_PROPERTY(double diskTotalGB READ diskTotalGB NOTIFY glacialDataChanged)
     Q_PROPERTY(QString uptime READ uptime NOTIFY glacialDataChanged)
-    Q_PROPERTY(int taskRunning READ taskRunning NOTIFY mediumDataChanged)
-    Q_PROPERTY(int taskTotal READ taskTotal NOTIFY mediumDataChanged)
 
     // === Static system info ===
     Q_PROPERTY(QString systemUser READ systemUser CONSTANT)
@@ -72,9 +67,6 @@ public:
     double coreTemp() const;
     double gpuTemp() const;
     double gpuUsage() const;
-    double load1() const;
-    double load5() const;
-    double load15() const;
     double cpuFreqGHz() const;
     
     // Slow
@@ -90,8 +82,6 @@ public:
     double diskUsedGB() const;
     double diskTotalGB() const;
     QString uptime() const;
-    int taskRunning() const;
-    int taskTotal() const;
 
     QString systemUser() const;
     QString hostName() const;
@@ -133,12 +123,7 @@ private:
     double m_coreTemp;
     double m_gpuTemp;
     double m_gpuUsage;
-    double m_load1;
-    double m_load5;
-    double m_load15;
     double m_cpuFreqGHz;
-    int m_taskRunning;
-    int m_taskTotal;
     
     // Slow cache
     int m_fanRpm;

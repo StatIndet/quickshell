@@ -6,8 +6,7 @@ SysmonPlugin::SysmonPlugin(QObject *parent)
       m_cpuUsage(0), m_ramUsage(0), m_ramUsedGB(0), m_ramTotalGB(0),
       m_netDownBps(0), m_netUpBps(0),
       m_coreTemp(0), m_gpuTemp(0), m_gpuUsage(0),
-      m_load1(0), m_load5(0), m_load15(0), m_cpuFreqGHz(0),
-      m_taskRunning(0), m_taskTotal(0),
+      m_cpuFreqGHz(0),
       m_fanRpm(0), m_batteryPercent(0), m_batteryHealth(100), m_batteryPowerW(0),
       m_diskUsage(0), m_diskUsedGB(0), m_diskTotalGB(0),
       m_processModel(new ProcessModel(this))
@@ -51,9 +50,6 @@ ProcessModel* SysmonPlugin::processes() const { return m_processModel; }
 double SysmonPlugin::coreTemp() const { return m_coreTemp; }
 double SysmonPlugin::gpuTemp() const { return m_gpuTemp; }
 double SysmonPlugin::gpuUsage() const { return m_gpuUsage; }
-double SysmonPlugin::load1() const { return m_load1; }
-double SysmonPlugin::load5() const { return m_load5; }
-double SysmonPlugin::load15() const { return m_load15; }
 double SysmonPlugin::cpuFreqGHz() const { return m_cpuFreqGHz; }
 
 // Slow
@@ -69,8 +65,6 @@ double SysmonPlugin::diskUsage() const { return m_diskUsage; }
 double SysmonPlugin::diskUsedGB() const { return m_diskUsedGB; }
 double SysmonPlugin::diskTotalGB() const { return m_diskTotalGB; }
 QString SysmonPlugin::uptime() const { return m_uptime; }
-int SysmonPlugin::taskRunning() const { return m_taskRunning; }
-int SysmonPlugin::taskTotal() const { return m_taskTotal; }
 
 QString SysmonPlugin::systemUser() const { return SysmonBackend::instance().getSystemUser(); }
 QString SysmonPlugin::hostName() const { return SysmonBackend::instance().getHostName(); }
@@ -95,8 +89,6 @@ void SysmonPlugin::onFastTick() {
     m_netDownBps = be.getNetDownBps();
     m_netUpBps   = be.getNetUpBps();
     
-    m_processModel->setProcesses(be.getTopProcesses(50));
-    
     emit fastDataChanged();
 }
 
@@ -107,12 +99,7 @@ void SysmonPlugin::onMediumTick() {
     m_coreTemp    = be.getCoreTempCelsius();
     m_gpuTemp     = be.getGpuTempCelsius();
     m_gpuUsage    = be.getGpuUsagePercent();
-    m_load1       = be.getLoad1();
-    m_load5       = be.getLoad5();
-    m_load15      = be.getLoad15();
     m_cpuFreqGHz  = be.getCpuFreqGHz();
-    m_taskRunning = be.getRunningTasks();
-    m_taskTotal   = be.getTotalTasks();
     
     emit mediumDataChanged();
 }
