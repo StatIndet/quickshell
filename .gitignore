@@ -2,6 +2,7 @@
 *.md
 !README.md
 !AGENTS.md
+!docs/*.md
 
 # Local tool/editor state
 .agentrules

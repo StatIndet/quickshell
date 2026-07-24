@@ -27,6 +27,86 @@ Launcher
 
 Meteocons 资源不纳入 Git；动画图标可从 npm 包 [`@meteocons/lottie`](https://www.npmjs.com/package/@meteocons/lottie) 下载，并将包内容放入 `assets/icons/weather/meteocons/lottie/`。
 
+## `key` 与系统监测
+
+系统监测由 `core/src/sysmon/` 中的共享 C++ 核心提供。QML plugin
+保留兼容包装，`key sysmon` 和 `key top` 直接链接同一个 collector /
+sampler；左侧边栏的 `SystemMonitorService` 只消费一个长期运行的 JSONL
+数据流，不在 QML 中读取 `/proc` 或计算速率。
+
+### 构建与安装
+
+除 Qt 6、Qt6Keychain、PipeWire 和 Cava 等原有依赖外，构建 `key top`
+还需要 `pkg-config` 可发现的 `ncursesw`。从仓库根目录执行：
+
+```bash
+cmake -S core -B core/build
+cmake --build core/build
+env -u QT_QPA_PLATFORMTHEME QT_QPA_PLATFORM=offscreen \
+  ctest --test-dir core/build --output-on-failure
+sudo cmake --install core/build
+sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/
+```
+
+`cmake --install` 将单一 CLI 入口 `key` 安装到 CMake 的
+`CMAKE_INSTALL_BINDIR`（默认前缀下通常为 `/usr/local/bin`）。最后一条命令
+按本仓库当前 Quickshell 部署方式更新 QML plugins。
+
+### CLI
+
+```bash
+key sysmon snapshot --format json
+key sysmon stream --format jsonl --interval 1000
+key sysmon cpu --format json
+key sysmon processes --sort cpu --limit 50 --format json
+key top
+```
+
+默认 snapshot/stream 包含 system、CPU、memory、GPU、disk、network 和
+battery，不包含进程；只有 `key top`、`key sysmon processes` 或显式请求
+`processes` module 才会扫描进程。JSON v1 字段、单位、不可用值和 JSONL
+约定见 [`docs/sysmon-schema-v1.md`](docs/sysmon-schema-v1.md)。系统页面的
+Material 3 检查记录见
+[`docs/system-monitor-material3-audit.md`](docs/system-monitor-material3-audit.md)。
+
+`key top` 的主要快捷键：
+
+| 按键 | 操作 |
+| --- | --- |
+| `q` | 退出 `key top` |
+| `Esc` | 关闭当前弹窗或取消输入模式 |
+| `?` | 帮助 |
+| `↑` / `↓`、`j` / `k` | 移动进程选择 |
+| `PageUp` / `PageDown` | 翻页 |
+| `Tab` / `Shift+Tab` | 切换区域 |
+| `/` / `f` | 筛选进程 |
+| `s` / `t` | 切换排序字段 / 进程树 |
+| `p` / `Space` / `r` | 暂停恢复 / 立即刷新 |
+| `Enter` | 进程详情 |
+| `K` | 进程信号确认；默认 SIGTERM，SIGKILL 需要二次确认 |
+
+这里使用大写 `K` 发送信号，以保留 Vim 风格的小写 `k` 向上移动。
+`NO_COLOR` 可关闭颜色，`key top --ascii` 会强制整个界面只输出 ASCII。
+
+### QML 数据流
+
+`Services/SystemMonitorService.qml` 在系统页位于前台时取得引用并启动一个
+`key sysmon stream`，按行验证 schema v1、维护有限历史、暴露
+loading/ready/stale/error 状态，并在异常退出时有限退避重连。页面离开前台
+后释放引用并停止 stream。展示组件不直接启动命令；“完整监视器”操作由
+Service 选择可用终端并执行 `key top`。
+
+可重复的 QML 数据、渲染和进程生命周期 smoke：
+
+```bash
+CLAVIS_KEY="$PWD/core/build/bin/key" \
+CLAVIS_SMOKE_OPEN_TOP=1 TERMINAL=/usr/bin/true \
+  qs --no-color -p ./smoke_system.qml
+```
+
+测试结束会输出 `SYSMON_SMOKE_PASS`，释放页面引用并主动退出；此时不应再有
+`key sysmon stream` 进程。
+
 
 
 ### 致谢

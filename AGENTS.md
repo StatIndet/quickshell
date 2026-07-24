@@ -37,6 +37,7 @@
 │   ├── Lock/
 │   └── Sidebars/
 │       ├── Left/
+│       │   └── system/       # SystemView 的 Material 3 展示组件
 │       └── Right/
 ├── assets/
 │   ├── icons/
@@ -51,7 +52,11 @@
 │   ├── system/
 │   ├── theme/
 │   └── weather/
-└── core/                     # Qt/C++ native plugin
+└── core/                     # Qt/C++ native plugin 与 key CLI
+    ├── src/sysmon/           # 共享 collector、sampler、类型与 JSON 序列化
+    └── cli/src/
+        ├── commands/         # key 子命令
+        └── tui/              # ncursesw key top
 ```
 
 分层规则：
@@ -73,6 +78,11 @@ Qt/C++ plugin 统一位于 `core/`：可复用 backend 代码在 `core/src/`，Q
 
 - 与 UI 无关的 backend、provider、calculator 放在 `core/src/`。
 - 面向 QML 的包装层放在 `core/plugin/<name>/`。
+- 系统监测以 `core/src/sysmon/` 为唯一数据核心；plugin、`key sysmon`
+  和 `key top` 必须复用它，不得各自重新读取 `/proc`、`/sys` 或重复计算差值。
+- 左侧系统页只通过 `Services/SystemMonitorService.qml` 消费
+  `key sysmon stream` 的 JSONL；展示组件不得直接 import `Clavis.Sysmon`
+  或创建系统命令。
 - plugin 构建完成后，如需让系统里的 Quickshell 正常 `import`，必须将构建出的 `Clavis/` 和 `M3Shapes/` 目录复制到 `/usr/lib64/qt6/qml/`：
   `sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/`
 - QML 中使用自制 plugin 时，直接按其 URI import，例如：
@@ -84,9 +94,15 @@ Qt/C++ plugin 统一位于 `core/`：可复用 backend 代码在 `core/src/`，Q
 - `qs`：运行当前这套 Quickshell 配置并直接查看输出结果。
 - `cmake -S core -B core/build`：配置 Qt 6/CMake plugins。
 - `cmake --build core/build`：构建 C++ plugin backend。
+- `env -u QT_QPA_PLATFORMTHEME QT_QPA_PLATFORM=offscreen ctest --test-dir core/build --output-on-failure`：运行 C++ 与 CLI 测试。
+- `sudo cmake --install core/build`：安装 `key` 单一 CLI 入口。
 - `sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/`：安装编译后的 plugin，以便 Quickshell 正常 import。
 
 除非另有说明，请从仓库根目录运行这些命令。
+
+`key top` 使用 `ncursesw`；CMake 通过 `pkg-config` 检测该依赖，缺失时会在
+配置阶段明确报错。系统监测 JSON v1 协议记录在
+`docs/sysmon-schema-v1.md`。
 
 ## 代码风格与命名约定
 
