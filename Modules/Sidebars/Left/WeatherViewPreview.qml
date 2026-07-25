@@ -271,9 +271,13 @@ Item {
 
                 Item {
                     width: parent.width
-                    height: Math.max(220, flick.height - 452 - 286 - contentColumn.spacing * 2)
+                    height: Math.max(
+                        currentSummary.implicitHeight + root.contentMargin * 2,
+                        flick.height - 452 - 286 - contentColumn.spacing * 2
+                    )
 
                     Column {
+                        id: currentSummary
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter

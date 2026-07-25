@@ -172,7 +172,7 @@ Singleton {
             root.switching = false;
 
         if (!fromIpc)
-            root.forwardIpc(screenName ? ["set", path, screenName] : ["set", path]);
+            root.forwardIpc(["set", path, screenName || ""]);
         return true;
     }
 
@@ -190,7 +190,7 @@ Singleton {
         root.switching = false;
 
         if (!fromIpc)
-            root.forwardIpc(screenName ? ["clear", screenName] : ["clear"]);
+            root.forwardIpc(["clear", screenName || ""]);
         return true;
     }
 

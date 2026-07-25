@@ -68,11 +68,11 @@ Item {
     IpcHandler {
         target: "wallpaper"
 
-        function set(path, screenName) {
+        function set(path: string, screenName: string): string {
             return WallpaperService.setWallpaper(path || "", screenName || "", true) ? "OK" : "PENDING";
         }
 
-        function clear(screenName) {
+        function clear(screenName: string): string {
             return WallpaperService.clearWallpaper(screenName || "", true) ? "OK" : "PENDING";
         }
 
@@ -88,7 +88,7 @@ Item {
             return WallpaperService.cycleRandom(true) ? "OK" : "PENDING";
         }
 
-        function setFolder(path) {
+        function setFolder(path: string): string {
             return WallpaperService.setWallpaperFolder(path || "", true) ? "OK" : "PENDING";
         }
     }
