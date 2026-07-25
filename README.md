@@ -56,7 +56,9 @@
 
 ### 天气图标
 
-Meteocons 资源不纳入 Git；动画图标可从 npm 包 [`@meteocons/lottie`](https://www.npmjs.com/package/@meteocons/lottie) 下载，并将包内容放入 `assets/icons/weather/meteocons/lottie/`。
+Meteocons 资源不纳入 Git。安装器会从 npm 获取
+固定版本的 `@meteocons/lottie` 与 `@meteocons/svg`，验证完整清单后补齐动画及
+静态天气图标。
 
 ## `key` 与系统监测
 
@@ -65,23 +67,31 @@ Meteocons 资源不纳入 Git；动画图标可从 npm 包 [`@meteocons/lottie`]
 sampler；左侧边栏的 `SystemMonitorService` 只消费一个长期运行的 JSONL
 数据流，不在 QML 中读取 `/proc` 或计算速率。
 
-### 构建与安装
+### 安装
 
-除 Qt 6、Qt6Keychain、PipeWire 和 Cava 等原有依赖外，构建 `key top`
-还需要 `pkg-config` 可发现的 `ncursesw`。从仓库根目录执行：
+安装器会以两个并发任务构建并测试 `key` 与原生 QML plugin，然后安装到
+`~/.local`，不需要 root。缺少 Meteocons 天气资源时会通过 npm 自动获取。
 
 ```bash
-cmake -S core -B core/build
-cmake --build core/build
-env -u QT_QPA_PLATFORMTHEME QT_QPA_PLATFORM=offscreen \
-  ctest --test-dir core/build --output-on-failure
-sudo cmake --install core/build
-sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/
+./install.sh --dry-run
+./install.sh
 ```
 
-`cmake --install` 将单一 CLI 入口 `key` 安装到 CMake 的
-`CMAKE_INSTALL_BINDIR`（默认前缀下通常为 `/usr/local/bin`）。最后一条命令
-按本仓库当前 Quickshell 部署方式更新 QML plugins。
+自定义安装前缀：
+
+```bash
+./install.sh --prefix "$HOME/.local"
+```
+
+运行本仓库配置时，将用户级 QML module 目录加入 Qt import path：
+
+```bash
+QML_IMPORT_PATH="$HOME/.local/lib/qt6/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" \
+  qs --no-duplicate --path "$PWD"
+```
+
+构建依赖包括 CMake、C++ 编译器、Qt 6、Qt6Keychain、PipeWire、Cava、
+`pkg-config`、`ncursesw`、Node.js 和 npm。
 
 ### CLI
 

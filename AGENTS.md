@@ -83,8 +83,9 @@ Qt/C++ plugin 统一位于 `core/`：可复用 backend 代码在 `core/src/`，Q
 - 左侧系统页只通过 `Services/SystemMonitorService.qml` 消费
   `key sysmon stream` 的 JSONL；展示组件不得直接 import `Clavis.Sysmon`
   或创建系统命令。
-- plugin 构建完成后，如需让系统里的 Quickshell 正常 `import`，必须将构建出的 `Clavis/` 和 `M3Shapes/` 目录复制到 `/usr/lib64/qt6/qml/`：
-  `sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/`
+- plugin 通过仓库根目录的 `./install.sh` 构建、测试并安装到用户 prefix；
+  不要直接写入 `/usr/lib64/qt6/qml/`。运行时通过 `QML_IMPORT_PATH`
+  加载用户级 `lib/qt6/qml`。
 - QML 中使用自制 plugin 时，直接按其 URI import，例如：
   `import Clavis.Sysmon 1.0`
 - 若只改了 QML，不需要重编译 plugin；若改动涉及 `core/src/` 或 `core/plugin/`，则需要重新构建并重新复制安装。
@@ -95,8 +96,9 @@ Qt/C++ plugin 统一位于 `core/`：可复用 backend 代码在 `core/src/`，Q
 - `cmake -S core -B core/build`：配置 Qt 6/CMake plugins。
 - `cmake --build core/build`：构建 C++ plugin backend。
 - `env -u QT_QPA_PLATFORMTHEME QT_QPA_PLATFORM=offscreen ctest --test-dir core/build --output-on-failure`：运行 C++ 与 CLI 测试。
-- `sudo cmake --install core/build`：安装 `key` 单一 CLI 入口。
-- `sudo cp -a core/build/Clavis core/build/M3Shapes /usr/lib64/qt6/qml/`：安装编译后的 plugin，以便 Quickshell 正常 import。
+- `./install.sh --dry-run`：查看非 root 安装计划。
+- `./install.sh`：以两个并发任务构建、测试并安装 `key` 与 QML plugin 到
+  `~/.local`。
 
 除非另有说明，请从仓库根目录运行这些命令。
 
