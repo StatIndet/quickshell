@@ -191,28 +191,36 @@ Item {
             color: "transparent"
             radius: Appearance.rounding.large
 
-            InfoView {
+            Loader {
                 anchors.fill: parent
-                visible: WidgetState.leftSidebarView === "info"
-                screenName: root.screenName
-                foreground: root.foreground
-                    && WidgetState.leftSidebarView === "info"
+                asynchronous: true
+                sourceComponent: WidgetState.leftSidebarView === "info"
+                    ? infoComponent
+                    : WidgetState.leftSidebarView === "sys"
+                        ? systemComponent : weatherComponent
             }
 
-            SystemView {
-                anchors.fill: parent
-                visible: WidgetState.leftSidebarView === "sys"
-                foreground: root.foreground
-                    && WidgetState.leftSidebarView === "sys"
+            Component {
+                id: infoComponent
+                InfoView {
+                    screenName: root.screenName
+                    foreground: root.foreground
+                }
             }
 
-            WeatherView {
-                anchors.fill: parent
-                visible: WidgetState.leftSidebarView === "weather"
-                foreground: root.foreground
-                    && WidgetState.leftSidebarView === "weather"
-                presentationActive: root.presentationActive
-                    && WidgetState.leftSidebarView === "weather"
+            Component {
+                id: systemComponent
+                SystemView {
+                    foreground: root.foreground
+                }
+            }
+
+            Component {
+                id: weatherComponent
+                WeatherView {
+                    foreground: root.foreground
+                    presentationActive: root.presentationActive
+                }
             }
         }
     }

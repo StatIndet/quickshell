@@ -55,7 +55,7 @@ Item {
             text: root.recordingType === "gif" ? "GIF" : "REC"
             color: Appearance.colors.colOnSurfaceVariant
             font {
-                family: "JetBrainsMono Nerd Font"
+                family: "MesloLGM Nerd Font"
                 pixelSize: 11
                 weight: Font.DemiBold
                 letterSpacing: 0.8
@@ -188,7 +188,7 @@ Item {
                 text: root.formatElapsed(root.heldElapsedMs)
                 color: Appearance.colors.colOnLayer0
                 font {
-                    family: "JetBrainsMono Nerd Font"
+                    family: "MesloLGM Nerd Font"
                     pixelSize: 18
                     weight: Font.DemiBold
                 }
@@ -305,7 +305,7 @@ Item {
                 text: qsTr("正在处理")
                 color: Appearance.colors.colOnLayer0
                 font {
-                    family: "LXGW WenKai GB Screen"
+                    family: "Noto Sans CJK SC"
                     pixelSize: 14
                     weight: Font.DemiBold
                 }

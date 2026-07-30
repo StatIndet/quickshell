@@ -16,7 +16,9 @@ Rectangle {
     radius: height / 2 
     color: Appearance.colors.colPrimaryContainer 
 
-    Behavior on implicitWidth { NumberAnimation { duration: 300; easing.type: Easing.OutCubic } }
+    Behavior on implicitWidth {
+        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+    }
 
     RowLayout {
         id: layout
@@ -26,7 +28,7 @@ Rectangle {
 
         Text {
             id: iconText
-            font.family: "JetBrainsMono Nerd Font" 
+            font.family: "MesloLGM Nerd Font"
             font.pixelSize: 14 
             Layout.alignment: Qt.AlignVCenter
             color: Appearance.colors.colOnPrimaryContainer 
@@ -51,7 +53,12 @@ Rectangle {
             Layout.alignment: Qt.AlignVCenter
             visible: root.isHovered
             opacity: root.isHovered ? 1.0 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 120
+                    easing.type: Easing.OutCubic
+                }
+            }
         }
     }
 

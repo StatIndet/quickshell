@@ -17,14 +17,13 @@ Item {
     implicitHeight: 36
     
     implicitWidth: {
-        if (isHovered) {
+        if (isHovered)
             return contentLayout.implicitWidth + 24;
-        }
         return ramGroup.implicitWidth + 24;
     }
 
-    Behavior on implicitWidth { 
-        NumberAnimation { duration: 300; easing.type: Easing.OutQuart } 
+    Behavior on implicitWidth {
+        NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
     }
 
     Rectangle {
@@ -63,14 +62,14 @@ Item {
             Text { 
                 text: "" 
                 color: Appearance.colors.colSecondary
-                font.family: "JetBrainsMono Nerd Font"
+                font.family: "MesloLGM Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 // 同时保全了原始流的传递。并在这里调取新的 ramUsedGB。toFixed(1) 可保留如 14.2G 格式：
                 text: SysmonPlugin.ramUsedGB.toFixed(1) + "G"
                 color: Appearance.colors.colOnSurface
-                font.family: "LXGW WenKai GB Screen"
+                font.family: "Noto Sans CJK SC"
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -78,68 +77,99 @@ Item {
 
         // --- 2. Disk (展开) ---
         RowLayout {
+            id: gpuGroup
+            spacing: 4
+            visible: opacity > 0
+            opacity: root.isHovered ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+            }
+
+            Text {
+                text: "󰢮"
+                color: Appearance.colors.colSecondary
+                font.family: "MesloLGM Nerd Font"
+                font.pixelSize: 16
+            }
+            Text {
+                text: Math.round(SysmonPlugin.gpuUsage) + "%"
+                color: Appearance.colors.colOnSurface
+                font.family: "Noto Sans CJK SC"
+                font.bold: true
+                font.pixelSize: 13
+            }
+        }
+
+        // --- 3. Disk (展开) ---
+        RowLayout {
             id: diskGroup
             spacing: 4
             visible: opacity > 0
             opacity: root.isHovered ? 1.0 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+            }
             
             Text { 
                 text: "" 
                 color: Appearance.colors.colPrimary
-                font.family: "JetBrainsMono Nerd Font"
+                font.family: "MesloLGM Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.diskUsage) + "%"
                 color: Appearance.colors.colOnSurface
-                font.family: "LXGW WenKai GB Screen"
+                font.family: "Noto Sans CJK SC"
                 font.bold: true
                 font.pixelSize: 13
             }
         }
 
-        // --- 3. Temp (展开) ---
+        // --- 4. Temp (展开) ---
         RowLayout {
             id: tempGroup
             spacing: 4
             visible: opacity > 0
             opacity: root.isHovered ? 1.0 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+            }
             
             Text { 
                 text: "" 
                 color: Appearance.colors.colTertiary
-                font.family: "JetBrainsMono Nerd Font"
+                font.family: "MesloLGM Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.coreTemp) + "°C"
                 color: Appearance.colors.colOnSurface
-                font.family: "LXGW WenKai GB Screen"
+                font.family: "Noto Sans CJK SC"
                 font.bold: true
                 font.pixelSize: 13
             }
         }
 
-        // --- 4. CPU (展开) ---
+        // --- 5. CPU (展开) ---
         RowLayout {
             id: cpuGroup
             spacing: 4
             visible: opacity > 0
             opacity: root.isHovered ? 1.0 : 0.0
-            Behavior on opacity { NumberAnimation { duration: 200 } }
+            Behavior on opacity {
+                NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+            }
             
             Text { 
                 text: "" 
                 color: Appearance.colors.colOnSurfaceVariant
-                font.family: "JetBrainsMono Nerd Font"
+                font.family: "MesloLGM Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.cpuUsage) + "%"
                 color: Appearance.colors.colOnSurface
-                font.family: "LXGW WenKai GB Screen"
+                font.family: "Noto Sans CJK SC"
                 font.bold: true
                 font.pixelSize: 13
             }

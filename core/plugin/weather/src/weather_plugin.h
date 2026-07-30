@@ -21,6 +21,9 @@ class WeatherPlugin : public QObject {
     Q_PROPERTY(double longitude READ longitude NOTIFY dataChanged)
     Q_PROPERTY(QString lastUpdated READ lastUpdated NOTIFY dataChanged)
     Q_PROPERTY(QString nextRefreshAt READ nextRefreshAt NOTIFY dataChanged)
+    Q_PROPERTY(bool locationSearchLoading READ locationSearchLoading NOTIFY locationSearchChanged)
+    Q_PROPERTY(QVariantList locationSearchResults READ locationSearchResults NOTIFY locationSearchChanged)
+    Q_PROPERTY(QString locationSearchError READ locationSearchError NOTIFY locationSearchChanged)
 
     Q_PROPERTY(double currentTemperatureC READ currentTemperatureC NOTIFY dataChanged)
     Q_PROPERTY(double currentFeelsLikeC READ currentFeelsLikeC NOTIFY dataChanged)
@@ -56,6 +59,9 @@ public:
     double longitude() const;
     QString lastUpdated() const;
     QString nextRefreshAt() const;
+    bool locationSearchLoading() const;
+    QVariantList locationSearchResults() const;
+    QString locationSearchError() const;
 
     double currentTemperatureC() const;
     double currentFeelsLikeC() const;
@@ -81,11 +87,13 @@ public:
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void setManualLocation(double latitude, double longitude, const QString &name);
     Q_INVOKABLE void clearManualLocation();
+    Q_INVOKABLE void searchLocations(const QString &query);
     Q_INVOKABLE QVariantMap current() const;
 
 signals:
     void dataChanged();
     void loadingChanged();
+    void locationSearchChanged();
 
 private:
     WeatherBackend m_backend;

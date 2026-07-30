@@ -19,8 +19,12 @@ WlSessionLockSurface {
     property bool startupStarted: false
     property bool startupFallbackElapsed: false
 
-    readonly property real targetHeight: Math.max(1, height * Sizes.lockHeightMult)
-    readonly property real targetWidth: targetHeight * Sizes.lockRatio
+    // Fit the lock panel against both screen axes.  The old 70%-of-height
+    // calculation clipped the three-column layout on fractional-scale screens.
+    readonly property real availableWidth: Math.max(1, width - Sizes.lockOuterPadding * 2)
+    readonly property real availableHeight: Math.max(1, height - Sizes.lockOuterPadding * 2)
+    readonly property real targetWidth: Math.min(availableWidth, availableHeight * Sizes.lockRatio)
+    readonly property real targetHeight: Math.min(availableHeight, targetWidth / Sizes.lockRatio)
     readonly property real compactSize: Math.min(Sizes.lockIconPanelSize, targetHeight)
     readonly property real compactRadius: compactSize / 4
     readonly property real panelRadius: Sizes.lockCardRadiusLarge * 1.5
@@ -238,7 +242,8 @@ WlSessionLockSurface {
             width: root.targetWidth - Sizes.lockOuterPadding * 2
             height: root.targetHeight - Sizes.lockOuterPadding * 2
             context: root.context
-            screenHeight: root.height
+            // Size cards from the usable panel, not from the larger screen.
+            screenHeight: height
             opacity: root.contentOpacity
             scale: root.contentScale
             visible: opacity > 0 || root.morphProgress > 0.96

@@ -8,6 +8,7 @@ Item {
     property var player 
 
     property string dateStr: ""
+    property string timeStr: ""
     
     // 【核心变化1】把时间拆分成 4 个独立的整数型变量，绑定动画目标值
     property int h0: 0
@@ -28,6 +29,7 @@ Item {
         onTriggered: {
             let d = new Date()
             root.dateStr = root.formatDate(d)
+            root.timeStr = Qt.formatTime(d, "HH:mm")
             let hStr = d.getHours().toString().padStart(2, '0')
             let mStr = d.getMinutes().toString().padStart(2, '0')
             
@@ -85,6 +87,7 @@ Item {
     Row {
         anchors.centerIn: parent
         spacing: 10 
+        visible: false
         
         // --- 左侧日期部分 ---
         Text {
@@ -153,6 +156,37 @@ Item {
                     digitOffset: 1 
                 }
             }
+        }
+    }
+
+    Row {
+        anchors.centerIn: parent
+        spacing: 9
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.dateStr
+            color: Appearance.colors.colPrimary
+            font.family: Sizes.fontFamily
+            font.pixelSize: 13
+            font.weight: Font.DemiBold
+        }
+
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            width: 1
+            height: 16
+            radius: 0.5
+            color: Appearance.colors.colOutlineVariant
+        }
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.timeStr
+            color: Appearance.colors.colPrimary
+            font.family: Sizes.fontFamilyMono
+            font.pixelSize: 20
+            font.weight: Font.Bold
         }
     }
 }

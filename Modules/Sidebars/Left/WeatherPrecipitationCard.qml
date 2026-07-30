@@ -77,10 +77,9 @@ WeatherInsightCard {
     }
 
     Row {
-        anchors.left: parent.left
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.leftMargin: 16
-        anchors.topMargin: 16
+        anchors.topMargin: 28
         spacing: 8
 
         Item {
@@ -114,17 +113,15 @@ WeatherInsightCard {
     Item {
         id: valueBlock
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.top: parent.top
-        anchors.leftMargin: 16
-        anchors.topMargin: 62
-        width: parent.width - 32
-        height: Math.round(root.height * 0.36)
+        anchors.topMargin: 68
+        height: Math.round(root.height * 0.40)
 
         Item {
             width: valueNumber.implicitWidth + (valueUnit.visible ? 6 + valueUnit.implicitWidth : 0)
             height: Math.max(valueNumber.implicitHeight, valueUnit.visible ? valueUnit.implicitHeight + 8 : 0)
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
+            anchors.centerIn: parent
 
             Text {
                 id: valueNumber
@@ -155,14 +152,15 @@ WeatherInsightCard {
     Text {
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: valueBlock.bottom
+        anchors.bottom: parent.bottom
         anchors.leftMargin: 16
         anchors.rightMargin: 16
-        anchors.topMargin: 8
+        anchors.bottomMargin: 36
         text: root.footerText
         color: root.ink
         font.pixelSize: 16
         font.bold: true
+        horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
     }
 }

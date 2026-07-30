@@ -69,7 +69,7 @@ Rectangle {
                 Text {
                     text: qsTr("逐小时预报")
                     color: Appearance.colors.colOnSurface
-                    font.family: "LXGW WenKai GB Screen"
+                    font.family: "Noto Sans CJK SC"
                     font.bold: true
                     font.pixelSize: 22
                     Layout.alignment: Qt.AlignVCenter
@@ -232,7 +232,7 @@ Rectangle {
                             }
 
                             ctx.fillStyle = textColor
-                            ctx.font = "bold 13px \"JetBrainsMono Nerd Font\""
+                            ctx.font = "bold 13px \"MesloLGM Nerd Font\""
                             ctx.textAlign = "center"
                             for (let n = 0; n < count; ++n) {
                                 ctx.fillText(root.fmtTemp(values[n]), pointX(n), yAt(values[n], minTemp, maxTemp) - 10)
@@ -255,7 +255,7 @@ Rectangle {
                                 y: trendContent.topTextY
                                 text: root.hourLabel(hourItem.time)
                                 color: Appearance.colors.colOnSurfaceVariant
-                                font.family: "JetBrainsMono Nerd Font"
+                                font.family: "MesloLGM Nerd Font"
                                 font.pixelSize: 13
                                 horizontalAlignment: Text.AlignHCenter
                             }

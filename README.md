@@ -1,6 +1,66 @@
 > [!WARNING]
 > 当前项目仍未完工，仅作为demo。
 
+## 此 Fork 的主要改进
+
+这个分支整理了针对 Niri、Intel 核显笔记本和高刷新率屏幕的日常体验优化。
+改动保持 Clavis 原有 Material 3 设计语言，并尽量复用共享 C++ 后端，避免在
+QML 中启动高频外部进程。
+
+### 性能与侧边栏
+
+- 左侧侧边栏改为按当前标签异步加载，不再同时创建信息、系统和天气三个重页面。
+- 降低后台天气粒子刷新频率，修复 Tooltip 依赖循环和隐藏页面持续渲染造成的
+  高 CPU、内存占用与展开掉帧。
+- 调整侧边栏用户卡片、天气指标卡片和状态栏按钮尺寸、间距及动画。
+- 天气卡片的标题、数值、单位和说明采用一致的居中布局。
+
+### Intel `xe` 核显 GPU 使用率
+
+系统监控新增 Intel `xe` 驱动支持。由于新驱动不提供传统
+`gpu_busy_percent`，collector 会读取 Linux DRM `/proc/*/fdinfo` 中的
+`drm-cycles-*` 与 `drm-total-cycles-*`，按 DRM client 去重并计算采样区间
+利用率。
+
+- 顶栏系统监控悬停展开后显示 GPU 使用率。
+- 共享 collector 同时服务 QML plugin、`key sysmon gpu` 和 `key top`。
+- 已在 Intel Arc 核显、`xe` 内核驱动上验证。
+
+```bash
+key sysmon stream --format jsonl --interval 2000 --modules gpu
+```
+
+### 天气位置与设置中心
+
+- 天气页编辑按钮直接打开设置中心的“天气”标签，不再显示独立弹窗。
+- 支持 IP 自动定位、Open-Meteo 地点搜索、从搜索结果自动取得经纬度，以及
+  手动输入位置名称和坐标。
+- 设置中心通过 IPC 将位置立即同步到主 Shell，无需重启。
+- OpenWeather 和 MapTiler 密钥仍只保存在系统密钥环中。
+
+### 顶栏与快捷设置
+
+- 左上角新增应用启动器按钮。
+- 新增 Codex 剩余额度显示；需要
+  [`codexbar`](https://github.com/steipete/codexbar)，默认从 `PATH` 查找，
+  也可通过 `CLAVIS_CODEXBAR` 指定可执行文件。
+- 新增节能、平衡、性能三档电源模式，并联动 Niri 输出刷新率：节能模式切换
+  60 Hz，平衡和性能模式恢复 120 Hz。
+
+显示器名称和模式可通过启动 Clavis 时设置以下环境变量覆盖：
+
+```bash
+export CLAVIS_INTERNAL_OUTPUT=eDP-1
+export CLAVIS_POWER_SAVER_MODE='2880x1800@60.000'
+export CLAVIS_NORMAL_MODE='2880x1800@120.000'
+```
+
+### 其他体验改进
+
+- 优化高刷新率下的状态栏按钮、网络与系统监控展开动画。
+- 修正锁屏缩放、认证卡片布局及 PAM 指纹认证兼容配置。
+- 改进截图区域选择、Keystone 时钟/录制组件、动态壁纸和歌词组件的生命周期。
+
 ## 项目说明
 
 .

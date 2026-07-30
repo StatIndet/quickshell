@@ -15,9 +15,9 @@ AccountProfileHeader {
             || PersonalizationConfig.wallpaperPath)
         : ""
 
-    coverHeight: Math.round(width / 2.5)
-    profileAreaHeight: 112
-    avatarSize: 96
+    coverHeight: Math.round(width / 3.8)
+    profileAreaHeight: 88
+    avatarSize: 72
     wallpaperPath: resolvedWallpaperPath
     colorWallpaper: WallpaperService.isColorSource(resolvedWallpaperPath)
     avatarUrl: AvatarService.avatarUrl

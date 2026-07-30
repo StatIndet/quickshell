@@ -93,6 +93,39 @@ void WeatherBackend::clearManualLocation() {
     refresh();
 }
 
+void WeatherBackend::searchLocations(const QString &query) {
+    const QString search = query.trimmed();
+    if (search.size() < 2) {
+        m_locationSearchResults.clear();
+        m_locationSearchError = QStringLiteral("请输入至少两个字符");
+        emit locationSearchChanged();
+        return;
+    }
+    m_locationSearchLoading = true;
+    m_locationSearchError.clear();
+    emit locationSearchChanged();
+    m_client.requestLocationSearch(
+        search, [this](bool ok, const QList<WeatherLocation> &locations,
+                       const QString &error) {
+            m_locationSearchLoading = false;
+            m_locationSearchResults.clear();
+            if (!ok) {
+                m_locationSearchError = error;
+            } else {
+                for (const WeatherLocation &location : locations) {
+                    QVariantMap item;
+                    item.insert(QStringLiteral("name"), location.name);
+                    item.insert(QStringLiteral("latitude"), location.latitude);
+                    item.insert(QStringLiteral("longitude"), location.longitude);
+                    m_locationSearchResults.push_back(item);
+                }
+                m_locationSearchError = locations.isEmpty()
+                    ? QStringLiteral("未找到匹配位置") : QString();
+            }
+            emit locationSearchChanged();
+        });
+}
+
 void WeatherBackend::setLoading(bool loading) {
     if (m_loading == loading) return;
     m_loading = loading;

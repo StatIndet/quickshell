@@ -322,6 +322,10 @@ WidgetPanel {
             Layout.fillWidth: true
         }
 
+        PowerProfileSelector {
+            Layout.fillWidth: true
+        }
+
         Rectangle {
             id: togglePanel
 

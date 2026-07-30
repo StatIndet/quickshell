@@ -192,7 +192,7 @@ Item {
                     id: errorMessage
 
                     property string msg: root.context && root.context.showFailure
-                        ? qsTr("密码错误，请重试。") : ""
+                        ? qsTr("验证失败，请重试密码或指纹。") : ""
                     property string pendingText: ""
 
                     anchors.left: parent.left

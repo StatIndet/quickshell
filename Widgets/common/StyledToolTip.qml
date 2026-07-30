@@ -7,7 +7,10 @@ PopupToolTip {
 
     property font font
 
-    respectParentHierarchy: true
+    // Hover/pressed conditions already suppress tooltips for inactive
+    // controls. Walking effective visibility through a Loader-backed sidebar
+    // creates a dependency cycle in Qt 6 and can saturate the GUI thread.
+    respectParentHierarchy: false
     horizontalPadding: 10
     verticalPadding: 5
     font {

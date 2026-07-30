@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Clavis.WeatherMap 1.0
+import Clavis.Weather 1.0
 import qs.Modules.Bar
 import qs.Modules.Keystone
 import qs.Modules.Launcher
@@ -69,13 +70,72 @@ Item {
     }
 
     IpcHandler {
+        target: "volume"
+
+        function increase(): string {
+            return Volume.setSinkVolume(Math.min(1.0, Volume.sinkVolume + 0.05)) ? "OK" : "UNAVAILABLE";
+        }
+
+        function decrease(): string {
+            return Volume.setSinkVolume(Math.max(0.0, Volume.sinkVolume - 0.05)) ? "OK" : "UNAVAILABLE";
+        }
+
+        function muteOutput(): string {
+            return Volume.toggleSinkMute() ? "OK" : "UNAVAILABLE";
+        }
+
+        function muteInput(): string {
+            return Volume.toggleSourceMute() ? "OK" : "UNAVAILABLE";
+        }
+    }
+
+    IpcHandler {
+        target: "brightness"
+
+        function increase(): string {
+            Brightness.setBrightness(Math.min(1.0, Brightness.brightnessValue + 0.05), false);
+            return "OK";
+        }
+
+        function decrease(): string {
+            Brightness.setBrightness(Math.max(0.01, Brightness.brightnessValue - 0.05), false);
+            return "OK";
+        }
+    }
+
+    IpcHandler {
+        target: "media"
+
+        function next(): string {
+            if (!MediaManager.active || !MediaManager.active.canGoNext)
+                return "UNAVAILABLE";
+            MediaManager.active.next();
+            return "OK";
+        }
+
+        function previous(): string {
+            if (!MediaManager.active || !MediaManager.active.canGoPrevious)
+                return "UNAVAILABLE";
+            MediaManager.active.previous();
+            return "OK";
+        }
+
+        function playPause(): string {
+            if (!MediaManager.active)
+                return "UNAVAILABLE";
+            MediaManager.active.togglePlaying();
+            return "OK";
+        }
+    }
+
+    IpcHandler {
         target: "wallpaper"
 
-        function set(path, screenName) {
+        function set(path: string, screenName: string) {
             return WallpaperService.setWallpaper(path || "", screenName || "", true) ? "OK" : "PENDING";
         }
 
-        function clear(screenName) {
+        function clear(screenName: string) {
             return WallpaperService.clearWallpaper(screenName || "", true) ? "OK" : "PENDING";
         }
 
@@ -91,8 +151,23 @@ Item {
             return WallpaperService.cycleRandom(true) ? "OK" : "PENDING";
         }
 
-        function setFolder(path) {
+        function setFolder(path: string) {
             return WallpaperService.setWallpaperFolder(path || "", true) ? "OK" : "PENDING";
+        }
+    }
+
+    IpcHandler {
+        target: "weather"
+
+        function setLocation(latitude: real, longitude: real,
+                             name: string): string {
+            WeatherPlugin.setManualLocation(latitude, longitude, name)
+            return "OK"
+        }
+
+        function useIpLocation(): string {
+            WeatherPlugin.clearManualLocation()
+            return "OK"
         }
     }
 

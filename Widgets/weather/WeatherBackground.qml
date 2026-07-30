@@ -1151,7 +1151,10 @@ Item {
     }
 
     Timer {
-        interval: 16
+        // Particle simulation is deliberately 30 FPS. The sidebar surface and
+        // controls still composite at the monitor refresh rate, while this
+        // expensive JavaScript scene no longer monopolizes the GUI thread.
+        interval: 33
         running: root.animate
         repeat: true
 

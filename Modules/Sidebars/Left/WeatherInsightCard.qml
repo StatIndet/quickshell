@@ -60,7 +60,7 @@ Rectangle {
             visible: root.title.length > 0
             text: root.title
             color: root.titleColor
-            font.family: "LXGW WenKai GB Screen"
+            font.family: "Noto Sans CJK SC"
             font.pixelSize: 13
             font.bold: true
             anchors.verticalCenter: parent.verticalCenter

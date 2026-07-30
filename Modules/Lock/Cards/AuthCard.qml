@@ -40,7 +40,7 @@ FocusScope {
     }
     readonly property bool hasText: input.text.length > 0
     readonly property bool busy: context && context.unlockInProgress
-    readonly property bool enterEnabled: hasText && !busy
+    readonly property bool enterEnabled: !busy
     readonly property bool enterHovered: frameMouse.containsMouse && frameMouse.mouseX >= enterButton.x
     readonly property bool enterPressed: frameMouse.pressed && frameMouse.mouseX >= enterButton.x
 
@@ -296,7 +296,7 @@ FocusScope {
                     property bool animateOnNextShow: true
 
                     anchors.centerIn: parent
-                    text: root.busy ? qsTr("正在加载…") : qsTr("输入密码")
+                    text: root.busy ? qsTr("正在验证…") : qsTr("输入密码，或按 Enter 使用指纹")
                     color: root.busy ? Appearance.colors.colSecondary : Appearance.colors.colOutline
                     font.family: Sizes.fontFamilyMono
                     font.pixelSize: 17

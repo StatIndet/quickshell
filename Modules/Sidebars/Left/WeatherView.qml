@@ -323,7 +323,7 @@ Item {
                         Text {
                             text: WeatherPlugin.locationName || qsTr("天气")
                             color: root.headerInk
-                            font.family: "LXGW WenKai GB Screen"
+                            font.family: "Noto Sans CJK SC"
                             font.pixelSize: 19
                             font.bold: true
                             elide: Text.ElideRight
@@ -336,7 +336,12 @@ Item {
                         implicitWidth: 38
                         implicitHeight: 38
                         Layout.alignment: Qt.AlignVCenter
-                        onClicked: console.log("Open weather settings")
+                        onClicked: {
+                            Quickshell.execDetached([
+                                Paths.shellDir
+                                    + "/scripts/open-weather-settings"
+                            ])
+                        }
 
                         background: Rectangle {
                             radius: width / 2
@@ -407,7 +412,7 @@ Item {
                         color: WeatherPlugin.status === "stale" || WeatherPlugin.status === "error"
                                ? root.headerErrorInk
                                : root.headerInk
-                        font.family: "JetBrainsMono Nerd Font"
+                        font.family: "MesloLGM Nerd Font"
                         font.pixelSize: 12
                         elide: Text.ElideRight
                         Layout.fillWidth: true
@@ -447,7 +452,7 @@ Item {
                             width: parent.width
                             text: WeatherPlugin.currentWeatherText || qsTr("未知")
                             color: Appearance.colors.colOnImage
-                            font.family: "LXGW WenKai GB Screen"
+                            font.family: "Noto Sans CJK SC"
                             font.pixelSize: 26
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
@@ -466,7 +471,7 @@ Item {
                                 anchors.bottom: parent.bottom
                                 text: fmtTempPlain(WeatherPlugin.currentTemperatureC)
                                 color: Appearance.colors.colOnImage
-                                font.family: "JetBrainsMono Nerd Font"
+                                font.family: "MesloLGM Nerd Font"
                                 font.pixelSize: 132
                                 font.bold: true
                                 font.letterSpacing: 0
@@ -488,7 +493,7 @@ Item {
                             width: parent.width
                             text: qsTr("体感温度: ") + fmtTemp(WeatherPlugin.currentFeelsLikeC)
                             color: Appearance.colors.colOnImage
-                            font.family: "LXGW WenKai GB Screen"
+                            font.family: "Noto Sans CJK SC"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
@@ -499,7 +504,7 @@ Item {
                             text: qsTr("最高 ") + fmtTemp(today().temperatureMaxC)
                                   + qsTr(" · 最低 ") + fmtTemp(today().temperatureMinC)
                             color: Appearance.colors.colOnImage
-                            font.family: "LXGW WenKai GB Screen"
+                            font.family: "Noto Sans CJK SC"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
@@ -775,7 +780,7 @@ Item {
             Text {
                 text: card.title
                 color: Appearance.colors.colOnSurface
-                font.family: "LXGW WenKai GB Screen"
+                font.family: "Noto Sans CJK SC"
                 font.bold: true
                 font.pixelSize: 15
                 anchors.verticalCenter: parent.verticalCenter

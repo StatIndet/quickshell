@@ -93,7 +93,7 @@ Item {
         Text {
             text: root.title
             color: Appearance.colors.colOnWeatherCardSurfaceVariant
-            font.family: "LXGW WenKai GB Screen"
+            font.family: "Noto Sans CJK SC"
             font.bold: true
             font.pixelSize: 19
             anchors.verticalCenter: parent.verticalCenter
@@ -107,7 +107,7 @@ Item {
             ? "--"
             : Math.round(valueAnimation.currentValue)
         color: Appearance.colors.colOnWeatherCardSurface
-        font.family: "JetBrainsMono Nerd Font"
+        font.family: "MesloLGM Nerd Font"
         font.bold: true
         font.pixelSize: 62
     }
@@ -119,7 +119,7 @@ Item {
         width: parent.width * 0.40
         text: root.level
         color: Appearance.colors.colOnWeatherCardSurface
-        font.family: "LXGW WenKai GB Screen"
+        font.family: "Noto Sans CJK SC"
         font.pixelSize: 22
         font.bold: true
         horizontalAlignment: Text.AlignHCenter

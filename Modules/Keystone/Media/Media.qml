@@ -306,7 +306,7 @@ Item {
                     activeColor: "white"
                     inactiveColor: "#99ffffff"
                     fontSize: 18
-                    fontFamily: "LXGW WenKai GB Screen"
+                    fontFamily: "Noto Sans CJK SC"
                     fontBold: true
                     horizontalAlignment: Text.AlignLeft
                     wrapMode: Text.WordWrap
@@ -366,9 +366,9 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        Text { text: root.isActive ? root.formatTime(root.currentPos) : "0:00"; color: "#dddddd"; font.pixelSize: 12; font.family: "JetBrainsMono Nerd Font" }
+                        Text { text: root.isActive ? root.formatTime(root.currentPos) : "0:00"; color: "#dddddd"; font.pixelSize: 12; font.family: "MesloLGM Nerd Font" }
                         Item { Layout.fillWidth: true }
-                        Text { text: root.isActive ? root.formatTime(root.player.length) : "0:00"; color: "#dddddd"; font.pixelSize: 12; font.family: "JetBrainsMono Nerd Font" }
+                        Text { text: root.isActive ? root.formatTime(root.player.length) : "0:00"; color: "#dddddd"; font.pixelSize: 12; font.family: "MesloLGM Nerd Font" }
                     }
                 }
             }

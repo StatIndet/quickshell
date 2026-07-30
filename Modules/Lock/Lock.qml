@@ -68,7 +68,7 @@ Scope {
         signal unlockFailed()
 
         function tryUnlock() {
-            if (currentText === "" || unlockInProgress)
+            if (unlockInProgress)
                 return;
 
             internalContext.unlockInProgress = true;

@@ -1,5 +1,6 @@
 #include "openmeteo_client.h"
 
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QNetworkReply>
 #include <QUrlQuery>
@@ -20,6 +21,43 @@ void OpenMeteoClient::requestIpLocation(LocationCallback callback) {
         if (location.name.isEmpty()) location.name = json.value("country").toString();
         if (location.name.isEmpty()) location.name = "Unknown";
         callback(location.latitude != 0.0 || location.longitude != 0.0, location, {});
+    });
+}
+
+void OpenMeteoClient::requestLocationSearch(
+    const QString &search, LocationListCallback callback) {
+    QUrl url("https://geocoding-api.open-meteo.com/v1/search");
+    QUrlQuery query;
+    query.addQueryItem("name", search.trimmed());
+    query.addQueryItem("count", "8");
+    query.addQueryItem("language", "zh");
+    query.addQueryItem("format", "json");
+    url.setQuery(query);
+    getJson(url, [callback](bool ok, const QJsonObject &json,
+                           const QString &error) {
+        if (!ok) {
+            callback(false, {}, error);
+            return;
+        }
+        QList<WeatherLocation> locations;
+        const QJsonArray results = json.value("results").toArray();
+        locations.reserve(results.size());
+        for (const QJsonValue &value : results) {
+            const QJsonObject item = value.toObject();
+            WeatherLocation location;
+            location.latitude = item.value("latitude").toDouble();
+            location.longitude = item.value("longitude").toDouble();
+            const QString name = item.value("name").toString();
+            const QString admin = item.value("admin1").toString();
+            const QString country = item.value("country").toString();
+            QStringList parts;
+            if (!name.isEmpty()) parts << name;
+            if (!admin.isEmpty() && admin != name) parts << admin;
+            if (!country.isEmpty()) parts << country;
+            location.name = parts.join(QStringLiteral(" · "));
+            locations.push_back(location);
+        }
+        callback(true, locations, {});
     });
 }
 

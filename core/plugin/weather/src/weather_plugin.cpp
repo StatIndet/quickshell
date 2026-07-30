@@ -13,6 +13,8 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
         emit dataChanged();
     });
     connect(&m_backend, &WeatherBackend::loadingChanged, this, &WeatherPlugin::loadingChanged);
+    connect(&m_backend, &WeatherBackend::locationSearchChanged,
+            this, &WeatherPlugin::locationSearchChanged);
     syncModels();
 }
 
@@ -26,6 +28,9 @@ double WeatherPlugin::latitude() const { return m_backend.snapshot().latitude; }
 double WeatherPlugin::longitude() const { return m_backend.snapshot().longitude; }
 QString WeatherPlugin::lastUpdated() const { return m_backend.snapshot().lastUpdated.toString(Qt::ISODate); }
 QString WeatherPlugin::nextRefreshAt() const { return m_backend.snapshot().nextRefreshAt.toString(Qt::ISODate); }
+bool WeatherPlugin::locationSearchLoading() const { return m_backend.locationSearchLoading(); }
+QVariantList WeatherPlugin::locationSearchResults() const { return m_backend.locationSearchResults(); }
+QString WeatherPlugin::locationSearchError() const { return m_backend.locationSearchError(); }
 
 double WeatherPlugin::currentTemperatureC() const { return currentValue("temperatureC", 0.0).toDouble(); }
 double WeatherPlugin::currentFeelsLikeC() const { return currentValue("feelsLikeC", currentTemperatureC()).toDouble(); }
@@ -51,6 +56,7 @@ WeatherListModel* WeatherPlugin::minutelyForecast() { return &m_minutely; }
 void WeatherPlugin::refresh() { m_backend.refresh(); }
 void WeatherPlugin::setManualLocation(double latitude, double longitude, const QString &name) { m_backend.setManualLocation(latitude, longitude, name); }
 void WeatherPlugin::clearManualLocation() { m_backend.clearManualLocation(); }
+void WeatherPlugin::searchLocations(const QString &query) { m_backend.searchLocations(query); }
 QVariantMap WeatherPlugin::current() const { return m_backend.snapshot().current; }
 
 QVariant WeatherPlugin::currentValue(const QString &key, const QVariant &fallback) const {

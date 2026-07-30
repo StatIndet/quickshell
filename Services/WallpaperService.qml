@@ -719,9 +719,9 @@ Singleton {
         onExited: exitCode => {
             root.overviewBackdropRuleDetected = exitCode === 0;
             niriTransparentBackgroundProbe.command = [
-                "grep", "-F", "-q",
+                "grep", "-R", "-F", "-q",
                 "background-color \"transparent\"",
-                Paths.homeDir + "/.config/niri/config.kdl"
+                Paths.homeDir + "/.config/niri"
             ];
             niriTransparentBackgroundProbe.running = true;
         }

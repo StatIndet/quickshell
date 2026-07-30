@@ -4,6 +4,7 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Window
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
@@ -22,7 +23,13 @@ FloatingWindow {
     Material.theme: PersonalizationConfig.themeMode === "light" ? Material.Light : Material.Dark
     Material.accent: Appearance.colors.colPrimary
     onClosed: Qt.quit()
-    Component.onCompleted: I18nService.initialize()
+    Component.onCompleted: {
+        I18nService.initialize()
+        const requestedPage = String(
+            Quickshell.env("CLAVIS_CONTROL_CENTER_PAGE") || "")
+        if (requestedPage.length)
+            openPage(requestedPage)
+    }
 
     property real contentPadding: 8
     property int currentPage: 0
@@ -60,6 +67,18 @@ FloatingWindow {
     function copyConfigPath() {
         Quickshell.clipboardText = PersonalizationConfig.filePath;
         copiedTimer.restart();
+    }
+
+    IpcHandler {
+        target: "control-center"
+
+        function openPage(pageId: string): string {
+            root.openPage(pageId)
+            root.show()
+            root.raise()
+            root.requestActivate()
+            return "OK"
+        }
     }
 
     Timer {

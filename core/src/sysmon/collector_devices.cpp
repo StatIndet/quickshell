@@ -346,6 +346,91 @@ QVector<GpuInfo> LinuxCollector::collectGpus(QVector<Error> *errors)
 
         gpu.utilizationPercent =
             readNumber(devicePath + QStringLiteral("/gpu_busy_percent"));
+        if (!gpu.utilizationPercent && driver == QStringLiteral("xe")) {
+            // The xe driver does not expose gpu_busy_percent. Like Resources,
+            // derive utilization from the per-client DRM cycle counters in
+            // /proc/*/fdinfo. A client can have several descriptors, so
+            // de-duplicate by drm-client-id and engine.
+            QHash<QString, quint64> busyCycles;
+            QHash<QString, quint64> totalCycles;
+            const QDir proc(QStringLiteral("/proc"));
+            const QRegularExpression pidPattern(QStringLiteral("^\\d+$"));
+            const QRegularExpression cyclePattern(
+                QStringLiteral("^drm-cycles-(.+):\\s*(\\d+)"));
+            const QRegularExpression totalPattern(
+                QStringLiteral("^drm-total-cycles-(.+):\\s*(\\d+)"));
+            for (const QString &pid :
+                 proc.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+                if (!pidPattern.match(pid).hasMatch())
+                    continue;
+                const QDir fdinfo(proc.absoluteFilePath(
+                    pid + QStringLiteral("/fdinfo")));
+                for (const QString &fd :
+                     fdinfo.entryList(QDir::Files | QDir::NoDotAndDotDot)) {
+                    const QString text = QString::fromUtf8(
+                        readAll(fdinfo.absoluteFilePath(fd)));
+                    if (!text.contains(QStringLiteral("drm-driver:\txe"))
+                        || !text.contains(
+                            QStringLiteral("drm-pdev:\t") + pciId)) {
+                        continue;
+                    }
+                    QString clientId;
+                    const QStringList lines = text.split('\n');
+                    for (const QString &line : lines) {
+                        if (line.startsWith(
+                                QStringLiteral("drm-client-id:"))) {
+                            clientId = line.section(':', 1).trimmed();
+                            break;
+                        }
+                    }
+                    if (clientId.isEmpty())
+                        continue;
+                    for (const QString &line : lines) {
+                        QRegularExpressionMatch match =
+                            cyclePattern.match(line);
+                        if (match.hasMatch()) {
+                            busyCycles.insert(
+                                pciId + QLatin1Char('/') + clientId
+                                    + QLatin1Char('/') + match.captured(1),
+                                match.captured(2).toULongLong());
+                            continue;
+                        }
+                        match = totalPattern.match(line);
+                        if (match.hasMatch()) {
+                            totalCycles.insert(
+                                pciId + QLatin1Char('/') + clientId
+                                    + QLatin1Char('/') + match.captured(1),
+                                match.captured(2).toULongLong());
+                        }
+                    }
+                }
+            }
+
+            double utilization = 0.0;
+            bool sampled = false;
+            for (auto it = busyCycles.cbegin(); it != busyCycles.cend(); ++it) {
+                const QString &key = it.key();
+                if (!totalCycles.contains(key)
+                    || !m_xeBusyCycles.contains(key)
+                    || !m_xeTotalCycles.contains(key)) {
+                    continue;
+                }
+                const quint64 busy = it.value();
+                const quint64 total = totalCycles.value(key);
+                const quint64 oldBusy = m_xeBusyCycles.value(key);
+                const quint64 oldTotal = m_xeTotalCycles.value(key);
+                if (busy < oldBusy || total <= oldTotal)
+                    continue;
+                utilization += 100.0
+                    * static_cast<double>(busy - oldBusy)
+                    / static_cast<double>(total - oldTotal);
+                sampled = true;
+            }
+            m_xeBusyCycles = std::move(busyCycles);
+            m_xeTotalCycles = std::move(totalCycles);
+            if (sampled)
+                gpu.utilizationPercent = std::clamp(utilization, 0.0, 100.0);
+        }
         gpu.frequencyMHz =
             readNumber(devicePath + QStringLiteral("/gt_cur_freq_mhz"));
         if (!gpu.frequencyMHz) {

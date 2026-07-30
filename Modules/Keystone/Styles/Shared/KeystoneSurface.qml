@@ -941,6 +941,31 @@ Variants {
                 property var audioNode: Pipewire.defaultAudioSink ? Pipewire.defaultAudioSink.audio : null
                 property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio : null
                 property string sliderMode: "volume"
+                property bool audioOsdReady: false
+                property bool microphoneOsdReady: false
+
+                onAudioNodeChanged: {
+                    audioOsdReady = false
+                    audioOsdReadyTimer.restart()
+                }
+
+                onSourceAudioNodeChanged: {
+                    microphoneOsdReady = false
+                    microphoneOsdReadyTimer.restart()
+                }
+
+                Timer {
+                    id: audioOsdReadyTimer
+                    interval: 1200
+                    onTriggered: root.audioOsdReady = root.audioNode !== null
+                }
+
+                Timer {
+                    id: microphoneOsdReadyTimer
+                    interval: 1200
+                    onTriggered: root.microphoneOsdReady =
+                        root.sourceAudioNode !== null
+                }
 
                 Timer { 
                     id: volHideTimer
@@ -953,14 +978,38 @@ Variants {
             
                 Connections {
                     target: root.audioNode; ignoreUnknownSignals: true
-                    function onVolumeChanged() { root.triggerSliderOSD("volume") } 
-                    function onMutedChanged() { root.triggerSliderOSD("volume") }  
+                    function onVolumeChanged() {
+                        if (!root.audioOsdReady) {
+                            audioOsdReadyTimer.restart()
+                            return
+                        }
+                        root.triggerSliderOSD("volume")
+                    }
+                    function onMutedChanged() {
+                        if (!root.audioOsdReady) {
+                            audioOsdReadyTimer.restart()
+                            return
+                        }
+                        root.triggerSliderOSD("volume")
+                    }
                 }
 
                 Connections {
                     target: root.sourceAudioNode; ignoreUnknownSignals: true
-                    function onVolumeChanged() { root.triggerSliderOSD("mic") }
-                    function onMutedChanged() { root.triggerSliderOSD("mic") }
+                    function onVolumeChanged() {
+                        if (!root.microphoneOsdReady) {
+                            microphoneOsdReadyTimer.restart()
+                            return
+                        }
+                        root.triggerSliderOSD("mic")
+                    }
+                    function onMutedChanged() {
+                        if (!root.microphoneOsdReady) {
+                            microphoneOsdReadyTimer.restart()
+                            return
+                        }
+                        root.triggerSliderOSD("mic")
+                    }
                 }
 
                 Connections {

@@ -24,6 +24,8 @@ StyledFlickable {
     property string feedbackText: ""
     property bool feedbackError: false
     property string selectedMapMode: "temp"
+    property string locationFeedback: ""
+    property bool locationFeedbackError: false
 
     Component.onCompleted: {
         if (!WeatherPlugin.hasValidData && !WeatherPlugin.loading)
@@ -48,6 +50,40 @@ StyledFlickable {
         const result = WeatherMapPlugin.clearApiKey()
         feedbackError = !result.ok
         feedbackText = result.message || qsTr("无法清除 API key")
+    }
+
+    function notifyLocation(latitude, longitude, name) {
+        Quickshell.execDetached([
+            "qs", "--path", Paths.shellDir + "/shell.qml",
+            "ipc", "call", "weather", "setLocation",
+            String(latitude), String(longitude), name
+        ])
+    }
+
+    function applyLocation(latitude, longitude, name) {
+        const lat = Number(latitude)
+        const lon = Number(longitude)
+        const label = String(name || "").trim()
+        if (!label.length || !isFinite(lat) || lat < -90 || lat > 90
+                || !isFinite(lon) || lon < -180 || lon > 180) {
+            locationFeedbackError = true
+            locationFeedback = qsTr("请输入有效的位置名称、纬度和经度")
+            return
+        }
+        WeatherPlugin.setManualLocation(lat, lon, label)
+        notifyLocation(lat, lon, label)
+        locationFeedbackError = false
+        locationFeedback = qsTr("天气位置已更新：") + label
+    }
+
+    function useIpLocation() {
+        WeatherPlugin.clearManualLocation()
+        Quickshell.execDetached([
+            "qs", "--path", Paths.shellDir + "/shell.qml",
+            "ipc", "call", "weather", "useIpLocation"
+        ])
+        locationFeedbackError = false
+        locationFeedback = qsTr("已切换为 IP 自动定位")
     }
 
     function notifyMainShell() {
@@ -144,6 +180,270 @@ StyledFlickable {
                     font.family: Sizes.fontFamily
                     font.pixelSize: 13
                     textFormat: Text.PlainText
+                }
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: locationContent.implicitHeight + 48
+            radius: Appearance.rounding.large
+            color: Appearance.colors.colSurfaceContainer
+
+            ColumnLayout {
+                id: locationContent
+                anchors.fill: parent
+                anchors.margins: 24
+                spacing: 16
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    Rectangle {
+                        Layout.preferredWidth: 44
+                        Layout.preferredHeight: 44
+                        radius: Appearance.rounding.full
+                        color: Appearance.colors.colPrimaryContainer
+
+                        MaterialSymbol {
+                            anchors.centerIn: parent
+                            text: "location_on"
+                            iconSize: 22
+                            fill: 1
+                            color: Appearance.colors.colOnPrimaryContainer
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: qsTr("天气位置")
+                            color: Appearance.colors.colOnSurface
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 16
+                            font.weight: Font.Medium
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: (WeatherPlugin.locationName || qsTr("未知"))
+                                + "  ·  "
+                                + Number(WeatherPlugin.latitude).toFixed(4)
+                                + ", "
+                                + Number(WeatherPlugin.longitude).toFixed(4)
+                            color: Appearance.colors.colOnSurfaceVariant
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 12
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    Button {
+                        text: qsTr("使用 IP 定位")
+                        flat: true
+                        onClicked: root.useIpLocation()
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1
+                    color: Appearance.colors.colOutlineVariant
+                }
+
+                Text {
+                    text: qsTr("搜索地点")
+                    color: Appearance.colors.colOnSurface
+                    font.family: Sizes.fontFamily
+                    font.pixelSize: 14
+                    font.weight: Font.Medium
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MaterialTextField {
+                        id: locationSearchField
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("输入地点，例如：上海五角场")
+                        Material.containerStyle: Material.Outlined
+                        onAccepted: WeatherPlugin.searchLocations(text)
+                    }
+
+                    Button {
+                        text: WeatherPlugin.locationSearchLoading
+                            ? qsTr("搜索中") : qsTr("搜索")
+                        highlighted: true
+                        enabled: !WeatherPlugin.locationSearchLoading
+                            && locationSearchField.text.trim().length >= 2
+                        onClicked:
+                            WeatherPlugin.searchLocations(locationSearchField.text)
+                    }
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    visible: WeatherPlugin.locationSearchError.length > 0
+                    text: WeatherPlugin.locationSearchError
+                    color: Appearance.colors.colError
+                    font.family: Sizes.fontFamily
+                    font.pixelSize: 12
+                }
+
+                Repeater {
+                    model: WeatherPlugin.locationSearchResults
+
+                    delegate: Rectangle {
+                        required property var modelData
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 52
+                        radius: Appearance.rounding.normal
+                        color: resultMouse.containsMouse
+                            ? Appearance.colors.colSurfaceContainerHighest
+                            : Appearance.colors.colSurfaceContainerHigh
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: 14
+                            anchors.rightMargin: 10
+                            spacing: 10
+
+                            MaterialSymbol {
+                                text: "location_on"
+                                iconSize: 20
+                                color: Appearance.colors.colPrimary
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 1
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: modelData.name
+                                    color: Appearance.colors.colOnSurface
+                                    font.family: Sizes.fontFamily
+                                    font.pixelSize: 13
+                                    font.weight: Font.Medium
+                                    elide: Text.ElideRight
+                                }
+
+                                Text {
+                                    text: Number(modelData.latitude).toFixed(5)
+                                        + ", "
+                                        + Number(modelData.longitude).toFixed(5)
+                                    color: Appearance.colors.colOnSurfaceVariant
+                                    font.family: Sizes.fontFamily
+                                    font.pixelSize: 11
+                                }
+                            }
+
+                            MaterialSymbol {
+                                text: "chevron_right"
+                                iconSize: 20
+                                color: Appearance.colors.colOnSurfaceVariant
+                            }
+                        }
+
+                        MouseArea {
+                            id: resultMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.applyLocation(
+                                modelData.latitude, modelData.longitude,
+                                modelData.name)
+                        }
+                    }
+                }
+
+                Text {
+                    text: qsTr("手动输入坐标")
+                    color: Appearance.colors.colOnSurface
+                    font.family: Sizes.fontFamily
+                    font.pixelSize: 14
+                    font.weight: Font.Medium
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    MaterialTextField {
+                        id: manualNameField
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("位置名称")
+                        Material.containerStyle: Material.Outlined
+                    }
+
+                    MaterialTextField {
+                        id: manualLatitudeField
+                        Layout.preferredWidth: 125
+                        placeholderText: qsTr("纬度")
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        Material.containerStyle: Material.Outlined
+                    }
+
+                    MaterialTextField {
+                        id: manualLongitudeField
+                        Layout.preferredWidth: 125
+                        placeholderText: qsTr("经度")
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        Material.containerStyle: Material.Outlined
+                    }
+
+                    Button {
+                        text: qsTr("应用")
+                        highlighted: true
+                        onClicked: root.applyLocation(
+                            manualLatitudeField.text,
+                            manualLongitudeField.text,
+                            manualNameField.text)
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight:
+                        locationFeedbackRow.implicitHeight + 20
+                    radius: Appearance.rounding.small
+                    visible: root.locationFeedback.length > 0
+                    color: root.locationFeedbackError
+                        ? Appearance.colors.colErrorContainer
+                        : Appearance.colors.colPrimaryContainer
+
+                    RowLayout {
+                        id: locationFeedbackRow
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 8
+
+                        MaterialSymbol {
+                            text: root.locationFeedbackError
+                                ? "error" : "check_circle"
+                            iconSize: 18
+                            fill: 1
+                            color: root.locationFeedbackError
+                                ? Appearance.colors.colOnErrorContainer
+                                : Appearance.colors.colOnPrimaryContainer
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: root.locationFeedback
+                            color: root.locationFeedbackError
+                                ? Appearance.colors.colOnErrorContainer
+                                : Appearance.colors.colOnPrimaryContainer
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 12
+                            wrapMode: Text.WordWrap
+                        }
+                    }
                 }
             }
         }

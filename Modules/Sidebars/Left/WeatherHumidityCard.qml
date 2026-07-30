@@ -109,7 +109,7 @@ WeatherInsightCard {
         Text {
             text: qsTr("相对湿度")
             color: Appearance.colors.colOnWeatherCardSurfaceVariant
-            font.family: "LXGW WenKai GB Screen"
+            font.family: "Noto Sans CJK SC"
             font.pixelSize: 18
             font.bold: true
         }
@@ -152,7 +152,7 @@ WeatherInsightCard {
         anchors.topMargin: 72
         text: root.animatedHumidityText()
         color: Appearance.colors.colOnWeatherCardSurface
-        font.family: "JetBrainsMono Nerd Font"
+        font.family: "MesloLGM Nerd Font"
         font.pixelSize: 58
         font.bold: true
     }
@@ -175,7 +175,7 @@ WeatherInsightCard {
                 anchors.centerIn: parent
                 text: root.animatedDewPointText()
                 color: Appearance.colors.colOnPrimaryContainer
-                font.family: "JetBrainsMono Nerd Font"
+                font.family: "MesloLGM Nerd Font"
                 font.pixelSize: 17
                 font.bold: true
             }
@@ -184,7 +184,7 @@ WeatherInsightCard {
         Text {
             text: qsTr("露点")
             color: Appearance.colors.colOnWeatherCardSurface
-            font.family: "LXGW WenKai GB Screen"
+            font.family: "Noto Sans CJK SC"
             font.pixelSize: 18
             font.bold: true
             anchors.verticalCenter: parent.verticalCenter

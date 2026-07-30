@@ -27,9 +27,10 @@ Rectangle {
     Text {
         id: icon
         anchors.centerIn: parent
-        text: "⏻"
-        font.pixelSize: 14 
-        font.bold: true
+        text: "power_settings_new"
+        font.family: Sizes.fontMaterialSymbols
+        font.pixelSize: 18
+        font.weight: Font.Normal
         color: Appearance.colors.colOnError 
     }
 

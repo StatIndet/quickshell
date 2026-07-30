@@ -4,10 +4,12 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import qs.Modules.Bar.Workspaces
+import qs.Modules.Bar.AppLauncher
 import qs.Modules.Bar.ActiveWindow
 import qs.Modules.Bar.Tray
 import qs.Modules.Bar.PowerButton
 import qs.Modules.Bar.SysMonitor
+import qs.Modules.Bar.CodexUsage
 import qs.Modules.Bar.QuickSettings
 import qs.Common
 import qs.Services
@@ -25,11 +27,14 @@ Variants {
         color: "transparent"
         
         property real barHeight: Sizes.barHeight
+        property real shadowPadding: 10
         
-        // 高度不再受 Keystone 影响
-        implicitHeight: barWindow.barHeight
+        // Keep transparent space below the visual bar so pill shadows are not
+        // clipped by the LayerShell surface boundary.
+        implicitHeight: barWindow.barHeight + barWindow.shadowPadding
         
-        exclusiveZone: barHeight
+        // Applications still reserve only the actual bar height.
+        exclusiveZone: barWindow.barHeight
         
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.namespace: "clavis-shell-bar"
@@ -44,7 +49,7 @@ Variants {
             id: barContent
             
             anchors { top: parent.top; left: parent.left; right: parent.right }
-            height: barWindow.barHeight 
+            height: barWindow.barHeight
 
             // --- 左侧组件 ---
             RowLayout {
@@ -54,6 +59,10 @@ Variants {
                 height: implicitHeight
                 spacing: 8
 
+                AppLauncher {
+                    id: appLauncher
+                    Layout.alignment: Qt.AlignVCenter
+                }
                 Workspaces {
                     id: workspaces
                     screenName: barWindow.screen.name
@@ -81,6 +90,11 @@ Variants {
                 }
                 SysMonitor {
                     id: sysMonitor
+                    Layout.alignment: Qt.AlignVCenter
+                }
+
+                CodexUsage {
+                    id: codexUsage
                     Layout.alignment: Qt.AlignVCenter
                 }
 
@@ -114,10 +128,12 @@ Variants {
             targetWindow: barWindow
             backgroundItem: workspaces
             additionalBackgroundItems: [
+                appLauncher,
                 sidebarButton,
                 activeWindow,
                 tray,
                 sysMonitor,
+                codexUsage,
                 quickSettings
             ]
             radius: 18

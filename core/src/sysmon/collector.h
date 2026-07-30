@@ -99,6 +99,8 @@ private:
     QProcess m_nvidiaProcess;
     bool m_nvidiaProbeAttempted = false;
     bool m_nvidiaProbePending = false;
+    QHash<QString, quint64> m_xeBusyCycles;
+    QHash<QString, quint64> m_xeTotalCycles;
 };
 
 } // namespace Clavis::Sysmon

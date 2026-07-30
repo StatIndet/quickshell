@@ -8,7 +8,6 @@ Item {
     id: root
     property bool isHovered: mouseArea.containsMouse
     readonly property int buttonSize: 28
-    readonly property int hoverButtonSize: 34
 
     implicitHeight: buttonSize
     implicitWidth: buttonSize
@@ -16,21 +15,24 @@ Item {
     Rectangle {
         id: background
         anchors.centerIn: parent
-        width: root.isHovered ? root.hoverButtonSize : root.buttonSize
+        width: root.buttonSize
         height: width
         radius: height / 2
         color: Appearance.colors.colError
+        scale: root.isHovered ? 1.14 : 1
 
-        Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+        Behavior on scale {
+            NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
+        }
 
         Text {
             id: icon
             anchors.centerIn: parent
-            text: "⏻"
-            font.pixelSize: root.isHovered ? 16 : 14
-            font.bold: true
+            text: "power_settings_new"
+            font.family: Sizes.fontMaterialSymbols
+            font.pixelSize: 18
+            font.weight: Font.Normal
             color: Appearance.colors.colOnError
-            Behavior on font.pixelSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
         }
     }
 

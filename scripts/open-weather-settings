@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -u
+
+clavis_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/quickshell/clavis"
+control_center="${clavis_dir}/controlcenter.qml"
+
+if qs --path "${control_center}" ipc call control-center openPage weather \
+        >/dev/null 2>&1; then
+    exit 0
+fi
+
+CLAVIS_CONTROL_CENTER_PAGE=weather \
+    qs --daemonize --path "${control_center}"
