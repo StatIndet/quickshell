@@ -440,9 +440,14 @@ Item {
 
                 Item {
                     width: parent.width
-                    height: Math.max(220, flick.height - 452 - 286 - contentColumn.spacing * 2)
+                    height: Math.max(
+                        currentConditionsColumn.implicitHeight + 24,
+                        flick.height - 452 - 286
+                            - contentColumn.spacing * 2
+                    )
 
                     Column {
+                        id: currentConditionsColumn
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
