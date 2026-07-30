@@ -136,14 +136,12 @@ Rectangle {
         }
 
         if (!root.animationActive) {
+            // Preserve the current sun/moon state while the sidebar is hidden
+            // or the card is outside the active viewport.
             pathEntryAnimation.stop()
             phaseEntryAnimation.stop()
             progressUpdateAnimation.stop()
             phaseUpdateAnimation.stop()
-            root.displayProgress = 0
-            root.animatedPhaseAngle = 0
-            root.iconRotation = 0
-            root.animationHasRun = false
             return
         }
 
@@ -157,6 +155,10 @@ Rectangle {
                 phaseEntryAnimation.restart()
             else
                 root.animatedPhaseAngle = root.phaseAngle
+        } else {
+            root.displayProgress = root.progressTarget
+            root.animatedPhaseAngle = root.phaseAngle
+            root.iconRotation = root.targetIconRotation()
         }
     }
 

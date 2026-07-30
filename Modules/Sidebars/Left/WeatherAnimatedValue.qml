@@ -47,9 +47,10 @@ QtObject {
         }
 
         if (!active) {
+            // Inactive means the card is offscreen or the sidebar is moving.
+            // Freeze the last rendered value instead of rewinding to zero;
+            // reopening can continue toward the current target.
             valueAnimation.stop()
-            currentValue = 0
-            hasAnimated = false
             return
         }
 
