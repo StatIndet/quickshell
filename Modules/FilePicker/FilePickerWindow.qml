@@ -35,6 +35,7 @@ ApplicationWindow {
     property string selectionPrompt: qsTr("选择一张图片")
     property string acceptLabel: qsTr("选择")
     property string formatSummary: "JPG · PNG · WebP\nBMP · GIF"
+    property bool acceptFilesOnSingleClick: false
     property string currentPath: startPath
     property string selectedPath: ""
     property string selectedName: ""
@@ -735,7 +736,13 @@ ApplicationWindow {
                                 colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
                                 colRipple: Appearance.colors.colOnSurface
                                 colRippleToggled: Appearance.colors.colOnSecondaryContainer
-                                releaseAction: () => root.selectEntry(filePath, fileName, fileIsDir)
+                                releaseAction: () => {
+                                    root.selectEntry(
+                                        filePath, fileName, fileIsDir);
+                                    if (!fileIsDir
+                                            && root.acceptFilesOnSingleClick)
+                                        root.acceptSelection();
+                                }
                                 doubleClickAction: () => root.openEntry(filePath, fileIsDir)
                                 transform: Translate {
                                     x: fileItem.appeared ? 0 : fileItem.initialX

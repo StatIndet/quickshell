@@ -88,10 +88,22 @@ foreach(tool_target IN ITEMS fake_gsr fake_ffmpeg fake_ffprobe fake_pactl)
     )
 endforeach()
 
+foreach(tool_target IN ITEMS fake_cliphist fake_wl_copy)
+    qt_add_executable(${tool_target}
+        fake_clipboard_tool.cpp
+    )
+    target_link_libraries(${tool_target} PRIVATE Qt6::Core)
+    set_target_properties(${tool_target} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fake-bin
+    )
+endforeach()
+
 set_target_properties(fake_gsr PROPERTIES OUTPUT_NAME gpu-screen-recorder)
 set_target_properties(fake_ffmpeg PROPERTIES OUTPUT_NAME ffmpeg)
 set_target_properties(fake_ffprobe PROPERTIES OUTPUT_NAME ffprobe)
 set_target_properties(fake_pactl PROPERTIES OUTPUT_NAME pactl)
+set_target_properties(fake_cliphist PROPERTIES OUTPUT_NAME cliphist)
+set_target_properties(fake_wl_copy PROPERTIES OUTPUT_NAME wl-copy)
 
 qt_add_executable(key_integration_tests
     key_integration_test.cpp
@@ -113,6 +125,8 @@ add_dependencies(key_integration_tests
     fake_ffmpeg
     fake_ffprobe
     fake_pactl
+    fake_cliphist
+    fake_wl_copy
 )
 
 add_test(NAME key_integration_tests COMMAND key_integration_tests)

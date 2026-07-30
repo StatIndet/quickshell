@@ -15,6 +15,7 @@ Singleton {
         Quickshell.env("CLAVIS_AWWW_DAEMON_COMMAND")
             || "awww-daemon"
 
+    property bool primaryInstance: false
     property bool available: false
     property bool probeComplete: false
     property bool daemonRunning: false
@@ -30,6 +31,10 @@ Singleton {
     property var applyOutputs: []
     property int applyIndex: 0
     property bool reapplyPending: false
+    property string activeApplyKey: ""
+    property string pendingApplyKey: ""
+    property string lastAppliedKey: ""
+    property var activeTransitionOptions: ({})
 
     readonly property bool busy:
         state === "starting"
@@ -67,6 +72,25 @@ Singleton {
         };
     }
 
+    function applyRequestKey() {
+        const outputs = root.screenNames();
+        const targets = [];
+        for (let index = 0; index < outputs.length; index += 1) {
+            const output = outputs[index];
+            targets.push({
+                output: output,
+                source: WallpaperService.wallpaperForScreen(output),
+                fillMode: WallpaperService.fillModeForScreen(output)
+            });
+        }
+        return JSON.stringify({
+            revision: WallpaperService.revision,
+            settingsRevision: WallpaperService.settingsRevision,
+            targets: targets,
+            transition: root.transitionOptions()
+        });
+    }
+
     function supportsDuration(transitionType) {
         return AwwwCommand.supportsDuration(transitionType);
     }
@@ -82,6 +106,12 @@ Singleton {
     function setRequestedBackend(value) {
         const backend = value === "awww" ? "awww" : "quickshell";
         root.requestedBackend = backend;
+        if (!root.primaryInstance) {
+            root.quickshellContentVisible = true;
+            root.effectiveBackend = "quickshell";
+            root.state = root.probeComplete ? "passive" : "probing";
+            return;
+        }
         if (backend === "awww")
             root.beginAwwwActivation();
         else
@@ -89,6 +119,8 @@ Singleton {
     }
 
     function beginAwwwActivation() {
+        if (!root.primaryInstance)
+            return;
         if (!root.probeComplete) {
             root.state = "probing";
             return;
@@ -128,6 +160,8 @@ Singleton {
     }
 
     function beginQuickshellActivation() {
+        if (!root.primaryInstance)
+            return;
         queryRetry.stop();
         root.quickshellContentVisible = true;
         root.effectiveBackend = "quickshell";
@@ -135,6 +169,10 @@ Singleton {
         root.applyOutputs = [];
         root.applyIndex = 0;
         root.reapplyPending = false;
+        root.activeApplyKey = "";
+        root.pendingApplyKey = "";
+        root.lastAppliedKey = "";
+        root.activeTransitionOptions = ({});
 
         if (root.daemonRunning || daemonProcess.running) {
             root.state = "stopping";
@@ -152,12 +190,17 @@ Singleton {
         root.applyOutputs = [];
         root.applyIndex = 0;
         root.reapplyPending = false;
+        root.activeApplyKey = "";
+        root.pendingApplyKey = "";
+        root.lastAppliedKey = "";
+        root.activeTransitionOptions = ({});
         if (root.daemonRunning || daemonProcess.running)
             root.stopDaemon();
     }
 
     function runQuery() {
-        if (queryProcess.running || !root.backendIsAwww())
+        if (!root.primaryInstance
+                || queryProcess.running || !root.backendIsAwww())
             return;
         root.state = "waiting-socket";
         queryProcess.command = AwwwCommand.query(
@@ -166,7 +209,7 @@ Singleton {
     }
 
     function startDaemon() {
-        if (!root.backendIsAwww())
+        if (!root.primaryInstance || !root.backendIsAwww())
             return;
         root.daemonStartAttempted = true;
         if (daemonProcess.running) {
@@ -180,16 +223,28 @@ Singleton {
     }
 
     function scheduleApplyAll() {
-        if (!root.backendIsAwww()
+        if (!root.primaryInstance || !root.backendIsAwww()
                 || !root.available || !root.daemonRunning)
             return;
+        const requestKey = root.applyRequestKey();
         if (applyProcess.running || root.state === "applying") {
+            if (requestKey === root.activeApplyKey
+                    || requestKey === root.pendingApplyKey)
+                return;
             root.reapplyPending = true;
+            root.pendingApplyKey = requestKey;
             return;
         }
+        if (requestKey === root.lastAppliedKey)
+            return;
 
         root.applyOutputs = root.screenNames();
         root.applyIndex = 0;
+        root.activeApplyKey = requestKey;
+        root.pendingApplyKey = "";
+        root.activeTransitionOptions =
+            AwwwCommand.resolvedTransitionOptions(
+                root.transitionOptions(), Math.random(), Math.random());
         root.state = "applying";
         root.applyNext();
     }
@@ -209,9 +264,13 @@ Singleton {
             root.effectiveBackend = "awww";
             root.quickshellContentVisible = false;
             root.state = "ready";
+            root.lastAppliedKey = root.activeApplyKey;
+            root.activeApplyKey = "";
+            root.activeTransitionOptions = ({});
 
             if (root.reapplyPending) {
                 root.reapplyPending = false;
+                root.pendingApplyKey = "";
                 Qt.callLater(() => {
                     if (root.backendIsAwww())
                         root.scheduleApplyAll();
@@ -235,11 +294,13 @@ Singleton {
             output,
             source,
             WallpaperService.fillModeForScreen(output),
-            root.transitionOptions());
+            root.activeTransitionOptions);
         applyProcess.running = true;
     }
 
     function stopDaemon() {
+        if (!root.primaryInstance)
+            return;
         root.daemonStopRequested = true;
         if (stopProcess.running)
             return;
@@ -250,8 +311,16 @@ Singleton {
 
     Component.onCompleted: probeClient.running = true
 
+    onPrimaryInstanceChanged: {
+        if (root.primaryInstance && root.probeComplete) {
+            root.setRequestedBackend(
+                PersonalizationConfig.desktopWallpaperBackend);
+        }
+    }
+
     Connections {
         target: PersonalizationConfig
+        enabled: root.primaryInstance
 
         function onDesktopWallpaperBackendChanged() {
             root.setRequestedBackend(
@@ -261,6 +330,7 @@ Singleton {
 
     Connections {
         target: WallpaperService
+        enabled: root.primaryInstance
 
         function onRevisionChanged() {
             if (root.backendIsAwww()
@@ -277,6 +347,7 @@ Singleton {
 
     Connections {
         target: Quickshell
+        enabled: root.primaryInstance
 
         function onScreensChanged() {
             if (root.backendIsAwww()

@@ -16,6 +16,11 @@ ShellRoot {
 
     WallpaperBackground {}
 
+    Component.onCompleted: {
+        WallpaperService.primaryInstance = true;
+        AwwwWallpaperService.primaryInstance = true;
+    }
+
     function verify(condition, message) {
         if (!condition)
             throw new Error(message);

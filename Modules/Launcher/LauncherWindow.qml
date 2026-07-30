@@ -1,9 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
-import Qt5Compat.GraphicalEffects
+import QtQuick.Controls.Material
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
@@ -22,477 +20,630 @@ PanelWindow {
         right: true
     }
 
-    WlrLayershell.namespace: "clavis-shell-launcher"
+    WlrLayershell.namespace: "clavis-shell-spotlight"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-    property int currentMode: 0
-    property bool isClosing: false
+    Material.theme: Appearance.m3colors.darkmode
+        ? Material.Dark : Material.Light
+    Material.accent: Appearance.colors.colPrimary
+
+    property string windowPhase: "hidden"
+    property string mode: "apps"
+    property string previousLocalMode: "apps"
+    property bool modeRailExpanded: false
+    property int modeFocusIndex: -1
     property string query: ""
-    readonly property var modeLabels: [
-        qsTr("应用"),
-        qsTr("窗口"),
-        qsTr("壁纸")
-    ]
+    property int selectedResultIndex: -1
+    property string selectedResultId: ""
 
-    property string previewImage: (currentMode === 2 && wallpaperPage.currentSelectedPreview !== "")
-                                  ? wallpaperPage.currentSelectedPreview
-                                  : (Appearance.currentWallpaperPreview !== "" ? Appearance.currentWallpaperPreview : (WallpaperService.currentWallpaper !== "" ? Paths.fileUrl(WallpaperService.currentWallpaper) : ""))
+    property real windowProgress: 0
+    property real railProgress: 0
+    property real webProgress: 0
+    property real _windowAnimationTarget: 0
+    property real _railAnimationTarget: 0
+    property real _webAnimationTarget: 0
 
-    RofiStyle {
-        id: rofiStyle
+    readonly property var activeResults: mode === "apps"
+        ? appProvider.results
+        : (mode === "wallpapers"
+            ? wallpaperProvider.results
+            : (mode === "clipboard" ? clipboardProvider.results : []))
+    readonly property bool clipboardMode: mode === "clipboard"
+    readonly property bool wallpaperMode: mode === "wallpapers"
+    readonly property bool showing:
+        windowPhase !== "hidden" && root.visible
+    readonly property bool searchHasFocus: searchBar.inputActiveFocus
+    readonly property real searchMainLeft: searchBar.mainLeft
+    readonly property real searchMainRight: searchBar.mainRight
+    readonly property real searchRequestedWidth:
+        searchBar.requestedMainWidth
+    readonly property real webPressDepth: searchBar.pressDepth
+    readonly property real webPressScaleX: searchBar.pressScaleX
+    readonly property real webPressScaleY: searchBar.pressScaleY
+    readonly property real searchShadowBlur:
+        searchBar.pressShadowBlur
+    readonly property real searchShadowVerticalOffset:
+        searchBar.pressShadowVerticalOffset
+    readonly property real resultsPanelWidth: resultsPanel.width
+    readonly property real resultsPanelHeight: resultsPanel.height
+    readonly property int wallpaperGridColumns:
+        resultsPanel.wallpaperColumnCount
+    readonly property real wallpaperPreviewWidth:
+        resultsPanel.wallpaperPreviewWidth
+    readonly property int blurRegionCount:
+        spotlightBlur.regionObjects.length
+
+    SpotlightStyle {
+        id: style
     }
 
-    function syncGlobalWallpaperPreview() {
-        const path = WallpaperService.currentWallpaper || WallpaperService.wallpaperForScreen("");
-        if (path && path !== "")
-            Appearance.currentWallpaperPreview = Paths.fileUrl(path);
+    SpotlightAppProvider {
+        id: appProvider
+        query: root.query
     }
 
-    function resetSearch() {
-        if (searchInput.text !== "")
-            searchInput.text = ""
-        if (root.query !== "")
-            root.query = ""
+    SpotlightWallpaperProvider {
+        id: wallpaperProvider
+        query: root.query
     }
 
-    function focusSearch() {
-        searchInput.forceActiveFocus()
+    SpotlightClipboardProvider {
+        id: clipboardProvider
+        query: root.query
+        onRestored: root.requestClose()
     }
 
-    function decrementCurrentIndex() {
-        if (root.currentMode === 0) appPage.decrementCurrentIndex()
-        else if (root.currentMode === 1) windowPage.decrementCurrentIndex()
-        else wallpaperPage.decrementCurrentIndex()
+    function normalizedMode(value) {
+        const requested = String(value || "").toLowerCase();
+        return requested === "apps"
+            || requested === "wallpapers"
+            || requested === "clipboard" ? requested : "";
     }
 
-    function incrementCurrentIndex() {
-        if (root.currentMode === 0) appPage.incrementCurrentIndex()
-        else if (root.currentMode === 1) windowPage.incrementCurrentIndex()
-        else wallpaperPage.incrementCurrentIndex()
+    function modeIndex(value) {
+        if (value === "wallpapers")
+            return 1;
+        if (value === "clipboard")
+            return 2;
+        return 0;
     }
 
-    function activateSelected() {
-        if (root.currentMode === 0) appPage.runSelectedApp()
-        else if (root.currentMode === 1) windowPage.focusSelectedWindow()
-        else wallpaperPage.applyWallpaper()
+    function modeForIndex(index) {
+        return ["apps", "wallpapers", "clipboard"][
+            Math.max(0, Math.min(2, index))
+        ];
     }
 
-    function setMode(mode) {
-        if (root.currentMode === mode) {
-            root.focusSearch()
-            return
+    function animateWindow(target) {
+        root._windowAnimationTarget = target;
+        windowAnimation.stop();
+        windowAnimation.from = root.windowProgress;
+        windowAnimation.to = target;
+        windowAnimation.duration = Math.max(
+            1,
+            (target > root.windowProgress
+                ? style.windowOpenDuration
+                : style.windowCloseDuration)
+                * Math.abs(target - root.windowProgress)
+        );
+        windowAnimation.restart();
+    }
+
+    function animateRail(target) {
+        root._railAnimationTarget = target;
+        railAnimation.stop();
+        railAnimation.from = root.railProgress;
+        railAnimation.to = target;
+        railAnimation.duration = Math.max(
+            1,
+            style.railDuration * Math.abs(target - root.railProgress)
+        );
+        railAnimation.restart();
+    }
+
+    function animateWeb(target) {
+        root._webAnimationTarget = target;
+        webAnimation.stop();
+        webAnimation.from = root.webProgress;
+        webAnimation.to = target;
+        webAnimation.duration = Math.max(
+            1,
+            style.webDuration * Math.abs(target - root.webProgress)
+        );
+        webAnimation.restart();
+    }
+
+    function openSpotlight(requestedMode) {
+        const localMode = normalizedMode(requestedMode);
+        if (localMode !== "")
+            setLocalMode(localMode);
+        else if (root.windowPhase === "hidden")
+            setLocalMode("apps");
+
+        if (root.windowPhase === "open"
+                || root.windowPhase === "opening") {
+            searchBar.focusInput();
+            return true;
         }
 
-        root.currentMode = mode
-    }
-
-    function prepareOpen(resetOpacity, delayFadeIn) {
-        root.isClosing = false
-        openFadeInDelay.stop()
-        closeAnim.stop()
-
-        if (resetOpacity) {
-            mainUI.opacity = 0.0
-            uiScale.xScale = rofiStyle.popinScale
-            uiScale.yScale = rofiStyle.popinScale
-        }
-
-        root.resetSearch()
-
-        if (delayFadeIn)
-            openFadeInDelay.restart()
-        else
-            launcherFadeIn.restart()
-
-        root.syncGlobalWallpaperPreview()
-        root.focusSearch()
-    }
-
-    function openWindow() {
-        if (launcherFadeIn.running || (root.visible && !root.isClosing))
-            return
-
-        if (root.visible) {
-            prepareOpen(false, false)
-            return
-        }
-
-        root.visible = true
-    }
-
-    onVisibleChanged: {
-        if (visible) {
-            prepareOpen(true, true)
-            uiTranslate.y = 0
-        }
-    }
-
-    onCurrentModeChanged: {
-        if (visible) {
-            root.resetSearch()
-            root.focusSearch()
-        }
+        if (!root.visible)
+            root.visible = true;
+        root.windowPhase = "opening";
+        root.animateWindow(1);
+        Qt.callLater(searchBar.focusInput);
+        return true;
     }
 
     function requestClose() {
-        if (!root.visible || root.isClosing)
-            return
-
-        root.isClosing = true
-        openFadeInDelay.stop()
-        launcherFadeIn.stop()
-        closeAnim.restart()
+        if (root.windowPhase === "hidden"
+                || root.windowPhase === "closing")
+            return false;
+        root.windowPhase = "closing";
+        root.modeRailExpanded = false;
+        root.modeFocusIndex = -1;
+        root.animateRail(0);
+        root.animateWindow(0);
+        return true;
     }
 
     function toggleWindow() {
-        if (root.visible && !root.isClosing) requestClose()
-        else openWindow()
+        if (root.windowPhase === "hidden"
+                || root.windowPhase === "closing")
+            return root.openSpotlight();
+        return root.requestClose();
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: root.requestClose()
+    function openWindow() {
+        return root.openSpotlight();
     }
 
-    Rectangle {
-        id: mainUI
-        width: rofiStyle.windowWidth
-        height: rofiStyle.windowHeight
+    function setRailExpanded(expanded) {
+        if (root.modeRailExpanded === expanded
+                && root._railAnimationTarget === (expanded ? 1 : 0))
+            return;
+        root.modeRailExpanded = expanded;
+        if (!expanded)
+            root.modeFocusIndex = -1;
+        root.animateRail(expanded ? 1 : 0);
+    }
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: Sizes.barHeight / 2
+    function setLocalMode(requestedMode) {
+        const localMode = normalizedMode(requestedMode);
+        if (localMode === "")
+            return false;
+        if (root.mode === "web")
+            root.animateWeb(0);
+        root.selectedResultId = "";
+        root.mode = localMode;
+        root.previousLocalMode = localMode;
+        root.selectResult(root.activeResults.length > 0 ? 0 : -1);
+        if (localMode === "clipboard")
+            clipboardProvider.refresh();
+        searchBar.focusInput();
+        return true;
+    }
 
-        opacity: 0.0
+    function enterWeb() {
+        if (root.mode === "web"
+                && root._webAnimationTarget === 1)
+            return true;
+        if (root.mode !== "web")
+            root.previousLocalMode = root.mode;
+        root.mode = "web";
+        root.selectedResultIndex = -1;
+        root.selectedResultId = "";
+        root.setRailExpanded(false);
+        root.animateWeb(1);
+        searchBar.focusInput();
+        return true;
+    }
 
-        transformOrigin: Item.Center
-        transform: [
-            Translate {
-                id: uiTranslate
-                y: 0
-            },
-            Scale {
-                id: uiScale
-                origin.x: mainUI.width / 2
-                origin.y: mainUI.height / 2
-                xScale: rofiStyle.popinScale
-                yScale: rofiStyle.popinScale
-            }
-        ]
+    function exitWeb() {
+        if (root.mode !== "web")
+            return false;
+        root.mode = root.normalizedMode(root.previousLocalMode) !== ""
+            ? root.previousLocalMode : "apps";
+        root.animateWeb(0);
+        root.selectedResultId = "";
+        root.selectResult(root.activeResults.length > 0 ? 0 : -1);
+        if (root.mode === "clipboard")
+            clipboardProvider.refresh();
+        searchBar.focusInput();
+        return true;
+    }
 
-        Timer {
-            id: openFadeInDelay
-            interval: 32
-            repeat: false
-            onTriggered: launcherFadeIn.restart()
+    function moveModeFocus(delta) {
+        if (!root.modeRailExpanded) {
+            root.modeFocusIndex = root.mode === "web"
+                ? 0 : root.modeIndex(root.mode);
+            root.setRailExpanded(true);
+            return;
+        }
+        const current = root.modeFocusIndex < 0
+            ? 0 : root.modeFocusIndex;
+        root.modeFocusIndex = (current + delta + 3) % 3;
+    }
+
+    function selectResult(index) {
+        if (root.activeResults.length === 0 || index < 0) {
+            root.selectedResultIndex = -1;
+            root.selectedResultId = "";
+            return false;
         }
 
-        ParallelAnimation {
-            id: launcherFadeIn
-            NumberAnimation {
-                target: mainUI
-                property: "opacity"
-                to: 1.0
-                duration: rofiStyle.openDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.fadeBezier
-            }
-            NumberAnimation {
-                target: uiScale
-                property: "xScale"
-                to: 1.0
-                duration: rofiStyle.openDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.openBezier
-            }
-            NumberAnimation {
-                target: uiScale
-                property: "yScale"
-                to: 1.0
-                duration: rofiStyle.openDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.openBezier
-            }
+        const bounded = Math.max(
+            0,
+            Math.min(root.activeResults.length - 1, index)
+        );
+        const result = root.activeResults[bounded];
+        root.selectedResultIndex = bounded;
+        root.selectedResultId = result && result.id !== undefined
+            ? String(result.id) : "";
+        return true;
+    }
+
+    function moveSelectionByOffset(offset) {
+        if (root.mode === "web" || root.activeResults.length === 0)
+            return;
+        const current = root.selectedResultIndex < 0
+            ? 0 : root.selectedResultIndex;
+        root.selectResult(
+            Math.max(
+                0,
+                Math.min(
+                    root.activeResults.length - 1,
+                    current + offset
+                )
+            )
+        );
+    }
+
+    function moveSelection(direction) {
+        root.moveSelectionByOffset(
+            resultsPanel.navigationStep(direction)
+        );
+    }
+
+    function reconcileSelection() {
+        if (root.activeResults.length === 0) {
+            root.selectResult(-1);
+            return;
         }
 
-        ParallelAnimation {
-            id: closeAnim
-            NumberAnimation {
-                target: mainUI
-                property: "opacity"
-                to: 0.0
-                duration: rofiStyle.closeDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.fadeBezier
-            }
-            NumberAnimation {
-                target: uiScale
-                property: "xScale"
-                to: rofiStyle.popinScale
-                duration: rofiStyle.closeDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.closeBezier
-            }
-            NumberAnimation {
-                target: uiScale
-                property: "yScale"
-                to: rofiStyle.popinScale
-                duration: rofiStyle.closeDuration
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: rofiStyle.closeBezier
-            }
-
-            onFinished: {
-                root.visible = false
-                root.isClosing = false
-            }
-        }
-
-        color: BlurService.backgroundColor(
-            Appearance.colors.colLayer0)
-        radius: rofiStyle.windowRadius
-        focus: true
-
-        Keys.onUpPressed: (event) => {
-            root.decrementCurrentIndex()
-            event.accepted = true
-        }
-
-        Keys.onDownPressed: (event) => {
-            root.incrementCurrentIndex()
-            event.accepted = true
-        }
-
-        Keys.onReturnPressed: (event) => {
-            root.activateSelected()
-            event.accepted = true
-        }
-
-        Keys.onEnterPressed: (event) => {
-            root.activateSelected()
-            event.accepted = true
-        }
-
-        Keys.onEscapePressed: (event) => {
-            root.requestClose()
-            event.accepted = true
-        }
-
-        Keys.onTabPressed: (event) => {
-            root.setMode((root.currentMode + 1) % root.modeLabels.length)
-            event.accepted = true
-        }
-
-        MouseArea {
-            anchors.fill: parent
-        }
-
-        Rectangle {
-            id: globalMask
-            anchors.fill: parent
-            radius: rofiStyle.windowRadius
-            visible: false
-        }
-
-        Item {
-            anchors.fill: parent
-            anchors.margins: rofiStyle.borderWidth
-            layer.enabled: true
-            layer.effect: OpacityMask {
-                maskSource: globalMask
-            }
-
-            RowLayout {
-                anchors.fill: parent
-                spacing: 0
-
-                Item {
-                    Layout.preferredWidth: rofiStyle.leftPaneWidth
-                    Layout.fillHeight: true
-                    clip: true
-
-                    Image {
-                        anchors.fill: parent
-                        source: root.previewImage
-                        fillMode: Image.PreserveAspectCrop
-                        asynchronous: true
-                        sourceSize.width: rofiStyle.windowWidth
-                        sourceSize.height: rofiStyle.windowHeight
-                    }
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: rofiStyle.panelPadding
-                        spacing: 0
-
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: rofiStyle.controlHeight
-                            radius: rofiStyle.controlRadius
-                            color: Appearance.colors.colLayer2
-                            clip: true
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.margins: rofiStyle.controlPadding
-                                spacing: rofiStyle.controlSpacing
-
-                                Text {
-                                    text: "  "
-                                    color: Appearance.colors.colOnLayer2
-                                    font.family: Sizes.fontFamilyMono
-                                    font.pixelSize: rofiStyle.fontPixelSize
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-
-                                    Text {
-                                        anchors.fill: parent
-                text: qsTr("搜索")
-                                        color: Appearance.applyAlpha(Appearance.colors.colOnLayer2, 0.65)
-                                        font.family: Sizes.fontFamilyMono
-                                        font.pixelSize: rofiStyle.fontPixelSize
-                                        verticalAlignment: Text.AlignVCenter
-                                        visible: searchInput.text.length === 0
-                                    }
-
-                                    TextInput {
-                                        id: searchInput
-                                        anchors.fill: parent
-                                        color: Appearance.colors.colOnLayer2
-                                        selectionColor: Appearance.colors.colPrimary
-                                        selectedTextColor: Appearance.colors.colOnPrimary
-                                        font.family: Sizes.fontFamilyMono
-                                        font.pixelSize: rofiStyle.fontPixelSize
-                                        verticalAlignment: TextInput.AlignVCenter
-                                        clip: true
-                                        focus: true
-                                        selectByMouse: true
-
-                                        onTextChanged: root.query = text
-
-                                        Keys.onUpPressed: (event) => {
-                                            root.decrementCurrentIndex()
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onDownPressed: (event) => {
-                                            root.incrementCurrentIndex()
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onReturnPressed: (event) => {
-                                            root.activateSelected()
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onEnterPressed: (event) => {
-                                            root.activateSelected()
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onEscapePressed: (event) => {
-                                            root.requestClose()
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onTabPressed: (event) => {
-                                            root.setMode((root.currentMode + 1) % root.modeLabels.length)
-                                            event.accepted = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            spacing: rofiStyle.modeSpacing
-
-                            Repeater {
-                                model: root.modeLabels
-
-                                delegate: Rectangle {
-                                    id: modeButton
-                                    readonly property bool selected: root.currentMode === index
-
-                                    Layout.preferredWidth: rofiStyle.modeButtonWidth
-                                    Layout.preferredHeight: rofiStyle.controlHeight
-                                    radius: rofiStyle.controlRadius
-                                    color: selected ? Appearance.colors.colPrimary : Appearance.colors.colLayer2
-
-                                    Text {
-                                        id: modeLabel
-                                        anchors.centerIn: parent
-                                        text: modelData
-                                        color: modeButton.selected ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer2
-                                        font.family: Sizes.fontFamilyMono
-                                        font.pixelSize: rofiStyle.fontPixelSize
-                                    }
-
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: root.setMode(index)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    StackLayout {
-                        anchors.fill: parent
-                        anchors.margins: rofiStyle.panelPadding
-                        currentIndex: root.currentMode
-
-                        AppPage {
-                            id: appPage
-                            query: root.query
-                            onRequestCloseLauncher: root.requestClose()
-                        }
-
-                        WindowPage {
-                            id: windowPage
-                            query: root.query
-                            onRequestCloseLauncher: root.requestClose()
-                        }
-
-                        WallpaperPage {
-                            id: wallpaperPage
-                            query: root.query
-                            onRequestCloseLauncher: root.requestClose()
-                        }
-                    }
+        let restoredIndex = -1;
+        if (root.selectedResultId !== "") {
+            for (let index = 0;
+                    index < root.activeResults.length;
+                    index += 1) {
+                const result = root.activeResults[index];
+                if (result && String(result.id)
+                        === root.selectedResultId) {
+                    restoredIndex = index;
+                    break;
                 }
             }
         }
+        root.selectResult(restoredIndex >= 0 ? restoredIndex : 0);
+    }
 
-        Rectangle {
-            anchors.fill: parent
-            color: "transparent"
-            border.color: Appearance.colors.colLayer0Border
-            border.width: rofiStyle.borderWidth
-            radius: rofiStyle.windowRadius
+    function openWebQuery() {
+        const value = String(root.query || "").trim();
+        if (value === "")
+            return false;
+        const encoded = encodeURIComponent(value);
+        const url = style.searchEngineUrlTemplate.replace(
+            "{query}", encoded);
+        return Qt.openUrlExternally(url);
+    }
+
+    function activateSelected() {
+        if (root.modeRailExpanded && root.modeFocusIndex >= 0) {
+            root.setLocalMode(root.modeForIndex(root.modeFocusIndex));
+            root.setRailExpanded(false);
+            return true;
         }
+        if (root.mode === "web")
+            return root.openWebQuery();
+        if (root.selectedResultIndex < 0)
+            return false;
+
+        if (root.mode === "apps") {
+            if (appProvider.execute(root.selectedResultIndex)) {
+                root.requestClose();
+                return true;
+            }
+            return false;
+        }
+        if (root.mode === "wallpapers")
+            return wallpaperProvider.execute(root.selectedResultIndex);
+        if (root.mode === "clipboard")
+            return clipboardProvider.execute(root.selectedResultIndex);
+        return false;
+    }
+
+    function modeButtonBlend(index) {
+        return searchBar.buttonBlend(index);
+    }
+
+    function modeButtonBridgeRadius(index) {
+        return searchBar.buttonBridgeRadius(index);
+    }
+
+    function modeButtonRadius(index) {
+        return searchBar.buttonRadius(index);
+    }
+
+    function modeButtonCenterX(index) {
+        return searchBar.buttonCenterX(index);
+    }
+
+    function resultNavigationStep(direction) {
+        return resultsPanel.navigationStep(direction);
+    }
+
+    function webPressDepthAt(progress) {
+        return searchBar.pressDepthForProgress(progress);
+    }
+
+    function webPressScaleXAt(progress) {
+        return searchBar.pressScaleXForProgress(progress);
+    }
+
+    function webPressScaleYAt(progress) {
+        return searchBar.pressScaleYForProgress(progress);
+    }
+
+    function webShadowBlurAt(progress) {
+        return searchBar.shadowBlurForProgress(progress);
+    }
+
+    function webShadowVerticalOffsetAt(progress) {
+        return searchBar.shadowVerticalOffsetForProgress(progress);
+    }
+
+    function handleEscape() {
+        if (root.mode === "web") {
+            root.exitWeb();
+        } else if (root.modeRailExpanded || root.railProgress > 0.001) {
+            root.setRailExpanded(false);
+        } else if (root.query !== "") {
+            root.query = "";
+        } else {
+            root.requestClose();
+        }
+    }
+
+    function handleKey(event) {
+        const control = (event.modifiers & Qt.ControlModifier) !== 0;
+        const shift = (event.modifiers & Qt.ShiftModifier) !== 0;
+
+        if (control && event.key === Qt.Key_K) {
+            root.enterWeb();
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Tab
+                || event.key === Qt.Key_Backtab) {
+            root.moveModeFocus(
+                event.key === Qt.Key_Backtab || shift ? -1 : 1);
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Escape) {
+            root.handleEscape();
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Up) {
+            root.moveSelection(-1);
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Down) {
+            root.moveSelection(1);
+            event.accepted = true;
+            return;
+        }
+        if (root.mode === "wallpapers"
+                && event.key === Qt.Key_Left) {
+            root.moveSelectionByOffset(-1);
+            event.accepted = true;
+            return;
+        }
+        if (root.mode === "wallpapers"
+                && event.key === Qt.Key_Right) {
+            root.moveSelectionByOffset(1);
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Return
+                || event.key === Qt.Key_Enter) {
+            root.activateSelected();
+            event.accepted = true;
+            return;
+        }
+        if (event.key === Qt.Key_Delete
+                && root.mode === "clipboard"
+                && root.selectedResultIndex >= 0) {
+            clipboardProvider.deleteEntry(root.selectedResultIndex);
+            event.accepted = true;
+        }
+    }
+
+    onActiveResultsChanged: root.reconcileSelection()
+
+    NumberAnimation {
+        id: windowAnimation
+
+        target: root
+        property: "windowProgress"
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: root._windowAnimationTarget > root.windowProgress
+            ? style.windowEnterCurve : style.windowExitCurve
+
+        onFinished: {
+            if (root._windowAnimationTarget >= 1) {
+                root.windowProgress = 1;
+                root.windowPhase = "open";
+                searchBar.focusInput();
+                return;
+            }
+            root.windowProgress = 0;
+            root.windowPhase = "hidden";
+            root.visible = false;
+            root.query = "";
+            root.mode = "apps";
+            root.previousLocalMode = "apps";
+            root.selectedResultIndex = -1;
+            root.selectedResultId = "";
+            root.modeRailExpanded = false;
+            root.modeFocusIndex = -1;
+            root.railProgress = 0;
+            root.webProgress = 0;
+        }
+    }
+
+    NumberAnimation {
+        id: railAnimation
+
+        target: root
+        property: "railProgress"
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: style.railCurve
+    }
+
+    NumberAnimation {
+        id: webAnimation
+
+        target: root
+        property: "webProgress"
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: style.webCurve
     }
 
     CompositorBlurRegion {
+        id: spotlightBlur
+
         targetWindow: root
-        backgroundItem: mainUI
-        blurEnabled: mainUI.opacity > 0
+        backgroundItem: searchBar.blurRegionItems[0]
+        additionalBackgroundItems:
+            searchBar.blurRegionItems.slice(1).concat([
+                resultsPanel.blurRegionItem
+            ])
+        blurEnabled: root.showing
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: Appearance.colors.colScrim
+        opacity: style.scrimOpacity * root.windowProgress
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.requestClose()
+        }
+    }
+
+    Item {
+        id: spotlightRoot
+
+        readonly property real baseY:
+            Math.max(40, root.height * 0.22 - searchBar.height / 2)
+
+        width: Math.min(
+            root.wallpaperMode
+                ? style.wallpaperPanelWidth : style.canvasWidth,
+            Math.max(
+                360,
+                root.width - style.windowHorizontalMargin * 2
+            )
+        )
+        height: searchBar.height
+            + style.resultGap + resultsPanel.height
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: baseY
+            + style.initialYOffset * (1 - root.windowProgress)
+        opacity: root.windowProgress
+        scale: style.initialScale
+            + (1 - style.initialScale) * root.windowProgress
+        transformOrigin: Item.Top
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+        }
+
+        SpotlightSearchBar {
+            id: searchBar
+
+            width: parent.width
+            anchors.top: parent.top
+            style: style
+            mode: root.mode
+            modeRailExpanded: root.modeRailExpanded
+            modeFocusIndex: root.modeFocusIndex
+            railProgress: root.railProgress
+            webProgress: root.webProgress
+            requestedMainWidth: Math.max(
+                420,
+                Math.min(
+                    style.searchWidth,
+                    width - style.compactSideReserve
+                )
+            )
+            text: root.query
+            onTextChanged: root.query = text
+            onRoutedKey: event => root.handleKey(event)
+            onModeClicked: index => {
+                root.modeFocusIndex = index;
+                root.setLocalMode(root.modeForIndex(index));
+                root.setRailExpanded(false);
+            }
+        }
+
+        SpotlightResultsPanel {
+            id: resultsPanel
+
+            width: root.wallpaperMode
+                ? Math.min(
+                    style.wallpaperPanelWidth,
+                    spotlightRoot.width
+                )
+                : searchBar.requestedMainWidth
+            anchors.top: searchBar.bottom
+            anchors.topMargin: style.resultGap
+            anchors.horizontalCenter: parent.horizontalCenter
+            style: style
+            mode: root.mode
+            results: root.activeResults
+            selectedIndex: root.selectedResultIndex
+            loading: root.clipboardMode && clipboardProvider.loading
+            providerAvailable:
+                !root.clipboardMode || clipboardProvider.available
+            canRestore:
+                !root.clipboardMode || clipboardProvider.canRestore
+            providerError:
+                root.clipboardMode ? clipboardProvider.error : null
+            availableHeight: Math.max(
+                style.emptyHeight,
+                root.height
+                    - spotlightRoot.baseY
+                    - searchBar.height
+                    - style.resultGap
+                    - style.windowBottomMargin
+            )
+
+            onSelectionRequested: index =>
+                root.selectResult(index)
+            onActivationRequested: index => {
+                root.selectResult(index);
+                root.activateSelected();
+            }
+            onDeleteRequested: index =>
+                clipboardProvider.deleteEntry(index)
+            onClearRequested: clipboardProvider.clear()
+        }
     }
 }

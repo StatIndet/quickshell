@@ -11,6 +11,8 @@ qt_add_executable(key
     src/commands/record_command.cpp
     src/commands/cast_command.h
     src/commands/cast_command.cpp
+    src/commands/clipboard_command.h
+    src/commands/clipboard_command.cpp
     src/commands/sysmon_command.h
     src/commands/sysmon_command.cpp
     src/commands/top_command.h

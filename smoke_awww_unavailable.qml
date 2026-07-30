@@ -7,6 +7,11 @@ import qs.Services
 ShellRoot {
     id: root
 
+    Component.onCompleted: {
+        WallpaperService.primaryInstance = true;
+        AwwwWallpaperService.primaryInstance = true;
+    }
+
     property bool requested: false
     property var savedConfig: ({})
 

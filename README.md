@@ -201,6 +201,123 @@ Meteocons 资源不纳入 Git；动画图标可从 npm 包 [`@meteocons/lottie`]
 
 电源菜单依赖 `wlogout` 和 `envsubst`（通常由 gettext 提供）。控制中心“主题”页可在 HyDE 风格的四宫格与横向六项布局之间切换。按钮透明度跟随 Clavis 的 Shell 背景透明度；在 niri 26.04 及以上开启 Shell 背景模糊时，Clavis 会为 wlogout 的 `logout_dialog` layer surface 启用全屏背景模糊。wlogout 本身不支持提交精确的 `ext-background-effect` Region，因此其模糊范围是整个电源菜单背景，而不是每个按钮分别提交的区域。
 
+## Spotlight 聚焦搜索
+
+Launcher 现在使用全屏 Overlay 聚焦搜索，提供应用、壁纸、剪贴板和网页搜索。
+项目只提供 IPC，不会修改用户的 niri 配置。推荐在
+`~/.config/niri/config.kdl` 的 `binds` 中加入：
+
+```kdl
+binds {
+    Ctrl+Space repeat=false hotkey-overlay-title="Spotlight" {
+        spawn "qs" "ipc" "call" "spotlight" "toggle";
+    }
+}
+```
+
+可用 IPC：
+
+```bash
+qs ipc call spotlight toggle
+qs ipc call spotlight open
+qs ipc call spotlight close
+qs ipc call spotlight web
+qs ipc call spotlight openMode apps
+qs ipc call spotlight openMode wallpapers
+qs ipc call spotlight openMode clipboard
+```
+
+Spotlight 内使用 Tab 展开模式按钮、Shift+Tab 反向选择、Ctrl+K 进入
+Google 网页搜索、Esc 分层退出。网页查询通过 Qt URL API 打开，不进入
+shell。旧的 `launcher` IPC 已删除。
+
+Keystone 只使用新的 `keystone` IPC target：
+
+```bash
+qs ipc call keystone hub
+qs ipc call keystone tools
+qs ipc call keystone closeAllOthers
+qs ipc call keystone cancelRecord
+qs ipc call keystone currentStyle
+```
+
+旧的 `island` IPC target 已删除。
+
+### 剪贴板历史
+
+剪贴板功能依赖 `cliphist` 和 `wl-clipboard`。Clavis 不会在每次打开
+Spotlight 时启动 watcher，必须由用户会话持久启动一次。若发行版已经提供
+`cliphist.service`，直接启用它：
+
+```bash
+systemctl --user enable --now cliphist.service
+```
+
+若发行版没有提供该单元，可以创建模板用户服务
+`~/.config/systemd/user/cliphist-watcher@.service`：
+
+```ini
+[Unit]
+Description=Store %i clipboard history with cliphist
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/wl-paste --type %i --watch /usr/bin/cliphist store
+Restart=on-failure
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+同时记录文本和图片：
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now \
+  cliphist-watcher@text.service \
+  cliphist-watcher@image.service
+```
+
+若发行版中的可执行文件不位于 `/usr/bin`，请相应修改 `ExecStart`。CLI
+会在历史为空时检测 watcher；未运行会返回
+`cliphist_watcher_inactive`，而不再把它误报为普通的“没有匹配结果”。
+Clipse 和 cliphist 使用不同的历史数据库，Clipse 中存在记录不代表
+Spotlight 能读到它；两个 watcher 可以同时监听 Wayland 剪贴板，不构成
+数据库冲突。安全包装层支持：
+
+```bash
+key clipboard status --format json
+key clipboard list --format json --limit 100
+key clipboard restore 123 --format json
+key clipboard delete 123 --format json
+key clipboard clear --format json
+```
+
+`restore` 在 C++ 中将 `cliphist decode` 的原始字节直接写入 `wl-copy`
+stdin；entry id 仅接受正十进制整数，剪贴板正文不会写入日志。
+
+若系统中的 `key clipboard` 仍提示未知命令，需要先安装本仓库构建出的新版
+CLI：
+
+```bash
+sudo cmake --install core/build
+key clipboard status --format json
+```
+
+### Launcher shader
+
+模式按钮和搜索药丸由同一个 SDF shader 绘制。修改 GLSL 后从仓库根目录
+重新生成 qsb：
+
+```bash
+scripts/build/compile-launcher-shaders.sh
+```
+
+脚本需要 Qt Shader Tools 的 `qsb`，会同时保留
+`assets/shaders/launcher/frag/` 源码和
+`assets/shaders/launcher/qsb/` 运行时产物。
+
 ## `key` 与系统监测
 
 系统监测由 `core/src/sysmon/` 中的共享 C++ 核心提供。QML plugin

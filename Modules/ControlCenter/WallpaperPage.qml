@@ -157,6 +157,7 @@ StyledFlickable {
 
         property string iconName: ""
         property string tooltipText: ""
+        property bool darkOverlay: false
 
         signal clicked
 
@@ -167,16 +168,20 @@ StyledFlickable {
         Rectangle {
             anchors.fill: parent
             radius: 16
-            color: actionMouse.containsMouse
-                ? Appearance.colors.colSurfaceContainerHighest
-                : Appearance.colors.colSurfaceContainerHigh
+            color: action.darkOverlay
+                ? Appearance.applyAlpha(
+                    "white", actionMouse.containsMouse ? 0.28 : 0.18)
+                : (actionMouse.containsMouse
+                    ? Appearance.colors.colSurfaceContainerHighest
+                    : Appearance.colors.colSurfaceContainerHigh)
         }
 
         MaterialSymbol {
             anchors.centerIn: parent
             text: action.iconName
             iconSize: 18
-            color: Appearance.colors.colOnSurface
+            color: action.darkOverlay
+                ? "white" : Appearance.colors.colOnSurface
             fill: 1
         }
 
@@ -291,6 +296,7 @@ StyledFlickable {
                 HoverActionButton {
                     iconName: "folder_open"
                     tooltipText: qsTr("选择文件夹")
+                    darkOverlay: true
                     enabled: preview.actionsEnabled
                     onClicked: preview.chooseFile()
                 }
@@ -298,6 +304,7 @@ StyledFlickable {
                 HoverActionButton {
                     iconName: "palette"
                     tooltipText: qsTr("选择颜色")
+                    darkOverlay: true
                     enabled: preview.actionsEnabled
                     onClicked: preview.chooseColor()
                 }
@@ -305,6 +312,7 @@ StyledFlickable {
                 HoverActionButton {
                     iconName: "clear"
                     tooltipText: qsTr("清除壁纸")
+                    darkOverlay: true
                     enabled: preview.actionsEnabled
                     onClicked: preview.clearWallpaper()
                 }

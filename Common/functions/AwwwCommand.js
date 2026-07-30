@@ -108,6 +108,31 @@ function transition(value) {
         ? requested : "fade";
 }
 
+function normalizedRandomCoordinate(value) {
+    const numeric = Number(value);
+    const bounded = Number.isFinite(numeric)
+        ? Math.max(0, Math.min(0.999999, numeric))
+        : 0.5;
+    return bounded.toFixed(6);
+}
+
+function resolvedTransitionOptions(options, randomX, randomY) {
+    const source = options || {};
+    const resolved = {};
+    for (let key in source)
+        resolved[key] = source[key];
+
+    // `any` asks every awww invocation to choose its own random point.
+    // Clavis applies one wallpaper once per output, so resolve that alias
+    // once for the whole batch and share one normalized desktop position.
+    if (transition(source.type) === "any") {
+        resolved.type = "grow";
+        resolved.position = normalizedRandomCoordinate(randomX)
+            + "," + normalizedRandomCoordinate(randomY);
+    }
+    return resolved;
+}
+
 function supportsDuration(transitionType) {
     const type = transition(transitionType);
     return type !== "none" && type !== "simple";

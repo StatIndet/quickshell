@@ -92,6 +92,8 @@ Singleton {
         "cava",
         "kitty",
         "fcitx5",
+        "fcitx5_panel_svg",
+        "fcitx5_highlight_svg",
         "niri",
         "yazi",
         "zsh_prompt"
@@ -169,6 +171,8 @@ Singleton {
         "cava": true,
         "kitty": true,
         "fcitx5": true,
+        "fcitx5_panel_svg": true,
+        "fcitx5_highlight_svg": true,
         "niri": true,
         "yazi": true,
         "zsh_prompt": true

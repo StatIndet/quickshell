@@ -18,6 +18,7 @@ Item {
     Component.onCompleted: {
         I18nService.initialize();
         WallpaperService.primaryInstance = true;
+        AwwwWallpaperService.primaryInstance = true;
     }
 
     WallpaperBackground {}
@@ -57,15 +58,49 @@ Item {
     }
 
     LauncherWindow {
-        id: rofiLauncher
+        id: spotlightLauncher
     }
 
+    IpcHandler {
+        target: "spotlight"
+
+        function toggle(): string {
+            spotlightLauncher.toggleWindow();
+            return spotlightLauncher.windowPhase.toUpperCase();
+        }
+
+        function open(): string {
+            spotlightLauncher.openSpotlight();
+            return spotlightLauncher.windowPhase.toUpperCase();
+        }
+
+        function close(): string {
+            spotlightLauncher.requestClose();
+            return spotlightLauncher.windowPhase.toUpperCase();
+        }
+
+        function web(): string {
+            spotlightLauncher.openSpotlight();
+            spotlightLauncher.enterWeb();
+            return "WEB";
+        }
+
+        function openMode(mode: string): string {
+            if (spotlightLauncher.normalizedMode(mode || "") === "")
+                return "INVALID_MODE";
+            spotlightLauncher.openSpotlight(mode);
+            return String(mode).toUpperCase();
+        }
+    }
+
+    // Keep existing keybindings and third-party scripts working while the
+    // upstream launcher IPC name transitions to "spotlight".
     IpcHandler {
         target: "launcher"
 
         function toggle(): string {
-            rofiLauncher.toggleWindow();
-            return "LAUNCHER_TOGGLED";
+            spotlightLauncher.toggleWindow();
+            return spotlightLauncher.windowPhase.toUpperCase();
         }
     }
 
@@ -131,28 +166,42 @@ Item {
     IpcHandler {
         target: "wallpaper"
 
-        function set(path: string, screenName: string) {
-            return WallpaperService.setWallpaper(path || "", screenName || "", true) ? "OK" : "PENDING";
+        function set(path: string): string {
+            return WallpaperService.setWallpaper(path || "", "", true)
+                ? "OK" : "INVALID";
         }
 
-        function clear(screenName: string) {
-            return WallpaperService.clearWallpaper(screenName || "", true) ? "OK" : "PENDING";
+        function setForScreen(path: string, screenName: string): string {
+            return WallpaperService.setWallpaper(
+                path || "", screenName || "", true)
+                ? "OK" : "INVALID";
         }
 
-        function previous() {
+        function clear(): string {
+            return WallpaperService.clearWallpaper("", true)
+                ? "OK" : "INVALID";
+        }
+
+        function clearForScreen(screenName: string): string {
+            return WallpaperService.clearWallpaper(screenName || "", true)
+                ? "OK" : "INVALID";
+        }
+
+        function previous(): string {
             return WallpaperService.cyclePrevious(true) ? "OK" : "PENDING";
         }
 
-        function next() {
+        function next(): string {
             return WallpaperService.cycleNext(true) ? "OK" : "PENDING";
         }
 
-        function random() {
+        function random(): string {
             return WallpaperService.cycleRandom(true) ? "OK" : "PENDING";
         }
 
-        function setFolder(path: string) {
-            return WallpaperService.setWallpaperFolder(path || "", true) ? "OK" : "PENDING";
+        function setFolder(path: string): string {
+            return WallpaperService.setWallpaperFolder(path || "", true)
+                ? "OK" : "INVALID";
         }
     }
 

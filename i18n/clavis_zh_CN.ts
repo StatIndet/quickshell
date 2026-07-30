@@ -5346,16 +5346,6 @@
         <source>编辑贝塞尔</source>
         <translation>编辑贝塞尔</translation>
     </message>
-    <message>
-        <location filename="../Modules/Launcher/WallpaperPage.qml" line="144" />
-        <source>正在扫描壁纸…</source>
-        <translation>正在扫描壁纸…</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Launcher/WallpaperPage.qml" line="153" />
-        <source>未找到壁纸。</source>
-        <translation>未找到壁纸。</translation>
-    </message>
 </context>
 <context>
     <name>WallpaperService</name>
@@ -6513,14 +6503,6 @@
         <location filename="../Widgets/common/WidgetPanel.qml" line="35" />
         <source>返回快捷设置</source>
         <translation>返回快捷设置</translation>
-    </message>
-</context>
-<context>
-    <name>WindowPage</name>
-    <message>
-        <location filename="../Modules/Launcher/WindowPage.qml" line="94" />
-        <source>没有已打开的窗口。</source>
-        <translation>没有已打开的窗口。</translation>
     </message>
 </context>
 <context>

@@ -403,6 +403,28 @@ TestCase {
         verify(command.indexOf("portal") === -1);
     }
 
+    function test_awwwAnyResolvesOneBatchPosition() {
+        const source = {
+            type: "any",
+            position: "center",
+            durationMs: 1200
+        };
+        const resolved = AwwwCommand.resolvedTransitionOptions(
+            source, 0.125, 0.875);
+        compare(resolved.type, "grow");
+        compare(resolved.position, "0.125000,0.875000");
+        compare(source.type, "any");
+        compare(source.position, "center");
+
+        const first = transitionCommand("any", resolved);
+        const second = transitionCommand("any", resolved);
+        compare(first[first.indexOf("--transition-type") + 1], "grow");
+        compare(second[second.indexOf("--transition-type") + 1], "grow");
+        compare(
+            first[first.indexOf("--transition-pos") + 1],
+            second[second.indexOf("--transition-pos") + 1]);
+    }
+
     function test_awwwPureColorUsesClear() {
         const command = AwwwCommand.apply(
             "mock-awww", "clavis-desktop", "HDMI-A-1",

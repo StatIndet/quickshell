@@ -23,7 +23,7 @@ command -v zsh >/dev/null 2>&1 || fail "zsh is required"
 
 expected_hooks=(
     'post_hook = "pkill -USR1 cava >/dev/null 2>&1 || true"'
-    'post_hook = "kitten themes --reload-in=all Matugen >/dev/null 2>&1 || true"'
+    'post_hook = "cp \"$HOME/.config/kitty/themes/Matugen.conf\" \"$HOME/.config/kitty/current-theme.conf\" && (pkill -USR1 -x kitty >/dev/null 2>&1 || true)"'
     'post_hook = "busctl --user call org.fcitx.Fcitx5 /controller org.fcitx.Fcitx.Controller1 ReloadAddonConfig s classicui >/dev/null 2>&1 || true"'
     'post_hook = "niri msg action load-config-file >/dev/null 2>&1 || true"'
 )
@@ -89,6 +89,21 @@ disabled_outputs=(
 for output in "${disabled_outputs[@]}"; do
     [[ ! -e "$output" ]] || fail "disabled template generated output: $output"
 done
+
+kitty_home="$test_dir/kitty-home"
+hook_bin="$test_dir/hook-bin"
+mkdir -p "$hook_bin"
+printf '%s\n' '#!/bin/sh' 'exit 0' > "$hook_bin/pkill"
+chmod +x "$hook_bin/pkill"
+HOME="$kitty_home" PATH="$hook_bin:$PATH" "$generator" \
+    --color "#6750a4" \
+    --mode dark \
+    --scheme scheme-tonal-spot \
+    --templates "kitty"
+cmp -s \
+    "$kitty_home/.config/kitty/themes/Matugen.conf" \
+    "$kitty_home/.config/kitty/current-theme.conf" \
+    || fail "Kitty current-theme.conf was not synchronized"
 
 quickshell_only_home="$test_dir/quickshell-only-home"
 HOME="$quickshell_only_home" "$generator" \

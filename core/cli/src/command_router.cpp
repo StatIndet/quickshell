@@ -2,6 +2,7 @@
 
 #include "commands/audio_command.h"
 #include "commands/cast_command.h"
+#include "commands/clipboard_command.h"
 #include "commands/doctor_command.h"
 #include "commands/record_command.h"
 #include "commands/sysmon_command.h"
@@ -39,6 +40,8 @@ CommandResult CommandRouter::route(const QStringList &arguments) const
         return RecordCommand().run(rest);
     if (command == QStringLiteral("cast"))
         return CastCommand().run(rest);
+    if (command == QStringLiteral("clipboard"))
+        return ClipboardCommand().run(rest);
     if (command == QStringLiteral("sysmon"))
         return SysmonCommand().run(rest);
     if (command == QStringLiteral("top"))
@@ -63,6 +66,9 @@ QString CommandRouter::helpText()
         "  key record stop [--json]\n"
         "  key cast list [--json]\n"
         "  key cast status [--json]\n"
+        "  key clipboard list --format json [--limit N]\n"
+        "  key clipboard restore|delete ID [--format json]\n"
+        "  key clipboard clear|status [--format json]\n"
         "  key sysmon snapshot [--format json] [--modules LIST]\n"
         "  key sysmon stream [--format jsonl] [--interval MS] [--modules LIST]\n"
         "  key sysmon system|cpu|memory|gpu|disk|network|battery [--format json]\n"

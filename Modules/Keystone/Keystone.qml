@@ -50,16 +50,6 @@ Item {
         function tools(): string { return root.invoke("tools"); }
     }
 
-    IpcHandler {
-        target: "island"
-
-        function cancelRecord(): string { return root.invoke("cancelRecord"); }
-        function closeAllOthers(): string { return root.invoke("closeAllOthers"); }
-        function currentStyle(): string { return PersonalizationConfig.keystoneStyle; }
-        function hub(): string { return root.invoke("hub"); }
-        function tools(): string { return root.invoke("tools"); }
-    }
-
     Component {
         id: bangsStyle
 

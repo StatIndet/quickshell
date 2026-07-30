@@ -5346,16 +5346,6 @@ Scroll to adjust; click to open sound</translation>
         <source>编辑贝塞尔</source>
         <translation>Edit Bézier curve</translation>
     </message>
-    <message>
-        <location filename="../Modules/Launcher/WallpaperPage.qml" line="144" />
-        <source>正在扫描壁纸…</source>
-        <translation>Scanning wallpapers…</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Launcher/WallpaperPage.qml" line="153" />
-        <source>未找到壁纸。</source>
-        <translation>No wallpapers found.</translation>
-    </message>
 </context>
 <context>
     <name>WallpaperService</name>
@@ -6513,14 +6503,6 @@ Scroll to adjust; click to open sound</translation>
         <location filename="../Widgets/common/WidgetPanel.qml" line="35" />
         <source>返回快捷设置</source>
         <translation>Back to Quick Settings</translation>
-    </message>
-</context>
-<context>
-    <name>WindowPage</name>
-    <message>
-        <location filename="../Modules/Launcher/WindowPage.qml" line="94" />
-        <source>没有已打开的窗口。</source>
-        <translation>No open windows.</translation>
     </message>
 </context>
 <context>

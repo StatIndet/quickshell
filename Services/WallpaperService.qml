@@ -230,12 +230,13 @@ Singleton {
 
     function forwardIpc(args) {
         if (root.primaryInstance || !args || args.length === 0)
-            return;
+            return false;
 
-        const command = ["quickshell", "ipc", "call", "wallpaper"];
+        const command = ["qs", "ipc", "call", "wallpaper"];
         for (let i = 0; i < args.length; i += 1)
             command.push(String(args[i]));
         Quickshell.execDetached(command);
+        return true;
     }
 
     function scan() {
@@ -265,6 +266,15 @@ Singleton {
         if (!path || path === "" || (!root.isImagePath(path) && !root.isColorSource(path)))
             return false;
 
+        if (!fromIpc && !root.primaryInstance) {
+            return root.forwardIpc(
+                screenName
+                    ? ["setForScreen", path, screenName]
+                    : ["set", path]
+            );
+        }
+
+        const revisionBeforeConfig = root.revision;
         if (PersonalizationConfig.perMonitorWallpaper && screenName)
             PersonalizationConfig.setMonitorWallpaper(screenName, path);
         else if (PersonalizationConfig.perModeWallpaper)
@@ -275,7 +285,8 @@ Singleton {
         root.currentWallpaper = path;
         root.rememberWallpaper(path);
         Appearance.currentWallpaperPreview = root.isColorSource(path) ? path : Paths.fileUrl(path);
-        root.revision += 1;
+        if (root.revision === revisionBeforeConfig)
+            root.revision += 1;
         root.switching = true;
 
         if (root.isImagePath(path))
@@ -285,12 +296,17 @@ Singleton {
         else
             root.switching = false;
 
-        if (!fromIpc)
-            root.forwardIpc(screenName ? ["set", path, screenName] : ["set", path]);
         return true;
     }
 
     function clearWallpaper(screenName, fromIpc) {
+        if (!fromIpc && !root.primaryInstance) {
+            return root.forwardIpc(
+                screenName ? ["clearForScreen", screenName] : ["clear"]
+            );
+        }
+
+        const revisionBeforeConfig = root.revision;
         if (PersonalizationConfig.perMonitorWallpaper && screenName)
             PersonalizationConfig.setMonitorWallpaper(screenName, "");
         else if (PersonalizationConfig.perModeWallpaper)
@@ -300,19 +316,19 @@ Singleton {
 
         root.currentWallpaper = root.wallpaperForScreen("");
         Appearance.currentWallpaperPreview = "";
-        root.revision += 1;
+        if (root.revision === revisionBeforeConfig)
+            root.revision += 1;
         root.switching = false;
 
-        if (!fromIpc)
-            root.forwardIpc(screenName ? ["clear", screenName] : ["clear"]);
         return true;
     }
 
     function setWallpaperFolder(path, fromIpc) {
+        if (!fromIpc && !root.primaryInstance)
+            return root.forwardIpc(["setFolder", path]);
+
         PersonalizationConfig.setWallpaperFolder(path || Paths.homeDir + "/.config/wallpaper");
         root.scan();
-        if (!fromIpc)
-            root.forwardIpc(["setFolder", PersonalizationConfig.wallpaperFolder]);
         return true;
     }
 
@@ -427,24 +443,21 @@ Singleton {
     }
 
     function cycleNext(fromIpc) {
-        const applied = root.cycle("next", !!fromIpc || !root.primaryInstance);
-        if (!fromIpc)
-            root.forwardIpc(["next"]);
-        return applied;
+        if (!fromIpc && !root.primaryInstance)
+            return root.forwardIpc(["next"]);
+        return root.cycle("next", !!fromIpc);
     }
 
     function cyclePrevious(fromIpc) {
-        const applied = root.cycle("previous", !!fromIpc || !root.primaryInstance);
-        if (!fromIpc)
-            root.forwardIpc(["previous"]);
-        return applied;
+        if (!fromIpc && !root.primaryInstance)
+            return root.forwardIpc(["previous"]);
+        return root.cycle("previous", !!fromIpc);
     }
 
     function cycleRandom(fromIpc) {
-        const applied = root.cycle("random", !!fromIpc || !root.primaryInstance);
-        if (!fromIpc)
-            root.forwardIpc(["random"]);
-        return applied;
+        if (!fromIpc && !root.primaryInstance)
+            return root.forwardIpc(["random"]);
+        return root.cycle("random", !!fromIpc);
     }
 
     function refreshFromConfig() {
