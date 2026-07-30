@@ -20,7 +20,8 @@ FloatingWindow {
     implicitHeight: 750
     minimumSize: Qt.size(760, 520)
     color: "transparent"
-    Material.theme: PersonalizationConfig.themeMode === "light" ? Material.Light : Material.Dark
+    Material.theme: Appearance.effectiveMatugenMode === "light"
+        ? Material.Light : Material.Dark
     Material.accent: Appearance.colors.colPrimary
     onClosed: Qt.quit()
     Component.onCompleted: {

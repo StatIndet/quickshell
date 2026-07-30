@@ -11,9 +11,10 @@ source_color=""
 dry_run=false
 templates_requested=false
 templates_csv=""
+skip_quickshell=false
 
 usage() {
-    printf 'Usage: %s (--image PATH | --color HEX) [--mode dark|light] [--scheme SCHEME] [--templates ID,...] [--dry-run]\n' "$0" >&2
+    printf 'Usage: %s (--image PATH | --color HEX) [--mode dark|light] [--scheme SCHEME] [--templates ID,...] [--skip-quickshell] [--dry-run]\n' "$0" >&2
 }
 
 while [[ $# -gt 0 ]]; do
@@ -38,6 +39,10 @@ while [[ $# -gt 0 ]]; do
             templates_requested=true
             templates_csv="${2:-}"
             shift 2
+            ;;
+        --skip-quickshell)
+            skip_quickshell=true
+            shift
             ;;
         --dry-run)
             dry_run=true
@@ -84,7 +89,10 @@ all_external_templates=(
     zsh_prompt
 )
 
-selected_templates=(quickshell)
+selected_templates=()
+if [[ "$skip_quickshell" == false ]]; then
+    selected_templates+=(quickshell)
+fi
 if [[ "$templates_requested" == false ]]; then
     selected_templates+=("${all_external_templates[@]}")
 elif [[ -n "$templates_csv" ]]; then

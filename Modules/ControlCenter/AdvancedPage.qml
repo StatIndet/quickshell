@@ -68,6 +68,28 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
+            title: qsTr("Shell 外观")
+            supportingText: qsTr("控制 Clavis 顶栏、侧边栏、设置中心和弹出面板是否跟随主题的深浅色变化。")
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "contrast"
+                title: qsTr("Clavis 界面跟随深浅色")
+                supportingText: PersonalizationConfig.shellFollowThemeMode
+                    ? qsTr("已跟随；日出日落自动模式也会同步改变 Shell 配色")
+                    : qsTr("已关闭；应用仍会切换，Clavis 保持当前配色")
+
+                trailing: StyledSwitch {
+                    checked: PersonalizationConfig.shellFollowThemeMode
+                    Accessible.name: qsTr("Clavis 界面跟随深浅色")
+                    onToggled:
+                        ThemeService.setShellFollowThemeMode(checked)
+                }
+            }
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
             title: qsTr("Matugen 模板生成")
             supportingText: qsTr("壁纸或主题变化时，仅为已启用的程序生成模板。Quickshell 配色始终生成。关闭开关不会删除已有配色文件。")
 

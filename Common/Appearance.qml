@@ -10,6 +10,7 @@ Singleton {
     readonly property string colorsPath: Quickshell.env("HOME") + "/.cache/quickshell-dev-colorscheme/colors.json"
     property string matugenScheme: "scheme-tonal-spot"
     property string matugenMode: "dark"
+    property bool followGeneratedColors: true
     readonly property string effectiveMatugenMode: matugenMode.toLowerCase() === "light" ? "light" : "dark"
     property string currentWallpaperPreview: ""
     property real backgroundTransparency: 0
@@ -290,7 +291,8 @@ Singleton {
 
         onLoaded: {
             try {
-                root.applyGeneratedColors(colorFile.text());
+                if (root.followGeneratedColors)
+                    root.applyGeneratedColors(colorFile.text());
             } catch (error) {
             }
         }

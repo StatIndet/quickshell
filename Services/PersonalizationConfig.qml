@@ -175,6 +175,7 @@ Singleton {
     })
     property string themeMode: "dark"
     property string themeModePolicy: "dark"
+    property bool shellFollowThemeMode: true
     property string cursorTheme: ""
     property int cursorSize: 24
     property bool cursorHideWhenTyping: false
@@ -683,6 +684,10 @@ Singleton {
         return true;
     }
 
+    function setShellFollowThemeMode(value) {
+        setValue("shellFollowThemeMode", !!value);
+    }
+
     function setCursorTheme(value) {
         setValue("cursorTheme", value || "");
     }
@@ -825,6 +830,7 @@ Singleton {
                 "matugenTemplates":
                     root.cloneMap(root.matugenTemplates),
                 "mode": root.themeModePolicy,
+                "shellFollowMode": root.shellFollowThemeMode,
                 "cursorTheme": root.cursorTheme,
                 "cursorSize": root.cursorSize,
                 "cursorHideWhenTyping": root.cursorHideWhenTyping,
@@ -959,6 +965,7 @@ Singleton {
             ? "sunrise-sunset"
             : (theme.mode === "light" ? "light" : "dark");
         root.themeMode = root.themeModePolicy === "light" ? "light" : "dark";
+        root.shellFollowThemeMode = theme.shellFollowMode !== false;
         root.cursorTheme = theme.cursorTheme || "";
         root.cursorSize = Math.max(12, Math.min(128, Math.round(Number(theme.cursorSize) || 24)));
         root.cursorHideWhenTyping = !!theme.cursorHideWhenTyping;
@@ -1011,7 +1018,8 @@ Singleton {
         return !theme || typeof theme !== "object"
             || Array.isArray(theme)
             || theme.powerMenuStyle === undefined
-            || theme.matugenTemplates === undefined;
+            || theme.matugenTemplates === undefined
+            || theme.shellFollowMode === undefined;
     }
 
     function save() {

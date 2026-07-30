@@ -103,6 +103,22 @@ HOME="$quickshell_only_home" "$generator" \
 [[ ! -e "$quickshell_only_home/.cache/quickshell-dev-colorscheme/zsh-prompt-colors.zsh" ]] \
     || fail "Zsh prompt output was generated for an empty selection"
 
+external_only_home="$test_dir/external-only-home"
+mkdir -p "$external_only_home/.cache/quickshell-dev-colorscheme"
+printf '%s\n' '{"sentinel":"keep-shell-palette"}' \
+    > "$external_only_home/.cache/quickshell-dev-colorscheme/colors.json"
+HOME="$external_only_home" "$generator" \
+    --color "#6750a4" \
+    --mode light \
+    --scheme scheme-tonal-spot \
+    --templates "kitty" \
+    --skip-quickshell
+grep -Fqx '{"sentinel":"keep-shell-palette"}' \
+    "$external_only_home/.cache/quickshell-dev-colorscheme/colors.json" \
+    || fail "external-only generation overwrote the preserved Quickshell palette"
+[[ -s "$external_only_home/.config/kitty/themes/Matugen.conf" ]] \
+    || fail "external-only generation did not update the requested app template"
+
 mock_bin="$test_dir/bin"
 mkdir -p "$mock_bin"
 cat > "$mock_bin/matugen" <<'EOF'

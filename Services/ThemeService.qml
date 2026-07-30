@@ -36,7 +36,10 @@ Singleton {
 
     function applyConfigToAppearance() {
         Appearance.matugenScheme = PersonalizationConfig.matugenScheme;
-        Appearance.matugenMode = PersonalizationConfig.themeMode;
+        Appearance.followGeneratedColors =
+            PersonalizationConfig.shellFollowThemeMode;
+        if (PersonalizationConfig.shellFollowThemeMode)
+            Appearance.matugenMode = PersonalizationConfig.themeMode;
     }
 
     function setMatugenScheme(value) {
@@ -78,6 +81,15 @@ Singleton {
         }
         PersonalizationConfig.setThemeModePolicy(value);
         root.evaluateAutomaticTheme(true);
+    }
+
+    function setShellFollowThemeMode(value) {
+        PersonalizationConfig.setShellFollowThemeMode(value);
+        root.applyConfigToAppearance();
+        if (PersonalizationConfig.shellFollowThemeMode) {
+            root.regenerateFromCurrentWallpaper();
+            Appearance.reloadColors();
+        }
     }
 
     function updateSunTimes() {
@@ -361,6 +373,8 @@ cursor {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
+        if (!PersonalizationConfig.shellFollowThemeMode)
+            command.push("--skip-quickshell");
         generateColorsProcess.command = command;
         generateColorsProcess.running = false;
         generateColorsProcess.running = true;
@@ -388,6 +402,8 @@ cursor {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
+        if (!PersonalizationConfig.shellFollowThemeMode)
+            command.push("--skip-quickshell");
         generateColorsProcess.command = command;
         generateColorsProcess.running = false;
         generateColorsProcess.running = true;
@@ -399,6 +415,8 @@ cursor {
             root.generateFromWallpaper(path);
         else if (path && path !== "" && WallpaperService.isColorSource(path))
             root.generateFromColor(path);
+        else
+            root.generateFromColor(Appearance.m3colors.m3sourceColor);
     }
 
     Component.onCompleted: {
@@ -419,6 +437,12 @@ cursor {
 
         function onThemeModeChanged() {
             root.applyConfigToAppearance();
+        }
+
+        function onShellFollowThemeModeChanged() {
+            root.applyConfigToAppearance();
+            if (PersonalizationConfig.shellFollowThemeMode)
+                Appearance.reloadColors();
         }
 
         function onThemeModePolicyChanged() {
