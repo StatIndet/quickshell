@@ -13,6 +13,18 @@ Item {
     id: root
 
     property bool isHovered: mouseArea.containsMouse
+    readonly property real cpuPowerWatts:
+        Number(SystemMonitorService.cpu.powerWatts)
+    readonly property real batteryPowerWatts:
+        Number(SystemMonitorService.battery.powerWatts)
+    readonly property real displayedPowerWatts:
+        isFinite(cpuPowerWatts) && cpuPowerWatts > 0
+            ? cpuPowerWatts
+            : (isFinite(batteryPowerWatts) && batteryPowerWatts > 0
+                ? batteryPowerWatts : NaN)
+
+    Component.onCompleted: SystemMonitorService.acquire()
+    Component.onDestruction: SystemMonitorService.release()
     
     implicitHeight: 36
     
@@ -100,9 +112,9 @@ Item {
             }
         }
 
-        // --- 3. Disk (展开) ---
+        // --- 3. Power draw (expanded) ---
         RowLayout {
-            id: diskGroup
+            id: powerGroup
             spacing: 4
             visible: opacity > 0
             opacity: root.isHovered ? 1.0 : 0.0
@@ -111,13 +123,15 @@ Item {
             }
             
             Text { 
-                text: "" 
+                text: ""
                 color: Appearance.colors.colPrimary
                 font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
-                text: Math.round(SysmonPlugin.diskUsage) + "%"
+                text: isFinite(root.displayedPowerWatts)
+                    ? root.displayedPowerWatts.toFixed(1) + "W"
+                    : "--W"
                 color: Appearance.colors.colOnSurface
                 font.family: "LXGW WenKai GB Screen"
                 font.bold: true
