@@ -47,9 +47,8 @@ Item {
         onClicked: mouse => {
             if (mouse.button === Qt.RightButton) {
                 Quickshell.execDetached([
-                    "qs",
-                    "--path",
-                    Paths.shellDir + "/controlcenter.qml"
+                    Paths.shellDir + "/scripts/open-control-center",
+                    "general"
                 ]);
                 return;
             }

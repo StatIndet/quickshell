@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -u
+
+clavis_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/quickshell/clavis"
+control_center="${clavis_dir}/controlcenter.qml"
+page="${1:-general}"
+build_dir="${clavis_dir}/core/build"
+
+if [[ -d "${build_dir}/Clavis" ]]; then
+    export QML_IMPORT_PATH="${build_dir}${QML_IMPORT_PATH:+:${QML_IMPORT_PATH}}"
+fi
+if [[ -d "${build_dir}/bin" ]]; then
+    export PATH="${build_dir}/bin:${PATH}"
+fi
+
+if qs --path "${control_center}" ipc call control-center openPage "${page}" \
+        >/dev/null 2>&1; then
+    exit 0
+fi
+
+CLAVIS_CONTROL_CENTER_PAGE="${page}" \
+    qs --daemonize --path "${control_center}"

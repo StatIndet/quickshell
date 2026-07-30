@@ -32,9 +32,8 @@ AccountProfileHeader {
     onAvatarActivated: {
         WidgetState.leftSidebarOpen = false;
         Quickshell.execDetached([
-            "qs",
-            "--path",
-            Paths.shellDir + "/controlcenter.qml"
+            Paths.shellDir + "/scripts/open-control-center",
+            "account"
         ]);
     }
 }

@@ -52,7 +52,7 @@ Item {
         property real digitOffset: 0
         
         width: digitText.implicitWidth
-        height: 24  // 严格限制高度，形成视口
+        height: 26
         clip: true  // 开启裁切，隐藏不在视口内的数字
         
         rotation: digitRotation
@@ -64,14 +64,14 @@ Item {
             // 一次性渲染 0-9，通过改变 y 坐标来实现滚动
             text: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9"
             color: digitContainer.digitColor
-            font.family: Sizes.fontFamily
-            font.pixelSize: 22
+            font.family: Sizes.fontFamilyMono
+            font.pixelSize: 21
             font.weight: Font.Black
-            lineHeight: 24 // 必须与视口 height 相同
+            lineHeight: 26
             lineHeightMode: Text.FixedHeight
             
             // 计算 y 轴偏移量
-            y: -digitContainer.targetDigit * 24
+            y: -digitContainer.targetDigit * 26
 
             // 弹性动画，带来带有惯性回弹的机械翻页感
             Behavior on y {
@@ -85,9 +85,11 @@ Item {
     }
 
     Row {
-        anchors.centerIn: parent
-        spacing: 10 
-        visible: false
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        height: 30
+        spacing: 10
+        visible: PersonalizationConfig.clockStyle === "staggered"
         
         // --- 左侧日期部分 ---
         Text {
@@ -119,13 +121,13 @@ Item {
                     targetDigit: root.h0
                     digitColor: Appearance.colors.colInversePrimary 
                     digitRotation: -3 // 各自独立的倾斜角度
-                    digitOffset: -2    // 各自独立的高低落差
+                    digitOffset: -1.5
                 }
                 RollingDigit {
                     targetDigit: root.h1
                     digitColor: Appearance.colors.colPrimary // 不透明的主题亮色
                     digitRotation: 3  
-                    digitOffset: 1   
+                    digitOffset: 1.5
                 }
             }
 
@@ -133,7 +135,7 @@ Item {
             Column {
                 spacing: 3 
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: 1 
+                anchors.verticalCenterOffset: 0
                 
                 Rectangle { width: 4; height: 4; radius: 2; color: Appearance.colors.colOutlineVariant }
                 Rectangle { width: 4; height: 4; radius: 2; color: Appearance.colors.colOutlineVariant }
@@ -147,13 +149,13 @@ Item {
                     targetDigit: root.m0
                     digitColor: Appearance.colors.colInversePrimary
                     digitRotation: -2 
-                    digitOffset: -1
+                    digitOffset: -1.5
                 }
                 RollingDigit {
                     targetDigit: root.m1
                     digitColor: Appearance.colors.colPrimary
                     digitRotation: 2
-                    digitOffset: 1 
+                    digitOffset: 1.5
                 }
             }
         }
@@ -162,6 +164,7 @@ Item {
     Row {
         anchors.centerIn: parent
         spacing: 9
+        visible: PersonalizationConfig.clockStyle === "simple"
 
         Text {
             anchors.verticalCenter: parent.verticalCenter

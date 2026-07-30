@@ -105,6 +105,10 @@ Singleton {
         ({ "value": "grid", "label": qsTr("四宫格") }),
         ({ "value": "row", "label": qsTr("横向六项") })
     ]
+    readonly property var clockStyles: [
+        ({ "value": "staggered", "label": qsTr("错落滚动") }),
+        ({ "value": "simple", "label": qsTr("简洁数字") })
+    ]
 
     property bool storeReady: false
     property bool loading: false
@@ -177,6 +181,7 @@ Singleton {
     property string iconTheme: ""
     property string keystoneStyle: "bangs"
     property string powerMenuStyle: "grid"
+    property string clockStyle: "staggered"
 
     property real shellBackgroundOpacity: 1.0
     property bool shellBlurEnabled: false
@@ -685,6 +690,11 @@ Singleton {
             root.powerMenuStyles, value, "grid"));
     }
 
+    function setClockStyle(value) {
+        setValue("clockStyle", normalizedOption(
+            root.clockStyles, value, "staggered"));
+    }
+
     function setShellBackgroundOpacity(value) {
         setValue("shellBackgroundOpacity",
             normalizedBoundedReal(value, 1.0, 0.0, 1.0));
@@ -805,7 +815,8 @@ Singleton {
                 "shellBlurXray": root.shellBlurXray
             },
             "keystone": {
-                "style": root.keystoneStyle
+                "style": root.keystoneStyle,
+                "clockStyle": root.clockStyle
             },
             "sounds": {
                 "pomodoro": root.pomodoroSoundEnabled
@@ -937,6 +948,8 @@ Singleton {
             typeof effects.shellBlurXray === "boolean"
                 ? effects.shellBlurXray : true;
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
+        root.clockStyle = normalizedOption(
+            root.clockStyles, keystone.clockStyle, "staggered");
         root.pomodoroSoundEnabled = !!sounds.pomodoro;
         root.keepSidebarsLoaded = sidebar.keepLoaded === undefined
             ? true : !!sidebar.keepLoaded;

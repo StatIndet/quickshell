@@ -675,6 +675,20 @@ StyledFlickable {
         }
 
         Section {
+            title: qsTr("顶部时钟")
+            iconName: "schedule"
+
+            SearchSelectSettingRow {
+                title: qsTr("时钟样式")
+                options: PersonalizationConfig.clockStyles
+                value: PersonalizationConfig.clockStyle
+                placeholder: qsTr("选择时钟样式")
+                onAccepted: value =>
+                    PersonalizationConfig.setClockStyle(value)
+            }
+        }
+
+        Section {
             title: qsTr("电源菜单")
             iconName: "power_settings_new"
 
