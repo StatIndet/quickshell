@@ -282,10 +282,10 @@ Item {
         color: "transparent"
         border.width: 1
         border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.34)
-        // The rounded mask requires an offscreen texture. Disable that costly
-        // full-panel pass while the sidebar or the weather page is moving;
-        // the parent still provides rectangular clipping during motion.
-        layer.enabled: root.presentationActive && !flick.scrollActive
+        // Keep the rounded mask active throughout opening and scrolling.
+        // Expensive weather scenes and offscreen cards are throttled
+        // independently, so the corners never flash back to a square clip.
+        layer.enabled: true
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 width: weatherPanel.width
