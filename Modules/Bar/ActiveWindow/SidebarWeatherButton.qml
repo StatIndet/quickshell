@@ -24,7 +24,7 @@ Item {
     TextMetrics {
         id: temperatureMetrics
         text: root.temperatureText
-        font.family: "MesloLGM Nerd Font"
+        font.family: "JetBrainsMono Nerd Font"
         font.pixelSize: root.temperatureSize
         font.bold: true
     }
@@ -129,7 +129,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: root.temperatureText
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: root.temperatureSize
                 font.bold: true
                 color: Appearance.colors.colOnTertiaryContainer

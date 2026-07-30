@@ -62,14 +62,14 @@ Item {
             Text { 
                 text: "" 
                 color: Appearance.colors.colSecondary
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 // 同时保全了原始流的传递。并在这里调取新的 ramUsedGB。toFixed(1) 可保留如 14.2G 格式：
                 text: SysmonPlugin.ramUsedGB.toFixed(1) + "G"
                 color: Appearance.colors.colOnSurface
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -88,13 +88,13 @@ Item {
             Text {
                 text: "󰢮"
                 color: Appearance.colors.colSecondary
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text {
                 text: Math.round(SysmonPlugin.gpuUsage) + "%"
                 color: Appearance.colors.colOnSurface
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -113,13 +113,13 @@ Item {
             Text { 
                 text: "" 
                 color: Appearance.colors.colPrimary
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.diskUsage) + "%"
                 color: Appearance.colors.colOnSurface
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -138,13 +138,13 @@ Item {
             Text { 
                 text: "" 
                 color: Appearance.colors.colTertiary
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.coreTemp) + "°C"
                 color: Appearance.colors.colOnSurface
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 13
             }
@@ -163,13 +163,13 @@ Item {
             Text { 
                 text: "" 
                 color: Appearance.colors.colOnSurfaceVariant
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 16
             }
             Text { 
                 text: Math.round(SysmonPlugin.cpuUsage) + "%"
                 color: Appearance.colors.colOnSurface
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.bold: true
                 font.pixelSize: 13
             }

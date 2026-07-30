@@ -287,7 +287,7 @@ Rectangle {
         Text {
             text: root.moon ? qsTr("月亮") : qsTr("太阳")
             color: root.titleInk
-            font.family: "Noto Sans CJK SC"
+            font.family: "LXGW WenKai GB Screen"
             font.pixelSize: 18
             font.bold: true
             anchors.verticalCenter: parent.verticalCenter
@@ -404,7 +404,7 @@ Rectangle {
         anchors.bottomMargin: root.moon ? 42 : 40
         text: root.riseText
         color: root.cardInk
-        font.family: "MesloLGM Nerd Font"
+        font.family: "JetBrainsMono Nerd Font"
         font.pixelSize: Math.round(root.width * 0.095)
         font.bold: true
         z: 3
@@ -417,7 +417,7 @@ Rectangle {
         anchors.bottomMargin: root.moon ? 42 : 40
         text: root.setText
         color: root.cardInk
-        font.family: "MesloLGM Nerd Font"
+        font.family: "JetBrainsMono Nerd Font"
         font.pixelSize: Math.round(root.width * 0.095)
         font.bold: true
         z: 3
@@ -519,7 +519,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             text: root.phaseText(root.phaseAngle)
             color: Appearance.colors.colOnWeatherCardSurfaceVariant
-            font.family: "Noto Sans CJK SC"
+            font.family: "LXGW WenKai GB Screen"
             font.pixelSize: 11
         }
     }

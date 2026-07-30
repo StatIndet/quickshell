@@ -107,7 +107,7 @@ Rectangle {
                 Text {
                     text: qsTr("每日预报")
                     color: Appearance.colors.colOnSurface
-                    font.family: "Noto Sans CJK SC"
+                    font.family: "LXGW WenKai GB Screen"
                     font.bold: true
                     font.pixelSize: 22
                     Layout.alignment: Qt.AlignVCenter
@@ -303,7 +303,7 @@ Rectangle {
                                 ctx.fillStyle = fadedBar
                                     ? Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.42)
                                     : primaryColor
-                                ctx.font = "bold 11px \"MesloLGM Nerd Font\""
+                                ctx.font = "bold 11px \"JetBrainsMono Nerd Font\""
                                 ctx.textAlign = "center"
                                 ctx.fillText(root.fmtPercent(popValue), x, trendContent.rainLabelY)
                             }
@@ -382,7 +382,7 @@ Rectangle {
                                     width: parent.width
                                     text: root.dayLabel(index, dayItem.time)
                                     color: Appearance.colors.colOnSurface
-                                    font.family: "Noto Sans CJK SC"
+                                    font.family: "LXGW WenKai GB Screen"
                                     font.pixelSize: 16
                                     font.bold: index === 1
                                     horizontalAlignment: Text.AlignHCenter
@@ -393,7 +393,7 @@ Rectangle {
                                     width: parent.width
                                     text: root.dateLabel(dayItem.time)
                                     color: Appearance.colors.colOnSurfaceVariant
-                                    font.family: "MesloLGM Nerd Font"
+                                    font.family: "JetBrainsMono Nerd Font"
                                     font.pixelSize: 13
                                     horizontalAlignment: Text.AlignHCenter
                                 }
@@ -415,7 +415,7 @@ Rectangle {
                                 y: trendContent.highTempTextY
                                 text: root.fmtTemp(root.valueAt(dayPart, "temperatureC", root.valueAt(dayItem, "temperatureMaxC", NaN)))
                                 color: Appearance.colors.colOnSurface
-                                font.family: "MesloLGM Nerd Font"
+                                font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 19
                                 font.bold: true
                                 horizontalAlignment: Text.AlignHCenter
@@ -426,7 +426,7 @@ Rectangle {
                                 y: trendContent.lowTempTextY
                                 text: root.fmtTemp(root.valueAt(nightPart, "temperatureC", root.valueAt(dayItem, "temperatureMinC", NaN)))
                                 color: Appearance.colors.colOnSurfaceVariant
-                                font.family: "MesloLGM Nerd Font"
+                                font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 18
                                 font.bold: true
                                 horizontalAlignment: Text.AlignHCenter

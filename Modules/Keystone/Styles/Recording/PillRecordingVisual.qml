@@ -228,7 +228,7 @@ Item {
                 text: root.formatElapsed(root.heldElapsedMs)
                 color: Appearance.colors.colOnLayer0
                 font {
-                    family: "MesloLGM Nerd Font"
+                    family: "JetBrainsMono Nerd Font"
                     pixelSize: 18
                     weight: Font.DemiBold
                 }
@@ -294,7 +294,7 @@ Item {
                 text: qsTr("正在处理")
                 color: Appearance.colors.colOnLayer0
                 font {
-                    family: "Noto Sans CJK SC"
+                    family: "LXGW WenKai GB Screen"
                     pixelSize: 15
                     weight: Font.DemiBold
                 }

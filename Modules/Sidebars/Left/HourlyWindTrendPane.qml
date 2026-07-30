@@ -167,7 +167,7 @@ Item {
                         y: root.topPadding
                         text: modelData.hourText
                         color: parent.hourColor
-                        font.family: "MesloLGM Nerd Font"
+                        font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 11
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -198,7 +198,7 @@ Item {
                         y: parent.barTop - 22
                         text: modelData.speedText
                         color: Appearance.colors.colOnSurfaceVariant
-                        font.family: "MesloLGM Nerd Font"
+                        font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 12
                     }
                 }
@@ -237,7 +237,7 @@ Item {
         visible: !root.hasData
         text: qsTr("风况数据暂不可用")
         color: Appearance.colors.colOnSurfaceVariant
-        font.family: "Noto Sans CJK SC"
+        font.family: "LXGW WenKai GB Screen"
         font.pixelSize: 16
     }
 }

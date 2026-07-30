@@ -28,7 +28,7 @@ Rectangle {
 
         Text {
             id: iconText
-            font.family: "MesloLGM Nerd Font"
+            font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 14 
             Layout.alignment: Qt.AlignVCenter
             color: Appearance.colors.colOnPrimaryContainer 

@@ -146,7 +146,7 @@ Item {
             color: Appearance.colors.colOnLayer0
             font.pixelSize: 15
             font.bold: true
-            font.family: "MesloLGM Nerd Font"
+            font.family: "JetBrainsMono Nerd Font"
             Layout.alignment: Qt.AlignVCenter
             Layout.minimumWidth: 32 
             horizontalAlignment: Text.AlignRight

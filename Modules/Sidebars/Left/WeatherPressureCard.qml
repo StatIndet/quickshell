@@ -99,7 +99,7 @@ Item {
             Text {
                 text: qsTr("气压")
                 color: root.mutedInk
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.pixelSize: 18
                 font.bold: true
             }
@@ -123,7 +123,7 @@ Item {
             anchors.topMargin: 20
             text: root.unitText
             color: root.ink
-            font.family: "Noto Sans CJK SC"
+            font.family: "LXGW WenKai GB Screen"
             font.pixelSize: 18
             font.bold: true
             z: 2

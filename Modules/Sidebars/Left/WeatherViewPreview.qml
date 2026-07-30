@@ -159,7 +159,7 @@ Item {
                         Text {
                             text: WeatherPlugin.locationName || qsTr("天气")
                             color: root.headerInk
-                            font.family: "Noto Sans CJK SC"
+                            font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 19
                             font.bold: true
                             elide: Text.ElideRight
@@ -243,7 +243,7 @@ Item {
                         color: WeatherPlugin.status === "stale" || WeatherPlugin.status === "error"
                                ? root.headerErrorInk
                                : root.headerInk
-                        font.family: "MesloLGM Nerd Font"
+                        font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 12
                         elide: Text.ElideRight
                         Layout.fillWidth: true
@@ -283,7 +283,7 @@ Item {
                             width: parent.width
                             text: root.previewWeatherText
                             color: Appearance.colors.colOnImage
-                            font.family: "Noto Sans CJK SC"
+                            font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 26
                             font.bold: true
                             horizontalAlignment: Text.AlignHCenter
@@ -302,7 +302,7 @@ Item {
                                 anchors.bottom: parent.bottom
                                 text: fmtTempPlain(root.previewTemperatureC)
                                 color: Appearance.colors.colOnImage
-                                font.family: "MesloLGM Nerd Font"
+                                font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 132
                                 font.bold: true
                                 font.letterSpacing: 0
@@ -324,7 +324,7 @@ Item {
                             width: parent.width
                             text: qsTr("体感温度: ") + fmtTemp(root.previewFeelsLikeC)
                             color: Appearance.colors.colOnImage
-                            font.family: "Noto Sans CJK SC"
+                            font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
@@ -335,7 +335,7 @@ Item {
                             text: qsTr("最高 ") + fmtTemp(root.previewHighC)
                                   + qsTr(" · 最低 ") + fmtTemp(root.previewLowC)
                             color: Appearance.colors.colOnImage
-                            font.family: "Noto Sans CJK SC"
+                            font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 18
                             horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
@@ -501,7 +501,7 @@ Item {
                 Text {
                     text: pill.label
                     color: Appearance.colors.colOnSurfaceVariant
-                    font.family: "MesloLGM Nerd Font"
+                    font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 11
                     elide: Text.ElideRight
                 }
@@ -509,7 +509,7 @@ Item {
                 Text {
                     text: pill.value
                     color: Appearance.colors.colOnSurface
-                    font.family: "Noto Sans CJK SC"
+                    font.family: "LXGW WenKai GB Screen"
                     font.pixelSize: 15
                     font.bold: true
                     elide: Text.ElideRight

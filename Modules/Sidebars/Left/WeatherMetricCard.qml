@@ -41,7 +41,7 @@ Rectangle {
             Text {
                 text: root.label
                 color: Appearance.colors.colOnSurfaceVariant
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.pixelSize: 11
                 elide: Text.ElideRight
                 Layout.fillWidth: true
@@ -50,7 +50,7 @@ Rectangle {
             Text {
                 text: root.value
                 color: Appearance.colors.colOnSurface
-                font.family: "MesloLGM Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.bold: true
                 font.pixelSize: 14
                 elide: Text.ElideRight
@@ -61,7 +61,7 @@ Rectangle {
                 text: root.detail
                 visible: root.detail.length > 0
                 color: Appearance.colors.colOutline
-                font.family: "Noto Sans CJK SC"
+                font.family: "LXGW WenKai GB Screen"
                 font.pixelSize: 10
                 elide: Text.ElideRight
                 Layout.fillWidth: true

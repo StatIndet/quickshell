@@ -78,7 +78,7 @@ Item {
             id: windowTitle
             text: root.activeTitle
 
-            font.family: "Noto Sans CJK SC"
+            font.family: "LXGW WenKai GB Screen"
             font.pointSize: 11
             color: Appearance.colors.colOnSurface
 

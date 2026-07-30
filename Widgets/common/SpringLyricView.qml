@@ -17,7 +17,7 @@ Item {
     property color activeColor: "white"
     property color inactiveColor: "#99ffffff"
     property int fontSize: 18
-    property string fontFamily: "Noto Sans CJK SC"
+    property string fontFamily: "LXGW WenKai GB Screen"
     property bool fontBold: true
     property int horizontalAlignment: Text.AlignLeft
     property int wrapMode: Text.WordWrap
