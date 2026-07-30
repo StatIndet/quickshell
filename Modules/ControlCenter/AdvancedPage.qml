@@ -19,8 +19,10 @@ StyledFlickable {
            "icon": "device_thermostat" }),
         ({ "id": "gpu", "title": qsTr("GPU 占用"),
            "icon": "developer_board" }),
-        ({ "id": "power", "title": qsTr("实时功耗"),
+        ({ "id": "cpuPower", "title": qsTr("CPU 功耗"),
            "icon": "bolt" }),
+        ({ "id": "gpuPower", "title": qsTr("GPU 功耗"),
+           "icon": "electric_bolt" }),
         ({ "id": "disk", "title": qsTr("硬盘占用"),
            "icon": "hard_drive" })
     ]

@@ -188,7 +188,8 @@ Singleton {
         "cpu": true,
         "temperature": true,
         "gpu": true,
-        "power": true,
+        "cpuPower": true,
+        "gpuPower": false,
         "disk": false
     })
 
@@ -701,7 +702,8 @@ Singleton {
 
     function setBarSystemMonitorMetricEnabled(id, enabled) {
         const supported = [
-            "cpu", "temperature", "gpu", "power", "disk"
+            "cpu", "temperature", "gpu", "cpuPower", "gpuPower",
+            "disk"
         ];
         if (supported.indexOf(id) < 0)
             return;
@@ -1016,10 +1018,14 @@ Singleton {
             "cpu": true,
             "temperature": true,
             "gpu": true,
-            "power": true,
+            "cpuPower": true,
+            "gpuPower": false,
             "disk": false
         };
         const configuredMetrics = bar.systemMonitorMetrics || {};
+        if (typeof configuredMetrics.cpuPower !== "boolean"
+                && typeof configuredMetrics.power === "boolean")
+            configuredMetrics.cpuPower = configuredMetrics.power;
         const normalizedMetrics = {};
         for (let metricId in metricDefaults) {
             normalizedMetrics[metricId] =

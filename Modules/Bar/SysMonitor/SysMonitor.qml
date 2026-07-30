@@ -15,13 +15,10 @@ Item {
     property bool isHovered: mouseArea.containsMouse
     readonly property real cpuPowerWatts:
         Number(SystemMonitorService.cpu.powerWatts)
-    readonly property real batteryPowerWatts:
-        Number(SystemMonitorService.battery.powerWatts)
-    readonly property real displayedPowerWatts:
-        isFinite(cpuPowerWatts) && cpuPowerWatts > 0
-            ? cpuPowerWatts
-            : (isFinite(batteryPowerWatts) && batteryPowerWatts > 0
-                ? batteryPowerWatts : NaN)
+    readonly property real gpuPowerWatts:
+        SystemMonitorService.gpus.length > 0
+            ? Number(SystemMonitorService.gpus[0].powerWatts)
+            : NaN
 
     Component.onCompleted: SystemMonitorService.acquire()
     Component.onDestruction: SystemMonitorService.release()
@@ -118,12 +115,12 @@ Item {
             }
         }
 
-        // --- 3. Power draw (expanded) ---
+        // --- 3. CPU power draw (expanded) ---
         RowLayout {
-            id: powerGroup
+            id: cpuPowerGroup
             spacing: 4
-            visible: root.metricEnabled("power") && opacity > 0
-            opacity: root.isHovered && root.metricEnabled("power")
+            visible: root.metricEnabled("cpuPower") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("cpuPower")
                 ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
@@ -136,8 +133,9 @@ Item {
                 font.pixelSize: 16
             }
             Text { 
-                text: isFinite(root.displayedPowerWatts)
-                    ? root.displayedPowerWatts.toFixed(1) + "W"
+                text: isFinite(root.cpuPowerWatts)
+                        && root.cpuPowerWatts > 0
+                    ? root.cpuPowerWatts.toFixed(1) + "W"
                     : "--W"
                 color: Appearance.colors.colOnSurface
                 font.family: "LXGW WenKai GB Screen"
@@ -146,7 +144,39 @@ Item {
             }
         }
 
-        // --- 4. Disk usage (optional expanded metric) ---
+        // --- 4. GPU power draw (optional expanded metric) ---
+        RowLayout {
+            id: gpuPowerGroup
+            spacing: 4
+            visible: root.metricEnabled("gpuPower") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("gpuPower")
+                ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 120
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Text {
+                text: "󱐋"
+                color: Appearance.colors.colSecondary
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 16
+            }
+            Text {
+                text: isFinite(root.gpuPowerWatts)
+                        && root.gpuPowerWatts > 0
+                    ? root.gpuPowerWatts.toFixed(1) + "W"
+                    : "--W"
+                color: Appearance.colors.colOnSurface
+                font.family: "LXGW WenKai GB Screen"
+                font.bold: true
+                font.pixelSize: 13
+            }
+        }
+
+        // --- 5. Disk usage (optional expanded metric) ---
         RowLayout {
             id: diskGroup
             spacing: 4
@@ -175,7 +205,7 @@ Item {
             }
         }
 
-        // --- 5. Temp (展开) ---
+        // --- 6. Temp (展开) ---
         RowLayout {
             id: tempGroup
             spacing: 4
@@ -201,7 +231,7 @@ Item {
             }
         }
 
-        // --- 6. CPU (展开) ---
+        // --- 7. CPU (展开) ---
         RowLayout {
             id: cpuGroup
             spacing: 4
