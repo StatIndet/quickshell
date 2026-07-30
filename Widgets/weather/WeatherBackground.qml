@@ -1036,6 +1036,9 @@ Item {
         id: canvas
         anchors.fill: parent
         opacity: Math.max(0, 0.92 - root.scrollProgress * 0.34)
+        // Paint the JavaScript scene on Canvas' private render thread. The
+        // resulting texture is still composed by Qt Quick on the Intel GPU.
+        renderStrategy: Canvas.Threaded
 
         property real phase: 0
 
@@ -1171,31 +1174,24 @@ Item {
             const stepScale = dt / root.frameBaseDt
             lastTickMs = now
             const base = root.driftBaseSpeed()
-            const nextBands = []
             for (let i = 0; i < root.cloudBands.length; ++i) {
                 const band = root.cloudBands[i]
-                let wrappedOffset = band.offset
                 if (base > 0) {
-                    const nextOffset = band.offset + base * band.speed * stepScale
-                    wrappedOffset = nextOffset
-                    if (wrappedOffset > root.width)
-                        wrappedOffset = wrappedOffset - root.width
+                    band.offset += base * band.speed * stepScale
+                    if (band.offset > root.width)
+                        band.offset -= root.width
                 }
-                nextBands.push({
-                    offset: wrappedOffset,
-                    height: band.height,
-                    arch: band.arch,
-                    speed: band.speed,
-                    toneIndex: band.toneIndex
-                })
             }
-            root.cloudBands = nextBands
             if (root.isRainScene()) {
                 root.updateRain(dt)
                 root.updateSplashes(dt)
             } else {
-                root.rainLayers = root.makeEmptyRainLayers()
-                root.splashes = []
+                if (root.rainLayers[0].length > 0
+                        || root.rainLayers[1].length > 0
+                        || root.rainLayers[2].length > 0)
+                    root.rainLayers = root.makeEmptyRainLayers()
+                if (root.splashes.length > 0)
+                    root.splashes = []
             }
             root.updateSnow(dt)
             root.updateLightning(dt)
