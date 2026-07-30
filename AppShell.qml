@@ -93,17 +93,6 @@ Item {
         }
     }
 
-    // Keep existing keybindings and third-party scripts working while the
-    // upstream launcher IPC name transitions to "spotlight".
-    IpcHandler {
-        target: "launcher"
-
-        function toggle(): string {
-            spotlightLauncher.toggleWindow();
-            return spotlightLauncher.windowPhase.toUpperCase();
-        }
-    }
-
     IpcHandler {
         target: "volume"
 
