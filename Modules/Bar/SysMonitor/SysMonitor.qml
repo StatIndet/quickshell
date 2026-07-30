@@ -25,6 +25,11 @@ Item {
 
     Component.onCompleted: SystemMonitorService.acquire()
     Component.onDestruction: SystemMonitorService.release()
+
+    function metricEnabled(id) {
+        return PersonalizationConfig
+            .isBarSystemMonitorMetricEnabled(id)
+    }
     
     implicitHeight: 36
     
@@ -91,8 +96,9 @@ Item {
         RowLayout {
             id: gpuGroup
             spacing: 4
-            visible: opacity > 0
-            opacity: root.isHovered ? 1.0 : 0.0
+            visible: root.metricEnabled("gpu") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("gpu")
+                ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
             }
@@ -116,8 +122,9 @@ Item {
         RowLayout {
             id: powerGroup
             spacing: 4
-            visible: opacity > 0
-            opacity: root.isHovered ? 1.0 : 0.0
+            visible: root.metricEnabled("power") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("power")
+                ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
             }
@@ -139,12 +146,42 @@ Item {
             }
         }
 
-        // --- 4. Temp (展开) ---
+        // --- 4. Disk usage (optional expanded metric) ---
+        RowLayout {
+            id: diskGroup
+            spacing: 4
+            visible: root.metricEnabled("disk") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("disk")
+                ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 120
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Text {
+                text: ""
+                color: Appearance.colors.colPrimary
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 16
+            }
+            Text {
+                text: Math.round(SysmonPlugin.diskUsage) + "%"
+                color: Appearance.colors.colOnSurface
+                font.family: "LXGW WenKai GB Screen"
+                font.bold: true
+                font.pixelSize: 13
+            }
+        }
+
+        // --- 5. Temp (展开) ---
         RowLayout {
             id: tempGroup
             spacing: 4
-            visible: opacity > 0
-            opacity: root.isHovered ? 1.0 : 0.0
+            visible: root.metricEnabled("temperature") && opacity > 0
+            opacity: root.isHovered
+                && root.metricEnabled("temperature") ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
             }
@@ -164,12 +201,13 @@ Item {
             }
         }
 
-        // --- 5. CPU (展开) ---
+        // --- 6. CPU (展开) ---
         RowLayout {
             id: cpuGroup
             spacing: 4
-            visible: opacity > 0
-            opacity: root.isHovered ? 1.0 : 0.0
+            visible: root.metricEnabled("cpu") && opacity > 0
+            opacity: root.isHovered && root.metricEnabled("cpu")
+                ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation { duration: 120; easing.type: Easing.OutCubic }
             }

@@ -12,6 +12,18 @@ StyledFlickable {
     contentHeight: contentColumn.y + contentColumn.implicitHeight + 24
 
     readonly property real pageContentWidth: 600
+    readonly property var systemMonitorMetrics: [
+        ({ "id": "cpu", "title": qsTr("CPU 占用"),
+           "icon": "memory" }),
+        ({ "id": "temperature", "title": qsTr("CPU 温度"),
+           "icon": "device_thermostat" }),
+        ({ "id": "gpu", "title": qsTr("GPU 占用"),
+           "icon": "developer_board" }),
+        ({ "id": "power", "title": qsTr("实时功耗"),
+           "icon": "bolt" }),
+        ({ "id": "disk", "title": qsTr("硬盘占用"),
+           "icon": "hard_drive" })
+    ]
     readonly property var templatePrograms: [
         ({
             "id": "btop",
@@ -84,6 +96,42 @@ StyledFlickable {
                     Accessible.name: qsTr("Clavis 界面跟随深浅色")
                     onToggled:
                         ThemeService.setShellFollowThemeMode(checked)
+                }
+            }
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            title: qsTr("顶栏系统监控")
+            supportingText: qsTr("选择鼠标悬停在右上角内存指标时展开显示的内容。内存用量始终作为折叠状态的主指标。")
+
+            Repeater {
+                model: root.systemMonitorMetrics
+
+                SettingsRow {
+                    required property var modelData
+
+                    Layout.fillWidth: true
+                    iconName: modelData.icon
+                    title: modelData.title
+                    supportingText:
+                        PersonalizationConfig
+                            .isBarSystemMonitorMetricEnabled(modelData.id)
+                        ? qsTr("悬停展开时显示")
+                        : qsTr("已隐藏")
+
+                    trailing: StyledSwitch {
+                        checked:
+                            PersonalizationConfig
+                                .isBarSystemMonitorMetricEnabled(
+                                    modelData.id)
+                        Accessible.name:
+                            qsTr("显示%1").arg(modelData.title)
+                        onToggled:
+                            PersonalizationConfig
+                                .setBarSystemMonitorMetricEnabled(
+                                    modelData.id, checked)
+                    }
                 }
             }
         }

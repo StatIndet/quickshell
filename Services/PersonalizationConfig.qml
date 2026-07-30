@@ -184,6 +184,13 @@ Singleton {
     property string keystoneStyle: "bangs"
     property string powerMenuStyle: "grid"
     property string clockStyle: "staggered"
+    property var barSystemMonitorMetrics: ({
+        "cpu": true,
+        "temperature": true,
+        "gpu": true,
+        "power": true,
+        "disk": false
+    })
 
     property real shellBackgroundOpacity: 1.0
     property bool shellBlurEnabled: false
@@ -688,6 +695,22 @@ Singleton {
         setValue("shellFollowThemeMode", !!value);
     }
 
+    function isBarSystemMonitorMetricEnabled(id) {
+        return root.barSystemMonitorMetrics[id] === true;
+    }
+
+    function setBarSystemMonitorMetricEnabled(id, enabled) {
+        const supported = [
+            "cpu", "temperature", "gpu", "power", "disk"
+        ];
+        if (supported.indexOf(id) < 0)
+            return;
+        const next = root.cloneMap(root.barSystemMonitorMetrics);
+        next[id] = !!enabled;
+        root.barSystemMonitorMetrics = next;
+        root.save();
+    }
+
     function setCursorTheme(value) {
         setValue("cursorTheme", value || "");
     }
@@ -848,6 +871,10 @@ Singleton {
                 "style": root.keystoneStyle,
                 "clockStyle": root.clockStyle
             },
+            "bar": {
+                "systemMonitorMetrics":
+                    root.cloneMap(root.barSystemMonitorMetrics)
+            },
             "sounds": {
                 "pomodoro": root.pomodoroSoundEnabled
             },
@@ -870,6 +897,7 @@ Singleton {
         const theme = parsed.theme || {};
         const effects = parsed.effects || {};
         const keystone = parsed.keystone || {};
+        const bar = parsed.bar || {};
         const sounds = parsed.sounds || {};
         const sidebar = parsed.sidebar || {};
         const interactions = parsed.interactions || {};
@@ -984,6 +1012,22 @@ Singleton {
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
         root.clockStyle = normalizedOption(
             root.clockStyles, keystone.clockStyle, "staggered");
+        const metricDefaults = {
+            "cpu": true,
+            "temperature": true,
+            "gpu": true,
+            "power": true,
+            "disk": false
+        };
+        const configuredMetrics = bar.systemMonitorMetrics || {};
+        const normalizedMetrics = {};
+        for (let metricId in metricDefaults) {
+            normalizedMetrics[metricId] =
+                typeof configuredMetrics[metricId] === "boolean"
+                    ? configuredMetrics[metricId]
+                    : metricDefaults[metricId];
+        }
+        root.barSystemMonitorMetrics = normalizedMetrics;
         root.pomodoroSoundEnabled = !!sounds.pomodoro;
         root.keepSidebarsLoaded = sidebar.keepLoaded === undefined
             ? true : !!sidebar.keepLoaded;
