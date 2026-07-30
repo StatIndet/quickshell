@@ -128,7 +128,8 @@ StyledFlickable {
         required property string mode
         required property string title
         property bool darkPreview: false
-        readonly property bool active: PersonalizationConfig.themeMode === mode
+        readonly property bool active:
+            PersonalizationConfig.themeModePolicy === mode
         readonly property color selectedAccent: Appearance.colors.colPrimary
         readonly property color selectedOnAccent: Appearance.colors.colOnPrimary
         readonly property color outerFill: active ? selectedAccent : Appearance.colors.colLayer1
@@ -594,6 +595,74 @@ StyledFlickable {
                 mode: "dark"
                 darkPreview: true
                 onClicked: ThemeService.setThemeMode("dark")
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 72
+            radius: 18
+            color: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                ? Appearance.colors.colPrimaryContainer
+                : Appearance.colors.colLayer1
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: 18
+                anchors.rightMargin: 18
+                spacing: 14
+
+                MaterialSymbol {
+                    text: "routine"
+                    iconSize: 28
+                    fill: 1
+                    color: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                        ? Appearance.colors.colOnPrimaryContainer
+                        : Appearance.colors.colOnLayer1
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: 2
+
+                    Text {
+                        text: qsTr("跟随日出日落")
+                        color: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                            ? Appearance.colors.colOnPrimaryContainer
+                            : Appearance.colors.colOnLayer1
+                        font.family: Sizes.fontFamily
+                        font.pixelSize: 15
+                        font.weight: Font.Medium
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: ThemeService.automaticThemeSummary
+                        color: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                            ? Appearance.colors.colOnPrimaryContainer
+                            : Appearance.colors.colSubtext
+                        font.family: Sizes.fontFamily
+                        font.pixelSize: 12
+                        elide: Text.ElideRight
+                    }
+                }
+
+                MaterialSymbol {
+                    text: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                        ? "check_circle" : "chevron_right"
+                    iconSize: 24
+                    fill: PersonalizationConfig.themeModePolicy === "sunrise-sunset" ? 1 : 0
+                    color: PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+                        ? Appearance.colors.colOnPrimaryContainer
+                        : Appearance.colors.colOnLayer1
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: ThemeService.setThemeModePolicy("sunrise-sunset")
             }
         }
 

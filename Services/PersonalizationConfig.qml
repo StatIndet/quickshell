@@ -174,6 +174,7 @@ Singleton {
         "zsh_prompt": true
     })
     property string themeMode: "dark"
+    property string themeModePolicy: "dark"
     property string cursorTheme: ""
     property int cursorSize: 24
     property bool cursorHideWhenTyping: false
@@ -656,7 +657,30 @@ Singleton {
     }
 
     function setThemeMode(value) {
-        setValue("themeMode", value === "light" ? "light" : "dark");
+        const mode = value === "light" ? "light" : "dark";
+        root.themeModePolicy = mode;
+        root.themeMode = mode;
+        root.save();
+    }
+
+    function setThemeModePolicy(value) {
+        const policy = value === "sunrise-sunset"
+            ? "sunrise-sunset"
+            : (value === "light" ? "light" : "dark");
+        if (root.themeModePolicy === policy)
+            return;
+        root.themeModePolicy = policy;
+        if (policy !== "sunrise-sunset")
+            root.themeMode = policy;
+        root.save();
+    }
+
+    function setEffectiveThemeMode(value) {
+        const mode = value === "light" ? "light" : "dark";
+        if (root.themeMode === mode)
+            return false;
+        root.themeMode = mode;
+        return true;
     }
 
     function setCursorTheme(value) {
@@ -800,7 +824,7 @@ Singleton {
                 "matugenScheme": root.matugenScheme,
                 "matugenTemplates":
                     root.cloneMap(root.matugenTemplates),
-                "mode": root.themeMode,
+                "mode": root.themeModePolicy,
                 "cursorTheme": root.cursorTheme,
                 "cursorSize": root.cursorSize,
                 "cursorHideWhenTyping": root.cursorHideWhenTyping,
@@ -931,7 +955,10 @@ Singleton {
         root.matugenScheme = normalizedOption(root.matugenSchemes, theme.matugenScheme, "scheme-tonal-spot");
         root.matugenTemplates =
             normalizedMatugenTemplates(theme.matugenTemplates);
-        root.themeMode = theme.mode === "light" ? "light" : "dark";
+        root.themeModePolicy = theme.mode === "sunrise-sunset"
+            ? "sunrise-sunset"
+            : (theme.mode === "light" ? "light" : "dark");
+        root.themeMode = root.themeModePolicy === "light" ? "light" : "dark";
         root.cursorTheme = theme.cursorTheme || "";
         root.cursorSize = Math.max(12, Math.min(128, Math.round(Number(theme.cursorSize) || 24)));
         root.cursorHideWhenTyping = !!theme.cursorHideWhenTyping;

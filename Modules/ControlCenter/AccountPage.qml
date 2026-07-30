@@ -609,12 +609,13 @@ Item {
                             Layout.preferredWidth: 142
                             options: [
                                 ({ "label": qsTr("浅色"), "value": "light" }),
-                                ({ "label": qsTr("深色"), "value": "dark" })
+                                ({ "label": qsTr("深色"), "value": "dark" }),
+                                ({ "label": qsTr("跟随日出日落"), "value": "sunrise-sunset" })
                             ]
-                            value: PersonalizationConfig.themeMode
+                            value: PersonalizationConfig.themeModePolicy
                             placeholder: qsTr("选择色彩模式")
                             closeOnAccept: true
-                            onAccepted: value => ThemeService.setThemeMode(value)
+                            onAccepted: value => ThemeService.setThemeModePolicy(value)
                         }
                     }
 

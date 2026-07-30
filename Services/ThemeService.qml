@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
+import Clavis.Weather 1.0
 
 Singleton {
     id: root
@@ -15,6 +16,20 @@ Singleton {
     property var availableCursorThemes: [({ "label": qsTr("系统默认"), "value": "" })]
     property string systemDefaultIconTheme: ""
     property string systemDefaultCursorTheme: ""
+    property real sunriseEpoch: 0
+    property real sunsetEpoch: 0
+
+    readonly property bool followsSun:
+        PersonalizationConfig.themeModePolicy === "sunrise-sunset"
+    readonly property string automaticThemeSummary: {
+        if (root.sunriseEpoch <= 0 || root.sunsetEpoch <= 0)
+            return qsTr("等待天气服务提供日出日落时间");
+        return qsTr("日出 %1 · 日落 %2 · 当前为%3模式")
+            .arg(Qt.formatDateTime(new Date(root.sunriseEpoch * 1000), "HH:mm"))
+            .arg(Qt.formatDateTime(new Date(root.sunsetEpoch * 1000), "HH:mm"))
+            .arg(PersonalizationConfig.themeMode === "dark"
+                ? qsTr("深色") : qsTr("浅色"));
+    }
 
     readonly property string sessionDesktop: (Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env("XDG_SESSION_DESKTOP") || "").toLowerCase()
     readonly property bool isNiriSession: sessionDesktop.indexOf("niri") !== -1 || (Quickshell.env("NIRI_SOCKET") || "") !== ""
@@ -53,6 +68,49 @@ Singleton {
         PersonalizationConfig.setThemeMode(value);
         root.applyConfigToAppearance();
         UiPreferences.setDarkMode(PersonalizationConfig.themeMode === "dark");
+        root.regenerateFromCurrentWallpaper();
+    }
+
+    function setThemeModePolicy(value) {
+        if (value !== "sunrise-sunset") {
+            root.setThemeMode(value);
+            return;
+        }
+        PersonalizationConfig.setThemeModePolicy(value);
+        root.evaluateAutomaticTheme(true);
+    }
+
+    function updateSunTimes() {
+        let weather = WeatherPlugin.current();
+        let sunrise = Number(weather.sunrise || 0);
+        let sunset = Number(weather.sunset || 0);
+        if ((sunrise <= 0 || sunset <= 0)
+                && WeatherPlugin.dailyForecast.count() > 0) {
+            weather = WeatherPlugin.dailyForecast.get(0);
+            sunrise = Number(weather.sunrise || 0);
+            sunset = Number(weather.sunset || 0);
+        }
+        root.sunriseEpoch = sunrise;
+        root.sunsetEpoch = sunset;
+        return sunrise > 0 && sunset > 0;
+    }
+
+    function evaluateAutomaticTheme(refreshIfMissing) {
+        if (!root.followsSun)
+            return;
+        if (!root.updateSunTimes()) {
+            if (refreshIfMissing && !WeatherPlugin.loading)
+                WeatherPlugin.refresh();
+            return;
+        }
+
+        const now = Math.floor(Date.now() / 1000);
+        const nextMode = now >= root.sunriseEpoch && now < root.sunsetEpoch
+            ? "light" : "dark";
+        if (!PersonalizationConfig.setEffectiveThemeMode(nextMode))
+            return;
+        root.applyConfigToAppearance();
+        UiPreferences.setDarkMode(nextMode === "dark");
         root.regenerateFromCurrentWallpaper();
     }
 
@@ -346,7 +404,9 @@ cursor {
     Component.onCompleted: {
         root.applyConfigToAppearance();
         root.detectAvailableThemes();
-        if (PersonalizationConfig.themeMode === "dark" && !UiPreferences.darkMode)
+        if (root.followsSun)
+            root.evaluateAutomaticTheme(true);
+        else if (PersonalizationConfig.themeMode === "dark" && !UiPreferences.darkMode)
             UiPreferences.setDarkMode(true);
     }
 
@@ -360,6 +420,27 @@ cursor {
         function onThemeModeChanged() {
             root.applyConfigToAppearance();
         }
+
+        function onThemeModePolicyChanged() {
+            if (root.followsSun)
+                root.evaluateAutomaticTheme(true);
+        }
+    }
+
+    Connections {
+        target: WeatherPlugin
+
+        function onDataChanged() {
+            root.evaluateAutomaticTheme(false);
+        }
+    }
+
+    Timer {
+        interval: 60000
+        repeat: true
+        running: root.followsSun
+        triggeredOnStart: true
+        onTriggered: root.evaluateAutomaticTheme(false)
     }
 
     Process {
