@@ -135,9 +135,9 @@ Item {
     MultiEffect {
         anchors.fill: panelSurface
         source: panelSurface
+        // Render the shadow while the panel is moving as well as when it is
+        // stationary so its border does not pop in at the end of the slide.
         visible: root.panelActive
-            && !openTransition.running
-            && !closeTransition.running
         shadowEnabled: true
         shadowColor: Qt.alpha(Appearance.colors.colShadow, 0.44)
         shadowBlur: 0.72

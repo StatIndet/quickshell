@@ -42,6 +42,13 @@ Singleton {
             Appearance.matugenMode = PersonalizationConfig.themeMode;
     }
 
+    function syncApplicationTheme() {
+        const shouldUseDark =
+            PersonalizationConfig.themeMode === "dark";
+        if (UiPreferences.darkMode !== shouldUseDark)
+            UiPreferences.setDarkMode(shouldUseDark);
+    }
+
     function setMatugenScheme(value) {
         PersonalizationConfig.setMatugenScheme(value);
         root.applyConfigToAppearance();
@@ -424,8 +431,8 @@ cursor {
         root.detectAvailableThemes();
         if (root.followsSun)
             root.evaluateAutomaticTheme(true);
-        else if (PersonalizationConfig.themeMode === "dark" && !UiPreferences.darkMode)
-            UiPreferences.setDarkMode(true);
+        else
+            root.syncApplicationTheme();
     }
 
     Connections {
@@ -437,6 +444,7 @@ cursor {
 
         function onThemeModeChanged() {
             root.applyConfigToAppearance();
+            root.syncApplicationTheme();
         }
 
         function onShellFollowThemeModeChanged() {

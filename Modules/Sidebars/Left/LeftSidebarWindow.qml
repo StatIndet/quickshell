@@ -151,9 +151,10 @@ Item {
     MultiEffect {
         anchors.fill: panelSurface
         source: panelSurface
+        // Keep the outline shadow attached to the moving surface for the
+        // entire presentation. Disabling it during transitions caused the
+        // panel to visibly gain/lose depth after the slide had finished.
         visible: root.panelActive
-            && !openTransition.running
-            && !closeTransition.running
         shadowEnabled: true
         shadowColor: Qt.alpha(Appearance.colors.colShadow, 0.44)
         shadowBlur: 0.72
