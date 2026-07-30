@@ -136,6 +136,8 @@ Item {
         anchors.fill: panelSurface
         source: panelSurface
         visible: root.panelActive
+            && !openTransition.running
+            && !closeTransition.running
         shadowEnabled: true
         shadowColor: Qt.alpha(Appearance.colors.colShadow, 0.44)
         shadowBlur: 0.72

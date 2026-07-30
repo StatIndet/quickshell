@@ -118,7 +118,7 @@ Item {
         color: "transparent"
         border.width: 1
         border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.34)
-        layer.enabled: true
+        layer.enabled: !flick.scrollActive
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 width: weatherPanel.width
@@ -135,6 +135,7 @@ Item {
             rainBounceY: root.backgroundRainBounceY
             scrollProgress: root.backgroundScrollProgress
             animate: root.visible && !flick.scrollActive
+                && flick.contentY < 640
         }
 
         Rectangle {

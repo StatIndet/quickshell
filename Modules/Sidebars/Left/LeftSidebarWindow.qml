@@ -18,12 +18,14 @@ Item {
         Math.max(0, height - sidebarY - gap)
     property bool panelPresented: false
     property bool contentRetained: false
+    property bool contentAnimationsActive: false
     readonly property bool panelActive:
         WidgetState.leftSidebarOpen || panelPresented
 
     function beginPresentation() {
         panelPresented = true
         contentRetained = true
+        contentAnimationsActive = false
     }
 
     function finishClosing() {
@@ -32,12 +34,14 @@ Item {
 
         // Hide the already off-screen surface before releasing its layout tree.
         panelPresented = false
+        contentAnimationsActive = false
         if (!PersonalizationConfig.keepSidebarsLoaded)
             contentRetained = false
     }
 
     Component.onCompleted: {
         panelPresented = WidgetState.leftSidebarOpen
+        contentAnimationsActive = WidgetState.leftSidebarOpen
         contentRetained = WidgetState.leftSidebarOpen
             || PersonalizationConfig.keepSidebarsLoaded
     }
@@ -48,6 +52,8 @@ Item {
         function onLeftSidebarOpenChanged() {
             if (WidgetState.leftSidebarOpen)
                 root.beginPresentation()
+            else
+                root.contentAnimationsActive = false
         }
     }
 
@@ -104,12 +110,21 @@ Item {
                 id: openTransition
                 to: "open"
 
-                NumberAnimation {
-                    target: animController
-                    property: "slideOffset"
-                    duration: root.enterDuration
-                    easing.type: Easing.OutBack
-                    easing.overshoot: 0.3
+                SequentialAnimation {
+                    NumberAnimation {
+                        target: animController
+                        property: "slideOffset"
+                        duration: root.enterDuration
+                        easing.type: Easing.OutBack
+                        easing.overshoot: 0.3
+                    }
+
+                    ScriptAction {
+                        script: {
+                            if (WidgetState.leftSidebarOpen)
+                                root.contentAnimationsActive = true
+                        }
+                    }
                 }
             },
             Transition {
@@ -137,6 +152,8 @@ Item {
         anchors.fill: panelSurface
         source: panelSurface
         visible: root.panelActive
+            && !openTransition.running
+            && !closeTransition.running
         shadowEnabled: true
         shadowColor: Qt.alpha(Appearance.colors.colShadow, 0.44)
         shadowBlur: 0.72
@@ -186,7 +203,7 @@ Item {
             anchors.fill: parent
             screenName: root.panelScreen ? root.panelScreen.name : ""
             foreground: WidgetState.leftSidebarOpen
-            presentationActive: root.panelActive
+            presentationActive: root.contentAnimationsActive
         }
     }
 }

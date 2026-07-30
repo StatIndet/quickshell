@@ -282,7 +282,10 @@ Item {
         color: "transparent"
         border.width: 1
         border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.34)
-        layer.enabled: true
+        // The rounded mask requires an offscreen texture. Disable that costly
+        // full-panel pass while the sidebar or the weather page is moving;
+        // the parent still provides rectangular clipping during motion.
+        layer.enabled: root.presentationActive && !flick.scrollActive
         layer.effect: OpacityMask {
             maskSource: Rectangle {
                 width: weatherPanel.width
@@ -300,7 +303,8 @@ Item {
             night: root.currentIsNight()
             rainBounceY: root.backgroundRainBounceY
             scrollProgress: root.backgroundScrollProgress
-            animate: root.foreground && !flick.scrollActive
+            animate: root.foreground && root.presentationActive
+                && !flick.scrollActive && flick.contentY < 640
         }
 
         Rectangle {
