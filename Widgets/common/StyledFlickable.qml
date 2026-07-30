@@ -16,6 +16,8 @@ Flickable {
     property real mouseScrollFactor: PersonalizationConfig.scrollMouseFactor
     property real touchpadScrollFactor: PersonalizationConfig.scrollTouchpadFactor
     property real mouseScrollDeltaThreshold: PersonalizationConfig.scrollMouseDeltaThreshold
+    readonly property bool scrollActive:
+        moving || dragging || flicking || scrollAnimation.running
 
     function maxContentY() {
         return Math.max(0, root.contentHeight - root.height);
@@ -65,7 +67,10 @@ Flickable {
         enabled: root.smoothWheelEnabled
         NumberAnimation {
             id: scrollAnimation
-            alwaysRunToEnd: true
+            // Retarget immediately when touchpad/wheel events arrive in a
+            // burst. Queuing every old target makes long weather pages feel
+            // increasingly delayed and keeps expensive scenes moving.
+            alwaysRunToEnd: false
             duration: Appearance.animation.scroll.duration
             easing.type: Appearance.animation.scroll.type
             easing.bezierCurve: Appearance.animation.scroll.bezierCurve

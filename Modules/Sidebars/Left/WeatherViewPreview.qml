@@ -29,6 +29,15 @@ Item {
     property color headerInk: lightHeaderPalette ? Qt.rgba(0.96, 0.98, 1.0, 0.94) : Qt.rgba(0.09, 0.14, 0.20, 0.88)
     property color headerInkMuted: lightHeaderPalette ? Qt.rgba(0.87, 0.91, 0.98, 0.76) : Qt.rgba(0.20, 0.28, 0.38, 0.62)
     property color headerErrorInk: lightHeaderPalette ? Qt.rgba(1.0, 0.79, 0.82, 0.96) : Qt.rgba(0.62, 0.14, 0.18, 0.88)
+    property real backgroundScrollProgress: 0
+    property real backgroundRainBounceY: 0
+
+    function syncBackgroundToScroll() {
+        root.backgroundScrollProgress =
+            Math.max(0, Math.min(1, flick.contentY / 340))
+        root.backgroundRainBounceY =
+            flick.y + dailyForecastCard.y - flick.contentY
+    }
 
     function validNumber(value) {
         return value !== undefined && value !== null && !isNaN(value)
@@ -92,6 +101,15 @@ Item {
         return WeatherPlugin.dailyForecast.count() > 0 ? WeatherPlugin.dailyForecast.get(0) : ({})
     }
 
+    Component.onCompleted: Qt.callLater(root.syncBackgroundToScroll)
+
+    Timer {
+        id: backgroundScrollSettleTimer
+        interval: 90
+        repeat: false
+        onTriggered: root.syncBackgroundToScroll()
+    }
+
     Rectangle {
         id: weatherPanel
         anchors.fill: parent
@@ -114,9 +132,9 @@ Item {
             weatherType: root.previewWeatherType
             night: root.previewNight
             windy: root.previewWindy
-            rainBounceY: flick.y + dailyForecastCard.y - flick.contentY
-            scrollProgress: Math.max(0, Math.min(1, flick.contentY / 340))
-            animate: root.visible
+            rainBounceY: root.backgroundRainBounceY
+            scrollProgress: root.backgroundScrollProgress
+            animate: root.visible && !flick.scrollActive
         }
 
         Rectangle {
@@ -263,6 +281,12 @@ Item {
             anchors.bottomMargin: root.contentMargin
             contentWidth: width
             contentHeight: contentColumn.implicitHeight + 4
+
+            onContentYChanged: backgroundScrollSettleTimer.restart()
+            onScrollActiveChanged: {
+                if (!scrollActive)
+                    root.syncBackgroundToScroll()
+            }
 
             Column {
                 id: contentColumn

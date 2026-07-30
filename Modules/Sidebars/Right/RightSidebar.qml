@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import qs.Common
 import qs.Services
 
@@ -131,6 +132,17 @@ Item {
         ]
     }
 
+    MultiEffect {
+        anchors.fill: panelSurface
+        source: panelSurface
+        visible: root.panelActive
+        shadowEnabled: true
+        shadowColor: Qt.alpha(Appearance.colors.colShadow, 0.44)
+        shadowBlur: 0.72
+        shadowHorizontalOffset: -2
+        shadowVerticalOffset: 6
+    }
+
     Rectangle {
         id: panelSurface
 
@@ -144,6 +156,9 @@ Item {
         color: BlurService.backgroundColor(
             Appearance.colors.colLayer0)
         radius: Appearance.rounding.large
+        border.width: 1
+        border.color: Qt.alpha(
+            Appearance.colors.colOutlineVariant, 0.58)
     }
 
     Item {
