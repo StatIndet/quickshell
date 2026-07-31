@@ -274,7 +274,6 @@ Singleton {
             );
         }
 
-        const revisionBeforeConfig = root.revision;
         if (PersonalizationConfig.perMonitorWallpaper && screenName)
             PersonalizationConfig.setMonitorWallpaper(screenName, path);
         else if (PersonalizationConfig.perModeWallpaper)
@@ -285,8 +284,6 @@ Singleton {
         root.currentWallpaper = path;
         root.rememberWallpaper(path);
         Appearance.currentWallpaperPreview = root.isColorSource(path) ? path : Paths.fileUrl(path);
-        if (root.revision === revisionBeforeConfig)
-            root.revision += 1;
         root.switching = true;
 
         if (root.isImagePath(path))
@@ -306,7 +303,6 @@ Singleton {
             );
         }
 
-        const revisionBeforeConfig = root.revision;
         if (PersonalizationConfig.perMonitorWallpaper && screenName)
             PersonalizationConfig.setMonitorWallpaper(screenName, "");
         else if (PersonalizationConfig.perModeWallpaper)
@@ -316,8 +312,6 @@ Singleton {
 
         root.currentWallpaper = root.wallpaperForScreen("");
         Appearance.currentWallpaperPreview = "";
-        if (root.revision === revisionBeforeConfig)
-            root.revision += 1;
         root.switching = false;
 
         return true;
@@ -381,7 +375,6 @@ Singleton {
         } else {
             PersonalizationConfig.setOverviewWallpaperPath(path);
         }
-        root.revision += 1;
         return true;
     }
 
@@ -391,7 +384,6 @@ Singleton {
                 .setOverviewMonitorWallpaper(screenName, "");
         else
             PersonalizationConfig.setOverviewWallpaperPath("");
-        root.revision += 1;
         return true;
     }
 
@@ -524,10 +516,12 @@ Singleton {
         }
 
         function onWallpaperFillModeChanged() {
+            root.refreshFromConfig();
             root.refreshSettingsFromConfig();
         }
 
         function onMonitorWallpaperFillModesChanged() {
+            root.refreshFromConfig();
             root.refreshSettingsFromConfig();
         }
 

@@ -63,9 +63,23 @@ require_text controlcenter.qml \
 require_text Modules/FilePicker/FilePickerWindow.qml \
     'color: "transparent"'
 require_text Modules/FilePicker/FilePickerWindow.qml \
-    'flags: Qt.Window | Qt.FramelessWindowHint'
+    'FloatingWindow {'
+reject_text Modules/FilePicker/FilePickerWindow.qml \
+    'ApplicationWindow {'
 require_text Modules/FilePicker/FilePickerWindow.qml \
     'CompositorBlurRegion {'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'targetWindow: root'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'backgroundItem: outerBackground'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'radius: outerBackground.radius'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'minimumSize: Qt.size(680, 440)'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'animateAppearance: false'
+require_text Modules/FilePicker/FilePickerWindow.qml \
+    'animateMovement: false'
 require_text Modules/ControlCenter/WallpaperFileBrowser.qml \
     'FilePickerWindow {'
 reject_text Modules/ControlCenter/WallpaperFileBrowser.qml \

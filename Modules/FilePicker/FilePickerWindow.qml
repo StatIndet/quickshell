@@ -7,7 +7,6 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Effects
 import QtQuick.Layouts
-import QtQuick.Window
 import Quickshell
 import Quickshell.Wayland
 import qs.Common
@@ -15,7 +14,7 @@ import qs.Components
 import qs.Services
 import qs.Widgets.common
 
-ApplicationWindow {
+FloatingWindow {
     id: root
 
     enum SelectionMode {
@@ -43,6 +42,7 @@ ApplicationWindow {
     property bool showHiddenFiles: false
     property bool pathEditing: false
     property string pathDraft: ""
+    property bool _completionHandled: true
 
     readonly property string homeDir: StandardPaths.writableLocation(StandardPaths.HomeLocation)
     readonly property string desktopDir: StandardPaths.writableLocation(StandardPaths.DesktopLocation)
@@ -53,30 +53,39 @@ ApplicationWindow {
     readonly property bool selectionValid: selectedPath !== ""
         && ((selectedIsDir && selectionMode !== FilePickerWindow.Files)
             || (!selectedIsDir && selectionMode !== FilePickerWindow.Folders))
+    readonly property alias blurController: pickerBlurController
+    readonly property alias blurBackground: outerBackground
+    readonly property alias fileGridView: fileGrid
 
     signal accepted(string path, bool isDirectory)
     signal rejected()
 
     visible: false
     title: "clavis-file-picker"
-    flags: Qt.Window | Qt.FramelessWindowHint
-    width: 920
-    height: 600
-    minimumWidth: 680
-    minimumHeight: 440
+    implicitWidth: 920
+    implicitHeight: 600
+    minimumSize: Qt.size(680, 440)
     color: "transparent"
     Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
     Material.accent: Appearance.colors.colPrimary
 
     onTargetScreenChanged: {
-        const mappedScreen = qtScreenFor(targetScreen);
-        if (mappedScreen)
-            screen = mappedScreen;
+        if (targetScreen)
+            screen = targetScreen;
     }
     onCurrentPathChanged: Qt.callLater(refreshBreadcrumbs)
-    onClosing: event => {
-        event.accepted = false;
-        dismiss();
+    onVisibleChanged: {
+        if (visible)
+            Qt.callLater(fileGrid.refreshLayout);
+    }
+    onClosed: {
+        if (_completionHandled)
+            return;
+        _completionHandled = true;
+        visible = false;
+        pathEditing = false;
+        clearSelection();
+        rejected();
     }
     Component.onCompleted: {
         currentPath = normalizePath(currentPath) || normalizePath(picturesDir) || "/";
@@ -167,17 +176,6 @@ ApplicationWindow {
         Qt.callLater(() => fileGrid.forceActiveFocus());
     }
 
-    function qtScreenFor(shellScreen) {
-        if (!shellScreen)
-            return null;
-        for (let index = 0; index < Application.screens.length; ++index) {
-            const candidate = Application.screens[index];
-            if (candidate.name === shellScreen.name)
-                return candidate;
-        }
-        return null;
-    }
-
     function commitPathEditing() {
         const normalized = normalizePath(pathDraft);
         if (normalized !== "")
@@ -194,12 +192,10 @@ ApplicationWindow {
         pathDraft = currentPath;
         refreshBreadcrumbs();
         clearSelection();
-        const mappedScreen = qtScreenFor(targetScreen);
-        if (mappedScreen)
-            screen = mappedScreen;
-        show();
-        raise();
-        requestActivate();
+        if (targetScreen)
+            screen = targetScreen;
+        _completionHandled = false;
+        visible = true;
         Qt.callLater(() => {
             dialogFocus.forceActiveFocus();
             fileGrid.forceActiveFocus();
@@ -207,8 +203,9 @@ ApplicationWindow {
     }
 
     function dismiss() {
-        if (!visible)
+        if (!visible || _completionHandled)
             return;
+        _completionHandled = true;
         visible = false;
         pathEditing = false;
         clearSelection();
@@ -220,6 +217,7 @@ ApplicationWindow {
             return;
         const path = selectedPath;
         const isDirectory = selectedIsDir;
+        _completionHandled = true;
         visible = false;
         clearSelection();
         accepted(path, isDirectory);
@@ -350,8 +348,11 @@ ApplicationWindow {
         }
 
         CompositorBlurRegion {
+            id: pickerBlurController
+
             targetWindow: root
             backgroundItem: outerBackground
+            radius: outerBackground.radius
         }
 
         MouseArea {
@@ -702,12 +703,29 @@ ApplicationWindow {
                         StyledGridView {
                             id: fileGrid
 
+                            function refreshLayout() {
+                                if (!root.visible
+                                        || width <= 0 || height <= 0)
+                                    return;
+                                forceLayout();
+                            }
+
                             anchors.fill: parent
                             anchors.margins: 10
                             clip: true
                             cellWidth: width > 0 ? width / Math.max(1, Math.floor(width / 146)) : 146
                             cellHeight: 142
                             model: folderModel
+                            animateAppearance: false
+                            animateMovement: false
+                            onWidthChanged:
+                                Qt.callLater(fileGrid.refreshLayout)
+                            onHeightChanged:
+                                Qt.callLater(fileGrid.refreshLayout)
+                            onCellWidthChanged:
+                                Qt.callLater(fileGrid.refreshLayout)
+                            onCountChanged:
+                                Qt.callLater(fileGrid.refreshLayout)
 
                             delegate: MaterialRippleButton {
                                 id: fileItem

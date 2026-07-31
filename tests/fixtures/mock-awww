@@ -23,6 +23,16 @@ query)
     [[ -e "${mock_state}.socket" ]]
     ;;
 img|clear)
+    mock_delay_ms="${CLAVIS_AWWW_MOCK_APPLY_DELAY_MS:-0}"
+    if [[ "${mock_delay_ms}" =~ ^[0-9]+$ ]] \
+            && (( mock_delay_ms > 0 )); then
+        mock_delay_seconds="$(
+            printf '%d.%03d' \
+                "$((mock_delay_ms / 1000))" \
+                "$((mock_delay_ms % 1000))"
+        )"
+        sleep "${mock_delay_seconds}"
+    fi
     [[ "${CLAVIS_AWWW_MOCK_FAIL_APPLY:-0}" != "1" ]]
     ;;
 kill)

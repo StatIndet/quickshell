@@ -133,6 +133,20 @@ function resolvedTransitionOptions(options, randomX, randomY) {
     return resolved;
 }
 
+function applyRequestKey(targets) {
+    const source = Array.isArray(targets) ? targets : [];
+    const finalState = [];
+    for (let index = 0; index < source.length; index += 1) {
+        const target = source[index] || {};
+        finalState.push({
+            output: String(target.output || ""),
+            source: String(target.source || ""),
+            fillMode: String(target.fillMode || "Fill")
+        });
+    }
+    return JSON.stringify(finalState);
+}
+
 function supportsDuration(transitionType) {
     const type = transition(transitionType);
     return type !== "none" && type !== "simple";

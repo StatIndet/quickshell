@@ -29,6 +29,7 @@ Singleton {
     property int queryAttempts: 0
     property bool daemonStartAttempted: false
     property var applyOutputs: []
+    property var activeApplyTargets: []
     property int applyIndex: 0
     property bool reapplyPending: false
     property string activeApplyKey: ""
@@ -72,23 +73,27 @@ Singleton {
         };
     }
 
-    function applyRequestKey() {
+    function applyTargets() {
         const outputs = root.screenNames();
         const targets = [];
+        const seenOutputs = {};
         for (let index = 0; index < outputs.length; index += 1) {
             const output = outputs[index];
+            if (seenOutputs[output])
+                continue;
+            seenOutputs[output] = true;
             targets.push({
                 output: output,
                 source: WallpaperService.wallpaperForScreen(output),
                 fillMode: WallpaperService.fillModeForScreen(output)
             });
         }
-        return JSON.stringify({
-            revision: WallpaperService.revision,
-            settingsRevision: WallpaperService.settingsRevision,
-            targets: targets,
-            transition: root.transitionOptions()
-        });
+        return targets;
+    }
+
+    function applyRequestKey(targets) {
+        return AwwwCommand.applyRequestKey(
+            targets || root.applyTargets());
     }
 
     function supportsDuration(transitionType) {
@@ -167,6 +172,7 @@ Singleton {
         root.effectiveBackend = "quickshell";
         root.lastError = "";
         root.applyOutputs = [];
+        root.activeApplyTargets = [];
         root.applyIndex = 0;
         root.reapplyPending = false;
         root.activeApplyKey = "";
@@ -188,6 +194,7 @@ Singleton {
         root.effectiveBackend = "quickshell";
         root.state = "error";
         root.applyOutputs = [];
+        root.activeApplyTargets = [];
         root.applyIndex = 0;
         root.reapplyPending = false;
         root.activeApplyKey = "";
@@ -226,7 +233,8 @@ Singleton {
         if (!root.primaryInstance || !root.backendIsAwww()
                 || !root.available || !root.daemonRunning)
             return;
-        const requestKey = root.applyRequestKey();
+        const targets = root.applyTargets();
+        const requestKey = root.applyRequestKey(targets);
         if (applyProcess.running || root.state === "applying") {
             if (requestKey === root.activeApplyKey
                     || requestKey === root.pendingApplyKey)
@@ -238,7 +246,8 @@ Singleton {
         if (requestKey === root.lastAppliedKey)
             return;
 
-        root.applyOutputs = root.screenNames();
+        root.activeApplyTargets = targets;
+        root.applyOutputs = targets.map(target => target.output);
         root.applyIndex = 0;
         root.activeApplyKey = requestKey;
         root.pendingApplyKey = "";
@@ -252,6 +261,7 @@ Singleton {
     function applyNext() {
         if (!root.backendIsAwww()) {
             root.applyOutputs = [];
+            root.activeApplyTargets = [];
             root.applyIndex = 0;
             root.reapplyPending = false;
             return;
@@ -259,6 +269,7 @@ Singleton {
 
         if (root.applyIndex >= root.applyOutputs.length) {
             root.applyOutputs = [];
+            root.activeApplyTargets = [];
             root.applyIndex = 0;
             root.lastError = "";
             root.effectiveBackend = "awww";
@@ -279,8 +290,9 @@ Singleton {
             return;
         }
 
-        const output = root.applyOutputs[root.applyIndex];
-        const source = WallpaperService.wallpaperForScreen(output);
+        const target = root.activeApplyTargets[root.applyIndex];
+        const output = target.output;
+        const source = target.source;
         if (!source) {
             root.failAwwwActivation(
                 qsTr("没有可应用到 %1 的桌面壁纸").arg(output));
@@ -293,7 +305,7 @@ Singleton {
             root.namespaceName,
             output,
             source,
-            WallpaperService.fillModeForScreen(output),
+            target.fillMode,
             root.activeTransitionOptions);
         applyProcess.running = true;
     }
@@ -333,12 +345,6 @@ Singleton {
         enabled: root.primaryInstance
 
         function onRevisionChanged() {
-            if (root.backendIsAwww()
-                    && root.effectiveBackend === "awww")
-                root.scheduleApplyAll();
-        }
-
-        function onSettingsRevisionChanged() {
             if (root.backendIsAwww()
                     && root.effectiveBackend === "awww")
                 root.scheduleApplyAll();
@@ -484,6 +490,7 @@ Singleton {
         onExited: exitCode => {
             if (!root.backendIsAwww()) {
                 root.applyOutputs = [];
+                root.activeApplyTargets = [];
                 root.applyIndex = 0;
                 root.reapplyPending = false;
                 return;

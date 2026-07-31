@@ -425,6 +425,44 @@ TestCase {
             second[second.indexOf("--transition-pos") + 1]);
     }
 
+    function test_awwwApplyRequestKeyOnlyTracksFinalState() {
+        const first = AwwwCommand.applyRequestKey([{
+            output: "eDP-1",
+            source: "/tmp/a.png",
+            fillMode: "Fill",
+            revision: 1,
+            settingsRevision: 3,
+            transition: {
+                fps: 60,
+                position: "0.1,0.2"
+            }
+        }]);
+        const sameFinalState = AwwwCommand.applyRequestKey([{
+            output: "eDP-1",
+            source: "/tmp/a.png",
+            fillMode: "Fill",
+            revision: 99,
+            settingsRevision: 100,
+            transition: {
+                fps: 240,
+                position: "0.8,0.9"
+            }
+        }]);
+        compare(first, sameFinalState);
+        compare(first, JSON.stringify([{
+            output: "eDP-1",
+            source: "/tmp/a.png",
+            fillMode: "Fill"
+        }]));
+
+        const changedWallpaper = AwwwCommand.applyRequestKey([{
+            output: "eDP-1",
+            source: "/tmp/b.png",
+            fillMode: "Fill"
+        }]);
+        verify(changedWallpaper !== first);
+    }
+
     function test_awwwPureColorUsesClear() {
         const command = AwwwCommand.apply(
             "mock-awww", "clavis-desktop", "HDMI-A-1",
