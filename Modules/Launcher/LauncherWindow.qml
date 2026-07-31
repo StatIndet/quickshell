@@ -37,6 +37,10 @@ PanelWindow {
     property string query: ""
     property int selectedResultIndex: -1
     property string selectedResultId: ""
+    property string clipboardActionState: "idle"
+    property string clipboardActionEntryId: ""
+    property bool clipboardActionKeepOpen: false
+    property string clipboardActionError: ""
 
     property real windowProgress: 0
     property real railProgress: 0
@@ -51,6 +55,8 @@ PanelWindow {
             ? wallpaperProvider.results
             : (mode === "clipboard" ? clipboardProvider.results : []))
     readonly property bool clipboardMode: mode === "clipboard"
+    readonly property bool clipboardCanRestore:
+        clipboardProvider.canRestore
     readonly property bool wallpaperMode: mode === "wallpapers"
     readonly property bool showing:
         windowPhase !== "hidden" && root.visible
@@ -92,7 +98,22 @@ PanelWindow {
     SpotlightClipboardProvider {
         id: clipboardProvider
         query: root.query
-        onRestored: root.requestClose()
+        onRestored: id => root.finishClipboardRestore(id)
+        onRestoreFailed: (id, code, message) =>
+            root.failClipboardRestore(id, code, message)
+    }
+
+    Timer {
+        id: clipboardFeedbackTimer
+
+        repeat: false
+        onTriggered: {
+            if (root.clipboardActionKeepOpen) {
+                root.resetClipboardAction();
+                return;
+            }
+            root.requestClose();
+        }
     }
 
     function normalizedMode(value) {
@@ -213,14 +234,19 @@ PanelWindow {
         const localMode = normalizedMode(requestedMode);
         if (localMode === "")
             return false;
+        const enteringClipboard = root.mode !== "clipboard"
+            && localMode === "clipboard";
         if (root.mode === "web")
             root.animateWeb(0);
         root.selectedResultId = "";
         root.mode = localMode;
         root.previousLocalMode = localMode;
         root.selectResult(root.activeResults.length > 0 ? 0 : -1);
-        if (localMode === "clipboard")
+        if (localMode === "clipboard") {
+            if (enteringClipboard)
+                root.resetClipboardAction();
             clipboardProvider.refresh();
+        }
         searchBar.focusInput();
         return true;
     }
@@ -338,7 +364,73 @@ PanelWindow {
         return Qt.openUrlExternally(url);
     }
 
-    function activateSelected() {
+    function resetClipboardAction() {
+        clipboardFeedbackTimer.stop();
+        root.clipboardActionState = "idle";
+        root.clipboardActionEntryId = "";
+        root.clipboardActionKeepOpen = false;
+        root.clipboardActionError = "";
+    }
+
+    function activateClipboard(keepOpen) {
+        if (root.selectedResultIndex < 0)
+            return false;
+        const result = root.activeResults[root.selectedResultIndex];
+        if (!result)
+            return false;
+        const id = String(result.id || "");
+        if (root.clipboardActionState === "copying") {
+            if (root.clipboardActionEntryId === id)
+                return false;
+            root.clipboardActionError = qsTr(
+                "已有剪贴板操作正在执行");
+            return false;
+        }
+        clipboardFeedbackTimer.stop();
+        root.clipboardActionState = "copying";
+        root.clipboardActionEntryId = id;
+        root.clipboardActionKeepOpen = keepOpen === true;
+        root.clipboardActionError = "";
+        if (!clipboardProvider.execute(root.selectedResultIndex)) {
+            if (root.clipboardActionState === "copying") {
+                root.clipboardActionState = "error";
+                root.clipboardActionError = qsTr("复制失败");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function activateResult(index, keepClipboardOpen) {
+        if (!root.selectResult(index))
+            return false;
+        return root.activateSelected(keepClipboardOpen === true);
+    }
+
+    function finishClipboardRestore(id) {
+        if (root.clipboardActionState !== "copying"
+                || String(id) !== root.clipboardActionEntryId)
+            return;
+        root.clipboardActionState = "copied";
+        root.clipboardActionError = "";
+        clipboardFeedbackTimer.interval =
+            root.clipboardActionKeepOpen ? 800 : 230;
+        clipboardFeedbackTimer.restart();
+    }
+
+    function failClipboardRestore(id, code, message) {
+        if (root.clipboardActionState === "copying"
+                && root.clipboardActionEntryId !== ""
+                && String(id) !== root.clipboardActionEntryId)
+            return;
+        root.clipboardActionEntryId = String(id);
+        root.clipboardActionState = "error";
+        root.clipboardActionError = String(message || qsTr("复制失败"));
+        root.clipboardActionKeepOpen = false;
+        clipboardFeedbackTimer.stop();
+    }
+
+    function activateSelected(keepClipboardOpen) {
         if (root.modeRailExpanded && root.modeFocusIndex >= 0) {
             root.setLocalMode(root.modeForIndex(root.modeFocusIndex));
             root.setRailExpanded(false);
@@ -359,7 +451,7 @@ PanelWindow {
         if (root.mode === "wallpapers")
             return wallpaperProvider.execute(root.selectedResultIndex);
         if (root.mode === "clipboard")
-            return clipboardProvider.execute(root.selectedResultIndex);
+            return root.activateClipboard(keepClipboardOpen === true);
         return false;
     }
 
@@ -381,6 +473,10 @@ PanelWindow {
 
     function resultNavigationStep(direction) {
         return resultsPanel.navigationStep(direction);
+    }
+
+    function clipboardActivationAreaAt(index) {
+        return resultsPanel.clipboardActivationAreaAt(index);
     }
 
     function webPressDepthAt(progress) {
@@ -460,7 +556,7 @@ PanelWindow {
         }
         if (event.key === Qt.Key_Return
                 || event.key === Qt.Key_Enter) {
-            root.activateSelected();
+            root.activateSelected(root.mode === "clipboard" && shift);
             event.accepted = true;
             return;
         }
@@ -502,6 +598,7 @@ PanelWindow {
             root.modeFocusIndex = -1;
             root.railProgress = 0;
             root.webProgress = 0;
+            root.resetClipboardAction();
         }
     }
 
@@ -626,6 +723,12 @@ PanelWindow {
                 !root.clipboardMode || clipboardProvider.canRestore
             providerError:
                 root.clipboardMode ? clipboardProvider.error : null
+            clipboardActionState: root.clipboardActionState
+            clipboardActionEntryId: root.clipboardActionEntryId
+            clipboardActionError: root.clipboardActionError
+            clipboardActionRunning: clipboardProvider.actionRunning
+                || root.clipboardActionState === "copying"
+                || root.clipboardActionState === "copied"
             availableHeight: Math.max(
                 style.emptyHeight,
                 root.height
@@ -637,13 +740,16 @@ PanelWindow {
 
             onSelectionRequested: index =>
                 root.selectResult(index)
-            onActivationRequested: index => {
-                root.selectResult(index);
-                root.activateSelected();
+            onActivationRequested: (index, keepOpen) => {
+                root.activateResult(index, keepOpen);
             }
             onDeleteRequested: index =>
                 clipboardProvider.deleteEntry(index)
             onClearRequested: clipboardProvider.clear()
+            onInspectionRequested: id =>
+                clipboardProvider.requestDetails(id)
+            onInspectionReleased: id =>
+                clipboardProvider.releaseDetails(id)
         }
     }
 }

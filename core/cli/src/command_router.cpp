@@ -67,6 +67,7 @@ QString CommandRouter::helpText()
         "  key cast list [--json]\n"
         "  key cast status [--json]\n"
         "  key clipboard list --format json [--limit N]\n"
+        "  key clipboard inspect|preview ID --format json\n"
         "  key clipboard restore|delete ID [--format json]\n"
         "  key clipboard clear|status [--format json]\n"
         "  key sysmon snapshot [--format json] [--modules LIST]\n"

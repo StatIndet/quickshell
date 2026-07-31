@@ -21,6 +21,10 @@ Item {
     property bool providerAvailable: true
     property bool canRestore: true
     property var providerError: null
+    property string clipboardActionState: "idle"
+    property string clipboardActionEntryId: ""
+    property string clipboardActionError: ""
+    property bool clipboardActionRunning: false
     property real availableHeight: 100000
     property real contentOpacity: 1
     readonly property int modeIndex: mode === "wallpapers"
@@ -62,9 +66,11 @@ Item {
     }
 
     signal selectionRequested(int index)
-    signal activationRequested(int index)
+    signal activationRequested(int index, bool keepOpen)
     signal deleteRequested(int index)
     signal clearRequested()
+    signal inspectionRequested(string id)
+    signal inspectionReleased(string id)
 
     height: targetHeight
     opacity: expanded ? 1 : 0
@@ -120,6 +126,11 @@ Item {
             Quickshell.iconPath(icon, "application-x-executable");
         return resolved && resolved !== ""
             ? resolved : fallbackIconSource();
+    }
+
+    function clipboardActivationAreaAt(index) {
+        const delegate = clipboardList.itemAtIndex(index);
+        return delegate ? delegate.activationArea : null;
     }
 
     function gridColumns() {
@@ -282,7 +293,7 @@ Item {
                     Accessible.role: Accessible.ListItem
                     onClicked: {
                         root.selectionRequested(appDelegate.index);
-                        root.activationRequested(appDelegate.index);
+                        root.activationRequested(appDelegate.index, false);
                     }
                 }
             }
@@ -461,7 +472,8 @@ Item {
                     Accessible.role: Accessible.ListItem
                     onClicked: {
                         root.selectionRequested(wallpaperDelegate.index);
-                        root.activationRequested(wallpaperDelegate.index);
+                        root.activationRequested(
+                            wallpaperDelegate.index, false);
                     }
                 }
             }
@@ -493,7 +505,8 @@ Item {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     enabled: root.providerAvailable
-                        && !root.loading && root.results.length > 0
+                        && !root.loading && !root.clipboardActionRunning
+                        && root.results.length > 0
                     onClicked: clearDialog.open()
 
                     contentItem: Row {
@@ -533,8 +546,19 @@ Item {
 
                     required property int index
                     required property var modelData
+                    readonly property bool actionForThis:
+                        String(modelData.id)
+                            === root.clipboardActionEntryId
+                    readonly property alias activationArea: clipboardMouse
                     width: ListView.view.width
                     height: root.style.resultRowHeight
+
+                    Component.onCompleted:
+                        root.inspectionRequested(
+                            String(clipboardDelegate.modelData.id))
+                    Component.onDestruction:
+                        root.inspectionReleased(
+                            String(clipboardDelegate.modelData.id))
 
                     Rectangle {
                         anchors.fill: parent
@@ -553,16 +577,55 @@ Item {
                         anchors.rightMargin: 6
                         spacing: 13
 
-                        MaterialSymbol {
-                            Layout.preferredWidth: 34
-                            Layout.preferredHeight: 34
-                            text: clipboardDelegate.modelData.icon
-                            iconSize: 23
-                            color:
-                                clipboardDelegate.index
-                                    === root.selectedIndex
-                                ? root.style.selectedContentColor
-                                : Appearance.colors.colPrimary
+                        Item {
+                            Layout.preferredWidth: 42
+                            Layout.preferredHeight: 42
+
+                            Item {
+                                id: clipboardPreviewFrame
+
+                                anchors.fill: parent
+                                visible:
+                                    String(clipboardDelegate
+                                        .modelData.previewUrl || "") !== ""
+                                layer.enabled: visible
+                                layer.effect: OpacityMask {
+                                    maskSource: Rectangle {
+                                        width: clipboardPreviewFrame.width
+                                        height: clipboardPreviewFrame.height
+                                        radius: Appearance.rounding.large
+                                    }
+                                }
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: root.style.hoverColor
+                                }
+
+                                Image {
+                                    anchors.fill: parent
+                                    source: clipboardDelegate
+                                        .modelData.previewUrl || ""
+                                    sourceSize.width: 96
+                                    sourceSize.height: 96
+                                    asynchronous: true
+                                    cache: true
+                                    smooth: true
+                                    fillMode: Image.PreserveAspectCrop
+                                }
+                            }
+
+                            MaterialSymbol {
+                                anchors.centerIn: parent
+                                visible: !clipboardPreviewFrame.visible
+                                text: clipboardDelegate.modelData.icon
+                                iconSize: 24
+                                color:
+                                    clipboardDelegate.index
+                                        === root.selectedIndex
+                                    ? root.style.selectedContentColor
+                                    : Appearance.colors.colPrimary
+                            }
                         }
 
                         ColumnLayout {
@@ -577,37 +640,107 @@ Item {
                                         === root.selectedIndex
                                     ? root.style.selectedContentColor
                                     : Appearance.colors.colOnSurface
-                                font.family: Sizes.fontFamily
+                                font.family:
+                                    clipboardDelegate.modelData.textSubtype
+                                        === "code"
+                                    ? Sizes.fontFamilyMono
+                                    : Sizes.fontFamily
+                                textFormat: Text.PlainText
                                 font.pixelSize: 16
                                 elide: Text.ElideRight
                             }
 
                             Text {
                                 Layout.fillWidth: true
-                                text: clipboardDelegate.modelData.subtitle
+                                text: clipboardDelegate.actionForThis
+                                    && root.clipboardActionState === "error"
+                                    && root.clipboardActionError !== ""
+                                    ? root.clipboardActionError
+                                    : clipboardDelegate.modelData.subtitle
                                 color:
                                     clipboardDelegate.index
                                         === root.selectedIndex
                                     ? root.style.selectedContentColor
                                     : Appearance.colors.colOnSurfaceVariant
                                 font.family: Sizes.fontFamily
+                                textFormat: Text.PlainText
                                 font.pixelSize: 12
                                 elide: Text.ElideRight
                             }
                         }
 
-                        ToolButton {
-                            Layout.preferredWidth: 42
+                        Item {
+                            Layout.preferredWidth: 92
                             Layout.preferredHeight: 42
-                            onClicked:
-                                root.deleteRequested(
-                                    clipboardDelegate.index)
-                            Accessible.name: qsTr("删除剪贴板条目")
 
-                            contentItem: MaterialSymbol {
-                                text: "delete"
-                                iconSize: 20
-                                color: Appearance.colors.colOnSurfaceVariant
+                            ToolButton {
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 42
+                                height: 42
+                                visible: !clipboardDelegate.actionForThis
+                                    || root.clipboardActionState === "idle"
+                                enabled: !root.clipboardActionRunning
+                                onClicked:
+                                    root.deleteRequested(
+                                        clipboardDelegate.index)
+                                Accessible.name:
+                                    qsTr("删除剪贴板条目")
+
+                                contentItem: MaterialSymbol {
+                                    text: "delete"
+                                    iconSize: 20
+                                    color:
+                                        Appearance.colors.colOnSurfaceVariant
+                                }
+                            }
+
+                            BusyIndicator {
+                                anchors.centerIn: parent
+                                width: 24
+                                height: 24
+                                visible: clipboardDelegate.actionForThis
+                                    && root.clipboardActionState
+                                        === "copying"
+                                running: visible
+                                Material.accent:
+                                    Appearance.colors.colPrimary
+                            }
+
+                            Row {
+                                anchors.centerIn: parent
+                                spacing: 5
+                                visible: clipboardDelegate.actionForThis
+                                    && (root.clipboardActionState === "copied"
+                                        || root.clipboardActionState
+                                            === "error")
+
+                                MaterialSymbol {
+                                    anchors.verticalCenter:
+                                        parent.verticalCenter
+                                    text: root.clipboardActionState
+                                        === "copied" ? "check" : "error"
+                                    iconSize: 18
+                                    fill: 1
+                                    color: root.clipboardActionState
+                                        === "copied"
+                                        ? Appearance.colors.colPrimary
+                                        : Appearance.colors.colError
+                                }
+
+                                Text {
+                                    anchors.verticalCenter:
+                                        parent.verticalCenter
+                                    text: root.clipboardActionState
+                                        === "copied"
+                                        ? qsTr("已复制") : qsTr("复制失败")
+                                    color: root.clipboardActionState
+                                        === "copied"
+                                        ? Appearance.colors.colPrimary
+                                        : Appearance.colors.colError
+                                    font.family: Sizes.fontFamily
+                                    font.pixelSize: 12
+                                }
                             }
                         }
                     }
@@ -616,17 +749,19 @@ Item {
                         id: clipboardMouse
 
                         anchors.fill: parent
-                        anchors.rightMargin: 46
+                        anchors.rightMargin: 96
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        enabled: root.canRestore
+                        acceptedButtons: Qt.LeftButton
                         Accessible.name: clipboardDelegate.modelData.title
                         Accessible.role: Accessible.ListItem
-                        onClicked: {
+                        onClicked: mouse => {
                             root.selectionRequested(
                                 clipboardDelegate.index);
                             root.activationRequested(
-                                clipboardDelegate.index);
+                                clipboardDelegate.index,
+                                (mouse.modifiers
+                                    & Qt.ControlModifier) !== 0);
                         }
                     }
                 }

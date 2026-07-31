@@ -365,6 +365,10 @@ ShellRoot {
                 smoke.verify(
                     spotlight.mode === "clipboard",
                     "Enter activates Clipboard");
+                smoke.verify(
+                    spotlight.clipboardActionState === "idle"
+                        && spotlight.clipboardActionEntryId === "",
+                    "Clipboard mode starts with an id-based idle action");
                 spotlight.query = "keep me";
                 smoke.key(Qt.Key_K, Qt.ControlModifier);
                 smoke.verify(

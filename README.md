@@ -229,7 +229,8 @@ qs ipc call spotlight openMode clipboard
 
 Spotlight 内使用 Tab 展开模式按钮、Shift+Tab 反向选择、Ctrl+K 进入
 Google 网页搜索、Esc 分层退出。网页查询通过 Qt URL API 打开，不进入
-shell。旧的 `launcher` IPC 已删除。
+shell。剪贴板条目可用单击或 Enter 复制并关闭；Ctrl+单击或
+Shift+Enter 会复制但保持 Spotlight 打开。旧的 `launcher` IPC 已删除。
 
 Keystone 只使用新的 `keystone` IPC target：
 
@@ -289,21 +290,50 @@ Spotlight 能读到它；两个 watcher 可以同时监听 Wayland 剪贴板，�
 ```bash
 key clipboard status --format json
 key clipboard list --format json --limit 100
+key clipboard inspect 123 --format json
+key clipboard preview 123 --format json
 key clipboard restore 123 --format json
 key clipboard delete 123 --format json
 key clipboard clear --format json
 ```
 
-`restore` 在 C++ 中将 `cliphist decode` 的原始字节直接写入 `wl-copy`
-stdin；entry id 仅接受正十进制整数，剪贴板正文不会写入日志。
+`list` 只读取轻量索引；可见或被搜索的条目通过 `inspect` 按需解码。
+`preview` 与 `inspect` 返回相同的结构化分类，并为原始图片生成受限尺寸的
+私有缓存缩略图，不会把图片 Base64 放进 JSON。`restore` 保持
+`cliphist decode` 的原始字节，并根据检查结果使用 `wl-copy --type`
+恢复文本、图片、URI 列表或 GNOME 文件复制 MIME。entry id 仅接受正十进制
+整数，剪贴板正文不会写入日志。
 
-若系统中的 `key clipboard` 仍提示未知命令，需要先安装本仓库构建出的新版
-CLI：
+可用以下命令确认 Quickshell 与终端实际使用的 CLI。开发构建可通过
+`CLAVIS_KEY` 显式指定；schemaVersion 小于 2 或缺少 inspect/MIME
+capability 时，Spotlight 会显示 `stale_key_cli`，不会静默调用旧实现：
+
+```bash
+type -a key
+"$PWD/core/build/bin/key" clipboard status --format json
+CLAVIS_KEY="$PWD/core/build/bin/key" qs
+```
+
+若系统中的 `key clipboard` 仍提示未知命令或 schema 过旧，需要安装本仓库
+构建出的新版 CLI：
 
 ```bash
 sudo cmake --install core/build
 key clipboard status --format json
 ```
+
+恢复诊断：
+
+```bash
+key clipboard restore 123 --format json
+wl-paste --list-types
+wl-paste --no-newline | sha256sum
+```
+
+建议把 `cliphist decode` 的输出也送入 `sha256sum` 比较，避免在终端或日志中
+暴露正文。缺少 `wl-copy` 时 `canList` 仍为 true、`canRestore` 为 false，
+历史可读取但激活条目会给出明确错误。Clavis 不会自动停止 Clipse、CopyQ
+等其他服务；只有实际观察到恢复后 selection 被覆盖时才需要逐项停用诊断。
 
 ### Launcher shader
 

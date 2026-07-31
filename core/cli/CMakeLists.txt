@@ -33,6 +33,7 @@ target_link_libraries(key PRIVATE
     ClavisRecordingCore
     ClavisNiriCore
     Qt6::Core
+    Qt6::Gui
     Qt6::Network
     PkgConfig::NCursesW
 )

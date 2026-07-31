@@ -8,6 +8,7 @@
 #include <QProcessEnvironment>
 #include <QTemporaryDir>
 #include <QTest>
+#include <QUrl>
 
 #include <csignal>
 
@@ -29,8 +30,14 @@ private slots:
     void rejectsUnavailableAudioSource();
     void rejectsCrossCaptureConflicts();
     void clipboardListIsStructured();
+    void clipboardListWorksWithoutWlCopy();
     void clipboardRejectsInvalidId();
     void clipboardRestoresOriginalBytes();
+    void clipboardRestoresImageWithMime();
+    void clipboardInspectsTextAndImage();
+    void clipboardClassifiesFiles();
+    void clipboardReportsDecodeAndCopyFailures();
+    void clipboardPreviewCacheIsCleaned();
     void clipboardDeleteAndClearAreSafe();
     void clipboardReportsMissingDependencies();
     void clipboardReportsInactiveWatcher();
@@ -69,6 +76,29 @@ void KeyIntegrationTest::init()
     m_environment.insert(
         QStringLiteral("CLAVIS_CLIPBOARD_WATCHER_RUNNING"),
         QStringLiteral("1"));
+    const QString fileRoot =
+        m_temporary->filePath(QStringLiteral("clipboard-files"));
+    QVERIFY(QDir().mkpath(fileRoot));
+    QVERIFY(QDir().mkpath(
+        QDir(fileRoot).filePath(QStringLiteral("folder"))));
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_FILE_ROOT"), fileRoot);
+    m_environment.insert(
+        QStringLiteral("CLAVIS_CLIPBOARD_CACHE_DIR"),
+        m_temporary->filePath(QStringLiteral("clipboard-cache")));
+    const QByteArray png = QByteArray::fromBase64(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC"
+        "AAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=");
+    const QList<QPair<QString, QByteArray>> files{
+        {QStringLiteral("image.png"), png},
+        {QStringLiteral("video.mp4"), QByteArrayLiteral("fake video")},
+        {QStringLiteral("archive.zip"), QByteArrayLiteral("PK fake archive")},
+        {QStringLiteral("main.cpp"), QByteArrayLiteral("int main() { return 0; }\n")},
+    };
+    for (const auto &item : files) {
+        QFile file(QDir(fileRoot).filePath(item.first));
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        QCOMPARE(file.write(item.second), item.second.size());
+    }
 }
 
 void KeyIntegrationTest::cleanup()
@@ -233,10 +263,34 @@ void KeyIntegrationTest::clipboardListIsStructured()
     QCOMPARE(entries.size(), 2);
     QCOMPARE(entries.at(0).toObject().value(QStringLiteral("id")).toString(),
              QStringLiteral("9"));
-    QCOMPARE(entries.at(0).toObject().value(QStringLiteral("type")).toString(),
+    QCOMPARE(entries.at(0).toObject()
+                 .value(QStringLiteral("payloadKind")).toString(),
              QStringLiteral("text"));
-    QCOMPARE(entries.at(1).toObject().value(QStringLiteral("type")).toString(),
+    QCOMPARE(entries.at(1).toObject()
+                 .value(QStringLiteral("payloadKind")).toString(),
              QStringLiteral("image"));
+    QCOMPARE(result.json.value(QStringLiteral("schemaVersion")).toInt(), 2);
+    QCOMPARE(result.json.value(QStringLiteral("capabilities")).toObject()
+                 .value(QStringLiteral("inspect")).toBool(), true);
+}
+
+void KeyIntegrationTest::clipboardListWorksWithoutWlCopy()
+{
+    const QString bin =
+        m_temporary->filePath(QStringLiteral("cliphist-only-bin"));
+    QVERIFY(QDir().mkpath(bin));
+    QVERIFY(QFile::link(
+        QDir(QStringLiteral(KEY_FAKE_BIN)).filePath(QStringLiteral("cliphist")),
+        QDir(bin).filePath(QStringLiteral("cliphist"))));
+    m_environment.insert(QStringLiteral("PATH"), bin);
+    const KeyResult result = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("list"),
+        QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(result.exitCode, 0);
+    QCOMPARE(result.json.value(QStringLiteral("canList")).toBool(), true);
+    QCOMPARE(result.json.value(QStringLiteral("canRestore")).toBool(), false);
+    QVERIFY(result.json.value(QStringLiteral("entries")).toArray().size() > 0);
 }
 
 void KeyIntegrationTest::clipboardRejectsInvalidId()
@@ -271,7 +325,243 @@ void KeyIntegrationTest::clipboardRestoresOriginalBytes()
     QFile traceFile(trace);
     QVERIFY(traceFile.open(QIODevice::ReadOnly));
     QCOMPARE(traceFile.readAll(), QByteArrayLiteral("copy:alpha\nbeta"));
+    QCOMPARE(result.json.value(QStringLiteral("mimeType")).toString(),
+             QStringLiteral("text/plain;charset=utf-8"));
     QVERIFY(!result.json.contains(QStringLiteral("preview")));
+}
+
+void KeyIntegrationTest::clipboardRestoresImageWithMime()
+{
+    const QString trace =
+        m_temporary->filePath(QStringLiteral("clipboard-image-trace"));
+    const QString arguments =
+        m_temporary->filePath(QStringLiteral("wl-copy-arguments"));
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_CLIPBOARD_TRACE"), trace);
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_WL_COPY_ARGUMENTS"),
+                         arguments);
+    const KeyResult result = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("restore"),
+        QStringLiteral("8"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(result.exitCode, 0);
+    QCOMPARE(result.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("image"));
+    QCOMPARE(result.json.value(QStringLiteral("mimeType")).toString(),
+             QStringLiteral("image/png"));
+    QFile argumentsFile(arguments);
+    QVERIFY(argumentsFile.open(QIODevice::ReadOnly));
+    QCOMPARE(argumentsFile.readAll(), QByteArrayLiteral("--type\nimage/png"));
+    QFile traceFile(trace);
+    QVERIFY(traceFile.open(QIODevice::ReadOnly));
+    QVERIFY(traceFile.readAll().startsWith(QByteArrayLiteral("copy:\x89PNG")));
+}
+
+void KeyIntegrationTest::clipboardInspectsTextAndImage()
+{
+    const KeyResult text = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("9"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(text.exitCode, 0);
+    QCOMPARE(text.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("text"));
+    QCOMPARE(text.json.value(QStringLiteral("textSubtype")).toString(),
+             QStringLiteral("plain"));
+    QCOMPARE(text.json.value(QStringLiteral("preview")).toString(),
+             QStringLiteral("alpha\nbeta"));
+
+    const KeyResult image = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("preview"),
+        QStringLiteral("8"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(image.exitCode, 0);
+    QCOMPARE(image.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("image"));
+    QCOMPARE(image.json.value(QStringLiteral("width")).toInt(), 1);
+    QCOMPARE(image.json.value(QStringLiteral("height")).toInt(), 1);
+    const QUrl preview(image.json.value(QStringLiteral("previewUrl")).toString());
+    QVERIFY(preview.isLocalFile());
+    QVERIFY(QFileInfo::exists(preview.toLocalFile()));
+    const QFileDevice::Permissions publicPermissions =
+        QFileInfo(preview.toLocalFile()).permissions()
+        & (QFileDevice::ReadGroup | QFileDevice::WriteGroup
+           | QFileDevice::ExeGroup | QFileDevice::ReadOther
+           | QFileDevice::WriteOther | QFileDevice::ExeOther);
+    QCOMPARE(publicPermissions, QFileDevice::Permissions{});
+
+    const KeyResult code = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("2"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(code.exitCode, 0);
+    QCOMPARE(code.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("text"));
+    QCOMPARE(code.json.value(QStringLiteral("textSubtype")).toString(),
+             QStringLiteral("code"));
+
+    const KeyResult url = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("1"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(url.exitCode, 0);
+    QCOMPARE(url.json.value(QStringLiteral("textSubtype")).toString(),
+             QStringLiteral("url"));
+    QCOMPARE(url.json.value(QStringLiteral("icon")).toString(),
+             QStringLiteral("link"));
+
+    const KeyResult damagedImage = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("preview"),
+        QStringLiteral("10"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(damagedImage.exitCode, 0);
+    QCOMPARE(damagedImage.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("binary"));
+    QCOMPARE(damagedImage.json.value(QStringLiteral("previewUrl")).toString(),
+             QString());
+}
+
+void KeyIntegrationTest::clipboardClassifiesFiles()
+{
+    const KeyResult single = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("7"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(single.exitCode, 0);
+    QCOMPARE(single.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("file"));
+    QCOMPARE(single.json.value(QStringLiteral("fileCount")).toInt(), 1);
+    QCOMPARE(single.json.value(QStringLiteral("mimeType")).toString(),
+             QStringLiteral("text/uri-list"));
+    QVERIFY(!single.json.value(QStringLiteral("previewUrl")).toString().isEmpty());
+
+    const KeyResult copied = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("6"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(copied.exitCode, 0);
+    QCOMPARE(copied.json.value(QStringLiteral("payloadKind")).toString(),
+             QStringLiteral("file-list"));
+    QCOMPARE(copied.json.value(QStringLiteral("fileOperation")).toString(),
+             QStringLiteral("copy"));
+    QCOMPARE(copied.json.value(QStringLiteral("fileCount")).toInt(), 2);
+    QCOMPARE(copied.json.value(QStringLiteral("mimeType")).toString(),
+             QStringLiteral("x-special/gnome-copied-files"));
+    const QJsonArray copiedFiles =
+        copied.json.value(QStringLiteral("files")).toArray();
+    QCOMPARE(copiedFiles.at(0).toObject()
+                 .value(QStringLiteral("category")).toString(),
+             QStringLiteral("video"));
+    QCOMPARE(copiedFiles.at(1).toObject()
+                 .value(QStringLiteral("category")).toString(),
+             QStringLiteral("archive"));
+
+    const QString arguments =
+        m_temporary->filePath(QStringLiteral("file-wl-copy-arguments"));
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_WL_COPY_ARGUMENTS"),
+                         arguments);
+    const KeyResult restoredFiles = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("restore"),
+        QStringLiteral("6"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(restoredFiles.exitCode, 0);
+    QFile argumentFile(arguments);
+    QVERIFY(argumentFile.open(QIODevice::ReadOnly));
+    QCOMPARE(argumentFile.readAll(),
+             QByteArrayLiteral("--type\nx-special/gnome-copied-files"));
+
+    const KeyResult cut = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("5"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(cut.exitCode, 0);
+    QCOMPARE(cut.json.value(QStringLiteral("fileOperation")).toString(),
+             QStringLiteral("cut"));
+    const QJsonObject sourceFile =
+        cut.json.value(QStringLiteral("files")).toArray().first().toObject();
+    QCOMPARE(sourceFile.value(QStringLiteral("category")).toString(),
+             QStringLiteral("source-code"));
+    QCOMPARE(sourceFile.value(QStringLiteral("icon")).toString(),
+             QStringLiteral("code"));
+
+    const KeyResult uriList = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("4"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(uriList.exitCode, 0);
+    QCOMPARE(uriList.json.value(QStringLiteral("fileCount")).toInt(), 3);
+    QCOMPARE(uriList.json.value(QStringLiteral("mimeType")).toString(),
+             QStringLiteral("text/uri-list"));
+
+    const KeyResult directory = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("inspect"),
+        QStringLiteral("3"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(directory.exitCode, 0);
+    const QJsonObject folder =
+        directory.json.value(QStringLiteral("files")).toArray().first().toObject();
+    QCOMPARE(folder.value(QStringLiteral("category")).toString(),
+             QStringLiteral("folder"));
+    QCOMPARE(folder.value(QStringLiteral("icon")).toString(),
+             QStringLiteral("folder"));
+}
+
+void KeyIntegrationTest::clipboardReportsDecodeAndCopyFailures()
+{
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_CLIPHIST_DECODE_FAIL"),
+                         QStringLiteral("1"));
+    const KeyResult decode = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("restore"),
+        QStringLiteral("9"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(decode.exitCode, 1);
+    QCOMPARE(decode.json.value(QStringLiteral("error")).toObject()
+                 .value(QStringLiteral("code")).toString(),
+             QStringLiteral("cliphist_decode_failed"));
+    m_environment.remove(QStringLiteral("CLAVIS_TEST_CLIPHIST_DECODE_FAIL"));
+
+    m_environment.insert(QStringLiteral("CLAVIS_TEST_WL_COPY_FAIL"),
+                         QStringLiteral("1"));
+    const KeyResult copy = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("restore"),
+        QStringLiteral("9"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(copy.exitCode, 1);
+    QCOMPARE(copy.json.value(QStringLiteral("error")).toObject()
+                 .value(QStringLiteral("code")).toString(),
+             QStringLiteral("wl_copy_failed"));
+}
+
+void KeyIntegrationTest::clipboardPreviewCacheIsCleaned()
+{
+    const KeyResult preview = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("preview"),
+        QStringLiteral("8"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(preview.exitCode, 0);
+    const QString previewPath =
+        QUrl(preview.json.value(QStringLiteral("previewUrl")).toString())
+            .toLocalFile();
+    QVERIFY(QFileInfo::exists(previewPath));
+    QCOMPARE(runKey({
+        QStringLiteral("clipboard"), QStringLiteral("delete"),
+        QStringLiteral("8"), QStringLiteral("--format"), QStringLiteral("json"),
+    }).exitCode, 0);
+    QVERIFY(!QFileInfo::exists(previewPath));
+
+    const KeyResult secondPreview = runKey({
+        QStringLiteral("clipboard"), QStringLiteral("preview"),
+        QStringLiteral("8"), QStringLiteral("--format"), QStringLiteral("json"),
+    });
+    QCOMPARE(secondPreview.exitCode, 0);
+    const QString secondPath =
+        QUrl(secondPreview.json.value(QStringLiteral("previewUrl")).toString())
+            .toLocalFile();
+    QVERIFY(QFileInfo::exists(secondPath));
+    QCOMPARE(runKey({
+        QStringLiteral("clipboard"), QStringLiteral("clear"),
+        QStringLiteral("--format"), QStringLiteral("json"),
+    }).exitCode, 0);
+    QVERIFY(!QFileInfo::exists(secondPath));
 }
 
 void KeyIntegrationTest::clipboardDeleteAndClearAreSafe()
