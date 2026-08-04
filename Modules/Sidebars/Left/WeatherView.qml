@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
+import Quickshell
 import qs.Common
 import qs.Widgets.common
 import qs.Widgets.weather
@@ -19,6 +20,17 @@ Item {
     property color headerInkMuted: lightHeaderPalette ? Qt.rgba(0.87, 0.91, 0.98, 0.76) : Qt.rgba(0.20, 0.28, 0.38, 0.62)
     property color headerErrorInk: lightHeaderPalette ? Qt.rgba(1.0, 0.79, 0.82, 0.96) : Qt.rgba(0.62, 0.14, 0.18, 0.88)
     property real currentEpoch: Math.floor(Date.now() / 1000)
+
+    function openWeatherSettings() {
+        WidgetState.leftSidebarOpen = false;
+        Quickshell.execDetached([
+            "env",
+            "CLAVIS_CONTROL_CENTER_PAGE=weather",
+            "qs",
+            "--path",
+            Paths.shellDir + "/controlcenter.qml"
+        ]);
+    }
 
     function validNumber(value) {
         return value !== undefined && value !== null && !isNaN(value)
@@ -336,7 +348,11 @@ Item {
                         implicitWidth: 38
                         implicitHeight: 38
                         Layout.alignment: Qt.AlignVCenter
-                        onClicked: console.log("Open weather settings")
+                        onClicked: root.openWeatherSettings()
+
+                        StyledToolTip {
+                            text: qsTr("编辑位置信息")
+                        }
 
                         background: Rectangle {
                             radius: width / 2

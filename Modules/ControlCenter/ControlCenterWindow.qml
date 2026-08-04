@@ -25,7 +25,6 @@ FloatingWindow {
     Component.onCompleted: I18nService.initialize()
 
     property real contentPadding: 8
-    property int currentPage: 0
     property bool navExpanded: width > 900
     readonly property var pages: [
         ({ "id": "account", "title": qsTr("账户"), "icon": "account_circle", "source": "AccountPage.qml" }),
@@ -36,6 +35,13 @@ FloatingWindow {
         ({ "id": "weather", "title": qsTr("天气"), "icon": "partly_cloudy_day", "source": "WeatherPage.qml" }),
         ({ "id": "advanced", "title": qsTr("高级"), "icon": "tune", "source": "AdvancedPage.qml" })
     ]
+    property int currentPage: {
+        const requestedPage = Quickshell.env(
+            "CLAVIS_CONTROL_CENTER_PAGE");
+        const requestedIndex = pages.findIndex(
+            page => page.id === requestedPage);
+        return Math.max(0, requestedIndex);
+    }
 
     function pageSource(index) {
         if (index < 0 || index >= pages.length)
