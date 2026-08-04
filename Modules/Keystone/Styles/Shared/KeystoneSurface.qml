@@ -27,6 +27,7 @@ Variants {
     property int topMargin: 0
     property int maxPillRadius: 24
     property bool showTopEdgeCurves: !detached
+    property var activePopupWindow: null
 
     function invoke(methodName) {
         if (instances.length === 0)
@@ -101,6 +102,15 @@ Variants {
             return "TOOLS_OPENED";
         }
 
+        function dismissPopups() {
+            root.closeKeystonePopups();
+        }
+
+        Component.onDestruction: {
+            if (styleSurface.activePopupWindow === keystoneWindow)
+                styleSurface.activePopupWindow = null;
+        }
+
         anchors {
             top: true
             bottom: true
@@ -121,6 +131,24 @@ Variants {
         // ============================================================
         // 【物理挖孔层 (Mask Region)】 
         // ============================================================
+        MouseArea {
+            id: outsideDismissArea
+
+            anchors.fill: parent
+            enabled: styleSurface.activePopupWindow !== null
+            acceptedButtons: Qt.AllButtons
+            preventStealing: true
+
+            onPressed: mouse => {
+                const activeWindow = styleSurface.activePopupWindow;
+                if (activeWindow
+                        && typeof activeWindow.dismissPopups === "function") {
+                    activeWindow.dismissPopups();
+                }
+                mouse.accepted = true;
+            }
+        }
+
         Item {
             id: hitBoxRegion
             anchors.top: maskContainer.top
@@ -133,7 +161,8 @@ Variants {
         }
 
         mask: Region {
-            item: hitBoxRegion
+            item: styleSurface.activePopupWindow !== null
+                ? outsideDismissArea : hitBoxRegion
         }
 
         // ============================================================
@@ -919,8 +948,21 @@ Variants {
                 focus: root.hasClosablePopup
 
                 onHasClosablePopupChanged: {
-                    if (root.hasClosablePopup)
+                    if (root.hasClosablePopup) {
+                        const previousWindow =
+                            styleSurface.activePopupWindow;
+                        if (previousWindow
+                                && previousWindow !== keystoneWindow
+                                && typeof previousWindow.dismissPopups
+                                    === "function") {
+                            previousWindow.dismissPopups();
+                        }
+                        styleSurface.activePopupWindow = keystoneWindow;
                         root.forceActiveFocus();
+                    } else if (styleSurface.activePopupWindow
+                            === keystoneWindow) {
+                        styleSurface.activePopupWindow = null;
+                    }
                 }
 
                 Keys.onEscapePressed: (event) => {
