@@ -55,6 +55,7 @@ set_target_properties(ClavisWeatherMapCore PROPERTIES POSITION_INDEPENDENT_CODE 
 
 target_link_libraries(ClavisWeatherMapCore PRIVATE
     Qt6::Core
+    Qt6::DBus
     Qt6::Gui
     Qt6::Network
     Qt6Keychain::Qt6Keychain
