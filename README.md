@@ -97,7 +97,11 @@ Niri 的 `~/.config/niri/config.kdl` 需要包含：
 
 ```kdl
 include "colors.kdl"
+include optional=true "clavis/cursor.kdl"
 ```
+
+Clavis 将 Niri 光标设置写入 `~/.config/niri/clavis/cursor.kdl`，不会修改
+`~/.config/niri/dms/` 下由其他 shell 管理的配置。
 
 Yazi 会自动读取 `~/.config/yazi/theme.toml`，无需修改主配置。自制 Zsh prompt
 需要在 `.zshrc` 的 `precmd` 中加载生成的配色片段；对应源码仓库内维护了

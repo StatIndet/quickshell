@@ -255,8 +255,8 @@ Singleton {
         if (!root.isNiriSession)
             return;
 
-        const niriDmsDir = Paths.homeDir + "/.config/niri/dms";
-        const cursorPath = niriDmsDir + "/cursor.kdl";
+        const niriClavisDir = Paths.homeDir + "/.config/niri/clavis";
+        const cursorPath = niriClavisDir + "/cursor.kdl";
         const themeName = root.effectiveCursorTheme();
         const size = PersonalizationConfig.cursorSize;
         const hideWhenTyping = PersonalizationConfig.cursorHideWhenTyping;
@@ -284,7 +284,7 @@ cursor {
 
         writeNiriCursorProcess.command = [
             "bash", "-c",
-            "mkdir -p " + root.shellQuote(niriDmsDir) + " && printf '%s' " + root.shellQuote(content) + " > " + root.shellQuote(cursorPath)
+            "mkdir -p " + root.shellQuote(niriClavisDir) + " && printf '%s' " + root.shellQuote(content) + " > " + root.shellQuote(cursorPath)
         ];
         writeNiriCursorProcess.running = false;
         writeNiriCursorProcess.running = true;
