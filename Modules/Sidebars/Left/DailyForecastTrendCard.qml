@@ -186,8 +186,6 @@ Rectangle {
                 visible: root.currentTab === 0
                 property bool initialPositionApplied: false
 
-                onContentXChanged: trendCanvas.requestPaint()
-
                 Component.onCompleted: initialPositionTimer.restart()
                 onContentWidthChanged: initialPositionTimer.restart()
                 onWidthChanged: initialPositionTimer.restart()
@@ -365,6 +363,8 @@ Rectangle {
                         model: root.modelCount()
 
                         delegate: Item {
+                            id: dayDelegate
+
                             x: root.itemWidth * index
                             width: root.itemWidth
                             height: trendContent.height
@@ -373,6 +373,13 @@ Rectangle {
                             property var dayItem: root.itemAt(index)
                             property var dayPart: dayItem.day || ({})
                             property var nightPart: dayItem.night || ({})
+                            readonly property bool animationActive:
+                                root.foreground
+                                && dayDelegate.x + dayDelegate.width
+                                    >= trendFlick.contentX - dayDelegate.width
+                                && dayDelegate.x
+                                    <= trendFlick.contentX + trendFlick.width
+                                        + dayDelegate.width
 
                             Rectangle {
                                 anchors.fill: parent
@@ -417,6 +424,7 @@ Rectangle {
                                 iconName: dayPart.iconName || ""
                                 night: false
                                 style: "fill"
+                                playing: dayDelegate.animationActive
                             }
 
                             Text {
@@ -461,6 +469,7 @@ Rectangle {
                                 iconName: nightPart.iconName || ""
                                 night: true
                                 style: "fill"
+                                playing: dayDelegate.animationActive
                             }
                         }
                     }

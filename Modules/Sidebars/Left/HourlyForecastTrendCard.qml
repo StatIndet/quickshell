@@ -147,8 +147,6 @@ Rectangle {
                 contentHeight: height
                 visible: root.currentTab === 0
 
-                onContentXChanged: trendCanvas.requestPaint()
-
                 Item {
                     id: trendContent
                     width: trendFlick.contentWidth
@@ -253,11 +251,20 @@ Rectangle {
                         model: root.modelCount()
 
                         delegate: Item {
+                            id: hourDelegate
+
                             x: root.itemWidth * index
                             width: root.itemWidth
                             height: trendContent.height
 
                             property var hourItem: root.itemAt(index)
+                            readonly property bool animationActive:
+                                root.foreground
+                                && hourDelegate.x + hourDelegate.width
+                                    >= trendFlick.contentX - hourDelegate.width
+                                && hourDelegate.x
+                                    <= trendFlick.contentX + trendFlick.width
+                                        + hourDelegate.width
 
                             Text {
                                 width: parent.width
@@ -278,6 +285,7 @@ Rectangle {
                                 iconName: hourItem.iconName || ""
                                 night: hourItem.isDaylight === undefined ? false : !hourItem.isDaylight
                                 style: "fill"
+                                playing: hourDelegate.animationActive
                             }
 
                             Text {

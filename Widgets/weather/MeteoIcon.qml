@@ -69,18 +69,28 @@ Item {
         scale: root.fittedScale
         transformOrigin: Item.Center
         visible: root.animated && status === LottieAnimation.Ready
-        source: root.lottieSource
-        autoPlay: true
+        source: root.animated ? root.lottieSource : ""
+        autoPlay: root.playing
         loops: LottieAnimation.Infinite
 
         onStatusChanged: {
-            if (status === LottieAnimation.Ready && root.playing) play()
+            if (status !== LottieAnimation.Ready)
+                return
+            if (root.playing)
+                play()
+            else
+                pause()
         }
     }
 
     onPlayingChanged: {
         if (!playing) lottieIcon.pause()
         else if (lottieIcon.status === LottieAnimation.Ready) lottieIcon.play()
+    }
+
+    onAnimatedChanged: {
+        if (!animated)
+            lottieIcon.pause()
     }
 
     Image {
