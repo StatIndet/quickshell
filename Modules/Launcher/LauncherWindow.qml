@@ -37,6 +37,7 @@ PanelWindow {
     property string query: ""
     property int selectedResultIndex: -1
     property string selectedResultId: ""
+    property string selectedResultQuery: ""
     property string clipboardActionState: "idle"
     property string clipboardActionEntryId: ""
     property bool clipboardActionKeepOpen: false
@@ -293,6 +294,7 @@ PanelWindow {
     }
 
     function selectResult(index) {
+        root.selectedResultQuery = root.query;
         if (root.activeResults.length === 0 || index < 0) {
             root.selectedResultIndex = -1;
             root.selectedResultId = "";
@@ -335,6 +337,11 @@ PanelWindow {
     function reconcileSelection() {
         if (root.activeResults.length === 0) {
             root.selectResult(-1);
+            return;
+        }
+
+        if (root.selectedResultQuery !== root.query) {
+            root.selectResult(0);
             return;
         }
 
@@ -598,6 +605,7 @@ PanelWindow {
             root.previousLocalMode = "apps";
             root.selectedResultIndex = -1;
             root.selectedResultId = "";
+            root.selectedResultQuery = "";
             root.modeRailExpanded = false;
             root.modeFocusIndex = -1;
             root.railProgress = 0;
