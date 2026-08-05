@@ -15,10 +15,45 @@ import qs.Services
 Item {
     id: root
 
+    function sendReloadNotification(success, errorString) {
+        const command = [
+            "notify-send",
+            "--app-name=Clavis",
+            "--icon=org.quickshell",
+            "--urgency=" + (success ? "low" : "critical"),
+            "--expire-time=" + (success ? "4000" : "10000")
+        ];
+
+        if (success)
+            command.push("--transient");
+
+        command.push(
+            success ? qsTr("Configuration reloaded")
+                    : qsTr("Configuration reload failed"),
+            success ? qsTr("Clavis is running with the latest configuration.")
+                    : (errorString || qsTr("Unknown reload error"))
+        );
+        Quickshell.execDetached(command);
+    }
+
     Component.onCompleted: {
         I18nService.initialize();
         WallpaperService.primaryInstance = true;
         AwwwWallpaperService.primaryInstance = true;
+    }
+
+    Connections {
+        target: Quickshell
+
+        function onReloadCompleted() {
+            Quickshell.inhibitReloadPopup();
+            root.sendReloadNotification(true, "");
+        }
+
+        function onReloadFailed(errorString) {
+            Quickshell.inhibitReloadPopup();
+            root.sendReloadNotification(false, errorString);
+        }
     }
 
     WallpaperBackground {}
