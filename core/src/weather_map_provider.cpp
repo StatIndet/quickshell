@@ -2,6 +2,10 @@
 
 #include <QBuffer>
 #include <QDateTime>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusReply>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -24,6 +28,53 @@ constexpr auto kKeychainService = "Clavis.Quickshell.WeatherMap";
 constexpr auto kOpenWeatherKeychainEntry = "openweather-api-key";
 constexpr auto kMapTilerKeychainEntry = "maptiler-api-key";
 
+void selectAvailableKeychainBackend()
+{
+#ifdef Q_OS_LINUX
+    if (!qEnvironmentVariableIsEmpty("QTKEYCHAIN_BACKEND"))
+        return;
+
+    const QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected())
+        return;
+
+    auto *busInterface = bus.interface();
+    if (busInterface) {
+        const QDBusReply<bool> secretServiceAvailable =
+            busInterface->isServiceRegistered(
+                QStringLiteral("org.freedesktop.secrets")
+            );
+        if (secretServiceAvailable.isValid()
+            && secretServiceAvailable.value()) {
+            return;
+        }
+    }
+
+    QDBusInterface kwallet(
+        QStringLiteral("org.kde.kwalletd6"),
+        QStringLiteral("/modules/kwalletd6"),
+        QStringLiteral("org.kde.KWallet"),
+        bus
+    );
+    const QDBusReply<QString> walletName = kwallet.call(
+        QStringLiteral("networkWallet")
+    );
+    if (walletName.isValid())
+        qputenv("QTKEYCHAIN_BACKEND", "kwallet6");
+#endif
+}
+
+QString keychainFailureMessage(
+    const QString &summary,
+    const QKeychain::Job *job
+)
+{
+    const QString detail = job ? job->errorString().trimmed() : QString();
+    return detail.isEmpty()
+        ? summary
+        : QStringLiteral("%1：%2").arg(summary, detail);
+}
+
 qint64 cacheControlMaxAge(const QByteArray &header)
 {
     const QList<QByteArray> directives = header.split(',');
@@ -44,6 +95,8 @@ qint64 cacheControlMaxAge(const QByteArray &header)
 WeatherMapProvider::WeatherMapProvider(QObject *parent)
     : QObject(parent)
 {
+    selectAvailableKeychainBackend();
+
     const QString genericCache = QStandardPaths::writableLocation(
         QStandardPaths::GenericCacheLocation
     );
@@ -279,7 +332,10 @@ QVariantMap WeatherMapProvider::storeApiKey(const QString &apiKey)
                 emit credentialOperationFinished(
                     QStringLiteral("openweather_store"),
                     false,
-                    QStringLiteral("无法保存 OpenWeather 密钥")
+                    keychainFailureMessage(
+                        QStringLiteral("无法保存 OpenWeather 密钥"),
+                        finishedJob
+                    )
                 );
                 return;
             }
@@ -339,7 +395,10 @@ QVariantMap WeatherMapProvider::clearApiKey()
                 emit credentialOperationFinished(
                     QStringLiteral("openweather_clear"),
                     false,
-                    QStringLiteral("无法清除 OpenWeather 密钥")
+                    keychainFailureMessage(
+                        QStringLiteral("无法清除 OpenWeather 密钥"),
+                        finishedJob
+                    )
                 );
                 return;
             }
@@ -412,7 +471,10 @@ QVariantMap WeatherMapProvider::storeMapTilerApiKey(const QString &apiKey)
                 emit credentialOperationFinished(
                     QStringLiteral("maptiler_store"),
                     false,
-                    QStringLiteral("无法保存 MapTiler 密钥")
+                    keychainFailureMessage(
+                        QStringLiteral("无法保存 MapTiler 密钥"),
+                        finishedJob
+                    )
                 );
                 return;
             }
@@ -473,7 +535,10 @@ QVariantMap WeatherMapProvider::clearMapTilerApiKey()
                 emit credentialOperationFinished(
                     QStringLiteral("maptiler_clear"),
                     false,
-                    QStringLiteral("无法清除 MapTiler 密钥")
+                    keychainFailureMessage(
+                        QStringLiteral("无法清除 MapTiler 密钥"),
+                        finishedJob
+                    )
                 );
                 return;
             }
@@ -947,7 +1012,10 @@ void WeatherMapProvider::loadOpenWeatherApiKey(bool forceRefresh)
                 replaceApiKey({}, forceRefresh);
                 setStatus(
                     QStringLiteral("keychain_error"),
-                    QStringLiteral("无法访问系统密钥环")
+                    keychainFailureMessage(
+                        QStringLiteral("无法访问系统密钥环"),
+                        finishedJob
+                    )
                 );
                 loadMapTilerApiKey(forceRefresh);
                 return;

@@ -197,6 +197,8 @@ FloatingWindow {
         _completionHandled = false;
         visible = true;
         Qt.callLater(() => {
+            root.raise();
+            root.requestActivate();
             dialogFocus.forceActiveFocus();
             fileGrid.forceActiveFocus();
         });

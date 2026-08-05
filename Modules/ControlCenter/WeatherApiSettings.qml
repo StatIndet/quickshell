@@ -24,10 +24,74 @@ StyledFlickable {
     property string feedbackText: ""
     property bool feedbackError: false
     property string selectedMapMode: "temp"
+    property bool locationFieldsInitialized: false
+    property string locationFeedbackText: ""
+    property bool locationFeedbackError: false
 
     Component.onCompleted: {
+        root.initializeLocationFields()
         if (!WeatherPlugin.hasValidData && !WeatherPlugin.loading)
             WeatherPlugin.refresh()
+    }
+
+    function initializeLocationFields() {
+        if (!WeatherPlugin.hasValidData)
+            return
+
+        locationNameField.text = WeatherPlugin.locationName || ""
+        latitudeField.text = Number(WeatherPlugin.latitude).toFixed(6)
+        longitudeField.text = Number(WeatherPlugin.longitude).toFixed(6)
+        locationFieldsInitialized = true
+    }
+
+    function notifyMainWeather(method, argumentsList) {
+        const command = [
+            "qs",
+            "--path",
+            Paths.shellDir + "/shell.qml",
+            "ipc",
+            "call",
+            "weather",
+            method
+        ]
+        for (const argument of argumentsList || [])
+            command.push(String(argument))
+        Quickshell.execDetached(command)
+    }
+
+    function saveLocation() {
+        const latitude = Number(latitudeField.text.trim())
+        const longitude = Number(longitudeField.text.trim())
+        if (!isFinite(latitude) || latitude < -90 || latitude > 90) {
+            locationFeedbackError = true
+            locationFeedbackText = qsTr("纬度必须介于 -90 和 90 之间")
+            latitudeField.forceActiveFocus()
+            return
+        }
+        if (!isFinite(longitude) || longitude < -180 || longitude > 180) {
+            locationFeedbackError = true
+            locationFeedbackText = qsTr("经度必须介于 -180 和 180 之间")
+            longitudeField.forceActiveFocus()
+            return
+        }
+
+        const locationName = locationNameField.text.trim()
+            || qsTr("手动位置")
+        WeatherPlugin.setManualLocation(latitude, longitude, locationName)
+        root.notifyMainWeather("setLocation", [
+            latitude, longitude, locationName
+        ])
+        locationFeedbackError = false
+        locationFeedbackText = qsTr("位置已保存，正在刷新天气")
+        locationFieldsInitialized = true
+    }
+
+    function clearLocation() {
+        WeatherPlugin.clearManualLocation()
+        root.notifyMainWeather("clearLocation", [])
+        locationFeedbackError = false
+        locationFeedbackText = qsTr("已恢复自动定位，正在刷新天气")
+        locationFieldsInitialized = false
     }
 
     function applyApiKey() {
@@ -63,6 +127,15 @@ StyledFlickable {
     }
 
     Connections {
+        target: WeatherPlugin
+
+        function onDataChanged() {
+            if (!root.locationFieldsInitialized)
+                root.initializeLocationFields()
+        }
+    }
+
+    Connections {
         target: WeatherMapPlugin
 
         function onCredentialOperationFinished(operation, success, message) {
@@ -90,6 +163,143 @@ StyledFlickable {
         x: Math.max(24, (root.width - width) / 2)
         y: 28
         spacing: 24
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: locationContent.implicitHeight + 48
+            radius: Appearance.rounding.large
+            color: Appearance.colors.colSurfaceContainer
+
+            ColumnLayout {
+                id: locationContent
+
+                anchors.fill: parent
+                anchors.margins: 24
+                spacing: 16
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    Rectangle {
+                        Layout.preferredWidth: 44
+                        Layout.preferredHeight: 44
+                        radius: Appearance.rounding.full
+                        color: Appearance.colors.colPrimaryContainer
+
+                        MaterialSymbol {
+                            anchors.centerIn: parent
+                            text: "edit_location_alt"
+                            iconSize: 22
+                            fill: 1
+                            color: Appearance.colors.colOnPrimaryContainer
+                        }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: qsTr("天气位置")
+                            color: Appearance.colors.colOnSurface
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 16
+                            font.weight: Font.Medium
+                            textFormat: Text.PlainText
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: WeatherPlugin.hasManualLocation
+                                ? qsTr("使用手动位置")
+                                : qsTr("使用网络自动定位")
+                            color: Appearance.colors.colOnSurfaceVariant
+                            font.family: Sizes.fontFamily
+                            font.pixelSize: 12
+                            textFormat: Text.PlainText
+                        }
+                    }
+                }
+
+                MaterialTextField {
+                    id: locationNameField
+
+                    Layout.fillWidth: true
+                    placeholderText: qsTr("位置名称")
+                    maximumLength: 96
+                    Material.containerStyle: Material.Outlined
+                    onAccepted: root.saveLocation()
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 12
+
+                    MaterialTextField {
+                        id: latitudeField
+
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("纬度")
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        validator: DoubleValidator {
+                            bottom: -90
+                            top: 90
+                            decimals: 8
+                        }
+                        Material.containerStyle: Material.Outlined
+                        onAccepted: root.saveLocation()
+                    }
+
+                    MaterialTextField {
+                        id: longitudeField
+
+                        Layout.fillWidth: true
+                        placeholderText: qsTr("经度")
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        validator: DoubleValidator {
+                            bottom: -180
+                            top: 180
+                            decimals: 8
+                        }
+                        Material.containerStyle: Material.Outlined
+                        onAccepted: root.saveLocation()
+                    }
+                }
+
+                InlineStatusBanner {
+                    Layout.fillWidth: true
+                    visible: root.locationFeedbackText !== ""
+                    tone: root.locationFeedbackError ? "error" : "success"
+                    message: root.locationFeedbackText
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 8
+
+                    Item { Layout.fillWidth: true }
+
+                    Button {
+                        text: qsTr("恢复自动定位")
+                        flat: true
+                        enabled: WeatherPlugin.hasManualLocation
+                        onClicked: root.clearLocation()
+                    }
+
+                    Button {
+                        text: qsTr("保存位置")
+                        highlighted: true
+                        enabled: latitudeField.acceptableInput
+                            && longitudeField.acceptableInput
+                        Material.background: Appearance.colors.colPrimary
+                        Material.foreground: Appearance.colors.colOnPrimary
+                        onClicked: root.saveLocation()
+                    }
+                }
+            }
+        }
 
         WeatherMapCard {
             id: weatherMap

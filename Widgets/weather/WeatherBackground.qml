@@ -1151,7 +1151,9 @@ Item {
     }
 
     Timer {
-        interval: 16
+        // The simulation is tuned around a 33 ms base frame. Running it at
+        // 60 fps only doubles Canvas paints without adding useful detail.
+        interval: 33
         running: root.animate
         repeat: true
 
@@ -1233,12 +1235,18 @@ Item {
     }
     onAnimateChanged: {
         if (animate) {
+            if (hasSnowScene())
+                resetSnowScene()
+            if (hasLeafScene())
+                resetLeafScene()
             ensureLeafPopulation()
         } else {
             leafSpawnTimer.stop()
         }
     }
     onRainBounceYChanged: {
+        if (!animate)
+            return
         if (hasSnowScene())
             resetSnowScene()
         if (hasLeafScene())
@@ -1250,5 +1258,4 @@ Item {
         if (hasLeafScene())
             resetLeafScene()
     }
-    onScrollProgressChanged: canvas.requestPaint()
 }

@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import qs.Common
 import qs.Widgets.common
 import qs.Widgets.weather
+import "../../../Common/functions/WeatherFormat.js" as WeatherFormat
 
 Rectangle {
     id: root
@@ -70,6 +71,13 @@ Rectangle {
 
     function dateLabel(epoch) {
         return epoch ? Qt.formatDateTime(new Date(epoch * 1000), "M/d") : "--"
+    }
+
+    function weatherLabel(item) {
+        return WeatherFormat.textForCode(
+            valueAt(item, "weatherCode", -1),
+            item ? item.weatherText : ""
+        )
     }
 
     Timer {
@@ -178,8 +186,6 @@ Rectangle {
                 visible: root.currentTab === 0
                 property bool initialPositionApplied: false
 
-                onContentXChanged: trendCanvas.requestPaint()
-
                 Component.onCompleted: initialPositionTimer.restart()
                 onContentWidthChanged: initialPositionTimer.restart()
                 onWidthChanged: initialPositionTimer.restart()
@@ -195,14 +201,15 @@ Rectangle {
                     property real columnWidth: root.itemWidth
                     property real topTextY: 8
                     property real topLabelSpacing: 3
-                    property real dayIconSize: Math.max(46, Math.min(60, columnWidth * 0.46))
-                    property real dayIconY: 56
+                    property real conditionTextY: 52
+                    property real dayIconSize: Math.max(42, Math.min(52, columnWidth * 0.44))
+                    property real dayIconY: 68
                     property real chartTopInset: 166
                     property real chartBottomInset: Math.max(chartTopInset + 72, height - 126)
                     property real rainLabelY: chartBottomInset + 18
                     property real nightIconSize: dayIconSize
                     property real nightIconY: height - nightIconSize - 12
-                    property real highTempTextY: 102
+                    property real highTempTextY: 119
                     property real lowTempTextY: nightIconY - 30
 
                     Canvas {
@@ -356,6 +363,8 @@ Rectangle {
                         model: root.modelCount()
 
                         delegate: Item {
+                            id: dayDelegate
+
                             x: root.itemWidth * index
                             width: root.itemWidth
                             height: trendContent.height
@@ -364,6 +373,13 @@ Rectangle {
                             property var dayItem: root.itemAt(index)
                             property var dayPart: dayItem.day || ({})
                             property var nightPart: dayItem.night || ({})
+                            readonly property bool animationActive:
+                                root.foreground
+                                && dayDelegate.x + dayDelegate.width
+                                    >= trendFlick.contentX - dayDelegate.width
+                                && dayDelegate.x
+                                    <= trendFlick.contentX + trendFlick.width
+                                        + dayDelegate.width
 
                             Rectangle {
                                 anchors.fill: parent
@@ -408,6 +424,18 @@ Rectangle {
                                 iconName: dayPart.iconName || ""
                                 night: false
                                 style: "fill"
+                                playing: dayDelegate.animationActive
+                            }
+
+                            Text {
+                                width: parent.width
+                                y: trendContent.conditionTextY
+                                text: root.weatherLabel(dayPart)
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: "LXGW WenKai GB Screen"
+                                font.pixelSize: 12
+                                horizontalAlignment: Text.AlignHCenter
+                                elide: Text.ElideRight
                             }
 
                             Text {
@@ -441,6 +469,7 @@ Rectangle {
                                 iconName: nightPart.iconName || ""
                                 night: true
                                 style: "fill"
+                                playing: dayDelegate.animationActive
                             }
                         }
                     }

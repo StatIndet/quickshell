@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Clavis.Weather 1.0
 import Clavis.WeatherMap 1.0
 import qs.Modules.Bar
 import qs.Modules.Keystone
@@ -14,10 +15,45 @@ import qs.Services
 Item {
     id: root
 
+    function sendReloadNotification(success, errorString) {
+        const command = [
+            "notify-send",
+            "--app-name=Clavis",
+            "--icon=org.quickshell",
+            "--urgency=" + (success ? "low" : "critical"),
+            "--expire-time=" + (success ? "4000" : "10000")
+        ];
+
+        if (success)
+            command.push("--transient");
+
+        command.push(
+            success ? qsTr("Configuration reloaded")
+                    : qsTr("Configuration reload failed"),
+            success ? qsTr("Clavis is running with the latest configuration.")
+                    : (errorString || qsTr("Unknown reload error"))
+        );
+        Quickshell.execDetached(command);
+    }
+
     Component.onCompleted: {
         I18nService.initialize();
         WallpaperService.primaryInstance = true;
         AwwwWallpaperService.primaryInstance = true;
+    }
+
+    Connections {
+        target: Quickshell
+
+        function onReloadCompleted() {
+            Quickshell.inhibitReloadPopup();
+            root.sendReloadNotification(true, "");
+        }
+
+        function onReloadFailed(errorString) {
+            Quickshell.inhibitReloadPopup();
+            root.sendReloadNotification(false, errorString);
+        }
     }
 
     WallpaperBackground {}
@@ -131,6 +167,30 @@ Item {
         function setFolder(path: string): string {
             return WallpaperService.setWallpaperFolder(path || "", true)
                 ? "OK" : "INVALID";
+        }
+    }
+
+    IpcHandler {
+        target: "weather"
+
+        function setLocation(latitude: string, longitude: string,
+                name: string): string {
+            const parsedLatitude = Number(latitude);
+            const parsedLongitude = Number(longitude);
+            if (!isFinite(parsedLatitude) || !isFinite(parsedLongitude)
+                    || parsedLatitude < -90 || parsedLatitude > 90
+                    || parsedLongitude < -180 || parsedLongitude > 180) {
+                return "INVALID_LOCATION";
+            }
+
+            WeatherPlugin.setManualLocation(
+                parsedLatitude, parsedLongitude, name || "");
+            return "OK";
+        }
+
+        function clearLocation(): string {
+            WeatherPlugin.clearManualLocation();
+            return "OK";
         }
     }
 

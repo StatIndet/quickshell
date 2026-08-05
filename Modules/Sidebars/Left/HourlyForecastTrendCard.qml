@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import qs.Common
 import qs.Widgets.common
 import qs.Widgets.weather
+import "../../../Common/functions/WeatherFormat.js" as WeatherFormat
 
 Rectangle {
     id: root
@@ -39,6 +40,13 @@ Rectangle {
 
     function hourLabel(epoch) {
         return epoch ? Qt.formatDateTime(new Date(epoch * 1000), "hh:00") : "--"
+    }
+
+    function weatherLabel(item) {
+        return WeatherFormat.textForCode(
+            valueAt(item, "weatherCode", -1),
+            item ? item.weatherText : ""
+        )
     }
 
     ColumnLayout {
@@ -139,8 +147,6 @@ Rectangle {
                 contentHeight: height
                 visible: root.currentTab === 0
 
-                onContentXChanged: trendCanvas.requestPaint()
-
                 Item {
                     id: trendContent
                     width: trendFlick.contentWidth
@@ -149,7 +155,8 @@ Rectangle {
                     property real topTextY: 6
                     property real iconY: 28
                     property real iconSize: Math.max(46, Math.min(60, root.itemWidth * 0.46))
-                    property real chartTopInset: 96
+                    property real conditionTextY: iconY + iconSize - 2
+                    property real chartTopInset: 106
                     property real chartBottomInset: Math.max(chartTopInset + 70, height - 30)
 
                     Canvas {
@@ -244,11 +251,20 @@ Rectangle {
                         model: root.modelCount()
 
                         delegate: Item {
+                            id: hourDelegate
+
                             x: root.itemWidth * index
                             width: root.itemWidth
                             height: trendContent.height
 
                             property var hourItem: root.itemAt(index)
+                            readonly property bool animationActive:
+                                root.foreground
+                                && hourDelegate.x + hourDelegate.width
+                                    >= trendFlick.contentX - hourDelegate.width
+                                && hourDelegate.x
+                                    <= trendFlick.contentX + trendFlick.width
+                                        + hourDelegate.width
 
                             Text {
                                 width: parent.width
@@ -269,6 +285,18 @@ Rectangle {
                                 iconName: hourItem.iconName || ""
                                 night: hourItem.isDaylight === undefined ? false : !hourItem.isDaylight
                                 style: "fill"
+                                playing: hourDelegate.animationActive
+                            }
+
+                            Text {
+                                width: parent.width
+                                y: trendContent.conditionTextY
+                                text: root.weatherLabel(hourItem)
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: "LXGW WenKai GB Screen"
+                                font.pixelSize: 12
+                                horizontalAlignment: Text.AlignHCenter
+                                elide: Text.ElideRight
                             }
                         }
                     }
