@@ -7,6 +7,7 @@ import qs.Common
 import qs.Widgets.common
 import qs.Widgets.weather
 import Clavis.Weather 1.0
+import "../../../Common/functions/WeatherFormat.js" as WeatherFormat
 
 Item {
     id: root
@@ -451,7 +452,7 @@ Item {
 
                 Item {
                     width: parent.width
-                    height: Math.max(220, flick.height - 452 - 286 - contentColumn.spacing * 2)
+                    height: Math.max(280, flick.height - 452 - 286 - contentColumn.spacing * 2)
 
                     Column {
                         anchors.left: parent.left
@@ -461,7 +462,10 @@ Item {
 
                         Text {
                             width: parent.width
-                            text: WeatherPlugin.currentWeatherText || qsTr("未知")
+                            text: WeatherFormat.textForCode(
+                                WeatherPlugin.currentWeatherCode,
+                                WeatherPlugin.currentWeatherText || qsTr("未知")
+                            )
                             color: Appearance.colors.colOnImage
                             font.family: "LXGW WenKai GB Screen"
                             font.pixelSize: 26
