@@ -140,7 +140,7 @@ WidgetPanel {
         switch (type) {
         case "network": return NetworkService.wifiEnabled;
         case "bluetooth": return BluetoothService.enabled;
-        case "caffeine": return IdleService.inhibited;
+        case "caffeine": return !IdleService.externalOwner && IdleService.inhibited;
         case "mic": return !Volume.sourceMuted;
         case "audio": return !Volume.sinkMuted && Volume.sinkVolume > 0;
         case "theme": return PersonalizationConfig.themeMode === "dark";
@@ -166,7 +166,10 @@ WidgetPanel {
             BluetoothService.toggle();
             break;
         case "caffeine":
-            IdleService.toggleInhibited();
+            if (IdleService.externalOwner)
+                IdleService.openController();
+            else
+                IdleService.toggleInhibited();
             break;
         case "mic":
             Volume.toggleSourceMute();
