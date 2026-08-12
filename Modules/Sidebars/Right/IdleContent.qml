@@ -48,6 +48,8 @@ WidgetPanel {
     }
 
     function policySummary() {
+        if (IdleService.externalOwner)
+            return "由 Idle Control 管理";
         if (!IdleService.policyEnabled)
             return qsTr("已暂停");
         const enabledCount = IdleService.stages.filter(stage => stage.enabled).length;
@@ -106,6 +108,24 @@ WidgetPanel {
 
                     SettingsRow {
                         Layout.fillWidth: true
+                        iconName: "bedtime"
+                        title: "Idle Control"
+                        supportingText: IdleService.externalOwner
+                            ? "正在管理电池与交流电策略"
+                            : "打开独立休眠策略应用"
+                        highlighted: IdleService.externalOwner
+                        interactive: true
+                        onClicked: IdleService.openController()
+
+                        trailing: MaterialSymbol {
+                            text: "open_in_new"
+                            iconSize: 20
+                            color: Appearance.colors.colOnLayer1
+                        }
+                    }
+
+                    SettingsRow {
+                        Layout.fillWidth: true
                         iconName: "coffee"
                         title: qsTr("保持唤醒")
                         highlighted: IdleService.inhibited
@@ -113,7 +133,7 @@ WidgetPanel {
                         trailing: StyledSwitch {
                             scale: 0.78
                             checked: IdleService.inhibited
-                            enabled: !IdleService.busy
+                            enabled: !IdleService.busy && !IdleService.externalOwner
                             Accessible.name: qsTr("保持唤醒")
                             onToggled: IdleService.setInhibited(checked)
                         }
@@ -129,7 +149,7 @@ WidgetPanel {
                         trailing: StyledSwitch {
                             scale: 0.78
                             checked: IdleService.policyEnabled
-                            enabled: IdleService.policyReady
+                            enabled: IdleService.policyReady && !IdleService.externalOwner
                             Accessible.name: qsTr("自动空闲")
                             onToggled: IdleService.setPolicyEnabled(checked)
                         }
@@ -207,6 +227,7 @@ WidgetPanel {
                     : qsTr("已关闭"))
                     + (panelRoot.stageActive(stageEditor.stageName) ? qsTr(" · 已触发") : "")
                 interactive: true
+                enabled: !IdleService.externalOwner
                 highlighted: stageEditor.stageEnabled && IdleService.policyEnabled
                 onClicked: panelRoot.expandedStage = stageEditor.expanded
                     ? ""
@@ -227,7 +248,7 @@ WidgetPanel {
                     StyledSwitch {
                         scale: 0.72
                         checked: stageEditor.stageEnabled
-                        enabled: IdleService.policyReady
+                        enabled: IdleService.policyReady && !IdleService.externalOwner
                         Accessible.name: stageEditor.stageTitle
                         onToggled: IdleService.configureStage(
                             stageEditor.stageName,
@@ -246,6 +267,7 @@ WidgetPanel {
                     : 0
                 opacity: stageEditor.expanded ? 1 : 0
                 enabled: stageEditor.expanded
+                    && !IdleService.externalOwner
                 clip: true
                 radius: Appearance.rounding.normal
                 color: Appearance.colors.colLayer2
@@ -286,6 +308,7 @@ WidgetPanel {
                             maxVisibleItems: 5
                             popupBoundsItem: panelRoot
                             closeOnAccept: true
+                            enabled: !IdleService.externalOwner
                             Accessible.name: stageEditor.stageTitle + qsTr("等待时间")
                             onAccepted: value => IdleService.configureStage(
                                 stageEditor.stageName,
@@ -321,6 +344,7 @@ WidgetPanel {
                             showTooltipOnHover: true
                             usePercentTooltip: false
                             tooltipContent: Math.round(value * 100) + "%"
+                            enabled: !IdleService.externalOwner
                             Accessible.name: qsTr("屏幕调暗比例")
 
                             Binding {
@@ -345,7 +369,7 @@ WidgetPanel {
                         trailing: StyledSwitch {
                             scale: 0.68
                             checked: stageEditor.respectInhibitors
-                            enabled: IdleService.policyReady
+                            enabled: IdleService.policyReady && !IdleService.externalOwner
                             Accessible.name: stageEditor.stageTitle + qsTr("遵循保持唤醒")
                             onToggled: IdleService.configureStage(
                                 stageEditor.stageName,

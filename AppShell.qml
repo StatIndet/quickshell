@@ -83,6 +83,18 @@ Item {
         }
     }
 
+    IpcHandler {
+        target: "idle"
+
+        function setExternalOwner(value: bool): string {
+            return IdleService.setExternalOwner(value);
+        }
+
+        function owner(): string {
+            return IdleService.externalOwner ? "external" : "quickshell";
+        }
+    }
+
     LauncherWindow {
         id: spotlightLauncher
     }

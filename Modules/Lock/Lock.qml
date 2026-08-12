@@ -31,7 +31,7 @@ Scope {
     }
 
     function isLocked() {
-        return sessionLock.locked || lockPending;
+        return sessionLock.secure;
     }
 
     function commitLock(snapshotGeneration) {

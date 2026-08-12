@@ -12,6 +12,9 @@ Singleton {
     // Policy defaults intentionally avoid automatic suspend and brightness changes.
     // Every stage remains independently configurable through configureStage().
     property bool policyEnabled: true
+    // An external owner (Idle Control) can pause the in-shell timers without
+    // overwriting the user's saved QuickShell policy.
+    property bool externalOwner: false
     property bool dimEnabled: false
     property real dimTimeout: 300
     property bool dimRespectInhibitors: true
@@ -111,6 +114,22 @@ Singleton {
         root.policyEnabled = requested;
         root.savePolicy();
         root.operationSucceeded("set-policy-enabled");
+    }
+
+    function setExternalOwner(value) {
+        const requested = !!value;
+        if (root.externalOwner === requested)
+            return "UNCHANGED";
+        root.externalOwner = requested;
+        if (requested) {
+            root._setDimmed(false);
+            root._setDisplaysOff(false);
+        }
+        return requested ? "EXTERNAL_OWNER" : "QUICKSHELL_OWNER";
+    }
+
+    function openController() {
+        Quickshell.execDetached(["idle-control-desktop"]);
     }
 
     function setDimFraction(value) {
@@ -229,6 +248,7 @@ Singleton {
 
     function _monitorEnabled(stageEnabled, timeout, respectInhibitors) {
         return root.policyEnabled
+            && !root.externalOwner
             && stageEnabled
             && timeout > 0
             && !(respectInhibitors && root.inhibited);
