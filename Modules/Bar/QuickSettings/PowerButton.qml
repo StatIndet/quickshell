@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import qs.Common
+import qs.Components
 import qs.Widgets.common
 
 Item {
@@ -22,14 +23,17 @@ Item {
 
         Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
 
-        Text {
+        MaterialSymbol {
             id: icon
             anchors.centerIn: parent
-            text: "⏻"
-            font.pixelSize: root.isHovered ? 16 : 14
-            font.bold: true
+            width: root.isHovered ? 20 : 18
+            height: width
+            text: "power_settings_new"
+            iconSize: root.isHovered ? 18 : 16
+            fill: 1
             color: Appearance.colors.colOnError
-            Behavior on font.pixelSize { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
+
+            Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
         }
     }
 

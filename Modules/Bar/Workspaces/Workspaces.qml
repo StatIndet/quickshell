@@ -10,6 +10,9 @@ Item {
     id: root
 
     property string screenName: ""
+    property Item previewAnchorItem: null
+    property var previewWorkspaceId: 0
+    property bool previewRequested: false
     readonly property bool hasMultipleOutputs: Niri.outputs.count > 1
 
     implicitHeight: 36
@@ -21,6 +24,22 @@ Item {
         if (!root.hasMultipleOutputs && outputName === "")
             return true
         return outputName === root.screenName
+    }
+
+    function showPreview(workspaceId) {
+        root.previewRequested = false;
+        root.previewAnchorItem = root;
+        root.previewWorkspaceId = workspaceId;
+        root.previewRequested = true;
+    }
+
+    function hidePreview() {
+        root.previewRequested = false;
+    }
+
+    function dismissPreview() {
+        root.previewRequested = false;
+        root.previewAnchorItem = null;
     }
 
     Rectangle {
@@ -84,14 +103,32 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Niri.focusWorkspaceById(model.id)
+                    onContainsMouseChanged: {
+                        if (containsMouse && delegateRoot.hasWindows)
+                            root.showPreview(model.id);
+                        else if (!containsMouse)
+                            root.hidePreview();
+                    }
+                    onClicked: {
+                        root.dismissPreview();
+                        Niri.focusWorkspaceById(model.id);
+                    }
                 }
 
                 PopupToolTip {
-                    extraVisibleCondition: mouseArea.containsMouse
-                    text: "工作区 " + model.id + (delegateRoot.hasWindows ? "\n窗口: " + model.windowCount : "")
+                    extraVisibleCondition: mouseArea.containsMouse && !delegateRoot.hasWindows
+                    text: "工作区 " + model.id
                 }
             }
         }
+    }
+
+    WorkspacePreview {
+        id: workspacePreview
+
+        anchorItem: root.previewAnchorItem
+        workspaceId: root.previewWorkspaceId
+        requestedVisible: root.previewRequested
+        onDismissed: root.dismissPreview()
     }
 }
