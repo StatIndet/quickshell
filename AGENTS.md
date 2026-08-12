@@ -123,3 +123,47 @@ Python compileall、CMake configure/build 和 CTest。它不得 install、sudo�
 启动持久后台服务。默认不安装、不重启进程、不提交；只有用户明确要求时才执行这些
 外部操作。不得编辑 `build/`、用户 Niri 配置、系统 Qt import 根或已安装文件来修复
 源码。
+
+## Personal fork workflow
+
+此仓库的个人 fork 同时承担“跟踪原作者更新”和“保存个人定制”两个职责。所有 AI、
+自动化工具和人工操作必须遵守以下分支与远端边界：
+
+- `origin` 是个人仓库 `ZChenW/quickshell`，是唯一允许 push 的远端。
+- `upstream` 是原作者仓库 `StatIndet/quickshell`，只允许 fetch；不得向其 push。
+- `main` 是上游镜像分支，只能快进到 `upstream/main`，不得直接加入个人提交。
+- `personal/main` 是日常运行和开发个人功能的分支；个人提交只能进入此分支或从它派生
+  的临时分支。
+- `backup/*` 是迁移前保险分支。没有用户明确授权，不得删除、改写或强推。
+
+开始任何 Git 操作前，必须检查 `git remote -v`、`git status -sb`、当前分支以及
+`git rev-parse --is-shallow-repository`。如果仓库是浅克隆，在判断 merge-base、同步或
+创建分支前必须先补全所需历史。工作区存在无关修改时必须保留，禁止混入当前提交。
+
+用户要求“保存”“提交并 push”或“同步到我的 GitHub”时，默认含义是：提交到
+`personal/main`（或当前个人功能分支）并只 push 到 `origin`。不得创建 Pull Request，
+也不得点击或使用 GitHub 在 push 输出中自动提供的 “Create pull request” 链接。
+
+同步上游使用以下模型：
+
+```bash
+git fetch upstream
+git switch main
+git merge --ff-only upstream/main
+git push origin main
+git switch personal/main
+git merge main
+# 解决冲突并完整验证后：
+git push origin personal/main
+```
+
+个人分支已发布后优先使用 merge 吸收 `main`，避免因 rebase 反复强推。任何 force-push、
+删除远端分支、改写 `main` 或修改 backup 分支都属于破坏性操作，必须先创建并核对远端
+备份，再取得用户针对该具体操作的明确授权。
+
+只有用户明确表示要向原作者贡献时才可创建上游 Pull Request。创建前必须向用户展示
+并确认以下四项，不得根据 fork 关系或 GitHub 默认值猜测：目标仓库、目标分支、来源仓库、
+来源分支。随后必须验证与真实目标分支的 merge-base、提交范围、文件范围和冲突状态。
+
+如果上游更新修改本节，解决冲突时应同时保留上游工程规范与本节个人 fork 安全边界；
+除非用户明确改变工作流，不得静默删除本节。
