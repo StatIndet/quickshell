@@ -39,10 +39,20 @@ Item {
             Brightness.setBrightnessForScreen(root.screen, newBri)
             wheel.accepted = true
         }
+        onClicked: {
+            if (root.screen && root.screen.name)
+                WidgetState.qsScreenName = root.screen.name;
+            if (WidgetState.qsOpen && WidgetState.qsView === "settings") {
+                WidgetState.qsOpen = false;
+            } else {
+                WidgetState.qsView = "settings";
+                WidgetState.qsOpen = true;
+            }
+        }
     }
 
     PopupToolTip {
         extraVisibleCondition: mouseArea.containsMouse
-        text: "亮度: " + Math.round(root.brightnessValue * 100) + "%\n滚轮调节"
+        text: "亮度: " + Math.round(root.brightnessValue * 100) + "%\n滚轮调节，点击打开快捷设置"
     }
 }
