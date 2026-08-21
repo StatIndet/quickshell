@@ -139,6 +139,7 @@ class Lyrics : public QObject {
     // The raw provider payload is retained so changing offset can rebuild the
     // timeline without asking a provider again.
     QString m_sourceText;
+    QString m_sourceTranslation;
     QString m_sourceProvider;
     QVariantMap m_sourceCandidate;
 
@@ -164,6 +165,7 @@ class Lyrics : public QObject {
     bool loadCachedLyrics(quint64 generation);
     bool acceptRawLyrics(const QString &provider, const QString &synced, const QString &plain,
                          const QVariantMap &candidate, quint64 generation, bool writeCache);
+    QVariantList mergeTranslation(const QVariantList &lines, const QString &translationLrc) const;
     void finishEmpty(const QString &message = {});
     void finishError(const QString &message);
     void rebuildTimelineFromSource();

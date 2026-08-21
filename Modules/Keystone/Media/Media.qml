@@ -357,28 +357,59 @@ Item {
                             }
                         }
 
-                        Text {
-                            id: lyricText
+                        Column {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            text: modelData.text || ""
-                            color: !root.synchronizedLyrics
-                                ? "#ddffffff"
-                                : (lyricDelegate.activeLine
-                                ? "white"
-                                : (lyricDelegate.hovered ? "#ddffffff" : "#99ffffff"))
-                            font.family: Fonts.ui
-                            font.pixelSize: 18
-                            font.bold: true
-                            horizontalAlignment: Text.AlignLeft
-                            wrapMode: Text.WordWrap
+                            spacing: 2
 
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: Appearance.animation.expressiveFastEffects.duration
-                                    easing.type: Appearance.animation.expressiveFastEffects.type
-                                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                            Text {
+                                id: lyricText
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                text: modelData.text || ""
+                                color: !root.synchronizedLyrics
+                                    ? "#ddffffff"
+                                    : (lyricDelegate.activeLine
+                                    ? "white"
+                                    : (lyricDelegate.hovered ? "#ddffffff" : "#99ffffff"))
+                                font.family: Fonts.ui
+                                font.pixelSize: 18
+                                font.bold: true
+                                horizontalAlignment: Text.AlignLeft
+                                wrapMode: Text.WordWrap
+
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Appearance.animation.expressiveFastEffects.duration
+                                        easing.type: Appearance.animation.expressiveFastEffects.type
+                                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                                    }
+                                }
+                            }
+
+                            Text {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                visible: modelData.translation !== undefined && modelData.translation !== ""
+                                text: modelData.translation || ""
+                                color: !root.synchronizedLyrics
+                                    ? "#99ffffff"
+                                    : (lyricDelegate.activeLine ? "#ddffffff" : "#77ffffff")
+                                font.family: Fonts.ui
+                                font.pixelSize: 13
+                                font.bold: false
+                                horizontalAlignment: Text.AlignLeft
+                                wrapMode: Text.WordWrap
+                                elide: Text.ElideRight
+                                maximumLineCount: 2
+
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Appearance.animation.expressiveFastEffects.duration
+                                        easing.type: Appearance.animation.expressiveFastEffects.type
+                                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                                    }
                                 }
                             }
                         }

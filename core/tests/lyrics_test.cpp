@@ -202,6 +202,22 @@ QByteArray lrclibResponse(const QString &id, const QString &lyrics)
     return QJsonDocument(object).toJson(QJsonDocument::Compact);
 }
 
+QByteArray netEaseSearchResponse(const QString &id, const QString &title = QStringLiteral("title"),
+                                 double durationMs = 5000.0)
+{
+    QJsonObject song{
+        {QStringLiteral("id"), id.toInt()},
+        {QStringLiteral("name"), title},
+        {QStringLiteral("artists"),
+         QJsonArray{QJsonObject{{QStringLiteral("name"), QStringLiteral("artist")}}}},
+        {QStringLiteral("album"), QJsonObject{{QStringLiteral("name"), QStringLiteral("album")}}},
+        {QStringLiteral("dt"), durationMs},
+    };
+    return QJsonDocument(QJsonObject{{QStringLiteral("result"),
+                                      QJsonObject{{QStringLiteral("songs"), QJsonArray{song}}}}})
+        .toJson(QJsonDocument::Compact);
+}
+
 } // namespace
 
 void LyricsTest::parsesNormalAndMillisecondTimestamps()
@@ -251,6 +267,13 @@ void LyricsTest::ignoresMalformedLrcMetadata()
 
 void LyricsTest::mapsTimelineAndOffset()
 {
+    QTemporaryDir temporary;
+    QVERIFY(temporary.isValid());
+    ScopedEnvironment cacheHome("XDG_CACHE_HOME");
+    ScopedEnvironment dataHome("XDG_DATA_HOME");
+    ScopedEnvironment localDirectory("CLAVIS_LYRICS_DIR");
+    configureTemporaryPaths(temporary.path(), cacheHome, dataHome, localDirectory);
+
     Lyrics lyrics;
     lyrics.setOffsetMs(250.0);
     FixtureNetworkAccessManager manager;
@@ -258,7 +281,13 @@ void LyricsTest::mapsTimelineAndOffset()
     lyrics.setNetworkAccessManager(&manager);
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("title"));
     waitForRequests(manager, 1);
-    manager.replyAt(0)->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:01.00]one\n[00:03.00]two"})"));
+    manager.replyAt(0)->complete(QByteArrayLiteral(
+        R"JSON({"result":{"songs":[
+            {"id":7,"name":"title","artists":[{"name":"artist"}],"album":{"name":"album"},"dt":5000}
+        ]}})JSON"));
+    waitForRequests(manager, 2);
+    manager.replyAt(1)->complete(
+        QByteArrayLiteral(R"JSON({"lrc":{"lyric":"[00:01.00]one\n[00:03.00]two"}})JSON"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.indexForTime(1.24), -1);
     QCOMPARE(lyrics.indexForTime(1.25), 0);
@@ -356,11 +385,8 @@ void LyricsTest::netEaseRequestUsesCompatibleContract()
     lyrics.setNetworkAccessManager(&manager);
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("Title"));
     waitForRequests(manager, 1);
-    manager.replyAt(0)->complete({}, 404);
-
-    waitForRequests(manager, 2);
     QVERIFY(manager.cookieJar() != oldCookieJar);
-    const QNetworkRequest searchRequest = manager.requestAt(1);
+    const QNetworkRequest searchRequest = manager.requestAt(0);
     QCOMPARE(searchRequest.url().path(), QStringLiteral("/api/search/get"));
     QUrlQuery searchQuery(searchRequest.url());
     QCOMPARE(searchQuery.queryItemValue(QStringLiteral("s")), QStringLiteral("Title artist"));
@@ -370,11 +396,11 @@ void LyricsTest::netEaseRequestUsesCompatibleContract()
     QVERIFY(searchRequest.rawHeader("User-Agent").startsWith("Mozilla/"));
     QCOMPARE(searchRequest.rawHeader("Referer"), QByteArrayLiteral("https://music.163.com/"));
 
-    manager.replyAt(1)->complete(QByteArrayLiteral(R"JSON({"result":{"songs":[
+    manager.replyAt(0)->complete(QByteArrayLiteral(R"JSON({"result":{"songs":[
         {"id":7,"name":"Title","artists":[{"name":"artist"}],"album":{"name":"album"},"dt":120000}
     ]}})JSON"));
-    waitForRequests(manager, 3);
-    const QNetworkRequest lyricRequest = manager.requestAt(2);
+    waitForRequests(manager, 2);
+    const QNetworkRequest lyricRequest = manager.requestAt(1);
     QCOMPARE(lyricRequest.url().path(), QStringLiteral("/api/song/lyric"));
     QUrlQuery lyricQuery(lyricRequest.url());
     QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("id")), QStringLiteral("7"));
@@ -384,7 +410,7 @@ void LyricsTest::netEaseRequestUsesCompatibleContract()
     QVERIFY(lyricRequest.rawHeader("User-Agent").startsWith("Mozilla/"));
     QCOMPARE(lyricRequest.rawHeader("Referer"), QByteArrayLiteral("https://music.163.com/"));
 
-    manager.replyAt(2)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:01.00]found"}})"));
+    manager.replyAt(1)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:01.00]found"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.provider(), QStringLiteral("NetEase"));
 }
@@ -607,17 +633,21 @@ void LyricsTest::deduplicatesSameTrackButRefreshes()
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("title"));
     QTest::qWait(120);
     QCOMPARE(manager.requests, 1);
-    manager.replyAt(0)->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:01.00]first"})"));
+    manager.replyAt(0)->complete(netEaseSearchResponse(QStringLiteral("42")));
+    waitForRequests(manager, 2);
+    manager.replyAt(1)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:01.00]first"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
 
     lyrics.refresh();
-    waitForRequests(manager, 2);
+    waitForRequests(manager, 3);
     QVERIFY(lyrics.loading());
-    manager.replyAt(1)->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:02.00]refreshed"})"));
+    manager.replyAt(2)->complete(netEaseSearchResponse(QStringLiteral("43")));
+    waitForRequests(manager, 4);
+    manager.replyAt(3)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:02.00]refreshed"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.lyrics().first().toMap().value(QStringLiteral("text")).toString(),
              QStringLiteral("refreshed"));
-    QCOMPARE(manager.requests, 2);
+    QCOMPARE(manager.requests, 4);
 }
 
 void LyricsTest::staleReplyCannotReplaceTrack()
@@ -637,10 +667,12 @@ void LyricsTest::staleReplyCannotReplaceTrack()
     waitForRequests(manager, 1);
     FixtureReply *firstReply = manager.replyAt(0);
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("second"));
-    firstReply->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:01.00]stale first"})"));
+    firstReply->complete(netEaseSearchResponse(QStringLiteral("1"), QStringLiteral("second")));
     waitForRequests(manager, 2);
     QVERIFY(manager.firstRequestAborted);
-    manager.replyAt(1)->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:02.00]second"})"));
+    manager.replyAt(1)->complete(netEaseSearchResponse(QStringLiteral("2"), QStringLiteral("second")));
+    waitForRequests(manager, 3);
+    manager.replyAt(2)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:02.00]second"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.trackTitle(), QStringLiteral("second"));
     QCOMPARE(lyrics.lyrics().first().toMap().value(QStringLiteral("text")).toString(),
@@ -664,13 +696,15 @@ void LyricsTest::rapidSwitchingAndClearTrackInvalidateReplies()
     waitForRequests(manager, 1);
     FixtureReply *firstReply = manager.replyAt(0);
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("B"));
-    firstReply->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:01.00]stale A"})"));
+    firstReply->complete(netEaseSearchResponse(QStringLiteral("1")));
     waitForRequests(manager, 2);
     FixtureReply *secondReply = manager.replyAt(1);
     lyrics.setTrack(QStringLiteral("artist"), QStringLiteral("C"));
-    secondReply->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:02.00]stale B"})"));
+    secondReply->complete(netEaseSearchResponse(QStringLiteral("2"), QStringLiteral("C")));
     waitForRequests(manager, 3);
-    manager.replyAt(2)->complete(QByteArrayLiteral(R"({"syncedLyrics":"[00:03.00]C"})"));
+    manager.replyAt(2)->complete(netEaseSearchResponse(QStringLiteral("3"), QStringLiteral("C")));
+    waitForRequests(manager, 4);
+    manager.replyAt(3)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:03.00]C"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.trackTitle(), QStringLiteral("C"));
     QCOMPARE(lyrics.lyrics().first().toMap().value(QStringLiteral("text")).toString(), QStringLiteral("C"));

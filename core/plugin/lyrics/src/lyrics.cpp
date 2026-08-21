@@ -637,7 +637,9 @@ void Lyrics::startLoad(quint64 generation, bool bypassCache)
     m_pendingCandidate.clear();
     m_netEaseCandidateIndex = 0;
     resetProviderOutcomes();
-    startLrclibTrack(generation);
+    // NetEase is preferred because it supplies translations (tlyric) that
+    // LRCLIB lacks; LRCLIB remains the fallback for coverage.
+    startNetEaseSearch(generation);
 }
 
 bool Lyrics::loadLocalLyrics(quint64 generation)
@@ -710,9 +712,13 @@ bool Lyrics::acceptRawLyrics(const QString &provider, const QString &synced, con
         return false;
 
     m_sourceText = raw;
+    // When a provider supplies both a synchronized original and a translation
+    // (e.g. NetEase tlyric), keep the translation source so the timeline can
+    // be rebuilt (offset changes) with the translation still attached.
+    m_sourceTranslation = synced.isEmpty() ? QString() : plain;
     m_sourceProvider = provider;
     m_sourceCandidate = candidate;
-    m_lyrics = lines;
+    m_lyrics = synced.isEmpty() ? lines : mergeTranslation(lines, m_sourceTranslation);
 
     bool synchronized = false;
     for (const QVariant &line : m_lyrics) {
@@ -766,7 +772,7 @@ void Lyrics::rebuildTimelineFromSource()
     if (lines.isEmpty())
         return;
 
-    m_lyrics = lines;
+    m_lyrics = m_sourceTranslation.isEmpty() ? lines : mergeTranslation(lines, m_sourceTranslation);
     bool synchronized = false;
     for (const QVariant &line : m_lyrics) {
         if (line.toMap().value(QStringLiteral("time"), -1.0).toDouble() >= 0.0) {
@@ -777,6 +783,62 @@ void Lyrics::rebuildTimelineFromSource()
     setHasLyrics(true);
     setHasSynchronizedLyrics(synchronized);
     emit lyricsChanged();
+}
+
+QVariantList Lyrics::mergeTranslation(const QVariantList &lines, const QString &translationLrc) const
+{
+    if (translationLrc.trimmed().isEmpty())
+        return lines;
+
+    // Translations are usually line-aligned with the original. Build a lookup
+    // from timestamp to translation text, tolerating small clock drift between
+    // the two LRC payloads.
+    struct Entry {
+        double time;
+        QString text;
+    };
+    QList<Entry> entries;
+    const QVariantList translationLines = parseLrc(translationLrc, 0.0);
+    entries.reserve(translationLines.size());
+    for (const QVariant &line : translationLines) {
+        const QVariantMap map = line.toMap();
+        const double time = map.value(QStringLiteral("time"), -1.0).toDouble();
+        const QString text = map.value(QStringLiteral("text")).toString();
+        if (time < 0.0 || text.trimmed().isEmpty())
+            continue;
+        entries.append({time, text});
+    }
+    if (entries.isEmpty())
+        return lines;
+    std::sort(entries.begin(), entries.end(),
+              [](const Entry &left, const Entry &right) { return left.time < right.time; });
+
+    const double toleranceMs = 120.0;
+    QVariantList merged;
+    merged.reserve(lines.size());
+    for (const QVariant &line : lines) {
+        const QVariantMap map = line.toMap();
+        const double time = map.value(QStringLiteral("time"), -1.0).toDouble();
+        QString translation;
+        if (time >= 0.0 && !entries.isEmpty()) {
+            // Linear probe is fine here: translations are typically a few
+            // hundred lines at most and the lists are usually aligned.
+            for (const Entry &entry : entries) {
+                if (entry.time >= time - toleranceMs / 1000.0 && entry.time <= time + toleranceMs / 1000.0) {
+                    translation = entry.text;
+                    break;
+                }
+            }
+        }
+        if (translation.isEmpty()) {
+            merged.append(line);
+        } else {
+            QVariantMap enriched = map;
+            enriched.insert(QStringLiteral("translation"), translation);
+            merged.append(enriched);
+        }
+    }
+    return merged;
 }
 
 void Lyrics::startLrclibTrack(quint64 generation)
@@ -873,9 +935,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         switch (kind) {
         case ReplyKind::LrclibTrack:
             m_lrclibOutcome = notFound ? ProviderOutcome::NotFound : ProviderOutcome::TransportError;
-            if (m_autoFallback)
-                startNetEaseSearch(generation);
-            else if (notFound)
+            if (notFound)
                 finishEmpty();
             else
                 finishError(QStringLiteral("LRCLIB 请求失败"));
@@ -887,8 +947,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         case ReplyKind::NetEaseSearch:
             m_netEaseSearchOutcome = notFound ? ProviderOutcome::NotFound : ProviderOutcome::TransportError;
             if (m_autoFallback) {
-                m_netEaseCandidateIndex = 0;
-                tryNextNetEaseCandidate(generation);
+                startLrclibTrack(generation);
             } else if (notFound) {
                 finishEmpty();
             } else {
@@ -901,7 +960,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
             if (notFound)
                 m_netEaseSawNoLyrics = true;
             if (m_autoFallback)
-                tryNextNetEaseCandidate(generation);
+                startLrclibTrack(generation);
             else if (notFound)
                 finishEmpty();
             else
@@ -917,10 +976,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         switch (kind) {
         case ReplyKind::LrclibTrack:
             m_lrclibOutcome = ProviderOutcome::InvalidResponse;
-            if (m_autoFallback)
-                startNetEaseSearch(generation);
-            else
-                finishError(QStringLiteral("LRCLIB 返回了无效响应"));
+            finishError(QStringLiteral("LRCLIB 返回了无效响应"));
             return;
         case ReplyKind::LrclibSearch:
             m_lrclibOutcome = ProviderOutcome::InvalidResponse;
@@ -929,8 +985,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         case ReplyKind::NetEaseSearch:
             m_netEaseSearchOutcome = ProviderOutcome::InvalidResponse;
             if (m_autoFallback) {
-                m_netEaseCandidateIndex = 0;
-                tryNextNetEaseCandidate(generation);
+                startLrclibTrack(generation);
             } else {
                 finishError(QStringLiteral("NetEase 搜索返回了无效响应"));
             }
@@ -938,7 +993,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         case ReplyKind::NetEaseLyrics:
             m_netEaseCandidateOutcome = ProviderOutcome::InvalidResponse;
             if (m_autoFallback)
-                tryNextNetEaseCandidate(generation);
+                startLrclibTrack(generation);
             else
                 finishError(QStringLiteral("NetEase 歌词返回了无效响应"));
             return;
@@ -958,9 +1013,7 @@ void Lyrics::handleReply(QNetworkReply *reply, ReplyKind kind, quint64 generatio
         if (handleLrclibTrack(document.object(), generation)) {
             return;
         }
-        if (m_autoFallback) {
-            startNetEaseSearch(generation);
-        } else if (m_lrclibOutcome == ProviderOutcome::NotFound) {
+        if (m_lrclibOutcome == ProviderOutcome::NotFound) {
             finishEmpty();
         } else {
             finishError(QStringLiteral("LRCLIB 歌词内容不可用"));
@@ -1090,7 +1143,9 @@ bool Lyrics::handleNetEaseLyrics(const QJsonObject &json, quint64 generation)
     const QJsonObject lrc = json.value(QStringLiteral("lrc")).toObject();
     const QJsonObject translated = json.value(QStringLiteral("tlyric")).toObject();
     const QString synced = firstString(lrc, {QStringLiteral("lyric")});
-    const QString plain = synced.isEmpty() ? firstString(translated, {QStringLiteral("lyric")}) : QString();
+    // Keep the translation even when a synchronized original exists: the UI
+    // merges it below each line instead of dropping it.
+    const QString plain = firstString(translated, {QStringLiteral("lyric")});
     if (synced.isEmpty() && plain.isEmpty()) {
         m_netEaseCandidateOutcome = ProviderOutcome::NoLyrics;
         m_netEaseSawNoLyrics = true;
@@ -1120,15 +1175,18 @@ void Lyrics::tryNextNetEaseCandidate(quint64 generation)
 
     if (m_netEaseSearchOutcome == ProviderOutcome::TransportError ||
         m_netEaseSearchOutcome == ProviderOutcome::InvalidResponse) {
-        finishError(QStringLiteral("NetEase 搜索不可用"));
-    } else if (m_lrclibOutcome == ProviderOutcome::TransportError ||
-               m_lrclibOutcome == ProviderOutcome::InvalidResponse ||
-               m_lrclibOutcome == ProviderOutcome::ParseFailure) {
-        finishError(QStringLiteral("歌词服务返回了无效内容"));
-    } else if (!m_netEaseCandidates.isEmpty() && !m_netEaseSawNoLyrics && !m_netEaseSawValidLyricResponse &&
-               (m_netEaseCandidateOutcome == ProviderOutcome::TransportError ||
-                m_netEaseCandidateOutcome == ProviderOutcome::InvalidResponse || m_netEaseSawParseFailure)) {
-        finishError(QStringLiteral("NetEase 歌词请求失败"));
+        if (m_autoFallback) {
+            startLrclibTrack(generation);
+        } else {
+            finishError(QStringLiteral("NetEase 搜索不可用"));
+        }
+    } else if (m_autoFallback) {
+        // NetEase found no usable lyrics for this track; fall back to LRCLIB
+        // for coverage (it never carries translations, but is a reliable
+        // source for the original lines).
+        startLrclibTrack(generation);
+    } else if (m_netEaseSawParseFailure) {
+        finishError(QStringLiteral("NetEase 歌词内容不可用"));
     } else {
         // A valid search with no lyrics is a normal not-found result, even if
         // LRCLIB previously returned HTTP 404 or a candidate was rejected.
