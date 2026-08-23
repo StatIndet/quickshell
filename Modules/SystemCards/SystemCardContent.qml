@@ -20,8 +20,7 @@ Item {
     readonly property bool preserveDefaultSurface: root.catalogEntry !== null && root.catalogEntry.preserveDefaultSurface === true
     readonly property bool shellManagedSurface: root.useShellManagedSurface && !root.preserveDefaultSurface
     readonly property int chartUpdateInterval: Math.max(250, Number(SystemMonitorService.sourceIntervalMs) || SystemMonitorService.intervalMs)
-    readonly property var primaryGpu: SystemMonitorService.gpus.length > 0 ? SystemMonitorService.gpus[0] : ({
-    })
+    readonly property var primaryGpu: SystemMonitorService.selectedGpu
     readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius) ? SystemMonitorService.cpu.packageTemperatureCelsius : SystemMonitorService.cpu.temperatureCelsius
 
     function normalizedPercent(value) {
@@ -57,7 +56,7 @@ Item {
     }
 
     function gpuSupporting() {
-        if (SystemMonitorService.gpus.length === 0)
+        if (SystemMonitorService.selectedGpuId === "")
             return qsTr("未检测到可用图形设备");
 
         const gpu = root.primaryGpu;
@@ -154,10 +153,10 @@ Item {
             label: qsTr("GPU")
             iconName: "developer_board"
             detailText: root.primaryGpu.name || qsTr("图形设备")
-            valueText: SystemMonitorService.gpus.length > 0 ? Format.percent(root.primaryGpu.utilizationPercent, 0) : "—"
+            valueText: SystemMonitorService.selectedGpuId !== "" ? Format.percent(root.primaryGpu.utilizationPercent, 0) : "—"
             supportingText: root.gpuSupporting()
             temperatureText: root.temperatureBadge(root.primaryGpu.temperatureCelsius)
-            usage: SystemMonitorService.gpus.length > 0 ? root.normalizedPercent(root.primaryGpu.utilizationPercent) : -1
+            usage: SystemMonitorService.selectedGpuId !== "" ? root.normalizedPercent(root.primaryGpu.utilizationPercent) : -1
             trendValues: SystemMonitorService.gpuHistory
             chartActive: root.active
             updateInterval: root.chartUpdateInterval

@@ -2446,6 +2446,14 @@ Scroll to adjust</translation>
         <source>桌面卡片</source>
         <translation>Desktop cards</translation>
     </message>
+    <message><source>GPU</source><translation>GPU</translation></message>
+    <message><source>自动</source><translation>Auto</translation></message>
+    <message><source>图形设备</source><translation>Graphics device</translation></message>
+    <message><source>当前不可用</source><translation>Currently unavailable</translation></message>
+    <message><source>选择 GPU 卡片显示的图形设备</source><translation>Select the graphics device shown by the GPU card</translation></message>
+    <message><source>系统监测快照间隔</source><translation>System monitor snapshot interval</translation></message>
+    <message><source>较短的间隔会提高实时性，同时增加资源占用</source><translation>Shorter intervals improve responsiveness while using more resources</translation></message>
+    <message><source>ms</source><translation>ms</translation></message>
 </context>
 <context>
     <name>GeneralSubpageHeader</name>

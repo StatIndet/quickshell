@@ -20,7 +20,7 @@ Singleton {
         const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim()
         return configured !== "" ? configured : "keytop"
     }
-    property int configuredIntervalMs: 1000
+    property int configuredIntervalMs: UiPreferences.systemMonitorIntervalMs
     property double sourceIntervalMs: 0
     readonly property int intervalMs: configuredIntervalMs
     property int consumerCount: 0
@@ -66,6 +66,8 @@ Singleton {
     property int _handledGeneration: -1
     property int _retryDelayMs: 1000
     property int _forceStopProbeCount: 0
+    property string _autoGpuId: ""
+    property string _effectiveGpuId: ""
 
     property var _terminalCandidates: []
     property int _terminalCandidateIndex: -1
@@ -84,6 +86,8 @@ Singleton {
     readonly property bool reconnecting: state === "reconnecting"
     readonly property bool partial: errors.length > 0
     readonly property bool processRunning: streamProcess.running
+    readonly property string selectedGpuId: _effectiveGpuId
+    readonly property var selectedGpu: _gpuById(root.gpus, root.selectedGpuId)
     readonly property string statusText: {
         switch (state) {
         case "loading":
@@ -313,7 +317,67 @@ Singleton {
         return next;
     }
 
+    function _gpuId(gpu) {
+        if (!root._isObject(gpu))
+            return "";
+        return String(gpu.id || "").trim();
+    }
+
+    function _gpuById(devices, id) {
+        const wanted = String(id || "");
+        for (let index = 0; index < devices.length; index += 1) {
+            if (root._gpuId(devices[index]) === wanted)
+                return devices[index];
+        }
+        return ({});
+    }
+
+    function _hasGpuId(devices, id) {
+        return root._gpuId(root._gpuById(devices, id)) !== "";
+    }
+
+    function _resolveAutoGpuId(devices) {
+        if (root._autoGpuId !== "" && root._hasGpuId(devices, root._autoGpuId))
+            return root._autoGpuId;
+
+        const ids = [];
+        for (let index = 0; index < devices.length; index += 1) {
+            const id = root._gpuId(devices[index]);
+            if (id !== "")
+                ids.push(id);
+        }
+        ids.sort();
+        root._autoGpuId = ids.length > 0 ? ids[0] : "";
+        return root._autoGpuId;
+    }
+
+    function _resolveSelectedGpuId(devices) {
+        const preferred = String(UiPreferences.systemMonitorGpuId || "auto");
+        if (preferred !== "auto" && root._hasGpuId(devices, preferred))
+            return preferred;
+        return root._resolveAutoGpuId(devices);
+    }
+
+    function _clearMonitorHistories() {
+        root.cpuHistory = [];
+        root.memoryHistory = [];
+        root.gpuHistory = [];
+        root.networkDownloadHistory = [];
+        root.networkUploadHistory = [];
+    }
+
+    function _applyConfiguredInterval() {
+        root._clearMonitorHistories();
+        root.sourceIntervalMs = 0;
+        if (root.active && streamProcess.running)
+            root._stopStream();
+    }
+
     function _commitSnapshot(snapshot) {
+        const nextSelectedGpuId = root._resolveSelectedGpuId(snapshot.gpus);
+        if (nextSelectedGpuId !== root._effectiveGpuId)
+            root.gpuHistory = [];
+        root._effectiveGpuId = nextSelectedGpuId;
         root.system = snapshot.system;
         root.cpu = snapshot.cpu;
         root.memory = snapshot.memory;
@@ -331,10 +395,11 @@ Singleton {
             root.memoryHistory,
             snapshot.memory.usagePercent
         );
-        if (snapshot.gpus.length > 0) {
+        const effectiveGpu = root._gpuById(snapshot.gpus, nextSelectedGpuId);
+        if (root._gpuId(effectiveGpu) !== "") {
             root.gpuHistory = root._appendHistory(
                 root.gpuHistory,
-                snapshot.gpus[0].utilizationPercent
+                effectiveGpu.utilizationPercent
             );
         }
         root.networkDownloadHistory = root._appendHistory(
@@ -579,6 +644,19 @@ Singleton {
             root._startStream();
         else
             root._stopStream();
+    }
+
+    onConfiguredIntervalMsChanged: root._applyConfiguredInterval()
+
+    Connections {
+        target: UiPreferences
+
+        function onSystemMonitorGpuIdChanged() {
+            const nextSelectedGpuId = root._resolveSelectedGpuId(root.gpus);
+            if (nextSelectedGpuId !== root._effectiveGpuId)
+                root.gpuHistory = [];
+            root._effectiveGpuId = nextSelectedGpuId;
+        }
     }
 
     Timer {

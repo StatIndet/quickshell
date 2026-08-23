@@ -9,6 +9,58 @@ StyledFlickable {
     id: root
 
     readonly property bool cookieClockActive: UiPreferences.sidebarClockStyle === "cookie"
+    readonly property var gpuOptions: buildGpuOptions()
+
+    function gpuPciLabel(gpu) {
+        const pciId = String(gpu.pciId || "");
+        if (pciId !== "")
+            return pciId;
+
+        const id = String(gpu.id || "");
+        return id.indexOf("pci:") === 0 ? id.slice(4) : id;
+    }
+
+    function buildGpuOptions() {
+        const options = [{
+            "value": "auto",
+            "label": qsTr("自动")
+        }];
+        const names = ({
+        });
+        for (let index = 0; index < SystemMonitorService.gpus.length; index += 1) {
+            const name = String(SystemMonitorService.gpus[index].name || qsTr("图形设备"));
+            names[name] = Number(names[name] || 0) + 1;
+        }
+        for (let index = 0; index < SystemMonitorService.gpus.length; index += 1) {
+            const gpu = SystemMonitorService.gpus[index];
+            const id = String(gpu.id || "");
+            if (id === "")
+                continue;
+
+            const name = String(gpu.name || qsTr("图形设备"));
+            options.push({
+                "value": id,
+                "label": names[name] > 1 ? name + " · " + root.gpuPciLabel(gpu) : name
+            });
+        }
+        const preferred = UiPreferences.systemMonitorGpuId;
+        if (preferred !== "auto") {
+            let found = false;
+            for (let index = 1; index < options.length; index += 1) {
+                if (options[index].value === preferred) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                options.push({
+                "value": preferred,
+                "label": preferred + " · " + qsTr("当前不可用")
+            });
+
+        }
+        return options;
+    }
 
     clip: true
     contentWidth: width
@@ -424,6 +476,67 @@ StyledFlickable {
                             }
                             Accessible.name: SystemCardService.cardName(modelData)
                             onToggled: SystemCardService.setCardEnabled(modelData, checked)
+                        }
+
+                    }
+
+                }
+
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "developer_board"
+                title: qsTr("GPU")
+                supportingText: qsTr("选择 GPU 卡片显示的图形设备")
+
+                trailing: SearchSelectMenuField {
+                    Layout.preferredWidth: 220
+                    options: root.gpuOptions
+                    value: UiPreferences.systemMonitorGpuId
+                    placeholder: qsTr("自动")
+                    closeOnAccept: true
+                    onAccepted: (value) => {
+                        return UiPreferences.setSystemMonitorGpuId(value);
+                    }
+                }
+
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "speed"
+                title: qsTr("系统监测快照间隔")
+                supportingText: qsTr("较短的间隔会提高实时性，同时增加资源占用")
+
+                trailing: MaterialFilledTextField {
+                    id: intervalField
+
+                    Layout.preferredWidth: 150
+                    text: String(UiPreferences.systemMonitorIntervalMs)
+                    error: text.length === 0 || !acceptableInput
+                    horizontalAlignment: TextInput.AlignRight
+                    inputMethodHints: Qt.ImhDigitsOnly
+                    trailingContentWidth: 40
+                    onEditingFinished: {
+                        UiPreferences.setSystemMonitorIntervalMs(text);
+                        text = String(UiPreferences.systemMonitorIntervalMs);
+                    }
+
+                    validator: IntValidator {
+                        bottom: 100
+                        top: 60000
+                    }
+
+                    trailingContent: Component {
+                        Text {
+                            anchors.fill: parent
+                            text: qsTr("ms")
+                            color: Appearance.colors.colOnSurfaceVariant
+                            font.family: Typography.bodyMedium.family
+                            font.pixelSize: Typography.bodyMedium.pixelSize
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
                         }
 
                     }

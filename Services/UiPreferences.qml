@@ -14,6 +14,8 @@ Singleton {
     property string language: normalizedLanguage(Qt.locale().name)
     property string weatherTemperatureUnit: "celsius"
     property string systemTemperatureUnit: "celsius"
+    property string systemMonitorGpuId: "auto"
+    property int systemMonitorIntervalMs: 2000
     property bool useTwelveHourClock: true
     property string sidebarClockStyle: "digital"
     property int sidebarCookieSides: 14
@@ -84,6 +86,42 @@ Singleton {
             return ;
 
         root.systemTemperatureUnit = normalized;
+        root.save();
+    }
+
+    function normalizedSystemMonitorGpuId(value) {
+        if (typeof value !== "string")
+            return "auto";
+
+        return value.trim() || "auto";
+    }
+
+    function setSystemMonitorGpuId(value) {
+        const normalized = root.normalizedSystemMonitorGpuId(value);
+        if (root.systemMonitorGpuId === normalized)
+            return ;
+
+        root.systemMonitorGpuId = normalized;
+        root.save();
+    }
+
+    function normalizedSystemMonitorIntervalMs(value) {
+        if (value === undefined || value === null || String(value).trim() === "")
+            return -1;
+
+        const numberValue = Number(value);
+        if (!isFinite(numberValue))
+            return -1;
+
+        return Math.max(100, Math.min(60000, Math.round(numberValue)));
+    }
+
+    function setSystemMonitorIntervalMs(value) {
+        const normalized = root.normalizedSystemMonitorIntervalMs(value);
+        if (normalized < 0 || root.systemMonitorIntervalMs === normalized)
+            return ;
+
+        root.systemMonitorIntervalMs = normalized;
         root.save();
     }
 
@@ -255,6 +293,8 @@ Singleton {
             "language": root.language,
             "weatherTemperatureUnit": root.weatherTemperatureUnit,
             "systemTemperatureUnit": root.systemTemperatureUnit,
+            "systemMonitorGpuId": root.systemMonitorGpuId,
+            "systemMonitorIntervalMs": root.systemMonitorIntervalMs,
             "useTwelveHourClock": root.useTwelveHourClock,
             "sidebarClockStyle": root.sidebarClockStyle,
             "sidebarCookieSides": root.sidebarCookieSides,
@@ -303,6 +343,9 @@ Singleton {
                 root.language = root.normalizedLanguage(parsed.language || Qt.locale().name);
                 root.weatherTemperatureUnit = root.normalizedTemperatureUnit(parsed.weatherTemperatureUnit);
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
+                root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);
+                const monitorInterval = root.normalizedSystemMonitorIntervalMs(parsed.systemMonitorIntervalMs === undefined ? 2000 : parsed.systemMonitorIntervalMs);
+                root.systemMonitorIntervalMs = monitorInterval < 0 ? 2000 : monitorInterval;
                 root.useTwelveHourClock = typeof parsed.useTwelveHourClock === "boolean" ? parsed.useTwelveHourClock : true;
                 root.sidebarClockStyle = root.allowedValue(parsed.sidebarClockStyle, ["digital", "cookie"], "digital");
                 root.sidebarCookieSides = Math.max(0, Math.min(40, Math.round(Number(parsed.sidebarCookieSides === undefined ? 14 : parsed.sidebarCookieSides) || 0)));
