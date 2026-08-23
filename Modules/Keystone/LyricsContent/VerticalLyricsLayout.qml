@@ -11,14 +11,11 @@ Item {
     required property string edge
     required property string status
     required property string errorText
-    property string currentLyric: ""
-    property string previousLyric: ""
-    property real transitionProgress: 1
     readonly property int padding: 15
     readonly property int contentSpacing: 12
     readonly property int tokenSpacing: 3
     readonly property int lyricWidth: 42
-    readonly property real lyricExtent: Math.max(20, currentTokens.implicitHeight, previousTokens.implicitHeight * (1 - transitionProgress))
+    readonly property real lyricExtent: Math.max(20, currentTokens.implicitHeight)
 
     function isCjk(character) {
         return /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/.test(character);
@@ -72,20 +69,8 @@ Item {
         return result;
     }
 
-    function showLyric(nextLyric) {
-        if (nextLyric === currentLyric)
-            return ;
-
-        previousLyric = currentLyric;
-        currentLyric = nextLyric;
-        transitionProgress = 0;
-        lyricTransition.restart();
-    }
-
     implicitWidth: lyricWidth
     implicitHeight: padding + 26 + contentSpacing + lyricExtent + contentSpacing + 21 + padding
-    onLyricChanged: showLyric(lyric)
-    Component.onCompleted: showLyric(lyric)
 
     LyricsAlbumArt {
         id: albumArt
@@ -106,31 +91,11 @@ Item {
         height: root.lyricExtent
 
         TokenColumn {
-            id: previousTokens
-
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
-            lyricText: root.previousLyric
-            opacity: 1 - root.transitionProgress
-
-            transform: Translate {
-                y: -6 * root.transitionProgress
-            }
-
-        }
-
-        TokenColumn {
             id: currentTokens
 
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
-            lyricText: root.currentLyric
-            opacity: root.transitionProgress
-
-            transform: Translate {
-                y: 6 * (1 - root.transitionProgress)
-            }
-
+            lyricText: root.lyric
         }
 
         Text {
@@ -147,54 +112,66 @@ Item {
 
     }
 
-    Canvas {
+    Item {
         id: spectrum
+
+        property var smoothValues: [0, 0, 0, 0, 0, 0]
 
         anchors.bottom: parent.bottom
         anchors.bottomMargin: root.padding
         anchors.horizontalCenter: parent.horizontalCenter
         width: 16
         height: 21
-        onPaint: {
-            const context = getContext("2d");
-            context.clearRect(0, 0, width, height);
-            context.beginPath();
-            context.lineCap = "round";
-            context.lineWidth = 2.5;
-            context.strokeStyle = String(Appearance.colors.colPrimary);
-            const values = AudioSpectrum.values || [];
-            for (let index = 0; index < 6; ++index) {
-                const sampleIndex = values.length > 0 ? Math.floor(index * (values.length - 1) / 5) : 0;
-                const amount = values.length > 0 ? Math.min(1, values[sampleIndex] * 4) : 0;
-                const barWidth = Math.max(3, amount * width);
-                const y = 1.25 + index * 3.7;
-                const start = root.edge === "left" ? 0 : width - barWidth;
-                context.moveTo(start, y);
-                context.lineTo(start + barWidth, y);
-            }
-            context.stroke();
-        }
 
         Timer {
             interval: 16
             running: root.active && AudioSpectrum.available
             repeat: true
-            onTriggered: parent.requestPaint()
+            onTriggered: {
+                const values = AudioSpectrum.values;
+                if (!values || values.length < 6)
+                    return ;
+
+                const ranges = [[0.55, 0.78, 1.5], [0.18, 0.33, 1.2], [0, 0.08, 1], [0.08, 0.18, 1], [0.33, 0.55, 1.2], [0.78, 0.98, 1.5]];
+                const next = spectrum.smoothValues.slice();
+                for (let index = 0; index < ranges.length; ++index) {
+                    const range = ranges[index];
+                    const start = Math.floor(values.length * range[0]);
+                    const end = Math.min(values.length - 1, Math.floor(values.length * range[1]));
+                    let maximum = 0;
+                    for (let sample = start; sample <= end; ++sample) maximum = Math.max(maximum, values[sample])
+                    const target = Math.min(100, maximum * 100 * range[2]);
+                    const difference = target - next[index];
+                    next[index] += (difference > 0 ? 0.85 : 0.08) * difference;
+                }
+                spectrum.smoothValues = next;
+                spectrumCanvas.requestPaint();
+            }
         }
 
-    }
+        Canvas {
+            id: spectrumCanvas
 
-    NumberAnimation {
-        id: lyricTransition
+            anchors.fill: parent
+            onPaint: {
+                const context = getContext("2d");
+                context.clearRect(0, 0, width, height);
+                context.beginPath();
+                context.lineCap = "round";
+                context.lineWidth = 2.5;
+                context.strokeStyle = String(Appearance.colors.colPrimary);
+                for (let index = 0; index < 6; ++index) {
+                    const amount = Math.min(1, spectrum.smoothValues[index] / 100);
+                    const barWidth = Math.max(3, amount * width);
+                    const half = barWidth / 2;
+                    const y = 1.25 + index * 3.7;
+                    context.moveTo(width / 2 - half, y);
+                    context.lineTo(width / 2 + half, y);
+                }
+                context.stroke();
+            }
+        }
 
-        target: root
-        property: "transitionProgress"
-        from: 0
-        to: 1
-        duration: Appearance.animation.expressiveDefaultEffects.duration
-        easing.type: Appearance.animation.expressiveDefaultEffects.type
-        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
-        onFinished: root.previousLyric = ""
     }
 
     component TokenColumn: Column {
