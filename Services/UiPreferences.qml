@@ -28,6 +28,9 @@ Singleton {
     property bool storeReady: false
     property bool preferencesReady: false
     property bool savePending: false
+    property bool systemThemeWriteQueued: false
+    property bool requestedDarkMode: false
+    property string systemThemeLastError: ""
     property var drawerGridLayout: ({
     })
     property var systemCards: ({
@@ -195,13 +198,28 @@ Singleton {
     }
 
     function setDarkMode(value) {
-        root.darkMode = value;
+        const enabled = !!value;
+        root.darkMode = enabled;
+        root.requestedDarkMode = enabled;
         root.save();
-        themeDebounce.start();
+        root.systemThemeWriteQueued = true;
+        themePoller.running = false;
+        root.writeSystemColorScheme();
     }
 
     function toggleDarkMode() {
         root.setDarkMode(!root.darkMode);
+    }
+
+    function writeSystemColorScheme() {
+        if (systemThemeWriter.running) {
+            root.systemThemeWriteQueued = true;
+            return ;
+        }
+        root.systemThemeWriteQueued = false;
+        root.systemThemeLastError = "";
+        systemThemeWriter.command = ["bash", Paths.scriptPath("theme", "set_system_color_scheme.sh"), root.requestedDarkMode ? "dark" : "light"];
+        systemThemeWriter.running = true;
     }
 
     function setDrawerGridLayout(layout) {
@@ -334,7 +352,32 @@ Singleton {
         running: true
 
         stdout: StdioCollector {
-            onStreamFinished: root.darkMode = this.text.toLowerCase().includes("prefer-dark")
+            onStreamFinished: {
+                if (!systemThemeWriter.running && !root.systemThemeWriteQueued)
+                    root.darkMode = this.text.toLowerCase().includes("prefer-dark");
+
+            }
+        }
+
+    }
+
+    Process {
+        id: systemThemeWriter
+
+        onExited: (exitCode) => {
+            if (exitCode !== 0) {
+                root.systemThemeLastError = systemThemeWriteError.text.trim() || qsTr("无法同步系统亮暗色设置");
+                console.warn("UiPreferences failed to set system color scheme:", root.systemThemeLastError);
+            }
+            if (root.systemThemeWriteQueued) {
+                root.writeSystemColorScheme();
+                return ;
+            }
+            themeDebounce.restart();
+        }
+
+        stderr: StdioCollector {
+            id: systemThemeWriteError
         }
 
     }
@@ -343,7 +386,11 @@ Singleton {
         interval: 5000
         running: true
         repeat: true
-        onTriggered: themePoller.running = true
+        onTriggered: {
+            if (!systemThemeWriter.running && !root.systemThemeWriteQueued)
+                themePoller.running = true;
+
+        }
     }
 
     Timer {
