@@ -4846,6 +4846,10 @@
         <source>不可用</source>
         <translation>不可用</translation>
     </message>
+    <message><source>已充满</source><translation>已充满</translation></message>
+    <message><source>充电中</source><translation>充电中</translation></message>
+    <message><source>放电中</source><translation>放电中</translation></message>
+    <message><source>状态未知</source><translation>状态未知</translation></message>
 </context>
 <context>
     <name>SystemCalendarCard</name>
@@ -5295,6 +5299,7 @@
         <source>%1 分钟</source>
         <translation>%1 分钟</translation>
     </message>
+    <message><source>无法读取系统身份信息</source><translation>无法读取系统身份信息</translation></message>
 </context>
 <context>
     <name>SystemLoadingState</name>

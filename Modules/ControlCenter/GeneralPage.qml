@@ -6,6 +6,7 @@ Item {
 
     property var parentModal: null
     property string currentSection: "overview"
+    property bool presentationActive: false
 
     function openSection(section) {
         root.closeChildWindows();
@@ -100,6 +101,11 @@ Item {
 
             if ("parentModal" in item)
                 item.parentModal = root.parentModal;
+
+            if ("presentationActive" in item)
+                item.presentationActive = Qt.binding(function() {
+                    return root.presentationActive && root.currentSection === "sidebar";
+                });
 
         }
     }

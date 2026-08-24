@@ -78,6 +78,7 @@ Loader {
         id: systemMonitorComponent
 
         SysMonitor {
+            ownerId: "bar-sysmonitor:" + root.screen.name
             vertical: root.vertical
         }
 

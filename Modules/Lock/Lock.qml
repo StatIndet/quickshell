@@ -12,6 +12,16 @@ Scope {
 
     property bool lockPending: false
     property int lockGeneration: 0
+    readonly property bool active: sessionLock.locked || lockPending
+
+    onActiveChanged: {
+        SystemIdentityService.setUptimeConsumer("lock-screen", root.active);
+        SystemMonitorService.setConsumerModules("lock-screen", root.active ? ["cpu", "memory", "disk"] : []);
+    }
+    Component.onDestruction: {
+        SystemIdentityService.setUptimeConsumer("lock-screen", false);
+        SystemMonitorService.clearConsumer("lock-screen");
+    }
 
     function open() {
         if (sessionLock.locked || lockPending)

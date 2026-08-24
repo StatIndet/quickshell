@@ -3,45 +3,30 @@ import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Components
+import qs.Services
 import "../../Common/functions/SystemFormat.js" as Format
 
 Rectangle {
     id: root
 
-    property var battery: ({})
     property color containerColor: Appearance.colors.colSecondaryContainer
     property color levelColor: Appearance.colors.colSecondary
-    readonly property bool present: root.battery.present === true
+    readonly property bool present: PowerService.present
     readonly property bool valueAvailable:
-        root.present && Format.isNumber(root.battery.chargePercent)
+        root.present && Format.isNumber(PowerService.percentage)
+    readonly property real chargePercent: root.valueAvailable
+        ? PowerService.percentage * 100 : NaN
     readonly property real targetLevel: root.valueAvailable
-        ? Math.max(0, Math.min(1, root.battery.chargePercent / 100))
+        ? Math.max(0, Math.min(1, PowerService.percentage))
         : 0
     property real animatedLevel: targetLevel
-    readonly property string normalizedStatus:
-        String(root.battery.status || "").toLowerCase()
-    readonly property bool charging:
-        root.normalizedStatus === "charging"
-    readonly property bool full:
-        root.normalizedStatus === "full"
-        || (
-            root.valueAvailable
-            && root.battery.chargePercent >= 100
-            && !root.charging
-        )
-    readonly property bool powerConnected:
-        root.battery.acOnline === true
-        || (
-            root.battery.acOnline !== false
-            && (
-                root.charging
-                || root.normalizedStatus === "full"
-                || root.normalizedStatus === "not charging"
-            )
-        )
+    readonly property bool charging: PowerService.charging
+    readonly property bool full: PowerService.full
+        || (root.valueAvailable && root.chargePercent >= 100 && !root.charging)
+    readonly property bool powerConnected: PowerService.powerConnected
     readonly property bool lowBattery:
         root.valueAvailable
-        && root.battery.chargePercent <= 15
+        && root.chargePercent <= 15
         && !root.powerConnected
     readonly property real batteryIconCenterY:
         Appearance.spacing.medium + 18
@@ -53,7 +38,7 @@ Rectangle {
         if (!root.present || !root.valueAvailable)
             return "battery_unknown";
 
-        const percent = root.battery.chargePercent;
+        const percent = root.chargePercent;
         if (root.charging) {
             if (percent <= 15)
                 return "battery_charging_20";
@@ -93,20 +78,20 @@ Rectangle {
 
         if (root.charging) {
             return Format.isNumber(
-                root.battery.timeRemainingSeconds
+                PowerService.timeToFull
             )
                 ? qsTr("充满还需 ") + Format.duration(
-                    root.battery.timeRemainingSeconds
+                    PowerService.timeToFull
                 )
                 : qsTr("充满时长未知");
         }
 
-        if (!root.powerConnected) {
+        if (PowerService.discharging || !root.powerConnected) {
             return Format.isNumber(
-                root.battery.timeRemainingSeconds
+                PowerService.timeToEmpty
             )
                 ? qsTr("耗电时长 ") + Format.duration(
-                    root.battery.timeRemainingSeconds
+                    PowerService.timeToEmpty
                 )
                 : qsTr("耗电时长未知");
         }
@@ -118,8 +103,8 @@ Rectangle {
     color: root.containerColor
     Accessible.name: qsTr("电池，")
         + (root.present
-            ? Format.percent(root.battery.chargePercent, 0)
-                + "，" + Format.batteryStatus(root.battery.status)
+            ? Format.percent(root.chargePercent, 0)
+                + "，" + root.statusText()
                 + "，" + (
                     root.powerConnected
                         ? qsTr("已接通电源")
@@ -134,6 +119,18 @@ Rectangle {
             easing.bezierCurve:
                 Appearance.animation.expressiveSlowSpatial.bezierCurve
         }
+    }
+
+    function statusText() {
+        if (!root.present)
+            return qsTr("不可用");
+        if (root.full)
+            return qsTr("已充满");
+        if (root.charging)
+            return qsTr("充电中");
+        if (PowerService.discharging)
+            return qsTr("放电中");
+        return root.powerConnected ? qsTr("已接通电源") : qsTr("状态未知");
     }
 
     BatteryContents {
@@ -279,7 +276,7 @@ Rectangle {
 
                 Text {
                     Layout.fillWidth: true
-                    text: Format.isNumber(root.battery.powerWatts)
+                    text: Format.isNumber(PowerService.changeRate)
                         ? (
                             root.powerConnected
                                 ? (
@@ -289,7 +286,7 @@ Rectangle {
                                 )
                                 : qsTr("放电 ")
                         ) + Format.watts(
-                            root.battery.powerWatts
+                            Math.abs(PowerService.changeRate)
                         )
                         : qsTr("功率未知")
                     color: contents.foregroundColor
@@ -302,7 +299,7 @@ Rectangle {
 
             RowLayout {
                 Layout.fillWidth: true
-                visible: Format.isNumber(root.battery.healthPercent)
+                visible: Format.isNumber(PowerService.healthPercentage)
                 spacing: Appearance.spacing.xSmall
 
                 MaterialSymbol {
@@ -315,7 +312,7 @@ Rectangle {
                     Layout.fillWidth: true
                     text: qsTr("健康 ")
                         + Format.percent(
-                            root.battery.healthPercent,
+                            PowerService.healthPercentage,
                             0
                         )
                     color: contents.foregroundColor
@@ -350,7 +347,7 @@ Rectangle {
             Text {
                 Layout.alignment: Qt.AlignRight
                 text: root.present
-                    ? Format.batteryStatus(root.battery.status)
+                    ? root.statusText()
                     : qsTr("不可用")
                 color: contents.foregroundColor
                 opacity: 0.74
@@ -378,7 +375,7 @@ Rectangle {
 
                 Text {
                     text: root.present
-                        ? Format.percent(root.battery.chargePercent, 0)
+                        ? Format.percent(root.chargePercent, 0)
                         : "—"
                     color: contents.foregroundColor
                     font.family: Fonts.numeric

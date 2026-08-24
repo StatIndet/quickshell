@@ -274,6 +274,8 @@ FloatingWindow {
                         onLoaded: {
                             if (item && "parentModal" in item)
                                 item.parentModal = parentModal;
+                            if (item && "presentationActive" in item)
+                                item.presentationActive = Qt.binding(function() { return root.visible; });
                         }
                     }
 

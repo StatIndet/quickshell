@@ -10,6 +10,7 @@ Item {
     id: root
 
     property bool vertical: false
+    property string ownerId: "bar-sysmonitor"
     readonly property bool isHovered: mouseArea.containsMouse
     readonly property var memory: SystemMonitorService.memory || ({
     })
@@ -62,8 +63,8 @@ Item {
 
     implicitWidth: root.vertical ? Sizes.barVisualThickness : resourceLayout.implicitWidth + 2 * Sizes.barPillHorizontalPadding
     implicitHeight: root.vertical ? resourceLayout.implicitHeight + 2 * Sizes.barPillHorizontalPadding : Sizes.barPillThickness
-    Component.onCompleted: SystemMonitorService.acquire()
-    Component.onDestruction: SystemMonitorService.release()
+    Component.onCompleted: SystemMonitorService.setConsumerModules(root.ownerId, ["cpu", "memory", "disk"])
+    Component.onDestruction: SystemMonitorService.clearConsumer(root.ownerId)
 
     TopBarPillBackground {
         anchors.fill: parent

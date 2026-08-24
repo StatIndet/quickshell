@@ -317,7 +317,7 @@ function requiresMonitor(state, id) {
     var item = card(state, id);
     var definition = definitionFor(id);
     return !!item && item.enabled && item.container === "desktop"
-        && !!definition && definition.requiresSystemMonitor;
+        && !!definition && (definition.monitorModules || []).length > 0;
 }
 
 function serialize(state) {

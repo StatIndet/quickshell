@@ -11,7 +11,7 @@ var cardDefinitions = [
         icon: "schedule",
         columnSpan: 2,
         rowSpan: 2,
-        requiresSystemMonitor: false,
+        monitorModules: [],
         preserveDefaultSurface: true,
         excludeHostBlur: true
     },
@@ -22,7 +22,7 @@ var cardDefinitions = [
         icon: "battery_full",
         columnSpan: 1,
         rowSpan: 2,
-        requiresSystemMonitor: true,
+        monitorModules: [],
         preserveDefaultSurface: true
     },
     {
@@ -32,7 +32,7 @@ var cardDefinitions = [
         icon: "memory",
         columnSpan: 1,
         rowSpan: 1,
-        requiresSystemMonitor: true,
+        monitorModules: ["cpu"],
         preserveDefaultSurface: true
     },
     {
@@ -42,7 +42,7 @@ var cardDefinitions = [
         icon: "developer_board",
         columnSpan: 1,
         rowSpan: 1,
-        requiresSystemMonitor: true,
+        monitorModules: ["gpu"],
         preserveDefaultSurface: true
     },
     {
@@ -52,7 +52,7 @@ var cardDefinitions = [
         icon: "memory_alt",
         columnSpan: 1,
         rowSpan: 1,
-        requiresSystemMonitor: true,
+        monitorModules: ["memory"],
         preserveDefaultSurface: true,
         excludeHostBlur: true
     },
@@ -63,7 +63,7 @@ var cardDefinitions = [
         icon: "wifi",
         columnSpan: 1,
         rowSpan: 1,
-        requiresSystemMonitor: false,
+        monitorModules: [],
         preserveDefaultSurface: true,
         excludeHostBlur: true
     },
@@ -74,7 +74,7 @@ var cardDefinitions = [
         icon: "swap_vert",
         columnSpan: 2,
         rowSpan: 1,
-        requiresSystemMonitor: true
+        monitorModules: ["network"]
     },
     {
         id: "storage",
@@ -83,7 +83,7 @@ var cardDefinitions = [
         icon: "storage",
         columnSpan: 3,
         rowSpan: 1,
-        requiresSystemMonitor: true
+        monitorModules: ["disk"]
     },
     {
         id: "calendar",
@@ -92,7 +92,7 @@ var cardDefinitions = [
         icon: "calendar_month",
         columnSpan: 1,
         rowSpan: 1,
-        requiresSystemMonitor: false
+        monitorModules: []
     },
     {
         id: "weather",
@@ -101,7 +101,7 @@ var cardDefinitions = [
         icon: "cloud",
         columnSpan: 2,
         rowSpan: 2,
-        requiresSystemMonitor: false,
+        monitorModules: [],
         preserveDefaultSurface: true,
         excludeHostBlur: true
     },
@@ -112,7 +112,7 @@ var cardDefinitions = [
         icon: "music_note",
         columnSpan: 2,
         rowSpan: 2,
-        requiresSystemMonitor: false,
+        monitorModules: [],
         preserveDefaultSurface: true,
         excludeHostBlur: true
     }
@@ -136,6 +136,8 @@ function cloneDefinition(definition) {
     var result = {};
     for (var key in definition)
         result[key] = definition[key];
+    result.monitorModules = (definition.monitorModules || []).slice();
+    result.requiresSystemMonitor = result.monitorModules.length > 0;
     return result;
 }
 

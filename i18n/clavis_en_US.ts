@@ -4847,6 +4847,10 @@ detected</translation>
         <source>不可用</source>
         <translation>Unavailable</translation>
     </message>
+    <message><source>已充满</source><translation>Fully charged</translation></message>
+    <message><source>充电中</source><translation>Charging</translation></message>
+    <message><source>放电中</source><translation>Discharging</translation></message>
+    <message><source>状态未知</source><translation>Status unknown</translation></message>
 </context>
 <context>
     <name>SystemCalendarCard</name>
@@ -5296,6 +5300,7 @@ detected</translation>
         <source>%1 分钟</source>
         <translation>%1 minutes</translation>
     </message>
+    <message><source>无法读取系统身份信息</source><translation>Unable to read system identity</translation></message>
 </context>
 <context>
     <name>SystemLoadingState</name>

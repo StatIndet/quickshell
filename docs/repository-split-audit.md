@@ -22,6 +22,12 @@ QML 状态或天气/歌词模型。
 `keytop` 独立拥有系统采样、TUI、JSON snapshot 和 JSONL stream。Clavis 直接启动
 `keytop value stream`，不经过 `key-cli`。
 
+Clavis 对系统信息采用四种独立生命周期：静态 identity 在 Quickshell 进程启动时通过
+`keytop value system` 读取一次；uptime 在可见 consumer 存在时从 `/proc/uptime` 校准
+一次并用本地单调时钟更新；电池直接使用 `Quickshell.Services.UPower`；CPU、GPU、
+Memory、Disk、Network 则按可见 owner 的 module union 维持单个 keytop JSONL stream，
+所有 active module 共用用户配置的采样间隔。
+
 ## 明确删除
 
 Clavis 不再包含旧 C++ CLI、系统监测 plugin、录屏/录音 backend、天气 CLI bridge、

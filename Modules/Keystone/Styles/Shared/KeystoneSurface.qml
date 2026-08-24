@@ -446,6 +446,7 @@ Variants {
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
                 property bool hasClosablePopup: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
+                readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
                 readonly property bool showDashboardHole: dashboardTabActive
                 property real pillMorphProgress: 0
                 property real recordingInfoProgress: 0
@@ -474,6 +475,9 @@ Variants {
                 property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio : null
                 property string sliderMode: "volume"
                 readonly property var currentPlayer: MediaManager.active
+
+                onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
+                Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
 
                 function isHoverWidthMotion(nextW) {
                     return isCollapsedMode && Math.abs(nextW - width) <= KeystoneMotion.hoverWidthDelta;
@@ -596,6 +600,7 @@ Variants {
                     recordingPresentationOut.restart();
                 }
                 Component.onCompleted: {
+                    SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive);
                     root.componentReady = true;
                     recordingContentIn.stop();
                     recordingPresentationOut.stop();

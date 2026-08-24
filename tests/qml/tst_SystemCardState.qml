@@ -215,6 +215,10 @@ TestCase {
         });
         state = CardState.setContainer(state, "cpu", "desktop", "DP-1", 0.2, 0.3, "screen");
         verify(CardState.requiresMonitor(state, "cpu"));
+        state = CardState.setContainer(state, "storage", "desktop", "DP-1", 0.2, 0.3, "screen");
+        verify(CardState.requiresMonitor(state, "storage"));
+        state = CardState.setContainer(state, "battery", "desktop", "DP-1", 0.2, 0.3, "screen");
+        verify(!CardState.requiresMonitor(state, "battery"));
         verify(!CardState.requiresMonitor(state, "time"));
         state = CardState.setEnabled(state, "cpu", false);
         verify(!CardState.requiresMonitor(state, "cpu"));

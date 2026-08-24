@@ -8,6 +8,12 @@ import qs.Modules.SystemCards
 StyledFlickable {
     id: root
 
+    property bool presentationActive: false
+
+    onPresentationActiveChanged: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu"] : [])
+    Component.onCompleted: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu"] : [])
+    Component.onDestruction: SystemMonitorService.clearConsumer("general-sidebar-settings")
+
     readonly property bool cookieClockActive: UiPreferences.sidebarClockStyle === "cookie"
     readonly property var gpuOptions: buildGpuOptions()
 

@@ -137,6 +137,4 @@ Rectangle {
         }
     }
 
-    Component.onCompleted: SystemMonitorService.acquire()
-    Component.onDestruction: SystemMonitorService.release()
 }

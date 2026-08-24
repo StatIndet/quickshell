@@ -17,7 +17,12 @@ Item {
     id: root
 
     property var parentModal: null
+    property bool presentationActive: false
     signal navigateRequested(string pageId)
+
+    onPresentationActiveChanged: SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive)
+    Component.onCompleted: SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive)
+    Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
     function closeChildWindows() {
         avatarPicker.dismiss();

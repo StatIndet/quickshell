@@ -276,10 +276,10 @@ Item {
 
     function syncServiceOwnership() {
         if (root.isForeground && !root.serviceForegroundAcquired) {
-            SystemCardService.setSidebarForeground(true);
+            SystemCardService.setSidebarForeground("sidebar:" + root.screenName, true);
             root.serviceForegroundAcquired = true;
         } else if (!root.isForeground && root.serviceForegroundAcquired) {
-            SystemCardService.setSidebarForeground(false);
+            SystemCardService.setSidebarForeground("sidebar:" + root.screenName, false);
             root.serviceForegroundAcquired = false;
         }
     }
@@ -299,7 +299,7 @@ Item {
             SystemCardDragSession.cancel();
 
         if (root.serviceForegroundAcquired)
-            SystemCardService.setSidebarForeground(false);
+            SystemCardService.setSidebarForeground("sidebar:" + root.screenName, false);
 
     }
 

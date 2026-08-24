@@ -18,8 +18,7 @@ Singleton {
     readonly property var desktopCardIds: CardState.activeDesktopIds(state)
     readonly property string globalDesktopLayoutMode: state.globalDesktopLayoutMode
     property bool preferencesLoaded: false
-    property int sidebarConsumerCount: 0
-    property bool monitorServiceAcquired: false
+    property var sidebarForegroundOwners: ({})
     property int desktopLayoutRevision: 0
     property var internalState: CardState.defaultState()
 
@@ -41,7 +40,12 @@ Singleton {
 
     function requiresSystemMonitor(cardId) {
         const definition = Catalog.definitionFor(String(cardId));
-        return !!definition && definition.requiresSystemMonitor;
+        return !!definition && (definition.monitorModules || []).length > 0;
+    }
+
+    function monitorModules(cardId) {
+        const definition = Catalog.definitionFor(String(cardId));
+        return definition ? (definition.monitorModules || []).slice() : [];
     }
 
     function cardExcludesHostBlur(cardId) {
@@ -226,29 +230,37 @@ Singleton {
         } : Catalog.defaultAnchorFor(String(cardId));
     }
 
-    function setSidebarForeground(active) {
+    function setSidebarForeground(owner, active) {
+        const key = String(owner || "default");
+        const next = Object.assign({}, root.sidebarForegroundOwners);
         if (active)
-            root.sidebarConsumerCount += 1;
+            next[key] = true;
         else
-            root.sidebarConsumerCount = Math.max(0, root.sidebarConsumerCount - 1);
+            delete next[key];
+        root.sidebarForegroundOwners = next;
         root.syncMonitorOwnership();
     }
 
     function syncMonitorOwnership() {
-        let desktopNeedsMonitor = false;
+        const desktopModules = [];
         root.desktopCardIds.forEach(function(id) {
-            if (CardState.requiresMonitor(root.state, id))
-                desktopNeedsMonitor = true;
-
+            root.monitorModules(id).forEach(function(module) {
+                if (desktopModules.indexOf(module) < 0)
+                    desktopModules.push(module);
+            });
         });
-        const needed = root.sidebarConsumerCount > 0 || desktopNeedsMonitor;
-        if (needed && !root.monitorServiceAcquired) {
-            SystemMonitorService.acquire();
-            root.monitorServiceAcquired = true;
-        } else if (!needed && root.monitorServiceAcquired) {
-            SystemMonitorService.release();
-            root.monitorServiceAcquired = false;
+        SystemMonitorService.setConsumerModules("system-cards-desktop", desktopModules);
+
+        const sidebarModules = [];
+        if (Object.keys(root.sidebarForegroundOwners).length > 0) {
+            root.sidebarCardIds.forEach(function(id) {
+                root.monitorModules(id).forEach(function(module) {
+                    if (sidebarModules.indexOf(module) < 0)
+                        sidebarModules.push(module);
+                });
+            });
         }
+        SystemMonitorService.setConsumerModules("system-cards-sidebar", sidebarModules);
     }
 
     function loadPreferences() {
@@ -269,9 +281,8 @@ Singleton {
 
     Component.onCompleted: root.loadPreferences()
     Component.onDestruction: {
-        if (root.monitorServiceAcquired)
-            SystemMonitorService.release();
-
+        SystemMonitorService.clearConsumer("system-cards-desktop");
+        SystemMonitorService.clearConsumer("system-cards-sidebar");
     }
 
     Connections {

@@ -23,20 +23,21 @@ Singleton {
     property int configuredIntervalMs: UiPreferences.systemMonitorIntervalMs
     property double sourceIntervalMs: 0
     readonly property int intervalMs: configuredIntervalMs
-    property int consumerCount: 0
+    property var _consumerModules: ({})
+    property var effectiveModules: []
+    property var _streamModules: []
+    property bool _reconcilePending: false
     property string state: "idle"
     property string errorMessage: ""
     property string errorDetails: ""
     property string actionError: ""
     property bool actionBusy: false
 
-    property var system: ({})
     property var cpu: ({})
     property var memory: ({})
     property var gpus: []
     property var disks: []
     property var network: ({})
-    property var battery: ({})
     property var errors: []
 
     property var cpuHistory: []
@@ -77,7 +78,7 @@ Singleton {
     property int _keyTopProbeGeneration: 0
     property int _keyTopProbeHandledGeneration: -1
 
-    readonly property bool active: consumerCount > 0
+    readonly property bool active: effectiveModules.length > 0
     readonly property bool hasData: _hasData
     readonly property bool loading: state === "loading"
     readonly property bool ready: state === "ready"
@@ -105,12 +106,63 @@ Singleton {
         }
     }
 
-    function acquire() {
-        root.consumerCount += 1;
+    function setConsumerModules(owner, modules) {
+        const key = String(owner || "").trim();
+        if (key === "")
+            return;
+        const allowed = ["cpu", "disk", "gpu", "memory", "network"];
+        const unique = [];
+        (Array.isArray(modules) ? modules : []).forEach(function(module) {
+            const name = String(module || "").trim();
+            if (allowed.indexOf(name) >= 0 && unique.indexOf(name) < 0)
+                unique.push(name);
+        });
+        unique.sort();
+        const next = Object.assign({}, root._consumerModules);
+        if (unique.length > 0)
+            next[key] = unique;
+        else
+            delete next[key];
+        root._consumerModules = next;
+        root._scheduleModuleReconcile();
     }
 
-    function release() {
-        root.consumerCount = Math.max(0, root.consumerCount - 1);
+    function clearConsumer(owner) {
+        root.setConsumerModules(owner, []);
+    }
+
+    function _scheduleModuleReconcile() {
+        if (root._reconcilePending)
+            return;
+        root._reconcilePending = true;
+        Qt.callLater(root._reconcileModules);
+    }
+
+    function _reconcileModules() {
+        root._reconcilePending = false;
+        const union = [];
+        Object.keys(root._consumerModules).sort().forEach(function(owner) {
+            root._consumerModules[owner].forEach(function(module) {
+                if (union.indexOf(module) < 0)
+                    union.push(module);
+            });
+        });
+        union.sort();
+        if (JSON.stringify(union) === JSON.stringify(root.effectiveModules))
+            return;
+
+        const previous = root.effectiveModules.slice();
+        const changed = previous.filter(module => union.indexOf(module) < 0)
+            .concat(union.filter(module => previous.indexOf(module) < 0));
+        changed.forEach(root._clearModuleHistory);
+        root.effectiveModules = union;
+        root.sourceIntervalMs = 0;
+        if (streamProcess.running)
+            root._stopStream();
+        else if (root.active)
+            root._startStream();
+        else
+            root.state = root.hasData ? "stale" : "idle";
     }
 
     function retry() {
@@ -134,7 +186,7 @@ Singleton {
             "--interval",
             String(root.configuredIntervalMs),
             "--modules",
-            "system,cpu,memory,gpu,disk,network,battery"
+            root._streamModules.join(",")
         ];
     }
 
@@ -153,6 +205,7 @@ Singleton {
         root._handledGeneration = -1;
         root._consecutiveMalformedLines = 0;
         root._streamStartedAtMs = Date.now();
+        root._streamModules = root.effectiveModules.slice();
         root.state = root.hasData || root.reconnectAttempt > 0
             ? "reconnecting"
             : "loading";
@@ -294,15 +347,17 @@ Singleton {
                 || !root._isFiniteNumber(snapshot.intervalMs)
                 || snapshot.intervalMs < 0)
             return qsTr("时间戳、序列号或采样间隔无效");
-        if (!root._isObject(snapshot.system)
-                || !root._isObject(snapshot.cpu)
-                || !root._isObject(snapshot.memory)
-                || !root._isObject(snapshot.network)
-                || !root._isObject(snapshot.battery))
-            return qsTr("系统模块字段缺失或类型无效");
-        if (!Array.isArray(snapshot.gpus)
-                || !Array.isArray(snapshot.disks)
-                || !Array.isArray(snapshot.errors))
+        if (root._streamModules.indexOf("cpu") >= 0 && !root._isObject(snapshot.cpu))
+            return qsTr("CPU 模块字段缺失或类型无效");
+        if (root._streamModules.indexOf("memory") >= 0 && !root._isObject(snapshot.memory))
+            return qsTr("内存模块字段缺失或类型无效");
+        if (root._streamModules.indexOf("network") >= 0 && !root._isObject(snapshot.network))
+            return qsTr("网络模块字段缺失或类型无效");
+        if (root._streamModules.indexOf("gpu") >= 0 && !Array.isArray(snapshot.gpus))
+            return qsTr("GPU 模块字段缺失或类型无效");
+        if (root._streamModules.indexOf("disk") >= 0 && !Array.isArray(snapshot.disks))
+            return qsTr("磁盘模块字段缺失或类型无效");
+        if (!Array.isArray(snapshot.errors))
             return qsTr("设备或错误字段必须是数组");
         return "";
     }
@@ -366,6 +421,24 @@ Singleton {
         root.networkUploadHistory = [];
     }
 
+    function _clearModuleHistory(module) {
+        switch (module) {
+        case "cpu":
+            root.cpuHistory = [];
+            break;
+        case "memory":
+            root.memoryHistory = [];
+            break;
+        case "gpu":
+            root.gpuHistory = [];
+            break;
+        case "network":
+            root.networkDownloadHistory = [];
+            root.networkUploadHistory = [];
+            break;
+        }
+    }
+
     function _applyConfiguredInterval() {
         root._clearMonitorHistories();
         root.sourceIntervalMs = 0;
@@ -374,28 +447,32 @@ Singleton {
     }
 
     function _commitSnapshot(snapshot) {
-        const nextSelectedGpuId = root._resolveSelectedGpuId(snapshot.gpus);
+        const snapshotGpus = Array.isArray(snapshot.gpus) ? snapshot.gpus : root.gpus;
+        const nextSelectedGpuId = root._resolveSelectedGpuId(snapshotGpus);
         if (nextSelectedGpuId !== root._effectiveGpuId)
             root.gpuHistory = [];
         root._effectiveGpuId = nextSelectedGpuId;
-        root.system = snapshot.system;
-        root.cpu = snapshot.cpu;
-        root.memory = snapshot.memory;
-        root.gpus = snapshot.gpus.slice();
-        root.disks = snapshot.disks.slice();
-        root.network = snapshot.network;
-        root.battery = snapshot.battery;
+        if (snapshot.cpu)
+            root.cpu = snapshot.cpu;
+        if (snapshot.memory)
+            root.memory = snapshot.memory;
+        if (Array.isArray(snapshot.gpus))
+            root.gpus = snapshot.gpus.slice();
+        if (Array.isArray(snapshot.disks))
+            root.disks = snapshot.disks.slice();
+        if (snapshot.network)
+            root.network = snapshot.network;
         root.errors = snapshot.errors.slice(0, 32);
 
         root.cpuHistory = root._appendHistory(
             root.cpuHistory,
-            snapshot.cpu.usagePercent
+            snapshot.cpu ? snapshot.cpu.usagePercent : undefined
         );
         root.memoryHistory = root._appendHistory(
             root.memoryHistory,
-            snapshot.memory.usagePercent
+            snapshot.memory ? snapshot.memory.usagePercent : undefined
         );
-        const effectiveGpu = root._gpuById(snapshot.gpus, nextSelectedGpuId);
+        const effectiveGpu = root._gpuById(snapshot.gpus || [], nextSelectedGpuId);
         if (root._gpuId(effectiveGpu) !== "") {
             root.gpuHistory = root._appendHistory(
                 root.gpuHistory,
@@ -404,11 +481,11 @@ Singleton {
         }
         root.networkDownloadHistory = root._appendHistory(
             root.networkDownloadHistory,
-            snapshot.network.downloadBytesPerSecond
+            snapshot.network ? snapshot.network.downloadBytesPerSecond : undefined
         );
         root.networkUploadHistory = root._appendHistory(
             root.networkUploadHistory,
-            snapshot.network.uploadBytesPerSecond
+            snapshot.network ? snapshot.network.uploadBytesPerSecond : undefined
         );
 
         root.sourceTimestampMs = snapshot.timestampMs;
@@ -426,6 +503,8 @@ Singleton {
     }
 
     function _consumeLine(line) {
+        if (root._terminationPending)
+            return;
         const text = String(line || "").trim();
         if (text.length === 0)
             return;
@@ -637,13 +716,6 @@ Singleton {
         }
 
         Qt.callLater(root._probeNextTerminal);
-    }
-
-    onActiveChanged: {
-        if (active)
-            root._startStream();
-        else
-            root._stopStream();
     }
 
     onConfiguredIntervalMsChanged: root._applyConfiguredInterval()

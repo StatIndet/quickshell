@@ -13,11 +13,15 @@ Item {
 
     readonly property bool isForeground: root.foreground
     onIsForegroundChanged: {
+        SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, root.isForeground);
         if (isForeground) {
             NotificationManager.timeoutAll();
             NotificationManager.markAllRead();
         }
     }
+
+    Component.onCompleted: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, root.isForeground)
+    Component.onDestruction: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, false)
 
     ColumnLayout {
         anchors.fill: parent

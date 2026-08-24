@@ -20,6 +20,7 @@ Item {
     Component.onCompleted: {
         I18nService.initialize();
         LyricsTrackService.initialize();
+        SystemIdentityService.initialize();
     }
 
     WallpaperBackground {}

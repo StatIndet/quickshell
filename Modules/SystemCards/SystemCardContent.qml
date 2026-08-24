@@ -38,9 +38,8 @@ Item {
     }
 
     function cpuDetail() {
-        const system = SystemMonitorService.system;
-        const physical = Number(system.physicalCoreCount || 0);
-        const logical = Number(system.logicalCpuCount || 0);
+        const physical = SystemIdentityService.physicalCoreCount;
+        const logical = SystemIdentityService.logicalCpuCount;
         if (physical > 0 && logical > 0)
             return physical + qsTr(" 核 · ") + logical + qsTr(" 线程");
 
@@ -113,7 +112,6 @@ Item {
         id: batteryComponent
 
         SystemBatteryTank {
-            battery: SystemMonitorService.battery
             containerColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer)
             // The battery fill is data visualization, not the card surface;
             // keep it visible while the surrounding tank is transparent.
