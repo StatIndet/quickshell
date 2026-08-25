@@ -21,7 +21,6 @@ Item {
     signal navigateRequested(string pageId)
 
     onPresentationActiveChanged: SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive)
-    Component.onCompleted: SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
     function closeChildWindows() {
@@ -145,6 +144,7 @@ Item {
     }
 
     Component.onCompleted: {
+        SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive);
         if (WallpaperService.wallpapers.length === 0 && !WallpaperService.scanning)
             WallpaperService.scan();
     }
