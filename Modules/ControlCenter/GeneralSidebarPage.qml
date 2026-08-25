@@ -513,15 +513,14 @@ StyledFlickable {
                 Layout.fillWidth: true
                 iconName: "speed"
                 title: qsTr("系统监测快照间隔")
-                supportingText: qsTr("较短的间隔会提高实时性，同时增加资源占用")
 
                 trailing: MaterialFilledTextField {
                     id: intervalField
 
                     Layout.preferredWidth: 150
+                    labelText: qsTr("间隔")
                     text: String(UiPreferences.systemMonitorIntervalMs)
                     error: text.length === 0 || !acceptableInput
-                    horizontalAlignment: TextInput.AlignRight
                     inputMethodHints: Qt.ImhDigitsOnly
                     trailingContentWidth: 40
                     onEditingFinished: {

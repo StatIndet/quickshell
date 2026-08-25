@@ -143,27 +143,6 @@ StyledFlickable {
         y: Metrics.pageMargin
         spacing: Metrics.spacingXL
 
-        InlineStatusBanner {
-            Layout.fillWidth: true
-            visible: DefaultApplicationsService.lastError !== ""
-            tone: "error"
-            message: DefaultApplicationsService.lastError
-        }
-
-        InlineStatusBanner {
-            Layout.fillWidth: true
-            visible: DefaultApplicationsService.lastMessage !== ""
-            tone: "info"
-            message: DefaultApplicationsService.lastMessage
-        }
-
-        InlineStatusBanner {
-            Layout.fillWidth: true
-            visible: DefaultApplicationsService.loading
-            iconName: "progress_activity"
-            message: qsTr("正在读取系统默认应用…")
-        }
-
         DefaultAppsGroup {
             Layout.fillWidth: true
             groupTitle: qsTr("互联网")
@@ -240,6 +219,27 @@ StyledFlickable {
                 title: qsTr("音乐播放器")
                 iconName: "music_note"
             }
+        }
+
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: DefaultApplicationsService.lastError !== ""
+            tone: "error"
+            message: DefaultApplicationsService.lastError
+        }
+
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: DefaultApplicationsService.lastMessage !== ""
+            tone: "info"
+            message: DefaultApplicationsService.lastMessage
+        }
+
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: DefaultApplicationsService.loading
+            iconName: "progress_activity"
+            message: qsTr("正在读取系统默认应用…")
         }
 
         Item {
