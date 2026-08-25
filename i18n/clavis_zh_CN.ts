@@ -2452,7 +2452,7 @@
     <message><source>当前不可用</source><translation>当前不可用</translation></message>
     <message><source>选择 GPU 卡片显示的图形设备</source><translation>选择 GPU 卡片显示的图形设备</translation></message>
     <message><source>系统监测快照间隔</source><translation>系统监测快照间隔</translation></message>
-    <message><source>较短的间隔会提高实时性，同时增加资源占用</source><translation>较短的间隔会提高实时性，同时增加资源占用</translation></message>
+    <message><source>间隔</source><translation>间隔</translation></message>
     <message><source>ms</source><translation>ms</translation></message>
 </context>
 <context>
