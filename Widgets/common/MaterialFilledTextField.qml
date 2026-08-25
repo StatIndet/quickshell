@@ -3,8 +3,8 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import qs.Common
 
-// Reusable Material 3 filled text field. The existing MaterialTextField keeps
-// its outlined contract; this component owns the filled surface and indicator.
+// Reusable Material 3 filled text field. Qt's Material style owns the filled
+// container and FloatingPlaceholderText, including its native label motion.
 TextField {
     id: root
 
@@ -30,10 +30,10 @@ TextField {
     selectByMouse: true
     wrapMode: TextInput.NoWrap
     activeFocusOnTab: true
+    hoverEnabled: true
     color: root.enabled ? Appearance.colors.colOnSurface : Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.38)
-    selectedTextColor: Appearance.colors.colOnPrimaryContainer
-    selectionColor: Appearance.colors.colPrimaryContainer
-    placeholderTextColor: !root.enabled ? Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.38) : root.activeFocus ? root.effectiveAccent : Appearance.colors.colOnSurfaceVariant
+    selectedTextColor: Appearance.colors.colOnSecondaryContainer
+    selectionColor: Appearance.colors.colSecondaryContainer
     leftPadding: Metrics.spacingL + (root.hasLeadingContent ? root.leadingContentWidth + Metrics.spacingXS : 0)
     rightPadding: Metrics.spacingL + (root.hasTrailingContent ? root.trailingContentWidth + Metrics.spacingXS : 0)
 
@@ -75,15 +75,14 @@ TextField {
     }
 
     HoverHandler {
-        id: hoverHandler
-
         cursorShape: Qt.IBeamCursor
     }
 
+    // Qt's Material TextField continues to own the floating placeholder.
+    // This replacement only supplies the shell's dynamic surface token, which
+    // the stock Material dark palette otherwise ignores for filled fields.
     background: Rectangle {
-        color: root.enabled ? root.containerColor : Appearance.applyAlpha(root.containerColor, 0.62)
-        topLeftRadius: Metrics.cornerXS
-        topRightRadius: Metrics.cornerXS
+        color: root.enabled ? root.containerColor : Appearance.colors.colLayer2Disabled
 
         Rectangle {
             anchors.left: parent.left
@@ -91,37 +90,7 @@ TextField {
             anchors.bottom: parent.bottom
             height: root.activeFocus || root.error ? 2 : 1
             opacity: root.enabled ? 1 : 0.38
-            color: {
-                if (root.error)
-                    return Appearance.colors.colError;
-
-                if (root.activeFocus)
-                    return Appearance.colors.colPrimary;
-
-                if (hoverHandler.hovered)
-                    return Appearance.colors.colOutline;
-
-                return Appearance.colors.colOutlineVariant;
-            }
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Appearance.animation.expressiveFastEffects.duration
-                    easing.type: Appearance.animation.expressiveFastEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-                }
-
-            }
-
-            Behavior on height {
-                NumberAnimation {
-                    duration: Appearance.animation.expressiveFastEffects.duration
-                    easing.type: Appearance.animation.expressiveFastEffects.type
-                    easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-                }
-
-            }
-
+            color: root.error ? Appearance.colors.colError : root.activeFocus ? root.effectiveAccent : root.hovered ? Appearance.colors.colOutline : Appearance.colors.colOutlineVariant
         }
 
     }
