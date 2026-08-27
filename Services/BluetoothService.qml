@@ -2,7 +2,9 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Bluetooth
+import qs.Common
 
 Singleton {
     id: root
@@ -535,7 +537,18 @@ Singleton {
         onTriggered: root._finishOperationFailed(qsTr("蓝牙操作超时；当前 Quickshell API 未提供更详细的 BlueZ 错误"))
     }
 
-    Component.onCompleted: root._applyDiscovery()
+    Process {
+        id: agentProcess
+        command: ["python3", Paths.scriptPath("system", "bluetooth-agent.py")]
+        running: true
+    }
+
+    Component.onCompleted: {
+        root._applyDiscovery();
+        if (root.adapter && !root.adapter.pairable) {
+            root.adapter.pairable = true;
+        }
+    }
     Component.onDestruction: {
         for (const nativeAdapter of root._nativeAdapters) {
             if (nativeAdapter && nativeAdapter.discovering)
