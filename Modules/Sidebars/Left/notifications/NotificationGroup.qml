@@ -23,18 +23,8 @@ MouseArea {
     property int parentDragIndex: dragHost ? dragHost.dragIndex : -1
     property real parentDragDistance: dragHost ? dragHost.dragDistance : 0
     property int dragIndexDiff: Math.abs(parentDragIndex - delegateIndex)
-    property real xOffset: dragIndexDiff === 0 ? parentDragDistance
-        : Math.abs(parentDragDistance) > dragConfirmThreshold ? 0
-        : dragIndexDiff === 1 ? parentDragDistance * 0.3
-        : dragIndexDiff === 2 ? parentDragDistance * 0.1
-        : 0
-    readonly property bool latestNotificationHasImage: notificationCount > 0
-        && notifications[notificationCount - 1].image !== ""
-
-    implicitHeight: background.implicitHeight
-    hoverEnabled: true
-
-    NotificationUtils { id: notifUtils }
+    property real xOffset: dragIndexDiff === 0 ? parentDragDistance : Math.abs(parentDragDistance) > dragConfirmThreshold ? 0 : dragIndexDiff === 1 ? parentDragDistance * 0.3 : dragIndexDiff === 2 ? parentDragDistance * 0.1 : 0
+    readonly property bool latestNotificationHasImage: notificationCount > 0 && notifications[notificationCount - 1].image !== ""
 
     function isCriticalUrgency(urgency) {
         return urgency === NotificationUrgency.Critical || urgency === NotificationUrgency.Critical.toString();
@@ -43,6 +33,7 @@ MouseArea {
     function destroyWithAnimation(left = false) {
         if (root.dragHost)
             root.dragHost.resetDrag();
+
         dragManager.resetDrag();
         background.anchors.leftMargin = background.anchors.leftMargin;
         destroyAnimation.left = left;
@@ -52,23 +43,46 @@ MouseArea {
     function toggleExpanded() {
         implicitHeightAnim.enabled = !root.multipleNotifications || root.expanded;
         root.expanded = !root.expanded;
+        if (root.expanded)
+            root.notifications.forEach((notif) => {
+            return NotificationManager.markAsRead(notif.notificationId);
+        });
+
     }
 
+    implicitHeight: background.implicitHeight
+    hoverEnabled: true
     onContainsMouseChanged: {
         if (!root.popup)
-            return;
+            return ;
 
-        if (root.containsMouse) {
-            root.notifications.forEach((notif) => NotificationManager.cancelTimeout(notif.notificationId));
-        } else {
-            root.notifications.forEach((notif) => NotificationManager.timeoutNotification(notif.notificationId));
-        }
+        if (root.containsMouse)
+            root.notifications.forEach((notif) => {
+            return NotificationManager.cancelTimeout(notif.notificationId);
+        });
+        else
+            root.notifications.forEach((notif) => {
+            return NotificationManager.timeoutNotification(notif.notificationId);
+        });
+    }
+
+    NotificationUtils {
+        id: notifUtils
     }
 
     SequentialAnimation {
         id: destroyAnimation
+
         property bool left: true
+
         running: false
+        onFinished: {
+            root.notifications.forEach((notif) => {
+                Qt.callLater(() => {
+                    return NotificationManager.discardNotification(notif.notificationId);
+                });
+            });
+        }
 
         NumberAnimation {
             target: background.anchors
@@ -79,40 +93,45 @@ MouseArea {
             easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
         }
 
-        onFinished: {
-            root.notifications.forEach((notif) => {
-                Qt.callLater(() => NotificationManager.discardNotification(notif.notificationId));
-            });
-        }
     }
 
     DragManager {
         id: dragManager
+
         anchors.fill: parent
         interactive: !root.expanded
         automaticallyReset: false
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-
         onPressed: (mouse) => {
             if (mouse.button === Qt.RightButton)
                 root.toggleExpanded();
-        }
 
+        }
         onClicked: (mouse) => {
-            if (mouse.button === Qt.MiddleButton)
+            if (mouse.button === Qt.MiddleButton) {
                 root.destroyWithAnimation();
+            } else if (mouse.button === Qt.LeftButton) {
+                // Свёрнутая группа из нескольких уведомлений — раскрыть.
+                // Одиночное уведомление (или клик по раскрытой группе) —
+                // переход в приложение (default action).
+                if (root.multipleNotifications && !root.expanded) {
+                    root.toggleExpanded();
+                } else if (root.notificationCount > 0) {
+                    const notif = root.notifications[root.notificationCount - 1];
+                    NotificationManager.invokeDefaultAction(notif.notificationId);
+                }
+            }
         }
-
         onDraggingChanged: {
             if (dragging && root.dragHost)
                 root.dragHost.dragIndex = root.delegateIndex;
-        }
 
+        }
         onDragDiffXChanged: {
             if (root.dragHost)
                 root.dragHost.dragDistance = dragDiffX;
-        }
 
+        }
         onDragReleased: (diffX) => {
             if (Math.abs(diffX) > root.dragConfirmThreshold) {
                 root.destroyWithAnimation(diffX < 0);
@@ -120,6 +139,7 @@ MouseArea {
                 dragManager.resetDrag();
                 if (root.dragHost)
                     root.dragHost.resetDrag();
+
             }
         }
     }
@@ -130,36 +150,14 @@ MouseArea {
         anchors.left: parent.left
         anchors.leftMargin: root.xOffset
         width: parent.width
-        color: root.popup
-            ? Appearance.colors.colBackgroundSurfaceContainer
-            : BlurService.opaqueBackgroundColor(
-                Appearance.m3colors.m3surfaceContainer)
+        color: root.popup ? Appearance.colors.colBackgroundSurfaceContainer : BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainer)
         radius: Appearance.rounding.normal
         clip: true
-        implicitHeight: root.expanded
-            ? row.implicitHeight + root.padding * 2
-            : Math.min(80, row.implicitHeight + root.padding * 2)
-
-        Behavior on anchors.leftMargin {
-            enabled: !dragManager.dragging && !destroyAnimation.running
-            NumberAnimation {
-                duration: Appearance.animation.expressiveDefaultSpatial.duration
-                easing.type: Appearance.animation.expressiveFastSpatial.type
-                easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-            }
-        }
-
-        Behavior on implicitHeight {
-            id: implicitHeightAnim
-            NumberAnimation {
-                duration: Appearance.animation.expressiveDefaultEffects.duration
-                easing.type: Appearance.animation.expressiveDefaultEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
-            }
-        }
+        implicitHeight: root.expanded ? row.implicitHeight + root.padding * 2 : Math.min(80, row.implicitHeight + root.padding * 2)
 
         RowLayout {
             id: row
+
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
@@ -171,34 +169,27 @@ MouseArea {
                 image: root.multipleNotifications || root.notificationCount === 0 ? "" : root.notifications[0].image
                 appIcon: root.notificationGroup ? root.notificationGroup.appIcon : ""
                 summary: root.notificationCount > 0 ? root.notifications[root.notificationCount - 1].summary : ""
-                urgency: root.notifications.some((notif) => root.isCriticalUrgency(notif.urgency))
-                    ? NotificationUrgency.Critical.toString()
-                    : NotificationUrgency.Normal.toString()
+                urgency: root.notifications.some((notif) => {
+                    return root.isCriticalUrgency(notif.urgency);
+                }) ? NotificationUrgency.Critical.toString() : NotificationUrgency.Normal.toString()
             }
 
             ColumnLayout {
                 Layout.fillWidth: true
-                spacing: root.expanded
-                    ? (root.multipleNotifications ? (root.latestNotificationHasImage ? 35 : 5) : 0)
-                    : 0
-
-                Behavior on spacing {
-                    NumberAnimation {
-                        duration: Appearance.animation.expressiveDefaultEffects.duration
-                        easing.type: Appearance.animation.expressiveDefaultEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
-                    }
-                }
+                spacing: root.expanded ? (root.multipleNotifications ? (root.latestNotificationHasImage ? 35 : 5) : 0) : 0
 
                 Item {
                     id: topRow
-                    Layout.fillWidth: true
-                    implicitHeight: Math.max(topTextRow.implicitHeight, expandButton.implicitHeight)
+
                     property real fontSize: 12
                     property bool showAppName: root.multipleNotifications
 
+                    Layout.fillWidth: true
+                    implicitHeight: Math.max(topTextRow.implicitHeight, expandButton.implicitHeight)
+
                     RowLayout {
                         id: topTextRow
+
                         anchors.left: parent.left
                         anchors.right: expandButton.left
                         anchors.verticalCenter: parent.verticalCenter
@@ -206,15 +197,11 @@ MouseArea {
 
                         Text {
                             Layout.fillWidth: true
-                            text: (topRow.showAppName
-                                ? (root.notificationGroup ? root.notificationGroup.appName : "")
-                                : (root.notificationCount > 0 ? root.notifications[0].summary : "")) || ""
+                            text: (topRow.showAppName ? (root.notificationGroup ? root.notificationGroup.appName : "") : (root.notificationCount > 0 ? root.notifications[0].summary : "")) || ""
                             font.family: Fonts.ui
                             font.pixelSize: topRow.showAppName ? topRow.fontSize : 13
                             font.bold: !topRow.showAppName
-                            color: topRow.showAppName
-                                ? Appearance.colors.colSubtext
-                                : Appearance.colors.colOnLayer2
+                            color: topRow.showAppName ? Appearance.colors.colSubtext : Appearance.colors.colOnLayer2
                             elide: Text.ElideRight
                         }
 
@@ -226,18 +213,23 @@ MouseArea {
                             font.pixelSize: topRow.fontSize
                             color: Appearance.colors.colSubtext
                         }
+
                     }
 
                     NotificationGroupExpandButton {
                         id: expandButton
+
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         count: root.notificationCount
                         expanded: root.expanded
                         fontSize: topRow.fontSize
                         onClicked: root.toggleExpanded()
-                        altAction: () => root.toggleExpanded()
+                        altAction: () => {
+                            return root.toggleExpanded();
+                        }
                     }
+
                 }
 
                 StyledListView {
@@ -245,6 +237,11 @@ MouseArea {
 
                     property int dragIndex: -1
                     property real dragDistance: 0
+
+                    function resetDrag() {
+                        dragIndex = -1;
+                        dragDistance = 0;
+                    }
 
                     Layout.fillWidth: true
                     implicitHeight: contentHeight
@@ -255,23 +252,17 @@ MouseArea {
                     showVerticalScrollBar: false
                     clip: false
 
-                    function resetDrag() {
-                        dragIndex = -1;
-                        dragDistance = 0;
-                    }
-
                     Behavior on spacing {
                         NumberAnimation {
                             duration: Appearance.animation.expressiveDefaultEffects.duration
                             easing.type: Appearance.animation.expressiveDefaultEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                         }
+
                     }
 
                     model: ScriptModel {
-                        values: root.expanded
-                            ? root.notifications.slice().reverse()
-                            : root.notifications.slice().reverse().slice(0, 2)
+                        values: root.expanded ? root.notifications.slice().reverse() : root.notifications.slice().reverse().slice(0, 2)
                         objectProp: "notificationId"
                     }
 
@@ -289,8 +280,44 @@ MouseArea {
                         opacity: (!root.expanded && index === 1 && root.notificationCount > 2) ? 0.5 : 1
                         visible: root.expanded || index < 2
                     }
+
                 }
+
+                Behavior on spacing {
+                    NumberAnimation {
+                        duration: Appearance.animation.expressiveDefaultEffects.duration
+                        easing.type: Appearance.animation.expressiveDefaultEffects.type
+                        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+                    }
+
+                }
+
             }
+
         }
+
+        Behavior on anchors.leftMargin {
+            enabled: !dragManager.dragging && !destroyAnimation.running
+
+            NumberAnimation {
+                duration: Appearance.animation.expressiveDefaultSpatial.duration
+                easing.type: Appearance.animation.expressiveFastSpatial.type
+                easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+            }
+
+        }
+
+        Behavior on implicitHeight {
+            id: implicitHeightAnim
+
+            NumberAnimation {
+                duration: Appearance.animation.expressiveDefaultEffects.duration
+                easing.type: Appearance.animation.expressiveDefaultEffects.type
+                easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+            }
+
+        }
+
     }
+
 }

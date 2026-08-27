@@ -2900,6 +2900,41 @@
         <source>字体、数字位置和颜色</source>
         <translation>字体、数字位置和颜色</translation>
     </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="181"/>
+        <source>通知隐私</source>
+        <translation>通知隐私</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="185"/>
+        <source>锁屏通知</source>
+        <translation>锁屏通知</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="186"/>
+        <source>锁屏时通知内容的显示方式</source>
+        <translation>锁屏时通知内容的显示方式</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="188"/>
+        <source>显示内容</source>
+        <translation>显示内容</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="189"/>
+        <source>隐藏内容</source>
+        <translation>隐藏内容</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="190"/>
+        <source>全部隐藏</source>
+        <translation>全部隐藏</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="193"/>
+        <source>选择显示方式</source>
+        <translation>选择显示方式</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -3751,6 +3786,11 @@
         <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="117"/>
         <source>没有通知</source>
         <translation>没有通知</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="296"/>
+        <source>通知内容已隐藏</source>
+        <translation>通知内容已隐藏</translation>
     </message>
 </context>
 <context>

@@ -2900,6 +2900,41 @@ Scroll to adjust</translation>
         <source>字体、数字位置和颜色</source>
         <translation>Font, digit positions, and colors</translation>
     </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="181"/>
+        <source>通知隐私</source>
+        <translation>Notification privacy</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="185"/>
+        <source>锁屏通知</source>
+        <translation>Lock screen notifications</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="186"/>
+        <source>锁屏时通知内容的显示方式</source>
+        <translation>How notification content is shown on the lock screen</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="188"/>
+        <source>显示内容</source>
+        <translation>Show content</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="189"/>
+        <source>隐藏内容</source>
+        <translation>Hide content</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="190"/>
+        <source>全部隐藏</source>
+        <translation>Hide all</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="193"/>
+        <source>选择显示方式</source>
+        <translation>Choose display mode</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -3751,6 +3786,11 @@ Click to open network settings</translation>
         <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="117"/>
         <source>没有通知</source>
         <translation>No notifications</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="296"/>
+        <source>通知内容已隐藏</source>
+        <translation>Notification content hidden</translation>
     </message>
 </context>
 <context>

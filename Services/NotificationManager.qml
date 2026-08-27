@@ -19,12 +19,15 @@ Singleton {
         property list<var> actions: []
         property bool popup: false
         property bool isTransient: false
+        property bool read: false
         property string appIcon: ""
         property string appName: ""
         property string body: ""
         property string image: ""
         property string replaceKey: ""
         property string summary: ""
+        property bool hasInlineReply: false
+        property string inlineReplyPlaceholder: ""
         property double time: Date.now()
         property string urgency: NotificationUrgency.Normal.toString()
         property Timer timer
@@ -61,6 +64,7 @@ Singleton {
     readonly property bool popupInhibited: silent || (WidgetState.leftSidebarOpen && WidgetState.leftSidebarView === "info")
     readonly property bool hasNotifs: popupList.length > 0
 
+    readonly property int historyRetentionMs: 7 * 24 * 60 * 60 * 1000
     property int unread: 0
     property int idOffset: 0
     property list<Notif> list: []
@@ -101,11 +105,13 @@ Singleton {
     NotificationServer {
         id: notifServer
         actionsSupported: true
+        actionIconsSupported: true
         bodyHyperlinksSupported: true
         bodyImagesSupported: true
         bodyMarkupSupported: true
         bodySupported: true
         imageSupported: true
+        inlineReplySupported: true
         keepOnReload: false
         persistenceSupported: true
 
@@ -116,6 +122,21 @@ Singleton {
             const replaceKey = root.replaceKeyForNotification(notification);
             root.removeNotificationsByReplaceKey(replaceKey);
             root.idOffset++;
+
+            const urgencyValue = notification.urgency !== undefined && notification.urgency !== null
+                ? notification.urgency
+                : NotificationUrgency.Normal;
+            const urgency = urgencyValue.toString();
+            const isCritical = urgencyValue === NotificationUrgency.Critical;
+            const isLow = urgencyValue === NotificationUrgency.Low;
+
+            // Inline reply: Quickshell распознаёт action "inline-reply" (нативно).
+            // KDE-стиль hint "x-kde-reply-placeholder-text" (Telegram) — fallback:
+            // показываем поле, но отправка возможна только через нативный путь.
+            const kdeReplyHint = notification.hints && notification.hints["x-kde-reply-placeholder-text"];
+            const hasInlineReply = notification.hasInlineReply || !!kdeReplyHint;
+            const inlineReplyPlaceholder = notification.inlineReplyPlaceholder || kdeReplyHint || qsTr("回复");
+
             const newNotifObject = notifComponent.createObject(root, {
                 "notificationId": root.idOffset,
                 "serverNotificationId": notification.id,
@@ -125,16 +146,19 @@ Singleton {
                 "appName": notification.appName || notification.desktopEntry || qsTr("系统"),
                 "body": notification.body || "",
                 "image": notification.image || "",
-                "isTransient": notification.hints ? notification.hints.transient : false,
+                "isTransient": notification.hints && notification.hints.transient ? true : false,
                 "replaceKey": replaceKey,
                 "summary": notification.summary || notification.appName || qsTr("通知"),
                 "time": now,
-                "urgency": notification.urgency ? notification.urgency.toString() : NotificationUrgency.Normal.toString(),
+                "urgency": urgency,
+                "hasInlineReply": hasInlineReply,
+                "inlineReplyPlaceholder": inlineReplyPlaceholder,
             });
 
-            if (!root.popupInhibited) {
+            // 按优先级决定弹出行为
+            if (!root.popupInhibited && !isLow) {
                 newNotifObject.popup = true;
-                if (notification.expireTimeout !== 0) {
+                if (notification.expireTimeout !== 0 && !isCritical) {
                     newNotifObject.timer = notifTimerComponent.createObject(root, {
                         "notificationId": newNotifObject.notificationId,
                         "interval": notification.expireTimeout < 0 ? 7000 : notification.expireTimeout,
@@ -143,7 +167,18 @@ Singleton {
                 root.unread++;
             }
 
-            root.list = [...root.list, newNotifObject];
+            root.list = [...root.list, newNotifObject].sort((a, b) => {
+                const urgencies = {
+                    [NotificationUrgency.Critical.toString()]: 0,
+                    [NotificationUrgency.Normal.toString()]: 1,
+                    [NotificationUrgency.Low.toString()]: 2
+                };
+                const aU = urgencies[a.urgency] ?? 1;
+                const bU = urgencies[b.urgency] ?? 1;
+                if (aU !== bU) return aU - bU;
+                return b.time - a.time;
+            });
+
             root.trimPopupList(3);
             root.saveNotifications();
             root.notify(newNotifObject);
@@ -157,30 +192,46 @@ Singleton {
         onLoaded: {
             try {
                 const fileContents = notifFileView.text();
-                const loaded = JSON.parse(fileContents && fileContents.trim() !== "" ? fileContents : "[]");
-                if (!Array.isArray(loaded)) {
+                if (!fileContents || fileContents.trim() === "") {
                     root.list = [];
                     root.initDone();
                     return;
                 }
 
+                const parsed = JSON.parse(fileContents);
+                const loadedData = parsed.version === 1 ? parsed.data : (Array.isArray(parsed) ? parsed : []);
+
+                if (!Array.isArray(loadedData)) {
+                    root.list = [];
+                    root.initDone();
+                    return;
+                }
+
+                const now = Date.now();
+                const retentionLimit = now - root.historyRetentionMs;
+
                 let maxId = 0;
-                root.list = loaded.map((notif) => {
-                    const notificationId = Number(notif.notificationId || notif.id || 0);
-                    maxId = Math.max(maxId, notificationId);
-                    return notifComponent.createObject(root, {
-                        "notificationId": notificationId,
-                        "actions": [],
-                        "appIcon": notif.appIcon || "",
-                        "appName": notif.appName || qsTr("系统"),
-                        "body": notif.body || "",
-                        "image": notif.image || "",
-                        "replaceKey": notif.replaceKey || root.replaceKeyForValues(notif.appName || "System", notif.summary || notif.appName || "Notification"),
-                        "summary": notif.summary || notif.appName || qsTr("通知"),
-                        "time": Number(notif.time) || Date.now(),
-                        "urgency": notif.urgency || NotificationUrgency.Normal.toString(),
+                root.list = loadedData
+                    .filter(notif => (Number(notif.time) || 0) > retentionLimit)
+                    .map((notif) => {
+                        const notificationId = Number(notif.notificationId || notif.id || 0);
+                        maxId = Math.max(maxId, notificationId);
+                        return notifComponent.createObject(root, {
+                            "notificationId": notificationId,
+                            "actions": [],
+                            "appIcon": notif.appIcon || "",
+                            "appName": notif.appName || qsTr("系统"),
+                            "body": notif.body || "",
+                            "image": notif.image || "",
+                            "replaceKey": notif.replaceKey || root.replaceKeyForValues(notif.appName || "System", notif.summary || notif.appName || "Notification"),
+                            "summary": notif.summary || notif.appName || qsTr("通知"),
+                            "time": Number(notif.time) || Date.now(),
+                            "urgency": notif.urgency || NotificationUrgency.Normal.toString(),
+                            "read": !!notif.read,
+                            "hasInlineReply": !!notif.hasInlineReply,
+                            "inlineReplyPlaceholder": notif.inlineReplyPlaceholder || "",
+                        });
                     });
-                });
                 root.idOffset = maxId;
                 root.initDone();
             } catch (error) {
@@ -215,11 +266,17 @@ Singleton {
             "summary": notif.summary,
             "time": notif.time,
             "urgency": notif.urgency,
+            "read": notif.read,
+            "hasInlineReply": notif.hasInlineReply,
+            "inlineReplyPlaceholder": notif.inlineReplyPlaceholder,
         };
     }
 
     function stringifyList(notifications) {
-        return JSON.stringify(notifications.map((notif) => root.notifToJSON(notif)), null, 2);
+        return JSON.stringify({
+            "version": 1,
+            "data": notifications.map((notif) => root.notifToJSON(notif))
+        }, null, 2);
     }
 
     function actionsForNotification(notification) {
@@ -278,10 +335,14 @@ Singleton {
     }
 
     function trimPopupList(maxCount) {
-        const popups = root.list.filter((notif) => notif.popup).sort((a, b) => b.time - a.time);
-        for (let i = maxCount; i < popups.length; i++)
-            popups[i].popup = false;
-        if (popups.length > maxCount)
+        // 关键通知不受数量上限约束，仅裁剪低优先级弹出
+        const critical = root.list.filter((notif) => notif.popup && notif.urgency === NotificationUrgency.Critical.toString());
+        const nonCritical = root.list.filter((notif) => notif.popup && notif.urgency !== NotificationUrgency.Critical.toString())
+            .sort((a, b) => b.time - a.time);
+        const keepCount = Math.max(0, maxCount - critical.length);
+        for (let i = keepCount; i < nonCritical.length; i++)
+            nonCritical[i].popup = false;
+        if (nonCritical.length > keepCount)
             root.triggerListChange();
     }
 
@@ -291,6 +352,26 @@ Singleton {
 
     function markAllRead() {
         root.unread = 0;
+        let changed = false;
+        root.list.forEach((notif) => {
+            if (!notif.read) {
+                notif.read = true;
+                changed = true;
+            }
+        });
+        if (changed) {
+            root.triggerListChange();
+            root.saveNotifications();
+        }
+    }
+
+    function markAsRead(id) {
+        const index = root.list.findIndex((notif) => notif.notificationId === id);
+        if (index === -1 || root.list[index].read)
+            return;
+        root.list[index].read = true;
+        root.triggerListChange();
+        root.saveNotifications();
     }
 
     function removeByNotifId(targetId) {
@@ -365,6 +446,18 @@ Singleton {
             root.list[index].timer.stop();
     }
 
+    // Перезапуск автоскрытия после ухода курсора с попапа.
+    function resumeTimeout(id) {
+        const index = root.list.findIndex((notif) => notif.notificationId === id);
+        const notif = index !== -1 ? root.list[index] : null;
+        if (!notif || !notif.timer)
+            return;
+        if (notif.urgency === NotificationUrgency.Critical.toString())
+            return;
+        notif.timer.interval = notif.timer.interval;
+        notif.timer.start();
+    }
+
     function timeoutNotification(id) {
         const index = root.list.findIndex((notif) => notif.notificationId === id);
         if (index !== -1) {
@@ -377,7 +470,10 @@ Singleton {
     }
 
     function timeoutAll() {
+        // 关键通知不会被 timeoutAll 清除，需用户显式确认
         root.popupList.forEach((notif) => {
+            if (notif.urgency === NotificationUrgency.Critical.toString())
+                return;
             root.timeout(notif.notificationId);
             if (notif.timer)
                 notif.timer.stop();
@@ -400,5 +496,49 @@ Singleton {
                 action.invoke();
         }
         root.discardNotification(id);
+    }
+
+    // Клик по телу уведомления: стандартное поведение всех DE — активировать
+    // приложение. Спецификация freedesktop: первое действие с идентификатором
+    // "default" (или просто первое действие) возвращает фокус приложению.
+    // Без действий — закрываем уведомление.
+    function invokeDefaultAction(id) {
+        const index = root.list.findIndex((notif) => notif.notificationId === id);
+        const notifObject = index !== -1 ? root.list[index] : null;
+        const serverNotificationId = notifObject ? notifObject.serverNotificationId : -1;
+        const notifServerIndex = serverNotificationId !== -1
+            ? notifServer.trackedNotifications.values.findIndex((notif) => notif.id === serverNotificationId)
+            : -1;
+        if (notifServerIndex !== -1) {
+            const notifServerNotif = notifServer.trackedNotifications.values[notifServerIndex];
+            const actions = notifServerNotif.actions;
+            const defaultAction = actions.find((candidate) => candidate.identifier === "default")
+                || (actions.length > 0 ? actions[0] : null);
+            if (defaultAction) {
+                defaultAction.invoke();
+                root.discardNotification(id);
+                return;
+            }
+        }
+        root.discardNotification(id);
+    }
+
+    // Inline reply (быстрый ответ из попапа, напр. Telegram).
+    // Возвращает false, если у уведомления нет inline reply.
+    function sendInlineReply(id, replyText) {
+        const index = root.list.findIndex((notif) => notif.notificationId === id);
+        const notifObject = index !== -1 ? root.list[index] : null;
+        const serverNotificationId = notifObject ? notifObject.serverNotificationId : -1;
+        const notifServerIndex = serverNotificationId !== -1
+            ? notifServer.trackedNotifications.values.findIndex((notif) => notif.id === serverNotificationId)
+            : -1;
+        if (notifServerIndex === -1)
+            return false;
+        const notifServerNotif = notifServer.trackedNotifications.values[notifServerIndex];
+        if (!notifServerNotif.hasInlineReply)
+            return false;
+        notifServerNotif.sendInlineReply(replyText);
+        root.discardNotification(id);
+        return true;
     }
 }
