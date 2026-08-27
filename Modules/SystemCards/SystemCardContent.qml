@@ -28,8 +28,7 @@ Item {
     }
 
     function surfaceColor(sidebarBaseColor, defaultColor) {
-        const baseColor = root.shellManagedSurface
-            ? sidebarBaseColor : defaultColor;
+        const baseColor = root.shellManagedSurface ? sidebarBaseColor : defaultColor;
         return BlurService.solidBackgroundColor(baseColor);
     }
 
@@ -87,8 +86,6 @@ Item {
             return calendarComponent;
         case "weather":
             return weatherComponent;
-        case "media":
-            return mediaComponent;
         default:
             return null;
         }
@@ -242,15 +239,7 @@ Item {
     Component {
         id: weatherComponent
 
-        SystemWeatherCard {}
-
-    }
-
-    Component {
-        id: mediaComponent
-
-        SystemMediaCard {
-            active: root.active
+        SystemWeatherCard {
         }
 
     }

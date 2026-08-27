@@ -7,8 +7,8 @@ TestCase {
         const state = CardState.normalize({
         });
         compare(state.version, 3);
-        compare(Object.keys(state.cards).length, 11);
-        compare(CardState.activeSidebarIds(state).length, 11);
+        compare(Object.keys(state.cards).length, 10);
+        compare(CardState.activeSidebarIds(state).length, 10);
         compare(CardState.activeDesktopIds(state).length, 0);
         compare(state.cards.cpu.enabled, true);
         compare(state.cards.cpu.container, "sidebar");

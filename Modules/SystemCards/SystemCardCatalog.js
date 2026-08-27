@@ -104,17 +104,6 @@ var cardDefinitions = [
         monitorModules: [],
         preserveDefaultSurface: true,
         excludeHostBlur: true
-    },
-    {
-        id: "media",
-        nameKey: "媒体",
-        name: qsTr("媒体"),
-        icon: "music_note",
-        columnSpan: 2,
-        rowSpan: 2,
-        monitorModules: [],
-        preserveDefaultSurface: true,
-        excludeHostBlur: true
     }
 ];
 
@@ -128,8 +117,7 @@ var defaultAnchors = {
     network: { column: 1, row: 3 },
     storage: { column: 0, row: 4 },
     calendar: { column: 0, row: 5 },
-    weather: { column: 1, row: 5 },
-    media: { column: 0, row: 7 }
+    weather: { column: 1, row: 5 }
 };
 
 function cloneDefinition(definition) {

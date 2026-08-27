@@ -5052,11 +5052,6 @@ detected</translation>
         <source>天气</source>
         <translation>Weather</translation>
     </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="111"/>
-        <source>媒体</source>
-        <translation>Media</translation>
-    </message>
 </context>
 <context>
     <name>SystemCardContent</name>
@@ -5313,34 +5308,6 @@ detected</translation>
         <location filename="../Modules/Sidebars/Left/drawer/SystemLoadingState.qml" line="35"/>
         <source>首个有效快照到达后显示实时指标</source>
         <translation>Live metrics appear after the first valid snapshot arrives</translation>
-    </message>
-</context>
-<context>
-    <name>SystemMediaCard</name>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="20"/>
-        <source>媒体播放器</source>
-        <translation>Media player</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="69"/>
-        <source>上一首</source>
-        <translation>Previous track</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="86"/>
-        <source>暂停</source>
-        <translation>Pause</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="86"/>
-        <source>播放</source>
-        <translation>Play</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="103"/>
-        <source>下一首</source>
-        <translation>Next track</translation>
     </message>
 </context>
 <context>

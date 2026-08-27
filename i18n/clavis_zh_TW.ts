@@ -5051,11 +5051,6 @@
         <source>天气</source>
         <translation>天氣</translation>
     </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="111"/>
-        <source>媒体</source>
-        <translation>媒體</translation>
-    </message>
 </context>
 <context>
     <name>SystemCardContent</name>
@@ -5312,34 +5307,6 @@
         <location filename="../Modules/Sidebars/Left/drawer/SystemLoadingState.qml" line="35"/>
         <source>首个有效快照到达后显示实时指标</source>
         <translation>首個有效快照到達後顯示即時指標</translation>
-    </message>
-</context>
-<context>
-    <name>SystemMediaCard</name>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="20"/>
-        <source>媒体播放器</source>
-        <translation>媒體播放器</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="69"/>
-        <source>上一首</source>
-        <translation>上一首</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="86"/>
-        <source>暂停</source>
-        <translation>暫停</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="86"/>
-        <source>播放</source>
-        <translation>播放</translation>
-    </message>
-    <message>
-        <location filename="../Modules/SystemCards/SystemMediaCard.qml" line="103"/>
-        <source>下一首</source>
-        <translation>下一首</translation>
     </message>
 </context>
 <context>
