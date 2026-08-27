@@ -7501,4 +7501,32 @@ Scroll to adjust; click to open sound</translation>
 Windows: </translation>
     </message>
 </context>
+<context>
+    <name>Battery</name>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="73"/><source>状态：已充满</source><translation>Status: Fully charged</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="76"/><source>状态：充电中 · 充满还需 </source><translation>Status: Charging · Full in </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="76"/><source>状态：充电中 · 充满时间未知</source><translation>Status: Charging · Time to full unknown</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="79"/><source>状态：放电中 · 剩余 </source><translation>Status: Discharging · </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="79"/><source>状态：放电中 · 剩余时间未知</source><translation>Status: Discharging · Remaining time unknown</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="82"/><source>状态：电量已耗尽</source><translation>Status: Empty</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="85"/><source>状态：等待充电</source><translation>Status: Pending charge</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="88"/><source>状态：等待放电</source><translation>Status: Pending discharge</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="90"/><source>状态：已插电，未在充电</source><translation>Status: Plugged in, not charging</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="90"/><source>状态：未知</source><translation>Status: Unknown</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时充电功率：</source><translation>Live charging power: </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时放电功率：</source><translation>Live discharging power: </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时功率：</source><translation>Live power: </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="95"/><source>未知</source><translation>Unknown</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>正在检测电池</source><translation>Detecting battery</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>UPower 尚未提供电池数据</source><translation>UPower has not provided battery data yet</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>插电状态、功率与健康度暂不可用</source><translation>Plug status, power, and health are temporarily unavailable</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>未检测到电池</source><translation>No battery detected</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>此设备可能没有内置电池</source><translation>This device may not have a built-in battery</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>插电：</source><translation>Plugged in: </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>是</source><translation>Yes</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>否</source><translation>No</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>充放电状态、功率与健康度不可用</source><translation>Charge state, power, and health are unavailable</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="105"/><source>电池电量：</source><translation>Battery level: </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="105"/><source>健康度：</source><translation>Health: </translation></message>
+</context>
 </TS>

@@ -19,5 +19,28 @@ Singleton {
     readonly property real timeToEmpty: present && device.timeToEmpty > 0 ? device.timeToEmpty : NaN
     readonly property real timeToFull: present && device.timeToFull > 0 ? device.timeToFull : NaN
     readonly property real changeRate: present && isFinite(device.changeRate) ? device.changeRate : NaN
-    readonly property real healthPercentage: present && device.healthSupported && isFinite(device.healthPercentage) ? device.healthPercentage : NaN
+    readonly property real healthPercentage: present ? root.physicalBatteryHealth() : NaN
+
+    function physicalBatteryHealth() {
+        if (root.device && root.device.healthSupported && isFinite(root.device.healthPercentage) && root.device.healthPercentage > 0)
+            return root.device.healthPercentage;
+
+        const devices = UPower.devices.values;
+        let total = 0;
+        let count = 0;
+        for (let index = 0; index < devices.length; index += 1) {
+            const candidate = devices[index];
+            if (!candidate || !candidate.ready || !candidate.isPresent || !candidate.healthSupported || !isFinite(candidate.healthPercentage) || candidate.healthPercentage <= 0)
+                continue;
+
+            const physicalBattery = candidate.isLaptopBattery || (candidate.powerSupply && candidate.type === UPowerDeviceType.Battery);
+            if (!physicalBattery)
+                continue;
+
+            total += candidate.healthPercentage;
+            count += 1;
+        }
+        return count > 0 ? total / count : NaN;
+    }
+
 }

@@ -7500,4 +7500,32 @@
 窗口: </translation>
     </message>
 </context>
+<context>
+    <name>Battery</name>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="73"/><source>状态：已充满</source><translation>状态：已充满</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="76"/><source>状态：充电中 · 充满还需 </source><translation>状态：充电中 · 充满还需 </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="76"/><source>状态：充电中 · 充满时间未知</source><translation>状态：充电中 · 充满时间未知</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="79"/><source>状态：放电中 · 剩余 </source><translation>状态：放电中 · 剩余 </translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="79"/><source>状态：放电中 · 剩余时间未知</source><translation>状态：放电中 · 剩余时间未知</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="82"/><source>状态：电量已耗尽</source><translation>状态：电量已耗尽</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="85"/><source>状态：等待充电</source><translation>状态：等待充电</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="88"/><source>状态：等待放电</source><translation>状态：等待放电</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="90"/><source>状态：已插电，未在充电</source><translation>状态：已插电，未在充电</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="90"/><source>状态：未知</source><translation>状态：未知</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时充电功率：</source><translation>实时充电功率：</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时放电功率：</source><translation>实时放电功率：</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="94"/><source>实时功率：</source><translation>实时功率：</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="95"/><source>未知</source><translation>未知</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>正在检测电池</source><translation>正在检测电池</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>UPower 尚未提供电池数据</source><translation>UPower 尚未提供电池数据</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="100"/><source>插电状态、功率与健康度暂不可用</source><translation>插电状态、功率与健康度暂不可用</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>未检测到电池</source><translation>未检测到电池</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>此设备可能没有内置电池</source><translation>此设备可能没有内置电池</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>插电：</source><translation>插电：</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>是</source><translation>是</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>否</source><translation>否</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="103"/><source>充放电状态、功率与健康度不可用</source><translation>充放电状态、功率与健康度不可用</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="105"/><source>电池电量：</source><translation>电池电量：</translation></message>
+    <message><location filename="../Modules/Bar/QuickSettings/Battery.qml" line="105"/><source>健康度：</source><translation>健康度：</translation></message>
+</context>
 </TS>

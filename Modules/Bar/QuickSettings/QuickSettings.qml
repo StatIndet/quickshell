@@ -24,7 +24,7 @@ Item {
         anchors.centerIn: parent
         rowSpacing: 8
         columnSpacing: 8
-        columns: root.vertical ? 1 : 7
+        columns: root.vertical ? 1 : 8
 
         // 直接调用同目录下的组件，无需 import
         Network {
@@ -46,6 +46,10 @@ Item {
 
         Microphone {
             screen: root.screen
+        }
+
+        Battery {
+            vertical: root.vertical
         }
 
         SettingsButton {
