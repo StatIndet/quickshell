@@ -77,14 +77,14 @@ Item {
         return [qsTr("电池电量：") + Format.percent(root.percentage, 0), qsTr("插电：") + (PowerService.powerConnected ? qsTr("是") : qsTr("否")), root.stateAndTimeText(), root.powerText(), qsTr("健康度：") + (Format.isNumber(PowerService.healthPercentage) ? Format.percent(PowerService.healthPercentage, 0) : qsTr("未知"))].join("\n");
     }
 
-    implicitWidth: root.vertical ? 40 : 56
-    implicitHeight: Sizes.barControlCircleSize
+    implicitWidth: root.vertical ? Sizes.barControlCircleSize : 56
+    implicitHeight: root.vertical ? 40 : Sizes.barControlCircleSize
     Accessible.name: root.tooltipText
     Accessible.role: Accessible.StaticText
 
     Rectangle {
         anchors.fill: parent
-        radius: height / 2
+        radius: Math.min(width, height) / 2
         color: root.containerColor
 
         Behavior on color {
@@ -98,17 +98,18 @@ Item {
 
     Row {
         anchors.centerIn: parent
-        spacing: root.vertical ? 1 : 2
+        visible: !root.vertical
+        spacing: 2
 
         Item {
             anchors.verticalCenter: parent.verticalCenter
-            width: root.vertical ? 27 : 31
-            height: root.vertical ? 14 : 16
+            width: 31
+            height: 16
 
             Rectangle {
                 id: batteryBody
 
-                radius: root.vertical ? 3 : 4
+                radius: 4
                 color: root.valueAvailable ? root.foregroundColor : "transparent"
                 border.width: root.valueAvailable ? 0 : 1
                 border.color: root.foregroundColor
@@ -126,7 +127,7 @@ Item {
                     text: root.displayText
                     color: root.valueAvailable ? root.containerColor : root.foregroundColor
                     font.family: Fonts.expressive
-                    font.pixelSize: root.vertical ? 10 : 11
+                    font.pixelSize: 11
                     font.weight: Font.Bold
                     font.hintingPreference: Font.PreferNoHinting
                 }
@@ -136,7 +137,7 @@ Item {
             Rectangle {
                 id: batteryTerminal
 
-                width: root.vertical ? 2 : 3
+                width: 3
                 height: parent.height * 0.5
                 radius: width / 2
                 color: root.foregroundColor
@@ -153,7 +154,73 @@ Item {
         MaterialSymbol {
             anchors.verticalCenter: parent.verticalCenter
             visible: PowerService.charging
-            width: visible ? (root.vertical ? 10 : 12) : 0
+            width: visible ? 12 : 0
+            height: width
+            text: "bolt"
+            iconSize: width
+            fill: 1
+            color: root.foregroundColor
+        }
+
+    }
+
+    Column {
+        anchors.centerIn: parent
+        visible: root.vertical
+        spacing: PowerService.charging ? 1 : 0
+
+        Item {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 16
+            height: 22
+
+            Rectangle {
+                id: verticalBatteryTerminal
+
+                width: parent.width * 0.5
+                height: 2
+                radius: 1
+                color: root.foregroundColor
+
+                anchors {
+                    top: parent.top
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+            }
+
+            Rectangle {
+                radius: 3
+                color: root.valueAvailable ? root.foregroundColor : "transparent"
+                border.width: root.valueAvailable ? 0 : 1
+                border.color: root.foregroundColor
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: verticalBatteryTerminal.bottom
+                    bottom: parent.bottom
+                    topMargin: 1
+                }
+
+                Text {
+                    anchors.centerIn: parent
+                    text: root.displayText
+                    color: root.valueAvailable ? root.containerColor : root.foregroundColor
+                    font.family: Fonts.expressive
+                    font.pixelSize: 8
+                    font.weight: Font.Bold
+                    font.hintingPreference: Font.PreferNoHinting
+                }
+
+            }
+
+        }
+
+        MaterialSymbol {
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: PowerService.charging
+            width: visible ? 10 : 0
             height: width
             text: "bolt"
             iconSize: width
