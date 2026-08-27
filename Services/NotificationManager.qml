@@ -22,6 +22,7 @@ Singleton {
         property bool read: false
         property string appIcon: ""
         property string appName: ""
+        property string desktopEntry: ""
         property string body: ""
         property string image: ""
         property string replaceKey: ""
@@ -144,6 +145,7 @@ Singleton {
                 "actions": root.actionsForNotification(notification),
                 "appIcon": notification.appIcon || notification.desktopEntry || "",
                 "appName": notification.appName || notification.desktopEntry || qsTr("系统"),
+                "desktopEntry": notification.desktopEntry || "",
                 "body": notification.body || "",
                 "image": notification.image || "",
                 "isTransient": notification.hints && notification.hints.transient ? true : false,
@@ -221,6 +223,7 @@ Singleton {
                             "actions": [],
                             "appIcon": notif.appIcon || "",
                             "appName": notif.appName || qsTr("系统"),
+                            "desktopEntry": notif.desktopEntry || "",
                             "body": notif.body || "",
                             "image": notif.image || "",
                             "replaceKey": notif.replaceKey || root.replaceKeyForValues(notif.appName || "System", notif.summary || notif.appName || "Notification"),
@@ -260,6 +263,7 @@ Singleton {
             "actions": notif.actions,
             "appIcon": notif.appIcon,
             "appName": notif.appName,
+            "desktopEntry": notif.desktopEntry,
             "body": notif.body,
             "image": notif.image,
             "replaceKey": notif.replaceKey,
@@ -519,6 +523,18 @@ Singleton {
                 root.discardNotification(id);
                 return;
             }
+        }
+        // Нет действий (или уведомление из истории без живого серверного объекта) —
+        // активируем приложение по desktopEntry (freedesktop: клик по телу возвращает
+        // фокус приложению). gtk-launch запускает .desktop-файл по имени без расширения.
+        const desktopEntry = String((notifObject && notifObject.desktopEntry) || "");
+        if (desktopEntry.length > 0) {
+            const entryName = desktopEntry.endsWith(".desktop")
+                ? desktopEntry.slice(0, -".desktop".length)
+                : desktopEntry;
+            Quickshell.execDetached(["gtk-launch", entryName]);
+            root.discardNotification(id);
+            return;
         }
         root.discardNotification(id);
     }
