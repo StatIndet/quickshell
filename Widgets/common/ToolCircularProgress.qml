@@ -24,6 +24,7 @@ Item {
 
     Behavior on degree {
         enabled: root.enableAnimation
+
         NumberAnimation {
             duration: root.animationDuration
             easing.type: Easing.OutCubic

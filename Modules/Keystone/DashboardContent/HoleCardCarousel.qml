@@ -7,10 +7,14 @@ Item {
 
     property int currentIndex: 0
     property var screen: null
-    readonly property int cardCount: 2
+    readonly property int cardCount: 3
     readonly property real switchThreshold: width * 0.2
     readonly property real glassAlpha: BlurService.enabled ? Math.min(PersonalizationConfig.shellBackgroundOpacity, 0.68) : 1
-    readonly property var blurBackgroundItems: [weatherCard.glassBackgroundItem, quickSettingsPage.glassBackgroundItem]
+    readonly property var blurBackgroundItems: [
+        weatherCard.glassBackgroundItem,
+        quickSettingsPage.glassBackgroundItem,
+        pomodoroPage.glassBackgroundItem
+    ]
     property real cardOffset: 0
     property real wheelRemainder: 0
     property bool wheelUsesPixels: false
@@ -115,6 +119,20 @@ Item {
             screen: root.screen
         }
 
+    }
+
+    CarouselCard {
+        id: pomodoroPage
+
+        width: root.width
+        height: root.height
+        x: root.cardX(2)
+        contentMargin: 0
+
+        DashboardPomodoroCard {
+            anchors.fill: parent
+            active: root.visible && root.currentIndex === 2
+        }
     }
 
     NumberAnimation {
