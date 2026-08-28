@@ -13,7 +13,7 @@ TestCase {
         compare(layout.length, 10);
         let area = 0;
         for (let index = 0; index < layout.length; index += 1) area += layout[index].columnSpan * layout[index].rowSpan
-        compare(area, 20);
+        compare(area, 21);
         compare(GridLayout.placementFor(layout, "time").column, 0);
         compare(GridLayout.placementFor(layout, "battery").column, 2);
         compare(GridLayout.placementFor(layout, "time").rowSpan, 2);
@@ -72,11 +72,11 @@ TestCase {
         compare(GridLayout.placementFor(moved, "battery").column, 0);
     }
 
-    function test_wideTileCollisionReflows() {
+    function test_fullWidthTileCollisionReflows() {
         const moved = GridLayout.moveLayout(GridLayout.defaultLayout(), "network", 1, 4);
         verify(moved !== null);
         verify(GridLayout.validateLayout(moved));
-        compare(GridLayout.placementFor(moved, "network").column, 1);
+        compare(GridLayout.placementFor(moved, "network").column, 0);
         compare(GridLayout.placementFor(moved, "network").row, 4);
     }
 

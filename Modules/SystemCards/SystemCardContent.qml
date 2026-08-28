@@ -211,7 +211,8 @@ Item {
             uploadHistory: SystemMonitorService.networkUploadHistory
             chartActive: root.active
             updateInterval: root.chartUpdateInterval
-            surfaceColor: root.surfaceColor(Appearance.m3colors.m3surfaceContainer, Appearance.colors.colSurfaceContainer)
+            surfaceColor: root.surfaceColor(Appearance.m3colors.m3primary, Appearance.colors.colPrimary)
+            panelColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer)
         }
 
     }

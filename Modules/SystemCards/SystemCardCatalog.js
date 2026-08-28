@@ -72,7 +72,7 @@ var cardDefinitions = [
         nameKey: "网络",
         name: qsTr("网络"),
         icon: "swap_vert",
-        columnSpan: 2,
+        columnSpan: 3,
         rowSpan: 1,
         monitorModules: ["network"]
     },
@@ -113,10 +113,10 @@ var defaultAnchors = {
     cpu: { column: 0, row: 2 },
     gpu: { column: 1, row: 2 },
     memoryUsed: { column: 2, row: 2 },
-    wifi: { column: 0, row: 3 },
-    network: { column: 1, row: 3 },
+    wifi: { column: 0, row: 5 },
+    network: { column: 0, row: 3 },
     storage: { column: 0, row: 4 },
-    calendar: { column: 0, row: 5 },
+    calendar: { column: 0, row: 6 },
     weather: { column: 1, row: 5 }
 };
 

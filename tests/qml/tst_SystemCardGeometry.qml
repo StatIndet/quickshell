@@ -18,7 +18,7 @@ TestCase {
         compare(Geometry.sizeFor("cpu").height, 160);
         compare(Geometry.sizeFor("battery").width, 152);
         compare(Geometry.sizeFor("battery").height, 328);
-        compare(Geometry.sizeFor("network").width, 312);
+        compare(Geometry.sizeFor("network").width, 472);
         compare(Geometry.sizeFor("network").height, 160);
         compare(Geometry.sizeFor("storage").width, 472);
         compare(Geometry.sizeFor("storage").height, 160);
