@@ -527,11 +527,25 @@ Singleton {
         // Нет действий (или уведомление из истории без живого серверного объекта) —
         // активируем приложение по desktopEntry (freedesktop: клик по телу возвращает
         // фокус приложению). gtk-launch запускает .desktop-файл по имени без расширения.
-        const desktopEntry = String((notifObject && notifObject.desktopEntry) || "");
-        if (desktopEntry.length > 0) {
-            const entryName = desktopEntry.endsWith(".desktop")
-                ? desktopEntry.slice(0, -".desktop".length)
-                : desktopEntry;
+        // Quickshell заполняет desktopEntry только из явного DBus-hint "desktop-entry",
+        // который большинство приложений не передаёт — поэтому fallback на appName
+        // (он почти всегда совпадает с desktop-id, напр. "org.telegram.desktop") и на
+        // heuristicLookup по нему.
+        const rawEntry = String((notifObject && notifObject.desktopEntry) || "");
+        const rawAppName = String((notifObject && notifObject.appName) || "");
+        let entryName = "";
+        if (rawEntry.length > 0) {
+            entryName = rawEntry.endsWith(".desktop")
+                ? rawEntry.slice(0, -".desktop".length)
+                : rawEntry;
+        } else if (rawAppName.length > 0) {
+            const lookup = DesktopEntries.heuristicLookup(rawAppName);
+            if (lookup && lookup.id)
+                entryName = String(lookup.id).replace(/\.desktop$/, "");
+            else
+                entryName = rawAppName.replace(/\.desktop$/, "");
+        }
+        if (entryName.length > 0) {
             Quickshell.execDetached(["gtk-launch", entryName]);
             root.discardNotification(id);
             return;
