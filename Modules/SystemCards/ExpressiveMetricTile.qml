@@ -69,16 +69,18 @@ Rectangle {
         id: metricShape
 
         anchors {
-            top: parent.top
             right: parent.right
-            margins: Appearance.spacing.small
+            bottom: parent.bottom
+            rightMargin: -implicitSize * 0.18
+            bottomMargin: -implicitSize * 0.2
         }
         implicitSize: Math.min(
             root.width * 0.38,
             root.height * 0.42,
             root.decorationSize
-                * (0.9 + root.normalizedUsage * 0.14)
+                * (1.08 + root.normalizedUsage * 0.14)
         )
+        rotation: 18
         shape: root.resolvedShape
         color: root.accentColor
         animationDuration:
@@ -107,6 +109,48 @@ Rectangle {
         }
     }
 
+    Row {
+        id: temperatureBadge
+
+        visible: root.temperatureText.length > 0
+        spacing: 3
+        z: 5
+
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: root.dense
+                ? Appearance.spacing.small
+                : Appearance.spacing.medium
+            rightMargin: root.dense
+                ? Appearance.spacing.small
+                : Appearance.spacing.medium
+        }
+
+        MaterialSymbol {
+            anchors.verticalCenter: parent.verticalCenter
+            text: "thermostat"
+            color: root.foregroundColor
+            iconSize: root.dense
+                ? Typography.titleSmall.pixelSize
+                : Typography.titleMedium.pixelSize
+            fill: 1
+            opacity: 0.78
+        }
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.temperatureText
+            color: root.foregroundColor
+            font.family: Fonts.numeric
+            font.pixelSize: root.dense
+                ? Typography.titleSmall.pixelSize
+                : Typography.titleMedium.pixelSize
+            font.weight: Font.DemiBold
+            opacity: 0.84
+        }
+    }
+
     ColumnLayout {
         anchors {
             fill: parent
@@ -119,8 +163,8 @@ Rectangle {
         Text {
             Layout.maximumWidth: Math.max(
                 48,
-                root.width - root.decorationSize
-                    - Appearance.spacing.large
+                root.width - temperatureBadge.width
+                    - Appearance.spacing.large * 1.5
             )
             text: root.label
             color: root.foregroundColor
@@ -154,7 +198,7 @@ Rectangle {
                 ? Appearance.spacing.xSmall
                 : 0
             Layout.minimumHeight: visible
-                ? (root.dense ? 30 : 34)
+                ? (root.dense ? 42 : 46)
                 : 0
             visible: root.trendValues.length > 1
                 && root.height >= 112
@@ -188,6 +232,7 @@ Rectangle {
 
             Text {
                 Layout.fillWidth: true
+                Layout.rightMargin: root.decorationSize * 0.28
                 text: root.valueText
                 color: root.foregroundColor
                 font.family: Fonts.numeric
@@ -203,31 +248,11 @@ Rectangle {
                 }
             }
 
-            RowLayout {
-                visible: root.temperatureText.length > 0
-                spacing: 2
-
-                MaterialSymbol {
-                    text: "thermostat"
-                    color: root.foregroundColor
-                    iconSize: Typography.labelMedium.pixelSize
-                    fill: 1
-                    opacity: 0.74
-                }
-
-                Text {
-                    text: root.temperatureText
-                    color: root.foregroundColor
-                    font.family: Fonts.numeric
-                    font.pixelSize: Typography.labelMedium.pixelSize
-                    font.weight: Font.DemiBold
-                    opacity: 0.78
-                }
-            }
         }
 
         Text {
             Layout.fillWidth: true
+            Layout.rightMargin: root.decorationSize * 0.5
             visible: !root.dense && text.length > 0
             text: root.supportingText
             color: root.foregroundColor
