@@ -78,12 +78,23 @@ var cardDefinitions = [
     },
     {
         id: "storage",
-        nameKey: "存储",
-        name: qsTr("存储"),
-        icon: "storage",
+        nameKey: "磁盘 I/O",
+        name: qsTr("磁盘 I/O"),
+        icon: "hard_drive",
         columnSpan: 3,
         rowSpan: 1,
         monitorModules: ["disk"]
+    },
+    {
+        id: "storageCapacity",
+        nameKey: "磁盘容量",
+        name: qsTr("磁盘容量"),
+        icon: "data_usage",
+        columnSpan: 1,
+        rowSpan: 1,
+        monitorModules: ["disk"],
+        preserveDefaultSurface: true,
+        excludeHostBlur: true
     },
     {
         id: "calendar",
@@ -116,6 +127,7 @@ var defaultAnchors = {
     wifi: { column: 0, row: 5 },
     network: { column: 0, row: 3 },
     storage: { column: 0, row: 4 },
+    storageCapacity: { column: 0, row: 7 },
     calendar: { column: 0, row: 6 },
     weather: { column: 1, row: 5 }
 };
@@ -148,8 +160,32 @@ function definitionFor(id) {
 }
 
 function nameFor(id) {
-    var definition = definitionFor(id);
-    return definition ? qsTr(definition.nameKey) : String(id);
+    switch (String(id)) {
+    case "time":
+        return qsTr("时钟");
+    case "battery":
+        return qsTr("电池");
+    case "cpu":
+        return qsTr("CPU");
+    case "gpu":
+        return qsTr("GPU");
+    case "memoryUsed":
+        return qsTr("内存");
+    case "wifi":
+        return qsTr("Wi-Fi");
+    case "network":
+        return qsTr("网络");
+    case "storage":
+        return qsTr("磁盘 I/O");
+    case "storageCapacity":
+        return qsTr("磁盘容量");
+    case "calendar":
+        return qsTr("日历");
+    case "weather":
+        return qsTr("天气");
+    default:
+        return String(id);
+    }
 }
 
 function defaultAnchorFor(id) {

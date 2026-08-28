@@ -1,203 +1,305 @@
 import QtQuick
-import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Components
-import qs.Widgets.common
+import qs.Services
 import "../ControlCenter" as ControlCenter
 import "../../Common/functions/SystemFormat.js" as Format
 
-Rectangle {
+Item {
     id: root
 
     property var disks: []
-    property color surfaceColor: Appearance.colors.colSurfaceContainer
-    property int currentDiskIndex: 0
-    property bool selectionInitialized: false
-    readonly property var disk:
-        root.disks.length > 0
-            ? root.disks[Math.max(
-                0,
-                Math.min(root.currentDiskIndex, root.disks.length - 1)
-            )]
-            : ({})
+    property var readHistories: ({
+    })
+    property var writeHistories: ({
+    })
+    property color surfaceColor: Appearance.colors.colTertiary
+    property color panelColor: Appearance.colors.colTertiaryContainer
+    property bool chartActive: visible
+    property int updateInterval: 1000
+    property string preferredDiskDevice: ""
+    readonly property var disk: {
+        for (let index = 0; index < root.disks.length; index += 1) {
+            if (String(root.disks[index].device || "") === root.preferredDiskDevice)
+                return root.disks[index];
+
+        }
+        return root.disks.length > 0 ? root.disks[0] : ({
+        });
+    }
     readonly property var diskOptions: {
         const options = [];
         for (let index = 0; index < root.disks.length; index += 1) {
-            const disk = root.disks[index];
-            options.push({
-                "value": String(index),
-                "label": String(
-                    disk.mountPoint || disk.device || qsTr("存储设备")
-                )
+            const device = String(root.disks[index].device || "");
+            if (device !== "")
+                options.push({
+                "value": device,
+                "label": device
             });
+
         }
         return options;
     }
-    readonly property bool valueAvailable:
-        Format.isNumber(root.disk.usagePercent)
-    readonly property real normalizedUsage: root.valueAvailable
-        ? Math.max(0, Math.min(1, root.disk.usagePercent / 100))
-        : 0
+    readonly property string selectedDevice: String(root.disk.device || "")
+    readonly property var readHistory: root.readHistories[root.selectedDevice] || []
+    readonly property var writeHistory: root.writeHistories[root.selectedDevice] || []
+    readonly property color leftColor: root.surfaceColor
+    readonly property color leftForeground: Appearance.colors.colOnTertiary
+    readonly property color rightColor: root.panelColor
+    readonly property color rightForeground: Appearance.colors.colOnPrimaryContainer
+    readonly property color readDataColor: Appearance.mix(Appearance.colors.colPrimary, root.leftForeground, 0.62)
+    readonly property color writeDataColor: Appearance.mix(Appearance.colors.colSecondary, root.leftForeground, 0.58)
+    readonly property string translatedTitle: {
+        const language = I18nService.language;
+        return qsTr("磁盘 I/O");
+    }
+    readonly property real rightPanelX: Math.round(width * 0.53)
+    readonly property int chartHistoryLength: 18
+    readonly property real chartMaximum: {
+        let maximum = 0;
+        const series = [root.readHistory, root.writeHistory];
+        for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex += 1) {
+            const points = series[seriesIndex];
+            const firstVisibleIndex = Math.max(0, points.length - root.chartHistoryLength);
+            for (let index = firstVisibleIndex; index < points.length; index += 1) {
+                const value = points[index];
+                if (Format.isNumber(value))
+                    maximum = Math.max(maximum, value);
 
-    function defaultDiskIndex() {
-        return Format.rootDiskIndex(root.disks);
+            }
+        }
+        return Math.max(1, maximum * 1.2);
+    }
+    readonly property var expressiveBoldAxes: Fonts.familyAvailable(Fonts.bundledFamilyName) && Fonts.expressive === Fonts.bundledFamilyName ? ({
+        "GRAD": 100,
+        "ROND": 35,
+        "wdth": 85
+    }) : ({
+    })
+
+    signal diskSelected(string device)
+
+    clip: true
+    layer.enabled: true
+    Accessible.name: root.disks.length > 0 ? qsTr("磁盘 %1，读取 %2，写入 %3").arg(root.selectedDevice, Format.bytesPerSecond(root.disk.readBytesPerSecond), Format.bytesPerSecond(root.disk.writeBytesPerSecond)) : qsTr("未检测到磁盘")
+
+    Rectangle {
+        anchors.fill: parent
+        radius: Appearance.rounding.extraLarge
+        color: root.leftColor
     }
 
-    onDisksChanged: {
-        if (root.disks.length === 0) {
-            root.currentDiskIndex = 0;
-            root.selectionInitialized = false;
-            return;
-        }
-        if (!root.selectionInitialized) {
-            root.currentDiskIndex = root.defaultDiskIndex();
-            root.selectionInitialized = true;
-        } else if (root.currentDiskIndex >= root.disks.length) {
-            root.currentDiskIndex = root.disks.length - 1;
-        }
-    }
+    Text {
+        text: root.translatedTitle
+        color: root.leftForeground
+        renderType: Text.NativeRendering
+        font.family: Fonts.expressive
+        font.pixelSize: 32
+        font.weight: Font.Black
+        font.variableAxes: root.expressiveBoldAxes
 
-    radius: Appearance.rounding.extraLarge
-    color: root.surfaceColor
-    Accessible.name: qsTr("存储 ")
-        + String(root.disk.mountPoint || "")
-        + "，" + Format.percent(root.disk.usagePercent, 0)
-        + qsTr("，已使用 ") + Format.bytes(root.disk.usedBytes)
-
-    RowLayout {
         anchors {
-            fill: parent
-            leftMargin: Appearance.spacing.xSmall
-            rightMargin: Appearance.spacing.xSmall
-        }
-        spacing: Appearance.spacing.medium
-
-        Item {
-            Layout.preferredWidth: Math.min(
-                root.height,
-                root.width * 0.32
-            )
-            Layout.preferredHeight: width
-            Layout.alignment: Qt.AlignVCenter
-
-            ArcGauge {
-                anchors.fill: parent
-                value: root.normalizedUsage
-                icon: ""
-                progressColor: Appearance.colors.colSecondary
-                trackColor:
-                    Appearance.colors.colSecondaryContainer
-                handleColor: Appearance.colors.colSecondary
-                iconColor: Appearance.colors.colSecondary
-                iconFont: Fonts.materialSymbolsRounded
-                iconSize: 1
-                arcRadius: (width - lineWidth) / 2 - 1
-                lineWidth: 11
-                gapAngle: 45
-                handleSpacing: Appearance.spacing.small
-                showHandle: false
-                animDuration:
-                    Appearance.animation.expressiveSlowSpatial.duration
-            }
-
-            ColumnLayout {
-                anchors.centerIn: parent
-                spacing: -2
-
-                MaterialSymbol {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "hard_drive"
-                    color: Appearance.colors.colSecondary
-                    iconSize: Typography.titleMedium.pixelSize
-                    fill: 1
-                }
-
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: Format.percent(
-                        root.disk.usagePercent,
-                        0
-                    )
-                    color: Appearance.colors.colSecondary
-                    font.family: Fonts.numeric
-                    font.pixelSize: Typography.headlineSmall.pixelSize
-                    font.weight: Font.Bold
-                }
-
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: qsTr("已使用")
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Fonts.ui
-                    font.pixelSize: Typography.labelMedium.pixelSize
-                }
-            }
+            left: parent.left
+            top: parent.top
+            leftMargin: Appearance.spacing.medium
+            topMargin: 16
         }
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: Appearance.spacing.xSmall
+    }
 
-            Item {
-                Layout.fillHeight: true
+    SystemSparkline {
+        values: root.writeHistory
+        maximum: root.chartMaximum
+        historyLength: root.chartHistoryLength
+        updateInterval: root.updateInterval
+        active: root.chartActive
+        showGuideLines: false
+        fillArea: true
+        fillOpacity: 0.3
+        lineColor: root.writeDataColor
+        baselineColor: "transparent"
+        lineWidth: 0
+        Accessible.ignored: true
+
+        anchors {
+            left: parent.left
+            right: ratePanel.left
+            top: parent.top
+            bottom: parent.bottom
+            topMargin: 46
+            bottomMargin: Appearance.spacing.small
+        }
+
+    }
+
+    SystemSparkline {
+        values: root.readHistory
+        secondaryValues: root.writeHistory
+        maximum: root.chartMaximum
+        historyLength: root.chartHistoryLength
+        updateInterval: root.updateInterval
+        active: root.chartActive
+        showGuideLines: false
+        fillArea: true
+        fillOpacity: 0.26
+        accessibilityName: qsTr("磁盘近期吞吐趋势")
+        accessibilityDescription: qsTr("读取 %1，写入 %2").arg(Format.bytesPerSecond(root.disk.readBytesPerSecond), Format.bytesPerSecond(root.disk.writeBytesPerSecond))
+        lineColor: root.readDataColor
+        secondaryLineColor: root.writeDataColor
+        baselineColor: "transparent"
+        lineWidth: 3
+
+        anchors {
+            left: parent.left
+            right: ratePanel.left
+            top: parent.top
+            bottom: parent.bottom
+            topMargin: 46
+            bottomMargin: Appearance.spacing.small
+        }
+
+    }
+
+    Rectangle {
+        id: ratePanel
+
+        x: root.rightPanelX
+        y: 0
+        width: root.width - x
+        height: root.height
+        radius: Appearance.rounding.extraLarge
+        color: root.rightColor
+        clip: true
+        z: 2
+
+        Column {
+            id: rateColumn
+
+            spacing: 2
+            z: 2
+
+            anchors {
+                fill: parent
+                leftMargin: Appearance.spacing.medium
+                rightMargin: Appearance.spacing.medium
+                topMargin: 10
+                bottomMargin: 10
+            }
+
+            ControlCenter.SplitMenuButton {
+                width: parent.width
+                height: 36
+                buttonHeight: 36
+                minimumWidth: parent.width
+                maximumWidth: parent.width
+                menuMinimumWidth: Math.max(190, width)
+                menuMaximumWidth: Math.max(260, width)
+                model: root.diskOptions
+                currentValue: root.selectedDevice
+                leadingIcon: "hard_drive"
+                enabled: root.diskOptions.length > 0
+                visible: enabled
+                buttonColor: root.leftColor
+                buttonHoverColor: Appearance.mix(root.leftColor, root.leftForeground, 0.88)
+                buttonPressedColor: Appearance.mix(root.leftColor, root.leftForeground, 0.76)
+                buttonTextColor: root.leftForeground
+                Accessible.name: qsTr("选择磁盘")
+                onValueSelected: (value) => {
+                    return root.diskSelected(value);
+                }
             }
 
             Text {
-                Layout.fillWidth: true
-                    text: qsTr("存储")
-                color: Appearance.colors.colOnSurface
-                font.family: Fonts.ui
-                font.pixelSize: Typography.titleLarge.pixelSize
+                width: parent.width
+                height: 36
+                visible: root.diskOptions.length === 0
+                text: qsTr("未检测到磁盘")
+                color: root.rightForeground
+                verticalAlignment: Text.AlignVCenter
+                font.family: Fonts.expressive
+                font.pixelSize: Typography.titleSmall.pixelSize
                 font.weight: Font.Bold
                 elide: Text.ElideRight
             }
 
-            Text {
-                Layout.fillWidth: true
-                text: root.disks.length > 0
-                    ? Format.bytes(root.disk.usedBytes)
-                        + " / "
-                        + Format.bytes(root.disk.totalBytes)
-                    : qsTr("未检测到存储盘")
-                color: Appearance.colors.colSecondary
-                font.family: Fonts.numeric
-                font.pixelSize: Typography.bodyLarge.pixelSize
-                font.weight: Font.DemiBold
-                elide: Text.ElideRight
+            DiskMetric {
+                width: parent.width
+                height: (parent.height - 36 - parent.spacing * 2) / 2
+                iconName: "input"
+                accessibilityLabel: qsTr("读取")
+                value: Format.bytesPerSecond(root.disk.readBytesPerSecond)
+                accentColor: root.readDataColor
             }
 
-            ControlCenter.SplitMenuButton {
-                id: diskSelector
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: 42
-                buttonHeight: 42
-                minimumWidth: 190
-                maximumWidth: 480
-                menuMinimumWidth: Math.min(320, width)
-                menuMaximumWidth: Math.max(320, width)
-                model: root.diskOptions
-                currentValue: String(root.currentDiskIndex)
-                leadingIcon: "hard_drive"
-                enabled: root.diskOptions.length > 0
-                opacity: enabled ? 1 : 0.38
-                buttonColor:
-                    Appearance.colors.colSecondaryContainer
-                buttonHoverColor:
-                    Appearance.colors.colSecondaryContainerHover
-                buttonPressedColor:
-                    Appearance.colors.colSecondaryContainerActive
-                buttonTextColor:
-                    Appearance.colors.colOnSecondaryContainer
-                Accessible.name: qsTr("选择存储盘")
-                onValueSelected: value =>
-                    root.currentDiskIndex = Number(value)
+            DiskMetric {
+                width: parent.width
+                height: (parent.height - 36 - parent.spacing * 2) / 2
+                iconName: "output"
+                accessibilityLabel: qsTr("写入")
+                value: Format.bytesPerSecond(root.disk.writeBytesPerSecond)
+                accentColor: root.writeDataColor
             }
 
-            Item {
-                Layout.fillHeight: true
-            }
         }
+
     }
+
+    layer.effect: OpacityMask {
+
+        maskSource: Rectangle {
+            width: root.width
+            height: root.height
+            radius: Appearance.rounding.extraLarge
+        }
+
+    }
+
+    component DiskMetric: Item {
+        id: metric
+
+        required property string iconName
+        required property string accessibilityLabel
+        required property string value
+        required property color accentColor
+
+        Accessible.name: metric.accessibilityLabel + " " + metric.value
+
+        MaterialSymbol {
+            id: metricIcon
+
+            text: metric.iconName
+            iconSize: 27
+            fill: 1
+            color: metric.accentColor
+            Accessible.ignored: true
+
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+            }
+
+        }
+
+        Text {
+            text: metric.value
+            color: root.rightForeground
+            renderType: Text.NativeRendering
+            font.family: Fonts.expressive
+            font.pixelSize: 27
+            font.weight: Font.Black
+            font.variableAxes: root.expressiveBoldAxes
+            elide: Text.ElideRight
+
+            anchors {
+                left: metricIcon.right
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+                leftMargin: Appearance.spacing.small
+            }
+
+        }
+
+    }
+
 }

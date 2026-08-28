@@ -22,9 +22,23 @@ Item {
     readonly property int chartUpdateInterval: Math.max(250, Number(SystemMonitorService.sourceIntervalMs) || SystemMonitorService.intervalMs)
     readonly property var primaryGpu: SystemMonitorService.selectedGpu
     readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius) ? SystemMonitorService.cpu.packageTemperatureCelsius : SystemMonitorService.cpu.temperatureCelsius
+    readonly property var ioDisk: root.diskForDevice(UiPreferences.systemMonitorDiskDevice, true)
+    readonly property var capacityDisk: UiPreferences.storageCapacityDiskDevice === "follow-io" ? root.ioDisk : root.diskForDevice(UiPreferences.storageCapacityDiskDevice, false)
 
     function normalizedPercent(value) {
         return Format.isNumber(value) ? Math.max(0, Math.min(1, value / 100)) : -1;
+    }
+
+    function diskForDevice(device, fallbackToFirst) {
+        const wanted = String(device || "");
+        for (let index = 0; index < SystemMonitorService.disks.length; index += 1) {
+            const disk = SystemMonitorService.disks[index];
+            if (String(disk.device || "") === wanted)
+                return disk;
+
+        }
+        return fallbackToFirst && SystemMonitorService.disks.length > 0 ? SystemMonitorService.disks[0] : ({
+        });
     }
 
     function surfaceColor(sidebarBaseColor, defaultColor) {
@@ -82,6 +96,8 @@ Item {
             return networkComponent;
         case "storage":
             return storageComponent;
+        case "storageCapacity":
+            return storageCapacityComponent;
         case "calendar":
             return calendarComponent;
         case "weather":
@@ -222,7 +238,37 @@ Item {
 
         SystemStorageCard {
             disks: SystemMonitorService.disks
-            surfaceColor: root.surfaceColor(Appearance.m3colors.m3surfaceContainer, Appearance.colors.colSurfaceContainer)
+            readHistories: SystemMonitorService.diskReadHistories
+            writeHistories: SystemMonitorService.diskWriteHistories
+            preferredDiskDevice: UiPreferences.systemMonitorDiskDevice
+            chartActive: root.active
+            updateInterval: root.chartUpdateInterval
+            surfaceColor: root.surfaceColor(Appearance.m3colors.m3tertiary, Appearance.colors.colTertiary)
+            panelColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer, Appearance.colors.colTertiaryContainer)
+            onDiskSelected: (device) => {
+                return UiPreferences.setSystemMonitorDiskDevice(device);
+            }
+        }
+
+    }
+
+    Component {
+        id: storageCapacityComponent
+
+        SystemLiquidMetricCard {
+            readonly property bool diskAvailable: String(root.capacityDisk.device || "") !== ""
+            readonly property bool capacityAvailable: diskAvailable && Format.isNumber(root.capacityDisk.usagePercent)
+
+            iconName: "data_usage"
+            valueText: capacityAvailable ? Format.percent(root.capacityDisk.usagePercent, 0) : "—"
+            supportingText: diskAvailable ? Format.bytes(root.capacityDisk.usedBytes) + " / " + Format.bytes(root.capacityDisk.totalBytes) : qsTr("未检测到磁盘")
+            level: root.normalizedPercent(root.capacityDisk.usagePercent)
+            valueAvailable: capacityAvailable
+            accessibilityName: diskAvailable ? qsTr("磁盘 %1，已使用 %2，共 %3，占用 %4").arg(String(root.capacityDisk.device), Format.bytes(root.capacityDisk.usedBytes), Format.bytes(root.capacityDisk.totalBytes), Format.percent(root.capacityDisk.usagePercent, 0)) : qsTr("未检测到磁盘")
+            shapeId: MaterialShape.Cookie9Sided
+            shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer)
+            liquidColor: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.66)
+            contentColor: Appearance.colors.colOnSecondaryContainer
         }
 
     }

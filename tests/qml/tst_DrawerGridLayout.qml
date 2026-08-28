@@ -10,16 +10,18 @@ TestCase {
     function test_defaultLayoutIsValid() {
         const layout = GridLayout.defaultLayout();
         verify(GridLayout.validateLayout(layout));
-        compare(layout.length, 10);
+        compare(layout.length, 11);
         let area = 0;
         for (let index = 0; index < layout.length; index += 1) area += layout[index].columnSpan * layout[index].rowSpan
-        compare(area, 21);
+        compare(area, 22);
         compare(GridLayout.placementFor(layout, "time").column, 0);
         compare(GridLayout.placementFor(layout, "battery").column, 2);
         compare(GridLayout.placementFor(layout, "time").rowSpan, 2);
         compare(GridLayout.placementFor(layout, "battery").rowSpan, 2);
         compare(GridLayout.placementFor(layout, "calendar").columnSpan, 1);
         compare(GridLayout.placementFor(layout, "calendar").rowSpan, 1);
+        compare(GridLayout.placementFor(layout, "storageCapacity").columnSpan, 1);
+        compare(GridLayout.placementFor(layout, "storageCapacity").rowSpan, 1);
         compare(GridLayout.placementFor(layout, "weather").columnSpan, 2);
         compare(GridLayout.placementFor(layout, "weather").rowSpan, 2);
         compare(GridLayout.placementFor(layout, "weather").column, 1);
@@ -30,7 +32,7 @@ TestCase {
         const layout = GridLayout.defaultLayout();
         const serialized = GridLayout.serializeLayout(layout);
         compare(serialized.version, 7);
-        compare(serialized.tiles.length, 10);
+        compare(serialized.tiles.length, 11);
         const hydrated = GridLayout.hydrateSaved(serialized);
         verify(GridLayout.validateLayout(hydrated));
         compare(JSON.stringify(GridLayout.serializeLayout(hydrated)), JSON.stringify(serialized));

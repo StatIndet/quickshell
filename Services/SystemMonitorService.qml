@@ -45,6 +45,8 @@ Singleton {
     property var gpuHistory: []
     property var networkDownloadHistory: []
     property var networkUploadHistory: []
+    property var diskReadHistories: ({})
+    property var diskWriteHistories: ({})
 
     property double sourceTimestampMs: 0
     property double lastUpdatedMs: 0
@@ -372,6 +374,27 @@ Singleton {
         return next;
     }
 
+    function _updateDiskHistories(devices) {
+        const nextReads = ({});
+        const nextWrites = ({});
+        for (let index = 0; index < devices.length; index += 1) {
+            const disk = devices[index];
+            const id = String(disk.device || "");
+            if (id === "")
+                continue;
+            nextReads[id] = root._appendHistory(
+                root.diskReadHistories[id] || [],
+                disk.readBytesPerSecond
+            );
+            nextWrites[id] = root._appendHistory(
+                root.diskWriteHistories[id] || [],
+                disk.writeBytesPerSecond
+            );
+        }
+        root.diskReadHistories = nextReads;
+        root.diskWriteHistories = nextWrites;
+    }
+
     function _gpuId(gpu) {
         if (!root._isObject(gpu))
             return "";
@@ -419,6 +442,8 @@ Singleton {
         root.gpuHistory = [];
         root.networkDownloadHistory = [];
         root.networkUploadHistory = [];
+        root.diskReadHistories = ({});
+        root.diskWriteHistories = ({});
     }
 
     function _clearModuleHistory(module) {
@@ -435,6 +460,10 @@ Singleton {
         case "network":
             root.networkDownloadHistory = [];
             root.networkUploadHistory = [];
+            break;
+        case "disk":
+            root.diskReadHistories = ({});
+            root.diskWriteHistories = ({});
             break;
         }
     }
@@ -458,8 +487,10 @@ Singleton {
             root.memory = snapshot.memory;
         if (Array.isArray(snapshot.gpus))
             root.gpus = snapshot.gpus.slice();
-        if (Array.isArray(snapshot.disks))
+        if (Array.isArray(snapshot.disks)) {
             root.disks = snapshot.disks.slice();
+            root._updateDiskHistories(root.disks);
+        }
         if (snapshot.network)
             root.network = snapshot.network;
         root.errors = snapshot.errors.slice(0, 32);

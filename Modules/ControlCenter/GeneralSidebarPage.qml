@@ -9,13 +9,9 @@ StyledFlickable {
     id: root
 
     property bool presentationActive: false
-
-    onPresentationActiveChanged: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu"] : [])
-    Component.onCompleted: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu"] : [])
-    Component.onDestruction: SystemMonitorService.clearConsumer("general-sidebar-settings")
-
     readonly property bool cookieClockActive: UiPreferences.sidebarClockStyle === "cookie"
     readonly property var gpuOptions: buildGpuOptions()
+    readonly property var capacityDiskOptions: buildCapacityDiskOptions()
 
     function gpuPciLabel(gpu) {
         const pciId = String(gpu.pciId || "");
@@ -68,6 +64,43 @@ StyledFlickable {
         return options;
     }
 
+    function buildCapacityDiskOptions() {
+        const language = I18nService.language;
+        const options = [{
+            "value": "follow-io",
+            "label": qsTr("跟随磁盘 I/O 卡片")
+        }];
+        for (let index = 0; index < SystemMonitorService.disks.length; index += 1) {
+            const device = String(SystemMonitorService.disks[index].device || "");
+            if (device !== "")
+                options.push({
+                "value": device,
+                "label": device
+            });
+
+        }
+        const preferred = UiPreferences.storageCapacityDiskDevice;
+        if (preferred !== "follow-io") {
+            let found = false;
+            for (let index = 1; index < options.length; index += 1) {
+                if (options[index].value === preferred) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                options.push({
+                "value": preferred,
+                "label": preferred + " · " + qsTr("当前不可用")
+            });
+
+        }
+        return options;
+    }
+
+    onPresentationActiveChanged: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu", "disk"] : [])
+    Component.onCompleted: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu", "disk"] : [])
+    Component.onDestruction: SystemMonitorService.clearConsumer("general-sidebar-settings")
     clip: true
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
@@ -546,6 +579,25 @@ StyledFlickable {
 
                     }
 
+                }
+
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "data_usage"
+                title: qsTr("磁盘容量")
+                supportingText: qsTr("选择容量卡片显示的物理磁盘")
+
+                trailing: SearchSelectMenuField {
+                    Layout.preferredWidth: 260
+                    options: root.capacityDiskOptions
+                    value: UiPreferences.storageCapacityDiskDevice
+                    placeholder: qsTr("跟随磁盘 I/O 卡片")
+                    closeOnAccept: true
+                    onAccepted: (value) => {
+                        return UiPreferences.setStorageCapacityDiskDevice(value);
+                    }
                 }
 
             }

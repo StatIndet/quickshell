@@ -22,12 +22,14 @@ TestCase {
         compare(Geometry.sizeFor("network").height, 160);
         compare(Geometry.sizeFor("storage").width, 472);
         compare(Geometry.sizeFor("storage").height, 160);
+        compare(Geometry.sizeFor("storageCapacity").width, 152);
+        compare(Geometry.sizeFor("storageCapacity").height, 160);
         compare(Geometry.sizeFor("weather").width, 312);
         compare(Geometry.sizeFor("weather").height, 328);
     }
 
     function test_originalSurfaceCardCatalog() {
-        ["time", "battery", "cpu", "gpu", "memoryUsed", "wifi", "weather"].forEach(function(id) {
+        ["time", "battery", "cpu", "gpu", "memoryUsed", "wifi", "storageCapacity", "weather"].forEach(function(id) {
             compare(Catalog.definitionFor(id).preserveDefaultSurface, true);
         });
         ["network", "storage", "calendar"].forEach(function(id) {

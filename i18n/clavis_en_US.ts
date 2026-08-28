@@ -2454,6 +2454,9 @@ Scroll to adjust</translation>
     <message><source>系统监测快照间隔</source><translation>System monitor snapshot interval</translation></message>
     <message><source>间隔</source><translation>Interval</translation></message>
     <message><source>ms</source><translation>ms</translation></message>
+    <message><source>跟随磁盘 I/O 卡片</source><translation>Follow Disk I/O card</translation></message>
+    <message><source>磁盘容量</source><translation>Disk capacity</translation></message>
+    <message><source>选择容量卡片显示的物理磁盘</source><translation>Select the physical disk shown by the capacity card</translation></message>
 </context>
 <context>
     <name>GeneralSubpageHeader</name>
@@ -5039,8 +5042,12 @@ detected</translation>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="82"/>
-        <source>存储</source>
-        <translation>Storage</translation>
+        <source>磁盘 I/O</source>
+        <translation>Disk I/O</translation>
+    </message>
+    <message>
+        <source>磁盘容量</source>
+        <translation>Disk capacity</translation>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="91"/>
@@ -5110,6 +5117,9 @@ detected</translation>
         <source>Wi-Fi 未连接</source>
         <translation>Wi-Fi is not connected</translation>
     </message>
+    <message><source>已用 %1</source><translation>%1 used</translation></message>
+    <message><source>未检测到磁盘</source><translation>No disk detected</translation></message>
+    <message><source>磁盘 %1，已使用 %2，共 %3，占用 %4</source><translation>Disk %1, %2 of %3 used, %4 occupied</translation></message>
 </context>
 <context>
     <name>SystemClockCard</name>
@@ -5557,39 +5567,45 @@ detected</translation>
 <context>
     <name>SystemStorageCard</name>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="30"/>
-        <source>存储设备</source>
-        <translation>Storage devices</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="93"/>
+        <source>磁盘 %1，读取 %2，写入 %3</source>
+        <translation>Disk %1, read %2, write %3</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="62"/>
-        <source>存储 </source>
-        <translation>Storage </translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="93"/>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="225"/>
+        <source>未检测到磁盘</source>
+        <translation>No disk detected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="65"/>
-        <source>，已使用 </source>
-        <translation>, used </translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="102"/>
+        <source>磁盘 I/O</source>
+        <translation>Disk I/O</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="129"/>
-        <source>已使用</source>
-        <translation>Used</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="154"/>
+        <source>磁盘近期吞吐趋势</source>
+        <translation>Recent disk throughput trend</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="148"/>
-        <source>存储</source>
-        <translation>Storage</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="155"/>
+        <source>读取 %1，写入 %2</source>
+        <translation>Read %1, write %2</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="162"/>
-        <source>未检测到存储盘</source>
-        <translation>No storage volume detected</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="215"/>
+        <source>选择磁盘</source>
+        <translation>Select disk</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="193"/>
-        <source>选择存储盘</source>
-        <translation>Choose storage volume</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="238"/>
+        <source>读取</source>
+        <translation>Read</translation>
+    </message>
+    <message>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="247"/>
+        <source>写入</source>
+        <translation>Write</translation>
     </message>
 </context>
 <context>

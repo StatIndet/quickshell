@@ -2454,6 +2454,9 @@
     <message><source>系统监测快照间隔</source><translation>系统监测快照间隔</translation></message>
     <message><source>间隔</source><translation>间隔</translation></message>
     <message><source>ms</source><translation>ms</translation></message>
+    <message><source>跟随磁盘 I/O 卡片</source><translation>跟随磁盘 I/O 卡片</translation></message>
+    <message><source>磁盘容量</source><translation>磁盘容量</translation></message>
+    <message><source>选择容量卡片显示的物理磁盘</source><translation>选择容量卡片显示的物理磁盘</translation></message>
 </context>
 <context>
     <name>GeneralSubpageHeader</name>
@@ -5038,8 +5041,12 @@
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="82"/>
-        <source>存储</source>
-        <translation>存储</translation>
+        <source>磁盘 I/O</source>
+        <translation>磁盘 I/O</translation>
+    </message>
+    <message>
+        <source>磁盘容量</source>
+        <translation>磁盘容量</translation>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemCardCatalog.js" line="91"/>
@@ -5109,6 +5116,9 @@
         <source>Wi-Fi 未连接</source>
         <translation>Wi-Fi 未连接</translation>
     </message>
+    <message><source>已用 %1</source><translation>已用 %1</translation></message>
+    <message><source>未检测到磁盘</source><translation>未检测到磁盘</translation></message>
+    <message><source>磁盘 %1，已使用 %2，共 %3，占用 %4</source><translation>磁盘 %1，已使用 %2，共 %3，占用 %4</translation></message>
 </context>
 <context>
     <name>SystemClockCard</name>
@@ -5556,39 +5566,45 @@
 <context>
     <name>SystemStorageCard</name>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="30"/>
-        <source>存储设备</source>
-        <translation>存储设备</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="93"/>
+        <source>磁盘 %1，读取 %2，写入 %3</source>
+        <translation>磁盘 %1，读取 %2，写入 %3</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="62"/>
-        <source>存储 </source>
-        <translation>存储 </translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="93"/>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="225"/>
+        <source>未检测到磁盘</source>
+        <translation>未检测到磁盘</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="65"/>
-        <source>，已使用 </source>
-        <translation>，已使用 </translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="102"/>
+        <source>磁盘 I/O</source>
+        <translation>磁盘 I/O</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="129"/>
-        <source>已使用</source>
-        <translation>已使用</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="154"/>
+        <source>磁盘近期吞吐趋势</source>
+        <translation>磁盘近期吞吐趋势</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="148"/>
-        <source>存储</source>
-        <translation>存储</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="155"/>
+        <source>读取 %1，写入 %2</source>
+        <translation>读取 %1，写入 %2</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="162"/>
-        <source>未检测到存储盘</source>
-        <translation>未检测到存储盘</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="215"/>
+        <source>选择磁盘</source>
+        <translation>选择磁盘</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="193"/>
-        <source>选择存储盘</source>
-        <translation>选择存储盘</translation>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="238"/>
+        <source>读取</source>
+        <translation>读取</translation>
+    </message>
+    <message>
+        <location filename="../Modules/SystemCards/SystemStorageCard.qml" line="247"/>
+        <source>写入</source>
+        <translation>写入</translation>
     </message>
 </context>
 <context>

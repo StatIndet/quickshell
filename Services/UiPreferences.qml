@@ -15,6 +15,8 @@ Singleton {
     property string weatherTemperatureUnit: "celsius"
     property string systemTemperatureUnit: "celsius"
     property string systemMonitorGpuId: "auto"
+    property string systemMonitorDiskDevice: ""
+    property string storageCapacityDiskDevice: "follow-io"
     property int systemMonitorIntervalMs: 2000
     property bool useTwelveHourClock: true
     property string sidebarClockStyle: "digital"
@@ -102,6 +104,29 @@ Singleton {
             return ;
 
         root.systemMonitorGpuId = normalized;
+        root.save();
+    }
+
+    function normalizedDiskDevice(value, fallback) {
+        const normalized = String(value || "").trim();
+        return normalized === "" ? String(fallback || "") : normalized;
+    }
+
+    function setSystemMonitorDiskDevice(value) {
+        const normalized = root.normalizedDiskDevice(value, "");
+        if (root.systemMonitorDiskDevice === normalized)
+            return ;
+
+        root.systemMonitorDiskDevice = normalized;
+        root.save();
+    }
+
+    function setStorageCapacityDiskDevice(value) {
+        const normalized = root.normalizedDiskDevice(value, "follow-io");
+        if (root.storageCapacityDiskDevice === normalized)
+            return ;
+
+        root.storageCapacityDiskDevice = normalized;
         root.save();
     }
 
@@ -294,6 +319,8 @@ Singleton {
             "weatherTemperatureUnit": root.weatherTemperatureUnit,
             "systemTemperatureUnit": root.systemTemperatureUnit,
             "systemMonitorGpuId": root.systemMonitorGpuId,
+            "systemMonitorDiskDevice": root.systemMonitorDiskDevice,
+            "storageCapacityDiskDevice": root.storageCapacityDiskDevice,
             "systemMonitorIntervalMs": root.systemMonitorIntervalMs,
             "useTwelveHourClock": root.useTwelveHourClock,
             "sidebarClockStyle": root.sidebarClockStyle,
@@ -344,6 +371,8 @@ Singleton {
                 root.weatherTemperatureUnit = root.normalizedTemperatureUnit(parsed.weatherTemperatureUnit);
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
                 root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);
+                root.systemMonitorDiskDevice = root.normalizedDiskDevice(parsed.systemMonitorDiskDevice, "");
+                root.storageCapacityDiskDevice = root.normalizedDiskDevice(parsed.storageCapacityDiskDevice, "follow-io");
                 const monitorInterval = root.normalizedSystemMonitorIntervalMs(parsed.systemMonitorIntervalMs === undefined ? 2000 : parsed.systemMonitorIntervalMs);
                 root.systemMonitorIntervalMs = monitorInterval < 0 ? 2000 : monitorInterval;
                 root.useTwelveHourClock = typeof parsed.useTwelveHourClock === "boolean" ? parsed.useTwelveHourClock : true;
