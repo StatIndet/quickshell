@@ -54,7 +54,7 @@ Core development dependencies include:
 - PipeWire
 - libcava
 
-Some features also use external tools such as Matugen, awww, cliphist, wl-clipboard, gpu-screen-recorder, FFmpeg and wlogout.
+Some features also use external tools such as Matugen, awww, cliphist, wl-clipboard, gpu-screen-recorder and FFmpeg.
 
 ## Development
 

@@ -9,6 +9,7 @@ import qs.Modules.DesktopCards
 import qs.Modules.Keystone
 import qs.Modules.Launcher
 import qs.Modules.Lock
+import qs.Modules.PowerMenu
 import qs.Modules.RegionSelector
 import qs.Modules.Sidebars
 import qs.Modules.Wallpaper
@@ -62,6 +63,40 @@ Item {
 
     Lock {
         id: sessionLocker
+    }
+
+    PowerMenu {}
+
+    Connections {
+        target: PowerMenuService
+
+        function onActionRequested(action) {
+            switch (action) {
+            case "lock":
+                sessionLocker.open();
+                break;
+            case "logout":
+                Quickshell.execDetached([
+                    "niri", "msg", "action", "quit",
+                    "--skip-confirmation"
+                ]);
+                break;
+            case "suspend":
+                if (sessionLocker.open())
+                    Quickshell.execDetached(["loginctl", "suspend"]);
+                break;
+            case "poweroff":
+                Quickshell.execDetached(["systemctl", "poweroff"]);
+                break;
+            case "hibernate":
+                if (sessionLocker.open())
+                    Quickshell.execDetached(["loginctl", "hibernate"]);
+                break;
+            case "reboot":
+                Quickshell.execDetached(["systemctl", "reboot"]);
+                break;
+            }
+        }
     }
 
     Connections {

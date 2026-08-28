@@ -7,21 +7,15 @@ main_config=${2:-}
 snippet_path=${3:-}
 xray_value=${4:-true}
 niri_command=${5:-niri}
-blur_enabled=${6:-false}
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
 if [ "$mode" != "write" ] && [ "$mode" != "configure" ]; then
-    echo "usage: manage-niri-effects.sh <write|configure> <main-config> <snippet> <xray> [niri] [blur]" >&2
+    echo "usage: manage-niri-effects.sh <write|configure> <main-config> <snippet> <xray> [niri]" >&2
     exit 2
 fi
 
 if [ "$xray_value" != "true" ] && [ "$xray_value" != "false" ]; then
     echo "invalid xray value: $xray_value" >&2
-    exit 2
-fi
-
-if [ "$blur_enabled" != "true" ] && [ "$blur_enabled" != "false" ]; then
-    echo "invalid blur value: $blur_enabled" >&2
     exit 2
 fi
 
@@ -57,18 +51,6 @@ trap cleanup EXIT HUP INT TERM
         echo
         echo "    background-effect {"
         echo "        xray false"
-        echo "    }"
-        echo "}"
-    fi
-    if [ "$blur_enabled" = "true" ]; then
-        echo
-        echo "// wlogout does not request ext-background-effect itself."
-        echo "layer-rule {"
-        echo "    match namespace=\"^logout_dialog$\""
-        echo
-        echo "    background-effect {"
-        echo "        xray $xray_value"
-        echo "        blur true"
         echo "    }"
         echo "}"
     fi

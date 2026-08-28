@@ -557,20 +557,6 @@ StyledFlickable {
         }
 
         Section {
-            title: qsTr("电源菜单")
-            iconName: "power_settings_new"
-
-            SearchSelectSettingRow {
-                title: qsTr("布局")
-                options: PersonalizationConfig.powerMenuStyles
-                value: PersonalizationConfig.powerMenuStyle
-                placeholder: qsTr("选择布局")
-                onAccepted: value =>
-                    PersonalizationConfig.setPowerMenuStyle(value)
-            }
-        }
-
-        Section {
             title: qsTr("字体")
             iconName: "text_format"
 

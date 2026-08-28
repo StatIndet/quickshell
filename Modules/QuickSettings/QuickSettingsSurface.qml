@@ -253,10 +253,7 @@ WidgetPanel {
             padding: root.headerButtonPadding
             iconName: "power_settings_new"
             tooltipText: qsTr("电源菜单")
-            onTriggered: Quickshell.execDetached([
-                Paths.systemScriptsDir + "/power-menu.sh",
-                PersonalizationConfig.powerMenuStyle
-            ])
+            onTriggered: PowerMenuService.open(root.screen)
         }
     }
 

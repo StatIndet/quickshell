@@ -192,13 +192,6 @@ Singleton {
         "label": qsTr("右侧"),
         "icon": "arrow_forward"
     })]
-    readonly property var powerMenuStyles: [({
-        "value": "grid",
-        "label": qsTr("四宫格")
-    }), ({
-        "value": "row",
-        "label": qsTr("横向六项")
-    })]
     property bool storeReady: false
     property bool loading: false
     property bool loaded: false
@@ -445,7 +438,6 @@ Singleton {
             "customColor": ""
         })
     })
-    property string powerMenuStyle: "grid"
     readonly property string uiFontFamily: Fonts.configuredUi || Fonts.defaultUi
     readonly property string monoFontFamily: Fonts.configuredMono || Fonts.defaultMono
     readonly property string numericFontFamily: Fonts.configuredNumeric || Fonts.defaultNumeric
@@ -1013,10 +1005,6 @@ Singleton {
         setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "bangs"));
     }
 
-    function setPowerMenuStyle(value) {
-        setValue("powerMenuStyle", normalizedOption(root.powerMenuStyles, value, "grid"));
-    }
-
     function setFontFamily(role, family) {
         const allowedRoles = ["ui", "mono", "numeric", "expressive"];
         if (allowedRoles.indexOf(role) === -1)
@@ -1364,7 +1352,6 @@ Singleton {
                 "cursorHideWhenTyping": root.cursorHideWhenTyping,
                 "cursorHideAfterInactiveMs": root.cursorHideAfterInactiveMs,
                 "iconTheme": root.iconTheme,
-                "powerMenuStyle": root.powerMenuStyle,
                 "fonts": {
                     "ui": root.uiFontFamily,
                     "mono": root.monoFontFamily,
@@ -1478,7 +1465,6 @@ Singleton {
         root.cursorHideWhenTyping = typeof theme.cursorHideWhenTyping === "boolean" ? theme.cursorHideWhenTyping : false;
         root.cursorHideAfterInactiveMs = root.normalizedBoundedInt(theme.cursorHideAfterInactiveMs, 0, 0, 5000);
         root.iconTheme = theme.iconTheme || "";
-        root.powerMenuStyle = normalizedOption(root.powerMenuStyles, theme.powerMenuStyle, "grid");
         Fonts.setConfiguredFamilies(fonts.ui, fonts.mono, fonts.numeric, fonts.expressive);
         root.shellBackgroundOpacity = normalizedBoundedReal(effects.shellBackgroundOpacity, 1, 0, 1);
         root.shellBlurEnabled = typeof effects.shellBlurEnabled === "boolean" ? effects.shellBlurEnabled : false;
@@ -1520,7 +1506,7 @@ Singleton {
 
     function needsThemeMigration(parsed) {
         const theme = parsed && parsed.theme;
-        return !theme || typeof theme !== "object" || Array.isArray(theme) || theme.powerMenuStyle === undefined || theme.matugenTemplates === undefined || theme.fonts === undefined;
+        return !theme || typeof theme !== "object" || Array.isArray(theme) || theme.matugenTemplates === undefined || theme.fonts === undefined;
     }
 
     function needsEdgePositionMigration(parsed) {

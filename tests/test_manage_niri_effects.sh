@@ -49,20 +49,7 @@ assert_contains "$snippet" 'match namespace="^clavis-shell-"'
 assert_contains "$snippet" 'match title="^(clavis-control-center|clavis-file-picker)$"'
 assert_contains "$snippet" 'xray false'
 assert_not_contains "$snippet" 'xray true'
-assert_not_contains "$snippet" 'logout_dialog'
 assert_not_contains "$snippet" 'blur true'
-
-"$manager" write "$main_config" "$snippet" true "$mock_niri" true >/dev/null
-assert_contains "$snippet" 'match namespace="^logout_dialog$"'
-assert_contains "$snippet" 'xray true'
-assert_contains "$snippet" 'blur true'
-assert_not_contains "$snippet" 'clavis-wallpaper'
-assert_not_contains "$snippet" 'clavis-overview-wallpaper'
-
-"$manager" write "$main_config" "$snippet" false "$mock_niri" true >/dev/null
-assert_contains "$snippet" 'match namespace="^logout_dialog$"'
-assert_contains "$snippet" 'xray false'
-assert_contains "$snippet" 'blur true'
 
 printf '%s\n' 'known-good' > "$snippet"
 if MOCK_NIRI_FAIL=1 "$manager" write "$main_config" "$snippet" true "$mock_niri" >/dev/null 2>&1; then

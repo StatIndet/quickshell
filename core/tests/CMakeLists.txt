@@ -17,12 +17,6 @@ add_test(
 )
 
 add_test(
-    NAME power_menu_tests
-    COMMAND ${BASH_EXECUTABLE}
-        ${CLAVIS_SOURCE_ROOT}/tests/test_power_menu.sh
-)
-
-add_test(
     NAME qml_unit_tests
     COMMAND Qt6::qmltestrunner -input ${CLAVIS_SOURCE_ROOT}/tests/qml
 )

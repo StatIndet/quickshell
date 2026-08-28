@@ -89,9 +89,7 @@ Singleton {
             root.niriConfigPath,
             root.effectsConfigPath,
             root.xray ? "true" : "false",
-            "niri",
-            PersonalizationConfig.shellBlurEnabled
-                ? "true" : "false"
+            "niri"
         ];
         effectsWriteProcess.running = true;
     }
@@ -107,9 +105,7 @@ Singleton {
             root.niriConfigPath,
             root.effectsConfigPath,
             root.xray ? "true" : "false",
-            "niri",
-            PersonalizationConfig.shellBlurEnabled
-                ? "true" : "false"
+            "niri"
         ];
         integrationProcess.running = true;
     }

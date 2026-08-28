@@ -132,6 +132,7 @@ Item {
         id: powerComponent
 
         PowerButton {
+            screen: root.screen
         }
 
     }
