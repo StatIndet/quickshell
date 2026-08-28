@@ -4,8 +4,7 @@ import qs.Common
 Item {
     id: root
 
-    required property var leadingField
-    required property var trailingField
+    required property var fields
     property bool dragActive: false
     property string componentId: ""
     property string componentLabel: ""
@@ -30,13 +29,28 @@ Item {
     }
 
     function fieldAt(sceneX, sceneY) {
-        if (root.leadingField.containsScenePoint(root, sceneX, sceneY))
-            return root.leadingField;
+        for (let index = 0; index < root.fields.length; index += 1) {
+            const field = root.fields[index];
+            if (field && field.containsScenePoint(root, sceneX, sceneY))
+                return field;
 
-        if (root.trailingField.containsScenePoint(root, sceneX, sceneY))
-            return root.trailingField;
-
+        }
         return null;
+    }
+
+    function forEachField(callback) {
+        for (let index = 0; index < root.fields.length; index += 1) {
+            const field = root.fields[index];
+            if (field)
+                callback(field);
+
+        }
+    }
+
+    function updateFieldPreviews(targetZone, targetIndex) {
+        root.forEachField((field) => {
+            field.showDropPreview(root.componentId, root.sourceZone, targetZone, targetIndex);
+        });
     }
 
     function updateDrag(point) {
@@ -52,16 +66,16 @@ Item {
     function updateTarget() {
         const targetField = root.fieldAt(root.pointerX, root.pointerY);
         root.activeTargetField = targetField;
-        root.leadingField.autoScrollVelocity = 0;
-        root.trailingField.autoScrollVelocity = 0;
+        root.forEachField((field) => {
+            field.autoScrollVelocity = 0;
+        });
         if (!targetField) {
             const previewChanged = root.targetZone !== "" || root.targetIndex !== -1;
             root.targetZone = "";
             root.targetIndex = -1;
-            if (previewChanged) {
-                root.leadingField.showDropPreview(root.componentId, root.sourceZone, "", -1);
-                root.trailingField.showDropPreview(root.componentId, root.sourceZone, "", -1);
-            }
+            if (previewChanged)
+                root.updateFieldPreviews("", -1);
+
             return ;
         }
         const nextZone = targetField.zone;
@@ -69,10 +83,9 @@ Item {
         const previewChanged = nextZone !== root.targetZone || nextIndex !== root.targetIndex;
         root.targetZone = nextZone;
         root.targetIndex = nextIndex;
-        if (previewChanged) {
-            root.leadingField.showDropPreview(root.componentId, root.sourceZone, root.targetZone, root.targetIndex);
-            root.trailingField.showDropPreview(root.componentId, root.sourceZone, root.targetZone, root.targetIndex);
-        }
+        if (previewChanged)
+            root.updateFieldPreviews(root.targetZone, root.targetIndex);
+
         targetField.updateAutoScroll(root, root.pointerX);
     }
 
@@ -87,8 +100,9 @@ Item {
             root.dropped(id, zone, index);
 
         root.dragActive = false;
-        root.leadingField.clearDropPreview();
-        root.trailingField.clearDropPreview();
+        root.forEachField((field) => {
+            field.clearDropPreview();
+        });
         root.activeTargetField = null;
         root.componentId = "";
         root.sourceZone = "";

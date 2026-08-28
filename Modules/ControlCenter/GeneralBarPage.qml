@@ -93,6 +93,40 @@ StyledFlickable {
 
             }
 
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.leftMargin: Metrics.spacingS
+                Layout.rightMargin: Metrics.spacingS
+                spacing: Metrics.spacingS
+
+                Text {
+                    Layout.fillWidth: true
+                    text: qsTr("快捷设置组件")
+                    color: Appearance.colors.colOnSurface
+                    font.family: Fonts.ui
+                    font.pixelSize: Typography.bodyLarge.pixelSize
+                    font.weight: Font.Medium
+                    elide: Text.ElideRight
+                }
+
+                SortableMultiSelectField {
+                    id: quickSettingsField
+
+                    Layout.fillWidth: true
+                    values: PersonalizationConfig.quickSettingsComponents
+                    options: PersonalizationConfig.quickSettingsComponentOptions
+                    zone: "quickSettings"
+                    dragCoordinator: quickSettingsDragCoordinator
+                    onToggled: (componentId) => {
+                        return PersonalizationConfig.toggleQuickSettingsComponent(componentId);
+                    }
+                    onRemoved: (componentId) => {
+                        return PersonalizationConfig.removeQuickSettingsComponent(componentId);
+                    }
+                }
+
+            }
+
         }
 
     }
@@ -102,10 +136,20 @@ StyledFlickable {
 
         anchors.fill: parent
         z: 1000
-        leadingField: leadingField
-        trailingField: trailingField
+        fields: [leadingField, trailingField]
         onDropped: (componentId, targetZone, targetIndex) => {
             return PersonalizationConfig.moveBarComponent(componentId, targetZone, targetIndex);
+        }
+    }
+
+    BarLayoutDragCoordinator {
+        id: quickSettingsDragCoordinator
+
+        anchors.fill: parent
+        z: 1001
+        fields: [quickSettingsField]
+        onDropped: (componentId, targetZone, targetIndex) => {
+            return PersonalizationConfig.moveQuickSettingsComponent(componentId, targetIndex);
         }
     }
 

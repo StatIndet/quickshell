@@ -292,8 +292,36 @@ Singleton {
         "value": "quickSettings",
         "label": qsTr("快捷设置")
     })]
+    readonly property var quickSettingsComponentIds: ["network", "bluetooth", "brightness", "volume", "microphone", "battery", "settings", "power"]
+    readonly property var defaultQuickSettingsComponents: root.quickSettingsComponentIds.slice()
+    readonly property var quickSettingsComponentOptions: [({
+        "value": "network",
+        "label": qsTr("网络")
+    }), ({
+        "value": "bluetooth",
+        "label": qsTr("蓝牙")
+    }), ({
+        "value": "brightness",
+        "label": qsTr("亮度")
+    }), ({
+        "value": "volume",
+        "label": qsTr("音量")
+    }), ({
+        "value": "microphone",
+        "label": qsTr("麦克风")
+    }), ({
+        "value": "battery",
+        "label": qsTr("电池")
+    }), ({
+        "value": "settings",
+        "label": qsTr("设置")
+    }), ({
+        "value": "power",
+        "label": qsTr("电源")
+    })]
     property var barLeadingComponents: root.defaultBarLeadingComponents.slice()
     property var barTrailingComponents: root.defaultBarTrailingComponents.slice()
+    property var quickSettingsComponents: root.defaultQuickSettingsComponents.slice()
     property string keystonePosition: "top"
     property bool keystoneHideDate: false
     readonly property var horizontalClockAxisDefaults: ({
@@ -1117,6 +1145,61 @@ Singleton {
         root.save();
     }
 
+    function normalizedQuickSettingsComponents(raw) {
+        const source = Array.isArray(raw) ? raw : root.defaultQuickSettingsComponents;
+        const result = [];
+        for (let index = 0; index < source.length; index += 1) {
+            const componentId = String(source[index] || "");
+            if (root.quickSettingsComponentIds.indexOf(componentId) === -1 || result.indexOf(componentId) !== -1)
+                continue;
+
+            result.push(componentId);
+        }
+        return result;
+    }
+
+    function moveQuickSettingsComponent(componentId, targetIndex) {
+        const id = String(componentId || "");
+        if (root.quickSettingsComponentIds.indexOf(id) === -1)
+            return false;
+
+        const components = root.normalizedQuickSettingsComponents(root.quickSettingsComponents).filter((value) => {
+            return value !== id;
+        });
+        const numericIndex = Number(targetIndex);
+        const insertionIndex = isFinite(numericIndex) ? Math.max(0, Math.min(components.length, Math.round(numericIndex))) : components.length;
+        components.splice(insertionIndex, 0, id);
+        root.quickSettingsComponents = components;
+        root.save();
+        return true;
+    }
+
+    function removeQuickSettingsComponent(componentId) {
+        const id = String(componentId || "");
+        const components = root.quickSettingsComponents.filter((value) => {
+            return value !== id;
+        });
+        if (components.length === root.quickSettingsComponents.length)
+            return false;
+
+        root.quickSettingsComponents = root.normalizedQuickSettingsComponents(components);
+        root.save();
+        return true;
+    }
+
+    function toggleQuickSettingsComponent(componentId) {
+        const id = String(componentId || "");
+        if (root.quickSettingsComponents.indexOf(id) !== -1)
+            return root.removeQuickSettingsComponent(id);
+
+        return root.moveQuickSettingsComponent(id, root.quickSettingsComponents.length);
+    }
+
+    function resetQuickSettingsComponents() {
+        root.quickSettingsComponents = root.defaultQuickSettingsComponents.slice();
+        root.save();
+    }
+
     function setKeystonePosition(value) {
         setValue("keystonePosition", normalizedEdgePosition(value));
     }
@@ -1307,7 +1390,8 @@ Singleton {
             "bar": {
                 "position": root.barPosition,
                 "barLeadingComponents": root.barLeadingComponents.slice(),
-                "barTrailingComponents": root.barTrailingComponents.slice()
+                "barTrailingComponents": root.barTrailingComponents.slice(),
+                "quickSettingsComponents": root.quickSettingsComponents.slice()
             },
             "sidebar": {
                 "keepLoaded": root.keepSidebarsLoaded
@@ -1410,6 +1494,7 @@ Singleton {
         const barLayout = root.normalizedBarLayout(bar.barLeadingComponents, bar.barTrailingComponents, !hasBarLayout);
         root.barLeadingComponents = barLayout.leading;
         root.barTrailingComponents = barLayout.trailing;
+        root.quickSettingsComponents = root.normalizedQuickSettingsComponents(bar.quickSettingsComponents);
         root.keepSidebarsLoaded = sidebar.keepLoaded === undefined ? true : !!sidebar.keepLoaded;
     }
 
