@@ -24,12 +24,17 @@ Item {
     readonly property color downloadChartColor: Appearance.mix(root.downloadIconColor, root.leftForeground, 0.64)
     readonly property color uploadChartColor: Appearance.mix(root.uploadIconColor, root.leftForeground, 0.58)
     readonly property real rightPanelX: Math.round(width * 0.53)
+    readonly property int chartHistoryLength: 18
     readonly property real chartMaximum: {
         let maximum = 0;
         const series = [root.downloadHistory || [], root.uploadHistory || []];
         for (let seriesIndex = 0; seriesIndex < series.length; seriesIndex += 1) {
             const points = series[seriesIndex];
-            for (let index = 0; index < points.length; index += 1) {
+            const firstVisibleIndex = Math.max(
+                0, points.length - root.chartHistoryLength);
+            for (let index = firstVisibleIndex;
+                 index < points.length;
+                 index += 1) {
                 const value = points[index];
                 if (typeof value === "number" && isFinite(value))
                     maximum = Math.max(maximum, value);
@@ -76,7 +81,7 @@ Item {
     SystemSparkline {
         values: root.uploadHistory
         maximum: root.chartMaximum
-        historyLength: 18
+        historyLength: root.chartHistoryLength
         updateInterval: root.updateInterval
         active: root.chartActive
         showGuideLines: false
@@ -93,7 +98,7 @@ Item {
             top: parent.top
             bottom: parent.bottom
             leftMargin: 0
-            rightMargin: -Math.min(ratePanel.radius, 30)
+            rightMargin: 0
             topMargin: 46
             bottomMargin: Appearance.spacing.small
         }
@@ -104,7 +109,7 @@ Item {
         values: root.downloadHistory
         secondaryValues: root.uploadHistory
         maximum: root.chartMaximum
-        historyLength: 18
+        historyLength: root.chartHistoryLength
         updateInterval: root.updateInterval
         active: root.chartActive
         showGuideLines: false
@@ -123,7 +128,7 @@ Item {
             top: parent.top
             bottom: parent.bottom
             leftMargin: 0
-            rightMargin: -Math.min(ratePanel.radius, 30)
+            rightMargin: 0
             topMargin: 46
             bottomMargin: Appearance.spacing.small
         }
