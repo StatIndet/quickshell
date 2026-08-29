@@ -1,7 +1,8 @@
+import "../../Common/functions/DateFormat.js" as DateFormat
 import QtQuick
+import QtQuick.Effects
 import qs.Common
 import qs.Services
-import "../../Common/functions/DateFormat.js" as DateFormat
 
 Item {
     id: root
@@ -64,6 +65,7 @@ Item {
             anchors.centerIn: parent
             width: Math.max(glyphGroup.width, dateMetrics.tightBoundingRect.width)
             height: glyphGroup.height + Appearance.spacing.small + dateMetrics.tightBoundingRect.height
+            layer.enabled: clockFace.visible
 
             Item {
                 id: glyphGroup
@@ -150,8 +152,7 @@ Item {
                         width: periodLabel.implicitWidth + Appearance.spacing.medium
                         height: periodLabel.implicitHeight + Appearance.spacing.small
                         radius: Appearance.rounding.small
-                        color: BlurService.solidBackgroundColor(
-                            Appearance.colors.colSecondaryContainer)
+                        color: BlurService.solidBackgroundColor(Appearance.colors.colSecondaryContainer)
 
                         anchors {
                             horizontalCenter: parent.horizontalCenter
@@ -212,6 +213,15 @@ Item {
 
                 text: dateLabel.text
                 font: dateLabel.font
+            }
+
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                shadowColor: Appearance.applyAlpha(Appearance.colors.colShadow, 0.4)
+                shadowBlur: 0.8
+                shadowVerticalOffset: 4
+                shadowHorizontalOffset: 0
+                autoPaddingEnabled: true
             }
 
         }

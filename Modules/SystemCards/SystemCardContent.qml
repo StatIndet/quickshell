@@ -1,10 +1,11 @@
-import QtQuick
-import M3Shapes
-import qs.Common
-import qs.Services
-import qs.Components
 import "../../Common/functions/SystemFormat.js" as Format
 import "./SystemCardCatalog.js" as CardCatalog
+import M3Shapes
+import QtQuick
+import QtQuick.Effects
+import qs.Common
+import qs.Components
+import qs.Services
 
 Item {
     id: root
@@ -24,6 +25,40 @@ Item {
     readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius) ? SystemMonitorService.cpu.packageTemperatureCelsius : SystemMonitorService.cpu.temperatureCelsius
     readonly property var ioDisk: root.diskForDevice(UiPreferences.systemMonitorDiskDevice, true)
     readonly property var capacityDisk: UiPreferences.storageCapacityDiskDevice === "follow-io" ? root.ioDisk : root.diskForDevice(UiPreferences.storageCapacityDiskDevice, false)
+    readonly property bool usesRectangularShadow: ["battery", "cpu", "gpu", "network", "storage", "calendar"].indexOf(root.tileId) >= 0
+    readonly property int shadowShape: {
+        switch (root.tileId) {
+        case "memoryUsed":
+            return MaterialShape.Slanted;
+        case "wifi":
+            return MaterialShape.Pentagon;
+        case "storageCapacity":
+            return MaterialShape.Cookie9Sided;
+        default:
+            return -1;
+        }
+    }
+    readonly property color shadowSurfaceColor: {
+        switch (root.tileId) {
+        case "battery":
+        case "gpu":
+        case "storageCapacity":
+            return root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer);
+        case "cpu":
+        case "memoryUsed":
+            return root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer);
+        case "wifi":
+            return root.surfaceColor(Appearance.m3colors.m3tertiaryContainer, Appearance.colors.colTertiaryContainer);
+        case "network":
+            return root.surfaceColor(Appearance.m3colors.m3primary, Appearance.colors.colPrimary);
+        case "storage":
+            return root.surfaceColor(Appearance.m3colors.m3tertiary, Appearance.colors.colTertiary);
+        case "calendar":
+            return root.surfaceColor(Appearance.m3colors.m3surfaceContainerHigh, Appearance.colors.colSurfaceContainerHigh);
+        default:
+            return Appearance.colors.colSurface;
+        }
+    }
 
     function normalizedPercent(value) {
         return Format.isNumber(value) ? Math.max(0, Math.min(1, value / 100)) : -1;
@@ -107,7 +142,50 @@ Item {
         }
     }
 
+    Rectangle {
+        id: rectangularShadowShape
+
+        anchors.fill: parent
+        visible: root.usesRectangularShadow
+        radius: Appearance.rounding.extraLarge
+        color: root.shadowSurfaceColor
+        layer.enabled: visible
+
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: Appearance.applyAlpha(Appearance.colors.colShadow, 0.4)
+            shadowBlur: 0.8
+            shadowVerticalOffset: 4
+            shadowHorizontalOffset: 0
+            autoPaddingEnabled: true
+        }
+
+    }
+
+    MaterialShape {
+        id: expressiveShadowShape
+
+        anchors.centerIn: parent
+        width: Math.max(72, Math.min(parent.width, parent.height) - Appearance.spacing.small)
+        height: width
+        visible: root.shadowShape >= 0
+        shape: root.shadowShape
+        color: root.shadowSurfaceColor
+        layer.enabled: visible
+
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: Appearance.applyAlpha(Appearance.colors.colShadow, 0.4)
+            shadowBlur: 0.8
+            shadowVerticalOffset: 4
+            shadowHorizontalOffset: 0
+            autoPaddingEnabled: true
+        }
+
+    }
+
     Loader {
+        z: 1
         anchors.fill: parent
         sourceComponent: root.componentFor(root.tileId)
     }
