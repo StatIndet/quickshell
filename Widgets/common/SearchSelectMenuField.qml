@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Controls.Material
 import QtQuick.Window
 import Qt5Compat.GraphicalEffects
 import qs.Common
@@ -21,7 +20,6 @@ FocusScope {
     property bool closeOnAccept: false
     property bool showCheckmark: true
     property bool showActiveIndicator: true
-    property bool indeterminateLoading: false
     property Component leadingDelegate
     property real leadingWidth: Metrics.iconM
     property real fieldHeight: 40
@@ -409,7 +407,7 @@ FocusScope {
             anchors.bottom: parent.bottom
             height: !root.showActiveIndicator ? 0 : root.expanded ? 2 : 1
             color: root.expanded ? Appearance.colors.colPrimary : Appearance.colors.colOutlineVariant
-            visible: root.showActiveIndicator && !root.indeterminateLoading
+            visible: root.showActiveIndicator
 
             Behavior on height {
                 NumberAnimation {
@@ -426,18 +424,6 @@ FocusScope {
                     easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                 }
             }
-        }
-
-        ProgressBar {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: 4
-            padding: 0
-            visible: root.indeterminateLoading
-            indeterminate: true
-            Material.accent: Appearance.colors.colPrimary
-            z: 2
         }
 
         MouseArea {

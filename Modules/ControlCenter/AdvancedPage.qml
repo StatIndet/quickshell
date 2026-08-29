@@ -10,6 +10,8 @@ StyledFlickable {
     id: root
 
     property var parentModal: null
+    property bool refreshRequested: false
+    property bool refreshConfirmed: false
     readonly property real pageContentWidth: 600
     readonly property var remoteOptions: RcloneService.remotes.map((remote) => ({
         "label": remote.name,
@@ -64,6 +66,9 @@ StyledFlickable {
     function refreshConfiguration() {
         if (RcloneService.remotesLoading)
             return ;
+        refreshConfirmationTimer.stop();
+        root.refreshRequested = true;
+        root.refreshConfirmed = false;
         RcloneService.refreshRemotes();
     }
 
@@ -74,6 +79,28 @@ StyledFlickable {
     Component.onCompleted: {
         if (RcloneService.providers.length === 0)
             RcloneService.loadProviders();
+    }
+
+    Connections {
+        target: RcloneService
+
+        function onRemotesLoadingChanged() {
+            if (RcloneService.remotesLoading || !root.refreshRequested)
+                return ;
+
+            root.refreshRequested = false;
+            if (RcloneService.remotesError === "") {
+                root.refreshConfirmed = true;
+                refreshConfirmationTimer.restart();
+            }
+        }
+    }
+
+    Timer {
+        id: refreshConfirmationTimer
+
+        interval: 1400
+        onTriggered: root.refreshConfirmed = false
     }
 
     ColumnLayout {
@@ -103,7 +130,6 @@ StyledFlickable {
                     fieldHeight: Metrics.controlHeightXL
                     itemHeight: Metrics.controlHeightXL
                     leadingWidth: Metrics.iconM
-                    indeterminateLoading: RcloneService.remotesLoading
                     enabled: options.length > 0
                     onAccepted: (value) => RcloneService.setDefaultRemote(value)
 
@@ -125,32 +151,25 @@ StyledFlickable {
                     Layout.preferredHeight: Metrics.controlHeightXL
                     iconName: RcloneService.remotesError !== ""
                         && !RcloneService.remotesLoading
-                        ? "sync_problem" : "refresh"
+                        ? "sync_problem"
+                        : root.refreshConfirmed ? "check" : "refresh"
+                    iconFill: root.refreshConfirmed ? 1 : 0
                     iconColor: RcloneService.remotesError !== ""
                         && !RcloneService.remotesLoading
                         ? Appearance.colors.colError
-                        : Appearance.colors.colOnSurfaceVariant
+                        : root.refreshConfirmed
+                            ? Appearance.colors.colPrimary
+                            : Appearance.colors.colOnSurfaceVariant
                     tooltipText: RcloneService.remotesLoading
                         ? qsTr("正在刷新配置")
                         : RcloneService.remotesError !== ""
-                            ? RcloneService.remotesError : qsTr("刷新配置")
+                            ? RcloneService.remotesError
+                            : root.refreshConfirmed
+                                ? qsTr("配置已刷新") : qsTr("刷新配置")
                     accessibleName: tooltipText
                     enabled: !RcloneService.remotesLoading
                         && !RcloneService.configBusy
                     onClicked: root.refreshConfiguration()
-
-                    RotationAnimator {
-                        target: refreshButton.iconItem
-                        from: 0
-                        to: 360
-                        duration: 1000
-                        loops: Animation.Infinite
-                        running: RcloneService.remotesLoading
-                        onRunningChanged: {
-                            if (!running)
-                                refreshButton.iconItem.rotation = 0;
-                        }
-                    }
                 }
             }
 

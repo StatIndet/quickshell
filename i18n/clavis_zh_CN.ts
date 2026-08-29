@@ -280,67 +280,72 @@
 <context>
     <name>AdvancedPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="50"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="51"/>
         <source>请输入 remote 内的相对目录，不要包含 remote 名称或冒号</source>
         <translation>请输入 remote 内的相对目录，不要包含 remote 名称或冒号</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="54"/>
         <source>请输入有效的远程目录</source>
         <translation>请输入有效的远程目录</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="116"/>
         <source>云存储</source>
         <translation>云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="101"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="127"/>
         <source>尚未选择云存储</source>
         <translation>尚未选择云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="167"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>添加云存储</source>
         <translation>添加云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
         <source>电脑备份位置</source>
         <translation>电脑备份位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
         <source>刷新配置</source>
         <translation>刷新配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="23"/>
         <source>此云存储不支持写入，不能设为默认</source>
         <translation>此云存储不支持写入，不能设为默认</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="134"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="164"/>
         <source>正在刷新配置</source>
         <translation>正在刷新配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
+        <source>配置已刷新</source>
+        <translation>配置已刷新</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
         <source>查看云存储</source>
         <translation>查看云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="208"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>正在为已启用的程序生成 Matugen 配色…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="214"/>
         <source>Matugen 模板生成</source>
         <translation>Matugen 模板生成</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="218"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="229"/>
         <source>启用 %1 Matugen 模板</source>
         <translation>启用 %1 Matugen 模板</translation>
     </message>
@@ -5485,7 +5490,7 @@
 <context>
     <name>SearchSelectMenuField</name>
     <message>
-        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="731"/>
+        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="748"/>
         <source>暂无可用选项</source>
         <translation>暂无可用选项</translation>
     </message>

@@ -280,67 +280,72 @@
 <context>
     <name>AdvancedPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="50"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="51"/>
         <source>请输入 remote 内的相对目录，不要包含 remote 名称或冒号</source>
         <translation>Enter a relative directory inside the remote; do not include a remote name or colon</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="54"/>
         <source>请输入有效的远程目录</source>
         <translation>Enter a valid remote directory</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="116"/>
         <source>云存储</source>
         <translation>Cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="101"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="127"/>
         <source>尚未选择云存储</source>
         <translation>No cloud storage selected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="167"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>添加云存储</source>
         <translation>Add cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
         <source>电脑备份位置</source>
         <translation>Computer backup location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
         <source>刷新配置</source>
         <translation>Refresh configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="23"/>
         <source>此云存储不支持写入，不能设为默认</source>
         <translation>This cloud storage is read-only and cannot be set as default</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="134"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="164"/>
         <source>正在刷新配置</source>
         <translation>Refreshing configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
+        <source>配置已刷新</source>
+        <translation>Configuration refreshed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
         <source>查看云存储</source>
         <translation>View cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="208"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>Generating Matugen colors for enabled applications…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="214"/>
         <source>Matugen 模板生成</source>
         <translation>Matugen template generation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="218"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="229"/>
         <source>启用 %1 Matugen 模板</source>
         <translation>Enable the %1 Matugen template</translation>
     </message>
@@ -5485,7 +5490,7 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>SearchSelectMenuField</name>
     <message>
-        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="731"/>
+        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="748"/>
         <source>暂无可用选项</source>
         <translation>No options available</translation>
     </message>
