@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Window
 import Qt5Compat.GraphicalEffects
 import qs.Common
@@ -20,6 +21,9 @@ FocusScope {
     property bool closeOnAccept: false
     property bool showCheckmark: true
     property bool showActiveIndicator: true
+    property bool indeterminateLoading: false
+    property Component leadingDelegate
+    property real leadingWidth: Metrics.iconM
     property real fieldHeight: 40
     property real itemHeight: 40
     property Item popupBoundsItem: null
@@ -102,6 +106,14 @@ FocusScope {
                 return optionText(options[i]);
         }
         return currentValue;
+    }
+
+    function optionForValue(currentValue) {
+        for (let i = 0; i < options.length; i += 1) {
+            if (optionValue(options[i]) === currentValue)
+                return options[i];
+        }
+        return null;
     }
 
     function selectedIndexInOptions() {
@@ -326,9 +338,10 @@ FocusScope {
         Text {
             id: displayLabel
 
-            anchors.left: parent.left
+            anchors.left: currentLeadingLoader.active
+                ? currentLeadingLoader.right : parent.left
             anchors.right: arrowIcon.left
-            anchors.leftMargin: 14
+            anchors.leftMargin: currentLeadingLoader.active ? 10 : 14
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
             visible: true
@@ -338,6 +351,36 @@ FocusScope {
             font.pixelSize: 14
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
+        }
+
+        Loader {
+            id: currentLeadingLoader
+
+            anchors.left: parent.left
+            anchors.leftMargin: 14
+            anchors.verticalCenter: parent.verticalCenter
+            width: active ? root.leadingWidth : 0
+            height: active ? root.leadingWidth : 0
+            active: root.leadingDelegate !== null
+                && root.optionForValue(root.visualSelectedValue) !== null
+            sourceComponent: root.leadingDelegate
+            onLoaded: {
+                if (item && "optionData" in item)
+                    item.optionData = root.optionForValue(
+                        root.visualSelectedValue);
+            }
+        }
+
+        Connections {
+            target: root
+
+            function onVisualSelectedValueChanged() {
+                if (currentLeadingLoader.item
+                        && "optionData" in currentLeadingLoader.item) {
+                    currentLeadingLoader.item.optionData
+                        = root.optionForValue(root.visualSelectedValue);
+                }
+            }
         }
 
         MaterialSymbol {
@@ -366,7 +409,7 @@ FocusScope {
             anchors.bottom: parent.bottom
             height: !root.showActiveIndicator ? 0 : root.expanded ? 2 : 1
             color: root.expanded ? Appearance.colors.colPrimary : Appearance.colors.colOutlineVariant
-            visible: root.showActiveIndicator
+            visible: root.showActiveIndicator && !root.indeterminateLoading
 
             Behavior on height {
                 NumberAnimation {
@@ -383,6 +426,18 @@ FocusScope {
                     easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                 }
             }
+        }
+
+        ProgressBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            height: 4
+            padding: 0
+            visible: root.indeterminateLoading
+            indeterminate: true
+            Material.accent: Appearance.colors.colPrimary
+            z: 2
         }
 
         MouseArea {
@@ -623,8 +678,25 @@ FocusScope {
                                     }
                                 }
 
+                                Loader {
+                                    id: optionLeadingLoader
+
+                                    x: root.showCheckmark ? 30 : 0
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: active ? root.leadingWidth : 0
+                                    height: active ? root.leadingWidth : 0
+                                    active: root.leadingDelegate !== null
+                                    sourceComponent: root.leadingDelegate
+                                    onLoaded: {
+                                        if (item && "optionData" in item)
+                                            item.optionData = optionItem.modelData;
+                                    }
+                                }
+
                                 Text {
-                                    x: optionItem.selected && root.showCheckmark ? 32 : 0
+                                    x: (root.showCheckmark ? 32 : 0)
+                                        + (optionLeadingLoader.active
+                                            ? root.leadingWidth + 10 : 0)
                                     width: parent.width - x
                                     height: parent.height
                                     text: optionItem.itemText

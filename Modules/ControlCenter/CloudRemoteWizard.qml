@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
 import Quickshell
 import qs.Common
 import qs.Components
@@ -355,14 +354,21 @@ FloatingWindow {
                         model: root.filteredProviders
 
                         delegate: SettingsRow {
+                            id: providerRow
+
                             required property var modelData
 
                             width: ListView.view.width
-                            iconName: "cloud"
-                            title: String(modelData.Description || modelData.Name || "")
-                            supportingText: String(modelData.Name || "")
+                            title: RcloneService.providerDisplayName(
+                                String(modelData.Name || ""))
                             interactive: true
                             onClicked: root.chooseProvider(modelData)
+                            leading: Component {
+                                CloudProviderIcon {
+                                    remoteType: String(providerRow.modelData.Name || "")
+                                    iconSize: Metrics.iconL
+                                }
+                            }
                             trailing: MaterialSymbol {
                                 text: "chevron_right"
                                 iconSize: Metrics.iconM
@@ -388,7 +394,8 @@ FloatingWindow {
                     Layout.fillWidth: true
                     title: qsTr("添加云存储")
                     subtitle: root.selectedProvider
-                        ? String(root.selectedProvider.Description || "") : ""
+                        ? RcloneService.providerDisplayName(
+                            String(root.selectedProvider.Name || "")) : ""
                     showBack: true
                     onBackRequested: {
                         root.currentPage = 0;
@@ -689,7 +696,9 @@ FloatingWindow {
                 Text {
                     Layout.fillWidth: true
                     text: root.selectedProvider
-                        ? qsTr("%1 已连接").arg(String(root.selectedProvider.Description || root.selectedProvider.Name || ""))
+                        ? qsTr("%1 已连接").arg(
+                            RcloneService.providerDisplayName(
+                                String(root.selectedProvider.Name || "")))
                         : qsTr("云存储已连接")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.headlineSmall.family

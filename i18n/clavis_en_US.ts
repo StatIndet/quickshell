@@ -280,17 +280,67 @@
 <context>
     <name>AdvancedPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="44"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="50"/>
+        <source>请输入 remote 内的相对目录，不要包含 remote 名称或冒号</source>
+        <translation>Enter a relative directory inside the remote; do not include a remote name or colon</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="53"/>
+        <source>请输入有效的远程目录</source>
+        <translation>Enter a valid remote directory</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="90"/>
+        <source>云存储</source>
+        <translation>Cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="101"/>
+        <source>尚未选择云存储</source>
+        <translation>No cloud storage selected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="167"/>
+        <source>添加云存储</source>
+        <translation>Add cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
+        <source>电脑备份位置</source>
+        <translation>Computer backup location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="136"/>
+        <source>刷新配置</source>
+        <translation>Refresh configuration</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="22"/>
+        <source>此云存储不支持写入，不能设为默认</source>
+        <translation>This cloud storage is read-only and cannot be set as default</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="134"/>
+        <source>正在刷新配置</source>
+        <translation>Refreshing configuration</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="159"/>
+        <source>查看云存储</source>
+        <translation>View cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>Generating Matugen colors for enabled applications…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="50"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="203"/>
         <source>Matugen 模板生成</source>
         <translation>Matugen template generation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="65"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="218"/>
         <source>启用 %1 Matugen 模板</source>
         <translation>Enable the %1 Matugen template</translation>
     </message>
@@ -1631,6 +1681,244 @@ Scroll to adjust</translation>
         <location filename="../Services/ClipboardService.qml" line="409"/>
         <source>无法检查剪贴板条目</source>
         <translation>Unable to inspect clipboard entry</translation>
+    </message>
+</context>
+<context>
+    <name>CloudRemoteManagerWindow</name>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="48"/>
+        <source>无法开始删除云存储配置</source>
+        <translation>Could not start deleting the cloud storage configuration</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="55"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="117"/>
+        <source>管理云存储</source>
+        <translation>Manage cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="68"/>
+        <source>已删除云存储“%1”</source>
+        <translation>Cloud storage “%1” was removed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="176"/>
+        <source>当前默认云存储</source>
+        <translation>Current default cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="176"/>
+        <source>设为默认</source>
+        <translation>Set as default</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="275"/>
+        <source>删除</source>
+        <translation>Delete</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="220"/>
+        <source>尚未配置云存储</source>
+        <translation>No cloud storage configured</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="257"/>
+        <source>删除“%1”？</source>
+        <translation>Remove “%1”?</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="261"/>
+        <source>删除云存储</source>
+        <translation>Remove cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="263"/>
+        <source>将从 rclone 配置中删除 remote “%1”。这不会主动删除云端已有文件。</source>
+        <translation>Remote “%1” will be removed from the rclone configuration. Existing cloud files will not be deleted.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteManagerWindow.qml" line="271"/>
+        <source>取消</source>
+        <translation>Cancel</translation>
+    </message>
+</context>
+<context>
+    <name>CloudRemoteWizard</name>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="102"/>
+        <source>名称不能为空</source>
+        <translation>Name cannot be empty</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="104"/>
+        <source>名称不能包含冒号或路径分隔符</source>
+        <translation>Names cannot contain a colon or path separator</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="106"/>
+        <source>已存在同名云存储</source>
+        <translation>Cloud storage with this name already exists</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="124"/>
+        <source>无法开始配置云存储</source>
+        <translation>Could not start cloud storage setup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="173"/>
+        <source>配置问题不可用</source>
+        <translation>The configuration question is unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="176"/>
+        <source>此项为必填项</source>
+        <translation>This field is required</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="179"/>
+        <source>请输入有效数字</source>
+        <translation>Enter a valid number</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="214"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="309"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="395"/>
+        <source>添加云存储</source>
+        <translation>Add cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="310"/>
+        <source>选择服务</source>
+        <translation>Choose a service</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="319"/>
+        <source>搜索云存储服务</source>
+        <translation>Search cloud storage services</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="346"/>
+        <source>正在读取云存储服务</source>
+        <translation>Loading cloud storage services</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="411"/>
+        <source>名称</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="413"/>
+        <source>用于在 Clavis 和 rclone 中识别此云存储。</source>
+        <translation>Used to identify this cloud storage in Clavis and rclone.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="423"/>
+        <source>显示高级选项</source>
+        <translation>Show advanced options</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="424"/>
+        <source>仅在需要自定义后端参数时启用</source>
+        <translation>Enable only when custom backend settings are needed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="438"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="593"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="644"/>
+        <source>取消</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="442"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="597"/>
+        <source>继续</source>
+        <translation>Continue</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="463"/>
+        <source>配置失败</source>
+        <translation>Setup failed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="463"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="615"/>
+        <source>正在配置</source>
+        <translation>Setting up</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="517"/>
+        <source>选择一个选项</source>
+        <translation>Choose an option</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="529"/>
+        <source>是</source>
+        <translation>Yes</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="529"/>
+        <source>否</source>
+        <translation>No</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="546"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="546"/>
+        <source>值</source>
+        <translation>Value</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="557"/>
+        <source>也可以输入自定义值</source>
+        <translation>You can also enter a custom value</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="581"/>
+        <source>使用建议值</source>
+        <translation>Use a suggested value</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="615"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="622"/>
+        <source>正在完成授权</source>
+        <translation>Completing authorization</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="620"/>
+        <source>正在取消配置…</source>
+        <translation>Cancelling setup…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="622"/>
+        <source>正在应用配置…</source>
+        <translation>Applying configuration…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="633"/>
+        <source>如果浏览器已打开，请在浏览器中完成登录和授权。完成后 Clavis 将继续配置。</source>
+        <translation>If a browser opened, complete sign-in and authorization there. Clavis will continue automatically afterward.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="663"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="734"/>
+        <source>完成</source>
+        <translation>Done</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="684"/>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="702"/>
+        <source>云存储已连接</source>
+        <translation>Cloud storage connected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="699"/>
+        <source>%1 已连接</source>
+        <translation>%1 is connected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/CloudRemoteWizard.qml" line="727"/>
+        <source>设为默认云存储</source>
+        <translation>Set as default cloud storage</translation>
     </message>
 </context>
 <context>
@@ -4396,6 +4684,19 @@ Click to open network settings</translation>
     </message>
 </context>
 <context>
+    <name>OutlinedTextField</name>
+    <message>
+        <location filename="../Widgets/common/OutlinedTextField.qml" line="64"/>
+        <source>隐藏密码</source>
+        <translation>Hide password</translation>
+    </message>
+    <message>
+        <location filename="../Widgets/common/OutlinedTextField.qml" line="64"/>
+        <source>显示密码</source>
+        <translation>Show password</translation>
+    </message>
+</context>
+<context>
     <name>PersonalizationConfig</name>
     <message>
         <location filename="../Services/PersonalizationConfig.qml" line="18"/>
@@ -4967,92 +5268,137 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>RcloneService</name>
     <message>
-        <location filename="../Services/RcloneService.qml" line="86"/>
+        <location filename="../Services/RcloneService.qml" line="137"/>
+        <source>其他云存储</source>
+        <translation>Other cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="153"/>
         <source>备份</source>
         <translation>Backup</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="195"/>
+        <location filename="../Services/RcloneService.qml" line="200"/>
+        <source>尚未配置可写云存储</source>
+        <translation>No writable cloud storage configured</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="358"/>
+        <source>rclone 配置失败</source>
+        <translation>rclone setup failed</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="374"/>
+        <source>rclone 返回了无效的配置问题</source>
+        <translation>rclone returned an invalid configuration question</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="401"/>
+        <source>rclone 配置问题缺少选项信息</source>
+        <translation>The rclone configuration question is missing option details</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="472"/>
         <source>所选云存储为只读服务</source>
         <translation>The selected cloud storage is read-only</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="214"/>
+        <location filename="../Services/RcloneService.qml" line="492"/>
         <source>正在准备备份</source>
         <translation>Preparing backup</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="223"/>
+        <location filename="../Services/RcloneService.qml" line="501"/>
         <source>电脑备份仅支持文件夹</source>
         <translation>Computer backup supports folders only</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="242"/>
+        <location filename="../Services/RcloneService.qml" line="520"/>
         <source>正在停止备份…</source>
         <translation>Stopping backup…</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="271"/>
+        <location filename="../Services/RcloneService.qml" line="549"/>
         <source>备份已停止</source>
         <translation>Backup stopped</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="278"/>
+        <location filename="../Services/RcloneService.qml" line="556"/>
         <source>请检查网络和远程权限</source>
         <translation>Check the network and remote permissions</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="286"/>
+        <location filename="../Services/RcloneService.qml" line="564"/>
         <source>备份已完成，共备份 %1 个文件夹</source>
         <translation>Backup complete. %1 folders backed up</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="311"/>
+        <location filename="../Services/RcloneService.qml" line="589"/>
         <source>正在准备 %1（%2/%3）</source>
         <translation>Preparing %1 (%2/%3)</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="356"/>
+        <location filename="../Services/RcloneService.qml" line="634"/>
         <source>正在备份 %1（%2/%3）</source>
         <translation>Backing up %1 (%2/%3)</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="356"/>
+        <location filename="../Services/RcloneService.qml" line="634"/>
         <source>正在检查 %1（%2/%3）</source>
         <translation>Checking %1 (%2/%3)</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="396"/>
+        <location filename="../Services/RcloneService.qml" line="688"/>
         <source>无法读取 rclone 配置</source>
         <translation>Could not read the rclone configuration</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="411"/>
+        <location filename="../Services/RcloneService.qml" line="708"/>
         <source>rclone 返回了无效的 remote 列表</source>
         <translation>rclone returned an invalid remote list</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="416"/>
+        <location filename="../Services/RcloneService.qml" line="722"/>
         <source>尚未配置云存储</source>
         <translation>No cloud storage configured</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="440"/>
+        <location filename="../Services/RcloneService.qml" line="744"/>
+        <source>无法读取 rclone 服务列表</source>
+        <translation>Could not load the rclone service list</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="756"/>
+        <source>rclone 返回了无效的服务列表</source>
+        <translation>rclone returned an invalid service list</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="791"/>
+        <source>无法删除云存储配置</source>
+        <translation>Could not remove the cloud storage configuration</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="801"/>
+        <source>rclone 配置命令失败</source>
+        <translation>The rclone configuration command failed</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="834"/>
         <source>此云存储暂不提供容量信息</source>
         <translation>This cloud storage does not currently provide capacity information</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="456"/>
+        <location filename="../Services/RcloneService.qml" line="850"/>
         <source>此云存储未报告总容量</source>
         <translation>This cloud storage did not report a total capacity</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="460"/>
+        <location filename="../Services/RcloneService.qml" line="854"/>
         <source>无法解析云存储容量</source>
         <translation>Could not parse cloud storage capacity</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="279"/>
+        <location filename="../Services/RcloneService.qml" line="557"/>
         <source>备份 %1 失败：%2</source>
         <translation>Failed to back up %1: %2</translation>
     </message>
@@ -5139,7 +5485,7 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>SearchSelectMenuField</name>
     <message>
-        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="690"/>
+        <location filename="../Widgets/common/SearchSelectMenuField.qml" line="731"/>
         <source>暂无可用选项</source>
         <translation>No options available</translation>
     </message>
@@ -6704,7 +7050,7 @@ detected</translation>
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="489"/>
+        <location filename="../Services/UiPreferences.qml" line="527"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8240,6 +8586,19 @@ Scroll to adjust; click to open sound</translation>
         <location filename="../Widgets/common/WidgetPanel.qml" line="34"/>
         <source>返回快捷设置</source>
         <translation>Back to Quick Settings</translation>
+    </message>
+</context>
+<context>
+    <name>WizardHeader</name>
+    <message>
+        <location filename="../Modules/ControlCenter/WizardHeader.qml" line="23"/>
+        <source>返回</source>
+        <translation>Back</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WizardHeader.qml" line="56"/>
+        <source>关闭</source>
+        <translation>Close</translation>
     </message>
 </context>
 <context>
