@@ -360,6 +360,14 @@ Variants {
         }
 
         Connections {
+            function onDesktopCardGridSnapEnabledChanged() {
+                window.scheduleDesktopLayout("grid-snap-changed");
+            }
+
+            target: PersonalizationConfig
+        }
+
+        Connections {
             function onDelegateReady() {
                 window.scheduleDesktopLayout("delegate-ready");
             }

@@ -442,6 +442,8 @@ Singleton {
     property bool shellBlurEnabled: false
     property bool shellBlurXray: true
     property bool keepSidebarsLoaded: true
+    property bool desktopCardGridSnapEnabled: true
+    property bool desktopCardGridVisibleWhileDragging: true
 
     signal settingsLoaded()
 
@@ -1041,6 +1043,14 @@ Singleton {
         setValue("keepSidebarsLoaded", !!value);
     }
 
+    function setDesktopCardGridSnapEnabled(value) {
+        setValue("desktopCardGridSnapEnabled", !!value);
+    }
+
+    function setDesktopCardGridVisibleWhileDragging(value) {
+        setValue("desktopCardGridVisibleWhileDragging", !!value);
+    }
+
     function setBarPosition(value) {
         setValue("barPosition", normalizedEdgePosition(value));
     }
@@ -1378,6 +1388,10 @@ Singleton {
             },
             "sidebar": {
                 "keepLoaded": root.keepSidebarsLoaded
+            },
+            "desktopCards": {
+                "gridSnapEnabled": root.desktopCardGridSnapEnabled,
+                "gridVisibleWhileDragging": root.desktopCardGridVisibleWhileDragging
             }
         };
     }
@@ -1394,6 +1408,8 @@ Singleton {
         const bar = parsed.bar || {
         };
         const sidebar = parsed.sidebar || {
+        };
+        const desktopCards = parsed.desktopCards || {
         };
         const transition = wallpaper.transition || {
         };
@@ -1478,6 +1494,8 @@ Singleton {
         root.barTrailingComponents = barLayout.trailing;
         root.quickSettingsComponents = root.normalizedQuickSettingsComponents(bar.quickSettingsComponents);
         root.keepSidebarsLoaded = sidebar.keepLoaded === undefined ? true : !!sidebar.keepLoaded;
+        root.desktopCardGridSnapEnabled = desktopCards.gridSnapEnabled === undefined ? true : !!desktopCards.gridSnapEnabled;
+        root.desktopCardGridVisibleWhileDragging = desktopCards.gridVisibleWhileDragging === undefined ? true : !!desktopCards.gridVisibleWhileDragging;
     }
 
     function needsScrollingMigration(parsed) {
@@ -1560,7 +1578,8 @@ Singleton {
                 }) !== JSON.stringify(root.toJson().effects) || JSON.stringify(parsed.theme || {
                 }) !== JSON.stringify(root.toJson().theme) || JSON.stringify(parsed.bar || {
                 }) !== JSON.stringify(root.toJson().bar) || JSON.stringify(parsed.keystone || {
-                }) !== JSON.stringify(root.toJson().keystone);
+                }) !== JSON.stringify(root.toJson().keystone) || JSON.stringify(parsed.desktopCards || {
+                }) !== JSON.stringify(root.toJson().desktopCards);
             } catch (error) {
                 console.warn("PersonalizationConfig failed to load:", error);
                 shouldRepair = true;

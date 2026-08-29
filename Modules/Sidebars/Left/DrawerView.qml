@@ -4,6 +4,7 @@ import qs.Common
 import qs.Services
 import qs.Widgets.common
 import qs.Modules.SystemCards
+import "../../DesktopCards/DesktopCardLayout.js" as DesktopCardLayout
 import "../../SystemCards/SystemCardGeometry.js" as CardGeometry
 import "../../SystemCards/SystemCardPlacement.js" as Placement
 import "./drawer"
@@ -183,8 +184,13 @@ Item {
                 "height": SystemCardDragSession.hostHeight
             };
             const size = SystemCardService.cardSize(tileId);
-            const screenX = Math.max(0, Math.min(Math.max(0, output.width - size.width), SystemCardDragSession.ghostX));
-            const screenY = Math.max(0, Math.min(Math.max(0, output.height - size.height), SystemCardDragSession.ghostY));
+            let screenX = Math.max(0, Math.min(Math.max(0, output.width - size.width), SystemCardDragSession.ghostX));
+            let screenY = Math.max(0, Math.min(Math.max(0, output.height - size.height), SystemCardDragSession.ghostY));
+            if (PersonalizationConfig.desktopCardGridSnapEnabled) {
+                const snapped = DesktopCardLayout.snapPoint(screenX, screenY, size.width, size.height, output.width, output.height);
+                screenX = snapped.x;
+                screenY = snapped.y;
+            }
             const normalized = Placement.normalizedPosition(screenX, screenY, output.width, output.height);
             if (!SystemCardDragSession.freezeGhost(screenX, screenY)) {
                 SystemCardDragSession.cancel();

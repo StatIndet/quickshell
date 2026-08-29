@@ -74,6 +74,31 @@ Item {
         }
         return false;
     }
+    readonly property bool externalCardDragging: SystemCardDragSession.presentationActive && SystemCardDragSession.screenName === root.screenName && SystemCardDragSession.presentationGhostRect.valid
+    readonly property var activeDragRect: {
+        if (root.collisionDraggedId !== "") {
+            for (let index = 0; index < cardRepeater.count; index += 1) {
+                const item = cardRepeater.itemAt(index);
+                if (item && item.active && item.tileId === root.collisionDraggedId)
+                    return item.visualRect();
+
+            }
+        }
+        if (root.externalCardDragging) {
+            const ghost = SystemCardDragSession.presentationGhostRect;
+            const point = PersonalizationConfig.desktopCardGridSnapEnabled ? DesktopCardLayout.snapPoint(ghost.x, ghost.y, ghost.width, ghost.height, root.width, root.height) : {
+                "x": ghost.x,
+                "y": ghost.y
+            };
+            return {
+                "x": point.x,
+                "y": point.y,
+                "width": ghost.width,
+                "height": ghost.height
+            };
+        }
+        return null;
+    }
 
     signal delegateReady(string tileId)
     signal handoffReady(string tileId)
@@ -138,7 +163,7 @@ Item {
             "y": Number(y),
             "width": dragged.width,
             "height": dragged.height
-        }, root.width, root.height);
+        }, root.width, root.height, PersonalizationConfig.desktopCardGridSnapEnabled);
         const preview = {
         };
         resolved.forEach(function(item) {
@@ -169,7 +194,7 @@ Item {
             "y": Number(y),
             "width": dragged.width,
             "height": dragged.height
-        }, root.width, root.height);
+        }, root.width, root.height, PersonalizationConfig.desktopCardGridSnapEnabled);
         return resolved.map(function(item) {
             return {
                 "id": item.id,
@@ -197,11 +222,11 @@ Item {
             "y": Number(y),
             "width": Number(width),
             "height": Number(height)
-        }, root.width, root.height);
+        }, root.width, root.height, PersonalizationConfig.desktopCardGridSnapEnabled);
     }
 
     function resolveCurrentCollisionLayout(preferredId) {
-        return DesktopCardLayout.resolveAllCollisions(root.currentCollisionCards(), String(preferredId || ""), root.width, root.height);
+        return DesktopCardLayout.resolveAllCollisions(root.currentCollisionCards(), String(preferredId || ""), root.width, root.height, DesktopCardLayout.desktopCardGap, PersonalizationConfig.desktopCardGridSnapEnabled);
     }
 
     function completeCollisionPreview() {
@@ -314,6 +339,12 @@ Item {
     x: 0
     y: 0
     Component.onCompleted: root.updateInputSlots()
+
+    DesktopCardGridOverlay {
+        anchors.fill: parent
+        active: (root.anyCardDragging || root.externalCardDragging) && PersonalizationConfig.desktopCardGridVisibleWhileDragging
+        highlightRect: root.activeDragRect
+    }
 
     Repeater {
         id: cardRepeater

@@ -2195,6 +2195,28 @@ Scroll to adjust</translation>
 <context>
     <name>GeneralSidebarPage</name>
     <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="195"/>
+        <source>桌面卡片吸附到网格</source>
+        <translation>Snap desktop cards to grid</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="191"/>
+        <source>自由拖动时将卡片和避让位置对齐到桌面网格</source>
+        <translation>Align cards and displaced positions to the desktop grid while freely dragging</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="209"/>
+        <source>拖动时显示桌面网格</source>
+        <translation>Show desktop grid while dragging</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="205"/>
+        <source>拖动卡片时显示网格和当前占用区域</source>
+        <translation>Show the grid and current occupied area while dragging a card</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="394"/>
         <source>系统卡片</source>
         <translation>System cards</translation>

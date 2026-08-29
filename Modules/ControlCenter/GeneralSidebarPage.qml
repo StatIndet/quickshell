@@ -184,6 +184,34 @@ StyledFlickable {
                 }
             }
 
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "grid_4x4"
+                title: qsTr("桌面卡片吸附到网格")
+                supportingText: qsTr("自由拖动时将卡片和避让位置对齐到桌面网格")
+
+                trailing: StyledSwitch {
+                    checked: PersonalizationConfig.desktopCardGridSnapEnabled
+                    Accessible.name: qsTr("桌面卡片吸附到网格")
+                    onToggled: PersonalizationConfig.setDesktopCardGridSnapEnabled(checked)
+                }
+
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: "grid_on"
+                title: qsTr("拖动时显示桌面网格")
+                supportingText: qsTr("拖动卡片时显示网格和当前占用区域")
+
+                trailing: StyledSwitch {
+                    checked: PersonalizationConfig.desktopCardGridVisibleWhileDragging
+                    Accessible.name: qsTr("拖动时显示桌面网格")
+                    onToggled: PersonalizationConfig.setDesktopCardGridVisibleWhileDragging(checked)
+                }
+
+            }
+
         }
 
         SettingsSection {

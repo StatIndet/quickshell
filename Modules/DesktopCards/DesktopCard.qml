@@ -4,6 +4,7 @@ import QtQuick.Controls.Material
 import qs.Common
 import qs.Services
 import qs.Modules.SystemCards
+import "./DesktopCardLayout.js" as DesktopCardLayout
 
 Item {
     id: root
@@ -15,10 +16,26 @@ Item {
     property var placementController: null
     property real dragX: 0
     property real dragY: 0
+    property real rawDragX: 0
+    property real rawDragY: 0
     property real dragOffsetX: 0
     property real dragOffsetY: 0
     readonly property var cardState: SystemCardService.cards[root.tileId] || null
     readonly property bool canDrag: root.active && root.hostItem !== null && SystemCardService.isFreeLayoutMode(SystemCardService.globalDesktopLayoutMode)
+
+    function updateDragPosition(x, y) {
+        root.rawDragX = Number(x);
+        root.rawDragY = Number(y);
+        const point = PersonalizationConfig.desktopCardGridSnapEnabled ? DesktopCardLayout.snapPoint(root.rawDragX, root.rawDragY, root.width, root.height, root.hostItem.width, root.hostItem.height) : {
+            "x": root.rawDragX,
+            "y": root.rawDragY
+        };
+        root.dragX = point.x;
+        root.dragY = point.y;
+        if (root.placementController && typeof root.placementController.updateCardDrag === "function")
+            root.placementController.updateCardDrag(root.dragX, root.dragY);
+
+    }
 
     Accessible.role: Accessible.Pane
     Accessible.name: SystemCardService.cardName(root.tileId)
@@ -78,12 +95,8 @@ Item {
                 }
                 root.dragOffsetX = point.x - visibleTopLeft.x;
                 root.dragOffsetY = point.y - visibleTopLeft.y;
-                root.dragX = visibleTopLeft.x;
-                root.dragY = visibleTopLeft.y;
                 root.dragging = true;
-                if (root.placementController && typeof root.placementController.updateCardDrag === "function")
-                    root.placementController.updateCardDrag(root.dragX, root.dragY);
-
+                root.updateDragPosition(visibleTopLeft.x, visibleTopLeft.y);
             } else if (started) {
                 started = false;
                 const bounds = dragHandler.screenBounds();
@@ -110,11 +123,9 @@ Item {
 
             const point = dragHandler.hostPoint();
             const bounds = dragHandler.screenBounds();
-            root.dragX = Math.max(0, Math.min(bounds.width - root.width, point.x - root.dragOffsetX));
-            root.dragY = Math.max(0, Math.min(bounds.height - root.height, point.y - root.dragOffsetY));
-            if (root.placementController && typeof root.placementController.updateCardDrag === "function")
-                root.placementController.updateCardDrag(root.dragX, root.dragY);
-
+            const x = Math.max(0, Math.min(bounds.width - root.width, point.x - root.dragOffsetX));
+            const y = Math.max(0, Math.min(bounds.height - root.height, point.y - root.dragOffsetY));
+            root.updateDragPosition(x, y);
         }
         onCanceled: {
             const visibleTopLeft = root.mapToItem(root.hostItem, 0, 0);

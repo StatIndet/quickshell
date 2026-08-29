@@ -2195,6 +2195,28 @@
 <context>
     <name>GeneralSidebarPage</name>
     <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="195"/>
+        <source>桌面卡片吸附到网格</source>
+        <translation>將桌面卡片吸附到網格</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="191"/>
+        <source>自由拖动时将卡片和避让位置对齐到桌面网格</source>
+        <translation>自由拖曳時將卡片與避讓位置對齊到桌面網格</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="209"/>
+        <source>拖动时显示桌面网格</source>
+        <translation>拖曳時顯示桌面網格</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="205"/>
+        <source>拖动卡片时显示网格和当前占用区域</source>
+        <translation>拖曳卡片時顯示網格與目前佔用區域</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="394"/>
         <source>系统卡片</source>
         <translation>系統卡片</translation>
