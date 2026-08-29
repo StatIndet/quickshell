@@ -12,6 +12,17 @@ Singleton {
     property var remotes: []
     property string selectedRemoteName: ""
     readonly property var selectedRemote: remoteByName(selectedRemoteName)
+    property int remotesRevision: 0
+    property string remotesError: ""
+    property var providers: []
+    property bool providersLoading: false
+    property string providersError: ""
+    property bool configBusy: false
+    property string configState: "idle"
+    property string configError: ""
+    property var configQuestion: null
+    property string configRemoteName: ""
+    property string configRemoteType: ""
     property string quotaState: "idle"
     property string quotaMessage: ""
     property real totalBytes: -1
@@ -47,13 +58,33 @@ Singleton {
     readonly property string backupCurrentFileName: backupTransferring.length > 0 ? String(backupTransferring[0].name || "") : ""
     property string _remotesOutput: ""
     property string _quotaOutput: ""
+    property string _quotaRemoteName: ""
     property var _backupQueue: []
     property int _backupQueueIndex: 0
     property string _backupVersionStamp: ""
     property string _backupRemoteName: ""
+    property string _backupRoot: ""
     property string _backupLastError: ""
     property bool _cancelRequested: false
     property real _backupStartedAtMs: 0
+    property string _providersOutput: ""
+    property string _providersErrorOutput: ""
+    property string _configOutput: ""
+    property string _configErrorOutput: ""
+    property string _configOperation: ""
+    property bool _configCancelRequested: false
+    property bool _configCreatedRemote: false
+    property string _pendingConfigFailure: ""
+    property bool _remotesRefreshPending: false
+
+    signal providersLoaded()
+    signal providersLoadFailed(string message)
+    signal configQuestionReady()
+    signal configSucceeded(string remoteName, string remoteType)
+    signal configFailed(string message)
+    signal configCancelled()
+    signal remoteDeleted(string remoteName)
+    signal remoteDeleteFailed(string message)
 
     function remoteByName(name) {
         for (let index = 0; index < root.remotes.length; ++index) {
@@ -69,6 +100,42 @@ Singleton {
             return true;
 
         return ["http"].indexOf(String(remote.type || "").toLowerCase()) >= 0;
+    }
+
+    function writableRemotes() {
+        return root.remotes.filter((remote) => {
+            return !root.isReadOnly(remote);
+        });
+    }
+
+    function providerByName(name) {
+        const normalized = String(name || "").toLowerCase();
+        for (const provider of root.providers) {
+            if (String(provider && provider.Name || "").toLowerCase() === normalized)
+                return provider;
+        }
+        return null;
+    }
+
+    function providerDisplayName(type, remoteName) {
+        const normalizedType = String(type || "").toLowerCase();
+        const normalizedName = String(remoteName || "").toLowerCase();
+        if (normalizedType === "s3")
+            return normalizedName.indexOf("r2") >= 0 || normalizedName.indexOf("cloudflare") >= 0
+                ? "Cloudflare R2" : "Amazon S3";
+
+        const provider = providerByName(type);
+        if (provider && provider.Description)
+            return String(provider.Description);
+
+        switch (normalizedType) {
+        case "drive": return "Google Drive";
+        case "onedrive": return "Microsoft OneDrive";
+        case "dropbox": return "Dropbox";
+        case "webdav": return "WebDAV";
+        case "sftp": return "SFTP";
+        default: return String(type || qsTr("其他云存储"));
+        }
     }
 
     function normalizeRemoteName(name) {
@@ -111,28 +178,236 @@ Singleton {
         return result;
     }
 
-    function selectRemote(name) {
+    function reconcileDefaultRemote() {
+        if (!UiPreferences.preferencesReady)
+            return ;
+
+        const preferredName = normalizeRemoteName(UiPreferences.cloudDefaultRemoteName);
+        const preferred = remoteByName(preferredName);
+        const fallback = writableRemotes().length > 0 ? writableRemotes()[0] : null;
+        const nextName = preferred && !isReadOnly(preferred) ? preferred.name : fallback ? fallback.name : "";
+        if (UiPreferences.cloudDefaultRemoteName !== nextName)
+            UiPreferences.setCloudDefaultRemoteName(nextName);
+
+        if (selectedRemoteName !== nextName) {
+            selectedRemoteName = nextName;
+            refreshQuota();
+        } else if (nextName !== "" && quotaState === "idle") {
+            refreshQuota();
+        }
+        if (nextName === "") {
+            quotaState = "unavailable";
+            quotaMessage = qsTr("尚未配置可写云存储");
+        }
+    }
+
+    function setDefaultRemote(name) {
         const normalized = normalizeRemoteName(name);
-        if (!remoteByName(normalized))
+        const remote = remoteByName(normalized);
+        if (!remote || isReadOnly(remote))
             return false;
 
-        if (selectedRemoteName === normalized)
-            return true;
-
-        selectedRemoteName = normalized;
-        refreshQuota();
+        UiPreferences.setCloudDefaultRemoteName(normalized);
+        if (selectedRemoteName !== normalized) {
+            selectedRemoteName = normalized;
+            refreshQuota();
+        }
         return true;
     }
 
+    function selectRemote(name) {
+        return setDefaultRemote(name);
+    }
+
     function refreshRemotes() {
-        if (remoteListProcess.running)
+        if (remoteListProcess.running) {
+            _remotesRefreshPending = true;
             return ;
+        }
 
         remotesLoading = true;
+        _remotesRefreshPending = false;
+        remotesError = "";
         _remotesOutput = "";
         remoteListProcess.command = [commandName, "listremotes", "--json"];
         remoteListProcess.running = true;
         remoteTimeout.restart();
+    }
+
+    function loadProviders() {
+        if (providersProcess.running)
+            return ;
+
+        providersLoading = true;
+        providersError = "";
+        _providersOutput = "";
+        _providersErrorOutput = "";
+        providersProcess.command = [commandName, "config", "providers"];
+        providersProcess.running = true;
+    }
+
+    function validRemoteName(name) {
+        const normalized = normalizeRemoteName(name).trim();
+        return normalized !== "" && normalized.indexOf(":") < 0
+            && normalized.indexOf("/") < 0 && normalized.indexOf("\\") < 0;
+    }
+
+    function startRemoteConfiguration(name, type) {
+        const normalizedName = normalizeRemoteName(name).trim();
+        const normalizedType = String(type || "").trim();
+        if (configBusy || !validRemoteName(normalizedName) || remoteByName(normalizedName) || !providerByName(normalizedType))
+            return false;
+
+        configBusy = true;
+        configState = "processing";
+        configError = "";
+        configQuestion = null;
+        configRemoteName = normalizedName;
+        configRemoteType = normalizedType;
+        _configOperation = "create";
+        _configCancelRequested = false;
+        _configCreatedRemote = true;
+        _pendingConfigFailure = "";
+        _configOutput = "";
+        _configErrorOutput = "";
+        configProcess.command = [commandName, "config", "create", normalizedName, normalizedType, "--all", "--non-interactive"];
+        configProcess.running = true;
+        return true;
+    }
+
+    function answerConfigQuestion(stateToken, answer) {
+        if (!configBusy || configProcess.running || configRemoteName === "" || String(stateToken || "") === "")
+            return false;
+
+        configState = "processing";
+        configQuestion = null;
+        _configOperation = "continue";
+        _configOutput = "";
+        _configErrorOutput = "";
+        configProcess.command = [commandName, "config", "update", configRemoteName, "--continue", "--state", String(stateToken), "--result", String(answer), "--non-interactive"];
+        configProcess.running = true;
+        return true;
+    }
+
+    function deleteRemote(name) {
+        const normalized = normalizeRemoteName(name);
+        if (configBusy || backupActive || !remoteByName(normalized))
+            return false;
+
+        configBusy = true;
+        configState = "deleting";
+        configError = "";
+        configRemoteName = normalized;
+        configRemoteType = "";
+        _configOperation = "delete";
+        _configCancelRequested = false;
+        _configCreatedRemote = false;
+        _configOutput = "";
+        _configErrorOutput = "";
+        configProcess.command = [commandName, "config", "delete", normalized];
+        configProcess.running = true;
+        return true;
+    }
+
+    function cancelRemoteConfiguration() {
+        if (!configBusy || (_configOperation !== "create" && _configOperation !== "continue"))
+            return false;
+
+        _configCancelRequested = true;
+        configState = "cancelling";
+        configQuestion = null;
+        if (configProcess.running)
+            configProcess.signal(2);
+        else
+            cleanupPartialRemote();
+        return true;
+    }
+
+    function cleanupPartialRemote() {
+        if (!_configCreatedRemote || configRemoteName === "") {
+            finishConfigCancelled();
+            return ;
+        }
+        _configOperation = "cleanup";
+        _configOutput = "";
+        _configErrorOutput = "";
+        configProcess.command = [commandName, "config", "delete", configRemoteName];
+        configProcess.running = true;
+    }
+
+    function finishConfigCancelled() {
+        const pendingFailure = _pendingConfigFailure;
+        configBusy = false;
+        configState = pendingFailure === "" ? "idle" : "error";
+        configError = pendingFailure;
+        configQuestion = null;
+        configRemoteName = "";
+        configRemoteType = "";
+        _configOperation = "";
+        _configCancelRequested = false;
+        _configCreatedRemote = false;
+        _pendingConfigFailure = "";
+        if (pendingFailure === "")
+            configCancelled();
+        else
+            configFailed(pendingFailure);
+        refreshRemotes();
+    }
+
+    function failConfiguration(message) {
+        const useful = usefulError(message) || qsTr("rclone 配置失败");
+        configBusy = false;
+        configState = "error";
+        configError = useful;
+        configQuestion = null;
+        _configOperation = "";
+        _configCreatedRemote = false;
+        configFailed(useful);
+        refreshRemotes();
+    }
+
+    function consumeConfigResult() {
+        let parsed = null;
+        try {
+            parsed = JSON.parse(_configOutput || "{}");
+        } catch (error) {
+            failConfiguration(qsTr("rclone 返回了无效的配置问题"));
+            return ;
+        }
+        const protocolError = usefulError(parsed.Error || "");
+        if (protocolError !== "") {
+            configError = protocolError;
+        }
+        const stateToken = String(parsed.State || "");
+        if (stateToken === "") {
+            if (protocolError !== "") {
+                _pendingConfigFailure = protocolError;
+                _configCancelRequested = true;
+                cleanupPartialRemote();
+                return ;
+            }
+            const completedName = configRemoteName;
+            const completedType = configRemoteType;
+            configBusy = false;
+            configState = "success";
+            configQuestion = null;
+            _configOperation = "";
+            _configCreatedRemote = false;
+            configSucceeded(completedName, completedType);
+            refreshRemotes();
+            return ;
+        }
+        if (!parsed.Option || typeof parsed.Option !== "object") {
+            failConfiguration(protocolError || qsTr("rclone 配置问题缺少选项信息"));
+            return ;
+        }
+        configQuestion = {
+            "state": stateToken,
+            "option": parsed.Option,
+            "error": protocolError
+        };
+        configState = "question";
+        configQuestionReady();
     }
 
     function refreshQuota() {
@@ -145,7 +420,8 @@ Singleton {
         usedBytes = -1;
         freeBytes = -1;
         _quotaOutput = "";
-        quotaProcess.command = [commandName, "about", selectedRemoteName + ":", "--json"];
+        _quotaRemoteName = selectedRemoteName;
+        quotaProcess.command = [commandName, "about", _quotaRemoteName + ":", "--json"];
         quotaProcess.running = true;
         quotaTimeout.restart();
     }
@@ -170,6 +446,7 @@ Singleton {
         _backupQueueIndex = 0;
         _backupVersionStamp = "";
         _backupRemoteName = "";
+        _backupRoot = "";
         _backupLastError = "";
         _cancelRequested = false;
         _backupStartedAtMs = 0;
@@ -181,10 +458,10 @@ Singleton {
 
     function backupFolders(paths) {
         const sources = normalizedFolderPaths(paths);
-        return beginBackup(sources, selectedRemoteName);
+        return beginBackup(sources, selectedRemoteName, UiPreferences.cloudBackupRoot);
     }
 
-    function beginBackup(sources, remoteName) {
+    function beginBackup(sources, remoteName, backupRoot) {
         const remote = remoteByName(remoteName);
         if (backupActive || backupProcess.running || sources.length === 0 || !remote)
             return false;
@@ -200,6 +477,7 @@ Singleton {
         _backupQueueIndex = 0;
         _backupVersionStamp = new Date().toISOString().replace(/[:.]/g, "-");
         _backupRemoteName = normalizeRemoteName(remoteName);
+        _backupRoot = UiPreferences.normalizedCloudBackupRoot(backupRoot);
         _backupStartedAtMs = Date.now();
         _cancelRequested = false;
         _backupLastError = "";
@@ -230,7 +508,7 @@ Singleton {
         if (backupActive || _backupQueue.length === 0 || _backupRemoteName === "")
             return false;
 
-        return beginBackup(_backupQueue.slice(), _backupRemoteName);
+        return beginBackup(_backupQueue.slice(), _backupRemoteName, _backupRoot);
     }
 
     function stopBackup() {
@@ -300,8 +578,8 @@ Singleton {
         const sourceName = safePathSegment(basename(source));
         const destinationName = sourceName + "-" + stablePathHash(source);
         const hostName = safePathSegment(SystemIdentityService.hostName);
-        const destinationRoot = _backupRemoteName + ":Clavis Backups/" + hostName + "/current/" + destinationName;
-        const historyRoot = _backupRemoteName + ":Clavis Backups/" + hostName + "/versions/" + _backupVersionStamp + "/" + destinationName;
+        const destinationRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/current/" + destinationName;
+        const historyRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/versions/" + _backupVersionStamp + "/" + destinationName;
         const command = [commandName, "sync", source, destinationRoot];
         command.push("--backup-dir", historyRoot, "--create-empty-src-dirs", "--check-first", "--stats=1s", "--stats-log-level=NOTICE", "--use-json-log");
         backupSource = source;
@@ -380,7 +658,24 @@ Singleton {
         }
     }
 
-    Component.onCompleted: refreshRemotes()
+    Component.onCompleted: {
+        refreshRemotes();
+        loadProviders();
+    }
+
+    Connections {
+        target: UiPreferences
+
+        function onPreferencesReadyChanged() {
+            if (UiPreferences.preferencesReady)
+                root.reconcileDefaultRemote();
+        }
+
+        function onCloudDefaultRemoteNameChanged() {
+            if (UiPreferences.preferencesReady)
+                root.reconcileDefaultRemote();
+        }
+    }
 
     Process {
         id: remoteListProcess
@@ -390,10 +685,13 @@ Singleton {
             root.remotesLoading = false;
             root.available = exitCode === 0;
             if (exitCode !== 0) {
-                root.remotes = [];
-                root.selectedRemoteName = "";
-                root.quotaState = "error";
-                root.quotaMessage = qsTr("无法读取 rclone 配置");
+                root.remotesError = qsTr("无法读取 rclone 配置");
+                if (root.remotes.length === 0) {
+                    root.quotaState = "error";
+                    root.quotaMessage = root.remotesError;
+                }
+                if (root._remotesRefreshPending)
+                    Qt.callLater(root.refreshRemotes);
                 return ;
             }
             try {
@@ -405,23 +703,30 @@ Singleton {
                         "description": String(item.description || "")
                     });
                 }) : [];
+                root.remotesRevision += 1;
             } catch (error) {
-                root.remotes = [];
-                root.quotaState = "error";
-                root.quotaMessage = qsTr("rclone 返回了无效的 remote 列表");
+                root.remotesError = qsTr("rclone 返回了无效的 remote 列表");
+                if (root.remotes.length === 0) {
+                    root.quotaState = "error";
+                    root.quotaMessage = root.remotesError;
+                }
+                if (root._remotesRefreshPending)
+                    Qt.callLater(root.refreshRemotes);
+                return ;
             }
             if (root.remotes.length === 0) {
                 root.selectedRemoteName = "";
+                if (UiPreferences.cloudDefaultRemoteName !== "")
+                    UiPreferences.setCloudDefaultRemoteName("");
                 root.quotaState = "unavailable";
                 root.quotaMessage = qsTr("尚未配置云存储");
+                if (root._remotesRefreshPending)
+                    Qt.callLater(root.refreshRemotes);
                 return ;
             }
-            const currentStillExists = root.remoteByName(root.selectedRemoteName);
-            if (!currentStillExists) {
-                const preferred = root.remoteByName("gdrive");
-                root.selectedRemoteName = preferred ? preferred.name : root.remotes[0].name;
-            }
-            root.refreshQuota();
+            root.reconcileDefaultRemote();
+            if (root._remotesRefreshPending)
+                Qt.callLater(root.refreshRemotes);
         }
 
         stdout: StdioCollector {
@@ -431,10 +736,99 @@ Singleton {
     }
 
     Process {
+        id: providersProcess
+
+        onExited: (exitCode) => {
+            root.providersLoading = false;
+            if (exitCode !== 0) {
+                root.providersError = root.usefulError(root._providersErrorOutput) || qsTr("无法读取 rclone 服务列表");
+                root.providersLoadFailed(root.providersError);
+                return ;
+            }
+            try {
+                const parsed = JSON.parse(root._providersOutput || "[]");
+                if (!Array.isArray(parsed))
+                    throw new Error("providers is not an array");
+                root.providers = parsed;
+                root.providersError = "";
+                root.providersLoaded();
+            } catch (error) {
+                root.providersError = qsTr("rclone 返回了无效的服务列表");
+                root.providersLoadFailed(root.providersError);
+            }
+        }
+
+        stdout: StdioCollector {
+            onStreamFinished: root._providersOutput = this.text
+        }
+
+        stderr: StdioCollector {
+            onStreamFinished: root._providersErrorOutput = this.text
+        }
+    }
+
+    Process {
+        id: configProcess
+
+        onExited: (exitCode) => {
+            // In particular, do not retain a --result password in the Process
+            // command property after rclone has consumed it.
+            configProcess.command = [];
+            const operation = root._configOperation;
+            if (operation === "cleanup") {
+                root.finishConfigCancelled();
+                return ;
+            }
+            if (operation === "delete") {
+                const deletedName = root.configRemoteName;
+                root.configBusy = false;
+                root.configState = exitCode === 0 ? "idle" : "error";
+                root._configOperation = "";
+                if (exitCode === 0) {
+                    root.remoteDeleted(deletedName);
+                    root.refreshRemotes();
+                } else {
+                    root.configError = root.usefulError(root._configErrorOutput) || qsTr("无法删除云存储配置");
+                    root.remoteDeleteFailed(root.configError);
+                }
+                return ;
+            }
+            if (root._configCancelRequested) {
+                root.cleanupPartialRemote();
+                return ;
+            }
+            if (exitCode !== 0) {
+                const failure = root.usefulError(root._configErrorOutput) || qsTr("rclone 配置命令失败");
+                root._pendingConfigFailure = failure;
+                if (root._configCreatedRemote) {
+                    root._configCancelRequested = true;
+                    root.cleanupPartialRemote();
+                } else {
+                    root.failConfiguration(failure);
+                }
+                return ;
+            }
+            root.consumeConfigResult();
+        }
+
+        stdout: StdioCollector {
+            onStreamFinished: root._configOutput = this.text
+        }
+
+        stderr: StdioCollector {
+            onStreamFinished: root._configErrorOutput = this.text
+        }
+    }
+
+    Process {
         id: quotaProcess
 
         onExited: (exitCode) => {
             quotaTimeout.stop();
+            if (root._quotaRemoteName !== root.selectedRemoteName) {
+                Qt.callLater(root.refreshQuota);
+                return ;
+            }
             if (exitCode !== 0) {
                 root.quotaState = "unavailable";
                 root.quotaMessage = qsTr("此云存储暂不提供容量信息");

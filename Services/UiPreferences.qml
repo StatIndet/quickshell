@@ -42,6 +42,8 @@ Singleton {
     property bool cloudBackupFoldersInitialized: false
     property int cloudBackupFoldersVersion: 0
     property var cloudBackupFolders: []
+    property string cloudDefaultRemoteName: ""
+    property string cloudBackupRoot: "Clavis Backups"
 
     function normalizedLanguage(value) {
         const normalized = String(value || "").replace("-", "_").toLowerCase();
@@ -347,6 +349,37 @@ Singleton {
         root.save();
     }
 
+    function normalizedCloudRemoteName(value) {
+        return String(value || "").trim().replace(/:+$/, "");
+    }
+
+    function setCloudDefaultRemoteName(value) {
+        const normalized = root.normalizedCloudRemoteName(value);
+        if (root.cloudDefaultRemoteName === normalized)
+            return ;
+
+        root.cloudDefaultRemoteName = normalized;
+        root.save();
+    }
+
+    function normalizedCloudBackupRoot(value) {
+        let normalized = String(value || "").trim().replace(/^\/+|\/+$/g, "");
+        normalized = normalized.replace(/\/{2,}/g, "/");
+        if (normalized === "" || normalized.indexOf(":") >= 0)
+            return "Clavis Backups";
+
+        return normalized;
+    }
+
+    function setCloudBackupRoot(value) {
+        const normalized = root.normalizedCloudBackupRoot(value);
+        if (root.cloudBackupRoot === normalized)
+            return ;
+
+        root.cloudBackupRoot = normalized;
+        root.save();
+    }
+
     function save() {
         if (!root.storeReady) {
             root.savePending = true;
@@ -377,7 +410,9 @@ Singleton {
             "systemCards": root.systemCards,
             "cloudBackupFoldersInitialized": root.cloudBackupFoldersInitialized,
             "cloudBackupFoldersVersion": root.cloudBackupFoldersVersion,
-            "cloudBackupFolders": root.cloudBackupFolders
+            "cloudBackupFolders": root.cloudBackupFolders,
+            "cloudDefaultRemoteName": root.cloudDefaultRemoteName,
+            "cloudBackupRoot": root.cloudBackupRoot
         }, null, 2));
     }
 
@@ -445,6 +480,9 @@ Singleton {
                 root.cloudBackupFoldersVersion = Math.max(0, Math.round(Number(parsed.cloudBackupFoldersVersion) || 0));
                 if (Array.isArray(parsed.cloudBackupFolders))
                     root.cloudBackupFolders = parsed.cloudBackupFolders;
+
+                root.cloudDefaultRemoteName = root.normalizedCloudRemoteName(parsed.cloudDefaultRemoteName);
+                root.cloudBackupRoot = root.normalizedCloudBackupRoot(parsed.cloudBackupRoot);
 
             } catch (error) {
                 console.warn("UiPreferences failed to load:", error);

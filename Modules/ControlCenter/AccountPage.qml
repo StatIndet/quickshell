@@ -530,7 +530,7 @@ Item {
                             text: qsTr("管理云存储")
                             iconName: "settings"
                             trailingIconName: "chevron_right"
-                            onClicked: console.warn("[Account] cloud storage management is unavailable")
+                            onClicked: root.navigateRequested("advanced")
                         }
                     }
                 }
