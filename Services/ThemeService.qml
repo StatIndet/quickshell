@@ -29,31 +29,6 @@ Singleton {
         Paths.xdgConfigHome + "/niri/clavis/cursor.kdl"
     readonly property string cursorConfigScript:
         Paths.scriptPath("theme", "write_niri_cursor_config.sh")
-    property var matugenAvailability: ({
-        "fcitx5": false,
-        "zsh": false,
-        "keytop": false
-    })
-
-    function matugenTargetAvailable(id) {
-        if (id !== "fcitx5" && id !== "zsh" && id !== "keytop")
-            return true;
-        return root.matugenAvailability[id] === true;
-    }
-
-    function detectMatugenTargets() {
-        const configHome = Paths.xdgConfigHome;
-        const script = Paths.scriptPath("theme", "detect_matugen_targets.sh");
-        detectMatugenTargetsProcess.command = [
-            "bash", script,
-            configHome + "/clavis-zsh-theme/matugen.conf",
-            configHome + "/keytop/matugen.conf",
-            configHome + "/fcitx5-matugen-theme/matugen.conf"
-        ];
-        detectMatugenTargetsProcess.running = false;
-        detectMatugenTargetsProcess.running = true;
-    }
-
     function applyConfigToAppearance() {
         Appearance.matugenScheme = PersonalizationConfig.matugenScheme;
         Appearance.matugenMode = PersonalizationConfig.themeMode;
@@ -283,7 +258,6 @@ Singleton {
     Component.onCompleted: {
         root.applyConfigToAppearance();
         root.detectAvailableThemes();
-        root.detectMatugenTargets();
         root.applyCursorSettings();
         if (PersonalizationConfig.themeMode === "dark" && !UiPreferences.darkMode)
             UiPreferences.setDarkMode(true);
@@ -337,24 +311,6 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 root.availableCursorThemes = root.parseDetectedThemes(this.text, qsTr("系统默认"), PersonalizationConfig.cursorTheme, true);
-            }
-        }
-    }
-
-    Process {
-        id: detectMatugenTargetsProcess
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const next = {};
-                const lines = String(this.text || "").split("\n");
-                for (let i = 0; i < lines.length; i += 1) {
-                    const separator = lines[i].indexOf("=");
-                    if (separator <= 0)
-                        continue;
-                    next[lines[i].slice(0, separator)] =
-                        lines[i].slice(separator + 1).trim() === "true";
-                }
-                root.matugenAvailability = next;
             }
         }
     }

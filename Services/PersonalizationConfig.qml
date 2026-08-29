@@ -167,7 +167,7 @@ Singleton {
         "value": "scheme-rainbow",
         "label": qsTr("彩虹")
     })]
-    readonly property var matugenTemplateIds: ["btop", "cava", "kitty", "fcitx5", "zsh", "keytop", "niri", "yazi"]
+    readonly property var matugenTemplateIds: ["btop", "cava", "kitty", "yazi"]
     readonly property var keystoneStyles: [({
         "value": "bangs",
         "label": qsTr("刘海")
@@ -249,10 +249,6 @@ Singleton {
         "btop": true,
         "cava": true,
         "kitty": true,
-        "fcitx5": true,
-        "zsh": true,
-        "keytop": true,
-        "niri": true,
         "yazi": true
     })
     property string themeMode: "dark"

@@ -275,26 +275,6 @@
 <context>
     <name>AdvancedPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="35"/>
-        <source>Fcitx5</source>
-        <translation>Fcitx5</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="40"/>
-        <source>Zsh Prompt</source>
-        <translation>Zsh Prompt</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="45"/>
-        <source>Keytop</source>
-        <translation>Keytop</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="92"/>
-        <source>未安装或配置模板不可用</source>
-        <translation>未安裝或設定模板不可用</translation>
-    </message>
-    <message>
         <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="72"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>正在為已啟用的程式產生 Matugen 配色…</translation>

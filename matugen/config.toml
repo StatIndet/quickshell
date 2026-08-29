@@ -20,11 +20,6 @@ input_path = "templates/kitty-colors.conf"
 output_path = "~/.config/kitty/themes/Matugen.conf"
 post_hook = "cp \"$HOME/.config/kitty/themes/Matugen.conf\" \"$HOME/.config/kitty/current-theme.conf\" && (pkill -USR1 -x kitty >/dev/null 2>&1 || true)"
 
-[templates.niri]
-input_path = "templates/niri-colors.kdl"
-output_path = "@CLAVIS_NIRI_HOME@/clavis/colors.kdl"
-post_hook = "niri msg action load-config-file >/dev/null 2>&1 || true"
-
 [templates.yazi]
 input_path = "templates/yazi-theme.toml"
 output_path = "~/.config/yazi/theme.toml"

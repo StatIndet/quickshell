@@ -119,7 +119,7 @@ Clavis-managed niri fragments are written under:
 
 Clavis uses [Matugen](https://github.com/InioX/matugen) to generate Material color schemes from the current wallpaper or a source color.
 
-The settings center can generate themes for supported applications including btop, Cava, Kitty, Fcitx5, keytop, niri and Yazi.
+The settings center can generate themes for supported applications including btop, Cava, Kitty and Yazi.
 
 ## Development checks
 
