@@ -1,9 +1,7 @@
 pragma ComponentBehavior: Bound
 
-import QtCore
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Controls.Material
 import QtQuick.Effects
 import QtQuick.Layouts
 import QtQuick.Window
@@ -25,7 +23,7 @@ Item {
 
     function closeChildWindows() {
         avatarPicker.dismiss();
-        backupPicker.dismiss();
+        backupWindow.dismiss();
     }
 
     readonly property bool wideLayout: width >= 880
@@ -477,14 +475,28 @@ Item {
                             wrapMode: Text.Wrap
                         }
 
-                        ProgressBar {
+                        RowLayout {
                             Layout.fillWidth: true
                             visible: RcloneService.backupState === "running"
-                            from: 0
-                            to: 1
-                            value: Math.max(0, RcloneService.backupProgress)
-                            indeterminate: RcloneService.backupProgress < 0
-                            Material.accent: Appearance.colors.colPrimary
+                            spacing: Appearance.spacing.small
+
+                            MaterialLoadingIndicator {
+                                Layout.preferredWidth: 36
+                                Layout.preferredHeight: 36
+                                contained: false
+                                accessibleName: qsTr("正在备份")
+                            }
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: RcloneService.backupProgress >= 0
+                                    ? qsTr("总进度 %1%").arg(Math.round(RcloneService.backupProgress * 100))
+                                    : qsTr("正在计算备份进度…")
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: Typography.labelMedium.family
+                                font.pixelSize: Typography.labelMedium.pixelSize
+                                font.weight: Typography.labelMedium.weight
+                            }
                         }
                     }
 
@@ -498,8 +510,7 @@ Item {
                             iconName: "backup"
                             enabled: RcloneService.selectedRemote !== null
                                 && !RcloneService.isReadOnly(RcloneService.selectedRemote)
-                                && RcloneService.backupState !== "running"
-                            onClicked: backupPicker.openAt(backupPicker.homeDir)
+                            onClicked: backupWindow.showWindow()
                         }
 
                         SettingsActionRow {
@@ -687,21 +698,10 @@ Item {
         }
     }
 
-    FilePickerWindow {
-        id: backupPicker
+    ComputerBackupWindow {
+        id: backupWindow
 
         parentModal: root.parentModal
-        requiresParentWindow: true
-        selectionMode: FilePickerWindow.FilesAndFolders
-        dialogTitle: qsTr("选择要备份的文件或文件夹")
-        description: qsTr("备份到所选云存储的 Clavis Backups 文件夹")
-        startPath: homeDir
-        nameFilters: []
-        windowIconName: "cloud_upload"
-        emptyStateText: qsTr("当前文件夹为空")
-        selectionPrompt: qsTr("选择文件或文件夹")
-        acceptLabel: qsTr("开始备份")
-        formatSummary: qsTr("支持文件与文件夹")
-        onAccepted: (path, isDirectory) => RcloneService.backup(path, isDirectory)
     }
+
 }

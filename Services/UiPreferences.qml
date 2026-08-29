@@ -39,6 +39,9 @@ Singleton {
     })
     property var systemCards: ({
     })
+    property bool cloudBackupFoldersInitialized: false
+    property int cloudBackupFoldersVersion: 0
+    property var cloudBackupFolders: []
 
     function normalizedLanguage(value) {
         const normalized = String(value || "").replace("-", "_").toLowerCase();
@@ -307,6 +310,43 @@ Singleton {
         root.save();
     }
 
+    function normalizedLocalPath(value) {
+        let path = String(value || "").trim();
+        if (path.startsWith("file://")) {
+            try {
+                path = decodeURIComponent(path.substring(7));
+            } catch (error) {
+                path = path.substring(7);
+            }
+        }
+        if (!path.startsWith("/"))
+            return "";
+
+        return path === "/" ? path : path.replace(/\/+$/, "");
+    }
+
+    function setCloudBackupFolders(folders) {
+        const normalized = [];
+        const seen = {
+        };
+        for (const folder of folders || []) {
+            const path = root.normalizedLocalPath(folder && folder.path);
+            if (path === "" || seen[path])
+                continue;
+
+            seen[path] = true;
+            normalized.push({
+                "path": path,
+                "enabled": folder.enabled === undefined ? true : !!folder.enabled,
+                "kind": String(folder && folder.kind || "custom")
+            });
+        }
+        root.cloudBackupFolders = normalized;
+        root.cloudBackupFoldersInitialized = true;
+        root.cloudBackupFoldersVersion = 3;
+        root.save();
+    }
+
     function save() {
         if (!root.storeReady) {
             root.savePending = true;
@@ -334,7 +374,10 @@ Singleton {
             "sidebarCookieSecondHandStyle": root.sidebarCookieSecondHandStyle,
             "sidebarCookieDateStyle": root.sidebarCookieDateStyle,
             "drawerGridLayout": root.drawerGridLayout,
-            "systemCards": root.systemCards
+            "systemCards": root.systemCards,
+            "cloudBackupFoldersInitialized": root.cloudBackupFoldersInitialized,
+            "cloudBackupFoldersVersion": root.cloudBackupFoldersVersion,
+            "cloudBackupFolders": root.cloudBackupFolders
         }, null, 2));
     }
 
@@ -397,6 +440,11 @@ Singleton {
 
                 if (parsed.systemCards && typeof parsed.systemCards === "object" && !Array.isArray(parsed.systemCards))
                     root.systemCards = parsed.systemCards;
+
+                root.cloudBackupFoldersInitialized = parsed.cloudBackupFoldersInitialized === true;
+                root.cloudBackupFoldersVersion = Math.max(0, Math.round(Number(parsed.cloudBackupFoldersVersion) || 0));
+                if (Array.isArray(parsed.cloudBackupFolders))
+                    root.cloudBackupFolders = parsed.cloudBackupFolders;
 
             } catch (error) {
                 console.warn("UiPreferences failed to load:", error);

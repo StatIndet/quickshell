@@ -36,6 +36,7 @@ FloatingWindow {
     property string formatSummary: "JPG · PNG · WebP\nBMP · GIF"
     property var parentModal: null
     property bool requiresParentWindow: false
+    property bool allowCurrentFolderSelection: false
     property string currentPath: startPath
     property string selectedPath: ""
     property string selectedName: ""
@@ -49,12 +50,17 @@ FloatingWindow {
     readonly property string homeDir: StandardPaths.writableLocation(StandardPaths.HomeLocation)
     readonly property string desktopDir: StandardPaths.writableLocation(StandardPaths.DesktopLocation)
     readonly property string documentsDir: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+    readonly property string musicDir: StandardPaths.writableLocation(StandardPaths.MusicLocation)
     readonly property string picturesDir: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
+    readonly property string videosDir: StandardPaths.writableLocation(StandardPaths.MoviesLocation)
     readonly property string downloadsDir: StandardPaths.writableLocation(StandardPaths.DownloadLocation)
     readonly property bool hasSelection: selectedPath !== ""
-    readonly property bool selectionValid: selectedPath !== ""
-        && ((selectedIsDir && selectionMode !== FilePickerWindow.Files)
-            || (!selectedIsDir && selectionMode !== FilePickerWindow.Folders))
+    readonly property bool currentFolderIsSelection: allowCurrentFolderSelection
+        && selectionMode !== FilePickerWindow.Files && selectedPath === ""
+    readonly property bool selectionValid: currentFolderIsSelection
+        || (selectedPath !== ""
+            && ((selectedIsDir && selectionMode !== FilePickerWindow.Files)
+                || (!selectedIsDir && selectionMode !== FilePickerWindow.Folders)))
     readonly property alias blurController: pickerBlurController
     readonly property alias blurBackground: outerBackground
     readonly property alias fileGridView: fileGrid
@@ -222,8 +228,8 @@ FloatingWindow {
     function acceptSelection() {
         if (!selectionValid)
             return;
-        const path = selectedPath;
-        const isDirectory = selectedIsDir;
+        const path = currentFolderIsSelection ? currentPath : selectedPath;
+        const isDirectory = currentFolderIsSelection || selectedIsDir;
         _completionHandled = true;
         visible = false;
         clearSelection();
@@ -514,7 +520,9 @@ FloatingWindow {
                         LocationButton { label: qsTr("主文件夹"); iconName: "home"; path: root.homeDir }
                         LocationButton { label: qsTr("桌面"); iconName: "desktop_windows"; path: root.desktopDir; visible: path !== "" }
                         LocationButton { label: qsTr("文档"); iconName: "description"; path: root.documentsDir; visible: path !== "" }
+                        LocationButton { label: qsTr("音乐"); iconName: "music_note"; path: root.musicDir; visible: path !== "" }
                         LocationButton { label: qsTr("图片"); iconName: "image"; path: root.picturesDir; visible: path !== "" }
+                        LocationButton { label: qsTr("视频"); iconName: "movie"; path: root.videosDir; visible: path !== "" }
                         LocationButton { label: qsTr("下载"); iconName: "download"; path: root.downloadsDir; visible: path !== "" }
 
                         Item { Layout.fillHeight: true }
@@ -952,7 +960,9 @@ FloatingWindow {
                                     Text {
                                         Layout.fillWidth: true
                                         text: root.selectedPath === ""
-                                            ? root.selectionPrompt
+                                            ? root.currentFolderIsSelection
+                                              ? qsTr("当前文件夹：%1").arg(root.currentPath)
+                                              : root.selectionPrompt
                                             : root.selectedIsDir
                                               ? qsTr("双击进入 ") + root.selectedName
                                               : root.selectedName
