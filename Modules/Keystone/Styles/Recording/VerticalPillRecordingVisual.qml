@@ -37,6 +37,7 @@ Item {
     readonly property real satelliteX: edge === "left" ? 0 : visualWidth - satelliteWidth
     readonly property color typeContainerColor: recordingType === "gif" ? Appearance.colors.colTertiaryContainer : Appearance.colors.colErrorContainer
     readonly property color typeContentColor: recordingType === "gif" ? Appearance.colors.colOnTertiaryContainer : Appearance.colors.colOnErrorContainer
+    readonly property var blurBackgroundItems: [mainBlurRegion, satelliteBlurRegion]
 
     signal stopRequested()
 
@@ -91,6 +92,30 @@ Item {
             heldElapsedMs = elapsedMs;
         else if (!finalizing && !active)
             heldElapsedMs = 0;
+    }
+
+    Rectangle {
+        id: mainBlurRegion
+
+        x: root.mainX
+        y: 0
+        width: root.mainWidth
+        height: root.mainHeight
+        radius: width / 2
+        color: "transparent"
+        visible: root.active && root.opacity > 0.01
+    }
+
+    Rectangle {
+        id: satelliteBlurRegion
+
+        x: root.satelliteX
+        y: root.satelliteCenterY - root.satelliteHeight / 2
+        width: root.satelliteWidth
+        height: root.satelliteHeight
+        radius: width / 2
+        color: "transparent"
+        visible: root.active && root.opacity > 0.01
     }
 
     PillMorphSurface {

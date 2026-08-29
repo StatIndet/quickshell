@@ -461,6 +461,8 @@ Variants {
                 readonly property QtObject activeLayout: keystoneWindow.horizontalEdge ? horizontalLayout : verticalLayout
                 readonly property real recordingVisualWidth: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitWidth : activeLayout.attachedRecordingWidth
                 readonly property real recordingVisualHeight: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitHeight : activeLayout.attachedRecordingHeight
+                readonly property bool useRecordingBlurRegions: styleSurface.detached && root.recordingPresentationActive && pillRecordingPresenter.item !== null
+                readonly property var recordingBlurBackgroundItems: useRecordingBlurRegions ? pillRecordingPresenter.item.blurBackgroundItems : []
                 property real targetW: activeLayout.targetWidth
                 property real targetH: activeLayout.targetHeight
                 property int targetR: styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) : 12
@@ -475,9 +477,6 @@ Variants {
                 property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio : null
                 property string sliderMode: "volume"
                 readonly property var currentPlayer: MediaManager.active
-
-                onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
-                Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
 
                 function isHoverWidthMotion(nextW) {
                     return isCollapsedMode && Math.abs(nextW - width) <= KeystoneMotion.hoverWidthDelta;
@@ -512,6 +511,8 @@ Variants {
                     root.triggerSliderOSD("volume");
                 }
 
+                onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
+                Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
                 state: keystoneWindow.edge
                 // HubContent changes its own currentIndex when a tab is
                 // clicked. Keep the two pieces of state synchronized
@@ -1537,7 +1538,8 @@ Variants {
 
             CompositorBlurRegion {
                 targetWindow: keystoneWindow
-                backgroundItem: root
+                backgroundItem: root.useRecordingBlurRegions ? null : root
+                additionalBackgroundItems: root.recordingBlurBackgroundItems
                 subtractedBackgroundItems: root.showDashboardHole ? [dashboardBlurCutout] : []
                 postSubtractionBackgroundItems: root.showDashboardHole ? hub.dashboardGlassItems : []
                 postSubtractionClipItem: root.showDashboardHole ? dashboardBlurCutout : null
