@@ -125,7 +125,7 @@ Variants {
         WlrLayershell.namespace: "clavis-shell-keystone"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: root.hasClosablePopup ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: (root.hasClosablePopup || notifContent.replyActive) ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors {
             top: true
@@ -456,7 +456,9 @@ Variants {
                 readonly property int pillFusionDuration: 820
                 property int pillActiveFusionDuration: pillFusionDuration
                 property int notifW: 380
-                property int notifH: (NotificationManager.popupList.length * 70) + 20
+                // Динамическая высота: учитывает hover-раскрытие делегата
+                // (actionsColumn добавляет ~40px к одному уведомлению).
+                property int notifH: Math.min(320, Math.max(80, notifContent.contentHeight + 20))
                 property color color: BlurService.backgroundColor(Appearance.colors.colLayer0)
                 readonly property QtObject activeLayout: keystoneWindow.horizontalEdge ? horizontalLayout : verticalLayout
                 readonly property real recordingVisualWidth: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitWidth : activeLayout.attachedRecordingWidth
@@ -1187,6 +1189,8 @@ Variants {
                     }
 
                     NotificationContent {
+                        id: notifContent
+
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.topMargin: 10

@@ -11,6 +11,11 @@ Singleton {
     readonly property string filePath: configDir + "/ui-preferences.json"
     property bool dndEnabled: false
     property bool darkMode: false
+    // Приватность уведомлений на экране блокировки (как Android):
+    //   "show"         — показывать содержимое (по умолчанию)
+    //   "hide-content" — видно приложение, текст скрыт
+    //   "hide-all"     — уведомления на lock screen скрыты полностью
+    property string lockScreenNotificationPrivacy: "show"
     property string language: normalizedLanguage(Qt.locale().name)
     property string weatherTemperatureUnit: "celsius"
     property string systemTemperatureUnit: "celsius"
@@ -58,6 +63,19 @@ Singleton {
 
     function toggleDnd() {
         root.setDndEnabled(!root.dndEnabled);
+    }
+
+    function normalizedNotificationPrivacy(value) {
+        return root.allowedValue(value, ["show", "hide-content", "hide-all"], "show");
+    }
+
+    function setLockScreenNotificationPrivacy(value) {
+        const normalized = root.normalizedNotificationPrivacy(value);
+        if (root.lockScreenNotificationPrivacy === normalized)
+            return ;
+
+        root.lockScreenNotificationPrivacy = normalized;
+        root.save();
     }
 
     function setLanguage(value) {
@@ -316,6 +334,7 @@ Singleton {
         prefsFile.setText(JSON.stringify({
             "dndEnabled": root.dndEnabled,
             "language": root.language,
+            "lockScreenNotificationPrivacy": root.lockScreenNotificationPrivacy,
             "weatherTemperatureUnit": root.weatherTemperatureUnit,
             "systemTemperatureUnit": root.systemTemperatureUnit,
             "systemMonitorGpuId": root.systemMonitorGpuId,
@@ -368,6 +387,7 @@ Singleton {
                     root.dndEnabled = parsed.dndEnabled;
 
                 root.language = root.normalizedLanguage(parsed.language || Qt.locale().name);
+                root.lockScreenNotificationPrivacy = root.normalizedNotificationPrivacy(parsed.lockScreenNotificationPrivacy);
                 root.weatherTemperatureUnit = root.normalizedTemperatureUnit(parsed.weatherTemperatureUnit);
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
                 root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);

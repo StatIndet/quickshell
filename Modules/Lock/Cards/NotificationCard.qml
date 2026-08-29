@@ -14,6 +14,9 @@ Rectangle {
     })
     readonly property int notificationCount: notifications.length
     readonly property int cardMargin: Sizes.lockOuterPadding
+    // Приватность: "show" / "hide-content" / "hide-all" (см. UiPreferences).
+    readonly property bool privacyHideContent: UiPreferences.lockScreenNotificationPrivacy === "hide-content"
+    readonly property bool privacyHideAll: UiPreferences.lockScreenNotificationPrivacy === "hide-all"
 
     function normalizeSource(source) {
         if (!source || source === "")
@@ -53,6 +56,8 @@ Rectangle {
         return Qt.formatDate(date, "MM/dd") + " " + UiPreferences.shortTime(date);
     }
 
+    // visible: при "hide-all" карточка скрыта полностью, но не сжимается layout.
+    visible: !privacyHideAll
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: Appearance.colors.colLayer2
@@ -258,6 +263,7 @@ Rectangle {
                             }
 
                             Text {
+                                visible: !delegateRoot.modelData || !root.privacyHideContent
                                 text: delegateRoot.modelData ? delegateRoot.modelData.summary : ""
                                 color: Appearance.colors.colOnSurface
                                 font.family: Fonts.ui
@@ -267,7 +273,39 @@ Rectangle {
                                 Layout.fillWidth: true
                             }
 
+                            // При "hide-content" содержимое не показываем:
+                            // вместо текста — иконка приватности.
+                            Item {
+                                visible: root.privacyHideContent
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 20
+
+                                RowLayout {
+                                    anchors.left: parent.left
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    spacing: 6
+
+                                    Text {
+                                        text: "visibility_off"
+                                        color: Appearance.colors.colOnSurfaceVariant
+                                        font.family: Fonts.materialSymbolsRounded
+                                        font.pixelSize: 15
+                                    }
+
+                                    Text {
+                                        text: qsTr("通知内容已隐藏")
+                                        color: Appearance.colors.colOnSurfaceVariant
+                                        font.family: Fonts.ui
+                                        font.pixelSize: 15
+                                        elide: Text.ElideRight
+                                    }
+
+                                }
+
+                            }
+
                             Text {
+                                visible: !root.privacyHideContent
                                 text: delegateRoot.modelData ? delegateRoot.modelData.body : ""
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Fonts.ui
