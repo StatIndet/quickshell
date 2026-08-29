@@ -1,10 +1,9 @@
-import QtQuick
+import "../../Common/functions/SystemFormat.js" as Format
+import "../ControlCenter" as ControlCenter
 import Qt5Compat.GraphicalEffects
+import QtQuick
 import qs.Common
 import qs.Components
-import qs.Services
-import "../ControlCenter" as ControlCenter
-import "../../Common/functions/SystemFormat.js" as Format
 
 Item {
     id: root
@@ -50,10 +49,6 @@ Item {
     readonly property color rightForeground: Appearance.colors.colOnPrimaryContainer
     readonly property color readDataColor: Appearance.mix(Appearance.colors.colPrimary, root.leftForeground, 0.62)
     readonly property color writeDataColor: Appearance.mix(Appearance.colors.colSecondary, root.leftForeground, 0.58)
-    readonly property string translatedTitle: {
-        const language = I18nService.language;
-        return qsTr("磁盘 I/O");
-    }
     readonly property real rightPanelX: Math.round(width * 0.53)
     readonly property int chartHistoryLength: 18
     readonly property real chartMaximum: {
@@ -91,7 +86,7 @@ Item {
     }
 
     Text {
-        text: root.translatedTitle
+        text: qsTr("磁盘 I/O")
         color: root.leftForeground
         renderType: Text.NativeRendering
         font.family: Fonts.expressive
