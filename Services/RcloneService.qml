@@ -20,20 +20,40 @@ Singleton {
     readonly property bool quotaAvailable: quotaState === "ready" && totalBytes > 0 && usedBytes >= 0
     readonly property real usageRatio: quotaAvailable ? Math.max(0, Math.min(1, usedBytes / totalBytes)) : 0
     property string backupState: "idle"
+    property string backupPhase: ""
     property string backupMessage: ""
-    property real backupProgress: -1
     property string backupSource: ""
     property string backupDestination: ""
     property int backupCurrentIndex: 0
     property int backupTotalCount: 0
+    property real backupBytes: 0
+    property real backupTotalBytes: -1
+    property real backupSpeed: -1
+    property real backupEtaSeconds: -1
+    property int backupTransfers: 0
+    property int backupTotalTransfers: -1
+    property int backupChecks: 0
+    property int backupTotalChecks: -1
+    property int backupErrors: 0
+    property int backupListed: 0
+    property var backupTransferring: []
+    property real backupElapsedSeconds: 0
+    property real backupCompletedBytes: 0
+    property int backupCompletedTransfers: 0
+    property string backupErrorMessage: ""
+    readonly property bool backupActive: backupState === "running" || backupState === "stopping"
+    readonly property real backupProgress: backupPhase === "transferring" && backupTotalBytes > 0 ? Math.max(0, Math.min(1, backupBytes / backupTotalBytes)) : -1
+    readonly property string backupCurrentFolderName: basename(backupSource)
+    readonly property string backupCurrentFileName: backupTransferring.length > 0 ? String(backupTransferring[0].name || "") : ""
     property string _remotesOutput: ""
     property string _quotaOutput: ""
     property var _backupQueue: []
     property int _backupQueueIndex: 0
     property string _backupVersionStamp: ""
     property string _backupRemoteName: ""
-    property real _currentFolderProgress: -1
     property string _backupLastError: ""
+    property bool _cancelRequested: false
+    property real _backupStartedAtMs: 0
 
     function remoteByName(name) {
         for (let index = 0; index < root.remotes.length; ++index) {
@@ -131,49 +151,68 @@ Singleton {
     }
 
     function clearCompletedBackupStatus() {
-        if (backupState === "running")
+        if (backupActive)
             return ;
 
         backupState = "idle";
+        backupPhase = "";
         backupMessage = "";
-        backupProgress = -1;
         backupSource = "";
         backupDestination = "";
         backupCurrentIndex = 0;
         backupTotalCount = 0;
+        resetCurrentFolderStats();
+        backupElapsedSeconds = 0;
+        backupCompletedBytes = 0;
+        backupCompletedTransfers = 0;
+        backupErrorMessage = "";
         _backupQueue = [];
         _backupQueueIndex = 0;
         _backupVersionStamp = "";
         _backupRemoteName = "";
-        _currentFolderProgress = -1;
         _backupLastError = "";
+        _cancelRequested = false;
+        _backupStartedAtMs = 0;
     }
 
     function refreshCard() {
-        clearCompletedBackupStatus();
         refreshQuota();
     }
 
     function backupFolders(paths) {
         const sources = normalizedFolderPaths(paths);
-        const remote = selectedRemote;
-        if (backupProcess.running || sources.length === 0 || !remote)
+        return beginBackup(sources, selectedRemoteName);
+    }
+
+    function beginBackup(sources, remoteName) {
+        const remote = remoteByName(remoteName);
+        if (backupActive || backupProcess.running || sources.length === 0 || !remote)
             return false;
 
         if (isReadOnly(remote)) {
             backupState = "error";
+            backupPhase = "";
             backupMessage = qsTr("所选云存储为只读服务");
+            backupErrorMessage = backupMessage;
             return false;
         }
-        _backupQueue = sources;
+        _backupQueue = sources.slice();
         _backupQueueIndex = 0;
         _backupVersionStamp = new Date().toISOString().replace(/[:.]/g, "-");
-        _backupRemoteName = selectedRemoteName;
+        _backupRemoteName = normalizeRemoteName(remoteName);
+        _backupStartedAtMs = Date.now();
+        _cancelRequested = false;
+        _backupLastError = "";
         backupCurrentIndex = 1;
         backupTotalCount = sources.length;
+        backupCompletedBytes = 0;
+        backupCompletedTransfers = 0;
+        backupElapsedSeconds = 0;
+        backupErrorMessage = "";
         backupState = "running";
-        backupProgress = -1;
-        _backupLastError = "";
+        backupPhase = "preparing";
+        backupMessage = qsTr("正在准备备份");
+        resetCurrentFolderStats();
         startNextBackupFolder();
         return true;
     }
@@ -187,12 +226,74 @@ Singleton {
         return backupFolders([path]);
     }
 
+    function restartBackup() {
+        if (backupActive || _backupQueue.length === 0 || _backupRemoteName === "")
+            return false;
+
+        return beginBackup(_backupQueue.slice(), _backupRemoteName);
+    }
+
+    function stopBackup() {
+        if (backupState !== "running")
+            return false;
+
+        _cancelRequested = true;
+        backupState = "stopping";
+        backupMessage = qsTr("正在停止备份…");
+        if (backupProcess.running)
+            backupProcess.signal(2);
+        else
+            finishCancelled();
+        return true;
+    }
+
+    function resetCurrentFolderStats() {
+        backupBytes = 0;
+        backupTotalBytes = -1;
+        backupSpeed = -1;
+        backupEtaSeconds = -1;
+        backupTransfers = 0;
+        backupTotalTransfers = -1;
+        backupChecks = 0;
+        backupTotalChecks = -1;
+        backupErrors = 0;
+        backupListed = 0;
+        backupTransferring = [];
+    }
+
+    function updateElapsedTime() {
+        backupElapsedSeconds = _backupStartedAtMs > 0 ? Math.max(0, (Date.now() - _backupStartedAtMs) / 1000) : 0;
+    }
+
+    function finishCancelled() {
+        updateElapsedTime();
+        backupState = "cancelled";
+        backupMessage = qsTr("备份已停止");
+        backupTransferring = [];
+    }
+
+    function finishError() {
+        updateElapsedTime();
+        backupState = "error";
+        backupErrorMessage = _backupLastError !== "" ? _backupLastError : qsTr("请检查网络和远程权限");
+        backupMessage = qsTr("备份 %1 失败：%2").arg(basename(backupSource)).arg(backupErrorMessage);
+        backupTransferring = [];
+    }
+
+    function finishSuccess() {
+        updateElapsedTime();
+        backupState = "success";
+        backupMessage = qsTr("备份已完成，共备份 %1 个文件夹").arg(backupTotalCount);
+        backupTransferring = [];
+        refreshQuota();
+    }
+
     function startNextBackupFolder() {
+        if (backupState !== "running")
+            return ;
+
         if (_backupQueueIndex >= _backupQueue.length) {
-            backupProgress = 1;
-            backupState = "success";
-            backupMessage = qsTr("备份已完成，共备份 %1 个文件夹").arg(backupTotalCount);
-            refreshQuota();
+            finishSuccess();
             return ;
         }
         const source = _backupQueue[_backupQueueIndex];
@@ -202,27 +303,59 @@ Singleton {
         const destinationRoot = _backupRemoteName + ":Clavis Backups/" + hostName + "/current/" + destinationName;
         const historyRoot = _backupRemoteName + ":Clavis Backups/" + hostName + "/versions/" + _backupVersionStamp + "/" + destinationName;
         const command = [commandName, "sync", source, destinationRoot];
-        command.push("--backup-dir", historyRoot, "--create-empty-src-dirs", "--stats=1s", "--stats-log-level=NOTICE", "--use-json-log");
+        command.push("--backup-dir", historyRoot, "--create-empty-src-dirs", "--check-first", "--stats=1s", "--stats-log-level=NOTICE", "--use-json-log");
         backupSource = source;
         backupDestination = destinationRoot;
         backupCurrentIndex = _backupQueueIndex + 1;
-        _currentFolderProgress = -1;
-        updateAggregateProgress();
-        backupMessage = qsTr("正在备份 %1（%2/%3）").arg(sourceName).arg(backupCurrentIndex).arg(backupTotalCount);
+        backupPhase = "preparing";
+        backupMessage = qsTr("正在准备 %1（%2/%3）").arg(sourceName).arg(backupCurrentIndex).arg(backupTotalCount);
+        _backupLastError = "";
+        resetCurrentFolderStats();
         backupProcess.command = command;
         backupProcess.running = true;
     }
 
-    function updateAggregateProgress() {
-        if (backupTotalCount <= 0) {
-            backupProgress = -1;
-            return ;
+    function numberOr(value, fallback) {
+        if (value === null || value === undefined || value === "")
+            return fallback;
+
+        const number = Number(value);
+        return isFinite(number) ? number : fallback;
+    }
+
+    function usefulError(value) {
+        const firstLine = String(value || "").trim().split("\n")[0];
+        return firstLine.length > 360 ? firstLine.substring(0, 357) + "…" : firstLine;
+    }
+
+    function updateBackupStats(stats) {
+        backupBytes = Math.max(0, numberOr(stats.bytes, 0));
+        backupTotalBytes = numberOr(stats.totalBytes, -1);
+        backupSpeed = numberOr(stats.speed, -1);
+        backupEtaSeconds = numberOr(stats.eta, -1);
+        backupTransfers = Math.max(0, Math.round(numberOr(stats.transfers, 0)));
+        backupTotalTransfers = Math.round(numberOr(stats.totalTransfers, -1));
+        backupChecks = Math.max(0, Math.round(numberOr(stats.checks, 0)));
+        backupTotalChecks = Math.round(numberOr(stats.totalChecks, -1));
+        backupErrors = Math.max(0, Math.round(numberOr(stats.errors, 0)));
+        backupListed = Math.max(0, Math.round(numberOr(stats.listed, 0)));
+        const transferring = Array.isArray(stats.transferring) ? stats.transferring : [];
+        backupTransferring = transferring.map((item) => {
+            return ({
+                "name": String(item && item.name || ""),
+                "bytes": numberOr(item && item.bytes, -1),
+                "size": numberOr(item && item.size, -1),
+                "percentage": numberOr(item && item.percentage, -1),
+                "speed": numberOr(item && item.speed, -1),
+                "eta": numberOr(item && item.eta, -1)
+            });
+        });
+        if (backupState === "running") {
+            const transferStarted = backupTransferring.length > 0 || backupBytes > 0 || backupTransfers > 0;
+            backupPhase = transferStarted ? "transferring" : "checking";
+            backupMessage = transferStarted ? qsTr("正在备份 %1（%2/%3）").arg(backupCurrentFolderName).arg(backupCurrentIndex).arg(backupTotalCount) : qsTr("正在检查 %1（%2/%3）").arg(backupCurrentFolderName).arg(backupCurrentIndex).arg(backupTotalCount);
         }
-        if (_currentFolderProgress < 0) {
-            backupProgress = _backupQueueIndex > 0 ? _backupQueueIndex / backupTotalCount : -1;
-            return ;
-        }
-        backupProgress = Math.max(0, Math.min(1, (_backupQueueIndex + _currentFolderProgress) / backupTotalCount));
+        updateElapsedTime();
     }
 
     function consumeBackupLine(line) {
@@ -231,24 +364,18 @@ Singleton {
             return ;
 
         if (value.charAt(0) !== "{") {
-            _backupLastError = value;
+            _backupLastError = usefulError(value);
             return ;
         }
         try {
             const parsed = JSON.parse(value);
-            const stats = parsed.stats || parsed;
-            const percentage = Number(stats.percentage);
-            const bytes = Number(stats.bytes);
-            const total = Number(stats.totalBytes);
-            if (isFinite(percentage))
-                _currentFolderProgress = Math.max(0, Math.min(1, percentage / 100));
-            else if (isFinite(bytes) && isFinite(total) && total > 0)
-                _currentFolderProgress = Math.max(0, Math.min(1, bytes / total));
-            const level = String(parsed.level || "").toLowerCase();
-            if ((level === "error" || level === "critical") && parsed.msg)
-                _backupLastError = String(parsed.msg);
+            if (parsed.stats && typeof parsed.stats === "object")
+                updateBackupStats(parsed.stats);
 
-            updateAggregateProgress();
+            const level = String(parsed.level || "").toLowerCase();
+            if (level === "error" || level === "critical")
+                _backupLastError = usefulError(parsed.error || parsed.msg);
+
         } catch (error) {
         }
     }
@@ -344,14 +471,17 @@ Singleton {
         id: backupProcess
 
         onExited: (exitCode) => {
-            if (exitCode !== 0) {
-                root.backupState = "error";
-                root.backupMessage = root._backupLastError !== "" ? qsTr("备份 %1 失败：%2").arg(root.basename(root.backupSource)).arg(root._backupLastError) : qsTr("备份 %1 失败，请检查网络和远程权限").arg(root.basename(root.backupSource));
+            if (root._cancelRequested) {
+                root.finishCancelled();
                 return ;
             }
+            if (exitCode !== 0) {
+                root.finishError();
+                return ;
+            }
+            root.backupCompletedBytes += Math.max(0, root.backupBytes);
+            root.backupCompletedTransfers += Math.max(0, root.backupTransfers);
             root._backupQueueIndex += 1;
-            root._currentFolderProgress = 1;
-            root.updateAggregateProgress();
             Qt.callLater(root.startNextBackupFolder);
         }
 

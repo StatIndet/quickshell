@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Common
+import qs.Widgets.common
 
 Item {
     id: root

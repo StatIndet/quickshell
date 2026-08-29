@@ -4,223 +4,243 @@
 <context>
     <name>AccountPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="80"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>未知</source>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>KB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>GB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>TB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="79"/>
         <source>PB</source>
         <translation>PB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="94"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="92"/>
         <source>未连接云存储</source>
         <translation>Not connected to cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="110"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="108"/>
         <source>其他云存储</source>
         <translation>Other cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="129"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="127"/>
         <source>已连接</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="128"/>
         <source>已配对</source>
         <translation>Paired</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="142"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="140"/>
         <source>断开</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="141"/>
         <source>连接</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="193"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="191"/>
         <source>语言</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="230"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="228"/>
         <source>蓝牙设备</source>
         <translation>Bluetooth devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="238"/>
         <source>蓝牙</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="238"/>
         <source>开启蓝牙以连接设备</source>
         <translation>Turn on Bluetooth to connect devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="249"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="247"/>
         <source>蓝牙开关</source>
         <translation>Bluetooth switch</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="306"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="350"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="304"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="348"/>
         <source>未命名设备</source>
         <translation>Unnamed device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="386"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="384"/>
         <source>更多蓝牙设置</source>
         <translation>More Bluetooth settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="398"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="396"/>
         <source>云存储</source>
         <translation>Cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="430"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="428"/>
         <source>刷新云存储信息</source>
         <translation>Refresh cloud storage information</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="449"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="447"/>
         <source>正在读取容量…</source>
         <translation>Reading capacity…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="460"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="458"/>
         <source>云存储已使用容量</source>
         <translation>Cloud storage used capacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="489"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="487"/>
         <source>正在备份</source>
         <translation>Backing up</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="495"/>
-        <source>总进度 %1%</source>
-        <translation>Overall progress %1%</translation>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="503"/>
+        <source>已扫描 %1 个项目</source>
+        <translation>%1 items scanned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="496"/>
-        <source>正在计算备份进度…</source>
-        <translation>Calculating backup progress…</translation>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="505"/>
+        <source>正在扫描文件…</source>
+        <translation>Scanning files…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="511"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="521"/>
         <source>电脑备份</source>
-        <translation>Back up computer</translation>
+        <translation>Computer backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="520"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="530"/>
         <source>管理云存储</source>
         <translation>Manage cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="534"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="544"/>
         <source>个性化</source>
         <translation>Personalization</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="202"/>
         <source>显示语言</source>
         <translation>Display language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="215"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="213"/>
         <source>选择语言</source>
         <translation>Choose language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="348"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="346"/>
         <source>%1 的更多选项</source>
         <translation>More options for %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="360"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="358"/>
         <source>遗忘设备</source>
         <translation>Forget device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="377"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="375"/>
         <source>暂无已配对设备</source>
         <translation>No paired devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="444"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="442"/>
         <source>容量：已使用 %1，共 %2（%3%）</source>
         <translation>Storage: Used %1 of %2 (%3%)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="565"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="493"/>
+        <source>正在停止备份…</source>
+        <translation>Stopping backup…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="496"/>
+        <source>%1：当前文件夹 %2%</source>
+        <translation>%1: current folder %2%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="501"/>
+        <source>正在检查文件…</source>
+        <translation>Checking files…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="506"/>
+        <source>正在准备备份</source>
+        <translation>Preparing backup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="575"/>
         <source>使用壁纸 %1</source>
         <translation>Use wallpaper %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="646"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="656"/>
         <source>色彩模式</source>
         <translation>Color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="656"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="666"/>
         <source>浅色</source>
         <translation>Light</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="657"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="667"/>
         <source>深色</source>
         <translation>Dark</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="660"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="670"/>
         <source>选择色彩模式</source>
         <translation>Choose color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="672"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="682"/>
         <source>壁纸</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="680"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="690"/>
         <source>主题</source>
         <translation>Theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="696"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="706"/>
         <source>选择头像</source>
         <translation>Choose avatar</translation>
     </message>
@@ -699,6 +719,246 @@
         <location filename="../Services/AwwwWallpaperService.qml" line="477"/>
         <source>awww 无法为 %1 应用桌面壁纸，退出码 %2</source>
         <translation>awww could not apply the desktop wallpaper to %1; exit code %2</translation>
+    </message>
+</context>
+<context>
+    <name>BackupSetupPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="54"/>
+        <source>电脑备份</source>
+        <translation>Computer backup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="253"/>
+        <source>关闭</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="71"/>
+        <source>所选文件夹会同步到云端；被替换或删除的文件将保留在带时间戳的历史版本中。</source>
+        <translation>Selected folders are synchronized to the cloud. Replaced or deleted files are retained in timestamped history versions.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="97"/>
+        <source>备份正在进行</source>
+        <translation>Backup in progress</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="102"/>
+        <source>备份正在进行，文件夹设置暂时不可修改。</source>
+        <translation>A backup is in progress. Folder settings cannot be changed temporarily.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="111"/>
+        <source>查看详情</source>
+        <translation>View details</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="154"/>
+        <source>尚未添加备份文件夹</source>
+        <translation>No backup folders added</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="219"/>
+        <source>备份 %1</source>
+        <translation>Back up %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="227"/>
+        <source>移除 %1</source>
+        <translation>Remove %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="242"/>
+        <source>添加其他路径</source>
+        <translation>Add another path</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupSetupPage.qml" line="258"/>
+        <source>开始备份</source>
+        <translation>Start backup</translation>
+    </message>
+</context>
+<context>
+    <name>BackupTaskPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="31"/>
+        <source>文件夹 %1 / %2</source>
+        <translation>Folder %1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="49"/>
+        <source>正在停止备份…</source>
+        <translation>Stopping backup…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="52"/>
+        <source>正在准备备份</source>
+        <translation>Preparing backup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="55"/>
+        <source>正在检查文件…</source>
+        <translation>Checking files…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="57"/>
+        <source>正在备份</source>
+        <translation>Backing up</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="63"/>
+        <source>备份已完成</source>
+        <translation>Backup complete</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="65"/>
+        <source>备份已停止</source>
+        <translation>Backup stopped</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="67"/>
+        <source>备份失败</source>
+        <translation>Backup failed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="97"/>
+        <source>返回备份配置</source>
+        <translation>Back to backup settings</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="103"/>
+        <source>电脑备份</source>
+        <translation>Computer backup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="112"/>
+        <source>关闭</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="218"/>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="405"/>
+        <source>%1%</source>
+        <translation>%1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="230"/>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="314"/>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="335"/>
+        <source>%1 / %2</source>
+        <translation>%1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="37"/>
+        <source>已检查 %1 / %2</source>
+        <translation>Checked %1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="39"/>
+        <source>已检查 %1 个项目</source>
+        <translation>%1 items checked</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="42"/>
+        <source>已扫描 %1 个项目</source>
+        <translation>%1 items scanned</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="44"/>
+        <source>正在读取文件列表…</source>
+        <translation>Reading the file list…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="55"/>
+        <source>正在扫描文件…</source>
+        <translation>Scanning files…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="265"/>
+        <source>传输速度</source>
+        <translation>Transfer speed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="286"/>
+        <source>剩余时间</source>
+        <translation>Time remaining</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="293"/>
+        <source>约 %1</source>
+        <translation>About %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="293"/>
+        <source>正在计算</source>
+        <translation>Calculating</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="307"/>
+        <source>已传输</source>
+        <translation>Transferred</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="328"/>
+        <source>已检查</source>
+        <translation>Checked</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="349"/>
+        <source>错误 %1</source>
+        <translation>Errors %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="359"/>
+        <source>正在传输</source>
+        <translation>Current transfers</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="440"/>
+        <source>正在等待下一个传输项目…</source>
+        <translation>Waiting for the next transfer…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="460"/>
+        <source>正在停止</source>
+        <translation>Stopping</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="460"/>
+        <source>停止备份</source>
+        <translation>Stop backup</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="521"/>
+        <source>已经成功同步到远端的文件会继续保留。</source>
+        <translation>Files already synchronized to the remote will be retained.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="532"/>
+        <source>%1 · %2 个文件已同步</source>
+        <translation>%1 · %2 files synchronized</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="543"/>
+        <source>耗时 %1</source>
+        <translation>Elapsed %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="562"/>
+        <source>返回</source>
+        <translation>Back</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="569"/>
+        <source>重试</source>
+        <translation>Retry</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BackupTaskPage.qml" line="569"/>
+        <source>重新开始</source>
+        <translation>Start again</translation>
     </message>
 </context>
 <context>
@@ -1376,128 +1636,67 @@ Scroll to adjust</translation>
 <context>
     <name>ComputerBackupWindow</name>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="22"/>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="206"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="249"/>
         <source>电脑备份</source>
         <translation>Back up computer</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="58"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="35"/>
         <source>桌面</source>
         <translation>Desktop</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="59"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="40"/>
         <source>文档</source>
         <translation>Documents</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="60"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="45"/>
         <source>下载</source>
         <translation>Downloads</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="61"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="50"/>
         <source>音乐</source>
         <translation>Music</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="55"/>
         <source>图片</source>
         <translation>Pictures</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="60"/>
         <source>视频</source>
         <translation>Videos</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="215"/>
-        <source>关闭</source>
-        <translation>Close</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="222"/>
-        <source>所选文件夹会同步到云端；被替换或删除的文件将保留在带时间戳的历史版本中。</source>
-        <translation>Selected folders are synchronized to the cloud. Replaced or deleted files are retained in timestamped history versions.</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="289"/>
-        <source>备份 %1</source>
-        <translation>Back up %1</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="297"/>
-        <source>移除 %1</source>
-        <translation>Remove %1</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="307"/>
-        <source>尚未添加备份文件夹</source>
-        <translation>No backup folders added</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="318"/>
-        <source>添加其他路径</source>
-        <translation>Add another path</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="350"/>
-        <source>正在备份</source>
-        <translation>Backing up</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="382"/>
-        <source>总进度 %1%</source>
-        <translation>Overall progress %1%</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="383"/>
-        <source>正在计算备份进度…</source>
-        <translation>Calculating backup progress…</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="399"/>
-        <source>取消</source>
-        <translation>Cancel</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="404"/>
-        <source>备份中</source>
-        <translation>Backing up</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="404"/>
-        <source>开始备份</source>
-        <translation>Start backup</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="421"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="362"/>
         <source>添加备份文件夹</source>
         <translation>Add backup folder</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="422"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="363"/>
         <source>选择一个要包含在电脑备份中的文件夹</source>
         <translation>Choose a folder to include in the computer backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="426"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="367"/>
         <source>当前文件夹为空</source>
         <translation>This folder is empty</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="427"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="368"/>
         <source>选择文件夹</source>
         <translation>Choose folder</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="428"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="369"/>
         <source>添加文件夹</source>
         <translation>Add folder</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="429"/>
+        <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="370"/>
         <source>可添加当前文件夹或选中的子文件夹</source>
         <translation>Add the current folder or a selected subfolder</translation>
     </message>
@@ -4768,67 +4967,92 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>RcloneService</name>
     <message>
-        <location filename="../Services/RcloneService.qml" line="66"/>
+        <location filename="../Services/RcloneService.qml" line="86"/>
         <source>备份</source>
         <translation>Backup</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="165"/>
+        <location filename="../Services/RcloneService.qml" line="195"/>
         <source>所选云存储为只读服务</source>
         <translation>The selected cloud storage is read-only</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="184"/>
+        <location filename="../Services/RcloneService.qml" line="214"/>
+        <source>正在准备备份</source>
+        <translation>Preparing backup</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="223"/>
         <source>电脑备份仅支持文件夹</source>
         <translation>Computer backup supports folders only</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="194"/>
+        <location filename="../Services/RcloneService.qml" line="242"/>
+        <source>正在停止备份…</source>
+        <translation>Stopping backup…</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="271"/>
+        <source>备份已停止</source>
+        <translation>Backup stopped</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="278"/>
+        <source>请检查网络和远程权限</source>
+        <translation>Check the network and remote permissions</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="286"/>
         <source>备份已完成，共备份 %1 个文件夹</source>
         <translation>Backup complete. %1 folders backed up</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="211"/>
+        <location filename="../Services/RcloneService.qml" line="311"/>
+        <source>正在准备 %1（%2/%3）</source>
+        <translation>Preparing %1 (%2/%3)</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="356"/>
         <source>正在备份 %1（%2/%3）</source>
         <translation>Backing up %1 (%2/%3)</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="269"/>
+        <location filename="../Services/RcloneService.qml" line="356"/>
+        <source>正在检查 %1（%2/%3）</source>
+        <translation>Checking %1 (%2/%3)</translation>
+    </message>
+    <message>
+        <location filename="../Services/RcloneService.qml" line="396"/>
         <source>无法读取 rclone 配置</source>
         <translation>Could not read the rclone configuration</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="284"/>
+        <location filename="../Services/RcloneService.qml" line="411"/>
         <source>rclone 返回了无效的 remote 列表</source>
         <translation>rclone returned an invalid remote list</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="289"/>
+        <location filename="../Services/RcloneService.qml" line="416"/>
         <source>尚未配置云存储</source>
         <translation>No cloud storage configured</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="313"/>
+        <location filename="../Services/RcloneService.qml" line="440"/>
         <source>此云存储暂不提供容量信息</source>
         <translation>This cloud storage does not currently provide capacity information</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="329"/>
+        <location filename="../Services/RcloneService.qml" line="456"/>
         <source>此云存储未报告总容量</source>
         <translation>This cloud storage did not report a total capacity</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="333"/>
+        <location filename="../Services/RcloneService.qml" line="460"/>
         <source>无法解析云存储容量</source>
         <translation>Could not parse cloud storage capacity</translation>
     </message>
     <message>
-        <location filename="../Services/RcloneService.qml" line="349"/>
-        <source>备份 %1 失败，请检查网络和远程权限</source>
-        <translation>Failed to back up %1. Check the network and remote permissions</translation>
-    </message>
-    <message>
-        <location filename="../Services/RcloneService.qml" line="349"/>
+        <location filename="../Services/RcloneService.qml" line="279"/>
         <source>备份 %1 失败：%2</source>
         <translation>Failed to back up %1: %2</translation>
     </message>
@@ -6480,7 +6704,7 @@ detected</translation>
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="473"/>
+        <location filename="../Services/UiPreferences.qml" line="489"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>

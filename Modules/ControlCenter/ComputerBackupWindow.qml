@@ -1,9 +1,7 @@
 import QtCore
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import qs.Common
-import qs.Components
 import qs.Modules.FilePicker
 import qs.Services
 import qs.Widgets.common
@@ -13,6 +11,7 @@ FloatingWindow {
 
     property var parentModal: null
     property bool _restoreAfterPicker: false
+    property string currentPage: "setup"
 
     function normalizeLocalPath(path) {
         let value = String(path || "").trim();
@@ -130,7 +129,7 @@ FloatingWindow {
                 "kind": folder.kind
             });
         });
-        if (index < 0 || index >= folders.length)
+        if (index < 0 || index >= folders.length || RcloneService.backupActive)
             return ;
 
         folders[index].enabled = enabled;
@@ -138,12 +137,18 @@ FloatingWindow {
     }
 
     function removeFolder(index) {
+        if (RcloneService.backupActive)
+            return ;
+
         UiPreferences.setCloudBackupFolders(UiPreferences.cloudBackupFolders.filter(function(folder, folderIndex) {
             return folderIndex !== index;
         }));
     }
 
     function addFolder(path) {
+        if (RcloneService.backupActive)
+            return ;
+
         const normalized = normalizeLocalPath(path);
         if (normalized === "")
             return ;
@@ -192,6 +197,8 @@ FloatingWindow {
             return ;
         }
         ensureDefaults();
+        clearBackupStatusTimer.stop();
+        currentPage = RcloneService.backupState === "idle" ? "setup" : "task";
         root.visible = true;
         Qt.callLater(() => {
             return windowFocus.forceActiveFocus();
@@ -205,6 +212,9 @@ FloatingWindow {
     }
 
     function chooseFolder() {
+        if (RcloneService.backupActive)
+            return ;
+
         _restoreAfterPicker = true;
         root.visible = false;
         folderPicker.targetScreen = root.screen;
@@ -212,7 +222,26 @@ FloatingWindow {
     }
 
     function startBackup() {
-        RcloneService.backupFolders(selectedFolders());
+        const folders = selectedFolders();
+        if (folders.length === 0)
+            return ;
+
+        if (RcloneService.backupFolders(folders))
+            currentPage = "task";
+
+    }
+
+    function returnToSetup() {
+        currentPage = "setup";
+        if (!RcloneService.backupActive)
+            clearBackupStatusTimer.restart();
+
+    }
+
+    function restartBackup() {
+        if (RcloneService.restartBackup())
+            currentPage = "task";
+
     }
 
     visible: false
@@ -232,6 +261,27 @@ FloatingWindow {
         }
 
         target: UiPreferences
+    }
+
+    Connections {
+        function onBackupStateChanged() {
+            if (root.visible && RcloneService.backupActive)
+                root.currentPage = "task";
+
+        }
+
+        target: RcloneService
+    }
+
+    Timer {
+        id: clearBackupStatusTimer
+
+        interval: Appearance.animation.elementResize.duration
+        onTriggered: {
+            if (root.currentPage === "setup" && !RcloneService.backupActive)
+                RcloneService.clearCompletedBackupStatus();
+
+        }
     }
 
     Rectangle {
@@ -258,271 +308,45 @@ FloatingWindow {
             event.accepted = true;
         }
 
-        ColumnLayout {
+        PageTransitionLayer {
             anchors.fill: parent
-            anchors.margins: Metrics.spacingXL
-            spacing: Metrics.spacingM
+            active: root.currentPage === "setup"
+            hubPage: true
+            transitionsEnabled: root.visible
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Metrics.spacingM
-
-                Rectangle {
-                    Layout.preferredWidth: Metrics.controlHeightL
-                    Layout.preferredHeight: Metrics.controlHeightL
-                    radius: Appearance.rounding.normal
-                    color: Appearance.colors.colPrimaryContainer
-
-                    MaterialSymbol {
-                        anchors.centerIn: parent
-                        text: "backup"
-                        iconSize: Metrics.iconM
-                        fill: 1
-                        color: Appearance.colors.colOnPrimaryContainer
-                    }
-
+            BackupSetupPage {
+                anchors.fill: parent
+                folderModel: UiPreferences.cloudBackupFolders
+                folderInfo: (entry) => {
+                    return root.folderInfo(entry);
                 }
-
-                Text {
-                    Layout.fillWidth: true
-                    text: qsTr("电脑备份")
-                    color: Appearance.colors.colOnSurface
-                    font.family: Typography.headlineSmall.family
-                    font.pixelSize: Typography.headlineSmall.pixelSize
-                    font.weight: Typography.headlineSmall.weight
+                taskActive: RcloneService.backupActive
+                canStart: root.selectedFolders().length > 0
+                onCloseRequested: root.dismiss()
+                onChooseFolderRequested: root.chooseFolder()
+                onUpdateFolderRequested: (index, enabled) => {
+                    return root.updateFolder(index, enabled);
                 }
-
-                IconButton {
-                    iconName: "close"
-                    accessibleName: qsTr("关闭")
-                    onClicked: root.dismiss()
+                onRemoveFolderRequested: (index) => {
+                    return root.removeFolder(index);
                 }
-
+                onStartRequested: root.startBackup()
+                onViewTaskRequested: root.currentPage = "task"
             }
 
-            Text {
-                Layout.fillWidth: true
-                text: qsTr("所选文件夹会同步到云端；被替换或删除的文件将保留在带时间戳的历史版本中。")
-                color: Appearance.colors.colOnSurfaceVariant
-                font.family: Typography.bodyMedium.family
-                font.pixelSize: Typography.bodyMedium.pixelSize
-                wrapMode: Text.Wrap
-            }
+        }
 
-            ListView {
-                id: folderList
+        PageTransitionLayer {
+            anchors.fill: parent
+            active: root.currentPage === "task"
+            transitionsEnabled: root.visible
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                clip: true
-                spacing: Metrics.spacingXS
-                model: UiPreferences.cloudBackupFolders
-
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width, 320)
-                    visible: folderList.count === 0
-                    spacing: Metrics.spacingM
-
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredWidth: 88
-                        Layout.preferredHeight: 88
-                        radius: Appearance.rounding.full
-                        color: Appearance.colors.colSecondaryContainer
-
-                        MaterialSymbol {
-                            anchors.centerIn: parent
-                            text: "folder_off"
-                            iconSize: 48
-                            fill: 1
-                            color: Appearance.colors.colOnSecondaryContainer
-                        }
-
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: qsTr("尚未添加备份文件夹")
-                        color: Appearance.colors.colOnSurfaceVariant
-                        font.family: Typography.titleMedium.family
-                        font.pixelSize: Typography.titleMedium.pixelSize
-                        font.weight: Typography.titleMedium.weight
-                        horizontalAlignment: Text.AlignHCenter
-                        wrapMode: Text.Wrap
-                    }
-
-                }
-
-                delegate: Rectangle {
-                    id: folderRow
-
-                    required property var modelData
-                    required property int index
-                    readonly property var info: root.folderInfo(folderRow.modelData)
-
-                    width: ListView.view ? ListView.view.width : 0
-                    height: 64
-                    radius: Appearance.rounding.normal
-                    color: Appearance.colors.colSurfaceContainerHighest
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.leftMargin: Metrics.spacingM
-                        anchors.rightMargin: Metrics.spacingXS
-                        spacing: Metrics.spacingS
-
-                        MaterialSymbol {
-                            text: folderRow.info.icon
-                            iconSize: Metrics.iconM
-                            color: Appearance.colors.colPrimary
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 0
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: folderRow.info.label
-                                color: Appearance.colors.colOnSurface
-                                font.family: Typography.bodyMedium.family
-                                font.pixelSize: Typography.bodyMedium.pixelSize
-                                font.weight: Font.Medium
-                                elide: Text.ElideRight
-                            }
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: folderRow.modelData.path
-                                color: Appearance.colors.colOnSurfaceVariant
-                                font.family: Typography.bodySmall.family
-                                font.pixelSize: Typography.bodySmall.pixelSize
-                                elide: Text.ElideMiddle
-                            }
-
-                        }
-
-                        StyledSwitch {
-                            id: folderSwitch
-
-                            checked: folderRow.modelData.enabled
-                            enabled: RcloneService.backupState !== "running"
-                            Accessible.name: qsTr("备份 %1").arg(folderRow.info.label)
-                            onToggled: root.updateFolder(folderRow.index, folderSwitch.checked)
-                        }
-
-                        IconButton {
-                            iconName: "close"
-                            iconSize: Metrics.iconS
-                            enabled: RcloneService.backupState !== "running"
-                            accessibleName: qsTr("移除 %1").arg(folderRow.info.label)
-                            onClicked: root.removeFolder(folderRow.index)
-                        }
-
-                    }
-
-                }
-
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                ActionButton {
-                    text: qsTr("添加其他路径")
-                    iconName: "create_new_folder"
-                    enabled: RcloneService.backupState !== "running"
-                    onClicked: root.chooseFolder()
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: progressRow.implicitHeight + Metrics.spacingM * 2
-                visible: RcloneService.backupState !== "idle"
-                radius: Appearance.rounding.normal
-                color: RcloneService.backupState === "error" ? Appearance.colors.colErrorContainer : Appearance.colors.colSecondaryContainer
-
-                RowLayout {
-                    id: progressRow
-
-                    anchors.fill: parent
-                    anchors.margins: Metrics.spacingM
-                    spacing: Metrics.spacingM
-
-                    MaterialLoadingIndicator {
-                        Layout.preferredWidth: 44
-                        Layout.preferredHeight: 44
-                        visible: RcloneService.backupState === "running"
-                        running: visible
-                        contained: false
-                        indicatorColor: Appearance.colors.colOnSecondaryContainer
-                        accessibleName: qsTr("正在备份")
-                    }
-
-                    MaterialSymbol {
-                        visible: RcloneService.backupState !== "running"
-                        text: RcloneService.backupState === "success" ? "cloud_done" : "error"
-                        iconSize: Metrics.iconL
-                        color: RcloneService.backupState === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSecondaryContainer
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: Metrics.spacingXXS
-
-                        Text {
-                            Layout.fillWidth: true
-                            text: RcloneService.backupMessage
-                            color: RcloneService.backupState === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSecondaryContainer
-                            font.family: Typography.bodyMedium.family
-                            font.pixelSize: Typography.bodyMedium.pixelSize
-                            font.weight: Font.Medium
-                            wrapMode: Text.Wrap
-                        }
-
-                        Text {
-                            Layout.fillWidth: true
-                            visible: RcloneService.backupState === "running"
-                            text: RcloneService.backupProgress >= 0 ? qsTr("总进度 %1%").arg(Math.round(RcloneService.backupProgress * 100)) : qsTr("正在计算备份进度…")
-                            color: Appearance.colors.colOnSecondaryContainer
-                            font.family: Typography.labelMedium.family
-                            font.pixelSize: Typography.labelMedium.pixelSize
-                        }
-
-                    }
-
-                }
-
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Metrics.spacingS
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                ActionButton {
-                    text: qsTr("取消")
-                    onClicked: root.dismiss()
-                }
-
-                ActionButton {
-                    text: RcloneService.backupState === "running" ? qsTr("备份中") : qsTr("开始备份")
-                    iconName: "backup"
-                    filled: true
-                    enabled: RcloneService.backupState !== "running" && root.selectedFolders().length > 0
-                    onClicked: root.startBackup()
-                }
-
+            BackupTaskPage {
+                anchors.fill: parent
+                onBackRequested: root.returnToSetup()
+                onCloseRequested: root.dismiss()
+                onStopRequested: RcloneService.stopBackup()
+                onRestartRequested: root.restartBackup()
             }
 
         }

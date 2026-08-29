@@ -477,7 +477,7 @@ Item {
 
                         RowLayout {
                             Layout.fillWidth: true
-                            visible: RcloneService.backupState === "running"
+                            visible: RcloneService.backupActive
                             spacing: Appearance.spacing.small
 
                             MaterialLoadingIndicator {
@@ -489,9 +489,21 @@ Item {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: RcloneService.backupProgress >= 0
-                                    ? qsTr("总进度 %1%").arg(Math.round(RcloneService.backupProgress * 100))
-                                    : qsTr("正在计算备份进度…")
+                                text: RcloneService.backupState === "stopping"
+                                    ? qsTr("正在停止备份…")
+                                    : RcloneService.backupPhase === "transferring"
+                                      && RcloneService.backupProgress >= 0
+                                        ? qsTr("%1：当前文件夹 %2%")
+                                            .arg(RcloneService.backupCurrentFolderName)
+                                            .arg(Math.round(RcloneService.backupProgress * 100))
+                                        : RcloneService.backupPhase === "checking"
+                                            ? RcloneService.backupChecks > 0
+                                                ? qsTr("正在检查文件…")
+                                                : RcloneService.backupListed > 0
+                                                    ? qsTr("已扫描 %1 个项目")
+                                                        .arg(RcloneService.backupListed)
+                                                    : qsTr("正在扫描文件…")
+                                            : qsTr("正在准备备份")
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Typography.labelMedium.family
                                 font.pixelSize: Typography.labelMedium.pixelSize
