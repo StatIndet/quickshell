@@ -278,6 +278,64 @@
     </message>
 </context>
 <context>
+    <name>AddNetworkPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="72"/>
+        <source>网络信息</source>
+        <translation>网络信息</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="84"/>
+        <source>SSID</source>
+        <translation>SSID</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="85"/>
+        <source>SSID 最多 32 个 UTF-8 字节</source>
+        <translation>SSID 最多 32 个 UTF-8 字节</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="92"/>
+        <source>隐藏网络</source>
+        <translation>隐藏网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="93"/>
+        <source>即使扫描列表中没有该 SSID 也尝试连接</source>
+        <translation>即使扫描列表中没有该 SSID 也尝试连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="103"/>
+        <source>安全类型</source>
+        <translation>安全类型</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="113"/>
+        <source>WPA/WPA2 Personal</source>
+        <translation>WPA/WPA2 Personal</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="116"/>
+        <source>无 / 开放</source>
+        <translation>无 / 开放</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="134"/>
+        <source>密码</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="136"/>
+        <source>密码需为 8–63 个字符，或 64 位十六进制 PSK</source>
+        <translation>密码需为 8–63 个字符，或 64 位十六进制 PSK</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AddNetworkPage.qml" line="166"/>
+        <source>连接并添加</source>
+        <translation>连接并添加</translation>
+    </message>
+</context>
+<context>
     <name>AdvancedPage</name>
     <message>
         <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="51"/>
@@ -2854,17 +2912,17 @@
 <context>
     <name>ExpressiveMetricTile</name>
     <message>
-        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="90"/>
+        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="99"/>
         <source> 图标</source>
         <translation> 图标</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="212"/>
+        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="221"/>
         <source> 最近一分钟趋势</source>
         <translation> 最近一分钟趋势</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="214"/>
+        <location filename="../Modules/SystemCards/ExpressiveMetricTile.qml" line="223"/>
         <source>当前值 </source>
         <translation>当前值 </translation>
     </message>
@@ -3074,47 +3132,57 @@
 <context>
     <name>GeneralOverviewPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="25"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="26"/>
         <source>界面</source>
         <translation>界面</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="31"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="32"/>
         <source>条栏</source>
         <translation>条栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="39"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="40"/>
         <source>侧边栏</source>
         <translation>侧边栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="47"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="48"/>
         <source>透明与模糊</source>
         <translation>透明与模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="56"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="57"/>
         <source>系统</source>
         <translation>系统</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="63"/>
         <source>语言与地区</source>
         <translation>语言与地区</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="71"/>
+        <source>网络</source>
+        <translation type="unfinished">网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="72"/>
+        <source>NetworkManager 不可用</source>
+        <translation type="unfinished">NetworkManager 不可用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="81"/>
         <source>应用</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="87"/>
         <source>开机启动</source>
         <translation>开机启动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="85"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="95"/>
         <source>默认应用</source>
         <translation>默认应用</translation>
     </message>
@@ -3122,37 +3190,42 @@
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="36"/>
         <source>条栏</source>
         <translation>条栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="39"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="38"/>
         <source>侧边栏</source>
         <translation>侧边栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="45"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="44"/>
         <source>开机启动</source>
         <translation>开机启动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="47"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="46"/>
         <source>默认应用</source>
         <translation>默认应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="49"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="48"/>
+        <source>网络</source>
+        <translation type="unfinished">网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="50"/>
         <source>通用</source>
         <translation>通用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="41"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="40"/>
         <source>透明与模糊</source>
         <translation>透明与模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="43"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="42"/>
         <source>语言与地区</source>
         <translation>语言与地区</translation>
     </message>
@@ -4041,13 +4114,13 @@
 <context>
     <name>LauncherWindow</name>
     <message>
-        <location filename="../Modules/Launcher/LauncherWindow.qml" line="442"/>
+        <location filename="../Modules/Launcher/LauncherWindow.qml" line="453"/>
         <source>已有剪贴板操作正在执行</source>
         <translation>已有剪贴板操作正在执行</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/LauncherWindow.qml" line="454"/>
-        <location filename="../Modules/Launcher/LauncherWindow.qml" line="485"/>
+        <location filename="../Modules/Launcher/LauncherWindow.qml" line="465"/>
+        <location filename="../Modules/Launcher/LauncherWindow.qml" line="496"/>
         <source>复制失败</source>
         <translation>复制失败</translation>
     </message>
@@ -4486,6 +4559,29 @@
     </message>
 </context>
 <context>
+    <name>NetworkConfigWindow</name>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkConfigWindow.qml" line="66"/>
+        <source>网络配置</source>
+        <translation>网络配置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkConfigWindow.qml" line="118"/>
+        <source>已保存网络</source>
+        <translation>已保存网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkConfigWindow.qml" line="146"/>
+        <source>连接配置</source>
+        <translation>连接配置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkConfigWindow.qml" line="178"/>
+        <source>添加网络</source>
+        <translation>添加网络</translation>
+    </message>
+</context>
+<context>
     <name>NetworkContent</name>
     <message>
         <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="13"/>
@@ -4663,105 +4759,511 @@
     </message>
 </context>
 <context>
-    <name>NetworkService</name>
+    <name>NetworkManagerExtras</name>
     <message>
-        <location filename="../Services/NetworkService.qml" line="97"/>
-        <source>已断开</source>
-        <translation>已断开</translation>
+        <location filename="../Services/NetworkManagerExtras.qml" line="40"/>
+        <source>网络详情查询当前不可用</source>
+        <translation>网络详情查询当前不可用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="99"/>
-        <source>有线</source>
-        <translation>有线</translation>
+        <location filename="../Services/NetworkManagerExtras.qml" line="69"/>
+        <source>另一项补充网络操作仍在进行</source>
+        <translation>另一项补充网络操作仍在进行</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="162"/>
+        <location filename="../Services/NetworkManagerExtras.qml" line="95"/>
+        <location filename="../Services/NetworkManagerExtras.qml" line="238"/>
+        <source>无法创建 Wi-Fi 配置</source>
+        <translation>无法创建 Wi-Fi 配置</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkManagerExtras.qml" line="120"/>
+        <source>nmcli 不可用，无法读取活动 IPv4 信息</source>
+        <translation>nmcli 不可用，无法读取活动 IPv4 信息</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkManagerExtras.qml" line="132"/>
+        <source>无法读取活动 IPv4 信息</source>
+        <translation>无法读取活动 IPv4 信息</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkManagerExtras.qml" line="233"/>
+        <source>nmcli 不可用，无法创建隐藏网络配置</source>
+        <translation>nmcli 不可用，无法创建隐藏网络配置</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkManagerExtras.qml" line="266"/>
+        <source>nmcli 不可用，无法激活隐藏网络配置</source>
+        <translation>nmcli 不可用，无法激活隐藏网络配置</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkManagerExtras.qml" line="274"/>
+        <source>Wi-Fi 配置已创建，但无法激活</source>
+        <translation>Wi-Fi 配置已创建，但无法激活</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="41"/>
+        <source>需要登录</source>
+        <translation>需要登录</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="44"/>
+        <source>连接受限</source>
+        <translation>连接受限</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="47"/>
+        <source>无 Internet 连接</source>
+        <translation>无 Internet 连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="62"/>
+        <source>信号 %1%</source>
+        <translation>信号 %1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="196"/>
+        <source>网络服务不可用</source>
+        <translation>网络服务不可用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="202"/>
+        <source>有线连接</source>
+        <translation>有线连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="271"/>
+        <source>网线未连接</source>
+        <translation>网线未连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="227"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="603"/>
+        <source>%1 Mbps</source>
+        <translation>%1 Mbps</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="270"/>
         <source>有线网络</source>
         <translation>有线网络</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="201"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="271"/>
+        <source>无可编辑连接</source>
+        <translation>无可编辑连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="281"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="287"/>
+        <source>Wi-Fi</source>
+        <translation>Wi-Fi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="288"/>
+        <source>未检测到无线网卡</source>
+        <translation>未检测到无线网卡</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="288"/>
+        <source>被硬件开关或 rfkill 禁用</source>
+        <translation>被硬件开关或 rfkill 禁用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="333"/>
+        <source>附近网络</source>
+        <translation>附近网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="420"/>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="425"/>
+        <source>正在查找附近网络</source>
+        <translation>正在查找附近网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="453"/>
+        <source>未找到附近网络</source>
+        <translation>未找到附近网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="472"/>
+        <source>%1 的密码</source>
+        <translation>%1 的密码</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="472"/>
+        <source>密码</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="474"/>
+        <source>密码至少需要 8 个字符</source>
+        <translation>密码至少需要 8 个字符</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="485"/>
+        <source>取消</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="493"/>
+        <source>连接</source>
+        <translation>连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="521"/>
+        <source>其他设置</source>
+        <translation>其他设置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="527"/>
+        <source>已保存网络</source>
+        <translation>已保存网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="535"/>
+        <source>添加网络</source>
+        <translation>添加网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="544"/>
+        <source>连接信息</source>
+        <translation>连接信息</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="557"/>
+        <source>接口</source>
+        <translation>接口</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="563"/>
+        <source>IP 地址</source>
+        <translation>IP 地址</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="569"/>
+        <source>Gateway</source>
+        <translation>Gateway</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="575"/>
+        <source>DNS</source>
+        <translation>DNS</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="581"/>
+        <source>MAC</source>
+        <translation>MAC</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="588"/>
+        <source>安全类型</source>
+        <translation>安全类型</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="589"/>
+        <source>未知</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="595"/>
+        <source>频率</source>
+        <translation>频率</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkPage.qml" line="602"/>
+        <source>链路速度</source>
+        <translation>链路速度</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkProfileEditor</name>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="136"/>
+        <source>活动网络配置已变化，未应用的修改已丢弃</source>
+        <translation>活动网络配置已变化，未应用的修改已丢弃</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="147"/>
+        <source>配置已保存；重新连接后将完整应用新的 IPv4 设置</source>
+        <translation>配置已保存；重新连接后将完整应用新的 IPv4 设置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="147"/>
+        <source>配置已保存</source>
+        <translation>配置已保存</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="192"/>
+        <source>断开</source>
+        <translation>断开</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="200"/>
+        <source>连接</source>
+        <translation>连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="213"/>
+        <source>忘记</source>
+        <translation>忘记</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="247"/>
+        <source>基本信息</source>
+        <translation>基本信息</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="252"/>
+        <source>配置名称</source>
+        <translation>配置名称</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="253"/>
+        <source>无可编辑配置</source>
+        <translation>无可编辑配置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="259"/>
+        <source>SSID</source>
+        <translation>SSID</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="265"/>
+        <source>接口</source>
+        <translation>接口</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="274"/>
+        <source>IPv4</source>
+        <translation>IPv4</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="280"/>
+        <source>自动连接</source>
+        <translation>自动连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="294"/>
+        <source>IP 分配</source>
+        <translation>IP 分配</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="305"/>
+        <source>自动 DHCP</source>
+        <translation>自动 DHCP</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="308"/>
+        <source>DHCP + 自定义 DNS</source>
+        <translation>DHCP + 自定义 DNS</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="311"/>
+        <source>手动</source>
+        <translation>手动</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="328"/>
+        <source>IPv4 地址 / CIDR</source>
+        <translation>IPv4 地址 / CIDR</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="330"/>
+        <source>请输入合法 IPv4 CIDR，例如 192.168.1.50/24</source>
+        <translation>请输入合法 IPv4 CIDR，例如 192.168.1.50/24</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="337"/>
+        <source>Gateway</source>
+        <translation>Gateway</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="339"/>
+        <source>请输入合法 IPv4 gateway</source>
+        <translation>请输入合法 IPv4 gateway</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="353"/>
+        <source>DNS</source>
+        <translation>DNS</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="355"/>
+        <source>请输入至少一个合法 IPv4 DNS 地址</source>
+        <translation>请输入至少一个合法 IPv4 DNS 地址</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/NetworkProfileEditor.qml" line="380"/>
+        <source>应用</source>
+        <translation>应用</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkService</name>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="191"/>
+        <source>已断开</source>
+        <translation>已断开</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="192"/>
+        <source>有线</source>
+        <translation>有线</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="287"/>
+        <source>有线网络</source>
+        <translation>有线网络</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="330"/>
         <source>另一项网络操作仍在进行</source>
         <translation>另一项网络操作仍在进行</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="231"/>
+        <location filename="../Services/NetworkService.qml" line="359"/>
         <source>网络操作失败</source>
         <translation>网络操作失败</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="255"/>
-        <location filename="../Services/NetworkService.qml" line="308"/>
+        <location filename="../Services/NetworkService.qml" line="382"/>
+        <location filename="../Services/NetworkService.qml" line="439"/>
         <source>NetworkManager 不可用</source>
         <translation>NetworkManager 不可用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="260"/>
+        <location filename="../Services/NetworkService.qml" line="387"/>
         <source>Wi-Fi 已被硬件或 rfkill 阻止</source>
         <translation>Wi-Fi 已被硬件或 rfkill 阻止</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="313"/>
+        <location filename="../Services/NetworkService.qml" line="444"/>
         <source>未检测到 Wi-Fi 设备</source>
         <translation>未检测到 Wi-Fi 设备</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="318"/>
+        <location filename="../Services/NetworkService.qml" line="449"/>
         <source>Wi-Fi 已关闭</source>
         <translation>Wi-Fi 已关闭</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="347"/>
+        <location filename="../Services/NetworkService.qml" line="473"/>
         <source>目标网络已不可用</source>
         <translation>目标网络已不可用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="365"/>
+        <location filename="../Services/NetworkService.qml" line="485"/>
         <source>该网络认证类型需要第二阶段 Secret Agent/Extras 后端</source>
         <translation>该网络认证类型需要第二阶段 Secret Agent/Extras 后端</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="382"/>
+        <location filename="../Services/NetworkService.qml" line="501"/>
         <source>当前 Quickshell API 仅支持 WPA/WPA2-PSK 与 SAE 密码连接</source>
         <translation>当前 Quickshell API 仅支持 WPA/WPA2-PSK 与 SAE 密码连接</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="432"/>
+        <location filename="../Services/NetworkService.qml" line="556"/>
         <source>没有可断开的活动网络</source>
         <translation>没有可断开的活动网络</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="448"/>
+        <location filename="../Services/NetworkService.qml" line="573"/>
         <source>未找到已保存的网络配置</source>
         <translation>未找到已保存的网络配置</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="468"/>
-        <source>当前 Quickshell API 不支持创建隐藏网络连接</source>
-        <translation>当前 Quickshell API 不支持创建隐藏网络连接</translation>
+        <location filename="../Services/NetworkService.qml" line="667"/>
+        <source>网络配置当前不可写入</source>
+        <translation>网络配置当前不可写入</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="474"/>
+        <location filename="../Services/NetworkService.qml" line="678"/>
+        <source>IPv4 配置格式无效</source>
+        <translation>IPv4 配置格式无效</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="690"/>
+        <source>当前 IPv4 模式不在此页面的编辑范围内</source>
+        <translation>当前 IPv4 模式不在此页面的编辑范围内</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="741"/>
+        <source>网络配置当前无法删除</source>
+        <translation>网络配置当前无法删除</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="812"/>
+        <source>另一项添加操作仍在进行</source>
+        <translation>另一项添加操作仍在进行</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="816"/>
+        <source>SSID 必须是 1 至 32 个 UTF-8 字节</source>
+        <translation>SSID 必须是 1 至 32 个 UTF-8 字节</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="820"/>
+        <source>Wi-Fi 密码格式无效</source>
+        <translation>Wi-Fi 密码格式无效</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="827"/>
+        <source>多个 Wi-Fi 设备发现了同名网络，请从附近网络列表选择具体设备</source>
+        <translation>多个 Wi-Fi 设备发现了同名网络，请从附近网络列表选择具体设备</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="835"/>
+        <source>该网络需要有效的 Wi-Fi 密码</source>
+        <translation>该网络需要有效的 Wi-Fi 密码</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="850"/>
+        <source>无法创建 Wi-Fi 配置</source>
+        <translation>无法创建 Wi-Fi 配置</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="857"/>
+        <source>该 NetworkManager 配置当前无法连接</source>
+        <translation>该 NetworkManager 配置当前无法连接</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="884"/>
         <source>NetworkManager 连接性检查不可用或未启用</source>
         <translation>NetworkManager 连接性检查不可用或未启用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="515"/>
+        <location filename="../Services/NetworkService.qml" line="974"/>
         <source>密码错误或认证超时</source>
         <translation>密码错误或认证超时</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="515"/>
+        <location filename="../Services/NetworkService.qml" line="974"/>
         <source>网络需要密码</source>
         <translation>网络需要密码</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="542"/>
+        <location filename="../Services/NetworkService.qml" line="1004"/>
         <source>连接未完成</source>
         <translation>连接未完成</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="560"/>
+        <location filename="../Services/NetworkService.qml" line="1039"/>
+        <source>NetworkManager 未确认配置写入</source>
+        <translation>NetworkManager 未确认配置写入</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="1052"/>
+        <source>NetworkManager 未确认配置删除</source>
+        <translation>NetworkManager 未确认配置删除</translation>
+    </message>
+    <message>
+        <location filename="../Services/NetworkService.qml" line="1072"/>
         <source>网络操作超时</source>
         <translation>网络操作超时</translation>
     </message>
@@ -5629,6 +6131,19 @@
     </message>
 </context>
 <context>
+    <name>SavedNetworksPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/SavedNetworksPage.qml" line="25"/>
+        <source>没有已保存的网络</source>
+        <translation>没有已保存的网络</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SavedNetworksPage.qml" line="53"/>
+        <source>自动连接</source>
+        <translation>自动连接</translation>
+    </message>
+</context>
+<context>
     <name>SearchSelectMenuField</name>
     <message>
         <location filename="../Widgets/common/SearchSelectMenuField.qml" line="748"/>
@@ -5760,63 +6275,63 @@
 <context>
     <name>SpotlightResultsPanel</name>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="525"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="599"/>
         <source>缺少 wl-copy：恢复功能不可用</source>
         <translation>缺少 wl-copy：恢复功能不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="526"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="600"/>
         <source>剪贴板历史</source>
         <translation>剪贴板历史</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="543"/>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="913"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="617"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="987"/>
         <source>清空</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="761"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="835"/>
         <source>删除剪贴板条目</source>
         <translation>删除剪贴板条目</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="805"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="879"/>
         <source>已复制</source>
         <translation>已复制</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="805"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="879"/>
         <source>复制失败</source>
         <translation>复制失败</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="872"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="946"/>
         <source>正在读取…</source>
         <translation>正在读取…</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="876"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="950"/>
         <source>当前 Provider 不可用</source>
         <translation>当前 Provider 不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="877"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="951"/>
         <source>没有匹配结果</source>
         <translation>没有匹配结果</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="892"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="966"/>
         <source>清空剪贴板历史？</source>
         <translation>清空剪贴板历史？</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="893"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="967"/>
         <source>此操作会清除 cliphist 中的全部历史记录，无法撤销。</source>
         <translation>此操作会清除 cliphist 中的全部历史记录，无法撤销。</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="906"/>
+        <location filename="../Modules/Launcher/SpotlightResultsPanel.qml" line="980"/>
         <source>取消</source>
         <translation>取消</translation>
     </message>
@@ -6765,7 +7280,7 @@
     <message>
         <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="118"/>
         <source>网络近期趋势</source>
-        <translation type="unfinished"></translation>
+        <translation>网络近期趋势</translation>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="163"/>
@@ -7195,7 +7710,7 @@
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="548"/>
+        <location filename="../Services/UiPreferences.qml" line="547"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7737,13 +8252,13 @@
 <context>
     <name>WallpaperService</name>
     <message>
-        <location filename="../Services/WallpaperService.qml" line="51"/>
+        <location filename="../Services/WallpaperService.qml" line="52"/>
         <source>纯色壁纸 </source>
         <translation>纯色壁纸 </translation>
     </message>
     <message>
-        <location filename="../Services/WallpaperService.qml" line="179"/>
-        <location filename="../Services/WallpaperService.qml" line="225"/>
+        <location filename="../Services/WallpaperService.qml" line="180"/>
+        <location filename="../Services/WallpaperService.qml" line="226"/>
         <source>全局</source>
         <translation>全局</translation>
     </message>

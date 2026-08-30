@@ -133,7 +133,6 @@ StyledFlickable {
                     Layout.fillWidth: true
                     labelText: qsTr("密码")
                     passwordToggle: true
-                    supportingText: qsTr("仅用于本次连接，不会保存到 Clavis 配置")
                     errorText: text.length > 0 && !root.validPassword ? qsTr("密码需为 8–63 个字符，或 64 位十六进制 PSK") : ""
                 }
 

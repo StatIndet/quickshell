@@ -10,6 +10,8 @@ StyledFlickable {
 
     property var parentModal: null
     property var passwordTarget: null
+    property bool initialLoadAttempted: false
+    property bool initialLoading: false
     readonly property var nearbyNetworks: NetworkService.nearbyWifiNetworks.filter((network) => {
         return !network.active;
     })
@@ -17,6 +19,22 @@ StyledFlickable {
     readonly property string activeConnectionKey: activeNetwork ? [activeNetwork.type, activeNetwork.deviceName, activeNetwork.name].join(":") : ""
     readonly property bool runtimeMatchesActive: activeNetwork !== null && NetworkService.runtimeDetails.interfaceName === String(activeNetwork.deviceName || "")
     readonly property bool multipleWifiDevices: NetworkService.wifiDevices.length > 1
+
+    function beginInitialLoad() {
+        if (root.initialLoadAttempted || !NetworkService.available || !NetworkService.wifiAvailable || !NetworkService.wifiEnabled)
+            return ;
+
+        root.initialLoadAttempted = true;
+        root.initialLoading = root.nearbyNetworks.length === 0;
+        if (root.initialLoading)
+            initialLoadTimer.restart();
+
+    }
+
+    function finishInitialLoad() {
+        root.initialLoading = false;
+        initialLoadTimer.stop();
+    }
 
     function connectivityException() {
         if (NetworkService.captivePortal)
@@ -111,13 +129,20 @@ StyledFlickable {
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
     onActiveConnectionKeyChanged: root.refreshRuntimeDetails()
+    onNearbyNetworksChanged: {
+        if (root.nearbyNetworks.length > 0)
+            root.finishInitialLoad();
+
+    }
     Component.onCompleted: {
         NetworkService.acquireScan("control-center-network");
         root.refreshRuntimeDetails();
+        Qt.callLater(root.beginInitialLoad);
     }
     Component.onDestruction: {
         nearbyPassword.text = "";
         root.passwordTarget = null;
+        initialLoadTimer.stop();
         NetworkService.releaseRuntimeDetails();
         NetworkService.releaseScan("control-center-network");
     }
@@ -133,7 +158,26 @@ StyledFlickable {
             root.refreshRuntimeDetails();
         }
 
+        function onWifiEnabledChanged() {
+            if (!NetworkService.wifiEnabled) {
+                root.finishInitialLoad();
+                root.initialLoadAttempted = false;
+                nearbyPassword.text = "";
+                root.passwordTarget = null;
+            } else {
+                Qt.callLater(root.beginInitialLoad);
+            }
+        }
+
         target: NetworkService
+    }
+
+    Timer {
+        id: initialLoadTimer
+
+        interval: 4000
+        repeat: false
+        onTriggered: root.initialLoading = false
     }
 
     ColumnLayout {
@@ -154,169 +198,8 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("Wi-Fi")
-            iconName: "wifi"
-
-            SettingsRow {
-                Layout.fillWidth: true
-                iconName: NetworkService.wifiEnabled ? "wifi" : "wifi_off"
-                title: qsTr("Wi-Fi")
-                supportingText: !NetworkService.available ? "" : !NetworkService.wifiAvailable ? qsTr("未检测到无线网卡") : !NetworkService.wifiHardwareEnabled ? qsTr("被硬件开关或 rfkill 禁用") : ""
-
-                trailing: StyledSwitch {
-                    checked: NetworkService.wifiEnabled
-                    enabled: NetworkService.available && NetworkService.wifiAvailable && NetworkService.wifiHardwareEnabled && !NetworkService.busy
-                    onToggled: NetworkService.setWifiEnabled(checked)
-                }
-
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: NetworkService.activeWifi !== null
-                iconName: "wifi"
-                title: NetworkService.activeWifi ? NetworkService.activeWifi.ssid : ""
-                supportingText: root.activeWifiDetails()
-                interactive: root.profileForTarget(NetworkService.activeWifi) !== null
-                highlighted: true
-                onClicked: root.openProfile(NetworkService.activeWifi)
-
-                trailing: MaterialSymbol {
-                    visible: root.profileForTarget(NetworkService.activeWifi) !== null
-                    text: "settings"
-                    iconSize: Metrics.iconS
-                    color: Appearance.colors.colOnSurfaceVariant
-                }
-
-            }
-
-            Text {
-                Layout.fillWidth: true
-                visible: NetworkService.wifiEnabled
-                text: qsTr("附近网络")
-                color: Appearance.colors.colOnSurfaceVariant
-                font.family: Typography.labelLarge.family
-                font.pixelSize: Typography.labelLarge.pixelSize
-                font.weight: Typography.labelLarge.weight
-            }
-
-            StyledListView {
-                id: nearbyList
-
-                readonly property real rowHeight: Metrics.controlHeightXL + Metrics.spacingS
-                readonly property real maximumViewportHeight: rowHeight * 6 + spacing * 5
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: Math.min(Math.max(0, contentHeight), maximumViewportHeight)
-                visible: NetworkService.wifiEnabled && count > 0
-                model: root.nearbyNetworks
-                spacing: Metrics.spacingXS
-                boundsBehavior: Flickable.StopAtBounds
-                fasterTouchpadScroll: true
-                showVerticalScrollBar: true
-                animateMovement: true
-
-                delegate: SettingsRow {
-                    id: wifiRow
-
-                    required property var modelData
-
-                    width: ListView.view.width
-                    height: nearbyList.rowHeight
-                    iconName: wifiRow.modelData.strength >= 70 ? "signal_wifi_4_bar" : wifiRow.modelData.strength >= 35 ? "network_wifi_2_bar" : "network_wifi_1_bar"
-                    title: wifiRow.modelData.ssid
-                    supportingText: root.nearbyWifiDetails(wifiRow.modelData)
-                    interactive: !NetworkService.busy
-                    onClicked: {
-                        if (wifiRow.modelData.isSecure && !wifiRow.modelData.known)
-                            root.passwordTarget = wifiRow.modelData;
-                        else
-                            NetworkService.connectToWifiNetwork(wifiRow.modelData);
-                    }
-
-                    trailing: RowLayout {
-                        spacing: Metrics.spacingXS
-
-                        MaterialSymbol {
-                            visible: wifiRow.modelData.known
-                            text: "bookmark"
-                            iconSize: Metrics.iconS
-                            color: Appearance.colors.colOnSurfaceVariant
-                        }
-
-                        MaterialSymbol {
-                            visible: wifiRow.modelData.isSecure
-                            text: "lock"
-                            iconSize: Metrics.iconS
-                            color: Appearance.colors.colOnSurfaceVariant
-                        }
-
-                    }
-
-                }
-
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                visible: root.passwordTarget !== null
-                spacing: Metrics.spacingXS
-
-                OutlinedTextField {
-                    id: nearbyPassword
-
-                    Layout.fillWidth: true
-                    labelText: root.passwordTarget ? qsTr("%1 的密码").arg(root.passwordTarget.ssid) : qsTr("密码")
-                    passwordToggle: true
-                    errorText: text.length > 0 && text.length < 8 ? qsTr("密码至少需要 8 个字符") : ""
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    ActionButton {
-                        text: qsTr("取消")
-                        onClicked: {
-                            nearbyPassword.text = "";
-                            root.passwordTarget = null;
-                        }
-                    }
-
-                    ActionButton {
-                        text: qsTr("连接")
-                        filled: true
-                        enabled: nearbyPassword.text.length >= 8 && !NetworkService.busy
-                        onClicked: {
-                            NetworkService.changePassword(root.passwordTarget, nearbyPassword.text);
-                            nearbyPassword.text = "";
-                            root.passwordTarget = null;
-                        }
-                    }
-
-                }
-
-            }
-
-            Text {
-                Layout.fillWidth: true
-                visible: NetworkService.wifiEnabled && root.nearbyNetworks.length === 0
-                text: qsTr("未找到附近网络")
-                color: Appearance.colors.colOutline
-                horizontalAlignment: Text.AlignHCenter
-                font.family: Typography.bodyMedium.family
-                font.pixelSize: Typography.bodyMedium.pixelSize
-            }
-
-        }
-
-        SettingsSection {
-            Layout.fillWidth: true
             visible: NetworkService.wiredDevices.length > 0
-            title: qsTr("Ethernet")
+            title: qsTr("有线连接")
             iconName: "lan"
 
             Repeater {
@@ -353,7 +236,7 @@ StyledFlickable {
                     }
 
                     Layout.fillWidth: true
-                    iconName: "settings_ethernet"
+                    iconName: wiredRow.device && wiredRow.device.connected ? "link" : "link_off"
                     title: wiredRow.modelData.name || wiredRow.modelData.deviceName || qsTr("有线网络")
                     supportingText: wiredRow.detailText
                     interactive: true
@@ -383,10 +266,250 @@ StyledFlickable {
                     required property var modelData
 
                     Layout.fillWidth: true
-                    iconName: "settings_ethernet"
+                    iconName: unconfiguredWiredRow.modelData.connected ? "link" : "link_off"
                     title: unconfiguredWiredRow.modelData.name || qsTr("有线网络")
                     supportingText: unconfiguredWiredRow.modelData.hasLink ? qsTr("无可编辑连接") : qsTr("网线未连接")
                     highlighted: unconfiguredWiredRow.modelData.connected
+                }
+
+            }
+
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            title: qsTr("Wi-Fi")
+            iconName: "wifi"
+
+            SettingsRow {
+                Layout.fillWidth: true
+                iconName: NetworkService.wifiEnabled ? "wifi" : "wifi_off"
+                title: qsTr("Wi-Fi")
+                supportingText: !NetworkService.available ? "" : !NetworkService.wifiAvailable ? qsTr("未检测到无线网卡") : !NetworkService.wifiHardwareEnabled ? qsTr("被硬件开关或 rfkill 禁用") : ""
+
+                trailing: StyledSwitch {
+                    checked: NetworkService.wifiEnabled
+                    enabled: NetworkService.available && NetworkService.wifiAvailable && NetworkService.wifiHardwareEnabled && !NetworkService.busy
+                    onToggled: NetworkService.setWifiEnabled(checked)
+                }
+
+            }
+
+            Item {
+                id: wifiExpandedRegion
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: NetworkService.wifiEnabled ? expandedWifiContent.implicitHeight : 0
+                opacity: NetworkService.wifiEnabled ? 1 : 0
+                clip: true
+
+                ColumnLayout {
+                    id: expandedWifiContent
+
+                    width: parent.width
+                    spacing: Metrics.spacingS
+
+                    SettingsRow {
+                        Layout.fillWidth: true
+                        visible: NetworkService.activeWifi !== null
+                        iconName: "wifi"
+                        title: NetworkService.activeWifi ? NetworkService.activeWifi.ssid : ""
+                        supportingText: root.activeWifiDetails()
+                        interactive: root.profileForTarget(NetworkService.activeWifi) !== null
+                        highlighted: true
+                        onClicked: root.openProfile(NetworkService.activeWifi)
+
+                        trailing: MaterialSymbol {
+                            visible: root.profileForTarget(NetworkService.activeWifi) !== null
+                            text: "settings"
+                            iconSize: Metrics.iconS
+                            color: Appearance.colors.colOnSurfaceVariant
+                        }
+
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: qsTr("附近网络")
+                        color: Appearance.colors.colOnSurfaceVariant
+                        font.family: Typography.labelLarge.family
+                        font.pixelSize: Typography.labelLarge.pixelSize
+                        font.weight: Typography.labelLarge.weight
+                    }
+
+                    Item {
+                        id: nearbyViewport
+
+                        readonly property real rowHeight: Metrics.controlHeightXL + Metrics.spacingS
+                        readonly property real rowSpacing: Metrics.spacingXS
+                        readonly property real viewportHeight: rowHeight * 5 + rowSpacing * 4
+
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: viewportHeight
+                        clip: true
+
+                        StyledListView {
+                            id: nearbyList
+
+                            anchors.fill: parent
+                            visible: !root.initialLoading && count > 0
+                            opacity: visible ? 1 : 0
+                            model: root.nearbyNetworks
+                            spacing: nearbyViewport.rowSpacing
+                            boundsBehavior: Flickable.StopAtBounds
+                            fasterTouchpadScroll: true
+                            showVerticalScrollBar: true
+                            animateMovement: true
+
+                            delegate: SettingsRow {
+                                id: wifiRow
+
+                                required property var modelData
+
+                                width: ListView.view.width
+                                height: nearbyViewport.rowHeight
+                                iconName: wifiRow.modelData.strength >= 70 ? "signal_wifi_4_bar" : wifiRow.modelData.strength >= 35 ? "network_wifi_2_bar" : "network_wifi_1_bar"
+                                title: wifiRow.modelData.ssid
+                                supportingText: root.nearbyWifiDetails(wifiRow.modelData)
+                                interactive: !NetworkService.busy
+                                onClicked: {
+                                    if (wifiRow.modelData.isSecure && !wifiRow.modelData.known)
+                                        root.passwordTarget = wifiRow.modelData;
+                                    else
+                                        NetworkService.connectToWifiNetwork(wifiRow.modelData);
+                                }
+
+                                trailing: RowLayout {
+                                    spacing: Metrics.spacingXS
+
+                                    MaterialSymbol {
+                                        visible: wifiRow.modelData.known
+                                        text: "bookmark"
+                                        iconSize: Metrics.iconS
+                                        color: Appearance.colors.colOnSurfaceVariant
+                                    }
+
+                                    MaterialSymbol {
+                                        visible: wifiRow.modelData.isSecure
+                                        text: "lock"
+                                        iconSize: Metrics.iconS
+                                        color: Appearance.colors.colOnSurfaceVariant
+                                    }
+
+                                }
+
+                            }
+
+                            Behavior on opacity {
+                                ElementMoveAnimation {
+                                }
+
+                            }
+
+                        }
+
+                        Column {
+                            anchors.centerIn: parent
+                            visible: root.initialLoading
+                            opacity: visible ? 1 : 0
+                            spacing: Metrics.spacingS
+
+                            MaterialLoadingIndicator {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                running: root.initialLoading
+                                accessibleName: qsTr("正在查找附近网络")
+                            }
+
+                            Text {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: qsTr("正在查找附近网络")
+                                color: Appearance.colors.colOnLayer1
+                                font.family: Typography.bodyMedium.family
+                                font.pixelSize: Typography.bodyMedium.pixelSize
+                            }
+
+                            Behavior on opacity {
+                                ElementMoveAnimation {
+                                }
+
+                            }
+
+                        }
+
+                        Column {
+                            anchors.centerIn: parent
+                            visible: !root.initialLoading && root.nearbyNetworks.length === 0
+                            spacing: Metrics.spacingS
+
+                            MaterialSymbol {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: "search_off"
+                                iconSize: Metrics.iconM
+                                color: Appearance.colors.colOnSurfaceVariant
+                            }
+
+                            Text {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: qsTr("未找到附近网络")
+                                color: Appearance.colors.colOnSurfaceVariant
+                                font.family: Typography.bodyMedium.family
+                                font.pixelSize: Typography.bodyMedium.pixelSize
+                            }
+
+                        }
+
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        visible: root.passwordTarget !== null
+                        spacing: Metrics.spacingXS
+
+                        OutlinedTextField {
+                            id: nearbyPassword
+
+                            Layout.fillWidth: true
+                            labelText: root.passwordTarget ? qsTr("%1 的密码").arg(root.passwordTarget.ssid) : qsTr("密码")
+                            passwordToggle: true
+                            errorText: text.length > 0 && text.length < 8 ? qsTr("密码至少需要 8 个字符") : ""
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            ActionButton {
+                                text: qsTr("取消")
+                                onClicked: {
+                                    nearbyPassword.text = "";
+                                    root.passwordTarget = null;
+                                }
+                            }
+
+                            ActionButton {
+                                text: qsTr("连接")
+                                filled: true
+                                enabled: nearbyPassword.text.length >= 8 && !NetworkService.busy
+                                onClicked: {
+                                    NetworkService.changePassword(root.passwordTarget, nearbyPassword.text);
+                                    nearbyPassword.text = "";
+                                    root.passwordTarget = null;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                Behavior on opacity {
+                    ElementMoveAnimation {
+                    }
+
                 }
 
             }
@@ -418,9 +541,8 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            visible: root.activeNetwork !== null
             title: qsTr("连接信息")
-            iconName: "info"
+            iconName: root.activeNetwork ? (root.activeNetwork.type === "wired" ? "link" : "wifi") : "link_off"
 
             InlineStatusBanner {
                 Layout.fillWidth: true

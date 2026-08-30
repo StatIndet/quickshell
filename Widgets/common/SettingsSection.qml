@@ -88,4 +88,12 @@ Rectangle {
 
     }
 
+    Behavior on implicitHeight {
+        enabled: !root.flat
+
+        ElementMoveAnimation {
+        }
+
+    }
+
 }
