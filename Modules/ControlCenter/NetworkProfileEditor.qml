@@ -237,8 +237,8 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("连接配置")
-            iconName: "settings_ethernet"
+            title: qsTr("基本信息")
+            iconName: "info"
 
             SettingsRow {
                 Layout.fillWidth: true
@@ -259,12 +259,6 @@ StyledFlickable {
                 supportingText: root.profile ? root.profile.deviceName : root.target ? root.target.deviceName || root.target.name : "—"
             }
 
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("UUID")
-                supportingText: root.profile ? root.profile.uuid : "—"
-            }
-
         }
 
         SettingsSection {
@@ -277,7 +271,6 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("自动连接")
-                supportingText: qsTr("NetworkManager 可在网络可用时自动激活此配置")
 
                 trailing: StyledSwitch {
                     checked: root.autoconnect

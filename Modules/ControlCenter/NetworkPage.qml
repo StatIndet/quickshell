@@ -16,21 +16,36 @@ StyledFlickable {
     readonly property var activeNetwork: NetworkService.activeNetwork
     readonly property string activeConnectionKey: activeNetwork ? [activeNetwork.type, activeNetwork.deviceName, activeNetwork.name].join(":") : ""
     readonly property bool runtimeMatchesActive: activeNetwork !== null && NetworkService.runtimeDetails.interfaceName === String(activeNetwork.deviceName || "")
+    readonly property bool multipleWifiDevices: NetworkService.wifiDevices.length > 1
 
-    function connectionStatus() {
-        if (!NetworkService.connected)
-            return qsTr("未连接");
-
-        if (NetworkService.internetAvailable)
-            return qsTr("已连接 · Internet 可用");
-
+    function connectivityException() {
         if (NetworkService.captivePortal)
-            return qsTr("已连接 · 需要登录");
+            return qsTr("需要登录");
 
         if (NetworkService.limitedConnectivity)
-            return qsTr("已连接 · 连接受限");
+            return qsTr("连接受限");
 
-        return qsTr("已连接");
+        if (NetworkService.connected && NetworkService.connectivityKnown && !NetworkService.internetAvailable)
+            return qsTr("无 Internet 连接");
+
+        return "";
+    }
+
+    function activeWifiDetails() {
+        const details = [qsTr("信号 %1%").arg(NetworkService.signalStrength)];
+        const exception = root.activeNetwork && root.activeNetwork.type === "wifi" ? root.connectivityException() : "";
+        if (exception.length > 0)
+            details.push(exception);
+
+        return details.join(" · ");
+    }
+
+    function nearbyWifiDetails(network) {
+        const details = [qsTr("信号 %1%").arg(network.strength)];
+        if (root.multipleWifiDevices)
+            details.push(network.deviceName);
+
+        return details.join(" · ");
     }
 
     function profileForTarget(target) {
@@ -133,162 +148,7 @@ StyledFlickable {
             Layout.fillWidth: true
             visible: !NetworkService.available || NetworkService.lastError.length > 0
             tone: "error"
-            message: NetworkService.lastError.length > 0 ? NetworkService.lastError : qsTr("NetworkManager 后端不可用")
-        }
-
-        SettingsSection {
-            Layout.fillWidth: true
-            flat: true
-            title: qsTr("当前连接")
-            iconName: root.activeNetwork && root.activeNetwork.type === "wired" ? "lan" : "wifi"
-
-            InlineStatusBanner {
-                Layout.fillWidth: true
-                visible: root.activeNetwork === null
-                message: qsTr("当前没有活动网络连接")
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                iconName: root.activeNetwork && root.activeNetwork.type === "wired" ? "settings_ethernet" : "wifi"
-                title: root.activeNetwork ? root.activeNetwork.name : ""
-                supportingText: root.connectionStatus()
-                highlighted: NetworkService.connected
-
-                trailing: MaterialLoadingIndicator {
-                    implicitWidth: Metrics.controlHeightS
-                    implicitHeight: Metrics.controlHeightS
-                    contained: false
-                    visible: NetworkService.runtimeDetailsLoading
-                }
-
-            }
-
-            InlineStatusBanner {
-                Layout.fillWidth: true
-                visible: NetworkService.runtimeDetailsError.length > 0
-                tone: "error"
-                message: NetworkService.runtimeDetailsError
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("接口")
-                supportingText: root.activeNetwork ? root.activeNetwork.deviceName : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("IP 地址")
-                supportingText: root.runtimeMatchesActive && NetworkService.runtimeDetails.addresses ? NetworkService.runtimeDetails.addresses.join(", ") : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("Gateway")
-                supportingText: root.runtimeMatchesActive ? NetworkService.runtimeDetails.gateway || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("DNS")
-                supportingText: root.runtimeMatchesActive && NetworkService.runtimeDetails.dns ? NetworkService.runtimeDetails.dns.join(", ") : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("连接 UUID")
-                supportingText: root.runtimeMatchesActive ? NetworkService.runtimeDetails.connectionUuid || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null
-                title: qsTr("MAC")
-                supportingText: root.activeNetwork ? root.activeNetwork.address || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null && root.activeNetwork.type === "wifi"
-                title: qsTr("信号与安全")
-                supportingText: root.activeNetwork ? qsTr("%1% · %2").arg(root.activeNetwork.strength).arg(root.activeNetwork.security || qsTr("未知")) : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null && root.activeNetwork.type === "wifi"
-                title: qsTr("频率")
-                supportingText: root.runtimeMatchesActive ? NetworkService.runtimeDetails.frequency || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: root.activeNetwork !== null && root.activeNetwork.type === "wired"
-                title: qsTr("链路")
-                supportingText: root.activeNetwork && root.activeNetwork.hasLink ? qsTr("已连接 · %1 Mbps").arg(root.activeNetwork.linkSpeed || "—") : qsTr("网线未连接")
-            }
-
-        }
-
-        SettingsSection {
-            Layout.fillWidth: true
-            flat: true
-            visible: NetworkService.wiredDevices.length > 0
-            title: qsTr("Ethernet")
-            iconName: "lan"
-
-            Repeater {
-                model: NetworkService.wiredProfiles
-
-                SettingsRow {
-                    id: wiredRow
-
-                    required property var modelData
-                    readonly property var device: root.wiredDeviceForProfile(wiredRow.modelData)
-
-                    Layout.fillWidth: true
-                    iconName: "settings_ethernet"
-                    title: wiredRow.modelData.name || wiredRow.modelData.deviceName || qsTr("有线网络")
-                    supportingText: wiredRow.device && wiredRow.device.connected ? qsTr("%1 · 已连接 · %2 Mbps").arg(wiredRow.modelData.deviceName).arg(wiredRow.device.linkSpeed || "—") : wiredRow.device && wiredRow.device.hasLink ? qsTr("%1 · 可连接").arg(wiredRow.modelData.deviceName) : qsTr("%1 · 网线未连接").arg(wiredRow.modelData.deviceName)
-                    interactive: true
-                    highlighted: wiredRow.device ? wiredRow.device.connected : false
-                    onClicked: configWindow.openProfile(wiredRow.modelData, "")
-
-                    trailing: MaterialSymbol {
-                        text: "chevron_right"
-                        iconSize: Metrics.iconS
-                        color: Appearance.colors.colOnSurfaceVariant
-                    }
-
-                }
-
-            }
-
-            Repeater {
-                model: NetworkService.wiredProfiles.length === 0 ? NetworkService.wiredDevices : []
-
-                SettingsRow {
-                    id: unconfiguredWiredRow
-
-                    required property var modelData
-
-                    Layout.fillWidth: true
-                    iconName: "settings_ethernet"
-                    title: unconfiguredWiredRow.modelData.name || qsTr("有线网络")
-                    supportingText: unconfiguredWiredRow.modelData.hasLink ? qsTr("没有可编辑的 NetworkManager 配置") : qsTr("网线未连接 · 没有可编辑配置")
-                    interactive: false
-                    highlighted: unconfiguredWiredRow.modelData.connected
-                }
-
-            }
-
+            message: NetworkService.lastError.length > 0 ? NetworkService.lastError : qsTr("网络服务不可用")
         }
 
         SettingsSection {
@@ -301,7 +161,7 @@ StyledFlickable {
                 Layout.fillWidth: true
                 iconName: NetworkService.wifiEnabled ? "wifi" : "wifi_off"
                 title: qsTr("Wi-Fi")
-                supportingText: !NetworkService.wifiAvailable ? qsTr("未检测到无线网卡") : !NetworkService.wifiHardwareEnabled ? qsTr("已被硬件开关阻止") : NetworkService.wifiEnabled ? qsTr("已开启") : qsTr("已关闭")
+                supportingText: !NetworkService.available ? "" : !NetworkService.wifiAvailable ? qsTr("未检测到无线网卡") : !NetworkService.wifiHardwareEnabled ? qsTr("被硬件开关或 rfkill 禁用") : ""
 
                 trailing: StyledSwitch {
                     checked: NetworkService.wifiEnabled
@@ -316,12 +176,13 @@ StyledFlickable {
                 visible: NetworkService.activeWifi !== null
                 iconName: "wifi"
                 title: NetworkService.activeWifi ? NetworkService.activeWifi.ssid : ""
-                supportingText: qsTr("当前网络 · 信号 %1%").arg(NetworkService.signalStrength)
+                supportingText: root.activeWifiDetails()
                 interactive: root.profileForTarget(NetworkService.activeWifi) !== null
                 highlighted: true
                 onClicked: root.openProfile(NetworkService.activeWifi)
 
                 trailing: MaterialSymbol {
+                    visible: root.profileForTarget(NetworkService.activeWifi) !== null
                     text: "settings"
                     iconSize: Metrics.iconS
                     color: Appearance.colors.colOnSurfaceVariant
@@ -329,33 +190,14 @@ StyledFlickable {
 
             }
 
-            RowLayout {
+            Text {
                 Layout.fillWidth: true
                 visible: NetworkService.wifiEnabled
-
-                Text {
-                    Layout.fillWidth: true
-                    text: qsTr("附近网络")
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Typography.labelLarge.family
-                    font.pixelSize: Typography.labelLarge.pixelSize
-                    font.weight: Typography.labelLarge.weight
-                }
-
-                MaterialLoadingIndicator {
-                    Layout.preferredWidth: 28
-                    Layout.preferredHeight: 28
-                    contained: false
-                    visible: NetworkService.wifiScanning
-                }
-
-                ActionButton {
-                    text: qsTr("扫描")
-                    iconName: "refresh"
-                    enabled: !NetworkService.busy
-                    onClicked: NetworkService.requestScan()
-                }
-
+                text: qsTr("附近网络")
+                color: Appearance.colors.colOnSurfaceVariant
+                font.family: Typography.labelLarge.family
+                font.pixelSize: Typography.labelLarge.pixelSize
+                font.weight: Typography.labelLarge.weight
             }
 
             StyledListView {
@@ -383,9 +225,8 @@ StyledFlickable {
                     height: nearbyList.rowHeight
                     iconName: wifiRow.modelData.strength >= 70 ? "signal_wifi_4_bar" : wifiRow.modelData.strength >= 35 ? "network_wifi_2_bar" : "network_wifi_1_bar"
                     title: wifiRow.modelData.ssid
-                    supportingText: (wifiRow.modelData.isSecure ? qsTr("安全") : qsTr("开放")) + (wifiRow.modelData.known ? qsTr(" · 已保存") : "") + qsTr(" · %1% · %2").arg(wifiRow.modelData.strength).arg(wifiRow.modelData.deviceName)
+                    supportingText: root.nearbyWifiDetails(wifiRow.modelData)
                     interactive: !NetworkService.busy
-                    highlighted: false
                     onClicked: {
                         if (wifiRow.modelData.isSecure && !wifiRow.modelData.known)
                             root.passwordTarget = wifiRow.modelData;
@@ -393,10 +234,23 @@ StyledFlickable {
                             NetworkService.connectToWifiNetwork(wifiRow.modelData);
                     }
 
-                    trailing: MaterialSymbol {
-                        text: wifiRow.modelData.isSecure ? "lock" : "login"
-                        iconSize: Metrics.iconS
-                        color: Appearance.colors.colOnSurfaceVariant
+                    trailing: RowLayout {
+                        spacing: Metrics.spacingXS
+
+                        MaterialSymbol {
+                            visible: wifiRow.modelData.known
+                            text: "bookmark"
+                            iconSize: Metrics.iconS
+                            color: Appearance.colors.colOnSurfaceVariant
+                        }
+
+                        MaterialSymbol {
+                            visible: wifiRow.modelData.isSecure
+                            text: "lock"
+                            iconSize: Metrics.iconS
+                            color: Appearance.colors.colOnSurfaceVariant
+                        }
+
                     }
 
                 }
@@ -449,12 +303,93 @@ StyledFlickable {
 
             Text {
                 Layout.fillWidth: true
-                visible: NetworkService.wifiEnabled && !NetworkService.wifiScanning && root.nearbyNetworks.length === 0
+                visible: NetworkService.wifiEnabled && root.nearbyNetworks.length === 0
                 text: qsTr("未找到附近网络")
                 color: Appearance.colors.colOutline
                 horizontalAlignment: Text.AlignHCenter
                 font.family: Typography.bodyMedium.family
                 font.pixelSize: Typography.bodyMedium.pixelSize
+            }
+
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            flat: true
+            visible: NetworkService.wiredDevices.length > 0
+            title: qsTr("Ethernet")
+            iconName: "lan"
+
+            Repeater {
+                model: NetworkService.wiredProfiles
+
+                SettingsRow {
+                    id: wiredRow
+
+                    required property var modelData
+                    readonly property var device: root.wiredDeviceForProfile(wiredRow.modelData)
+                    readonly property string detailText: {
+                        const details = [];
+                        const interfaceName = String(wiredRow.modelData.deviceName || "");
+                        if (interfaceName.length > 0)
+                            details.push(interfaceName);
+
+                        if (!wiredRow.device)
+                            return details.join(" · ");
+
+                        if (!wiredRow.device.hasLink) {
+                            details.push(qsTr("网线未连接"));
+                            return details.join(" · ");
+                        }
+                        if (wiredRow.device.connected && wiredRow.device.linkSpeed > 0)
+                            details.push(qsTr("%1 Mbps").arg(wiredRow.device.linkSpeed));
+
+                        if (wiredRow.device.connected && root.activeNetwork && root.activeNetwork.type === "wired" && root.activeNetwork.deviceName === wiredRow.device.deviceName) {
+                            const exception = root.connectivityException();
+                            if (exception.length > 0)
+                                details.push(exception);
+
+                        }
+                        return details.join(" · ");
+                    }
+
+                    Layout.fillWidth: true
+                    iconName: "settings_ethernet"
+                    title: wiredRow.modelData.name || wiredRow.modelData.deviceName || qsTr("有线网络")
+                    supportingText: wiredRow.detailText
+                    interactive: true
+                    highlighted: wiredRow.device ? wiredRow.device.connected : false
+                    onClicked: configWindow.openProfile(wiredRow.modelData, "")
+
+                    trailing: MaterialSymbol {
+                        text: "chevron_right"
+                        iconSize: Metrics.iconS
+                        color: Appearance.colors.colOnSurfaceVariant
+                    }
+
+                }
+
+            }
+
+            Repeater {
+                model: NetworkService.wiredDevices.filter((device) => {
+                    return !NetworkService.wiredProfiles.some((profile) => {
+                        return profile.deviceName === device.deviceName;
+                    });
+                })
+
+                SettingsRow {
+                    id: unconfiguredWiredRow
+
+                    required property var modelData
+
+                    Layout.fillWidth: true
+                    iconName: "settings_ethernet"
+                    title: unconfiguredWiredRow.modelData.name || qsTr("有线网络")
+                    supportingText: unconfiguredWiredRow.modelData.hasLink ? qsTr("无可编辑连接") : qsTr("网线未连接")
+                    highlighted: unconfiguredWiredRow.modelData.connected
+                }
+
             }
 
         }
@@ -469,7 +404,6 @@ StyledFlickable {
                 Layout.fillWidth: true
                 iconName: "bookmark"
                 text: qsTr("已保存网络")
-                description: qsTr("%1 个 NetworkManager 配置").arg(NetworkService.savedWifiProfiles.length)
                 trailingIconName: "chevron_right"
                 onClicked: configWindow.openSavedNetworks()
             }
@@ -478,9 +412,75 @@ StyledFlickable {
                 Layout.fillWidth: true
                 iconName: "add"
                 text: qsTr("添加网络")
-                description: qsTr("手动添加 SSID 或隐藏网络")
                 trailingIconName: "chevron_right"
                 onClicked: configWindow.openAddNetwork()
+            }
+
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            flat: true
+            visible: root.activeNetwork !== null
+            title: qsTr("连接信息")
+            iconName: "info"
+
+            InlineStatusBanner {
+                Layout.fillWidth: true
+                visible: NetworkService.runtimeDetailsError.length > 0
+                tone: "error"
+                message: NetworkService.runtimeDetailsError
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("接口")
+                supportingText: root.activeNetwork ? root.activeNetwork.deviceName : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("IP 地址")
+                supportingText: root.runtimeMatchesActive && NetworkService.runtimeDetails.addresses ? NetworkService.runtimeDetails.addresses.join(", ") : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("Gateway")
+                supportingText: root.runtimeMatchesActive ? NetworkService.runtimeDetails.gateway || "—" : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("DNS")
+                supportingText: root.runtimeMatchesActive && NetworkService.runtimeDetails.dns ? NetworkService.runtimeDetails.dns.join(", ") : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("MAC")
+                supportingText: root.activeNetwork ? root.activeNetwork.address || "—" : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                visible: root.activeNetwork !== null && root.activeNetwork.type === "wifi"
+                title: qsTr("安全类型")
+                supportingText: root.activeNetwork ? root.activeNetwork.security || qsTr("未知") : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                visible: root.activeNetwork !== null && root.activeNetwork.type === "wifi"
+                title: qsTr("频率")
+                supportingText: root.runtimeMatchesActive ? NetworkService.runtimeDetails.frequency || "—" : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                visible: root.activeNetwork !== null && root.activeNetwork.type === "wired"
+                title: qsTr("链路速度")
+                supportingText: root.activeNetwork && root.activeNetwork.linkSpeed > 0 ? qsTr("%1 Mbps").arg(root.activeNetwork.linkSpeed) : "—"
             }
 
         }

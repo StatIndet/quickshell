@@ -14,7 +14,7 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         visible: NetworkService.savedWifiProfiles.length === 0
-        message: qsTr("没有已保存的 Wi-Fi 配置")
+        message: qsTr("没有已保存的网络")
     }
 
     StyledListView {
@@ -33,11 +33,23 @@ Item {
             id: savedRow
 
             required property var modelData
+            readonly property string profileName: String(savedRow.modelData.name || "")
+            readonly property string networkName: String(savedRow.modelData.ssid || savedRow.profileName)
+            readonly property string secondaryText: {
+                const details = [];
+                if (savedRow.profileName.length > 0 && savedRow.profileName !== savedRow.networkName)
+                    details.push(savedRow.profileName);
+
+                if (savedRow.modelData.autoconnect)
+                    details.push(qsTr("自动连接"));
+
+                return details.join(" · ");
+            }
 
             width: ListView.view.width
-            iconName: savedRow.modelData.networkConnected ? "wifi" : "signal_wifi_off"
-            title: savedRow.modelData.ssid || savedRow.modelData.name
-            supportingText: savedRow.modelData.name + (savedRow.modelData.autoconnect ? qsTr(" · 自动连接") : "") + (savedRow.modelData.networkConnected ? qsTr(" · 同名网络已连接") : "")
+            iconName: "bookmark"
+            title: savedRow.networkName
+            supportingText: savedRow.secondaryText
             interactive: true
             highlighted: false
             onClicked: root.detailRequested(savedRow.modelData)

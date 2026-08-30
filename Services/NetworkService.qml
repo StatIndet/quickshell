@@ -18,10 +18,6 @@ Singleton {
     readonly property bool connectivityKnown: Networking.connectivity !== NetworkConnectivity.Unknown
     readonly property bool canCheckConnectivity: available && Networking.canCheckConnectivity
     readonly property bool connectivityCheckEnabled: available && Networking.connectivityCheckEnabled
-    readonly property bool scanning: wifiScanning
-    readonly property bool wifiScanning: root._nativeWifiDevices.some((device) => {
-        return device && device.scannerEnabled;
-    })
     readonly property bool busy: root._pendingOperation.length > 0 || root._pendingSettings !== null || root._pendingForgetSettings !== null || NetworkManagerExtras.mutationBusy
     readonly property bool wifiConnecting: root._pendingOperation === "connect" || root._nativeWifiDevices.some((device) => {
         return device && device.state === ConnectionState.Connecting;
@@ -233,7 +229,6 @@ Singleton {
             "state": ConnectionState.toString(device.state),
             "managed": !!device.nmManaged,
             "autoconnect": !!device.autoconnect,
-            "scanning": isWifi && !!device.scannerEnabled,
             "hasLink": !isWifi && !!device.hasLink,
             "linkSpeed": !isWifi ? Number(device.linkSpeed || 0) : 0,
             "nativeDevice": device,
@@ -461,10 +456,6 @@ Singleton {
         root._applyScanning();
         root.operationStarted("scan");
         root.operationSucceeded("scan");
-    }
-
-    function rescanWifi() {
-        root.requestScan();
     }
 
     function _applyScanning() {

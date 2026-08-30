@@ -114,7 +114,6 @@ FloatingWindow {
                 WizardHeader {
                     Layout.fillWidth: true
                     title: qsTr("已保存网络")
-                    subtitle: qsTr("%1 个 NetworkManager 配置").arg(NetworkService.savedWifiProfiles.length)
                     onCloseRequested: root.dismiss()
                 }
 
@@ -175,7 +174,6 @@ FloatingWindow {
                 WizardHeader {
                     Layout.fillWidth: true
                     title: qsTr("添加网络")
-                    subtitle: qsTr("手动添加 SSID 或隐藏网络")
                     onCloseRequested: root.dismiss()
                 }
 
