@@ -14,8 +14,10 @@ TestCase {
     }
 
     function test_knownCardSpans() {
-        compare(Geometry.sizeFor("cpu").width, 152);
+        compare(Geometry.sizeFor("cpu").width, 312);
         compare(Geometry.sizeFor("cpu").height, 160);
+        compare(Geometry.sizeFor("gpu").width, 312);
+        compare(Geometry.sizeFor("gpu").height, 160);
         compare(Geometry.sizeFor("battery").width, 152);
         compare(Geometry.sizeFor("battery").height, 328);
         compare(Geometry.sizeFor("network").width, 472);

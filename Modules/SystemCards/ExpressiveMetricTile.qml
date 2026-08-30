@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 import M3Shapes
 import qs.Common
 import qs.Components
@@ -46,6 +47,14 @@ Rectangle {
     radius: Appearance.rounding.extraLarge
     color: root.containerColor
     clip: true
+    layer.enabled: true
+    layer.effect: OpacityMask {
+        maskSource: Rectangle {
+            width: root.width
+            height: root.height
+            radius: root.radius
+        }
+    }
     Accessible.name: [
         root.label,
         root.valueText,

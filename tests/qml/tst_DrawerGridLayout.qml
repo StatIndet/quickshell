@@ -13,11 +13,15 @@ TestCase {
         compare(layout.length, 11);
         let area = 0;
         for (let index = 0; index < layout.length; index += 1) area += layout[index].columnSpan * layout[index].rowSpan
-        compare(area, 22);
+        compare(area, 24);
         compare(GridLayout.placementFor(layout, "time").column, 0);
         compare(GridLayout.placementFor(layout, "battery").column, 2);
         compare(GridLayout.placementFor(layout, "time").rowSpan, 2);
         compare(GridLayout.placementFor(layout, "battery").rowSpan, 2);
+        compare(GridLayout.placementFor(layout, "cpu").columnSpan, 2);
+        compare(GridLayout.placementFor(layout, "cpu").rowSpan, 1);
+        compare(GridLayout.placementFor(layout, "gpu").columnSpan, 2);
+        compare(GridLayout.placementFor(layout, "gpu").rowSpan, 1);
         compare(GridLayout.placementFor(layout, "calendar").columnSpan, 1);
         compare(GridLayout.placementFor(layout, "calendar").rowSpan, 1);
         compare(GridLayout.placementFor(layout, "storageCapacity").columnSpan, 1);
@@ -25,7 +29,7 @@ TestCase {
         compare(GridLayout.placementFor(layout, "weather").columnSpan, 2);
         compare(GridLayout.placementFor(layout, "weather").rowSpan, 2);
         compare(GridLayout.placementFor(layout, "weather").column, 1);
-        compare(GridLayout.placementFor(layout, "weather").row, 5);
+        compare(GridLayout.placementFor(layout, "weather").row, 6);
     }
 
     function test_serializationRoundTrip() {
@@ -132,7 +136,7 @@ TestCase {
         const layout = GridLayout.defaultLayout(active);
         verify(GridLayout.validateLayout(layout, active));
         compare(layout.length, active.length);
-        compare(GridLayout.contentRowCount(layout), 7);
+        compare(GridLayout.contentRowCount(layout), 8);
         verify(GridLayout.placementFor(layout, "battery") === null);
         const serialized = GridLayout.serializeLayout(layout, active);
         compare(serialized.version, 7);

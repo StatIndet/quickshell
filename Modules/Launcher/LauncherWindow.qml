@@ -254,6 +254,8 @@ PanelWindow {
         const localMode = normalizedMode(requestedMode);
         if (localMode === "")
             return false;
+        const enteringWallpapers = root.mode !== "wallpapers"
+            && localMode === "wallpapers";
         const enteringClipboard = root.mode !== "clipboard"
             && localMode === "clipboard";
         if (root.mode === "web")
@@ -270,6 +272,8 @@ PanelWindow {
                 root.resetClipboardAction();
             clipboardProvider.refresh();
         }
+        if (enteringWallpapers)
+            wallpaperProvider.refresh();
         root.focusSpotlight();
         return true;
     }
@@ -338,6 +342,13 @@ PanelWindow {
             return;
         const current = root.selectedResultIndex < 0
             ? 0 : root.selectedResultIndex;
+        if (root.mode === "wallpapers"
+                && wallpaperProvider.hasMore
+                && current + offset >= root.activeResults.length - 1) {
+            wallpaperProvider.loadMore(
+                current + Math.abs(offset)
+                    + root.wallpaperGridColumns * 2);
+        }
         root.selectResult(
             Math.max(
                 0,
@@ -829,6 +840,7 @@ PanelWindow {
             style: style
             mode: root.mode
             results: root.activeResults
+            wallpaperModel: wallpaperProvider.resultModel
             clipboardModel: clipboardProvider.resultModel
             selectedIndex: root.selectedResultIndex
             loading: root.clipboardMode && clipboardProvider.loading
@@ -844,6 +856,7 @@ PanelWindow {
             clipboardActionRunning: clipboardProvider.actionRunning
                 || root.clipboardActionState === "copying"
                 || root.clipboardActionState === "copied"
+            wallpaperHasMore: wallpaperProvider.hasMore
             availableHeight: Math.max(
                 style.emptyHeight,
                 root.height
@@ -866,6 +879,8 @@ PanelWindow {
             onInspectionReleased: id =>
                 clipboardProvider.releaseDetails(id)
             onModalClosed: root.focusSpotlight()
+            onWallpaperMoreRequested: minimumCount =>
+                wallpaperProvider.loadMore(minimumCount)
         }
     }
 }

@@ -16,6 +16,7 @@ Item {
     required property SpotlightStyle style
     required property string mode
     required property var results
+    required property var wallpaperModel
     required property var clipboardModel
     required property int selectedIndex
 
@@ -28,6 +29,7 @@ Item {
     property string clipboardActionEntryId: ""
     property string clipboardActionError: ""
     property bool clipboardActionRunning: false
+    property bool wallpaperHasMore: false
     property real availableHeight: 100000
     property real contentOpacity: 1
     readonly property int modeIndex: mode === "wallpapers"
@@ -77,6 +79,7 @@ Item {
     signal inspectionRequested(string id)
     signal inspectionReleased(string id)
     signal modalClosed()
+    signal wallpaperMoreRequested(int minimumCount)
 
     height: targetHeight
     opacity: expanded ? 1 : 0
@@ -177,6 +180,17 @@ Item {
         else
             appList.positionViewAtIndex(
                 root.selectedIndex, ListView.Contain);
+    }
+
+    function requestMoreWallpapers() {
+        if (root.mode !== "wallpapers" || !root.wallpaperHasMore)
+            return;
+        const remaining = wallpaperGrid.contentHeight
+            - wallpaperGrid.contentY - wallpaperGrid.height;
+        if (remaining > root.wallpaperCellHeight * 1.5)
+            return;
+        root.wallpaperMoreRequested(
+            wallpaperGrid.count + root.wallpaperColumnCount * 4);
     }
 
     NumberAnimation {
@@ -328,25 +342,85 @@ Item {
             id: wallpaperGrid
 
             clip: true
-            model: root.mode === "wallpapers" ? root.results : []
+            model: root.mode === "wallpapers"
+                ? root.wallpaperModel : null
             currentIndex: root.selectedIndex
             cellWidth: root.wallpaperCellWidth
             cellHeight: root.wallpaperCellHeight
             boundsBehavior: Flickable.StopAtBounds
+            cacheBuffer: 0
+            onContentYChanged: root.requestMoreWallpapers()
+            onHeightChanged: Qt.callLater(root.requestMoreWallpapers)
+            onCountChanged: Qt.callLater(root.requestMoreWallpapers)
 
             delegate: Item {
                 id: wallpaperDelegate
 
                 required property int index
-                required property var modelData
+                required property string wallpaperPath
+                readonly property var entry:
+                    root.results[wallpaperDelegate.index] || ({})
                 readonly property bool isCurrentWallpaper:
                     WallpaperService.normalizedPath(
-                        wallpaperDelegate.modelData.path)
+                        wallpaperDelegate.entry.path)
                     === WallpaperService.normalizedPath(
                         WallpaperService.currentWallpaper
                         || WallpaperService.wallpaperForScreen(""))
+                property bool appeared: false
+                readonly property real initialX:
+                    ((index * 37) % 3 - 1) * 24
+                readonly property real initialY:
+                    ((index * 53) % 5 - 2) * 10
                 width: wallpaperGrid.cellWidth
                 height: wallpaperGrid.cellHeight
+                opacity: appeared ? 1 : 0
+                scale: appeared ? 1 : 0.76
+                rotation: appeared ? 0 : ((index % 3) - 1) * 3
+                transform: Translate {
+                    x: wallpaperDelegate.appeared
+                        ? 0 : wallpaperDelegate.initialX
+                    y: wallpaperDelegate.appeared
+                        ? 0 : wallpaperDelegate.initialY
+                }
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 190
+                    }
+                }
+
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Appearance.animation
+                            .expressiveDefaultSpatial.duration
+                        easing.type: Appearance.animation
+                            .expressiveDefaultSpatial.type
+                        easing.bezierCurve: Appearance.animation
+                            .expressiveDefaultSpatial.bezierCurve
+                    }
+                }
+
+                Behavior on rotation {
+                    NumberAnimation {
+                        duration: Appearance.animation
+                            .expressiveDefaultSpatial.duration
+                        easing.type: Appearance.animation
+                            .expressiveDefaultSpatial.type
+                        easing.bezierCurve: Appearance.animation
+                            .expressiveDefaultSpatial.bezierCurve
+                    }
+                }
+
+                Timer {
+                    interval: Math.min(
+                        260,
+                        (wallpaperDelegate.index
+                            % Math.max(1,
+                                root.wallpaperColumnCount * 3)) * 18
+                    ) + ((wallpaperDelegate.index * 29) % 5) * 8
+                    running: root.mode === "wallpapers"
+                    onTriggered: wallpaperDelegate.appeared = true
+                }
 
                 Rectangle {
                     id: wallpaperCard
@@ -396,7 +470,7 @@ Item {
                             id: wallpaperImage
 
                             anchors.fill: parent
-                            source: wallpaperDelegate.modelData.preview
+                            source: wallpaperDelegate.entry.preview
                             sourceSize.width:
                                 Math.ceil(previewFrame.width * 2)
                             sourceSize.height:
@@ -476,7 +550,7 @@ Item {
                         anchors.leftMargin: 8
                         anchors.rightMargin: 8
                         height: root.style.wallpaperLabelHeight
-                        text: wallpaperDelegate.modelData.title
+                        text: wallpaperDelegate.entry.title
                         color:
                             wallpaperDelegate.index === root.selectedIndex
                             ? root.style.selectedContentColor
@@ -499,7 +573,7 @@ Item {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     acceptedButtons: Qt.LeftButton
-                    Accessible.name: wallpaperDelegate.modelData.title
+                    Accessible.name: wallpaperDelegate.entry.title
                     Accessible.role: Accessible.ListItem
                     onClicked: {
                         root.selectionRequested(wallpaperDelegate.index);

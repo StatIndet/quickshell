@@ -19,6 +19,7 @@ Singleton {
     property string pendingWallpaperPath: ""
     property string pendingWallpaperScreen: ""
     property bool scanRequested: false
+    property var scanResults: []
     property var desktopErrors: ({})
     property var overviewErrors: ({})
     property var overviewReadyScreens: ({})
@@ -250,7 +251,7 @@ Singleton {
         }
 
         root.scanRequested = false;
-        root.wallpapers = [];
+        root.scanResults = [];
         scanProcess.command = [
             "find", PersonalizationConfig.wallpaperFolder,
             "-type", "f",
@@ -704,12 +705,12 @@ Singleton {
             onRead: file => {
                 const path = file.trim();
                 if (path !== "")
-                    root.wallpapers = root.wallpapers.concat([path]);
+                    root.scanResults.push(path);
             }
         }
         onExited: {
             root.scanning = false;
-            const sorted = root.wallpapers.slice().sort();
+            const sorted = root.scanResults.slice().sort();
             const unique = [];
             for (let i = 0; i < sorted.length; i += 1) {
                 if (i === 0 || sorted[i] !== sorted[i - 1])

@@ -30,7 +30,7 @@ var cardDefinitions = [
         nameKey: "CPU",
         name: qsTr("CPU"),
         icon: "memory",
-        columnSpan: 1,
+        columnSpan: 2,
         rowSpan: 1,
         monitorModules: ["cpu"],
         preserveDefaultSurface: true
@@ -40,7 +40,7 @@ var cardDefinitions = [
         nameKey: "GPU",
         name: qsTr("GPU"),
         icon: "developer_board",
-        columnSpan: 1,
+        columnSpan: 2,
         rowSpan: 1,
         monitorModules: ["gpu"],
         preserveDefaultSurface: true
@@ -122,14 +122,14 @@ var defaultAnchors = {
     time: { column: 0, row: 0 },
     battery: { column: 2, row: 0 },
     cpu: { column: 0, row: 2 },
-    gpu: { column: 1, row: 2 },
+    gpu: { column: 0, row: 3 },
     memoryUsed: { column: 2, row: 2 },
-    wifi: { column: 0, row: 5 },
-    network: { column: 0, row: 3 },
-    storage: { column: 0, row: 4 },
+    wifi: { column: 0, row: 6 },
+    network: { column: 0, row: 4 },
+    storage: { column: 0, row: 5 },
     storageCapacity: { column: 0, row: 7 },
-    calendar: { column: 0, row: 6 },
-    weather: { column: 1, row: 5 }
+    calendar: { column: 2, row: 3 },
+    weather: { column: 1, row: 6 }
 };
 
 function cloneDefinition(definition) {
