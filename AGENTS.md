@@ -75,6 +75,31 @@ normalize。普通 format/check 只处理当前改动的 QML，避免 legacy tre
 明确要迁移整棵树时才使用 `scripts/dev/format-qml.sh --all`。除非确有语义需要，不要
 借格式化顺手重排大范围属性或对象。
 
+## UI copy and information density
+
+- 设置页面默认不写 supporting text。只有标题、图标、控件状态无法表达的新信息才可
+  添加 supporting text，例如动态数值、当前模式、不可用原因、错误或验证要求。
+- 禁止用文字重复 boolean control state；`Wi-Fi / 已开启 / switch ON` 中的“已开启”
+  必须删除。正常状态通常无需说明，硬件阻止、权限失败、backend 不可用等异常状态应
+  使用简短文案说明原因。
+- 禁止 subtitle 改写或重复 title；例如“添加网络 / 手动添加网络”是无效文案。
+- 普通 UI 不得暴露没有用户价值的 backend 实现术语，例如 `NetworkManager 配置`、
+  `DBus backend`、内部 UUID；只有明确的高级诊断页面可以展示这些信息。
+- 一个语义只保留一种主要表达。selected/highlighted shape、switch、icon、badge 或
+  dynamic value 已完整表达状态时，不再追加一句文字重复解释。
+- 信息层级和状态优先通过项目现有的 Material Design / expressive shape、icon、badge、
+  state layer、tooltip、switch、slider 和 animation 表达，不得另造平行组件体系。
+- Tooltip 用于 icon-only action、次要解释，以及不值得长期占据 layout 的辅助信息；
+  不要为了避免 tooltip 而把所有解释永久铺在页面上。
+- 面向全球用户使用简短、一致的名词或动词短语，避免完整说明句、实现术语和不必要的
+  翻译负担。错误、破坏性操作警告、验证规则、认证或权限失败及歧义操作标签不得因精简
+  文案而隐藏。
+- Material expressive UI 应先以视觉建立 hierarchy，copy 只辅助视觉无法可靠传达的
+  内容，不得依靠大量 prose 创建页面结构。
+- 新增或修改设置页面时必须主动执行 semantic redundancy audit：检查 title/subtitle、
+  icon/text、switch/status text、badge/description 是否重复，同一状态是否在相邻 section
+  重复出现，以及 implementation detail 是否泄漏到 user-facing copy。
+
 ## Test Policy
 
 质量检查和 tests 分开。`qmllint`、`qmlformat`、`clang-format`、`bash -n`、
