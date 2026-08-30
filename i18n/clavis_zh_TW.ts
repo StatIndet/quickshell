@@ -1927,6 +1927,132 @@
     </message>
 </context>
 <context>
+    <name>CloudUploadContent</name>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="40"/>
+        <source>上传完成</source>
+        <translation>上傳完成</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="42"/>
+        <source>上传失败</source>
+        <translation>上傳失敗</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="44"/>
+        <source>已取消</source>
+        <translation>已取消</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="46"/>
+        <source>正在上传</source>
+        <translation>正在上傳</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="48"/>
+        <source>正在准备</source>
+        <translation>正在準備</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="50"/>
+        <source>等待上传</source>
+        <translation>等待上傳</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="57"/>
+        <source>%1 / %2</source>
+        <translation>%1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="64"/>
+        <source>剩余 %1</source>
+        <translation>剩餘 %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <source>释放以上传</source>
+        <translation>放開以上傳</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <source>将文件或文件夹拖到这里</source>
+        <translation>將檔案或資料夾拖到這裡</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="171"/>
+        <source>文件夹会保持原有目录结构，上传到默认云存储的 Clavis Uploads</source>
+        <translation>資料夾會保留原有目錄結構，上傳到預設雲端儲存的 Clavis Uploads</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="223"/>
+        <source>没有可用的默认云存储</source>
+        <translation>沒有可用的預設雲端儲存</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="233"/>
+        <source>请先在设置中心选择一个可写入的默认云存储</source>
+        <translation>請先在設定中心選擇一個可寫入的預設雲端儲存</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="243"/>
+        <source>打开云存储设置</source>
+        <translation>開啟雲端儲存設定</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="267"/>
+        <source>上传队列</source>
+        <translation>上傳佇列</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="275"/>
+        <source>清除已完成</source>
+        <translation>清除已完成</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="282"/>
+        <source>返回上传</source>
+        <translation>返回上傳</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="403"/>
+        <source>重试</source>
+        <translation>重試</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="411"/>
+        <source>取消上传</source>
+        <translation>取消上傳</translation>
+    </message>
+</context>
+<context>
+    <name>CloudUploadService</name>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="79"/>
+        <source>没有可上传的本地文件或文件夹</source>
+        <translation>沒有可上傳的本機檔案或資料夾</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="84"/>
+        <source>请先选择可写入的默认云存储</source>
+        <translation>請先選擇可寫入的預設雲端儲存</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="115"/>
+        <source>已加入 %1 个上传任务</source>
+        <translation>已加入 %1 個上傳工作</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="115"/>
+        <source>相同路径已在上传队列中</source>
+        <translation>相同路徑已在上傳佇列中</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="203"/>
+        <source>上传失败，请检查网络或远程权限</source>
+        <translation>上傳失敗，請檢查網路或遠端權限</translation>
+    </message>
+</context>
+<context>
     <name>ComputerBackupWindow</name>
     <message>
         <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="249"/>
@@ -3567,22 +3693,22 @@
 <context>
     <name>HubContent</name>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="47"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="48"/>
         <source>仪表板</source>
         <translation>儀表板</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="53"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="54"/>
         <source>媒体</source>
         <translation>媒體</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="59"/>
-        <source>壁纸</source>
-        <translation>桌布</translation>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="60"/>
+        <source>上传</source>
+        <translation>上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="65"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="66"/>
         <source>天气</source>
         <translation>天氣</translation>
     </message>
@@ -7245,44 +7371,6 @@
         <location filename="../Modules/ControlCenter/WallpaperColorPicker.qml" line="658"/>
         <source>复制</source>
         <translation>複製</translation>
-    </message>
-</context>
-<context>
-    <name>WallpaperContent</name>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="392"/>
-        <source>正在扫描壁纸</source>
-        <translation>正在掃描桌布</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="394"/>
-        <source>未找到匹配壁纸</source>
-        <translation>未找到匹配桌布</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="395"/>
-        <source>未找到壁纸</source>
-        <translation>未找到桌布</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="406"/>
-        <source>请尝试其他搜索内容</source>
-        <translation>請嘗試其他搜尋內容</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="407"/>
-        <source>请将图片放入 </source>
-        <translation>請將圖片放入 </translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="498"/>
-        <source>搜索壁纸</source>
-        <translation>搜尋桌布</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="525"/>
-        <source>清除壁纸搜索</source>
-        <translation>清除桌布搜尋</translation>
     </message>
 </context>
 <context>

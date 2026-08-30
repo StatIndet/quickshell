@@ -1,6 +1,5 @@
-pragma Singleton
-
 import QtQuick
+pragma Singleton
 
 QtObject {
     id: root
@@ -8,17 +7,20 @@ QtObject {
     property bool qsOpen: false
     property string qsView: "settings"
     property string qsScreenName: ""
-
     property bool leftSidebarOpen: false
     property string leftSidebarView: "info"
 
-    onQsOpenChanged: {
-        if (!qsOpen)
-            qsScreenName = "";
-    }
+    signal transientSurfacesDismissRequested()
 
     function closeAllPopups() {
         qsOpen = false;
         leftSidebarOpen = false;
+        transientSurfacesDismissRequested();
+    }
+
+    onQsOpenChanged: {
+        if (!qsOpen)
+            qsScreenName = "";
+
     }
 }

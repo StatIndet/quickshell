@@ -3,9 +3,9 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import qs.Common
 import qs.Components
+import qs.Modules.Keystone.CloudUploadContent
 import qs.Modules.Keystone.DashboardContent
 import qs.Modules.Keystone.Media
-import qs.Modules.Keystone.WallpaperContent
 import qs.Modules.Keystone.WeatherContent
 
 Item {
@@ -14,13 +14,14 @@ Item {
     property var player: null
     property var screen: null
     property int currentIndex: 0
+    property bool dragActive: false
     readonly property var dashboardGlassItems: dashboardContent.holeGlassItems
 
     signal closeRequested()
     signal avatarEditRequested()
 
     implicitWidth: currentIndex === 0 ? 860 : currentIndex === 2 ? 960 : currentIndex === 3 ? 960 : 760
-    implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 300 : 570)
+    implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 : 570)
 
     Shortcut {
         sequence: "Tab"
@@ -55,8 +56,8 @@ Item {
         }
 
         TabBtn {
-            icon: "wallpaper"
-            title: qsTr("壁纸")
+            icon: "cloud_upload"
+            title: qsTr("上传")
             index: 2
         }
 
@@ -192,15 +193,14 @@ Item {
 
         }
 
-        WallpaperContent {
+        CloudUploadContent {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width * 0.95
-            height: 300
-            screen: root.screen
+            height: 480
+            dragActive: root.dragActive
             visible: root.currentIndex === 2
             opacity: visible ? 1 : 0
-            onWallpaperChanged: root.closeRequested()
 
             Behavior on opacity {
                 NumberAnimation {

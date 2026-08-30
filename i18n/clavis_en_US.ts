@@ -1927,6 +1927,132 @@ Scroll to adjust</translation>
     </message>
 </context>
 <context>
+    <name>CloudUploadContent</name>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="40"/>
+        <source>上传完成</source>
+        <translation>Upload complete</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="42"/>
+        <source>上传失败</source>
+        <translation>Upload failed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="44"/>
+        <source>已取消</source>
+        <translation>Cancelled</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="46"/>
+        <source>正在上传</source>
+        <translation>Uploading</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="48"/>
+        <source>正在准备</source>
+        <translation>Preparing</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="50"/>
+        <source>等待上传</source>
+        <translation>Waiting to upload</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="57"/>
+        <source>%1 / %2</source>
+        <translation>%1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="64"/>
+        <source>剩余 %1</source>
+        <translation>%1 remaining</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <source>释放以上传</source>
+        <translation>Drop to upload</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <source>将文件或文件夹拖到这里</source>
+        <translation>Drag files or folders here</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="171"/>
+        <source>文件夹会保持原有目录结构，上传到默认云存储的 Clavis Uploads</source>
+        <translation>Folders keep their directory structure and upload to Clavis Uploads on the default cloud storage</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="223"/>
+        <source>没有可用的默认云存储</source>
+        <translation>No default cloud storage is available</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="233"/>
+        <source>请先在设置中心选择一个可写入的默认云存储</source>
+        <translation>Choose a writable default cloud storage in Settings first</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="243"/>
+        <source>打开云存储设置</source>
+        <translation>Open cloud storage settings</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="267"/>
+        <source>上传队列</source>
+        <translation>Upload queue</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="275"/>
+        <source>清除已完成</source>
+        <translation>Clear completed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="282"/>
+        <source>返回上传</source>
+        <translation>Back to upload</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="403"/>
+        <source>重试</source>
+        <translation>Retry</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="411"/>
+        <source>取消上传</source>
+        <translation>Cancel upload</translation>
+    </message>
+</context>
+<context>
+    <name>CloudUploadService</name>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="79"/>
+        <source>没有可上传的本地文件或文件夹</source>
+        <translation>No local files or folders are available to upload</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="84"/>
+        <source>请先选择可写入的默认云存储</source>
+        <translation>Choose a writable default cloud storage first</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="115"/>
+        <source>已加入 %1 个上传任务</source>
+        <translation>Added %1 upload task(s)</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="115"/>
+        <source>相同路径已在上传队列中</source>
+        <translation>The same path is already in the upload queue</translation>
+    </message>
+    <message>
+        <location filename="../Services/CloudUploadService.qml" line="203"/>
+        <source>上传失败，请检查网络或远程权限</source>
+        <translation>Upload failed. Check the network or remote permissions</translation>
+    </message>
+</context>
+<context>
     <name>ComputerBackupWindow</name>
     <message>
         <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="249"/>
@@ -3567,22 +3693,22 @@ Scroll to adjust</translation>
 <context>
     <name>HubContent</name>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="47"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="48"/>
         <source>仪表板</source>
         <translation>Dashboard</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="53"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="54"/>
         <source>媒体</source>
         <translation>Media</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="59"/>
-        <source>壁纸</source>
-        <translation>Wallpaper</translation>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="60"/>
+        <source>上传</source>
+        <translation>Upload</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="65"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="66"/>
         <source>天气</source>
         <translation>Weather</translation>
     </message>
@@ -7246,44 +7372,6 @@ Scroll to adjust; click to open sound</translation>
         <location filename="../Modules/ControlCenter/WallpaperColorPicker.qml" line="658"/>
         <source>复制</source>
         <translation>Copy</translation>
-    </message>
-</context>
-<context>
-    <name>WallpaperContent</name>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="392"/>
-        <source>正在扫描壁纸</source>
-        <translation>Scanning wallpapers</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="394"/>
-        <source>未找到匹配壁纸</source>
-        <translation>No matching wallpapers found</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="395"/>
-        <source>未找到壁纸</source>
-        <translation>No wallpapers found</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="406"/>
-        <source>请尝试其他搜索内容</source>
-        <translation>Try a different search</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="407"/>
-        <source>请将图片放入 </source>
-        <translation>Place images in </translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="498"/>
-        <source>搜索壁纸</source>
-        <translation>Search wallpapers</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WallpaperContent/WallpaperContent.qml" line="525"/>
-        <source>清除壁纸搜索</source>
-        <translation>Clear wallpaper search</translation>
     </message>
 </context>
 <context>

@@ -9,6 +9,8 @@ qt_add_qml_module(ClavisRuntime
     SOURCES
         src/clavis_build_info.h
         src/clavis_build_info.cpp
+        src/clavis_file_system.h
+        src/clavis_file_system.cpp
     OUTPUT_DIRECTORY ${CLAVIS_QML_BUILD_DIR}/Clavis/Runtime
 )
 

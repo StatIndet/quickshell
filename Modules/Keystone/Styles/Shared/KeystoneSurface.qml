@@ -125,7 +125,7 @@ Variants {
         WlrLayershell.namespace: "clavis-shell-keystone"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: root.hasClosablePopup ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: root.escapeDismissActive ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors {
             top: true
@@ -444,7 +444,7 @@ Variants {
                 property bool isNotifMode: !contentPresentationActive && NotificationManager.hasNotifs && !expanded && !showVolume && !isHubMode && !isToolsMode && !isLyricsMode
                 property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode && !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                property bool hasClosablePopup: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
+                readonly property bool escapeDismissActive: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
                 readonly property bool showDashboardHole: dashboardTabActive
@@ -496,6 +496,9 @@ Variants {
                     root.showVolume = false;
                     root.showHub = false;
                     root.showTools = false;
+                    if (root.isNotifMode)
+                        NotificationManager.timeoutAll();
+
                 }
 
                 function triggerSliderOSD(mode) {
@@ -513,6 +516,16 @@ Variants {
 
                 onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
                 Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
+                focus: root.escapeDismissActive
+                onEscapeDismissActiveChanged: {
+                    if (root.escapeDismissActive)
+                        root.forceActiveFocus();
+
+                }
+                Keys.onEscapePressed: (event) => {
+                    WidgetState.closeAllPopups();
+                    event.accepted = true;
+                }
                 state: keystoneWindow.edge
                 // HubContent changes its own currentIndex when a tab is
                 // clicked. Keep the two pieces of state synchronized
@@ -670,16 +683,6 @@ Variants {
                         rDuration = KeystoneMotion.radiusDuration;
                         rBezier = KeystoneMotion.radiusBezier;
                     }
-                }
-                focus: root.hasClosablePopup
-                onHasClosablePopupChanged: {
-                    if (root.hasClosablePopup)
-                        root.forceActiveFocus();
-
-                }
-                Keys.onEscapePressed: (event) => {
-                    root.closeKeystonePopups();
-                    event.accepted = true;
                 }
                 states: [
                     State {
@@ -1261,6 +1264,7 @@ Variants {
                         height: implicitHeight
                         player: root.currentPlayer
                         screen: keystoneWindow.screen
+                        dragActive: cloudUploadDropArea.containsDrag
                         onCurrentIndexChanged: {
                             if (root.hubTabIndex !== currentIndex)
                                 root.hubTabIndex = currentIndex;
@@ -1316,6 +1320,44 @@ Variants {
 
                     }
 
+                }
+
+                DropArea {
+                    id: cloudUploadDropArea
+
+                    anchors.fill: parent
+                    z: 20000
+                    enabled: !root.contentPresentationActive && (root.isCollapsedMode || root.isHubMode)
+                    onEntered: (drag) => {
+                        const supportsUrls = drag.hasUrls && drag.formats.indexOf("text/uri-list") >= 0 && CloudUploadService.hasLocalUrls(drag.urls);
+                        drag.accepted = enabled && supportsUrls;
+                        if (!drag.accepted)
+                            return ;
+
+                        root.expanded = false;
+                        root.showLyrics = false;
+                        root.showVolume = false;
+                        root.showTools = false;
+                        root.hubTabIndex = 2;
+                        root.showHub = true;
+                    }
+                    onDropped: (drop) => {
+                        const supportsUrls = drop.hasUrls && drop.formats.indexOf("text/uri-list") >= 0 && CloudUploadService.hasLocalUrls(drop.urls);
+                        if (!enabled || !supportsUrls) {
+                            drop.accepted = false;
+                            return ;
+                        }
+                        CloudUploadService.enqueueUrls(drop.urls);
+                        drop.acceptProposedAction();
+                    }
+                }
+
+                Connections {
+                    function onTransientSurfacesDismissRequested() {
+                        root.closeKeystonePopups();
+                    }
+
+                    target: WidgetState
                 }
 
                 MouseArea {
