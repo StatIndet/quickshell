@@ -444,7 +444,10 @@ Variants {
                 property bool isNotifMode: !contentPresentationActive && NotificationManager.hasNotifs && !expanded && !showVolume && !isHubMode && !isToolsMode && !isLyricsMode
                 property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode && !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                property bool hasClosablePopup: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
+                readonly property bool hubLyricsActive: isHubMode && hub.mediaLyricsActive
+                property bool hasClosablePopup: !contentPresentationActive
+                    && !root.hubLyricsActive
+                    && (expanded || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
                 readonly property bool showDashboardHole: dashboardTabActive
@@ -1139,8 +1142,12 @@ Variants {
                                 root.expanded = false;
 
                         } else {
-                            if (root.isLyricsMode || root.isHubMode || root.isToolsMode)
-                                return ;
+                            if (root.isLyricsMode) {
+                                root.showLyrics = false;
+                                return;
+                            }
+                            if (root.isHubMode || root.isToolsMode)
+                                return;
 
                             root.expanded = !root.expanded;
                         }

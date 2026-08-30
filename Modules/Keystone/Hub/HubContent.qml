@@ -15,6 +15,10 @@ Item {
     property var screen: null
     property int currentIndex: 0
     readonly property var dashboardGlassItems: dashboardContent.holeGlassItems
+    // Hub media tab shows its own lyrics view; when it is open the surface is
+    // a read-only display and must not claim exclusive keyboard focus.
+    readonly property bool mediaLyricsActive:
+        currentIndex === 1 && mediaContent.showLyrics
 
     signal closeRequested()
     signal avatarEditRequested()
@@ -177,6 +181,8 @@ Item {
         }
 
         Media {
+            id: mediaContent
+
             player: root.player
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter

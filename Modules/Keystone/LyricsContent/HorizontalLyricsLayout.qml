@@ -52,34 +52,55 @@ Item {
             readonly property bool isCurrent: index === root.currentLineIndex
 
             width: ListView.view.width
-            height: 42
+            height: modelData.translation ? 52 : 42
             onIsCurrentChanged: {
                 if (isCurrent)
                     root.currentTextWidth = Math.max(root.defaultTextWidth, Math.min(lyricText.implicitWidth, 800));
 
             }
 
-            Text {
-                id: lyricText
-
+            Column {
                 anchors.centerIn: parent
-                text: parent.modelData.text
-                color: Appearance.m3colors.darkmode ? "white" : "black"
-                font.family: Fonts.ui
-                font.pixelSize: 15
-                font.weight: Font.Bold
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenterOffset: modelData.translation ? -4 : 0
+                width: parent.width
+                spacing: 1
 
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.animation.expressiveFastEffects.duration
-                        easing.type: Appearance.animation.expressiveFastEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                Text {
+                    id: lyricText
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    text: modelData.text
+                    color: Appearance.m3colors.darkmode ? "white" : "black"
+                    font.family: Fonts.ui
+                    font.pixelSize: 15
+                    font.weight: Font.Bold
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Appearance.animation.expressiveFastEffects.duration
+                            easing.type: Appearance.animation.expressiveFastEffects.type
+                            easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
+                        }
+
                     }
 
                 }
 
+                Text {
+                    visible: modelData.translation !== undefined && modelData.translation !== ""
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    text: modelData.translation || ""
+                    color: Appearance.applyAlpha(Appearance.m3colors.darkmode ? "white" : "black", 0.6)
+                    font.family: Fonts.ui
+                    font.pixelSize: 12
+                    font.weight: Font.Normal
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
 
         }
