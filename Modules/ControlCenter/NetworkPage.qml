@@ -146,6 +146,7 @@ StyledFlickable {
 
         InlineStatusBanner {
             Layout.fillWidth: true
+            radius: Metrics.cornerM
             visible: !NetworkService.available || NetworkService.lastError.length > 0
             tone: "error"
             message: NetworkService.lastError.length > 0 ? NetworkService.lastError : qsTr("网络服务不可用")
@@ -153,7 +154,6 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             title: qsTr("Wi-Fi")
             iconName: "wifi"
 
@@ -262,13 +262,13 @@ StyledFlickable {
                 visible: root.passwordTarget !== null
                 spacing: Metrics.spacingXS
 
-                MaterialTextField {
+                OutlinedTextField {
                     id: nearbyPassword
 
                     Layout.fillWidth: true
                     labelText: root.passwordTarget ? qsTr("%1 的密码").arg(root.passwordTarget.ssid) : qsTr("密码")
-                    echoMode: TextInput.Password
-                    error: text.length > 0 && text.length < 8
+                    passwordToggle: true
+                    errorText: text.length > 0 && text.length < 8 ? qsTr("密码至少需要 8 个字符") : ""
                 }
 
                 RowLayout {
@@ -315,7 +315,6 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             visible: NetworkService.wiredDevices.length > 0
             title: qsTr("Ethernet")
             iconName: "lan"
@@ -396,7 +395,6 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             title: qsTr("其他设置")
             iconName: "tune"
 
@@ -420,13 +418,13 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             visible: root.activeNetwork !== null
             title: qsTr("连接信息")
             iconName: "info"
 
             InlineStatusBanner {
                 Layout.fillWidth: true
+                radius: Metrics.cornerM
                 visible: NetworkService.runtimeDetailsError.length > 0
                 tone: "error"
                 message: NetworkService.runtimeDetailsError

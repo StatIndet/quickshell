@@ -81,6 +81,8 @@ FloatingWindow {
         anchors.fill: parent
         radius: Appearance.rounding.extraLarge
         color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
+        border.width: Metrics.dividerWidth
+        border.color: Appearance.colors.colOutlineVariant
     }
 
     CompositorBlurRegion {

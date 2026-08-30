@@ -49,6 +49,9 @@ StyledFlickable {
     property string gateway: ""
     property string dns: ""
     property bool autoconnect: true
+    property bool addressTouched: false
+    property bool gatewayTouched: false
+    property bool dnsTouched: false
     property bool saving: false
     property string errorMessage: ""
     property string successMessage: ""
@@ -84,6 +87,9 @@ StyledFlickable {
     }
 
     function loadProfile() {
+        root.addressTouched = false;
+        root.gatewayTouched = false;
+        root.dnsTouched = false;
         const snapshot = NetworkService.profileSnapshot(root.profile);
         if (!snapshot) {
             root.original = null;
@@ -221,6 +227,7 @@ StyledFlickable {
 
         InlineStatusBanner {
             Layout.fillWidth: true
+            radius: Metrics.cornerM
             visible: root.errorMessage.length > 0
             tone: "error"
             message: root.errorMessage
@@ -228,6 +235,7 @@ StyledFlickable {
 
         InlineStatusBanner {
             Layout.fillWidth: true
+            radius: Metrics.cornerM
             visible: root.successMessage.length > 0
             tone: "info"
             iconName: "check_circle"
@@ -236,7 +244,6 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             title: qsTr("基本信息")
             iconName: "info"
 
@@ -263,10 +270,10 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             visible: root.profile !== null
             title: qsTr("IPv4")
             iconName: "network_manage"
+            contentSpacing: Metrics.spacingL
 
             SettingsRow {
                 Layout.fillWidth: true
@@ -314,36 +321,24 @@ StyledFlickable {
             ColumnLayout {
                 Layout.fillWidth: true
                 visible: root.mode === "manual"
-                spacing: Metrics.spacingXS
+                spacing: Metrics.spacingM
 
-                MaterialTextField {
+                OutlinedTextField {
                     Layout.fillWidth: true
                     labelText: qsTr("IPv4 地址 / CIDR")
                     text: root.address
-                    error: !root.addressValid
+                    errorText: root.addressTouched && !root.addressValid ? qsTr("请输入合法 IPv4 CIDR，例如 192.168.1.50/24") : ""
                     onTextChanged: root.address = text
+                    onEditingFinished: root.addressTouched = true
                 }
 
-                Text {
-                    visible: !root.addressValid
-                    text: qsTr("请输入合法 IPv4 CIDR，例如 192.168.1.50/24")
-                    color: Appearance.colors.colError
-                    font.pixelSize: Typography.bodySmall.pixelSize
-                }
-
-                MaterialTextField {
+                OutlinedTextField {
                     Layout.fillWidth: true
                     labelText: qsTr("Gateway")
                     text: root.gateway
-                    error: !root.gatewayValid
+                    errorText: root.gatewayTouched && !root.gatewayValid ? qsTr("请输入合法 IPv4 gateway") : ""
                     onTextChanged: root.gateway = text
-                }
-
-                Text {
-                    visible: !root.gatewayValid
-                    text: qsTr("请输入合法 IPv4 gateway")
-                    color: Appearance.colors.colError
-                    font.pixelSize: Typography.bodySmall.pixelSize
+                    onEditingFinished: root.gatewayTouched = true
                 }
 
             }
@@ -351,20 +346,15 @@ StyledFlickable {
             ColumnLayout {
                 Layout.fillWidth: true
                 visible: root.mode !== "auto"
-                spacing: Metrics.spacingXS
+                spacing: Metrics.spacingM
 
-                MaterialTextField {
+                OutlinedTextField {
                     Layout.fillWidth: true
                     labelText: qsTr("DNS")
                     text: root.dns
-                    error: !root.dnsValid
+                    errorText: root.dnsTouched && !root.dnsValid ? qsTr("请输入至少一个合法 IPv4 DNS 地址") : ""
                     onTextChanged: root.dns = text
-                }
-
-                Text {
-                    text: root.dnsValid ? qsTr("可使用逗号或空格分隔") : qsTr("请输入至少一个合法 IPv4 DNS 地址")
-                    color: root.dnsValid ? Appearance.colors.colOnSurfaceVariant : Appearance.colors.colError
-                    font.pixelSize: Typography.bodySmall.pixelSize
+                    onEditingFinished: root.dnsTouched = true
                 }
 
             }

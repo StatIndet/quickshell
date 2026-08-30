@@ -69,29 +69,20 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            flat: true
             title: qsTr("网络信息")
             iconName: "add_link"
+            contentSpacing: Metrics.spacingL
 
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: Metrics.spacingXS
 
-                MaterialTextField {
+                OutlinedTextField {
                     id: ssidField
 
                     Layout.fillWidth: true
                     labelText: qsTr("SSID")
-                    error: root.ssidBytes > 32
-                }
-
-                Text {
-                    Layout.fillWidth: true
-                    text: root.ssidBytes > 32 ? qsTr("SSID 最多 32 个 UTF-8 字节") : qsTr("网络名称为必填项")
-                    visible: ssidField.error
-                    color: Appearance.colors.colError
-                    font.family: Typography.bodySmall.family
-                    font.pixelSize: Typography.bodySmall.pixelSize
+                    errorText: root.ssidBytes > 32 ? qsTr("SSID 最多 32 个 UTF-8 字节") : ""
                 }
 
             }
@@ -136,21 +127,14 @@ StyledFlickable {
                 visible: root.secure
                 spacing: Metrics.spacingXS
 
-                MaterialTextField {
+                OutlinedTextField {
                     id: passwordField
 
                     Layout.fillWidth: true
                     labelText: qsTr("密码")
-                    echoMode: TextInput.Password
-                    error: text.length > 0 && !root.validPassword
-                }
-
-                Text {
-                    Layout.fillWidth: true
-                    text: passwordField.error ? qsTr("密码需为 8–63 个字符，或 64 位十六进制 PSK") : qsTr("密码仅用于本次连接，不会写入 Clavis 配置")
-                    color: passwordField.error ? Appearance.colors.colError : Appearance.colors.colOnSurfaceVariant
-                    font.family: Typography.bodySmall.family
-                    font.pixelSize: Typography.bodySmall.pixelSize
+                    passwordToggle: true
+                    supportingText: qsTr("仅用于本次连接，不会保存到 Clavis 配置")
+                    errorText: text.length > 0 && !root.validPassword ? qsTr("密码需为 8–63 个字符，或 64 位十六进制 PSK") : ""
                 }
 
             }
@@ -159,6 +143,7 @@ StyledFlickable {
 
         InlineStatusBanner {
             Layout.fillWidth: true
+            radius: Metrics.cornerM
             visible: root.errorMessage.length > 0
             tone: "error"
             message: root.errorMessage

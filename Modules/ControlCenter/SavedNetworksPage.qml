@@ -9,10 +9,18 @@ Item {
 
     signal detailRequested(var target)
 
+    Rectangle {
+        anchors.fill: parent
+        radius: Metrics.cornerL
+        color: Appearance.colors.colLayer1
+    }
+
     InlineStatusBanner {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        anchors.margins: Metrics.cardPadding
+        radius: Metrics.cornerM
         visible: NetworkService.savedWifiProfiles.length === 0
         message: qsTr("没有已保存的网络")
     }
@@ -21,6 +29,7 @@ Item {
         id: savedList
 
         anchors.fill: parent
+        anchors.margins: Metrics.spacingS
         visible: NetworkService.savedWifiProfiles.length > 0
         model: NetworkService.savedWifiProfiles
         spacing: Metrics.spacingXS
