@@ -247,6 +247,7 @@ Singleton {
             "name": String(network.name || ""),
             "ssid": String(network.name || ""),
             "deviceName": String(device.name || ""),
+            "address": String(device.address || ""),
             "type": "wifi",
             "strength": Math.round(Number(network.signalStrength || 0) * 100),
             "security": WifiSecurityType.toString(securityType),
@@ -290,6 +291,7 @@ Singleton {
         return {
             "name": String(network.name || device.name || qsTr("有线网络")),
             "deviceName": String(device.name || ""),
+            "address": String(device.address || ""),
             "type": "wired",
             "known": !!network.known,
             "active": !!network.connected,

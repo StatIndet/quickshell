@@ -9,8 +9,6 @@ StyledFlickable {
 
     property var target: null
     readonly property bool isWired: target && target.type === "wired"
-    readonly property string targetInterface: String(target ? target.deviceName || target.name || "" : "")
-    readonly property bool runtimeMatchesInterface: NetworkService.runtimeDetails.interfaceName === targetInterface
     property bool profileRemoved: false
     readonly property var profile: {
         if (!target || profileRemoved)
@@ -26,33 +24,24 @@ StyledFlickable {
             return item.deviceName === target.deviceName && item.ssid === target.ssid;
         }) : null;
         const currentProfiles = currentNetwork ? currentNetwork.profiles : target.profiles;
-        if (currentProfiles && currentProfiles.length > 0) {
-            const activeUuid = runtimeMatchesInterface ? NetworkService.runtimeDetails.connectionUuid : "";
-            return currentProfiles.find((item) => {
-                return activeUuid.length > 0 && item.uuid === activeUuid;
-            }) || currentProfiles[0];
-        }
+        if (currentProfiles && currentProfiles.length > 0)
+            return currentProfiles[0];
+
         if (isWired) {
-            const activeUuid = runtimeMatchesInterface ? NetworkService.runtimeDetails.connectionUuid : "";
-            return NetworkService.wiredProfiles.find((item) => {
-                return item.deviceName === target.name && activeUuid.length > 0 && item.uuid === activeUuid;
-            }) || NetworkService.wiredProfiles.find((item) => {
-                return item.deviceName === target.name;
-            }) || null;
+            const interfaceName = String(target.deviceName || target.name || "");
+            for (const wiredProfile of NetworkService.wiredProfiles) {
+                if (wiredProfile.deviceName === interfaceName)
+                    return wiredProfile;
+
+            }
         }
         return null;
     }
     readonly property var nativeNetwork: target && target.nativeNetwork ? target.nativeNetwork : profile ? profile.nativeNetwork : null
-    readonly property bool connectionIsActive: {
-        if (!nativeNetwork || !nativeNetwork.connected)
-            return false;
-
-        if (target && target.nativeSettings)
-            return runtimeMatchesInterface && NetworkService.runtimeDetails.connectionUuid === target.uuid;
-
-        return true;
-    }
-    readonly property bool showRuntimeDetails: connectionIsActive && runtimeMatchesInterface
+    readonly property bool connectionIsActive: !!(nativeNetwork && nativeNetwork.connected)
+    readonly property var wiredDevice: isWired && profile ? NetworkService.wiredDevices.find((device) => {
+        return device.deviceName === profile.deviceName;
+    }) || null : null
     property var original: null
     property string loadedProfileUuid: ""
     property string mode: "auto"
@@ -110,26 +99,19 @@ StyledFlickable {
         root.autoconnect = snapshot.autoconnect;
     }
 
-    function refreshRuntime() {
-        if (root.target && root.nativeNetwork && root.nativeNetwork.connected)
-            NetworkService.requestRuntimeDetails(root.profile || root.target);
-        else
-            NetworkService.releaseRuntimeDetails();
+    function resetEditor() {
+        root.profileRemoved = false;
+        root.saving = false;
+        root.errorMessage = "";
+        root.successMessage = "";
+        root.loadProfile();
     }
 
     clip: true
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
-    Component.onCompleted: {
-        loadProfile();
-        refreshRuntime();
-    }
-    Component.onDestruction: NetworkService.releaseRuntimeDetails()
-    onTargetChanged: {
-        root.profileRemoved = false;
-        loadProfile();
-        refreshRuntime();
-    }
+    Component.onCompleted: root.resetEditor()
+    onTargetChanged: root.resetEditor()
     onProfileChanged: {
         const uuid = String(root.profile ? root.profile.uuid || "" : "");
         if (uuid === root.loadedProfileUuid)
@@ -158,7 +140,6 @@ StyledFlickable {
             root.errorMessage = "";
             root.successMessage = root.nativeNetwork && root.nativeNetwork.connected ? qsTr("配置已保存；重新连接后将完整应用新的 IPv4 设置") : qsTr("配置已保存");
             root.loadProfile();
-            root.refreshRuntime();
         }
 
         function onProfileWriteFailed(uuid, message) {
@@ -188,15 +169,6 @@ StyledFlickable {
         target: NetworkService
     }
 
-    Connections {
-        function onConnectedChanged() {
-            root.refreshRuntime();
-        }
-
-        target: root.nativeNetwork
-        enabled: root.nativeNetwork !== null
-    }
-
     ColumnLayout {
         id: contentColumn
 
@@ -221,7 +193,7 @@ StyledFlickable {
                 visible: root.nativeNetwork && !root.connectionIsActive
                 text: qsTr("连接")
                 iconName: "link"
-                enabled: !NetworkService.busy && (!root.isWired || root.target.hasLink)
+                enabled: !NetworkService.busy && (!root.isWired || root.wiredDevice && root.wiredDevice.hasLink)
                 onClicked: {
                     if (root.profile)
                         NetworkService.connectProfile(root.profile);
@@ -249,9 +221,9 @@ StyledFlickable {
 
         InlineStatusBanner {
             Layout.fillWidth: true
-            visible: root.errorMessage.length > 0 || NetworkService.runtimeDetailsError.length > 0
+            visible: root.errorMessage.length > 0
             tone: "error"
-            message: root.errorMessage.length > 0 ? root.errorMessage : NetworkService.runtimeDetailsError
+            message: root.errorMessage
         }
 
         InlineStatusBanner {
@@ -265,71 +237,32 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("连接信息")
-            iconName: root.isWired ? "lan" : "wifi"
+            title: qsTr("连接配置")
+            iconName: "settings_ethernet"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("配置")
+                title: qsTr("配置名称")
                 supportingText: root.profile ? root.profile.name : qsTr("无可编辑配置")
             }
 
             SettingsRow {
                 Layout.fillWidth: true
+                visible: !root.isWired
+                title: qsTr("SSID")
+                supportingText: root.profile ? root.profile.ssid : "—"
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
                 title: qsTr("接口")
-                supportingText: root.profile ? root.profile.deviceName : root.target ? root.target.name : "—"
+                supportingText: root.profile ? root.profile.deviceName : root.target ? root.target.deviceName || root.target.name : "—"
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                visible: root.isWired
-                title: qsTr("链路速度")
-                supportingText: root.target && root.target.linkSpeed ? root.target.linkSpeed + " Mbps" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: !root.isWired
-                title: qsTr("信号")
-                supportingText: root.target && root.target.strength !== undefined ? root.target.strength + "%" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: !root.isWired
-                title: qsTr("安全类型")
-                supportingText: root.target ? String(root.target.security || qsTr("未知")) : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                visible: !root.isWired
-                title: qsTr("频率")
-                supportingText: root.showRuntimeDetails ? NetworkService.runtimeDetails.frequency || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("IP 地址")
-                supportingText: root.showRuntimeDetails && NetworkService.runtimeDetails.addresses ? NetworkService.runtimeDetails.addresses.join(", ") : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("Gateway")
-                supportingText: root.showRuntimeDetails ? NetworkService.runtimeDetails.gateway || "—" : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("DNS")
-                supportingText: root.showRuntimeDetails && NetworkService.runtimeDetails.dns ? NetworkService.runtimeDetails.dns.join(", ") : "—"
-            }
-
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("MAC")
-                supportingText: root.target ? root.target.address || (root.profile ? root.profile.deviceAddress : "—") : "—"
+                title: qsTr("UUID")
+                supportingText: root.profile ? root.profile.uuid : "—"
             }
 
         }

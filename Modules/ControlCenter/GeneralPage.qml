@@ -1,5 +1,4 @@
 import QtQuick
-import qs.Common
 
 Item {
     id: root
@@ -7,7 +6,6 @@ Item {
     property var parentModal: null
     property string currentSection: "overview"
     property bool presentationActive: false
-    property var networkDetailTarget: null
 
     function openSection(section) {
         root.closeChildWindows();
@@ -17,11 +15,6 @@ Item {
     function showOverview() {
         root.closeChildWindows();
         root.currentSection = "overview";
-    }
-
-    function showNetworkRoot() {
-        root.closeChildWindows();
-        root.currentSection = "network";
     }
 
     function closeChildWindows() {
@@ -53,12 +46,6 @@ Item {
                 return qsTr("默认应用");
             case "network":
                 return qsTr("网络");
-            case "network-add":
-                return qsTr("添加网络");
-            case "network-saved":
-                return qsTr("已保存网络");
-            case "network-detail":
-                return root.networkDetailTarget ? String(root.networkDetailTarget.ssid || root.networkDetailTarget.name || qsTr("连接详情")) : qsTr("连接详情");
             default:
                 return qsTr("通用");
             }
@@ -78,15 +65,12 @@ Item {
             case "default-apps":
                 return "apps";
             case "network":
-            case "network-add":
-            case "network-saved":
-            case "network-detail":
                 return "wifi";
             default:
                 return "settings";
             }
         }
-        onBackRequested: root.currentSection.startsWith("network-") ? root.showNetworkRoot() : root.showOverview()
+        onBackRequested: root.showOverview()
     }
 
     Loader {
@@ -112,12 +96,6 @@ Item {
                 return Qt.resolvedUrl("DefaultAppsPage.qml");
             case "network":
                 return Qt.resolvedUrl("NetworkPage.qml");
-            case "network-add":
-                return Qt.resolvedUrl("AddNetworkPage.qml");
-            case "network-saved":
-                return Qt.resolvedUrl("SavedNetworksPage.qml");
-            case "network-detail":
-                return Qt.resolvedUrl("NetworkConnectionDetailPage.qml");
             default:
                 return Qt.resolvedUrl("GeneralOverviewPage.qml");
             }
@@ -134,28 +112,12 @@ Item {
                 return root.presentationActive && root.currentSection === "sidebar";
             });
 
-            if ("target" in item)
-                item.target = root.networkDetailTarget;
-
         }
     }
 
     Connections {
         function onSectionRequested(section) {
             root.openSection(section);
-        }
-
-        function onDetailRequested(target) {
-            root.networkDetailTarget = target;
-            root.openSection("network-detail");
-        }
-
-        function onCompleted() {
-            root.showNetworkRoot();
-        }
-
-        function onProfileForgotten() {
-            root.showNetworkRoot();
         }
 
         target: pageLoader.item

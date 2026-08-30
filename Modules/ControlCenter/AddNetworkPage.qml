@@ -24,10 +24,23 @@ StyledFlickable {
         }
     }
 
+    function clearSensitiveData() {
+        passwordField.text = "";
+    }
+
+    function resetForm() {
+        root.submitting = false;
+        root.errorMessage = "";
+        ssidField.text = "";
+        hiddenSwitch.checked = false;
+        securitySelect.value = "personal";
+        root.clearSensitiveData();
+    }
+
     clip: true
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
-    Component.onDestruction: passwordField.text = ""
+    Component.onDestruction: root.clearSensitiveData()
 
     Connections {
         function onAddWifiFinished(success, result, errorMessage) {
@@ -35,11 +48,12 @@ StyledFlickable {
                 return ;
 
             root.submitting = false;
-            passwordField.text = "";
-            if (success)
+            if (success) {
+                root.resetForm();
                 root.completed();
-            else
+            } else {
                 root.errorMessage = errorMessage;
+            }
         }
 
         target: NetworkService
