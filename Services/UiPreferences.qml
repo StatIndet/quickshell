@@ -44,6 +44,7 @@ Singleton {
     property var cloudBackupFolders: []
     property string cloudDefaultRemoteName: ""
     property string cloudBackupRoot: "Clavis Backups"
+    property string cloudUploadRoot: "Clavis Uploads"
 
     function normalizedLanguage(value) {
         const normalized = String(value || "").replace("-", "_").toLowerCase();
@@ -380,6 +381,24 @@ Singleton {
         root.save();
     }
 
+    function normalizedCloudUploadRoot(value) {
+        let normalized = String(value || "").trim().replace(/^\/+|\/+$/g, "");
+        normalized = normalized.replace(/\/{2,}/g, "/");
+        if (normalized === "" || normalized.indexOf(":") >= 0)
+            return "Clavis Uploads";
+
+        return normalized;
+    }
+
+    function setCloudUploadRoot(value) {
+        const normalized = root.normalizedCloudUploadRoot(value);
+        if (root.cloudUploadRoot === normalized)
+            return ;
+
+        root.cloudUploadRoot = normalized;
+        root.save();
+    }
+
     function save() {
         if (!root.storeReady) {
             root.savePending = true;
@@ -412,7 +431,8 @@ Singleton {
             "cloudBackupFoldersVersion": root.cloudBackupFoldersVersion,
             "cloudBackupFolders": root.cloudBackupFolders,
             "cloudDefaultRemoteName": root.cloudDefaultRemoteName,
-            "cloudBackupRoot": root.cloudBackupRoot
+            "cloudBackupRoot": root.cloudBackupRoot,
+            "cloudUploadRoot": root.cloudUploadRoot
         }, null, 2));
     }
 
@@ -483,7 +503,7 @@ Singleton {
 
                 root.cloudDefaultRemoteName = root.normalizedCloudRemoteName(parsed.cloudDefaultRemoteName);
                 root.cloudBackupRoot = root.normalizedCloudBackupRoot(parsed.cloudBackupRoot);
-
+                root.cloudUploadRoot = root.normalizedCloudUploadRoot(parsed.cloudUploadRoot);
             } catch (error) {
                 console.warn("UiPreferences failed to load:", error);
             }

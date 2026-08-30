@@ -45,7 +45,7 @@ StyledFlickable {
         cloudManager.dismiss();
     }
 
-    function backupRootError(value) {
+    function cloudRootError(value) {
         const raw = String(value || "").trim();
         if (raw.indexOf(":") >= 0)
             return qsTr("请输入 remote 内的相对目录，不要包含 remote 名称或冒号");
@@ -56,11 +56,19 @@ StyledFlickable {
     }
 
     function saveBackupRoot() {
-        const error = root.backupRootError(backupRootField.text);
+        const error = root.cloudRootError(backupRootField.text);
         if (error !== "")
             return ;
         UiPreferences.setCloudBackupRoot(backupRootField.text);
         backupRootField.text = "/" + UiPreferences.cloudBackupRoot;
+    }
+
+    function saveUploadRoot() {
+        const error = root.cloudRootError(uploadRootField.text);
+        if (error !== "")
+            return ;
+        UiPreferences.setCloudUploadRoot(uploadRootField.text);
+        uploadRootField.text = "/" + UiPreferences.cloudUploadRoot;
     }
 
     function refreshConfiguration() {
@@ -191,12 +199,23 @@ StyledFlickable {
             }
 
             MaterialFilledTextField {
+                id: uploadRootField
+
+                Layout.fillWidth: true
+                labelText: qsTr("文件上传位置")
+                text: "/" + UiPreferences.cloudUploadRoot
+                error: root.cloudRootError(text) !== ""
+                onAccepted: root.saveUploadRoot()
+                onEditingFinished: root.saveUploadRoot()
+            }
+
+            MaterialFilledTextField {
                 id: backupRootField
 
                 Layout.fillWidth: true
                 labelText: qsTr("电脑备份位置")
                 text: "/" + UiPreferences.cloudBackupRoot
-                error: root.backupRootError(text) !== ""
+                error: root.cloudRootError(text) !== ""
                 onAccepted: root.saveBackupRoot()
                 onEditingFinished: root.saveBackupRoot()
             }

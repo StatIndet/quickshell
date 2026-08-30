@@ -290,27 +290,27 @@
         <translation>請輸入有效的遠端目錄</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="116"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="124"/>
         <source>云存储</source>
         <translation>雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="127"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="135"/>
         <source>尚未选择云存储</source>
         <translation>尚未選擇雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="194"/>
         <source>添加云存储</source>
         <translation>新增雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="216"/>
         <source>电脑备份位置</source>
         <translation>電腦備份位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="176"/>
         <source>刷新配置</source>
         <translation>重新整理設定</translation>
     </message>
@@ -320,32 +320,37 @@
         <translation>此雲端儲存不支援寫入，無法設為預設</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="164"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="172"/>
         <source>正在刷新配置</source>
         <translation>正在重新整理設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="176"/>
         <source>配置已刷新</source>
         <translation>設定已重新整理</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>查看云存储</source>
         <translation>檢視雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="208"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="205"/>
+        <source>文件上传位置</source>
+        <translation>檔案上傳位置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="227"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>正在為已啟用的程式產生 Matugen 配色…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="214"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="233"/>
         <source>Matugen 模板生成</source>
         <translation>Matugen 範本產生</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="229"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="248"/>
         <source>启用 %1 Matugen 模板</source>
         <translation>啟用 %1 Matugen 範本</translation>
     </message>
@@ -1930,96 +1935,111 @@
     <name>CloudUploadContent</name>
     <message>
         <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="40"/>
+        <source>已暂停</source>
+        <translation>已暫停</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="44"/>
         <source>上传完成</source>
         <translation>上傳完成</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="42"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="46"/>
         <source>上传失败</source>
         <translation>上傳失敗</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="44"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="48"/>
         <source>已取消</source>
         <translation>已取消</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="46"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="50"/>
         <source>正在上传</source>
         <translation>正在上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="48"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="52"/>
         <source>正在准备</source>
         <translation>正在準備</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="50"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="54"/>
         <source>等待上传</source>
         <translation>等待上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="57"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="61"/>
         <source>%1 / %2</source>
         <translation>%1 / %2</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="64"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="68"/>
         <source>剩余 %1</source>
         <translation>剩餘 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="526"/>
         <source>释放以上传</source>
         <translation>放開以上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="161"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="526"/>
         <source>将文件或文件夹拖到这里</source>
         <translation>將檔案或資料夾拖到這裡</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="171"/>
-        <source>文件夹会保持原有目录结构，上传到默认云存储的 Clavis Uploads</source>
-        <translation>資料夾會保留原有目錄結構，上傳到預設雲端儲存的 Clavis Uploads</translation>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="537"/>
+        <source>已加入 %1 个上传任务</source>
+        <translation>已加入 %1 個上傳工作</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="223"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="134"/>
         <source>没有可用的默认云存储</source>
         <translation>沒有可用的預設雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="233"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="144"/>
         <source>请先在设置中心选择一个可写入的默认云存储</source>
         <translation>請先在設定中心選擇一個可寫入的預設雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="243"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="154"/>
         <source>打开云存储设置</source>
         <translation>開啟雲端儲存設定</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="267"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="205"/>
         <source>上传队列</source>
         <translation>上傳佇列</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="275"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="213"/>
+        <source>全部继续</source>
+        <translation>全部繼續</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="213"/>
+        <source>全部暂停</source>
+        <translation>全部暫停</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="220"/>
         <source>清除已完成</source>
         <translation>清除已完成</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="282"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="227"/>
         <source>返回上传</source>
         <translation>返回上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="403"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="430"/>
         <source>重试</source>
         <translation>重試</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="411"/>
+        <location filename="../Modules/Keystone/CloudUploadContent/CloudUploadContent.qml" line="438"/>
         <source>取消上传</source>
         <translation>取消上傳</translation>
     </message>
@@ -2027,27 +2047,22 @@
 <context>
     <name>CloudUploadService</name>
     <message>
-        <location filename="../Services/CloudUploadService.qml" line="79"/>
+        <location filename="../Services/CloudUploadService.qml" line="84"/>
         <source>没有可上传的本地文件或文件夹</source>
         <translation>沒有可上傳的本機檔案或資料夾</translation>
     </message>
     <message>
-        <location filename="../Services/CloudUploadService.qml" line="84"/>
+        <location filename="../Services/CloudUploadService.qml" line="89"/>
         <source>请先选择可写入的默认云存储</source>
         <translation>請先選擇可寫入的預設雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Services/CloudUploadService.qml" line="115"/>
-        <source>已加入 %1 个上传任务</source>
-        <translation>已加入 %1 個上傳工作</translation>
-    </message>
-    <message>
-        <location filename="../Services/CloudUploadService.qml" line="115"/>
+        <location filename="../Services/CloudUploadService.qml" line="122"/>
         <source>相同路径已在上传队列中</source>
         <translation>相同路徑已在上傳佇列中</translation>
     </message>
     <message>
-        <location filename="../Services/CloudUploadService.qml" line="203"/>
+        <location filename="../Services/CloudUploadService.qml" line="212"/>
         <source>上传失败，请检查网络或远程权限</source>
         <translation>上傳失敗，請檢查網路或遠端權限</translation>
     </message>
@@ -3693,22 +3708,22 @@
 <context>
     <name>HubContent</name>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="48"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="52"/>
         <source>仪表板</source>
         <translation>儀表板</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="54"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="58"/>
         <source>媒体</source>
         <translation>媒體</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="60"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="64"/>
         <source>上传</source>
         <translation>上傳</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="66"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="70"/>
         <source>天气</source>
         <translation>天氣</translation>
     </message>
@@ -7180,7 +7195,7 @@
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="527"/>
+        <location filename="../Services/UiPreferences.qml" line="548"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>

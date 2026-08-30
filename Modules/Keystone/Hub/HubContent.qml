@@ -20,6 +20,10 @@ Item {
     signal closeRequested()
     signal avatarEditRequested()
 
+    function finishCloudUploadDrop(addedCount) {
+        cloudUploadContent.finishDrop(addedCount);
+    }
+
     implicitWidth: currentIndex === 0 ? 860 : currentIndex === 2 ? 960 : currentIndex === 3 ? 960 : 760
     implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 : 570)
 
@@ -194,6 +198,8 @@ Item {
         }
 
         CloudUploadContent {
+            id: cloudUploadContent
+
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width * 0.95

@@ -7,10 +7,15 @@ pragma Singleton
 Singleton {
     id: root
 
-    readonly property string uploadRoot: "Clavis Uploads"
+    readonly property string uploadRoot: UiPreferences.cloudUploadRoot
     readonly property bool hasWritableRemote: RcloneService.selectedRemote !== null && !RcloneService.isReadOnly(RcloneService.selectedRemote)
     readonly property bool uploadActive: currentJobId >= 0 || uploadProcess.running
+    readonly property int uploadJobCount: uploadJobs.length
+    readonly property bool hasPendingUploads: uploadJobs.some((job) => {
+        return ["queued", "preparing", "uploading"].indexOf(job.state) >= 0;
+    })
     property var uploadJobs: []
+    property bool uploadsPaused: false
     property int currentJobId: -1
     property int nextJobId: 1
     property string lastMessage: ""
@@ -114,7 +119,7 @@ Singleton {
             added += 1;
         }
         uploadJobs = jobs;
-        lastMessage = added > 0 ? qsTr("已加入 %1 个上传任务").arg(added) : qsTr("相同路径已在上传队列中");
+        lastMessage = added > 0 ? "" : qsTr("相同路径已在上传队列中");
         lastMessageTone = added > 0 ? "success" : "neutral";
         if (added > 0)
             Qt.callLater(startNextJob);
@@ -123,7 +128,7 @@ Singleton {
     }
 
     function startNextJob() {
-        if (uploadProcess.running || currentJobId >= 0)
+        if (uploadsPaused || uploadProcess.running || currentJobId >= 0)
             return ;
 
         let job = null;
@@ -216,6 +221,35 @@ Singleton {
         });
     }
 
+    function removeCompletedUpload(id) {
+        const index = indexForId(id);
+        if (index < 0 || uploadJobs[index].state !== "success")
+            return false;
+
+        const jobs = uploadJobs.slice();
+        jobs.splice(index, 1);
+        uploadJobs = jobs;
+        return true;
+    }
+
+    function setUploadsPaused(paused) {
+        const nextPaused = Boolean(paused);
+        if (uploadsPaused === nextPaused)
+            return ;
+
+        uploadsPaused = nextPaused;
+        if (uploadProcess.running)
+            uploadProcess.signal(nextPaused ? 19 : 18);
+
+        if (!nextPaused)
+            Qt.callLater(startNextJob);
+
+    }
+
+    function toggleUploadsPaused() {
+        setUploadsPaused(!uploadsPaused);
+    }
+
     function retryUpload(id) {
         const index = indexForId(id);
         if (index < 0 || uploadJobs[index].state !== "error" || isActivePath(uploadJobs[index].sourcePath))
@@ -252,6 +286,9 @@ Singleton {
         }
         if (id === currentJobId && (state === "preparing" || state === "uploading")) {
             _cancelRequestedId = id;
+            if (uploadsPaused)
+                uploadProcess.signal(18);
+
             uploadProcess.signal(2);
         }
     }

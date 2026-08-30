@@ -1347,7 +1347,8 @@ Variants {
                             drop.accepted = false;
                             return ;
                         }
-                        CloudUploadService.enqueueUrls(drop.urls);
+                        const addedCount = CloudUploadService.enqueueUrls(drop.urls);
+                        hub.finishCloudUploadDrop(addedCount);
                         drop.acceptProposedAction();
                     }
                 }
