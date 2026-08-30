@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
+import qs.Services
 import qs.Widgets.common
 
 StyledFlickable {
@@ -62,6 +63,15 @@ StyledFlickable {
                 text: qsTr("语言与地区")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("language-region")
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
+                iconName: "wifi"
+                text: qsTr("网络")
+                description: NetworkService.available ? NetworkService.activeConnection : qsTr("NetworkManager 不可用")
+                trailingIconName: "chevron_right"
+                onClicked: root.sectionRequested("network")
             }
 
         }
