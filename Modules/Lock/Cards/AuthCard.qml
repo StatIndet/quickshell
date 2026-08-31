@@ -11,31 +11,13 @@ FocusScope {
 
     property var context: null
     readonly property var passwordShapeQueue: {
-        const shapes = [
-            MaterialShape.Slanted,
-            MaterialShape.Arch,
-            MaterialShape.Fan,
-            MaterialShape.Arrow,
-            MaterialShape.SemiCircle,
-            MaterialShape.Triangle,
-            MaterialShape.Diamond,
-            MaterialShape.ClamShell,
-            MaterialShape.Pentagon,
-            MaterialShape.Gem,
-            MaterialShape.Sunny,
-            MaterialShape.VerySunny,
-            MaterialShape.Cookie4Sided,
-            MaterialShape.Ghostish,
-            MaterialShape.SoftBurst
-        ];
-
+        const shapes = [MaterialShape.Slanted, MaterialShape.Arch, MaterialShape.Fan, MaterialShape.Arrow, MaterialShape.SemiCircle, MaterialShape.Triangle, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon, MaterialShape.Gem, MaterialShape.Sunny, MaterialShape.VerySunny, MaterialShape.Cookie4Sided, MaterialShape.Ghostish, MaterialShape.SoftBurst];
         for (let i = shapes.length - 1; i > 0; --i) {
             const j = Math.floor(Math.random() * (i + 1));
             const shape = shapes[i];
             shapes[i] = shapes[j];
             shapes[j] = shape;
         }
-
         return shapes;
     }
     readonly property bool hasText: input.text.length > 0
@@ -47,10 +29,13 @@ FocusScope {
     signal requestUnlock()
 
     Layout.fillWidth: true
-    Layout.preferredHeight: Sizes.lockAuthHeight
-
+    Layout.preferredHeight: Metrics.lockAuthHeight
     Component.onCompleted: input.forceActiveFocus()
-    onActiveFocusChanged: if (activeFocus) input.forceActiveFocus()
+    onActiveFocusChanged: {
+        if (activeFocus)
+            input.forceActiveFocus();
+
+    }
 
     Rectangle {
         id: inputFrame
@@ -71,11 +56,11 @@ FocusScope {
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: Math.round(5 * 4 / 3)
-            spacing: Math.round(12 * 4 / 3)
+            anchors.margins: Metrics.spacingXS
+            spacing: Metrics.spacingL
 
             Item {
-                Layout.preferredWidth: Math.round(38 * 4 / 3)
+                Layout.preferredWidth: Metrics.controlHeightXL
                 Layout.fillHeight: true
 
                 Item {
@@ -101,7 +86,9 @@ FocusScope {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
+
                         }
+
                     }
 
                     Text {
@@ -113,15 +100,20 @@ FocusScope {
                         font.family: Fonts.materialSymbolsRounded
                         font.pixelSize: 24
                         opacity: root.busy ? 0 : 1
+
                         Behavior on opacity {
                             NumberAnimation {
                                 duration: Appearance.animation.expressiveEffects.duration
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
+
                         }
+
                     }
+
                 }
+
             }
 
             Item {
@@ -141,14 +133,17 @@ FocusScope {
                     echoMode: TextInput.Password
                     inputMethodHints: Qt.ImhSensitiveData
                     onActiveFocusChanged: cursorVisible = false
-                    onCursorVisibleChanged: if (cursorVisible) cursorVisible = false
+                    onCursorVisibleChanged: {
+                        if (cursorVisible)
+                            cursorVisible = false;
 
+                    }
                     onAccepted: {
                         placeholder.animateOnNextShow = false;
                         if (!root.busy)
                             root.requestUnlock();
-                    }
 
+                    }
                     onTextChanged: {
                         if (root.context)
                             root.context.currentText = text;
@@ -157,23 +152,22 @@ FocusScope {
                             dotsList.bindImplicitWidth();
                         else if (text.length === 0)
                             placeholder.animateOnNextShow = true;
-
-                        while (dotsModel.count < text.length)
-                            dotsModel.append({});
-
-                        while (dotsModel.count > text.length)
-                            dotsModel.remove(dotsModel.count - 1);
+                        while (dotsModel.count < text.length)dotsModel.append({
+                        })
+                        while (dotsModel.count > text.length)dotsModel.remove(dotsModel.count - 1)
                     }
 
                     Connections {
-                        target: root.context
-                        ignoreUnknownSignals: true
-
                         function onCurrentTextChanged() {
                             if (root.context && input.text !== root.context.currentText)
                                 input.text = root.context.currentText;
+
                         }
+
+                        target: root.context
+                        ignoreUnknownSignals: true
                     }
+
                 }
 
                 Text {
@@ -191,11 +185,13 @@ FocusScope {
 
                     Behavior on opacity {
                         enabled: placeholder.animateOnNextShow
+
                         NumberAnimation {
                             duration: Appearance.animation.expressiveEffects.duration
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
+
                     }
 
                     Behavior on scale {
@@ -204,7 +200,9 @@ FocusScope {
                             easing.type: Appearance.animation.expressiveFastSpatial.type
                             easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                         }
+
                     }
+
                 }
 
                 ListModel {
@@ -229,7 +227,9 @@ FocusScope {
 
                     function bindImplicitWidth() {
                         implicitWidthBehavior.enabled = false;
-                        implicitWidth = Qt.binding(() => fullWidth);
+                        implicitWidth = Qt.binding(() => {
+                            return fullWidth;
+                        });
                         implicitWidthBehavior.enabled = true;
                     }
 
@@ -238,7 +238,7 @@ FocusScope {
                     implicitWidth: fullWidth
                     implicitHeight: dotSize
                     orientation: ListView.Horizontal
-                    spacing: Math.round(Sizes.lockCardGap / 2)
+                    spacing: Metrics.spacingS
                     interactive: false
                     model: dotsModel
 
@@ -250,6 +250,7 @@ FocusScope {
                             easing.type: Appearance.animation.standard.type
                             easing.bezierCurve: Appearance.animation.standard.bezierCurve
                         }
+
                     }
 
                     delegate: Item {
@@ -261,7 +262,6 @@ FocusScope {
                         implicitWidth: dotsList.dotSize
                         width: implicitWidth
                         height: dotsList.dotSize
-
                         ListView.onRemove: {
                             appearAnimation.stop();
                             removeAnimation.start();
@@ -272,24 +272,9 @@ FocusScope {
 
                             anchors.centerIn: parent
                             implicitSize: dotsList.dotSize * 1.5
-                            shape: root.passwordShapeQueue[
-                                character.index
-                                % root.passwordShapeQueue.length
-                            ] ?? MaterialShape.Circle
+                            shape: root.passwordShapeQueue[character.index % root.passwordShapeQueue.length] ?? MaterialShape.Circle
                             color: Appearance.colors.colOnSurface
-                            animationDuration:
-                                Appearance.animation.expressiveFastSpatial.duration
-
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration:
-                                        Appearance.animation.expressiveSlowEffects.duration
-                                    easing.type:
-                                        Appearance.animation.expressiveSlowEffects.type
-                                    easing.bezierCurve:
-                                        Appearance.animation.expressiveSlowEffects.bezierCurve
-                                }
-                            }
+                            animationDuration: Appearance.animation.expressiveFastSpatial.duration
 
                             SequentialAnimation {
                                 id: appearAnimation
@@ -302,12 +287,9 @@ FocusScope {
                                         property: "opacity"
                                         from: 0
                                         to: 1
-                                        duration:
-                                            Appearance.animation.expressiveEffects.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveEffects.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveEffects.bezierCurve
+                                        duration: Appearance.animation.expressiveEffects.duration
+                                        easing.type: Appearance.animation.expressiveEffects.type
+                                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                                     }
 
                                     NumberAnimation {
@@ -315,12 +297,9 @@ FocusScope {
                                         property: "scale"
                                         from: 0
                                         to: 1
-                                        duration:
-                                            Appearance.animation.expressiveFastSpatial.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveFastSpatial.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveFastSpatial.bezierCurve
+                                        duration: Appearance.animation.expressiveFastSpatial.duration
+                                        easing.type: Appearance.animation.expressiveFastSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                                     }
 
                                     NumberAnimation {
@@ -328,12 +307,9 @@ FocusScope {
                                         property: "implicitWidth"
                                         from: dotsList.dotSize
                                         to: dotsList.dotSize * 1.3
-                                        duration:
-                                            Appearance.animation.expressiveDefaultSpatial.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveDefaultSpatial.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveDefaultSpatial.bezierCurve
+                                        duration: Appearance.animation.expressiveDefaultSpatial.duration
+                                        easing.type: Appearance.animation.expressiveDefaultSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
 
                                     PropertyAction {
@@ -341,12 +317,11 @@ FocusScope {
                                         property: "nonAnimatedWidthScale"
                                         value: 1.5
                                     }
+
                                 }
 
                                 PauseAnimation {
-                                    duration:
-                                        Appearance.animation.expressiveEffects.duration
-                                        * 0.9
+                                    duration: Appearance.animation.expressiveEffects.duration * 0.9
                                 }
 
                                 PropertyAction {
@@ -360,24 +335,18 @@ FocusScope {
                                         target: characterShape
                                         property: "scale"
                                         to: 2 / 3
-                                        duration:
-                                            Appearance.animation.expressiveFastSpatial.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveFastSpatial.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveFastSpatial.bezierCurve
+                                        duration: Appearance.animation.expressiveFastSpatial.duration
+                                        easing.type: Appearance.animation.expressiveFastSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                                     }
 
                                     NumberAnimation {
                                         target: character
                                         property: "implicitWidth"
                                         to: dotsList.dotSize
-                                        duration:
-                                            Appearance.animation.expressiveDefaultSpatial.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveDefaultSpatial.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveDefaultSpatial.bezierCurve
+                                        duration: Appearance.animation.expressiveDefaultSpatial.duration
+                                        easing.type: Appearance.animation.expressiveDefaultSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
 
                                     PropertyAction {
@@ -385,7 +354,9 @@ FocusScope {
                                         property: "nonAnimatedWidthScale"
                                         value: 1
                                     }
+
                                 }
+
                             }
 
                             SequentialAnimation {
@@ -402,25 +373,20 @@ FocusScope {
                                         target: characterShape
                                         property: "opacity"
                                         to: 0
-                                        duration:
-                                            Appearance.animation.expressiveEffects.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveEffects.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveEffects.bezierCurve
+                                        duration: Appearance.animation.expressiveEffects.duration
+                                        easing.type: Appearance.animation.expressiveEffects.type
+                                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                                     }
 
                                     NumberAnimation {
                                         target: characterShape
                                         property: "scale"
                                         to: 0.5
-                                        duration:
-                                            Appearance.animation.expressiveFastSpatial.duration
-                                        easing.type:
-                                            Appearance.animation.expressiveFastSpatial.type
-                                        easing.bezierCurve:
-                                            Appearance.animation.expressiveFastSpatial.bezierCurve
+                                        duration: Appearance.animation.expressiveFastSpatial.duration
+                                        easing.type: Appearance.animation.expressiveFastSpatial.type
+                                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                                     }
+
                                 }
 
                                 PropertyAction {
@@ -428,45 +394,35 @@ FocusScope {
                                     property: "ListView.delayRemove"
                                     value: false
                                 }
+
                             }
+
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: Appearance.animation.expressiveSlowEffects.duration
+                                    easing.type: Appearance.animation.expressiveSlowEffects.type
+                                    easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
+                                }
+
+                            }
+
                         }
+
                     }
+
                 }
+
             }
 
             Rectangle {
                 id: enterButton
 
                 Layout.alignment: Qt.AlignVCenter
-                Layout.preferredWidth: implicitWidth + (root.enterPressed ? Sizes.lockOuterPadding * 2 : root.hasText ? Sizes.lockOuterPadding : 0)
-                implicitWidth: enterIcon.implicitWidth + Sizes.lockOuterPadding * 2
-                implicitHeight: enterIcon.implicitHeight + Math.round(10 * 4 / 3) * 2
-                radius: root.hasText || root.enterPressed ? Math.round(17 * 4 / 3) : Math.min(implicitWidth, implicitHeight) / 2
+                Layout.preferredWidth: implicitWidth + (root.enterPressed ? Metrics.lockOuterPadding * 2 : root.hasText ? Metrics.lockOuterPadding : 0)
+                implicitWidth: enterIcon.implicitWidth + Metrics.lockOuterPadding * 2
+                implicitHeight: enterIcon.implicitHeight + Metrics.spacingM * 2
+                radius: root.hasText || root.enterPressed ? Metrics.cornerL : Math.min(implicitWidth, implicitHeight) / 2
                 color: root.hasText ? Appearance.colors.colPrimary : Appearance.colors.colLayer3
-
-                Behavior on Layout.preferredWidth {
-                    NumberAnimation {
-                        duration: Appearance.animation.expressiveFastSpatial.duration
-                        easing.type: Appearance.animation.expressiveFastSpatial.type
-                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-                    }
-                }
-
-                Behavior on radius {
-                    NumberAnimation {
-                        duration: Appearance.animation.expressiveFastSpatial.duration
-                        easing.type: Appearance.animation.expressiveFastSpatial.type
-                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
-                    }
-                }
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Appearance.animation.standard.duration
-                        easing.type: Appearance.animation.standard.type
-                        easing.bezierCurve: Appearance.animation.standard.bezierCurve
-                    }
-                }
 
                 Rectangle {
                     anchors.fill: parent
@@ -480,7 +436,9 @@ FocusScope {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
+
                     }
+
                 }
 
                 Text {
@@ -493,7 +451,36 @@ FocusScope {
                     font.pixelSize: 24
                     font.weight: 500
                 }
+
+                Behavior on Layout.preferredWidth {
+                    NumberAnimation {
+                        duration: Appearance.animation.expressiveFastSpatial.duration
+                        easing.type: Appearance.animation.expressiveFastSpatial.type
+                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+                    }
+
+                }
+
+                Behavior on radius {
+                    NumberAnimation {
+                        duration: Appearance.animation.expressiveFastSpatial.duration
+                        easing.type: Appearance.animation.expressiveFastSpatial.type
+                        easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+                    }
+
+                }
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Appearance.animation.standard.duration
+                        easing.type: Appearance.animation.standard.type
+                        easing.bezierCurve: Appearance.animation.standard.bezierCurve
+                    }
+
+                }
+
             }
+
         }
 
         MouseArea {
@@ -503,15 +490,18 @@ FocusScope {
             z: 10
             hoverEnabled: true
             cursorShape: root.enterEnabled && mouseX >= enterButton.x ? Qt.PointingHandCursor : Qt.IBeamCursor
-            onPressed: mouse => {
+            onPressed: (mouse) => {
                 rippleEffect.startAt(mouse.x, mouse.y);
                 input.forceActiveFocus();
             }
-            onClicked: mouse => {
+            onClicked: (mouse) => {
                 input.forceActiveFocus();
                 if (root.enterEnabled && mouse.x >= enterButton.x)
                     root.requestUnlock();
+
             }
         }
+
     }
+
 }

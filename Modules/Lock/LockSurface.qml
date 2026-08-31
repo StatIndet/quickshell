@@ -18,30 +18,24 @@ WlSessionLockSurface {
     property real backgroundBlur: 0
     property bool startupStarted: false
     property bool startupFallbackElapsed: false
-
     readonly property real targetHeight: Math.max(1, height * Sizes.lockHeightMult)
     readonly property real targetWidth: targetHeight * Sizes.lockRatio
-    readonly property real compactSize: Math.min(Sizes.lockIconPanelSize, targetHeight)
+    readonly property real compactSize: Math.min(Metrics.lockIconPanelSize, targetHeight)
     readonly property real compactRadius: compactSize / 4
-    readonly property real panelRadius: Sizes.lockCardRadiusLarge * 1.5
+    readonly property real panelRadius: Metrics.lockCardRadius * 1.5
     readonly property string snapshotSource: LockSnapshot.snapshotUrl(root.screen)
     readonly property bool snapshotReady: snapshotSource !== "" && desktopSnapshotFallback.status === Image.Ready
     readonly property bool canStartStartupAnimation: snapshotReady || startupFallbackElapsed
 
-    color: "transparent"
-
-    onCanStartStartupAnimationChanged: maybeStartStartupAnimation()
-
-    Component.onCompleted: maybeStartStartupAnimation()
-
     function focusAuth() {
         if (lockContent.opacity > 0)
             lockContent.forceAuthFocus();
+
     }
 
     function maybeStartStartupAnimation() {
         if (startupStarted || !canStartStartupAnimation)
-            return;
+            return ;
 
         startupStarted = true;
         startupAnim.start();
@@ -49,29 +43,36 @@ WlSessionLockSurface {
 
     function startExitAnimation() {
         if (isExiting)
-            return;
+            return ;
 
         startupAnim.stop();
         isExiting = true;
         exitAnim.start();
     }
 
+    color: "transparent"
+    onCanStartStartupAnimationChanged: maybeStartStartupAnimation()
+    Component.onCompleted: maybeStartStartupAnimation()
+
     Rectangle {
         id: immediateFallback
+
         anchors.fill: parent
         color: Appearance.colors.colLayer0Base
     }
 
     Image {
         id: desktopSnapshotFallback
+
         anchors.fill: parent
         source: root.snapshotSource
         fillMode: Image.Stretch
         asynchronous: false
         cache: false
         visible: root.snapshotSource !== ""
-
         layer.enabled: true
+        onStatusChanged: root.maybeStartStartupAnimation()
+
         layer.effect: MultiEffect {
             autoPaddingEnabled: false
             blurEnabled: true
@@ -80,7 +81,6 @@ WlSessionLockSurface {
             blurMultiplier: 1
         }
 
-        onStatusChanged: root.maybeStartStartupAnimation()
     }
 
     MouseArea {
@@ -89,25 +89,26 @@ WlSessionLockSurface {
     }
 
     Connections {
-        target: root.context
-        ignoreUnknownSignals: true
-
         function onUnlockFailed() {
             root.isExiting = false;
             root.focusAuth();
         }
+
+        target: root.context
+        ignoreUnknownSignals: true
     }
 
     Connections {
-        target: root.lock
-
         function onUnlock() {
             root.startExitAnimation();
         }
+
+        target: root.lock
     }
 
     Timer {
         id: startupFallbackTimer
+
         interval: 160
         running: true
         repeat: false
@@ -116,6 +117,7 @@ WlSessionLockSurface {
 
     ParallelAnimation {
         id: startupAnim
+
         running: false
         onFinished: root.focusAuth()
 
@@ -147,6 +149,7 @@ WlSessionLockSurface {
                     easing.type: Appearance.animation.standardAccel.type
                     easing.bezierCurve: Appearance.animation.standardAccel.bezierCurve
                 }
+
             }
 
             ParallelAnimation {
@@ -194,33 +197,29 @@ WlSessionLockSurface {
                     easing.type: Appearance.animation.expressiveDefaultSpatial.type
                     easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                 }
+
             }
+
         }
+
     }
 
     Rectangle {
         id: morphContainer
+
         anchors.centerIn: parent
         clip: true
-
         width: root.compactSize + (root.targetWidth - root.compactSize) * root.morphProgress
         height: root.compactSize + (root.targetHeight - root.compactSize) * root.morphProgress
         radius: root.compactRadius + (root.panelRadius - root.compactRadius) * root.morphProgress
         rotation: root.containerRotation
         scale: root.containerScale
-        color: BlurService.backgroundColor(
-            Appearance.colors.colLayer0)
-
+        color: BlurService.backgroundColor(Appearance.colors.colLayer0)
         layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: Appearance.colors.colShadow
-            shadowBlur: 0.8
-            shadowVerticalOffset: 8
-        }
 
         Text {
             id: lockIcon
+
             anchors.centerIn: parent
             text: "lock"
             rotation: 180
@@ -234,19 +233,35 @@ WlSessionLockSurface {
 
         LockContent {
             id: lockContent
+
             anchors.centerIn: parent
-            width: root.targetWidth - Sizes.lockOuterPadding * 2
-            height: root.targetHeight - Sizes.lockOuterPadding * 2
+            width: root.targetWidth - Metrics.lockOuterPadding * 2
+            height: root.targetHeight - Metrics.lockOuterPadding * 2
             context: root.context
             screenHeight: root.height
             opacity: root.contentOpacity
             scale: root.contentScale
             visible: opacity > 0 || root.morphProgress > 0.96
         }
+
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: Appearance.colors.colShadow
+            shadowBlur: 0.8
+            shadowVerticalOffset: 8
+        }
+
     }
 
     SequentialAnimation {
         id: exitAnim
+
+        onFinished: {
+            if (root.context)
+                root.context.finishUnlock();
+            else
+                root.lock.locked = false;
+        }
 
         ParallelAnimation {
             NumberAnimation {
@@ -302,6 +317,7 @@ WlSessionLockSurface {
                 easing.type: Appearance.animation.standardLarge.type
                 easing.bezierCurve: Appearance.animation.standardLarge.bezierCurve
             }
+
         }
 
         SequentialAnimation {
@@ -317,13 +333,9 @@ WlSessionLockSurface {
                 easing.type: Appearance.animation.standard.type
                 easing.bezierCurve: Appearance.animation.standard.bezierCurve
             }
+
         }
 
-        onFinished: {
-            if (root.context)
-                root.context.finishUnlock();
-            else
-                root.lock.locked = false;
-        }
     }
+
 }

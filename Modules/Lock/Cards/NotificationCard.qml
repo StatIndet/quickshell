@@ -9,11 +9,13 @@ import qs.Widgets.common
 Rectangle {
     id: root
 
+    property bool compact: false
+    property bool veryCompact: false
     readonly property var notifications: NotificationManager.list.slice().sort((a, b) => {
         return b.time - a.time;
     })
     readonly property int notificationCount: notifications.length
-    readonly property int cardMargin: Sizes.lockOuterPadding
+    readonly property int cardMargin: Metrics.lockOuterPadding
 
     function normalizeSource(source) {
         if (!source || source === "")
@@ -56,13 +58,13 @@ Rectangle {
     Layout.fillWidth: true
     Layout.fillHeight: true
     color: Appearance.colors.colLayer2
-    radius: Sizes.lockCardRadius
+    radius: Metrics.lockCardRadius
     clip: true
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: root.cardMargin
-        spacing: Math.round(10 * 4 / 3)
+        spacing: Metrics.spacingM
 
         Text {
             Layout.fillWidth: true
@@ -80,11 +82,12 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
+            visible: !root.veryCompact
 
             ColumnLayout {
                 anchors.centerIn: parent
                 width: parent.width
-                spacing: Math.round(20 * 4 / 3)
+                spacing: Metrics.spacingXL
                 opacity: root.notificationCount > 0 ? 0 : 1
                 scale: root.notificationCount > 0 ? 0.96 : 1
                 visible: opacity > 0
@@ -147,7 +150,7 @@ Rectangle {
                 anchors.fill: parent
                 visible: root.notificationCount > 0
                 clip: true
-                spacing: Math.round(7 * 4 / 3)
+                spacing: Metrics.spacingS
                 animateMovement: true
                 model: root.notifications
 
@@ -159,7 +162,7 @@ Rectangle {
 
                     width: ListView.view ? ListView.view.width : 0
                     height: Math.max(84, contentRow.implicitHeight + 14)
-                    radius: Sizes.lockCardRadiusSmall
+                    radius: Metrics.lockCardRadiusSmall
                     color: Appearance.colors.colLayer3
 
                     RowLayout {
@@ -275,6 +278,7 @@ Rectangle {
                                 elide: Text.ElideRight
                                 Layout.fillWidth: true
                                 maximumLineCount: 2
+                                visible: !root.compact
                                 opacity: 0.8
                             }
 
@@ -342,6 +346,18 @@ Rectangle {
 
             }
 
+        }
+
+        Text {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: root.veryCompact
+            text: root.notificationCount > 0 ? qsTr("%1 条通知").arg(root.notificationCount) : qsTr("没有通知")
+            color: Appearance.colors.colOnSurfaceVariant
+            font.family: Fonts.numeric
+            font.pixelSize: 20
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
 
     }

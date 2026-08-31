@@ -11,8 +11,13 @@ Item {
 
     property var context: null
     property real screenHeight: height
+    readonly property real availableWidth: width
+    readonly property real availableHeight: height
+    readonly property bool veryCompact: availableHeight < Metrics.lockVeryCompactBreakpoint
+    readonly property bool compact: availableHeight < Metrics.lockCompactBreakpoint
+    readonly property bool spacious: availableHeight >= Metrics.lockFetchExpandedBreakpoint
     readonly property real centerScale: Math.min(1, root.screenHeight / 1440)
-    readonly property real centerWidth: Sizes.lockCenterWidth * centerScale
+    readonly property real centerWidth: Metrics.lockCenterWidth * centerScale
     readonly property int clockHour24: clockTimer.now.getHours()
     readonly property int clockHour: UiPreferences.useTwelveHourClock ? ((clockHour24 + 11) % 12) + 1 : clockHour24
 
@@ -22,30 +27,32 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: Sizes.lockColumnGap
+        spacing: Metrics.lockColumnGap
 
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: Sizes.lockCardGap
+            spacing: Metrics.lockCardGap
 
             WeatherCard {
                 Layout.fillWidth: true
-                radius: Sizes.lockCardRadiusSmall
-                topLeftRadius: Sizes.lockCardRadiusLarge
-                rootHeight: root.screenHeight
+                radius: Metrics.lockCardRadiusSmall
+                topLeftRadius: Metrics.lockCardRadius
+                availableHeight: root.availableHeight
             }
 
             LockFetchCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                radius: Sizes.lockCardRadiusSmall
+                detailLevel: root.spacious ? 3 : root.compact ? (root.veryCompact ? 0 : 1) : 2
+                radius: Metrics.lockCardRadiusSmall
             }
 
             MediaCard {
                 Layout.fillWidth: true
-                radius: Sizes.lockCardRadiusSmall
-                bottomLeftRadius: Sizes.lockCardRadiusLarge
+                compact: root.compact
+                radius: Metrics.lockCardRadiusSmall
+                bottomLeftRadius: Metrics.lockCardRadius
             }
 
         }
@@ -54,18 +61,18 @@ Item {
             Layout.preferredWidth: root.centerWidth
             Layout.fillHeight: true
             Layout.fillWidth: false
-            spacing: Sizes.lockColumnGap
+            spacing: Metrics.lockColumnGap
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: Math.round(7 * 4 / 3)
+                spacing: Metrics.spacingS
 
                 Text {
                     Layout.alignment: Qt.AlignVCenter
                     text: String(root.clockHour).padStart(2, "0")
                     color: Appearance.colors.colSecondary
                     font.family: Fonts.numeric
-                    font.pixelSize: Math.floor(Sizes.lockTimeFontSize * root.centerScale)
+                    font.pixelSize: Math.floor(Metrics.lockTimeFontSize * root.centerScale)
                     font.bold: true
                 }
 
@@ -74,7 +81,7 @@ Item {
                     text: ":"
                     color: Appearance.colors.colPrimary
                     font.family: Fonts.numeric
-                    font.pixelSize: Math.floor(Sizes.lockTimeFontSize * root.centerScale)
+                    font.pixelSize: Math.floor(Metrics.lockTimeFontSize * root.centerScale)
                     font.bold: true
                 }
 
@@ -83,18 +90,18 @@ Item {
                     text: Qt.formatTime(clockTimer.now, "mm")
                     color: Appearance.colors.colSecondary
                     font.family: Fonts.numeric
-                    font.pixelSize: Math.floor(Sizes.lockTimeFontSize * root.centerScale)
+                    font.pixelSize: Math.floor(Metrics.lockTimeFontSize * root.centerScale)
                     font.bold: true
                 }
 
                 Text {
-                    Layout.leftMargin: Math.round(7 * 4 / 3)
+                    Layout.leftMargin: Metrics.spacingS
                     Layout.alignment: Qt.AlignVCenter
                     visible: UiPreferences.useTwelveHourClock
                     text: Qt.formatTime(clockTimer.now, "AP")
                     color: Appearance.colors.colPrimary
                     font.family: Fonts.numeric
-                    font.pixelSize: Math.floor(Sizes.lockTimeSuffixFontSize * root.centerScale)
+                    font.pixelSize: Math.floor(Metrics.lockTimeSuffixFontSize * root.centerScale)
                     font.bold: true
                 }
 
@@ -102,18 +109,18 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.topMargin: -Sizes.lockOuterPadding * 2
+                Layout.topMargin: -Metrics.lockOuterPadding * 2
                 text: Qt.formatDate(clockTimer.now, "dddd, d MMMM yyyy")
                 color: Appearance.colors.colTertiary
                 font.family: Fonts.numeric
-                font.pixelSize: Math.floor(Sizes.lockDateFontSize * root.centerScale)
+                font.pixelSize: Math.floor(Metrics.lockDateFontSize * root.centerScale)
                 font.bold: true
             }
 
             Item {
                 Layout.preferredWidth: root.centerWidth / 2
                 Layout.preferredHeight: root.centerWidth / 2
-                Layout.topMargin: Sizes.lockColumnGap
+                Layout.topMargin: Metrics.lockColumnGap
                 Layout.alignment: Qt.AlignHCenter
 
                 Rectangle {
@@ -174,7 +181,7 @@ Item {
                 id: authCard
 
                 Layout.preferredWidth: root.centerWidth * 0.8
-                Layout.preferredHeight: Sizes.lockAuthHeight
+                Layout.preferredHeight: Metrics.lockAuthHeight
                 Layout.alignment: Qt.AlignHCenter
                 context: root.context
                 onRequestUnlock: {
@@ -186,7 +193,7 @@ Item {
 
             Item {
                 Layout.fillWidth: true
-                Layout.topMargin: -Math.round(20 * 4 / 3)
+                Layout.topMargin: -Metrics.spacingXL
                 implicitHeight: Math.max(errorMessage.implicitHeight, stateMessage.implicitHeight, 18)
 
                 Text {
@@ -432,7 +439,7 @@ Item {
                     scale: 0.7
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.numeric
-                    font.pixelSize: Math.floor(12 * Sizes.lockReferenceScale)
+                    font.pixelSize: 16
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     lineHeight: 1.2
@@ -565,20 +572,21 @@ Item {
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: Sizes.lockCardGap
+            spacing: Metrics.lockCardGap
 
             SystemGrid {
                 Layout.fillWidth: true
-                Layout.preferredHeight: Sizes.lockSystemGridHeight
-                radius: Sizes.lockCardRadiusSmall
-                topRightRadius: Sizes.lockCardRadiusLarge
+                radius: Metrics.lockCardRadiusSmall
+                topRightRadius: Metrics.lockCardRadius
             }
 
             NotificationCard {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                radius: Sizes.lockCardRadiusSmall
-                bottomRightRadius: Sizes.lockCardRadiusLarge
+                compact: root.compact
+                veryCompact: root.veryCompact
+                radius: Metrics.lockCardRadiusSmall
+                bottomRightRadius: Metrics.lockCardRadius
             }
 
         }
