@@ -313,19 +313,14 @@ Singleton {
     }
 
     function removeNotificationsByReplaceKey(replaceKey) {
-        let changed = false;
-        for (let i = root.list.length - 1; i >= 0; i--) {
-            const notif = root.list[i];
-            if (notif.replaceKey !== replaceKey)
-                continue;
+        const removed = root.list.filter((notif) => notif.replaceKey === replaceKey);
+        removed.forEach((notif) => {
             if (notif.timer)
                 notif.timer.stop();
-            root.list.splice(i, 1);
-            changed = true;
-        }
+        });
 
-        if (changed)
-            root.triggerListChange();
+        if (removed.length > 0)
+            root.list = root.list.filter((notif) => notif.replaceKey !== replaceKey);
     }
 
     function discardNotification(id) {
@@ -339,8 +334,7 @@ Singleton {
             const notif = root.list[index];
             if (notif.timer)
                 notif.timer.stop();
-            root.list.splice(index, 1);
-            root.triggerListChange();
+            root.list = root.list.filter((candidate) => candidate.notificationId !== id);
             root.saveNotifications();
         }
         if (notifServerIndex !== -1)

@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 import qs.Services
 import qs.Widgets.common
@@ -18,19 +19,8 @@ StyledListView {
     spacing: 3
     animateMovement: false
 
-    remove: Transition {
-    }
-
-    removeDisplaced: Transition {
-        ElementMoveAnimation {
-            property: "y"
-        }
-
-    }
-
     model: ScriptModel {
-        values: root.popup ? NotificationGroups.popupGroups : NotificationGroups.groups
-        objectProp: "key"
+        values: root.popup ? NotificationManager.popupAppNameList : NotificationManager.appNameList
     }
 
     delegate: NotificationGroup {
@@ -41,7 +31,7 @@ StyledListView {
         dragHost: root
         popup: root.popup
         width: ListView.view.width
-        notificationGroup: modelData
+        notificationGroup: root.popup ? NotificationManager.popupGroupsByAppName[modelData] : NotificationManager.groupsByAppName[modelData]
     }
 
 }
