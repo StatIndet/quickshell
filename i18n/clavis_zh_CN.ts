@@ -4584,32 +4584,32 @@
 <context>
     <name>NetworkContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="13"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="121"/>
         <source>网络</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="36"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="29"/>
         <source>NetworkManager 当前不可用</source>
         <translation>NetworkManager 当前不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="38"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="32"/>
         <source>未检测到 Wi-Fi 设备</source>
         <translation>未检测到 Wi-Fi 设备</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="35"/>
         <source>Wi-Fi 已被硬件开关或 rfkill 阻止</source>
         <translation>Wi-Fi 已被硬件开关或 rfkill 阻止</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="42"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="38"/>
         <source>Wi-Fi 已关闭</source>
         <translation>Wi-Fi 已关闭</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="88"/>
         <source>需要登录网络门户</source>
         <translation>需要登录网络门户</translation>
     </message>
@@ -4619,58 +4619,78 @@
         <translation>网络连接受限</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="94"/>
         <source>互联网可用</source>
         <translation>互联网可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="95"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="97"/>
         <source>已连接，无法确认互联网状态</source>
         <translation>已连接，无法确认互联网状态</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="96"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="99"/>
         <source>当前未连接</source>
         <translation>当前未连接</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="151"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="431"/>
         <source>刷新网络列表</source>
         <translation>刷新网络列表</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="172"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="450"/>
         <source>Wi-Fi 开关</source>
         <translation>Wi-Fi 开关</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="203"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="207"/>
         <source>未连接</source>
         <translation>未连接</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="233"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="110"/>
+        <source>手动 IPv4</source>
+        <translation>手动 IPv4</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="112"/>
+        <source>DHCP + 自定义 DNS</source>
+        <translation>DHCP + 自定义 DNS</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="114"/>
+        <source>自动 DHCP</source>
+        <translation>自动 DHCP</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="116"/>
+        <source>自动连接</source>
+        <translation>自动连接</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="235"/>
         <source>打开网络门户</source>
         <translation>打开网络门户</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="262"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="265"/>
         <source>已保存网络</source>
         <translation>已保存网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="263"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="282"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="266"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="285"/>
         <source> 个网络</source>
         <translation> 个网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="279"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="284"/>
         <source>可选网络</source>
         <translation>可选网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="281"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="285"/>
         <source>正在获取扫描结果</source>
         <translation>正在获取扫描结果</translation>
     </message>
@@ -4681,79 +4701,81 @@
         <translation>正在查找可选网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="348"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="361"/>
         <source>未发现可选网络</source>
         <translation>未发现可选网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="366"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="506"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="383"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="511"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="630"/>
         <source>遗忘网络</source>
         <translation>遗忘网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="368"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="384"/>
         <source>将删除“</source>
         <translation>将删除“</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="369"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="384"/>
         <source>”的已保存连接。</source>
         <translation>”的已保存连接。</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="380"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="578"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="395"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="707"/>
         <source>取消</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="388"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="403"/>
         <source>遗忘</source>
         <translation>遗忘</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="449"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
         <source>已连接 · </source>
         <translation>已连接 · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="450"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
         <source>已保存 · </source>
         <translation>已保存 · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="451"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
         <source>开放网络</source>
         <translation>开放网络</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="489"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="499"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="612"/>
         <source>网络操作</source>
         <translation>网络操作</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="502"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="625"/>
         <source>断开连接</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="548"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="675"/>
         <source>网络密码</source>
         <translation>网络密码</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="562"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="688"/>
         <source>隐藏密码</source>
         <translation>隐藏密码</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="562"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="688"/>
         <source>显示密码</source>
         <translation>显示密码</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="582"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="712"/>
         <source>连接</source>
         <translation>连接</translation>
     </message>
@@ -5107,163 +5129,163 @@
 <context>
     <name>NetworkService</name>
     <message>
-        <location filename="../Services/NetworkService.qml" line="191"/>
+        <location filename="../Services/NetworkService.qml" line="192"/>
         <source>已断开</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="192"/>
+        <location filename="../Services/NetworkService.qml" line="193"/>
         <source>有线</source>
         <translation>有线</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="287"/>
+        <location filename="../Services/NetworkService.qml" line="298"/>
         <source>有线网络</source>
         <translation>有线网络</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="330"/>
+        <location filename="../Services/NetworkService.qml" line="341"/>
         <source>另一项网络操作仍在进行</source>
         <translation>另一项网络操作仍在进行</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="359"/>
+        <location filename="../Services/NetworkService.qml" line="370"/>
         <source>网络操作失败</source>
         <translation>网络操作失败</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="382"/>
-        <location filename="../Services/NetworkService.qml" line="439"/>
+        <location filename="../Services/NetworkService.qml" line="396"/>
+        <location filename="../Services/NetworkService.qml" line="453"/>
         <source>NetworkManager 不可用</source>
         <translation>NetworkManager 不可用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="387"/>
+        <location filename="../Services/NetworkService.qml" line="401"/>
         <source>Wi-Fi 已被硬件或 rfkill 阻止</source>
         <translation>Wi-Fi 已被硬件或 rfkill 阻止</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="444"/>
+        <location filename="../Services/NetworkService.qml" line="458"/>
         <source>未检测到 Wi-Fi 设备</source>
         <translation>未检测到 Wi-Fi 设备</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="449"/>
+        <location filename="../Services/NetworkService.qml" line="463"/>
         <source>Wi-Fi 已关闭</source>
         <translation>Wi-Fi 已关闭</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="473"/>
+        <location filename="../Services/NetworkService.qml" line="487"/>
         <source>目标网络已不可用</source>
         <translation>目标网络已不可用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="485"/>
+        <location filename="../Services/NetworkService.qml" line="499"/>
         <source>该网络认证类型需要第二阶段 Secret Agent/Extras 后端</source>
         <translation>该网络认证类型需要第二阶段 Secret Agent/Extras 后端</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="501"/>
+        <location filename="../Services/NetworkService.qml" line="515"/>
         <source>当前 Quickshell API 仅支持 WPA/WPA2-PSK 与 SAE 密码连接</source>
         <translation>当前 Quickshell API 仅支持 WPA/WPA2-PSK 与 SAE 密码连接</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="556"/>
+        <location filename="../Services/NetworkService.qml" line="570"/>
         <source>没有可断开的活动网络</source>
         <translation>没有可断开的活动网络</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="573"/>
+        <location filename="../Services/NetworkService.qml" line="587"/>
         <source>未找到已保存的网络配置</source>
         <translation>未找到已保存的网络配置</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="667"/>
+        <location filename="../Services/NetworkService.qml" line="681"/>
         <source>网络配置当前不可写入</source>
         <translation>网络配置当前不可写入</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="678"/>
+        <location filename="../Services/NetworkService.qml" line="692"/>
         <source>IPv4 配置格式无效</source>
         <translation>IPv4 配置格式无效</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="690"/>
+        <location filename="../Services/NetworkService.qml" line="704"/>
         <source>当前 IPv4 模式不在此页面的编辑范围内</source>
         <translation>当前 IPv4 模式不在此页面的编辑范围内</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="741"/>
+        <location filename="../Services/NetworkService.qml" line="755"/>
         <source>网络配置当前无法删除</source>
         <translation>网络配置当前无法删除</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="812"/>
+        <location filename="../Services/NetworkService.qml" line="826"/>
         <source>另一项添加操作仍在进行</source>
         <translation>另一项添加操作仍在进行</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="816"/>
+        <location filename="../Services/NetworkService.qml" line="830"/>
         <source>SSID 必须是 1 至 32 个 UTF-8 字节</source>
         <translation>SSID 必须是 1 至 32 个 UTF-8 字节</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="820"/>
+        <location filename="../Services/NetworkService.qml" line="834"/>
         <source>Wi-Fi 密码格式无效</source>
         <translation>Wi-Fi 密码格式无效</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="827"/>
+        <location filename="../Services/NetworkService.qml" line="841"/>
         <source>多个 Wi-Fi 设备发现了同名网络，请从附近网络列表选择具体设备</source>
         <translation>多个 Wi-Fi 设备发现了同名网络，请从附近网络列表选择具体设备</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="835"/>
+        <location filename="../Services/NetworkService.qml" line="849"/>
         <source>该网络需要有效的 Wi-Fi 密码</source>
         <translation>该网络需要有效的 Wi-Fi 密码</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="850"/>
+        <location filename="../Services/NetworkService.qml" line="864"/>
         <source>无法创建 Wi-Fi 配置</source>
         <translation>无法创建 Wi-Fi 配置</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="857"/>
+        <location filename="../Services/NetworkService.qml" line="871"/>
         <source>该 NetworkManager 配置当前无法连接</source>
         <translation>该 NetworkManager 配置当前无法连接</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="884"/>
+        <location filename="../Services/NetworkService.qml" line="906"/>
         <source>NetworkManager 连接性检查不可用或未启用</source>
         <translation>NetworkManager 连接性检查不可用或未启用</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="974"/>
+        <location filename="../Services/NetworkService.qml" line="996"/>
         <source>密码错误或认证超时</source>
         <translation>密码错误或认证超时</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="974"/>
+        <location filename="../Services/NetworkService.qml" line="996"/>
         <source>网络需要密码</source>
         <translation>网络需要密码</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1004"/>
+        <location filename="../Services/NetworkService.qml" line="1037"/>
         <source>连接未完成</source>
         <translation>连接未完成</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1039"/>
+        <location filename="../Services/NetworkService.qml" line="1072"/>
         <source>NetworkManager 未确认配置写入</source>
         <translation>NetworkManager 未确认配置写入</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1052"/>
+        <location filename="../Services/NetworkService.qml" line="1085"/>
         <source>NetworkManager 未确认配置删除</source>
         <translation>NetworkManager 未确认配置删除</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1072"/>
+        <location filename="../Services/NetworkService.qml" line="1105"/>
         <source>网络操作超时</source>
         <translation>网络操作超时</translation>
     </message>

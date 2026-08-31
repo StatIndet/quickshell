@@ -27,6 +27,7 @@ Singleton {
     property string passwordRequestDeviceName: ""
     property string connectTargetSsid: ""
     property string connectTargetDeviceName: ""
+    property string connectTargetUuid: ""
     readonly property var _nativeDevices: Networking.devices ? Networking.devices.values : []
     readonly property var _nativeWifiDevices: _nativeDevices.filter((device) => {
         return device && device.type === DeviceType.Wifi;
@@ -201,6 +202,8 @@ Singleton {
     property string _pendingOperation: ""
     property string _pendingSsid: ""
     property bool _pendingWithPsk: false
+    property var _pendingConnectSettings: null
+    property string _pendingConnectPhase: ""
     property bool _pendingWifiState: false
     property bool _pendingStateWasChanging: false
     property var _pendingNetwork: null
@@ -267,6 +270,10 @@ Singleton {
         };
         const connection = map.connection || {
         };
+        const ipv4 = map.ipv4 || {
+        };
+        const dnsData = ipv4["dns-data"] || [];
+        const legacyDns = ipv4.dns || [];
         return {
             "uuid": String(settings ? settings.uuid || "" : ""),
             "name": String(settings ? settings.id || network.name || "" : ""),
@@ -277,6 +284,10 @@ Singleton {
             "networkConnected": !!(network && network.connected),
             "strength": network ? Math.round(Number(network.signalStrength || 0) * 100) : 0,
             "autoconnect": connection.autoconnect === undefined ? true : !!connection.autoconnect,
+            "ipv4Method": String(ipv4.method || "auto"),
+            "customDns": !!ipv4["ignore-auto-dns"] || dnsData.length > 0 || legacyDns.length > 0,
+            "security": network ? WifiSecurityType.toString(network.security) : "",
+            "isSecure": !!(network && network.security !== WifiSecurityType.Open && network.security !== WifiSecurityType.Owe),
             "nativeSettings": settings,
             "nativeNetwork": network
         };
@@ -367,9 +378,12 @@ Singleton {
         root._pendingNetwork = null;
         root._pendingSsid = "";
         root._pendingWithPsk = false;
+        root._pendingConnectSettings = null;
+        root._pendingConnectPhase = "";
         root._pendingStateWasChanging = false;
         root.connectTargetSsid = "";
         root.connectTargetDeviceName = "";
+        root.connectTargetUuid = "";
     }
 
     function _isPskSecurity(securityType) {
@@ -863,7 +877,15 @@ Singleton {
 
         root.connectTargetSsid = String(profile.ssid || "");
         root.connectTargetDeviceName = String(profile.deviceName || "");
-        profile.nativeNetwork.connectWithSettings(profile.nativeSettings);
+        root.connectTargetUuid = String(profile.uuid || "");
+        root._pendingConnectSettings = profile.nativeSettings;
+        if (profile.nativeNetwork.connected) {
+            root._pendingConnectPhase = "disconnecting";
+            profile.nativeNetwork.disconnect();
+        } else {
+            root._pendingConnectPhase = "activating";
+            profile.nativeNetwork.connectWithSettings(profile.nativeSettings);
+        }
         return true;
     }
 
@@ -981,10 +1003,21 @@ Singleton {
         }
 
         function onConnectedChanged() {
-            if (root._pendingOperation === "connect" && root._pendingNetwork.connected)
+            if (root._pendingOperation === "connect" && root._pendingNetwork.connected) {
                 root._finishOperationSucceeded();
-            else if (root._pendingOperation === "disconnect" && !root._pendingNetwork.connected)
+            } else if (root._pendingOperation === "connect" && root._pendingConnectPhase === "disconnecting" && !root._pendingNetwork.connected) {
+                root._pendingConnectPhase = "waiting";
+                root._pendingStateWasChanging = false;
+                Qt.callLater(() => {
+                    if (root._pendingOperation !== "connect" || root._pendingConnectPhase !== "waiting" || !root._pendingNetwork || !root._pendingConnectSettings)
+                        return ;
+
+                    root._pendingConnectPhase = "activating";
+                    root._pendingNetwork.connectWithSettings(root._pendingConnectSettings);
+                });
+            } else if (root._pendingOperation === "disconnect" && !root._pendingNetwork.connected) {
                 root._finishOperationSucceeded();
+            }
         }
 
         function onKnownChanged() {
@@ -1000,7 +1033,7 @@ Singleton {
             if (root._pendingNetwork.stateChanging)
                 root._pendingStateWasChanging = true;
 
-            if (root._pendingOperation === "connect" && root._pendingStateWasChanging && root._pendingNetwork.state === ConnectionState.Disconnected)
+            if (root._pendingOperation === "connect" && root._pendingConnectPhase !== "disconnecting" && root._pendingConnectPhase !== "waiting" && root._pendingStateWasChanging && root._pendingNetwork.state === ConnectionState.Disconnected)
                 root._finishOperationFailed(qsTr("连接未完成"));
 
         }
