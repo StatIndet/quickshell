@@ -22,13 +22,6 @@ Item {
     Component.onCompleted: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, root.isForeground)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, false)
 
-    Shortcut {
-        sequence: "Esc"
-        context: Qt.WindowShortcut
-        enabled: WidgetState.leftSidebarOpen
-        onActivated: WidgetState.closeAllPopups()
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 12

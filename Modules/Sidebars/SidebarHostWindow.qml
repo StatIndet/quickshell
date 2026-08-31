@@ -87,13 +87,6 @@ PanelWindow {
     Component.onCompleted: {
         if (root.fallbackScreen)
             root.retainedScreenName = root.fallbackScreen.name;
-        if (root.anySidebarOpen)
-            Qt.callLater(() => keyGateway.forceActiveFocus());
-    }
-
-    onAnySidebarOpenChanged: {
-        if (root.anySidebarOpen)
-            Qt.callLater(() => keyGateway.forceActiveFocus());
     }
 
     Connections {
@@ -157,20 +150,17 @@ PanelWindow {
         ]
     }
 
-    Item {
-        id: keyGateway
-
-        anchors.fill: parent
-        focus: root.anySidebarOpen
-
-        Keys.onEscapePressed: event => {
+    Shortcut {
+        sequence: "Esc"
+        context: Qt.WindowShortcut
+        enabled: root.anySidebarOpen
+        onActivated: {
             if (SystemCardDragSession.active) {
                 SystemCardDragSession.requestCancel();
-                event.accepted = true;
                 return;
             }
+
             WidgetState.closeAllPopups();
-            event.accepted = true;
         }
     }
 }
