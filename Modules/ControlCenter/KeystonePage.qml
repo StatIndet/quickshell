@@ -10,66 +10,6 @@ Item {
 
     property string currentSection: "overview"
 
-    component SearchSelectSettingRow: Item {
-        id: selectRow
-
-        property string title: ""
-        property string description: ""
-        property var options: []
-        property string value: ""
-        property string placeholder: ""
-        property int fieldWidth: 240
-
-        signal accepted(string value)
-
-        Layout.fillWidth: true
-        Layout.preferredHeight: Math.max(58, selectLabelColumn.implicitHeight + 16)
-
-        RowLayout {
-            anchors.fill: parent
-            spacing: 16
-
-            Column {
-                id: selectLabelColumn
-
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                spacing: 3
-
-                Text {
-                    width: parent.width
-                    text: selectRow.title
-                    color: Appearance.colors.colOnSurface
-                    font.family: Fonts.ui
-                    font.pixelSize: 15
-                    font.weight: Font.Medium
-                    elide: Text.ElideRight
-                }
-
-                Text {
-                    width: parent.width
-                    text: selectRow.description
-                    color: Appearance.colors.colSubtext
-                    font.family: Fonts.ui
-                    font.pixelSize: 12
-                    wrapMode: Text.WordWrap
-                }
-            }
-
-            SearchSelectMenuField {
-                Layout.preferredWidth: selectRow.fieldWidth
-                Layout.preferredHeight: 40
-                Layout.alignment: Qt.AlignVCenter
-                options: selectRow.options
-                value: selectRow.value
-                placeholder: selectRow.placeholder
-                textRole: "label"
-                valueRole: "value"
-                onAccepted: value => selectRow.accepted(value)
-            }
-        }
-    }
-
     function openSection(section) {
         root.currentSection = String(section || "overview");
     }
@@ -120,7 +60,9 @@ Item {
                     options: PersonalizationConfig.keystoneStyles
                     value: PersonalizationConfig.keystoneStyle
                     placeholder: qsTr("选择钥石样式")
-                    onAccepted: value => PersonalizationConfig.setKeystoneStyle(value)
+                    onAccepted: (value) => {
+                        return PersonalizationConfig.setKeystoneStyle(value);
+                    }
                 }
 
                 SettingsRow {
@@ -129,10 +71,41 @@ Item {
 
                     trailing: EdgePositionSelector {
                         position: PersonalizationConfig.keystonePosition
-                        onPositionSelected: position =>
-                            PersonalizationConfig.setKeystonePosition(position)
+                        onPositionSelected: (position) => {
+                            return PersonalizationConfig.setKeystonePosition(position);
+                        }
                     }
+
                 }
+
+            }
+
+            KeystoneSection {
+                title: qsTr("钥匙孔")
+                iconName: "view_carousel"
+
+                SettingsRow {
+                    Layout.fillWidth: true
+                    title: qsTr("卡片")
+
+                    trailing: SortableMultiSelectField {
+                        id: keyholeCardsField
+
+                        Layout.preferredWidth: 380
+                        values: PersonalizationConfig.keystoneKeyholeCards
+                        options: PersonalizationConfig.keystoneKeyholeCardOptions
+                        zone: "keyhole"
+                        dragCoordinator: keyholeDragCoordinator
+                        onToggled: (cardId) => {
+                            return PersonalizationConfig.toggleKeystoneKeyholeCard(cardId);
+                        }
+                        onRemoved: (cardId) => {
+                            return PersonalizationConfig.removeKeystoneKeyholeCard(cardId);
+                        }
+                    }
+
+                }
+
             }
 
             KeystoneSection {
@@ -141,8 +114,7 @@ Item {
 
                 Item {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: Math.max(
-                        66, (width - 8) * 42 / 220 + 12)
+                    Layout.preferredHeight: Math.max(66, (width - 8) * 42 / 220 + 12)
 
                     HorizontalClockPreview {
                         anchors.left: parent.left
@@ -154,6 +126,7 @@ Item {
                         anchors.topMargin: 6
                         anchors.bottomMargin: 6
                     }
+
                 }
 
                 SettingsRow {
@@ -165,6 +138,7 @@ Item {
                         Accessible.name: qsTr("隐藏日期")
                         onToggled: PersonalizationConfig.setKeystoneHideDate(checked)
                     }
+
                 }
 
                 SettingsActionRow {
@@ -175,13 +149,16 @@ Item {
                     trailingIconName: "chevron_right"
                     onClicked: root.openSection("horizontal-clock")
                 }
+
             }
 
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
             }
+
         }
+
     }
 
     Loader {
@@ -192,7 +169,85 @@ Item {
         anchors.top: subpageHeader.bottom
         anchors.bottom: parent.bottom
         visible: root.currentSection !== "overview"
-        source: root.currentSection === "horizontal-clock"
-            ? Qt.resolvedUrl("HorizontalClockPage.qml") : ""
+        source: root.currentSection === "horizontal-clock" ? Qt.resolvedUrl("HorizontalClockPage.qml") : ""
     }
+
+    BarLayoutDragCoordinator {
+        id: keyholeDragCoordinator
+
+        anchors.fill: parent
+        z: 1000
+        fields: [keyholeCardsField]
+        onDropped: (cardId, targetZone, targetIndex) => {
+            if (targetZone === "keyhole")
+                PersonalizationConfig.moveKeystoneKeyholeCard(cardId, targetIndex);
+
+        }
+    }
+
+    component SearchSelectSettingRow: Item {
+        id: selectRow
+
+        property string title: ""
+        property string description: ""
+        property var options: []
+        property string value: ""
+        property string placeholder: ""
+        property int fieldWidth: 240
+
+        signal accepted(string value)
+
+        Layout.fillWidth: true
+        Layout.preferredHeight: Math.max(58, selectLabelColumn.implicitHeight + 16)
+
+        RowLayout {
+            anchors.fill: parent
+            spacing: 16
+
+            Column {
+                id: selectLabelColumn
+
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                spacing: 3
+
+                Text {
+                    width: parent.width
+                    text: selectRow.title
+                    color: Appearance.colors.colOnSurface
+                    font.family: Fonts.ui
+                    font.pixelSize: 15
+                    font.weight: Font.Medium
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    width: parent.width
+                    text: selectRow.description
+                    color: Appearance.colors.colSubtext
+                    font.family: Fonts.ui
+                    font.pixelSize: 12
+                    wrapMode: Text.WordWrap
+                }
+
+            }
+
+            SearchSelectMenuField {
+                Layout.preferredWidth: selectRow.fieldWidth
+                Layout.preferredHeight: 40
+                Layout.alignment: Qt.AlignVCenter
+                options: selectRow.options
+                value: selectRow.value
+                placeholder: selectRow.placeholder
+                textRole: "label"
+                valueRole: "value"
+                onAccepted: (value) => {
+                    return selectRow.accepted(value);
+                }
+            }
+
+        }
+
+    }
+
 }

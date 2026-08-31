@@ -1,12 +1,13 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.Services
 
 // Layout adapted from Caelestia Shell's dashboard composition (GPL-3.0).
 Item {
     id: root
 
     property var screen: null
-    readonly property var holeGlassItems: holeCardCarousel.blurBackgroundItems
+    readonly property var keyholeGlassItems: keyholeCardCarousel.blurBackgroundItems
 
     signal closeRequested()
     signal avatarEditRequested()
@@ -43,8 +44,8 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            HoleCardCarousel {
-                id: holeCardCarousel
+            KeyholeCardCarousel {
+                id: keyholeCardCarousel
 
                 width: 340
                 anchors.left: parent.left
@@ -52,6 +53,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 screen: root.screen
+                visible: PersonalizationConfig.keystoneKeyholeCards.length > 0
             }
 
         }

@@ -3976,49 +3976,59 @@
 <context>
     <name>KeystonePage</name>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="92"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="173"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="32"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="147"/>
         <source>横向时钟样式</source>
         <translation>橫向時鐘樣式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="93"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="33"/>
         <source>返回钥石设置</source>
         <translation>返回鑰石設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="115"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="55"/>
         <source>钥石样式</source>
         <translation>鑰石樣式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="119"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="59"/>
         <source>样式</source>
         <translation>樣式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="122"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="62"/>
         <source>选择钥石样式</source>
         <translation>選擇鑰石樣式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="128"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="70"/>
         <source>屏幕边缘</source>
         <translation>螢幕邊緣</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="139"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="84"/>
+        <source>钥匙孔</source>
+        <translation>鑰匙孔</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="89"/>
+        <source>卡片</source>
+        <translation>卡片</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="112"/>
         <source>横向时钟</source>
         <translation>橫向時鐘</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="161"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="134"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="138"/>
         <source>隐藏日期</source>
         <translation>隱藏日期</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="174"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="148"/>
         <source>字体、数字位置和颜色</source>
         <translation>字型、數字位置和顏色</translation>
     </message>
@@ -4584,7 +4594,7 @@
 <context>
     <name>NetworkContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="121"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="133"/>
         <source>网络</source>
         <translation>網路</translation>
     </message>
@@ -4634,17 +4644,17 @@
         <translation>當前未連線</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="431"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="442"/>
         <source>刷新网络列表</source>
         <translation>重新整理網路列表</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="450"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="461"/>
         <source>Wi-Fi 开关</source>
         <translation>Wi-Fi 開關</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="207"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="219"/>
         <source>未连接</source>
         <translation>未連線</translation>
     </message>
@@ -4669,113 +4679,112 @@
         <translation>自動連線</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="235"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="247"/>
         <source>打开网络门户</source>
         <translation>開啟網路門戶</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="265"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="277"/>
         <source>已保存网络</source>
         <translation>已儲存網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="266"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="285"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="296"/>
         <source> 个网络</source>
         <translation> 個網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="284"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="295"/>
         <source>可选网络</source>
         <translation>可選網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="285"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="296"/>
         <source>正在获取扫描结果</source>
         <translation>正在獲取掃描結果</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="301"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="306"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="312"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="317"/>
         <source>正在查找可选网络</source>
         <translation>正在查詢可選網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="361"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="372"/>
         <source>未发现可选网络</source>
         <translation>未發現可選網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="383"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="511"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="630"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="394"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="522"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="641"/>
         <source>遗忘网络</source>
         <translation>遺忘網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="384"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="395"/>
         <source>将删除“</source>
         <translation>將刪除“</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="384"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="395"/>
         <source>”的已保存连接。</source>
         <translation>”的已儲存連線。</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="395"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="707"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="406"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="718"/>
         <source>取消</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="403"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="414"/>
         <source>遗忘</source>
         <translation>遺忘</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="579"/>
         <source>已连接 · </source>
         <translation>已連線 · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="579"/>
         <source>已保存 · </source>
         <translation>已儲存 · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="568"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="579"/>
         <source>开放网络</source>
         <translation>開放網路</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="499"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="612"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="510"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="623"/>
         <source>网络操作</source>
         <translation>網路操作</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="625"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="636"/>
         <source>断开连接</source>
         <translation>斷開連線</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="675"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="686"/>
         <source>网络密码</source>
         <translation>網路密碼</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="688"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="699"/>
         <source>隐藏密码</source>
         <translation>隱藏密碼</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="688"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="699"/>
         <source>显示密码</source>
         <translation>顯示密碼</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="712"/>
+        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="723"/>
         <source>连接</source>
         <translation>連線</translation>
     </message>
@@ -5628,72 +5637,83 @@
         <translation>右側</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="288"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="265"/>
+        <source>天气</source>
+        <translation>天氣</translation>
+    </message>
+    <message>
+        <location filename="../Services/PersonalizationConfig.qml" line="271"/>
+        <source>番茄钟</source>
+        <translation>番茄鐘</translation>
+    </message>
+    <message>
+        <location filename="../Services/PersonalizationConfig.qml" line="301"/>
         <source>网络</source>
         <translation type="unfinished">網路</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="291"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="304"/>
         <source>蓝牙</source>
         <translation type="unfinished">藍牙</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="294"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="307"/>
         <source>亮度</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="297"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
         <source>音量</source>
         <translation type="unfinished">音量</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="300"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="313"/>
         <source>麦克风</source>
         <translation type="unfinished">麥克風</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="303"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="316"/>
         <source>电池</source>
         <translation type="unfinished">電池</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="306"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="319"/>
         <source>设置</source>
         <translation type="unfinished">設定</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="309"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
         <source>电源</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="267"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="280"/>
         <source>工作区</source>
         <translation>工作區</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="270"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
         <source>信息中心</source>
         <translation>資訊中心</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="273"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="286"/>
         <source>聚焦窗口</source>
         <translation>聚焦視窗</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="276"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="289"/>
         <source>托盘</source>
         <translation>系統匣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="279"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="292"/>
         <source>系统监控</source>
         <translation>系統監視器</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="282"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="268"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="295"/>
         <source>快捷设置</source>
         <translation>快速設定</translation>
     </message>

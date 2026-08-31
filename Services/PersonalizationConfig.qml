@@ -258,6 +258,19 @@ Singleton {
     property int cursorHideAfterInactiveMs: 0
     property string iconTheme: ""
     property string keystoneStyle: "bangs"
+    readonly property var keystoneKeyholeCardIds: ["weather", "quickSettings", "pomodoro"]
+    readonly property var defaultKeystoneKeyholeCards: root.keystoneKeyholeCardIds.slice()
+    readonly property var keystoneKeyholeCardOptions: [({
+        "value": "weather",
+        "label": qsTr("天气")
+    }), ({
+        "value": "quickSettings",
+        "label": qsTr("快捷设置")
+    }), ({
+        "value": "pomodoro",
+        "label": qsTr("番茄钟")
+    })]
+    property var keystoneKeyholeCards: root.defaultKeystoneKeyholeCards.slice()
     property string barPosition: "top"
     readonly property var barComponentIds: ["workspaces", "information", "activeWindow", "tray", "systemMonitor", "quickSettings"]
     readonly property var defaultBarLeadingComponents: ["workspaces", "information", "activeWindow"]
@@ -1198,6 +1211,56 @@ Singleton {
         setValue("keystonePosition", normalizedEdgePosition(value));
     }
 
+    function normalizedKeystoneKeyholeCards(raw) {
+        const source = Array.isArray(raw) ? raw : root.defaultKeystoneKeyholeCards;
+        const result = [];
+        for (let index = 0; index < source.length; index += 1) {
+            const cardId = String(source[index] || "");
+            if (root.keystoneKeyholeCardIds.indexOf(cardId) === -1 || result.indexOf(cardId) !== -1)
+                continue;
+
+            result.push(cardId);
+        }
+        return result;
+    }
+
+    function moveKeystoneKeyholeCard(cardId, targetIndex) {
+        const id = String(cardId || "");
+        if (root.keystoneKeyholeCardIds.indexOf(id) === -1)
+            return false;
+
+        const cards = root.normalizedKeystoneKeyholeCards(root.keystoneKeyholeCards).filter((value) => {
+            return value !== id;
+        });
+        const numericIndex = Number(targetIndex);
+        const insertionIndex = isFinite(numericIndex) ? Math.max(0, Math.min(cards.length, Math.round(numericIndex))) : cards.length;
+        cards.splice(insertionIndex, 0, id);
+        root.keystoneKeyholeCards = cards;
+        root.save();
+        return true;
+    }
+
+    function removeKeystoneKeyholeCard(cardId) {
+        const id = String(cardId || "");
+        const cards = root.keystoneKeyholeCards.filter((value) => {
+            return value !== id;
+        });
+        if (cards.length === root.keystoneKeyholeCards.length)
+            return false;
+
+        root.keystoneKeyholeCards = root.normalizedKeystoneKeyholeCards(cards);
+        root.save();
+        return true;
+    }
+
+    function toggleKeystoneKeyholeCard(cardId) {
+        const id = String(cardId || "");
+        if (root.keystoneKeyholeCards.indexOf(id) !== -1)
+            return root.removeKeystoneKeyholeCard(id);
+
+        return root.moveKeystoneKeyholeCard(id, root.keystoneKeyholeCards.length);
+    }
+
     function setKeystoneHideDate(value) {
         setValue("keystoneHideDate", !!value);
     }
@@ -1374,6 +1437,9 @@ Singleton {
                 "style": root.keystoneStyle,
                 "position": root.keystonePosition,
                 "hideDate": root.keystoneHideDate,
+                "keyhole": {
+                    "cards": root.keystoneKeyholeCards.slice()
+                },
                 "horizontalClock": {
                     "fontSize": root.horizontalClockFontSize,
                     "axes": root.cloneMap(root.horizontalClockAxes),
@@ -1424,6 +1490,8 @@ Singleton {
         const fonts = theme.fonts || {
         };
         const horizontalClock = keystone.horizontalClock || {
+        };
+        const keyhole = keystone.keyhole || {
         };
         root.wallpaperFolder = wallpaper.folder || Paths.dataHome + "/wallpapers";
         root.wallpaperPath = wallpaper.path === Paths.currentWallpaper ? "" : (wallpaper.path || "");
@@ -1484,6 +1552,7 @@ Singleton {
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
         root.keystonePosition = normalizedEdgePosition(keystone.position);
         root.keystoneHideDate = typeof keystone.hideDate === "boolean" ? keystone.hideDate : false;
+        root.keystoneKeyholeCards = root.normalizedKeystoneKeyholeCards(keyhole.cards);
         root.horizontalClockFontSize = root.normalizedBoundedInt(horizontalClock.fontSize, 22, 16, 28);
         root.horizontalClockAxes = root.normalizedHorizontalClockAxes(horizontalClock.axes);
         root.horizontalClockDigits = root.normalizedHorizontalClockDigits(horizontalClock.digits);

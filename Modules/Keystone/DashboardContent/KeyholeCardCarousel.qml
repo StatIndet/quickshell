@@ -7,14 +7,21 @@ Item {
 
     property int currentIndex: 0
     property var screen: null
-    readonly property int cardCount: 3
+    readonly property var cardIds: PersonalizationConfig.keystoneKeyholeCards
+    readonly property int cardCount: cardIds.length
+    readonly property string currentCardId: cardCount > 0 ? String(cardIds[currentIndex] || "") : ""
     readonly property real switchThreshold: width * 0.2
     readonly property real glassAlpha: BlurService.enabled ? Math.min(PersonalizationConfig.shellBackgroundOpacity, 0.68) : 1
-    readonly property var blurBackgroundItems: [
-        weatherCard.glassBackgroundItem,
-        quickSettingsPage.glassBackgroundItem,
-        pomodoroPage.glassBackgroundItem
-    ]
+    readonly property var blurBackgroundItems: {
+        const items = [];
+        for (let index = 0; index < cardRepeater.count; index += 1) {
+            const card = cardRepeater.itemAt(index);
+            if (card)
+                items.push(card.glassBackgroundItem);
+
+        }
+        return items;
+    }
     property real cardOffset: 0
     property real wheelRemainder: 0
     property bool wheelUsesPixels: false
@@ -22,6 +29,9 @@ Item {
     property int transitionDirection: 0
 
     function wrappedIndex(index) {
+        if (cardCount === 0)
+            return 0;
+
         return ((index % cardCount) + cardCount) % cardCount;
     }
 
@@ -38,7 +48,7 @@ Item {
     }
 
     function queueStep(direction) {
-        if (direction === 0)
+        if (direction === 0 || cardCount < 2)
             return ;
 
         pendingSteps += direction;
@@ -48,7 +58,7 @@ Item {
     }
 
     function startQueuedStep() {
-        if (pendingSteps === 0 || settleAnimation.running || carouselInput.dragActive)
+        if (cardCount < 2 || pendingSteps === 0 || settleAnimation.running || carouselInput.dragActive)
             return ;
 
         const direction = pendingSteps > 0 ? 1 : -1;
@@ -69,6 +79,10 @@ Item {
     }
 
     function finishDrag() {
+        if (cardCount < 2) {
+            cardOffset = 0;
+            return ;
+        }
         if (Math.abs(cardOffset) >= switchThreshold) {
             const direction = cardOffset < 0 ? 1 : -1;
             animateTo(-direction * width, direction);
@@ -87,52 +101,81 @@ Item {
         Qt.callLater(startQueuedStep);
     }
 
+    function resetCarousel() {
+        settleAnimation.stop();
+        currentIndex = 0;
+        cardOffset = 0;
+        wheelRemainder = 0;
+        pendingSteps = 0;
+        transitionDirection = 0;
+    }
+
+    function quickSettingsCard() {
+        for (let index = 0; index < cardRepeater.count; index += 1) {
+            const card = cardRepeater.itemAt(index);
+            if (card && card.cardId === "quickSettings")
+                return card.quickSettingsItem;
+
+        }
+        return null;
+    }
+
     clip: true
+    onCardIdsChanged: resetCarousel()
 
-    CarouselCard {
-        id: weatherCard
+    Repeater {
+        id: cardRepeater
 
-        width: root.width
-        height: root.height
-        x: root.cardX(0)
-        contentMargin: 0
+        model: root.cardIds
 
-        DashboardWeatherCard {
-            anchors.fill: parent
-            active: root.visible && root.currentIndex === 0
+        delegate: CarouselCard {
+            id: cardDelegate
+
+            required property int index
+            required property string modelData
+            readonly property string cardId: modelData
+            readonly property bool cardActive: root.visible && root.currentIndex === index
+            readonly property var quickSettingsItem: quickSettingsLoader.item
+
+            width: root.width
+            height: root.height
+            x: root.cardX(index)
+            contentMargin: 0
+
+            Loader {
+                anchors.fill: parent
+                active: cardDelegate.cardId === "weather"
+
+                sourceComponent: DashboardWeatherCard {
+                    active: cardDelegate.cardActive
+                }
+
+            }
+
+            Loader {
+                id: quickSettingsLoader
+
+                anchors.fill: parent
+                active: cardDelegate.cardId === "quickSettings"
+
+                sourceComponent: DashboardQuickSettingsCard {
+                    screen: root.screen
+                }
+
+            }
+
+            Loader {
+                anchors.fill: parent
+                active: cardDelegate.cardId === "pomodoro"
+
+                sourceComponent: DashboardPomodoroCard {
+                    active: cardDelegate.cardActive
+                }
+
+            }
+
         }
 
-    }
-
-    CarouselCard {
-        id: quickSettingsPage
-
-        width: root.width
-        height: root.height
-        x: root.cardX(1)
-        contentMargin: 0
-
-        DashboardQuickSettingsCard {
-            id: quickSettingsCard
-
-            anchors.fill: parent
-            screen: root.screen
-        }
-
-    }
-
-    CarouselCard {
-        id: pomodoroPage
-
-        width: root.width
-        height: root.height
-        x: root.cardX(2)
-        contentMargin: 0
-
-        DashboardPomodoroCard {
-            anchors.fill: parent
-            active: root.visible && root.currentIndex === 2
-        }
     }
 
     NumberAnimation {
@@ -153,6 +196,7 @@ Item {
         property real pressX: 0
 
         anchors.fill: parent
+        enabled: root.cardCount > 1
         acceptedButtons: Qt.MiddleButton
         preventStealing: true
         onPressed: (mouse) => {
@@ -181,9 +225,10 @@ Item {
             dragActive = false;
         }
         onWheel: (event) => {
-            if (root.currentIndex === 1) {
-                const point = quickSettingsCard.mapFromItem(root, event.x, event.y);
-                if (quickSettingsCard.capturesWheelAt(point.x, point.y)) {
+            const quickSettings = root.currentCardId === "quickSettings" ? root.quickSettingsCard() : null;
+            if (quickSettings) {
+                const point = quickSettings.mapFromItem(root, event.x, event.y);
+                if (quickSettings.capturesWheelAt(point.x, point.y)) {
                     event.accepted = false;
                     return ;
                 }

@@ -275,7 +275,7 @@ Variants {
                         anchors.top: parent.top
                         anchors.topMargin: 132
                         radius: 24
-                        color: root.showDashboardHole ? "black" : "transparent"
+                        color: root.showDashboardKeyhole ? "black" : "transparent"
                     }
 
                 }
@@ -461,7 +461,7 @@ Variants {
                 readonly property bool escapeDismissActive: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
-                readonly property bool showDashboardHole: dashboardTabActive
+                readonly property bool showDashboardKeyhole: dashboardTabActive && PersonalizationConfig.keystoneKeyholeCards.length > 0
                 property real pillMorphProgress: 0
                 property real recordingInfoProgress: 0
                 property real recordingActionProgress: 0
@@ -1005,7 +1005,7 @@ Variants {
                 }
 
                 Item {
-                    id: dashboardBlurCutout
+                    id: dashboardKeyholeCutout
 
                     property real radius: 24
 
@@ -1015,7 +1015,7 @@ Variants {
                     anchors.leftMargin: 48
                     anchors.top: parent.top
                     anchors.topMargin: 132
-                    visible: root.showDashboardHole
+                    visible: root.showDashboardKeyhole
                 }
 
                 Canvas {
@@ -1027,12 +1027,12 @@ Variants {
                     readonly property real topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge && !keystoneWindow.rightEdge) ? outerRadius : 0
                     readonly property real bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.rightEdge) ? outerRadius : 0
                     readonly property real bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.leftEdge) ? outerRadius : 0
-                    readonly property bool cutoutVisible: root.showDashboardHole
-                    readonly property real cutoutX: dashboardBlurCutout.x
-                    readonly property real cutoutY: dashboardBlurCutout.y
-                    readonly property real cutoutWidth: dashboardBlurCutout.width
-                    readonly property real cutoutHeight: dashboardBlurCutout.height
-                    readonly property real cutoutRadius: dashboardBlurCutout.radius
+                    readonly property bool cutoutVisible: root.showDashboardKeyhole
+                    readonly property real cutoutX: dashboardKeyholeCutout.x
+                    readonly property real cutoutY: dashboardKeyholeCutout.y
+                    readonly property real cutoutWidth: dashboardKeyholeCutout.width
+                    readonly property real cutoutHeight: dashboardKeyholeCutout.height
+                    readonly property real cutoutRadius: dashboardKeyholeCutout.radius
 
                     function addRoundedRect(context, x, y, width, height, topLeft, topRight, bottomRight, bottomLeft) {
                         const maxRadius = Math.min(width / 2, height / 2);
@@ -1597,9 +1597,9 @@ Variants {
                 targetWindow: keystoneWindow
                 backgroundItem: root.useRecordingBlurRegions ? null : root
                 additionalBackgroundItems: root.recordingBlurBackgroundItems
-                subtractedBackgroundItems: root.showDashboardHole ? [dashboardBlurCutout] : []
-                postSubtractionBackgroundItems: root.showDashboardHole ? hub.dashboardGlassItems : []
-                postSubtractionClipItem: root.showDashboardHole ? dashboardBlurCutout : null
+                subtractedBackgroundItems: root.showDashboardKeyhole ? [dashboardKeyholeCutout] : []
+                postSubtractionBackgroundItems: root.showDashboardKeyhole ? hub.dashboardKeyholeGlassItems : []
+                postSubtractionClipItem: root.showDashboardKeyhole ? dashboardKeyholeCutout : null
                 radius: root.radius
             }
 

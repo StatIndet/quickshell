@@ -15,7 +15,7 @@ Item {
     property var screen: null
     property int currentIndex: 0
     property bool dragActive: false
-    readonly property var dashboardGlassItems: dashboardContent.holeGlassItems
+    readonly property var dashboardKeyholeGlassItems: dashboardContent.keyholeGlassItems
 
     signal closeRequested()
     signal avatarEditRequested()
