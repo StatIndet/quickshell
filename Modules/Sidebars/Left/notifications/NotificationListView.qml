@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import Quickshell
 import qs.Services
 import qs.Widgets.common
@@ -11,16 +10,27 @@ StyledListView {
     property int dragIndex: -1
     property real dragDistance: 0
 
-    spacing: 3
-    animateMovement: false
-
-    model: ScriptModel {
-        values: root.popup ? NotificationManager.popupAppNameList : NotificationManager.appNameList
-    }
-
     function resetDrag() {
         root.dragIndex = -1;
         root.dragDistance = 0;
+    }
+
+    spacing: 3
+    animateMovement: false
+
+    remove: Transition {
+    }
+
+    removeDisplaced: Transition {
+        ElementMoveAnimation {
+            property: "y"
+        }
+
+    }
+
+    model: ScriptModel {
+        values: root.popup ? NotificationGroups.popupGroups : NotificationGroups.groups
+        objectProp: "key"
     }
 
     delegate: NotificationGroup {
@@ -31,8 +41,7 @@ StyledListView {
         dragHost: root
         popup: root.popup
         width: ListView.view.width
-        notificationGroup: root.popup
-            ? NotificationManager.popupGroupsByAppName[modelData]
-            : NotificationManager.groupsByAppName[modelData]
+        notificationGroup: modelData
     }
+
 }
