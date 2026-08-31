@@ -5,6 +5,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Wayland
+import Clavis.Niri
 import qs.Services
 import qs.Common
 import qs.Widgets.common
@@ -27,11 +28,24 @@ Variants {
 
     signal avatarEditRequested(var screen)
 
-    function invoke(methodName) {
+    function targetInstance() {
         if (instances.length === 0)
-            return "KEYSTONE_UNAVAILABLE";
+            return null;
 
-        const instance = instances[0];
+        const outputName = String(Niri.currentOutput || "");
+        if (outputName.length > 0) {
+            for (let index = 0; index < instances.length; ++index) {
+                const instance = instances[index];
+                if (instance && instance.screen && instance.screen.name === outputName)
+                    return instance;
+
+            }
+        }
+        return instances[0];
+    }
+
+    function invoke(methodName) {
+        const instance = targetInstance();
         if (!instance || typeof instance[methodName] !== "function")
             return "KEYSTONE_UNAVAILABLE";
 
