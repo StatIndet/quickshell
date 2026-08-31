@@ -8,11 +8,24 @@ import qs.Services
 Scope {
     id: root
 
+    readonly property bool active: sessionLock.locked
+
     signal unlocked()
 
-    property bool lockPending: false
-    property int lockGeneration: 0
-    readonly property bool active: sessionLock.locked || lockPending
+    function open() {
+        if (sessionLock.locked)
+            return "ALREADY_LOCKED";
+
+        internalContext.currentText = "";
+        internalContext.unlockInProgress = false;
+        internalContext.showFailure = false;
+        sessionLock.locked = true;
+        return "LOCKED";
+    }
+
+    function isLocked() {
+        return sessionLock.locked;
+    }
 
     onActiveChanged: {
         SystemIdentityService.setUptimeConsumer("lock-screen", root.active);
@@ -21,51 +34,6 @@ Scope {
     Component.onDestruction: {
         SystemIdentityService.setUptimeConsumer("lock-screen", false);
         SystemMonitorService.clearConsumer("lock-screen");
-    }
-
-    function open() {
-        if (sessionLock.locked || lockPending)
-            return "ALREADY_LOCKED";
-
-        internalContext.currentText = "";
-        internalContext.unlockInProgress = false;
-        internalContext.showFailure = false;
-        lockPending = true;
-        lockGeneration = LockSnapshot.request(Quickshell.screens.length);
-        lockSnapshotTimeout.restart();
-
-        if (LockSnapshot.ready)
-            commitLock(lockGeneration);
-
-        return "LOCKED";
-    }
-
-    function isLocked() {
-        return sessionLock.locked || lockPending;
-    }
-
-    function commitLock(snapshotGeneration) {
-        if (!lockPending || snapshotGeneration !== lockGeneration)
-            return;
-
-        lockPending = false;
-        lockSnapshotTimeout.stop();
-        sessionLock.locked = true;
-    }
-
-    Connections {
-        target: LockSnapshot
-
-        function onPrepared(snapshotGeneration) {
-            root.commitLock(snapshotGeneration);
-        }
-    }
-
-    Timer {
-        id: lockSnapshotTimeout
-        interval: 180
-        repeat: false
-        onTriggered: root.commitLock(root.lockGeneration)
     }
 
     Scope {
@@ -79,7 +47,7 @@ Scope {
 
         function tryUnlock() {
             if (currentText === "" || unlockInProgress)
-                return;
+                return ;
 
             internalContext.unlockInProgress = true;
             pam.start();
@@ -95,13 +63,12 @@ Scope {
 
             configDirectory: Paths.shellDir + "/Modules/Lock/pam"
             config: "password.conf"
-
             onPamMessage: {
                 if (this.responseRequired)
                     this.respond(internalContext.currentText);
-            }
 
-            onCompleted: result => {
+            }
+            onCompleted: (result) => {
                 if (result == PamResult.Success) {
                     internalContext.currentText = "";
                     internalContext.showFailure = false;
@@ -114,6 +81,7 @@ Scope {
                 internalContext.unlockInProgress = false;
             }
         }
+
     }
 
     WlSessionLock {
@@ -125,5 +93,7 @@ Scope {
             lock: sessionLock
             context: internalContext
         }
+
     }
+
 }

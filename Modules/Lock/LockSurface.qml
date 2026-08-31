@@ -16,29 +16,16 @@ WlSessionLockSurface {
     property real contentOpacity: 0
     property real contentScale: 0
     property real backgroundBlur: 0
-    property bool startupStarted: false
-    property bool startupFallbackElapsed: false
     readonly property real targetHeight: Math.max(1, height * Sizes.lockHeightMult)
     readonly property real targetWidth: targetHeight * Sizes.lockRatio
     readonly property real compactSize: Math.min(Metrics.lockIconPanelSize, targetHeight)
     readonly property real compactRadius: compactSize / 4
     readonly property real panelRadius: Metrics.lockCardRadius * 1.5
-    readonly property string snapshotSource: LockSnapshot.snapshotUrl(root.screen)
-    readonly property bool snapshotReady: snapshotSource !== "" && desktopSnapshotFallback.status === Image.Ready
-    readonly property bool canStartStartupAnimation: snapshotReady || startupFallbackElapsed
 
     function focusAuth() {
         if (lockContent.opacity > 0)
             lockContent.forceAuthFocus();
 
-    }
-
-    function maybeStartStartupAnimation() {
-        if (startupStarted || !canStartStartupAnimation)
-            return ;
-
-        startupStarted = true;
-        startupAnim.start();
     }
 
     function startExitAnimation() {
@@ -51,8 +38,7 @@ WlSessionLockSurface {
     }
 
     color: "transparent"
-    onCanStartStartupAnimationChanged: maybeStartStartupAnimation()
-    Component.onCompleted: maybeStartStartupAnimation()
+    Component.onCompleted: startupAnim.start()
 
     Rectangle {
         id: immediateFallback
@@ -61,17 +47,11 @@ WlSessionLockSurface {
         color: Appearance.colors.colLayer0Base
     }
 
-    Image {
-        id: desktopSnapshotFallback
-
+    ScreencopyView {
         anchors.fill: parent
-        source: root.snapshotSource
-        fillMode: Image.Stretch
-        asynchronous: false
-        cache: false
-        visible: root.snapshotSource !== ""
+        captureSource: root.screen
+        paintCursor: false
         layer.enabled: true
-        onStatusChanged: root.maybeStartStartupAnimation()
 
         layer.effect: MultiEffect {
             autoPaddingEnabled: false
@@ -104,15 +84,6 @@ WlSessionLockSurface {
         }
 
         target: root.lock
-    }
-
-    Timer {
-        id: startupFallbackTimer
-
-        interval: 160
-        running: true
-        repeat: false
-        onTriggered: root.startupFallbackElapsed = true
     }
 
     ParallelAnimation {
