@@ -139,7 +139,7 @@ Variants {
         WlrLayershell.namespace: "clavis-shell-keystone"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: root.escapeDismissActive ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
         anchors {
             top: true
@@ -530,12 +530,25 @@ Variants {
                     root.triggerSliderOSD("volume");
                 }
 
+                function requestKeyboardFocus() {
+                    keystoneWindow.requestActivate();
+                    Qt.callLater(() => {
+                        if (!root.escapeDismissActive)
+                            return ;
+
+                        if (root.isToolsMode)
+                            toolsWidget.forceActiveFocus();
+                        else
+                            root.forceActiveFocus();
+                    });
+                }
+
                 onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
                 Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
                 focus: root.escapeDismissActive
                 onEscapeDismissActiveChanged: {
                     if (root.escapeDismissActive)
-                        root.forceActiveFocus();
+                        root.requestKeyboardFocus();
 
                 }
                 Keys.onEscapePressed: (event) => {
