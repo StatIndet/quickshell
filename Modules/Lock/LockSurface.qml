@@ -9,6 +9,11 @@ WlSessionLockSurface {
 
     required property WlSessionLock lock
     property var context: null
+    property var snapshotProvider: null
+    property var snapshotResult: null
+    property bool componentReady: false
+    property bool snapshotResolved: false
+    property bool startupStarted: false
     property bool isExiting: false
     property real morphProgress: 0
     property real containerScale: 0
@@ -21,6 +26,29 @@ WlSessionLockSurface {
     readonly property real compactSize: Math.min(Metrics.lockIconPanelSize, targetHeight)
     readonly property real compactRadius: compactSize / 4
     readonly property real panelRadius: Metrics.lockCardRadius * 1.5
+
+    function resolveSnapshot() {
+        if (!componentReady || snapshotResolved || !root.screen || !root.screen.name)
+            return ;
+
+        snapshotResult = snapshotProvider ? snapshotProvider.snapshot(root.screen) : null;
+        snapshotResolved = true;
+        maybeStartStartupAnimation();
+    }
+
+    function maybeStartStartupAnimation() {
+        if (startupStarted || !snapshotResolved)
+            return ;
+
+        if (snapshotResult && snapshotImage.status !== Image.Ready && snapshotImage.status !== Image.Error)
+            return ;
+
+        if (snapshotResult && snapshotImage.status === Image.Error)
+            console.warn("Unable to display pre-lock snapshot for output " + root.screen.name);
+
+        startupStarted = true;
+        startupAnim.start();
+    }
 
     function focusAuth() {
         if (lockContent.opacity > 0)
@@ -38,7 +66,11 @@ WlSessionLockSurface {
     }
 
     color: "transparent"
-    Component.onCompleted: startupAnim.start()
+    onScreenChanged: resolveSnapshot()
+    Component.onCompleted: {
+        componentReady = true;
+        resolveSnapshot();
+    }
 
     Rectangle {
         id: immediateFallback
@@ -47,11 +79,17 @@ WlSessionLockSurface {
         color: Appearance.colors.colLayer0Base
     }
 
-    ScreencopyView {
+    Image {
+        id: snapshotImage
+
         anchors.fill: parent
-        captureSource: root.screen
-        paintCursor: false
+        source: root.snapshotResult ? root.snapshotResult.url : ""
+        fillMode: Image.Stretch
+        asynchronous: false
+        cache: false
+        visible: source !== ""
         layer.enabled: true
+        onStatusChanged: root.maybeStartStartupAnimation()
 
         layer.effect: MultiEffect {
             autoPaddingEnabled: false

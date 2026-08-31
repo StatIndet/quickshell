@@ -8,23 +8,36 @@ import qs.Services
 Scope {
     id: root
 
-    readonly property bool active: sessionLock.locked
+    readonly property bool active: sessionLock.locked || capturePending
+    readonly property bool secure: sessionLock.secure
+    property bool capturePending: false
+    property int activeCaptureRequestId: 0
 
     signal unlocked()
+    signal secured()
 
     function open() {
-        if (sessionLock.locked)
+        if (sessionLock.locked || capturePending)
             return "ALREADY_LOCKED";
 
         internalContext.currentText = "";
         internalContext.unlockInProgress = false;
         internalContext.showFailure = false;
-        sessionLock.locked = true;
+        capturePending = true;
+        activeCaptureRequestId = preLockCapture.capture();
         return "LOCKED";
     }
 
     function isLocked() {
-        return sessionLock.locked;
+        return sessionLock.locked || capturePending;
+    }
+
+    function finishCapture(captureRequestId) {
+        if (!capturePending || captureRequestId !== activeCaptureRequestId)
+            return ;
+
+        sessionLock.locked = true;
+        capturePending = false;
     }
 
     onActiveChanged: {
@@ -32,8 +45,18 @@ Scope {
         SystemMonitorService.setConsumerModules("lock-screen", root.active ? ["cpu", "memory", "disk"] : []);
     }
     Component.onDestruction: {
+        preLockCapture.cancel();
+        preLockCapture.clear();
         SystemIdentityService.setUptimeConsumer("lock-screen", false);
         SystemMonitorService.clearConsumer("lock-screen");
+    }
+
+    PreLockCapture {
+        id: preLockCapture
+
+        onCompleted: (captureRequestId) => {
+            return root.finishCapture(captureRequestId);
+        }
     }
 
     Scope {
@@ -56,6 +79,7 @@ Scope {
         function finishUnlock() {
             sessionLock.locked = false;
             root.unlocked();
+            Qt.callLater(preLockCapture.clear);
         }
 
         PamContext {
@@ -89,9 +113,16 @@ Scope {
 
         signal unlock()
 
+        onSecureStateChanged: {
+            if (secure)
+                root.secured();
+
+        }
+
         LockSurface {
             lock: sessionLock
             context: internalContext
+            snapshotProvider: preLockCapture
         }
 
     }
