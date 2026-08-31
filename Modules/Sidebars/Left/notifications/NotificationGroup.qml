@@ -146,6 +146,7 @@ MouseArea {
             }
 
             ColumnLayout {
+                Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
                 spacing: root.expanded ? (root.multipleNotifications ? (root.latestNotificationHasImage ? 35 : 5) : 0) : 0
 
