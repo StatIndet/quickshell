@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -12,36 +11,10 @@ Rectangle {
     property bool compact: false
     property bool veryCompact: false
     readonly property var notifications: NotificationManager.list.slice().sort((a, b) => {
-        return b.time - a.time;
+        return b.receivedAt - a.receivedAt;
     })
     readonly property int notificationCount: notifications.length
     readonly property int cardMargin: Metrics.lockOuterPadding
-
-    function normalizeSource(source) {
-        if (!source || source === "")
-            return "";
-
-        if (source.startsWith("/"))
-            return "file://" + source;
-
-        return source;
-    }
-
-    function iconSourceFor(notificationObject) {
-        if (!notificationObject)
-            return "";
-
-        if (notificationObject.image && notificationObject.image !== "")
-            return normalizeSource(notificationObject.image);
-
-        if (notificationObject.appIcon && notificationObject.appIcon !== "") {
-            if (notificationObject.appIcon.startsWith("/") || notificationObject.appIcon.startsWith("file://"))
-                return normalizeSource(notificationObject.appIcon);
-
-            return Quickshell.iconPath(notificationObject.appIcon, "image-missing");
-        }
-        return "";
-    }
 
     function formatTime(timestamp) {
         const date = new Date(Number(timestamp));
@@ -53,6 +26,10 @@ Rectangle {
             return UiPreferences.shortTime(date);
 
         return Qt.formatDate(date, "MM/dd") + " " + UiPreferences.shortTime(date);
+    }
+
+    function sanitizedBody(body) {
+        return (body || "").replace(/<img\b[^>]*>/gi, "");
     }
 
     Layout.fillWidth: true
@@ -158,7 +135,6 @@ Rectangle {
                     id: delegateRoot
 
                     required property var modelData
-                    readonly property string iconSource: root.iconSourceFor(modelData)
 
                     width: ListView.view ? ListView.view.width : 0
                     height: Math.max(84, contentRow.implicitHeight + 14)
@@ -172,35 +148,14 @@ Rectangle {
                         anchors.margins: 14
                         spacing: 12
 
-                        Rectangle {
+                        NotificationVisual {
                             Layout.preferredWidth: 56
                             Layout.preferredHeight: 56
                             Layout.alignment: Qt.AlignTop
-                            radius: 18
-                            color: Appearance.colors.colLayer4
-                            clip: true
-
-                            Image {
-                                id: iconImg
-
-                                anchors.fill: parent
-                                anchors.margins: delegateRoot.modelData && delegateRoot.modelData.image ? 0 : 8
-                                source: delegateRoot.iconSource
-                                fillMode: delegateRoot.modelData && delegateRoot.modelData.image ? Image.PreserveAspectCrop : Image.PreserveAspectFit
-                                visible: delegateRoot.iconSource !== "" && status !== Image.Error
-                                asynchronous: true
-                                smooth: true
-                            }
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: "notifications"
-                                visible: !iconImg.visible
-                                color: Appearance.colors.colOnSurfaceVariant
-                                font.family: Fonts.materialSymbolsRounded
-                                font.pixelSize: 27
-                            }
-
+                            appIcon: delegateRoot.modelData ? delegateRoot.modelData.appIcon : ""
+                            image: delegateRoot.modelData ? delegateRoot.modelData.image : ""
+                            summary: delegateRoot.modelData ? delegateRoot.modelData.summary : ""
+                            urgency: delegateRoot.modelData ? delegateRoot.modelData.urgency : ""
                         }
 
                         ColumnLayout {
@@ -224,38 +179,11 @@ Rectangle {
 
                                 Text {
                                     Layout.alignment: Qt.AlignVCenter
-                                    text: delegateRoot.modelData ? root.formatTime(delegateRoot.modelData.time) : ""
+                                    text: delegateRoot.modelData ? root.formatTime(delegateRoot.modelData.receivedAt) : ""
                                     color: Appearance.colors.colOnSurfaceVariant
                                     font.family: Fonts.numeric
                                     font.pixelSize: 13
                                     opacity: 0.7
-                                }
-
-                                Item {
-                                    Layout.preferredWidth: 18
-                                    Layout.preferredHeight: 18
-                                    Layout.alignment: Qt.AlignVCenter
-
-                                    Text {
-                                        anchors.centerIn: parent
-                                        text: "close"
-                                        color: Appearance.colors.colOnSurfaceVariant
-                                        font.family: Fonts.materialSymbolsRounded
-                                        font.pixelSize: 14
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        opacity: closeMouse.containsMouse ? 1 : 0.7
-                                    }
-
-                                    MouseArea {
-                                        id: closeMouse
-
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: NotificationManager.discardNotification(delegateRoot.modelData.notificationId)
-                                    }
-
                                 }
 
                             }
@@ -271,7 +199,8 @@ Rectangle {
                             }
 
                             Text {
-                                text: delegateRoot.modelData ? delegateRoot.modelData.body : ""
+                                text: delegateRoot.modelData ? root.sanitizedBody(delegateRoot.modelData.body) : ""
+                                textFormat: Text.StyledText
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Fonts.ui
                                 font.pixelSize: 16

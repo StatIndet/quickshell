@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -21,69 +20,76 @@ Item {
         animateMovement: true
         showVerticalScrollBar: false
 
-        delegate: Rectangle {
+        delegate: Item {
             id: delegateRoot
 
             required property var modelData
+            readonly property var normalActions: root.manager.normalActions(delegateRoot.modelData)
+            readonly property bool hasDefaultAction: root.manager.defaultAction(delegateRoot.modelData) !== null
+            readonly property bool hasExpiry: delegateRoot.modelData && delegateRoot.modelData.popupExpiresAt > 0
+            property real expiryProgress: 0
+
+            function sanitizedBody() {
+                return (modelData ? modelData.body : "").replace(/<img\b[^>]*>/gi, "");
+            }
+
+            function restartProgress() {
+                progressAnimation.stop();
+                if (!delegateRoot.hasExpiry) {
+                    delegateRoot.expiryProgress = 0;
+                    return ;
+                }
+                const total = Math.max(1, delegateRoot.modelData.popupExpiresAt - delegateRoot.modelData.popupStartedAt);
+                const remaining = Math.max(0, delegateRoot.modelData.popupExpiresAt - Date.now());
+                delegateRoot.expiryProgress = Math.min(1, remaining / total);
+                progressAnimation.duration = remaining;
+                progressAnimation.restart();
+            }
 
             width: ListView.view.width
-            height: 60
-            color: "transparent"
+            height: normalActions.length > 0 ? 104 : 64
+            Component.onCompleted: restartProgress()
+            onModelDataChanged: restartProgress()
 
-            readonly property string imageSource: modelData && modelData.image ? modelData.image : ""
-            readonly property string appIconSource: modelData && modelData.appIcon ? Quickshell.iconPath(modelData.appIcon, "image-missing") : ""
-            readonly property string iconSource: imageSource !== "" ? imageSource : appIconSource
-            readonly property bool hasImage: imageSource !== ""
-            readonly property bool hasIcon: iconSource !== ""
+            NumberAnimation {
+                id: progressAnimation
 
-            Timer {
-                interval: 5000
-                running: true
-                repeat: false
-                onTriggered: root.manager.removeByNotifId(delegateRoot.modelData.notificationId)
+                target: delegateRoot
+                property: "expiryProgress"
+                to: 0
+                easing.type: Easing.Linear
             }
 
             MouseArea {
-                anchors.fill: parent
+                anchors.fill: card
+                enabled: delegateRoot.hasDefaultAction
                 cursorShape: Qt.PointingHandCursor
-                onClicked: root.manager.removeByNotifId(delegateRoot.modelData.notificationId)
+                onClicked: root.manager.invokeDefaultAction(delegateRoot.modelData.notificationId)
             }
 
             RowLayout {
-                anchors.fill: parent
+                id: card
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: progressTrack.top
                 anchors.bottomMargin: 4
                 spacing: 12
 
-                Rectangle {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: 40
-                    radius: 10
-                    color: Appearance.colors.colLayer0
-                    clip: true
-
-                    Image {
-                        id: iconImage
-                        anchors.fill: parent
-                        anchors.margins: delegateRoot.hasImage ? 0 : 6
-                        source: delegateRoot.iconSource
-                        fillMode: delegateRoot.hasImage ? Image.PreserveAspectCrop : Image.PreserveAspectFit
-                        asynchronous: true
-                        visible: delegateRoot.hasIcon && status !== Image.Error
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "chat"
-                        visible: !iconImage.visible
-                        font.family: Fonts.materialSymbolsRounded
-                        font.pixelSize: 22
-                        color: Appearance.colors.colOnSurfaceVariant
-                    }
+                NotificationVisual {
+                    Layout.preferredWidth: 44
+                    Layout.preferredHeight: 44
+                    Layout.alignment: Qt.AlignTop
+                    appIcon: delegateRoot.modelData ? delegateRoot.modelData.appIcon : ""
+                    image: delegateRoot.modelData ? delegateRoot.modelData.image : ""
+                    summary: delegateRoot.modelData ? delegateRoot.modelData.summary : ""
+                    urgency: delegateRoot.modelData ? delegateRoot.modelData.urgency : ""
                 }
 
                 ColumnLayout {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillHeight: true
                     spacing: 2
 
                     Text {
@@ -97,38 +103,122 @@ Item {
                     }
 
                     Text {
-                        text: delegateRoot.modelData ? delegateRoot.modelData.body : ""
+                        text: delegateRoot.sanitizedBody()
+                        textFormat: Text.StyledText
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
                         font.pixelSize: 12
                         Layout.fillWidth: true
                         elide: Text.ElideRight
-                        maximumLineCount: 2
+                        maximumLineCount: delegateRoot.normalActions.length > 0 ? 1 : 2
+                        onLinkActivated: (link) => {
+                            return Qt.openUrlExternally(link);
+                        }
                     }
+
+                    StyledFlickable {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 34
+                        visible: delegateRoot.normalActions.length > 0
+                        contentWidth: actionRow.implicitWidth
+                        contentHeight: height
+                        flickableDirection: Flickable.HorizontalFlick
+                        boundsBehavior: Flickable.StopAtBounds
+                        showVerticalScrollBar: false
+
+                        RowLayout {
+                            id: actionRow
+
+                            height: parent.height
+                            spacing: 6
+
+                            Repeater {
+                                model: delegateRoot.normalActions
+
+                                RippleButton {
+                                    id: actionButton
+
+                                    required property var modelData
+
+                                    implicitHeight: 34
+                                    implicitWidth: Math.max(64, actionLabel.implicitWidth + 24)
+                                    buttonRadius: Appearance.rounding.full
+                                    containerColor: Appearance.colors.colLayer3
+                                    stateLayerColor: Appearance.colors.colOnLayer3
+                                    Accessible.name: actionButton.modelData.text
+                                    onClicked: root.manager.invokeAction(actionButton.modelData)
+
+                                    contentItem: Text {
+                                        id: actionLabel
+
+                                        text: actionButton.modelData.text
+                                        color: Appearance.colors.colOnLayer3
+                                        font.family: Fonts.ui
+                                        font.pixelSize: 12
+                                        font.weight: Font.Medium
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
                 }
 
-                Text {
-                    text: "close"
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Fonts.materialSymbolsRounded
-                    font.pixelSize: 18
-                    Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                RippleButton {
+                    Layout.preferredWidth: 40
+                    Layout.preferredHeight: 40
+                    Layout.alignment: Qt.AlignTop
+                    buttonRadius: Appearance.rounding.full
+                    containerColor: "transparent"
+                    stateLayerColor: Appearance.colors.colOnSurfaceVariant
+                    hoverStateLayerOpacity: 0.08
+                    focusStateLayerOpacity: 0.1
+                    pressedStateLayerOpacity: 0.12
+                    rippleColor: Appearance.colors.colOnSurfaceVariant
+                    Accessible.name: qsTr("关闭")
+                    onClicked: root.manager.dismissPopup(delegateRoot.modelData.notificationId)
+
+                    contentItem: Text {
+                        text: "close"
+                        color: Appearance.colors.colOnSurfaceVariant
+                        font.family: Fonts.materialSymbolsRounded
+                        font.pixelSize: 20
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
                 }
+
             }
 
             Rectangle {
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: 2
-                radius: 1
-                color: Appearance.colors.colPrimary
+                id: progressTrack
 
-                NumberAnimation on width {
-                    from: delegateRoot.width - 20
-                    to: 0
-                    duration: 5000
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: delegateRoot.hasExpiry ? 2 : 0
+                radius: 1
+                color: Appearance.colors.colLayer2
+                visible: delegateRoot.hasExpiry
+
+                Rectangle {
+                    width: parent.width * delegateRoot.expiryProgress
+                    height: parent.height
+                    radius: parent.radius
+                    color: Appearance.colors.colPrimary
                 }
+
             }
+
         }
+
     }
+
 }

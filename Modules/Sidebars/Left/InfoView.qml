@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Common
 import qs.Services
 import "./notifications"
 import "./infoTools"
@@ -10,16 +9,16 @@ Item {
 
     property string screenName: ""
     property bool foreground: false
-
     readonly property bool isForeground: root.foreground
+
     onIsForegroundChanged: {
         SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, root.isForeground);
         if (isForeground) {
-            NotificationManager.timeoutAll();
+            NotificationManager.hideAllPopups();
             NotificationManager.markAllRead();
+            Time.refreshNow();
         }
     }
-
     Component.onCompleted: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, root.isForeground)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("left-sidebar-info:" + root.screenName, false)
 
@@ -43,5 +42,7 @@ Item {
             Layout.preferredHeight: implicitHeight
             active: root.isForeground
         }
+
     }
+
 }

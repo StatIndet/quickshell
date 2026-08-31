@@ -470,7 +470,9 @@ Variants {
                 readonly property int pillFusionDuration: 820
                 property int pillActiveFusionDuration: pillFusionDuration
                 property int notifW: 380
-                property int notifH: (NotificationManager.popupList.length * 70) + 20
+                property int notifH: 20 + NotificationManager.popupList.reduce((height, notif) => {
+                    return height + (NotificationManager.normalActions(notif).length > 0 ? 104 : 64);
+                }, 0) + Math.max(0, NotificationManager.popupList.length - 1) * 10
                 property color color: BlurService.backgroundColor(Appearance.colors.colLayer0)
                 readonly property QtObject activeLayout: keystoneWindow.horizontalEdge ? horizontalLayout : verticalLayout
                 readonly property real recordingVisualWidth: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitWidth : activeLayout.attachedRecordingWidth
@@ -511,7 +513,7 @@ Variants {
                     root.showHub = false;
                     root.showTools = false;
                     if (root.isNotifMode)
-                        NotificationManager.timeoutAll();
+                        NotificationManager.hideAllPopups();
 
                 }
 
