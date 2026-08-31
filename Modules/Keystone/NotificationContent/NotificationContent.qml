@@ -143,8 +143,12 @@ Item {
                                     implicitHeight: 34
                                     implicitWidth: Math.max(64, actionLabel.implicitWidth + 24)
                                     buttonRadius: Appearance.rounding.full
-                                    containerColor: Appearance.colors.colLayer3
-                                    stateLayerColor: Appearance.colors.colOnLayer3
+                                    containerColor: "transparent"
+                                    stateLayerColor: Appearance.colors.colOnSurfaceVariant
+                                    hoverStateLayerOpacity: 0.08
+                                    focusStateLayerOpacity: 0.1
+                                    pressedStateLayerOpacity: 0.12
+                                    rippleColor: Appearance.colors.colOnSurfaceVariant
                                     Accessible.name: actionButton.modelData.text
                                     onClicked: root.manager.invokeAction(actionButton.modelData)
 
@@ -152,7 +156,7 @@ Item {
                                         id: actionLabel
 
                                         text: actionButton.modelData.text
-                                        color: Appearance.colors.colOnLayer3
+                                        color: Appearance.colors.colOnSurfaceVariant
                                         font.family: Fonts.ui
                                         font.pixelSize: 12
                                         font.weight: Font.Medium

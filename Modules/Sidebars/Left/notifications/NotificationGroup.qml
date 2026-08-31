@@ -224,6 +224,9 @@ MouseArea {
                     showVerticalScrollBar: false
                     clip: false
 
+                    remove: Transition {
+                    }
+
                     Behavior on spacing {
                         NumberAnimation {
                             duration: Appearance.animation.expressiveDefaultEffects.duration
@@ -251,6 +254,9 @@ MouseArea {
                         onlyNotification: root.notificationCount === 1
                         opacity: (!root.expanded && index === 1 && root.notificationCount > 2) ? 0.5 : 1
                         visible: root.expanded || index < 2
+                        onDismissGroup: (left) => {
+                            return root.destroyWithAnimation(left);
+                        }
                     }
 
                 }

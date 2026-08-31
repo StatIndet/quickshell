@@ -27,6 +27,8 @@ Item {
     readonly property var notificationActions: NotificationManager.normalActions(notificationObject)
     readonly property var notificationUrgency: notificationObject ? notificationObject.urgency : NotificationUrgency.Normal
 
+    signal dismissGroup(bool left)
+
     function isCriticalUrgency(urgency) {
         return urgency === NotificationUrgency.Critical || String(urgency).endsWith("Critical");
     }
@@ -66,9 +68,14 @@ Item {
 
         running: false
         onFinished: {
-            if (root.notificationObject)
-                NotificationManager.discardNotification(root.notificationObject.notificationId);
+            if (!root.notificationObject)
+                return ;
 
+            if (root.onlyNotification) {
+                root.dismissGroup(destroyAnimation.left);
+                return ;
+            }
+            NotificationManager.discardNotification(root.notificationObject.notificationId);
         }
 
         NumberAnimation {
