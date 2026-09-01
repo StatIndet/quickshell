@@ -266,15 +266,17 @@ Variants {
                     visible: false
 
                     Rectangle {
-                        // Keep the cutout at the Dashboard's final geometry;
-                        // the expanding surface reveals it naturally.
-                        width: 340
-                        height: 456
+                        // Exclude the blur kernel as well as the visible hole.
+                        // DropShadow uses a 20 px radius and up to a 6 px
+                        // directional offset, so a 26 px parallel outset keeps
+                        // its inner edge out of the transparent keyhole.
+                        width: 340 + root.dashboardKeyholeShadowExclusionMargin * 2
+                        height: 456 + root.dashboardKeyholeShadowExclusionMargin * 2
                         anchors.left: parent.horizontalCenter
-                        anchors.leftMargin: hub.dashboardKeyholeCenterOffset
+                        anchors.leftMargin: hub.dashboardKeyholeCenterOffset - root.dashboardKeyholeShadowExclusionMargin
                         anchors.top: parent.top
-                        anchors.topMargin: 132
-                        radius: 24
+                        anchors.topMargin: 132 - root.dashboardKeyholeShadowExclusionMargin
+                        radius: 24 + root.dashboardKeyholeShadowExclusionMargin
                         color: root.showDashboardKeyhole ? "black" : "transparent"
                     }
 
@@ -320,7 +322,7 @@ Variants {
             radius: 20
             samples: 32
             color: "#80000000"
-            cached: true
+            cached: false
             opacity: root.color.a * (styleSurface.detached && root.recordingPresentationActive ? 0 : 1)
         }
 
@@ -462,6 +464,7 @@ Variants {
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
                 readonly property bool showDashboardKeyhole: dashboardTabActive
+                readonly property real dashboardKeyholeShadowExclusionMargin: 26
                 property real pillMorphProgress: 0
                 property real recordingInfoProgress: 0
                 property real recordingActionProgress: 0
