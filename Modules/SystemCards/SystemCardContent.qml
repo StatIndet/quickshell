@@ -301,12 +301,18 @@ Item {
 
         SystemNetworkCard {
             network: SystemMonitorService.network
-            downloadHistory: SystemMonitorService.networkDownloadHistory
-            uploadHistory: SystemMonitorService.networkUploadHistory
+            aggregateDownloadHistory: SystemMonitorService.networkDownloadHistory
+            aggregateUploadHistory: SystemMonitorService.networkUploadHistory
+            downloadHistories: NetworkInterfaceHistoryService.downloadHistories
+            uploadHistories: NetworkInterfaceHistoryService.uploadHistories
+            preferredInterface: UiPreferences.systemMonitorNetworkInterface
             chartActive: root.active
             updateInterval: root.chartUpdateInterval
             surfaceColor: root.surfaceColor(Appearance.m3colors.m3primary, Appearance.colors.colPrimary)
             panelColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer)
+            onInterfaceSelected: (networkInterface) => {
+                return UiPreferences.setSystemMonitorNetworkInterface(networkInterface);
+            }
         }
 
     }

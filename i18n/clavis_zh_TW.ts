@@ -7379,33 +7379,48 @@
 <context>
     <name>SystemNetworkCard</name>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="55"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="50"/>
+        <source>默认 · %1</source>
+        <translation>預設 · %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="50"/>
+        <source>默认</source>
+        <translation>預設</translation>
+    </message>
+    <message>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="53"/>
+        <source>总量</source>
+        <translation>總量</translation>
+    </message>
+    <message>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="102"/>
         <source>网络，下载 </source>
         <translation>網路，下載 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="55"/>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="119"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="102"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="166"/>
         <source>，上传 </source>
         <translation>，上傳 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="64"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="111"/>
         <source>网络</source>
         <translation>網路</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="118"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="165"/>
         <source>网络近期趋势</source>
         <translation>近期網路趨勢</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="163"/>
-        <source>全部接口</source>
-        <translation>全部介面</translation>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="226"/>
+        <source>选择网络接口</source>
+        <translation>選擇網路介面</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="119"/>
+        <location filename="../Modules/SystemCards/SystemNetworkCard.qml" line="166"/>
         <source>下载 </source>
         <translation>下載 </translation>
     </message>

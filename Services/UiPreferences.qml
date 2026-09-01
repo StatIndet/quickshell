@@ -17,6 +17,7 @@ Singleton {
     property string systemTemperatureUnit: "celsius"
     property string systemMonitorGpuId: "auto"
     property string systemMonitorDiskDevice: ""
+    property string systemMonitorNetworkInterface: ""
     property string storageCapacityDiskDevice: "follow-io"
     property int systemMonitorIntervalMs: 2000
     property bool useTwelveHourClock: true
@@ -133,6 +134,15 @@ Singleton {
             return ;
 
         root.systemMonitorDiskDevice = normalized;
+        root.save();
+    }
+
+    function setSystemMonitorNetworkInterface(value) {
+        const normalized = String(value || "").trim();
+        if (root.systemMonitorNetworkInterface === normalized)
+            return ;
+
+        root.systemMonitorNetworkInterface = normalized;
         root.save();
     }
 
@@ -454,6 +464,7 @@ Singleton {
             "systemTemperatureUnit": root.systemTemperatureUnit,
             "systemMonitorGpuId": root.systemMonitorGpuId,
             "systemMonitorDiskDevice": root.systemMonitorDiskDevice,
+            "systemMonitorNetworkInterface": root.systemMonitorNetworkInterface,
             "storageCapacityDiskDevice": root.storageCapacityDiskDevice,
             "systemMonitorIntervalMs": root.systemMonitorIntervalMs,
             "useTwelveHourClock": root.useTwelveHourClock,
@@ -516,6 +527,7 @@ Singleton {
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
                 root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);
                 root.systemMonitorDiskDevice = root.normalizedDiskDevice(parsed.systemMonitorDiskDevice, "");
+                root.systemMonitorNetworkInterface = String(parsed.systemMonitorNetworkInterface || "").trim();
                 root.storageCapacityDiskDevice = root.normalizedDiskDevice(parsed.storageCapacityDiskDevice, "follow-io");
                 const monitorInterval = root.normalizedSystemMonitorIntervalMs(parsed.systemMonitorIntervalMs === undefined ? 2000 : parsed.systemMonitorIntervalMs);
                 root.systemMonitorIntervalMs = monitorInterval < 0 ? 2000 : monitorInterval;

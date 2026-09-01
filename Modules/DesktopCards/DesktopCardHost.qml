@@ -474,6 +474,10 @@ Variants {
                 item: cardCanvas.inputSlot10
             }
 
+            Region {
+                item: PopupInputRegionService.itemForWindow(window)
+            }
+
         }
 
     }
