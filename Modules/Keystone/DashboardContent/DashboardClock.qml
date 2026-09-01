@@ -48,7 +48,6 @@ Item {
             font.family: root.clockFamily
             font.pixelSize: 132
             font.weight: Font.Bold
-            font.letterSpacing: -9
             font.variableAxes: root.clockAxes
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -86,7 +85,6 @@ Item {
             font.family: root.clockFamily
             font.pixelSize: 132
             font.weight: Font.Bold
-            font.letterSpacing: -9
             font.variableAxes: root.clockAxes
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
