@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import Qt5Compat.GraphicalEffects
 import Quickshell
 import Quickshell.Io
@@ -256,33 +257,6 @@ Variants {
                     bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.leftEdge) ? root.radius : 0
                     bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.rightEdge) ? root.radius : 0
                     color: "black"
-                    visible: false
-                }
-
-                Item {
-                    id: shadowHoleWrapper
-
-                    anchors.fill: parent
-                    visible: false
-
-                    Rectangle {
-                        width: 340
-                        height: 456
-                        anchors.left: parent.horizontalCenter
-                        anchors.leftMargin: hub.dashboardKeyholeCenterOffset
-                        anchors.top: parent.top
-                        anchors.topMargin: 132
-                        radius: 24
-                        color: root.showDashboardKeyhole ? "black" : "transparent"
-                    }
-
-                }
-
-                OpacityMask {
-                    anchors.fill: parent
-                    source: solidShadowBg
-                    maskSource: shadowHoleWrapper
-                    invert: true
                 }
 
             }
@@ -1068,6 +1042,7 @@ Variants {
 
                     anchors.fill: parent
                     antialiasing: true
+                    visible: !root.showDashboardKeyhole
                     opacity: styleSurface.detached && root.recordingPresentationActive ? 0 : 1
                     onPaint: {
                         const context = getContext("2d");
@@ -1098,6 +1073,19 @@ Variants {
                     onCutoutWidthChanged: requestPaint()
                     onCutoutHeightChanged: requestPaint()
                     onCutoutRadiusChanged: requestPaint()
+                }
+
+                MultiEffect {
+                    anchors.fill: rootSurface
+                    source: rootSurface
+                    visible: root.showDashboardKeyhole
+                    autoPaddingEnabled: true
+                    shadowEnabled: true
+                    shadowColor: "#80000000"
+                    shadowBlur: 0.8
+                    shadowHorizontalOffset: keystoneWindow.leftEdge ? 6 : keystoneWindow.rightEdge ? -6 : 0
+                    shadowVerticalOffset: keystoneWindow.topEdge ? 6 : keystoneWindow.bottomEdge ? -6 : 0
+                    opacity: rootSurface.opacity
                 }
 
                 PwObjectTracker {
