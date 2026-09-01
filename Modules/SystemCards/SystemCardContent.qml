@@ -25,7 +25,7 @@ Item {
     readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius) ? SystemMonitorService.cpu.packageTemperatureCelsius : SystemMonitorService.cpu.temperatureCelsius
     readonly property var ioDisk: root.diskForDevice(UiPreferences.systemMonitorDiskDevice, true)
     readonly property var capacityDisk: UiPreferences.storageCapacityDiskDevice === "follow-io" ? root.ioDisk : root.diskForDevice(UiPreferences.storageCapacityDiskDevice, false)
-    readonly property bool usesRectangularShadow: ["battery", "cpu", "gpu", "network", "storage", "calendar"].indexOf(root.tileId) >= 0
+    readonly property bool usesRectangularShadow: ["cpu", "gpu", "network", "storage", "calendar"].indexOf(root.tileId) >= 0
     readonly property int shadowShape: {
         switch (root.tileId) {
         case "memoryUsed":
