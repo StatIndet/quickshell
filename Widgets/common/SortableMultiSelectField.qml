@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
-import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Components
 
@@ -18,14 +17,16 @@ FocusScope {
     property real itemHeight: 40
     property real menuItemSpacing: 4
     property int maxVisibleItems: 6
-    property Item popupBoundsItem: null
     property real scrollTargetX: 0
     property real autoScrollVelocity: 0
     readonly property Item popupParentItem: root.Window.window ? root.Window.window.contentItem : null
     readonly property real menuPadding: 6
     readonly property real menuGap: 6
-    readonly property int visibleMenuItemCount: Math.min(Math.max(1, maxVisibleItems), Math.max(1, options.length))
-    readonly property real listTargetHeight: visibleMenuItemCount * itemHeight + Math.max(0, visibleMenuItemCount - 1) * menuItemSpacing
+    readonly property var availableOptions: options.filter((option) => {
+        return values.indexOf(optionValue(option)) === -1;
+    })
+    readonly property int visibleMenuItemCount: Math.min(Math.max(1, maxVisibleItems), Math.max(1, availableOptions.length))
+    readonly property real listTargetHeight: Math.max(itemHeight + menuPadding * 2, Math.ceil(availableOptions.length / 2) * (itemHeight + menuItemSpacing) + menuPadding * 2)
     readonly property bool dragActive: dragCoordinator && dragCoordinator.dragActive
 
     signal toggled(string componentId)
@@ -39,6 +40,10 @@ FocusScope {
         return option && typeof option === "object" ? String(option.label || option.value || "") : String(option || "");
     }
 
+    function optionIcon(option) {
+        return option && typeof option === "object" ? String(option.icon || "widgets") : "widgets";
+    }
+
     function labelFor(componentId) {
         for (let index = 0; index < root.options.length; index += 1) {
             if (root.optionValue(root.options[index]) === componentId)
@@ -46,6 +51,15 @@ FocusScope {
 
         }
         return componentId;
+    }
+
+    function iconFor(componentId) {
+        for (let index = 0; index < root.options.length; index += 1) {
+            if (root.optionValue(root.options[index]) === componentId)
+                return root.optionIcon(root.options[index]);
+
+        }
+        return "widgets";
     }
 
     function entryIndex(entryKey) {
@@ -208,19 +222,14 @@ FocusScope {
         if (!root.popupParentItem)
             return false;
 
-        const bounds = root.popupBoundsItem || root.popupParentItem;
-        const origin = bounds.mapToItem(root.popupParentItem, 0, 0);
+        const origin = root.mapToItem(root.popupParentItem, 0, 0);
         const margin = 12;
-        const left = origin.x + margin;
-        const top = origin.y + margin;
-        const right = origin.x + bounds.width - margin;
-        const bottom = origin.y + bounds.height - margin;
-        optionsPopup.width = Math.min(root.width, right - left);
-        optionsPopup.height = Math.min(root.listTargetHeight + root.menuPadding * 2, bottom - top);
-        const below = root.mapToItem(root.popupParentItem, 0, root.height + root.menuGap);
-        const above = root.mapToItem(root.popupParentItem, 0, -optionsPopup.height - root.menuGap);
-        optionsPopup.x = Math.max(left, Math.min(below.x, right - optionsPopup.width));
-        optionsPopup.y = below.y + optionsPopup.height <= bottom ? below.y : above.y >= top ? above.y : Math.max(top, bottom - optionsPopup.height);
+        optionsPopup.width = root.width;
+        optionsPopup.height = root.listTargetHeight;
+        optionsPopup.x = Math.max(margin, Math.min(origin.x, root.popupParentItem.width - optionsPopup.width - margin));
+        const belowY = origin.y + root.fieldHeight + root.menuGap;
+        const aboveY = origin.y - optionsPopup.height - root.menuGap;
+        optionsPopup.y = belowY + optionsPopup.height <= root.popupParentItem.height - margin ? belowY : Math.max(margin, aboveY);
         return true;
     }
 
@@ -243,18 +252,17 @@ FocusScope {
     }
 
     function moveHighlight(delta) {
-        if (root.options.length === 0)
+        if (root.availableOptions.length === 0)
             return ;
 
-        root.highlightedIndex = (root.highlightedIndex + delta + root.options.length) % root.options.length;
-        menuList.positionViewAtIndex(root.highlightedIndex, ListView.Contain);
+        root.highlightedIndex = (root.highlightedIndex + delta + root.availableOptions.length) % root.availableOptions.length;
     }
 
     function toggleHighlighted() {
-        if (root.highlightedIndex < 0 || root.highlightedIndex >= root.options.length)
+        if (root.highlightedIndex < 0 || root.highlightedIndex >= root.availableOptions.length)
             return ;
 
-        root.toggled(root.optionValue(root.options[root.highlightedIndex]));
+        root.toggled(root.optionValue(root.availableOptions[root.highlightedIndex]));
     }
 
     function handleKey(event) {
@@ -298,7 +306,10 @@ FocusScope {
     Rectangle {
         id: fieldFrame
 
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        height: root.fieldHeight
         clip: true
         color: root.expanded || fieldTap.pressed ? Appearance.colors.colLayer2Active : fieldHover.hovered ? Appearance.colors.colLayer2Hover : Appearance.colors.colLayer2
 
@@ -349,7 +360,7 @@ FocusScope {
                     required property bool placeholder
                     readonly property bool ownsActiveDrag: root.dragActive && root.dragCoordinator && root.dragCoordinator.componentId === chipDelegate.componentId && root.dragCoordinator.sourceZone === root.zone
                     readonly property bool isDragged: root.dragActive && root.dragCoordinator.componentId === componentId && !placeholder
-                    readonly property real naturalWidth: Math.max(72, chipLabel.implicitWidth + 48)
+                    readonly property real naturalWidth: Math.max(88, chipLabel.implicitWidth + 70)
 
                     width: placeholder && root.dragCoordinator ? root.dragCoordinator.dragWidth : isDragged ? 0 : naturalWidth
                     height: chipList.height
@@ -365,6 +376,19 @@ FocusScope {
                         color: chipDelegate.placeholder ? Appearance.colors.colLayer2Active : chipHover.hovered ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colPrimaryContainer
                         opacity: chipDelegate.placeholder ? 0.45 : 1
 
+                        MaterialSymbol {
+                            id: chipIcon
+
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: root.iconFor(chipDelegate.componentId)
+                            iconSize: 17
+                            fill: 1
+                            color: Appearance.colors.colOnPrimaryContainer
+                            visible: !chipDelegate.placeholder
+                        }
+
                         Text {
                             id: chipLabel
 
@@ -377,9 +401,9 @@ FocusScope {
                             elide: Text.ElideRight
 
                             anchors {
-                                left: parent.left
+                                left: chipIcon.right
                                 right: closeButton.left
-                                leftMargin: 12
+                                leftMargin: 6
                                 rightMargin: 4
                                 verticalCenter: parent.verticalCenter
                             }
@@ -444,7 +468,7 @@ FocusScope {
                             dragThreshold: 8
                             onActiveChanged: {
                                 if (active)
-                                    root.dragCoordinator.beginDrag(root, chipDelegate.componentId, root.labelFor(chipDelegate.componentId), chipDelegate.naturalWidth, centroid.scenePosition);
+                                    root.dragCoordinator.beginDrag(root, chipDelegate.componentId, root.labelFor(chipDelegate.componentId), root.iconFor(chipDelegate.componentId), chipDelegate.naturalWidth, centroid.scenePosition);
                                 else if (root.dragCoordinator && root.dragCoordinator.dragActive && root.dragCoordinator.componentId === chipDelegate.componentId)
                                     root.dragCoordinator.finishDrag();
                             }
@@ -582,144 +606,114 @@ FocusScope {
     Popup {
         id: optionsPopup
 
-        property real revealProgress: 0
-
         parent: root.popupParentItem
         padding: 0
-        modal: true
+        modal: false
         dim: false
         focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-        onAboutToShow: {
-            revealProgress = 0;
-            Qt.callLater(() => {
-                return revealProgress = 1;
-            });
-        }
-        onAboutToHide: revealProgress = 0
-        onOpened: Qt.callLater(() => {
-            return menuContent.forceActiveFocus();
-        })
+        closePolicy: Popup.CloseOnEscape
         onClosed: root.expanded = false
 
         background: Item {
         }
 
-        contentItem: FocusScope {
-            id: menuContent
+        contentItem: Rectangle {
+            id: optionPoolCard
 
-            focus: optionsPopup.visible
-            Keys.onPressed: (event) => {
-                return root.handleKey(event);
-            }
+            clip: true
+            radius: Appearance.rounding.normal
+            color: Appearance.m3colors.m3surfaceContainerHigh
 
-            Item {
-                id: maskedSurface
+            Flickable {
+                id: optionPool
 
-                width: parent.width
-                height: parent.height * optionsPopup.revealProgress
+                anchors.fill: parent
+                anchors.margins: root.menuPadding
+                contentWidth: width
+                contentHeight: Math.max(height, optionFlow.childrenRect.height)
+                boundsBehavior: Flickable.StopAtBounds
                 clip: true
-                layer.enabled: true
 
-                Rectangle {
-                    anchors.fill: parent
-                    radius: Appearance.rounding.normal
-                    color: Appearance.m3colors.m3surfaceContainerHigh
-                }
+                Flow {
+                    id: optionFlow
 
-                StyledListView {
-                    id: menuList
-
-                    x: root.menuPadding
-                    y: root.menuPadding
-                    width: parent.width - root.menuPadding * 2
-                    height: optionsPopup.height - root.menuPadding * 2
-                    model: root.options
+                    width: optionPool.width
                     spacing: root.menuItemSpacing
-                    boundsBehavior: Flickable.StopAtBounds
-                    currentIndex: root.highlightedIndex
-                    animateAppearance: false
-                    animateMovement: false
 
-                    delegate: Item {
-                        id: optionItem
+                    Repeater {
+                        model: root.availableOptions
 
-                        required property var modelData
-                        required property int index
-                        readonly property string componentId: root.optionValue(modelData)
-                        readonly property bool selected: root.values.indexOf(componentId) !== -1
+                        delegate: Rectangle {
+                            id: optionChip
 
-                        width: ListView.view.width
-                        height: root.itemHeight
+                            required property var modelData
+                            required property int index
+                            readonly property string componentId: root.optionValue(modelData)
+                            readonly property bool highlighted: index === root.highlightedIndex
 
-                        Rectangle {
-                            anchors.fill: parent
+                            width: Math.min(optionFlow.width, Math.max(88, optionLabel.implicitWidth + 52))
+                            height: 30
                             radius: Appearance.rounding.small
-                            color: optionItem.selected ? Appearance.colors.colPrimaryContainer : optionItem.index === root.highlightedIndex ? Appearance.m3colors.m3surfaceContainerHighest : Appearance.m3colors.m3surfaceContainerHigh
-                        }
-
-                        Item {
-                            id: checkSlot
-
-                            anchors.left: parent.left
-                            width: 38
-                            height: parent.height
-                            scale: optionItem.selected ? 1 : 0
+                            color: optionTap.pressed ? Appearance.colors.colPrimaryContainerActive : optionHover.hovered || highlighted ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colPrimaryContainer
 
                             MaterialSymbol {
-                                anchors.centerIn: parent
-                                text: "check"
-                                iconSize: 19
+                                id: optionIcon
+
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: root.optionIcon(optionChip.modelData)
+                                iconSize: 17
                                 fill: 1
                                 color: Appearance.colors.colOnPrimaryContainer
                             }
 
-                            Behavior on scale {
-                                NumberAnimation {
-                                    duration: Appearance.animation.clickBounce.duration
-                                    easing.type: Appearance.animation.clickBounce.type
-                                    easing.bezierCurve: Appearance.animation.clickBounce.bezierCurve
+                            Text {
+                                id: optionLabel
+
+                                anchors.left: optionIcon.right
+                                anchors.leftMargin: 6
+                                anchors.right: parent.right
+                                anchors.rightMargin: 12
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: root.optionLabel(optionChip.modelData)
+                                color: Appearance.colors.colOnPrimaryContainer
+                                font.family: Fonts.ui
+                                font.pixelSize: 13
+                                font.weight: Font.Medium
+                                elide: Text.ElideRight
+                            }
+
+                            HoverHandler {
+                                id: optionHover
+
+                                onHoveredChanged: {
+                                    if (hovered)
+                                        root.highlightedIndex = optionChip.index;
+
                                 }
-
                             }
 
-                        }
+                            TapHandler {
+                                id: optionTap
 
-                        Text {
-                            text: root.optionLabel(optionItem.modelData)
-                            color: optionItem.selected ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnLayer3
-                            font.family: Fonts.ui
-                            font.pixelSize: 14
-                            font.weight: optionItem.selected ? Font.Medium : Font.Normal
-                            elide: Text.ElideRight
-
-                            anchors {
-                                left: checkSlot.right
-                                right: parent.right
-                                verticalCenter: parent.verticalCenter
-                                rightMargin: 12
+                                onTapped: root.toggled(optionChip.componentId)
                             }
 
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onEntered: root.highlightedIndex = optionItem.index
-                            onClicked: root.toggled(optionItem.componentId)
                         }
 
                     }
 
-                }
-
-                layer.effect: OpacityMask {
-
-                    maskSource: Rectangle {
-                        width: maskedSurface.width
-                        height: maskedSurface.height
-                        radius: Appearance.rounding.normal
+                    Text {
+                        visible: root.availableOptions.length === 0
+                        width: optionFlow.width
+                        height: root.itemHeight
+                        text: qsTr("所有组件均已使用")
+                        color: Appearance.colors.colSubtext
+                        font.family: Fonts.ui
+                        font.pixelSize: 13
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                     }
 
                 }
@@ -733,26 +727,6 @@ FocusScope {
                 property: "opacity"
                 from: 0
                 to: 1
-                duration: Appearance.animation.standardDecel.duration
-                easing.type: Appearance.animation.standardDecel.type
-                easing.bezierCurve: Appearance.animation.standardDecel.bezierCurve
-            }
-
-        }
-
-        exit: Transition {
-            NumberAnimation {
-                property: "opacity"
-                to: 0
-                duration: Appearance.animation.expressiveFastEffects.duration
-                easing.type: Appearance.animation.expressiveFastEffects.type
-                easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
-            }
-
-        }
-
-        Behavior on revealProgress {
-            NumberAnimation {
                 duration: Appearance.animation.standardDecel.duration
                 easing.type: Appearance.animation.standardDecel.type
                 easing.bezierCurve: Appearance.animation.standardDecel.bezierCurve

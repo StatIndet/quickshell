@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Common
+import qs.Components
 
 Item {
     id: root
@@ -8,6 +9,7 @@ Item {
     property bool dragActive: false
     property string componentId: ""
     property string componentLabel: ""
+    property string componentIcon: "widgets"
     property string sourceZone: ""
     property string targetZone: ""
     property int targetIndex: -1
@@ -18,10 +20,11 @@ Item {
 
     signal dropped(string componentId, string targetZone, int targetIndex)
 
-    function beginDrag(sourceField, id, label, width, point) {
+    function beginDrag(sourceField, id, label, icon, width, point) {
         root.dragActive = true;
         root.componentId = id;
         root.componentLabel = label;
+        root.componentIcon = icon;
         root.sourceZone = sourceField.zone;
         root.dragWidth = width;
         sourceField.closeMenu();
@@ -105,6 +108,7 @@ Item {
         });
         root.activeTargetField = null;
         root.componentId = "";
+        root.componentIcon = "widgets";
         root.sourceZone = "";
         root.targetZone = "";
         root.targetIndex = -1;
@@ -131,6 +135,18 @@ Item {
         color: Appearance.colors.colPrimaryContainerHover
         scale: 1.04
 
+        MaterialSymbol {
+            id: dragIcon
+
+            anchors.left: parent.left
+            anchors.leftMargin: 11
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.componentIcon
+            iconSize: 17
+            fill: 1
+            color: Appearance.colors.colOnPrimaryContainer
+        }
+
         Text {
             text: root.componentLabel
             color: Appearance.colors.colOnPrimaryContainer
@@ -140,9 +156,9 @@ Item {
             elide: Text.ElideRight
 
             anchors {
-                left: parent.left
+                left: dragIcon.right
                 right: parent.right
-                leftMargin: 12
+                leftMargin: 6
                 rightMargin: 12
                 verticalCenter: parent.verticalCenter
             }

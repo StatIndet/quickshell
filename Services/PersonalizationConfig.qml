@@ -262,13 +262,16 @@ Singleton {
     readonly property var defaultKeystoneKeyholeCards: root.keystoneKeyholeCardIds.slice()
     readonly property var keystoneKeyholeCardOptions: [({
         "value": "weather",
-        "label": qsTr("天气")
+        "label": qsTr("天气"),
+        "icon": "partly_cloudy_day"
     }), ({
         "value": "quickSettings",
-        "label": qsTr("快捷设置")
+        "label": qsTr("快捷设置"),
+        "icon": "tune"
     }), ({
         "value": "pomodoro",
-        "label": qsTr("番茄钟")
+        "label": qsTr("番茄钟"),
+        "icon": "timer"
     })]
     property var keystoneKeyholeCards: root.defaultKeystoneKeyholeCards.slice()
     property string barPosition: "top"
@@ -277,49 +280,63 @@ Singleton {
     readonly property var defaultBarTrailingComponents: ["tray", "systemMonitor", "quickSettings"]
     readonly property var barComponentOptions: [({
         "value": "workspaces",
-        "label": qsTr("工作区")
+        "label": qsTr("工作区"),
+        "icon": "grid_view"
     }), ({
         "value": "information",
-        "label": qsTr("信息中心")
+        "label": qsTr("信息"),
+        "icon": "info"
     }), ({
         "value": "activeWindow",
-        "label": qsTr("聚焦窗口")
+        "label": qsTr("聚焦窗口"),
+        "icon": "web_asset"
     }), ({
         "value": "tray",
-        "label": qsTr("托盘")
+        "label": qsTr("托盘"),
+        "icon": "inbox"
     }), ({
         "value": "systemMonitor",
-        "label": qsTr("系统监控")
+        "label": qsTr("系统监控"),
+        "icon": "monitoring"
     }), ({
         "value": "quickSettings",
-        "label": qsTr("快捷设置")
+        "label": qsTr("快捷设置"),
+        "icon": "tune"
     })]
     readonly property var quickSettingsComponentIds: ["network", "bluetooth", "brightness", "volume", "microphone", "battery", "settings", "power"]
     readonly property var defaultQuickSettingsComponents: root.quickSettingsComponentIds.slice()
     readonly property var quickSettingsComponentOptions: [({
         "value": "network",
-        "label": qsTr("网络")
+        "label": qsTr("网络"),
+        "icon": "wifi"
     }), ({
         "value": "bluetooth",
-        "label": qsTr("蓝牙")
+        "label": qsTr("蓝牙"),
+        "icon": "bluetooth"
     }), ({
         "value": "brightness",
-        "label": qsTr("亮度")
+        "label": qsTr("亮度"),
+        "icon": "brightness_6"
     }), ({
         "value": "volume",
-        "label": qsTr("音量")
+        "label": qsTr("音量"),
+        "icon": "volume_up"
     }), ({
         "value": "microphone",
-        "label": qsTr("麦克风")
+        "label": qsTr("麦克风"),
+        "icon": "mic"
     }), ({
         "value": "battery",
-        "label": qsTr("电池")
+        "label": qsTr("电池"),
+        "icon": "battery_full"
     }), ({
         "value": "settings",
-        "label": qsTr("设置")
+        "label": qsTr("设置"),
+        "icon": "settings"
     }), ({
         "value": "power",
-        "label": qsTr("电源")
+        "label": qsTr("电源"),
+        "icon": "power_settings_new"
     })]
     property var barLeadingComponents: root.defaultBarLeadingComponents.slice()
     property var barTrailingComponents: root.defaultBarTrailingComponents.slice()
