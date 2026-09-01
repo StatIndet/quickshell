@@ -286,14 +286,14 @@ Variants {
 
         DropShadow {
             anchors.fill: shadowSource
-            source: shadowSource
+            source: root.showDashboardKeyhole ? rootSurface : shadowSource
             horizontalOffset: keystoneWindow.leftEdge ? 6 : keystoneWindow.rightEdge ? -6 : 0
             verticalOffset: keystoneWindow.topEdge ? 6 : keystoneWindow.bottomEdge ? -6 : 0
             radius: 20
             samples: 32
             color: "#80000000"
             cached: true
-            opacity: root.showDashboardKeyhole ? 0 : root.color.a * (styleSurface.detached && root.recordingPresentationActive ? 0 : 1)
+            opacity: root.color.a * (styleSurface.detached && root.recordingPresentationActive ? 0 : 1)
         }
 
         // ============================================================
@@ -1042,7 +1042,6 @@ Variants {
 
                     anchors.fill: parent
                     antialiasing: true
-                    visible: !root.showDashboardKeyhole
                     opacity: styleSurface.detached && root.recordingPresentationActive ? 0 : 1
                     onPaint: {
                         const context = getContext("2d");
@@ -1073,19 +1072,6 @@ Variants {
                     onCutoutWidthChanged: requestPaint()
                     onCutoutHeightChanged: requestPaint()
                     onCutoutRadiusChanged: requestPaint()
-                }
-
-                MultiEffect {
-                    anchors.fill: rootSurface
-                    source: rootSurface
-                    visible: root.showDashboardKeyhole
-                    autoPaddingEnabled: true
-                    shadowEnabled: true
-                    shadowColor: "#80000000"
-                    shadowBlur: 0.8
-                    shadowHorizontalOffset: keystoneWindow.leftEdge ? 6 : keystoneWindow.rightEdge ? -6 : 0
-                    shadowVerticalOffset: keystoneWindow.topEdge ? 6 : keystoneWindow.bottomEdge ? -6 : 0
-                    opacity: rootSurface.opacity
                 }
 
                 PwObjectTracker {
