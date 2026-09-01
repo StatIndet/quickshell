@@ -27,16 +27,17 @@ Item {
     readonly property real processingProgress: Math.max(0, Math.min(1, processingContentProgress))
     readonly property real mainWidth: morphValue(baseMainWidth, 250, 220, 210, 200)
     readonly property real mainHeight: morphValue(layoutHeight, 52, 46, 44, 42)
-    readonly property real satelliteWidth: satelliteMorphValue(layoutHeight, 60, 56, 54, 52)
-    readonly property real satelliteHeight: satelliteMorphValue(layoutHeight, 50, 46, 44, 42)
+    readonly property real satelliteDiameter: mainHeight
+    readonly property real satelliteWidth: satelliteDiameter
+    readonly property real satelliteHeight: satelliteDiameter
     readonly property real satelliteOffset: satelliteMorphValue(-layoutHeight / 2, 40, 38, 38, 38)
     readonly property real satelliteCenterX: mainWidth + satelliteOffset
     readonly property real visualWidth: Math.max(mainWidth, satelliteCenterX + satelliteWidth / 2)
     readonly property real visualHeight: 52
     readonly property real mainY: edge === "top" ? 0 : visualHeight - mainHeight
     readonly property real satelliteY: edge === "top" ? 0 : visualHeight - satelliteHeight
-    readonly property color typeContainerColor: recordingType === "gif" ? Appearance.colors.colTertiaryContainer : Appearance.colors.colErrorContainer
-    readonly property color typeContentColor: recordingType === "gif" ? Appearance.colors.colOnTertiaryContainer : Appearance.colors.colOnErrorContainer
+    readonly property color typeContainerColor: Appearance.colors.colTertiaryContainer
+    readonly property color typeContentColor: Appearance.colors.colOnTertiaryContainer
     readonly property var blurBackgroundItems: [mainBlurRegion, satelliteBlurRegion]
 
     signal stopRequested()
@@ -131,7 +132,7 @@ Item {
     }
 
     Row {
-        x: 24
+        x: (root.mainWidth - width) / 2
         y: root.mainY + (root.mainHeight - height) / 2
         spacing: 10
         opacity: root.infoProgress
@@ -166,7 +167,7 @@ Item {
     }
 
     Row {
-        x: 24
+        x: (root.mainWidth - width) / 2
         y: root.mainY + (root.mainHeight - height) / 2
         spacing: 10
         opacity: root.processingProgress
@@ -177,12 +178,10 @@ Item {
             radius: width / 2
             color: root.typeContainerColor
 
-            MaterialSymbol {
+            ProcessingSpiralIndicator {
                 anchors.centerIn: parent
-                text: "hourglass_top"
-                iconSize: 18
-                fill: 1
-                color: root.typeContentColor
+                running: root.finalizing && root.processingProgress > 0.01
+                dotColor: root.typeContentColor
             }
 
         }
@@ -207,18 +206,32 @@ Item {
 
         Rectangle {
             anchors.centerIn: parent
-            width: 36
-            height: 36
+            width: 16
+            height: 16
             radius: width / 2
-            color: satelliteMouse.pressed ? Appearance.colors.colErrorContainerActive : satelliteMouse.containsMouse ? Appearance.colors.colErrorContainerHover : Appearance.colors.colErrorContainer
-        }
+            color: Appearance.colors.colError
+            opacity: 1
 
-        MaterialSymbol {
-            anchors.centerIn: parent
-            text: "stop"
-            iconSize: 20
-            fill: 1
-            color: Appearance.colors.colOnErrorContainer
+            SequentialAnimation on opacity {
+                running: root.recording && root.actionProgress > 0.01
+                loops: Animation.Infinite
+
+                NumberAnimation {
+                    from: 0.35
+                    to: 1
+                    duration: 800
+                    easing.type: Easing.InOutSine
+                }
+
+                NumberAnimation {
+                    from: 1
+                    to: 0.35
+                    duration: 800
+                    easing.type: Easing.InOutSine
+                }
+
+            }
+
         }
 
         MouseArea {

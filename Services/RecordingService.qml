@@ -56,7 +56,9 @@ Singleton {
             root.backendState = response.state || "idle";
             root.sessionId = response.sessionId || "";
             root.pid = response.pid || 0;
-            root.recordingType = response.type || "video";
+            if (response.type === "gif" || response.type === "video")
+                root.recordingType = response.type;
+
             root.target = response.target || {
                 "type": "region",
                 "geometry": null
@@ -96,10 +98,12 @@ Singleton {
 
         const settings = options || {
         };
+        const requestedType = type === "gif" ? "gif" : "video";
         root.error = null;
+        root.recordingType = requestedType;
         root.transientState = "selecting";
         if (!RegionSelectionService.begin("record", {
-            "type": type === "gif" ? "gif" : "video",
+            "type": requestedType,
             "audio": settings.audio || "none",
             "fps": settings.fps || 60,
             "output": settings.output || ""
@@ -116,11 +120,13 @@ Singleton {
 
         const settings = options || {
         };
-        const command = [root.commandName, "record", "start", "--type", settings.type === "gif" ? "gif" : "video", "--target", "region", "--geometry", geometry, "--audio", settings.audio || "none", "--fps", String(settings.fps || 60), "--json"];
+        const requestedType = settings.type === "gif" ? "gif" : "video";
+        const command = [root.commandName, "record", "start", "--type", requestedType, "--target", "region", "--geometry", geometry, "--audio", settings.audio || "none", "--fps", String(settings.fps || 60), "--json"];
         if (settings.output)
             command.splice(command.length - 1, 0, "--output", settings.output);
 
         root.error = null;
+        root.recordingType = requestedType;
         root.transientState = "starting";
         root.target = {
             "type": "region",

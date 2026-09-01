@@ -27,16 +27,17 @@ Item {
     readonly property real processingProgress: Math.max(0, Math.min(1, processingContentProgress))
     readonly property real mainHeight: morphValue(baseMainHeight, 250, 220, 210, 200)
     readonly property real mainWidth: morphValue(layoutWidth, 52, 46, 44, 42)
-    readonly property real satelliteHeight: satelliteMorphValue(layoutWidth, 60, 56, 54, 52)
-    readonly property real satelliteWidth: satelliteMorphValue(layoutWidth, 50, 46, 44, 42)
+    readonly property real satelliteDiameter: mainWidth
+    readonly property real satelliteHeight: satelliteDiameter
+    readonly property real satelliteWidth: satelliteDiameter
     readonly property real satelliteOffset: satelliteMorphValue(-layoutWidth / 2, 40, 38, 38, 38)
     readonly property real satelliteCenterY: mainHeight + satelliteOffset
     readonly property real visualWidth: 52
     readonly property real visualHeight: Math.max(mainHeight, satelliteCenterY + satelliteHeight / 2)
     readonly property real mainX: edge === "left" ? 0 : visualWidth - mainWidth
     readonly property real satelliteX: edge === "left" ? 0 : visualWidth - satelliteWidth
-    readonly property color typeContainerColor: recordingType === "gif" ? Appearance.colors.colTertiaryContainer : Appearance.colors.colErrorContainer
-    readonly property color typeContentColor: recordingType === "gif" ? Appearance.colors.colOnTertiaryContainer : Appearance.colors.colOnErrorContainer
+    readonly property color typeContainerColor: Appearance.colors.colTertiaryContainer
+    readonly property color typeContentColor: Appearance.colors.colOnTertiaryContainer
     readonly property var blurBackgroundItems: [mainBlurRegion, satelliteBlurRegion]
 
     signal stopRequested()
@@ -132,7 +133,7 @@ Item {
 
     Column {
         x: root.mainX + (root.mainWidth - width) / 2
-        y: 24
+        y: (root.mainHeight - height) / 2
         width: root.layoutWidth
         spacing: 8
         opacity: root.infoProgress
@@ -174,17 +175,24 @@ Item {
 
     Column {
         x: root.mainX + (root.mainWidth - width) / 2
-        y: 24
+        y: (root.mainHeight - height) / 2
         width: root.layoutWidth
         spacing: 8
         opacity: root.processingProgress
 
-        MaterialSymbol {
+        Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: "hourglass_top"
-            iconSize: 20
-            fill: 1
-            color: root.typeContentColor
+            width: 30
+            height: 30
+            radius: width / 2
+            color: root.typeContainerColor
+
+            ProcessingSpiralIndicator {
+                anchors.centerIn: parent
+                running: root.finalizing && root.processingProgress > 0.01
+                dotColor: root.typeContentColor
+            }
+
         }
 
         VerticalRecordingStatusLabel {
@@ -204,18 +212,32 @@ Item {
 
         Rectangle {
             anchors.centerIn: parent
-            width: 36
-            height: 36
+            width: 16
+            height: 16
             radius: width / 2
-            color: satelliteMouse.pressed ? Appearance.colors.colErrorContainerActive : satelliteMouse.containsMouse ? Appearance.colors.colErrorContainerHover : Appearance.colors.colErrorContainer
-        }
+            color: Appearance.colors.colError
+            opacity: 1
 
-        MaterialSymbol {
-            anchors.centerIn: parent
-            text: "stop"
-            iconSize: 20
-            fill: 1
-            color: Appearance.colors.colOnErrorContainer
+            SequentialAnimation on opacity {
+                running: root.recording && root.actionProgress > 0.01
+                loops: Animation.Infinite
+
+                NumberAnimation {
+                    from: 0.35
+                    to: 1
+                    duration: 800
+                    easing.type: Easing.InOutSine
+                }
+
+                NumberAnimation {
+                    from: 1
+                    to: 0.35
+                    duration: 800
+                    easing.type: Easing.InOutSine
+                }
+
+            }
+
         }
 
         MouseArea {
