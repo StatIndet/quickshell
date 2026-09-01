@@ -1,4 +1,5 @@
 pragma Singleton
+import QtCore
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -43,8 +44,16 @@ Singleton {
     property int cloudBackupFoldersVersion: 0
     property var cloudBackupFolders: []
     property string cloudDefaultRemoteName: ""
-    property string cloudBackupRoot: "Clavis Backups"
-    property string cloudUploadRoot: "Clavis Uploads"
+    property string cloudBackupRoot: "Backups"
+    property string cloudUploadRoot: "Uploads"
+    readonly property string defaultRecordingVideoDirectory: root.standardDirectory(StandardPaths.MoviesLocation, "Videos") + "/Recordings"
+    readonly property string defaultRecordingGifDirectory: root.standardDirectory(StandardPaths.PicturesLocation, "Pictures") + "/GIFs"
+    readonly property string defaultRecordingMicrophoneDirectory: root.standardDirectory(StandardPaths.MusicLocation, "Music") + "/Recordings/Microphone"
+    readonly property string defaultRecordingSystemAudioDirectory: root.standardDirectory(StandardPaths.MusicLocation, "Music") + "/Recordings/System"
+    property string recordingVideoDirectory: defaultRecordingVideoDirectory
+    property string recordingGifDirectory: defaultRecordingGifDirectory
+    property string recordingMicrophoneDirectory: defaultRecordingMicrophoneDirectory
+    property string recordingSystemAudioDirectory: defaultRecordingSystemAudioDirectory
 
     function normalizedLanguage(value) {
         const normalized = String(value || "").replace("-", "_").toLowerCase();
@@ -328,6 +337,39 @@ Singleton {
         return path === "/" ? path : path.replace(/\/+$/, "");
     }
 
+    function standardDirectory(location, fallbackName) {
+        const standardPath = root.normalizedLocalPath(StandardPaths.writableLocation(location));
+        if (standardPath !== "")
+            return standardPath;
+
+        const homePath = root.normalizedLocalPath(StandardPaths.writableLocation(StandardPaths.HomeLocation));
+        return homePath === "" ? "/" + fallbackName : homePath + "/" + fallbackName;
+    }
+
+    function normalizedRecordingDirectory(value, fallback) {
+        const normalized = root.normalizedLocalPath(value);
+        return normalized === "" ? fallback : normalized;
+    }
+
+    function setRecordingDirectory(key, value) {
+        const fallbacks = {
+            "recordingVideoDirectory": root.defaultRecordingVideoDirectory,
+            "recordingGifDirectory": root.defaultRecordingGifDirectory,
+            "recordingMicrophoneDirectory": root.defaultRecordingMicrophoneDirectory,
+            "recordingSystemAudioDirectory": root.defaultRecordingSystemAudioDirectory
+        };
+        if (!(key in fallbacks))
+            return false;
+
+        const normalized = root.normalizedRecordingDirectory(value, fallbacks[key]);
+        if (root[key] === normalized)
+            return true;
+
+        root[key] = normalized;
+        root.save();
+        return true;
+    }
+
     function setCloudBackupFolders(folders) {
         const normalized = [];
         const seen = {
@@ -367,7 +409,7 @@ Singleton {
         let normalized = String(value || "").trim().replace(/^\/+|\/+$/g, "");
         normalized = normalized.replace(/\/{2,}/g, "/");
         if (normalized === "" || normalized.indexOf(":") >= 0)
-            return "Clavis Backups";
+            return "Backups";
 
         return normalized;
     }
@@ -385,7 +427,7 @@ Singleton {
         let normalized = String(value || "").trim().replace(/^\/+|\/+$/g, "");
         normalized = normalized.replace(/\/{2,}/g, "/");
         if (normalized === "" || normalized.indexOf(":") >= 0)
-            return "Clavis Uploads";
+            return "Uploads";
 
         return normalized;
     }
@@ -432,7 +474,11 @@ Singleton {
             "cloudBackupFolders": root.cloudBackupFolders,
             "cloudDefaultRemoteName": root.cloudDefaultRemoteName,
             "cloudBackupRoot": root.cloudBackupRoot,
-            "cloudUploadRoot": root.cloudUploadRoot
+            "cloudUploadRoot": root.cloudUploadRoot,
+            "recordingVideoDirectory": root.recordingVideoDirectory,
+            "recordingGifDirectory": root.recordingGifDirectory,
+            "recordingMicrophoneDirectory": root.recordingMicrophoneDirectory,
+            "recordingSystemAudioDirectory": root.recordingSystemAudioDirectory
         }, null, 2));
     }
 
@@ -504,6 +550,10 @@ Singleton {
                 root.cloudDefaultRemoteName = root.normalizedCloudRemoteName(parsed.cloudDefaultRemoteName);
                 root.cloudBackupRoot = root.normalizedCloudBackupRoot(parsed.cloudBackupRoot);
                 root.cloudUploadRoot = root.normalizedCloudUploadRoot(parsed.cloudUploadRoot);
+                root.recordingVideoDirectory = root.normalizedRecordingDirectory(parsed.recordingVideoDirectory, root.defaultRecordingVideoDirectory);
+                root.recordingGifDirectory = root.normalizedRecordingDirectory(parsed.recordingGifDirectory, root.defaultRecordingGifDirectory);
+                root.recordingMicrophoneDirectory = root.normalizedRecordingDirectory(parsed.recordingMicrophoneDirectory, root.defaultRecordingMicrophoneDirectory);
+                root.recordingSystemAudioDirectory = root.normalizedRecordingDirectory(parsed.recordingSystemAudioDirectory, root.defaultRecordingSystemAudioDirectory);
             } catch (error) {
                 console.warn("UiPreferences failed to load:", error);
             }

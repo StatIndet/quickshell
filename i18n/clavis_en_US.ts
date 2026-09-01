@@ -546,9 +546,19 @@
         <translation>key audio returned an unsupported JSON schema</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="122"/>
-        <source>录音已保存</source>
-        <translation>Recording saved</translation>
+        <location filename="../Services/AudioRecordingService.qml" line="123"/>
+        <source>系统音频已保存</source>
+        <translation>System audio recording saved</translation>
+    </message>
+    <message>
+        <location filename="../Services/AudioRecordingService.qml" line="124"/>
+        <source>麦克风录音已保存</source>
+        <translation>Microphone recording saved</translation>
+    </message>
+    <message>
+        <location filename="../Services/AudioRecordingService.qml" line="125"/>
+        <source>已保存到 %1</source>
+        <translation>Saved to %1</translation>
     </message>
     <message>
         <location filename="../Services/AudioRecordingService.qml" line="131"/>
@@ -4032,6 +4042,56 @@ Scroll to adjust</translation>
         <source>字体、数字位置和颜色</source>
         <translation>Font, digit positions, and colors</translation>
     </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="175"/>
+        <source>录制</source>
+        <translation>Recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="179"/>
+        <source>视频录制</source>
+        <translation>Video recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="185"/>
+        <source>GIF 录制</source>
+        <translation>GIF recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="191"/>
+        <source>麦克风录音</source>
+        <translation>Microphone recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="197"/>
+        <source>系统音频录音</source>
+        <translation>System audio recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="244"/>
+        <source>保存位置</source>
+        <translation>Save location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="248"/>
+        <source>当前文件夹为空</source>
+        <translation>This folder is empty</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="249"/>
+        <source>选择文件夹</source>
+        <translation>Choose folder</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="250"/>
+        <source>选择</source>
+        <translation>Choose</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="251"/>
+        <source>可选择当前文件夹或选中的子文件夹</source>
+        <translation>Choose the current folder or a selected subfolder</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -6162,6 +6222,21 @@ Right-click to change shape; scroll to reorder</translation>
         <location filename="../Services/RecordingService.qml" line="221"/>
         <source>无法通过 key 查询录制状态</source>
         <translation>Could not query recording status through key</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="87"/>
+        <source>GIF 已保存</source>
+        <translation>GIF saved</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="88"/>
+        <source>录屏已保存</source>
+        <translation>Screen recording saved</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="89"/>
+        <source>已保存到 %1</source>
+        <translation>Saved to %1</translation>
     </message>
 </context>
 <context>

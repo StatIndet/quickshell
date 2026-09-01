@@ -3,12 +3,34 @@ import QtQuick.Layouts
 import qs.Common
 import qs.Services
 import qs.Components
+import qs.Modules.FilePicker
 import qs.Widgets.common
 
 Item {
     id: root
 
+    property var parentModal: null
     property string currentSection: "overview"
+    property string editingDirectoryKey: ""
+    property var editingDirectoryField: null
+
+    function directoryValue(key) {
+        return String(UiPreferences[key] || "");
+    }
+
+    function saveDirectory(key, value, field) {
+        UiPreferences.setRecordingDirectory(key, value);
+        if (field)
+            field.text = root.directoryValue(key);
+
+    }
+
+    function openDirectoryPicker(key, field) {
+        root.saveDirectory(key, field.text, field);
+        root.editingDirectoryKey = key;
+        root.editingDirectoryField = field;
+        directoryPicker.openAt(root.directoryValue(key));
+    }
 
     function openSection(section) {
         root.currentSection = String(section || "overview");
@@ -20,6 +42,7 @@ Item {
 
     function closeChildWindows() {
         root.showOverview();
+        directoryPicker.dismiss();
     }
 
     GeneralSubpageHeader {
@@ -148,6 +171,36 @@ Item {
 
             }
 
+            KeystoneSection {
+                title: qsTr("录制")
+                iconName: "video_camera_front"
+
+                RecordingDirectoryField {
+                    settingTitle: qsTr("视频录制")
+                    settingKey: "recordingVideoDirectory"
+                    value: UiPreferences.recordingVideoDirectory
+                }
+
+                RecordingDirectoryField {
+                    settingTitle: qsTr("GIF 录制")
+                    settingKey: "recordingGifDirectory"
+                    value: UiPreferences.recordingGifDirectory
+                }
+
+                RecordingDirectoryField {
+                    settingTitle: qsTr("麦克风录音")
+                    settingKey: "recordingMicrophoneDirectory"
+                    value: UiPreferences.recordingMicrophoneDirectory
+                }
+
+                RecordingDirectoryField {
+                    settingTitle: qsTr("系统音频录音")
+                    settingKey: "recordingSystemAudioDirectory"
+                    value: UiPreferences.recordingSystemAudioDirectory
+                }
+
+            }
+
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
@@ -179,6 +232,82 @@ Item {
                 PersonalizationConfig.moveKeystoneKeyholeCard(cardId, targetIndex);
 
         }
+    }
+
+    FilePickerWindow {
+        id: directoryPicker
+
+        parentModal: root.parentModal
+        requiresParentWindow: true
+        selectionMode: FilePickerWindow.Folders
+        allowCurrentFolderSelection: true
+        dialogTitle: qsTr("保存位置")
+        description: root.editingDirectoryField ? root.editingDirectoryField.settingTitle : ""
+        nameFilters: []
+        windowIconName: "folder_open"
+        emptyStateText: qsTr("当前文件夹为空")
+        selectionPrompt: qsTr("选择文件夹")
+        acceptLabel: qsTr("选择")
+        formatSummary: qsTr("可选择当前文件夹或选中的子文件夹")
+        onAccepted: function(path, isDirectory) {
+            if (isDirectory && root.editingDirectoryKey !== "")
+                root.saveDirectory(root.editingDirectoryKey, path, root.editingDirectoryField);
+
+            root.editingDirectoryKey = "";
+            root.editingDirectoryField = null;
+        }
+        onRejected: {
+            root.editingDirectoryKey = "";
+            root.editingDirectoryField = null;
+        }
+    }
+
+    component RecordingDirectoryField: ColumnLayout {
+        id: directorySetting
+
+        property string settingTitle: ""
+        property string settingKey: ""
+        property string value: ""
+
+        Layout.fillWidth: true
+        Layout.leftMargin: Metrics.spacingS
+        Layout.rightMargin: Metrics.spacingS
+        spacing: Metrics.spacingXS
+
+        Text {
+            Layout.fillWidth: true
+            text: directorySetting.settingTitle
+            color: Appearance.colors.colOnSurface
+            font.family: Typography.titleSmall.family
+            font.pixelSize: Typography.titleSmall.pixelSize
+            font.weight: Typography.titleSmall.weight
+            elide: Text.ElideRight
+        }
+
+        MaterialFilledTextField {
+            id: directoryField
+
+            Layout.fillWidth: true
+            labelText: qsTr("保存位置")
+            text: directorySetting.value
+            trailingContentWidth: Metrics.touchTarget
+            onAccepted: root.saveDirectory(directorySetting.settingKey, text, directoryField)
+            onEditingFinished: root.saveDirectory(directorySetting.settingKey, text, directoryField)
+
+            trailingContent: Component {
+                IconButton {
+                    anchors.centerIn: parent
+                    iconName: "folder_open"
+                    accessibleName: qsTr("选择文件夹")
+                    tooltipText: qsTr("选择文件夹")
+                    controlSize: Metrics.touchTarget
+                    onClicked: root.openDirectoryPicker(directorySetting.settingKey, directoryField)
+                }
+
+            }
+
+        }
+
     }
 
     component SearchSelectSettingRow: Item {

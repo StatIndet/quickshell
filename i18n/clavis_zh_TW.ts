@@ -546,9 +546,19 @@
         <translation>key audio 返回了不受支援的 JSON schema</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="122"/>
-        <source>录音已保存</source>
-        <translation>錄音已儲存</translation>
+        <location filename="../Services/AudioRecordingService.qml" line="123"/>
+        <source>系统音频已保存</source>
+        <translation>系統音訊已儲存</translation>
+    </message>
+    <message>
+        <location filename="../Services/AudioRecordingService.qml" line="124"/>
+        <source>麦克风录音已保存</source>
+        <translation>麥克風錄音已儲存</translation>
+    </message>
+    <message>
+        <location filename="../Services/AudioRecordingService.qml" line="125"/>
+        <source>已保存到 %1</source>
+        <translation>已儲存至 %1</translation>
     </message>
     <message>
         <location filename="../Services/AudioRecordingService.qml" line="131"/>
@@ -4032,6 +4042,56 @@
         <source>字体、数字位置和颜色</source>
         <translation>字型、數字位置和顏色</translation>
     </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="175"/>
+        <source>录制</source>
+        <translation>錄製</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="179"/>
+        <source>视频录制</source>
+        <translation>影片錄製</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="185"/>
+        <source>GIF 录制</source>
+        <translation>GIF 錄製</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="191"/>
+        <source>麦克风录音</source>
+        <translation>麥克風錄音</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="197"/>
+        <source>系统音频录音</source>
+        <translation>系統音訊錄音</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="244"/>
+        <source>保存位置</source>
+        <translation>儲存位置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="248"/>
+        <source>当前文件夹为空</source>
+        <translation>目前資料夾為空</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="249"/>
+        <source>选择文件夹</source>
+        <translation>選擇資料夾</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="250"/>
+        <source>选择</source>
+        <translation>選擇</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="251"/>
+        <source>可选择当前文件夹或选中的子文件夹</source>
+        <translation>可選擇目前資料夾或選取的子資料夾</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -6162,6 +6222,21 @@
         <location filename="../Services/RecordingService.qml" line="221"/>
         <source>无法通过 key 查询录制状态</source>
         <translation>無法通過 key 查詢錄製狀態</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="87"/>
+        <source>GIF 已保存</source>
+        <translation>GIF 已儲存</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="88"/>
+        <source>录屏已保存</source>
+        <translation>螢幕錄影已儲存</translation>
+    </message>
+    <message>
+        <location filename="../Services/RecordingService.qml" line="89"/>
+        <source>已保存到 %1</source>
+        <translation>已儲存至 %1</translation>
     </message>
 </context>
 <context>

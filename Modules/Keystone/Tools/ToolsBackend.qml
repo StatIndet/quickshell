@@ -13,7 +13,8 @@ Item {
     function startRecord(mode) {
         RecordingService.start(mode, {
             "audio": "none",
-            "fps": 60
+            "fps": 60,
+            "output": mode === "gif" ? UiPreferences.recordingGifDirectory : UiPreferences.recordingVideoDirectory
         });
     }
 
@@ -22,7 +23,9 @@ Item {
     }
 
     function startAudio(source) {
-        return AudioRecordingService.start(source);
+        return AudioRecordingService.start(source, {
+            "output": source === "system" ? UiPreferences.recordingSystemAudioDirectory : UiPreferences.recordingMicrophoneDirectory
+        });
     }
 
     function stopAudio() {
