@@ -271,7 +271,7 @@ Variants {
                         width: 340
                         height: 456
                         anchors.left: parent.horizontalCenter
-                        anchors.leftMargin: 48
+                        anchors.leftMargin: hub.dashboardKeyholeCenterOffset
                         anchors.top: parent.top
                         anchors.topMargin: 132
                         radius: 24
@@ -1027,7 +1027,7 @@ Variants {
                     width: 340
                     height: 456
                     anchors.left: parent.horizontalCenter
-                    anchors.leftMargin: 48
+                    anchors.leftMargin: hub.dashboardKeyholeCenterOffset
                     anchors.top: parent.top
                     anchors.topMargin: 132
                     visible: root.showDashboardKeyhole

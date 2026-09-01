@@ -15,8 +15,12 @@ Item {
     readonly property string clockFamily: Fonts.systemClock
     readonly property var horizontalClockAxes: root.safeHorizontalClockAxes(PersonalizationConfig.horizontalClockAxes)
     readonly property var verticalClockAxes: Fonts.familyAvailable(Fonts.systemClock) ? ({
+        "wght": 900,
+        "wdth": 85,
+        "opsz": 24,
+        "GRAD": 75,
         "ROND": 25,
-        "wdth": 85
+        "slnt": 0
     }) : ({
     })
     readonly property real horizontalFontSize: root.boundedNumber(PersonalizationConfig.horizontalClockFontSize, 22, 16, 28)
@@ -236,7 +240,7 @@ Item {
         id: verticalClockLayout
 
         anchors.centerIn: parent
-        spacing: 6
+        spacing: 4
         visible: root.vertical
 
         Column {
@@ -283,7 +287,7 @@ Item {
 
         Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 0
+            spacing: -1
 
             Text {
                 width: 28
@@ -293,6 +297,7 @@ Item {
                 font.family: root.clockFamily
                 font.pixelSize: 20
                 font.weight: Font.Black
+                font.letterSpacing: -1.5
                 font.variableAxes: root.verticalClockAxes
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -300,7 +305,7 @@ Item {
 
             Item {
                 width: 28
-                height: 20
+                height: 10
 
                 Row {
                     anchors.centerIn: parent
@@ -332,6 +337,7 @@ Item {
                 font.family: root.clockFamily
                 font.pixelSize: 20
                 font.weight: Font.Black
+                font.letterSpacing: -1.5
                 font.variableAxes: root.verticalClockAxes
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -340,12 +346,13 @@ Item {
             Text {
                 visible: UiPreferences.useTwelveHourClock
                 width: 28
-                height: 18
+                height: 15
                 text: root.periodLead + "M"
                 color: Appearance.colors.colPrimary
                 font.family: root.clockFamily
                 font.pixelSize: 14
                 font.weight: Font.Black
+                font.letterSpacing: -2
                 font.variableAxes: root.verticalClockAxes
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

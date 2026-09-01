@@ -8,22 +8,36 @@ Item {
 
     property var screen: null
     readonly property var keyholeGlassItems: keyholeCardCarousel.blurBackgroundItems
+    readonly property real clockColumnWidth: 160
+    readonly property real profileColumnWidth: 392
+    readonly property real layoutMargin: 32
+    readonly property real layoutSpacing: 24
+    readonly property real keyholeWidth: 340
+    readonly property real keyholeLeftMargin: 30
+    readonly property real keyholeCenterOffset: layoutMargin + clockColumnWidth + layoutSpacing + profileColumnWidth + layoutSpacing + keyholeLeftMargin - implicitWidth / 2
 
     signal closeRequested()
     signal avatarEditRequested()
 
-    implicitWidth: 860
+    implicitWidth: 1040
     implicitHeight: 520
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: 32
-        spacing: 24
+        anchors.margins: root.layoutMargin
+        spacing: root.layoutSpacing
+
+        DashboardClock {
+            Layout.minimumWidth: root.clockColumnWidth
+            Layout.preferredWidth: root.clockColumnWidth
+            Layout.maximumWidth: root.clockColumnWidth
+            Layout.fillHeight: true
+        }
 
         ColumnLayout {
-            Layout.minimumWidth: 392
-            Layout.preferredWidth: 392
-            Layout.maximumWidth: 392
+            Layout.minimumWidth: root.profileColumnWidth
+            Layout.preferredWidth: root.profileColumnWidth
+            Layout.maximumWidth: root.profileColumnWidth
             Layout.fillHeight: true
             spacing: 16
 
@@ -47,9 +61,9 @@ Item {
             KeyholeCardCarousel {
                 id: keyholeCardCarousel
 
-                width: 340
+                width: root.keyholeWidth
                 anchors.left: parent.left
-                anchors.leftMargin: 30
+                anchors.leftMargin: root.keyholeLeftMargin
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 screen: root.screen

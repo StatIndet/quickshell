@@ -16,6 +16,7 @@ Item {
     property int currentIndex: 0
     property bool dragActive: false
     readonly property var dashboardKeyholeGlassItems: dashboardContent.keyholeGlassItems
+    readonly property real dashboardKeyholeCenterOffset: dashboardContent.keyholeCenterOffset
 
     signal closeRequested()
     signal avatarEditRequested()
@@ -24,7 +25,7 @@ Item {
         cloudUploadContent.finishDrop(addedCount);
     }
 
-    implicitWidth: currentIndex === 0 ? 860 : currentIndex === 2 ? 960 : currentIndex === 3 ? 960 : 760
+    implicitWidth: currentIndex === 0 ? dashboardContent.implicitWidth : currentIndex === 2 ? 960 : currentIndex === 3 ? 960 : 760
     implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 : 570)
 
     Shortcut {
