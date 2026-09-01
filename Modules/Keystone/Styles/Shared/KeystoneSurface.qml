@@ -461,7 +461,7 @@ Variants {
                 readonly property bool escapeDismissActive: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
-                readonly property bool showDashboardKeyhole: dashboardTabActive && PersonalizationConfig.keystoneKeyholeCards.length > 0
+                readonly property bool showDashboardKeyhole: dashboardTabActive
                 property real pillMorphProgress: 0
                 property real recordingInfoProgress: 0
                 property real recordingActionProgress: 0

@@ -84,26 +84,22 @@ Item {
                 title: qsTr("钥匙孔")
                 iconName: "view_carousel"
 
-                SettingsRow {
+                SortableMultiSelectField {
+                    id: keyholeCardsField
+
                     Layout.fillWidth: true
-                    title: qsTr("卡片")
-
-                    trailing: SortableMultiSelectField {
-                        id: keyholeCardsField
-
-                        Layout.preferredWidth: 380
-                        values: PersonalizationConfig.keystoneKeyholeCards
-                        options: PersonalizationConfig.keystoneKeyholeCardOptions
-                        zone: "keyhole"
-                        dragCoordinator: keyholeDragCoordinator
-                        onToggled: (cardId) => {
-                            return PersonalizationConfig.toggleKeystoneKeyholeCard(cardId);
-                        }
-                        onRemoved: (cardId) => {
-                            return PersonalizationConfig.removeKeystoneKeyholeCard(cardId);
-                        }
+                    Layout.leftMargin: Metrics.spacingS
+                    Layout.rightMargin: Metrics.spacingS
+                    values: PersonalizationConfig.keystoneKeyholeCards
+                    options: PersonalizationConfig.keystoneKeyholeCardOptions
+                    zone: "keyhole"
+                    dragCoordinator: keyholeDragCoordinator
+                    onToggled: (cardId) => {
+                        return PersonalizationConfig.toggleKeystoneKeyholeCard(cardId);
                     }
-
+                    onRemoved: (cardId) => {
+                        return PersonalizationConfig.removeKeystoneKeyholeCard(cardId);
+                    }
                 }
 
             }

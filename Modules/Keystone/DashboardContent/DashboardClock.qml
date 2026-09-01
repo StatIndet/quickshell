@@ -63,7 +63,7 @@ Item {
                 spacing: 14
 
                 Repeater {
-                    model: 2
+                    model: 3
 
                     Rectangle {
                         width: 14

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Services
 
 // Layout adapted from Caelestia Shell's dashboard composition (GPL-3.0).
 Item {
@@ -67,7 +66,6 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 screen: root.screen
-                visible: PersonalizationConfig.keystoneKeyholeCards.length > 0
             }
 
         }
