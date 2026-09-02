@@ -74,6 +74,29 @@ StyledFlickable {
                 onClicked: root.sectionRequested("network")
             }
 
+            SettingsActionRow {
+                Layout.fillWidth: true
+                iconName: "devices_other"
+                text: qsTr("连接的设备")
+                description: {
+                    if (!BluetoothService.available)
+                        return qsTr("蓝牙不可用");
+
+                    if (!BluetoothService.enabled)
+                        return qsTr("蓝牙已关闭");
+
+                    if (BluetoothService.connectedDevices.length === 1)
+                        return BluetoothService.connectedDevices[0].name;
+
+                    if (BluetoothService.connectedDevices.length > 1)
+                        return qsTr("%1 台设备已连接").arg(BluetoothService.connectedDevices.length);
+
+                    return "";
+                }
+                trailingIconName: "chevron_right"
+                onClicked: root.sectionRequested("connected-devices")
+            }
+
         }
 
         SettingsSection {

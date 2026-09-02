@@ -1,4 +1,6 @@
 import QtQuick
+import qs.Common
+import qs.Services
 
 Item {
     id: root
@@ -6,15 +8,42 @@ Item {
     property var parentModal: null
     property string currentSection: "overview"
     property bool presentationActive: false
+    property string selectedBluetoothAddress: ""
+    property string selectedBluetoothAdapterId: ""
+
+    function selectedBluetoothDevice() {
+        return BluetoothService.devices.find((device) => {
+            return device.address === root.selectedBluetoothAddress && (root.selectedBluetoothAdapterId.length === 0 || device.adapterId === root.selectedBluetoothAdapterId);
+        }) || null;
+    }
 
     function openSection(section) {
         root.closeChildWindows();
+        BluetoothService.clearError();
         root.currentSection = section;
     }
 
     function showOverview() {
         root.closeChildWindows();
+        BluetoothService.clearError();
         root.currentSection = "overview";
+    }
+
+    function showConnectedDevices() {
+        root.openSection("connected-devices");
+    }
+
+    function openBluetoothDevice(address, adapterId) {
+        root.selectedBluetoothAddress = address;
+        root.selectedBluetoothAdapterId = adapterId;
+        root.openSection("bluetooth-device");
+    }
+
+    function goBack() {
+        if (root.currentSection === "bluetooth-pairing" || root.currentSection === "bluetooth-device")
+            root.showConnectedDevices();
+        else
+            root.showOverview();
     }
 
     function closeChildWindows() {
@@ -46,6 +75,15 @@ Item {
                 return qsTr("默认应用");
             case "network":
                 return qsTr("网络");
+            case "connected-devices":
+                return qsTr("连接的设备");
+            case "bluetooth-pairing":
+                return qsTr("配对新设备");
+            case "bluetooth-device":
+                {
+                    const device = root.selectedBluetoothDevice();
+                    return device ? device.name : qsTr("蓝牙设备");
+                };
             default:
                 return qsTr("通用");
             }
@@ -66,11 +104,19 @@ Item {
                 return "apps";
             case "network":
                 return "wifi";
+            case "connected-devices":
+            case "bluetooth-pairing":
+                return "devices_other";
+            case "bluetooth-device":
+                {
+                    const device = root.selectedBluetoothDevice();
+                    return BluetoothDeviceIcon.iconName(device);
+                };
             default:
                 return "settings";
             }
         }
-        onBackRequested: root.showOverview()
+        onBackRequested: root.goBack()
     }
 
     Loader {
@@ -96,6 +142,12 @@ Item {
                 return Qt.resolvedUrl("DefaultAppsPage.qml");
             case "network":
                 return Qt.resolvedUrl("NetworkPage.qml");
+            case "connected-devices":
+                return Qt.resolvedUrl("ConnectedDevicesPage.qml");
+            case "bluetooth-pairing":
+                return Qt.resolvedUrl("BluetoothPairingPage.qml");
+            case "bluetooth-device":
+                return Qt.resolvedUrl("BluetoothDevicePage.qml");
             default:
                 return Qt.resolvedUrl("GeneralOverviewPage.qml");
             }
@@ -109,8 +161,14 @@ Item {
 
             if ("presentationActive" in item)
                 item.presentationActive = Qt.binding(function() {
-                return root.presentationActive && root.currentSection === "sidebar";
+                return root.presentationActive;
             });
+
+            if ("deviceAddress" in item)
+                item.deviceAddress = root.selectedBluetoothAddress;
+
+            if ("deviceAdapterId" in item)
+                item.deviceAdapterId = root.selectedBluetoothAdapterId;
 
         }
     }
@@ -118,6 +176,18 @@ Item {
     Connections {
         function onSectionRequested(section) {
             root.openSection(section);
+        }
+
+        function onPairingRequested() {
+            root.openSection("bluetooth-pairing");
+        }
+
+        function onDeviceRequested(address, adapterId) {
+            root.openBluetoothDevice(address, adapterId);
+        }
+
+        function onReturnRequested() {
+            root.showConnectedDevices();
         }
 
         target: pageLoader.item

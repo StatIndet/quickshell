@@ -531,42 +531,42 @@
 <context>
     <name>AudioRecordingService</name>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="52"/>
+        <location filename="../Services/AudioRecordingService.qml" line="46"/>
         <source>录音命令执行失败</source>
         <translation>Recording command failed</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="62"/>
+        <location filename="../Services/AudioRecordingService.qml" line="53"/>
         <source>录音失败</source>
         <translation>Recording failed</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="77"/>
+        <location filename="../Services/AudioRecordingService.qml" line="66"/>
         <source>key audio 返回了不受支持的 JSON schema</source>
         <translation>key audio returned an unsupported JSON schema</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="123"/>
+        <location filename="../Services/AudioRecordingService.qml" line="103"/>
         <source>系统音频已保存</source>
         <translation>System audio recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="124"/>
+        <location filename="../Services/AudioRecordingService.qml" line="103"/>
         <source>麦克风录音已保存</source>
         <translation>Microphone recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="125"/>
+        <location filename="../Services/AudioRecordingService.qml" line="103"/>
         <source>已保存到 %1</source>
         <translation>Saved to %1</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="131"/>
+        <location filename="../Services/AudioRecordingService.qml" line="110"/>
         <source>无法解析 key audio 返回的 JSON: </source>
         <translation>Could not parse JSON returned by key audio: </translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="227"/>
+        <location filename="../Services/AudioRecordingService.qml" line="207"/>
         <source>无法通过 key 查询录音状态</source>
         <translation>Could not query recording status through key</translation>
     </message>
@@ -587,12 +587,12 @@
 <context>
     <name>AuthCard</name>
     <message>
-        <location filename="../Modules/Lock/Cards/AuthCard.qml" line="185"/>
+        <location filename="../Modules/Lock/Cards/AuthCard.qml" line="179"/>
         <source>正在加载…</source>
         <translation>Loading…</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/AuthCard.qml" line="185"/>
+        <location filename="../Modules/Lock/Cards/AuthCard.qml" line="179"/>
         <source>输入密码</source>
         <translation>Enter password</translation>
     </message>
@@ -1325,268 +1325,452 @@
 <context>
     <name>BluetoothContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="13"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="104"/>
         <source>蓝牙</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="31"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="26"/>
         <source>未检测到蓝牙适配器或 BlueZ 不可用</source>
         <translation>No Bluetooth adapter detected or BlueZ is unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="33"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="29"/>
         <source>蓝牙已关闭</source>
         <translation>Bluetooth is off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="37"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="32"/>
         <source>尚未发现蓝牙设备</source>
         <translation>No Bluetooth devices discovered yet</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="110"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="86"/>
         <source>已阻止</source>
         <translation>Blocked</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="112"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="88"/>
         <source>正在配对</source>
         <translation>Pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="114"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="242"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="206"/>
         <source>已连接</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="116"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="250"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="92"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="214"/>
         <source>已配对</source>
         <translation>Paired</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="118"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="258"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="94"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="222"/>
         <source>可用设备</source>
         <translation>Available devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="120"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="96"/>
         <source>受信任</source>
         <translation>Trusted</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="122"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="99"/>
         <source>电量 </source>
         <translation>Battery </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="181"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="432"/>
         <source>重新扫描蓝牙设备</source>
         <translation>Scan for Bluetooth devices again</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="199"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="451"/>
         <source>蓝牙开关</source>
         <translation>Bluetooth switch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="277"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="237"/>
         <source>正在查找可用蓝牙设备</source>
         <translation>Searching for available Bluetooth devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="282"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="333"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="242"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="306"/>
         <source>正在查找附近设备</source>
         <translation>Searching for nearby devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="325"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="298"/>
         <source>未发现可用设备</source>
         <translation>No available devices found</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="331"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="305"/>
         <source>适配器</source>
         <translation>Adapters</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="334"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="306"/>
         <source>设备发现已暂停</source>
         <translation>Device discovery is paused</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="334"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="306"/>
         <source>打开蓝牙后可开始发现</source>
         <translation>Turn on Bluetooth to start discovery</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="344"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="316"/>
         <source>蓝牙适配器</source>
         <translation>Bluetooth adapter</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="346"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="317"/>
         <source>已被 rfkill 阻止</source>
         <translation>Blocked by rfkill</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="347"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="317"/>
         <source>已关闭</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="354"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="324"/>
         <source>切换适配器 </source>
         <translation>Toggle adapter </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="364"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="336"/>
         <source>允许被发现</source>
         <translation>Allow discovery</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="365"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="337"/>
         <source>让附近设备可以找到这台电脑</source>
         <translation>Let nearby devices find this computer</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="372"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="344"/>
         <source>蓝牙可发现</source>
         <translation>Bluetooth discoverability</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="381"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="354"/>
         <source>允许配对</source>
         <translation>Allow pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="382"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="355"/>
         <source>接受官方模块支持的配对请求</source>
         <translation>Accept pairing requests supported by the official module</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="389"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="362"/>
         <source>蓝牙可配对</source>
         <translation>Bluetooth pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="409"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="387"/>
         <source>遗忘蓝牙设备</source>
         <translation>Forget Bluetooth device</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="411"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="388"/>
         <source>将删除“</source>
         <translation>This will delete the pairing information for “</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="412"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="388"/>
         <source>”的配对信息。</source>
         <translation>”.</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="423"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="399"/>
         <source>取消</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="431"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="407"/>
         <source>遗忘</source>
         <translation>Forget</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="494"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="506"/>
         <source>断开</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="495"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="506"/>
         <source>连接</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="495"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="506"/>
         <source>配对</source>
         <translation>Pair</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="516"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="525"/>
         <source>蓝牙设备操作</source>
         <translation>Bluetooth device action</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="528"/>
+        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="537"/>
         <source>遗忘设备</source>
         <translation>Forget device</translation>
     </message>
 </context>
 <context>
+    <name>BluetoothDevicePage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="17"/>
+        <source>蓝牙设备</source>
+        <translation>Bluetooth device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="27"/>
+        <source>已阻止</source>
+        <translation>Blocked</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="30"/>
+        <source>正在连接…</source>
+        <translation>Connecting…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="33"/>
+        <source>正在断开连接…</source>
+        <translation>Disconnecting…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="36"/>
+        <source>已连接 · %1%</source>
+        <translation>Connected · %1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="36"/>
+        <source>已连接</source>
+        <translation>Connected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="38"/>
+        <source>已保存</source>
+        <translation>Saved</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="101"/>
+        <source>断开连接</source>
+        <translation>Disconnect</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="101"/>
+        <source>连接</source>
+        <translation>Connect</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="119"/>
+        <source>遗忘设备</source>
+        <translation>Forget device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="128"/>
+        <source>连接</source>
+        <comment>Bluetooth settings section</comment>
+        <translation>Connection</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="134"/>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="139"/>
+        <source>受信任设备</source>
+        <translation>Trusted device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="152"/>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="157"/>
+        <source>阻止设备</source>
+        <translation>Block device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="170"/>
+        <source>允许唤醒</source>
+        <translation>Allow wake</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="175"/>
+        <source>允许设备唤醒系统</source>
+        <translation>Allow device to wake the system</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="189"/>
+        <source>设备信息</source>
+        <translation>Device information</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="195"/>
+        <source>电池</source>
+        <translation>Battery</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="196"/>
+        <source>%1%</source>
+        <translation>%1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="196"/>
+        <source>不可用</source>
+        <translation>Unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="202"/>
+        <source>设备电量 %1%</source>
+        <translation>Device battery %1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="202"/>
+        <source>设备电量不可用</source>
+        <translation>Device battery unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="210"/>
+        <source>地址</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="217"/>
+        <source>适配器</source>
+        <translation>Adapter</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="230"/>
+        <source>遗忘“%1”？</source>
+        <translation>Forget “%1”?</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="230"/>
+        <source>遗忘设备？</source>
+        <translation>Forget device?</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="231"/>
+        <source>这会删除该设备保存的蓝牙配对信息。</source>
+        <translation>This removes the saved Bluetooth pairing information for this device.</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="242"/>
+        <source>取消</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothDevicePage.qml" line="248"/>
+        <source>遗忘</source>
+        <translation>Forget</translation>
+    </message>
+</context>
+<context>
+    <name>BluetoothPairingPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="93"/>
+        <source>附近设备</source>
+        <translation>Nearby devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="99"/>
+        <source>正在搜索附近设备</source>
+        <translation>Searching for nearby devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="99"/>
+        <source>等待蓝牙扫描</source>
+        <translation>Waiting for Bluetooth scan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="107"/>
+        <source>正在搜索附近蓝牙设备</source>
+        <translation>Searching for nearby Bluetooth devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="123"/>
+        <source>正在配对…</source>
+        <translation>Pairing…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="137"/>
+        <source>正在配对 %1</source>
+        <translation>Pairing %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/BluetoothPairingPage.qml" line="148"/>
+        <source>尚未发现附近设备</source>
+        <translation>No nearby devices found yet</translation>
+    </message>
+</context>
+<context>
     <name>BluetoothService</name>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="79"/>
+        <location filename="../Services/BluetoothService.qml" line="90"/>
         <source>未知设备</source>
         <translation>Unknown device</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="151"/>
+        <location filename="../Services/BluetoothService.qml" line="161"/>
         <source>另一项蓝牙操作仍在进行</source>
         <translation>Another Bluetooth operation is already in progress</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="176"/>
+        <location filename="../Services/BluetoothService.qml" line="188"/>
         <source>蓝牙操作失败</source>
         <translation>Bluetooth operation failed</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="197"/>
-        <location filename="../Services/BluetoothService.qml" line="229"/>
-        <location filename="../Services/BluetoothService.qml" line="246"/>
+        <location filename="../Services/BluetoothService.qml" line="209"/>
+        <location filename="../Services/BluetoothService.qml" line="242"/>
+        <location filename="../Services/BluetoothService.qml" line="261"/>
         <source>未检测到蓝牙适配器</source>
         <translation>No Bluetooth adapter detected</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="202"/>
+        <location filename="../Services/BluetoothService.qml" line="214"/>
         <source>蓝牙适配器已被 rfkill 阻止</source>
         <translation>The Bluetooth adapter is blocked by rfkill</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="229"/>
-        <location filename="../Services/BluetoothService.qml" line="246"/>
-        <location filename="../Services/BluetoothService.qml" line="291"/>
+        <location filename="../Services/BluetoothService.qml" line="242"/>
+        <location filename="../Services/BluetoothService.qml" line="261"/>
+        <location filename="../Services/BluetoothService.qml" line="311"/>
         <source>蓝牙适配器已关闭</source>
         <translation>The Bluetooth adapter is off</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="286"/>
+        <location filename="../Services/BluetoothService.qml" line="306"/>
         <source>未检测到蓝牙适配器或 BlueZ 不可用</source>
         <translation>No Bluetooth adapter detected or BlueZ is unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="324"/>
+        <location filename="../Services/BluetoothService.qml" line="345"/>
         <source>目标蓝牙设备已不可用</source>
         <translation>The target Bluetooth device is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="329"/>
+        <location filename="../Services/BluetoothService.qml" line="350"/>
         <source>目标蓝牙设备已被阻止</source>
         <translation>The target Bluetooth device is blocked</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="478"/>
+        <location filename="../Services/BluetoothService.qml" line="528"/>
         <source>设备连接失败</source>
         <translation>Could not connect to the device</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="491"/>
-        <source>配对失败；需要 PIN/Passkey 交互的设备将在第二阶段支持</source>
-        <translation>Pairing failed; devices requiring PIN/passkey interaction will be supported in a later phase</translation>
+        <location filename="../Services/BluetoothService.qml" line="541"/>
+        <source>配对失败</source>
+        <translation>Pairing failed</translation>
     </message>
     <message>
-        <location filename="../Services/BluetoothService.qml" line="535"/>
+        <location filename="../Services/BluetoothService.qml" line="595"/>
         <source>蓝牙操作超时；当前 Quickshell API 未提供更详细的 BlueZ 错误</source>
         <translation>Bluetooth operation timed out; the current Quickshell API provides no more detailed BlueZ error</translation>
     </message>
@@ -2201,6 +2385,92 @@ Scroll to adjust</translation>
         <location filename="../Modules/ControlCenter/ComputerBackupWindow.qml" line="370"/>
         <source>可添加当前文件夹或选中的子文件夹</source>
         <translation>Add the current folder or a selected subfolder</translation>
+    </message>
+</context>
+<context>
+    <name>ConnectedDevicesPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="19"/>
+        <source>未检测到蓝牙适配器或 BlueZ 不可用</source>
+        <translation>No Bluetooth adapter detected or BlueZ is unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="22"/>
+        <source>蓝牙适配器已被 rfkill 阻止</source>
+        <translation>The Bluetooth adapter is blocked by rfkill</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="32"/>
+        <source>已阻止</source>
+        <translation>Blocked</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="35"/>
+        <source>已连接 · %1%</source>
+        <translation>Connected · %1%</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="35"/>
+        <source>已连接</source>
+        <translation>Connected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="65"/>
+        <source>Bluetooth</source>
+        <translation>Bluetooth</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="70"/>
+        <source>Bluetooth 开关</source>
+        <translation>Bluetooth switch</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="80"/>
+        <source>已保存的设备</source>
+        <translation>Saved devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="113"/>
+        <source>没有已保存的设备</source>
+        <translation>No saved devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="120"/>
+        <source>配对新设备</source>
+        <translation>Pair new device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="143"/>
+        <source>蓝牙适配器</source>
+        <translation>Bluetooth adapter</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="144"/>
+        <source>%1 · 已被 rfkill 阻止</source>
+        <translation>%1 · Blocked by rfkill</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="149"/>
+        <source>切换适配器 %1</source>
+        <translation>Toggle adapter %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="161"/>
+        <source>高级设置</source>
+        <translation>Advanced settings</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="167"/>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="172"/>
+        <source>允许被发现</source>
+        <translation>Allow discovery</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/ConnectedDevicesPage.qml" line="186"/>
+        <source>允许配对</source>
+        <translation>Allow pairing</translation>
     </message>
 </context>
 <context>
@@ -3182,17 +3452,37 @@ Scroll to adjust</translation>
         <translation type="unfinished">NetworkManager is unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="80"/>
+        <source>连接的设备</source>
+        <translation>Connected devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="83"/>
+        <source>蓝牙不可用</source>
+        <translation>Bluetooth unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="86"/>
+        <source>蓝牙已关闭</source>
+        <translation>Bluetooth is off</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="92"/>
+        <source>%1 台设备已连接</source>
+        <translation>%1 devices connected</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="104"/>
         <source>应用</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="110"/>
         <source>开机启动</source>
         <translation>Autostart</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="118"/>
         <source>默认应用</source>
         <translation>Default applications</translation>
     </message>
@@ -3200,42 +3490,57 @@ Scroll to adjust</translation>
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="36"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="65"/>
         <source>条栏</source>
         <translation>Bar</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="38"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="67"/>
         <source>侧边栏</source>
         <translation>Sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="44"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
         <source>开机启动</source>
         <translation>Autostart</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="46"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="75"/>
         <source>默认应用</source>
         <translation>Default applications</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="48"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
         <source>网络</source>
         <translation type="unfinished">Network</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="50"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
+        <source>连接的设备</source>
+        <translation>Connected devices</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
+        <source>配对新设备</source>
+        <translation>Pair new device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
+        <source>蓝牙设备</source>
+        <translation>Bluetooth device</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="88"/>
         <source>通用</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="40"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="69"/>
         <source>透明与模糊</source>
         <translation>Transparency and blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="42"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
         <source>语言与地区</source>
         <translation>Language &amp; region</translation>
     </message>
@@ -3704,12 +4009,12 @@ Scroll to adjust</translation>
 <context>
     <name>HorizontalPillRecordingVisual</name>
     <message>
-        <location filename="../Modules/Keystone/Styles/Recording/HorizontalPillRecordingVisual.qml" line="192"/>
+        <location filename="../Modules/Keystone/Styles/Recording/HorizontalPillRecordingVisual.qml" line="191"/>
         <source>正在处理</source>
         <translation type="unfinished">Processing</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Styles/Recording/HorizontalPillRecordingVisual.qml" line="236"/>
+        <location filename="../Modules/Keystone/Styles/Recording/HorizontalPillRecordingVisual.qml" line="249"/>
         <source>停止录制</source>
         <translation type="unfinished">Stop recording</translation>
     </message>
@@ -3791,22 +4096,22 @@ Scroll to adjust</translation>
 <context>
     <name>HubContent</name>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="52"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="53"/>
         <source>仪表板</source>
         <translation>Dashboard</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="58"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="59"/>
         <source>媒体</source>
         <translation>Media</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="64"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="65"/>
         <source>上传</source>
         <translation>Upload</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="70"/>
+        <location filename="../Modules/Keystone/Hub/HubContent.qml" line="71"/>
         <source>天气</source>
         <translation>Weather</translation>
     </message>
@@ -3986,59 +4291,54 @@ Scroll to adjust</translation>
 <context>
     <name>KeystonePage</name>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="32"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="147"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="55"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="166"/>
         <source>横向时钟样式</source>
         <translation>Horizontal clock style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="33"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="56"/>
         <source>返回钥石设置</source>
         <translation>Back to Keystone settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="55"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="78"/>
         <source>钥石样式</source>
         <translation>Keystone style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="59"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="82"/>
         <source>样式</source>
         <translation>Style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="85"/>
         <source>选择钥石样式</source>
         <translation>Choose Keystone style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="70"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="93"/>
         <source>屏幕边缘</source>
         <translation>Screen edge</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="107"/>
         <source>钥匙孔</source>
         <translation>Keyhole</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="89"/>
-        <source>卡片</source>
-        <translation>Cards</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="112"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="131"/>
         <source>横向时钟</source>
         <translation>Horizontal clock</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="134"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="138"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="153"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="157"/>
         <source>隐藏日期</source>
         <translation>Hide date</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="148"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="167"/>
         <source>字体、数字位置和颜色</source>
         <translation>Font, digit positions, and colors</translation>
     </message>
@@ -4069,6 +4369,7 @@ Scroll to adjust</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="244"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="291"/>
         <source>保存位置</source>
         <translation>Save location</translation>
     </message>
@@ -4079,6 +4380,8 @@ Scroll to adjust</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="249"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="301"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="302"/>
         <source>选择文件夹</source>
         <translation>Choose folder</translation>
     </message>
@@ -4216,22 +4519,22 @@ Scroll to adjust</translation>
 <context>
     <name>LockContent</name>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="195"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="202"/>
         <source>密码错误，请重试。</source>
         <translation>Incorrect password. Try again.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="383"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="390"/>
         <source>大写锁定和数字锁定已开启。</source>
         <translation>Caps Lock and Num Lock are on.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="386"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="393"/>
         <source>大写锁定已开启。</source>
         <translation>Caps Lock is on.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="389"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="396"/>
         <source>数字锁定已开启。</source>
         <translation>Num Lock is on.</translation>
     </message>
@@ -4487,17 +4790,17 @@ Scroll to adjust</translation>
 <context>
     <name>MediaCard</name>
     <message>
-        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="33"/>
+        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="16"/>
         <source>没有媒体</source>
         <translation>No media</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="34"/>
+        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="17"/>
         <source>未在播放</source>
         <translation>Not playing</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="115"/>
+        <location filename="../Modules/Lock/Cards/MediaCard.qml" line="114"/>
         <source>正在播放</source>
         <translation>Now playing</translation>
     </message>
@@ -5362,27 +5665,29 @@ Click to open network settings</translation>
 <context>
     <name>NotificationCard</name>
     <message>
-        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="69"/>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="48"/>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="284"/>
         <source>%1 条通知</source>
         <translation>%1 notifications</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="69"/>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="48"/>
         <source>通知</source>
         <translation>Notifications</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="117"/>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="97"/>
+        <location filename="../Modules/Lock/Cards/NotificationCard.qml" line="284"/>
         <source>没有通知</source>
         <translation>No notifications</translation>
     </message>
 </context>
 <context>
-    <name>NotificationItem</name>
+    <name>NotificationContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationItem.qml" line="290"/>
+        <location filename="../Modules/Keystone/NotificationContent/NotificationContent.qml" line="188"/>
         <source>关闭</source>
-        <translation>Close</translation>
+        <translation type="unfinished">Close</translation>
     </message>
 </context>
 <context>
@@ -5396,15 +5701,15 @@ Click to open network settings</translation>
 <context>
     <name>NotificationManager</name>
     <message>
-        <location filename="../Services/NotificationManager.qml" line="125"/>
-        <location filename="../Services/NotificationManager.qml" line="175"/>
-        <location filename="../Services/NotificationManager.qml" line="259"/>
+        <location filename="../Services/NotificationManager.qml" line="132"/>
+        <location filename="../Services/NotificationManager.qml" line="188"/>
+        <location filename="../Services/NotificationManager.qml" line="284"/>
         <source>系统</source>
         <translation>System</translation>
     </message>
     <message>
-        <location filename="../Services/NotificationManager.qml" line="130"/>
-        <location filename="../Services/NotificationManager.qml" line="179"/>
+        <location filename="../Services/NotificationManager.qml" line="137"/>
+        <location filename="../Services/NotificationManager.qml" line="192"/>
         <source>通知</source>
         <translation>Notification</translation>
     </message>
@@ -5412,12 +5717,12 @@ Click to open network settings</translation>
 <context>
     <name>NotificationUtils</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="44"/>
+        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="12"/>
         <source>刚刚</source>
         <translation>Just now</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="53"/>
+        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="20"/>
         <source>昨天</source>
         <translation>Yesterday</translation>
     </message>
@@ -5702,78 +6007,78 @@ Click to open network settings</translation>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="271"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="273"/>
         <source>番茄钟</source>
         <translation>Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="301"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="287"/>
+        <source>信息</source>
+        <translation type="unfinished">Information</translation>
+    </message>
+    <message>
+        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
         <source>网络</source>
         <translation type="unfinished">Network</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="304"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="314"/>
         <source>蓝牙</source>
         <translation type="unfinished">Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="307"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="318"/>
         <source>亮度</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
         <source>音量</source>
         <translation type="unfinished">Volume</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="313"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="326"/>
         <source>麦克风</source>
         <translation type="unfinished">Microphone</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="316"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="330"/>
         <source>电池</source>
         <translation type="unfinished">Battery</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="319"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="334"/>
         <source>设置</source>
         <translation type="unfinished">Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="338"/>
         <source>电源</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="280"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
         <source>工作区</source>
         <translation>Workspaces</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
-        <source>信息中心</source>
-        <translation>Information Center</translation>
-    </message>
-    <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="286"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="291"/>
         <source>聚焦窗口</source>
         <translation>Active Window</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="289"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="295"/>
         <source>托盘</source>
         <translation>Tray</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="292"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="299"/>
         <source>系统监控</source>
         <translation>System Monitor</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="268"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="295"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="269"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="303"/>
         <source>快捷设置</source>
         <translation>Quick Settings</translation>
     </message>
@@ -6199,7 +6504,7 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>RecordingService</name>
     <message>
-        <location filename="../Services/RecordingService.qml" line="55"/>
+        <location filename="../Services/RecordingService.qml" line="51"/>
         <source>key 返回了不受支持的 JSON schema</source>
         <translation>key returned an unsupported JSON schema</translation>
     </message>
@@ -6209,12 +6514,12 @@ Right-click to change shape; scroll to reorder</translation>
         <translation>key command failed</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="84"/>
+        <location filename="../Services/RecordingService.qml" line="88"/>
         <source>无法解析 key 返回的 JSON: </source>
         <translation>Could not parse JSON returned by key: </translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="167"/>
+        <location filename="../Services/RecordingService.qml" line="166"/>
         <source>无法启动录制命令</source>
         <translation>Could not start the recording command</translation>
     </message>
@@ -6224,17 +6529,17 @@ Right-click to change shape; scroll to reorder</translation>
         <translation>Could not query recording status through key</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="87"/>
+        <location filename="../Services/RecordingService.qml" line="81"/>
         <source>GIF 已保存</source>
         <translation>GIF saved</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="88"/>
+        <location filename="../Services/RecordingService.qml" line="81"/>
         <source>录屏已保存</source>
         <translation>Screen recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="89"/>
+        <location filename="../Services/RecordingService.qml" line="81"/>
         <source>已保存到 %1</source>
         <translation>Saved to %1</translation>
     </message>
@@ -6310,9 +6615,14 @@ Right click: Control Center</translation>
 <context>
     <name>SortableMultiSelectField</name>
     <message>
-        <location filename="../Widgets/common/SortableMultiSelectField.qml" line="504"/>
+        <location filename="../Widgets/common/SortableMultiSelectField.qml" line="528"/>
         <source>未选择组件</source>
         <translation>No components selected</translation>
+    </message>
+    <message>
+        <location filename="../Widgets/common/SortableMultiSelectField.qml" line="711"/>
+        <source>所有组件均已使用</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6571,106 +6881,106 @@ Right click: Control Center</translation>
         <translation>Fully charged in </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="86"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="83"/>
         <source>充满时长未知</source>
         <translation>Time to full is unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="93"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="86"/>
         <source>耗电时长 </source>
         <translation>Time remaining </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="96"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="86"/>
         <source>耗电时长未知</source>
         <translation>Remaining time is unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="99"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="88"/>
         <source>已接通电源，未在充电</source>
         <translation>Plugged in, not charging</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="104"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="107"/>
         <source>电池，</source>
         <translation>Battery,</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="110"/>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="133"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="104"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="107"/>
         <source>已接通电源</source>
         <translation>Plugged in</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="111"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="107"/>
         <source>未接通电源</source>
         <translation>On battery</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="113"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="107"/>
         <source>未检测到电池</source>
         <translation>No battery detected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="229"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="304"/>
         <source>电池</source>
         <translation>Battery</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="284"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="362"/>
         <source>充电 </source>
         <translation>Charging </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="285"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="362"/>
         <source>功率 </source>
         <translation>Power </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="287"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="362"/>
         <source>放电 </source>
         <translation>Discharging </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="291"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="362"/>
         <source>功率未知</source>
         <translation>Power unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="313"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="385"/>
         <source>健康 </source>
         <translation>Health </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="330"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="400"/>
         <source>未检测到
 电池</source>
         <translation>No battery
 detected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="126"/>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="351"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="93"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="420"/>
         <source>不可用</source>
         <translation>Unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="128"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="96"/>
         <source>已充满</source>
         <translation>Fully charged</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="130"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="99"/>
         <source>充电中</source>
         <translation>Charging</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="132"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="102"/>
         <source>放电中</source>
         <translation>Discharging</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="133"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="104"/>
         <source>状态未知</source>
         <translation>Status unknown</translation>
     </message>
@@ -6950,13 +7260,13 @@ detected</translation>
         <translation>Wi-Fi is not connected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="342"/>
-        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="345"/>
+        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="348"/>
+        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="351"/>
         <source>未检测到磁盘</source>
         <translation>No disk detected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="345"/>
+        <location filename="../Modules/SystemCards/SystemCardContent.qml" line="351"/>
         <source>磁盘 %1，已使用 %2，共 %3，占用 %4</source>
         <translation>Disk %1, %2 of %3 used, %4 occupied</translation>
     </message>
@@ -7843,7 +8153,7 @@ detected</translation>
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="547"/>
+        <location filename="../Services/UiPreferences.qml" line="609"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7877,12 +8187,12 @@ detected</translation>
 <context>
     <name>VerticalPillRecordingVisual</name>
     <message>
-        <location filename="../Modules/Keystone/Styles/Recording/VerticalPillRecordingVisual.qml" line="192"/>
+        <location filename="../Modules/Keystone/Styles/Recording/VerticalPillRecordingVisual.qml" line="200"/>
         <source>正在处理</source>
         <translation type="unfinished">Processing</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/Styles/Recording/VerticalPillRecordingVisual.qml" line="233"/>
+        <location filename="../Modules/Keystone/Styles/Recording/VerticalPillRecordingVisual.qml" line="255"/>
         <source>停止录制</source>
         <translation type="unfinished">Stop recording</translation>
     </message>
@@ -8632,7 +8942,7 @@ Scroll to adjust; click to open sound</translation>
         <translation>Humidity:</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Cards/WeatherCard.qml" line="96"/>
+        <location filename="../Modules/Lock/Cards/WeatherCard.qml" line="98"/>
         <source>天气</source>
         <translation>Weather</translation>
     </message>

@@ -1,5 +1,4 @@
 pragma Singleton
-
 import QtQuick
 import Quickshell
 import Quickshell.Bluetooth
@@ -10,34 +9,38 @@ Singleton {
     readonly property var _nativeAdapters: Bluetooth.adapters ? Bluetooth.adapters.values : []
     readonly property var _nativeDevices: Bluetooth.devices ? Bluetooth.devices.values : []
     readonly property var adapter: Bluetooth.defaultAdapter
-
     readonly property bool available: adapter !== null
     readonly property bool enabled: available && adapter.enabled
-    readonly property bool discovering: _nativeAdapters.some(candidate => candidate && candidate.discovering)
+    readonly property bool blocked: available && adapter.state === BluetoothAdapterState.Blocked
+    readonly property bool discovering: _nativeAdapters.some((candidate) => {
+        return candidate && candidate.discovering;
+    })
     readonly property bool scanning: discovering
     readonly property bool discoverable: available && adapter.discoverable
     readonly property bool pairable: available && adapter.pairable
     readonly property bool connected: connectedDevices.length > 0
     readonly property string connectedName: connected ? connectedDevices[0].name : ""
-    readonly property bool busy: _pendingOperation.length > 0
-        || _nativeAdapters.some(candidate => candidate
-            && (candidate.state === BluetoothAdapterState.Enabling
-                || candidate.state === BluetoothAdapterState.Disabling))
-        || _nativeDevices.some(device => device
-            && (device.pairing
-                || device.state === BluetoothDeviceState.Connecting
-                || device.state === BluetoothDeviceState.Disconnecting))
-
-    readonly property var adapters: _nativeAdapters.map(candidate => root._describeAdapter(candidate))
+    readonly property bool busy: _pendingOperation.length > 0 || _nativeAdapters.some((candidate) => {
+        return candidate && (candidate.state === BluetoothAdapterState.Enabling || candidate.state === BluetoothAdapterState.Disabling);
+    }) || _nativeDevices.some((device) => {
+        return device && (device.pairing || device.state === BluetoothDeviceState.Connecting || device.state === BluetoothDeviceState.Disconnecting);
+    })
+    readonly property var adapters: _nativeAdapters.map((candidate) => {
+        return root._describeAdapter(candidate);
+    })
     readonly property var devices: root._deduplicatedDeviceDescriptors()
-    readonly property var connectedDevices: devices.filter(device => device.connected)
-    readonly property var pairedDevices: devices.filter(device => !device.connected
-        && (device.paired || device.bonded || device.trusted))
-    readonly property var availableDevices: devices.filter(device => !device.connected
-        && !device.paired && !device.bonded && !device.trusted)
-
+    readonly property var connectedDevices: devices.filter((device) => {
+        return device.connected;
+    })
+    readonly property var pairedDevices: devices.filter((device) => {
+        return !device.connected && (device.paired || device.bonded || device.trusted);
+    })
+    readonly property var availableDevices: devices.filter((device) => {
+        return !device.connected && !device.paired && !device.bonded && !device.trusted;
+    })
     property string lastError: ""
-    property var _discoveryOwners: ({})
+    property var _discoveryOwners: ({
+    })
     property bool _manualDiscoveryActive: false
     property string _pendingOperation: ""
     property string _pendingAddress: ""
@@ -52,9 +55,15 @@ Singleton {
     signal operationSucceeded(string operation)
     signal operationFailed(string operation, string message)
 
+    function clearError() {
+        root.lastError = "";
+    }
+
     function _describeAdapter(candidate) {
         if (!candidate)
-            return {};
+            return {
+        };
+
         return {
             "id": String(candidate.adapterId || ""),
             "name": String(candidate.name || candidate.adapterId || ""),
@@ -73,7 +82,9 @@ Singleton {
 
     function _describeDevice(device) {
         if (!device)
-            return {};
+            return {
+        };
+
         const deviceAdapter = device.adapter;
         return {
             "name": String(device.name || device.deviceName || device.address || qsTr("未知设备")),
@@ -86,6 +97,8 @@ Singleton {
             "paired": !!device.paired,
             "bonded": !!device.bonded,
             "pairing": !!device.pairing,
+            "connecting": device.state === BluetoothDeviceState.Connecting,
+            "disconnecting": device.state === BluetoothDeviceState.Disconnecting,
             "trusted": !!device.trusted,
             "blocked": !!device.blocked,
             "wakeAllowed": !!device.wakeAllowed,
@@ -96,54 +109,51 @@ Singleton {
     }
 
     function _deduplicatedDeviceDescriptors() {
-        const byAddress = {};
+        const byAddress = {
+        };
         for (const device of root._nativeDevices) {
             if (!device)
                 continue;
-            const descriptor = root._describeDevice(device);
-            const key = descriptor.address.length > 0
-                ? descriptor.address
-                : descriptor.adapterId + "|" + descriptor.name;
-            const current = byAddress[key];
-            if (!current
-                    || (descriptor.connected && !current.connected)
-                    || (descriptor.paired && !current.paired))
-                byAddress[key] = descriptor;
-        }
 
-        return Object.keys(byAddress)
-            .map(key => byAddress[key])
-            .sort((a, b) => {
-                if (a.connected !== b.connected)
-                    return a.connected ? -1 : 1;
-                if ((a.paired || a.bonded) !== (b.paired || b.bonded))
-                    return (a.paired || a.bonded) ? -1 : 1;
-                return a.name.localeCompare(b.name);
-            });
+            const descriptor = root._describeDevice(device);
+            const key = descriptor.address.length > 0 ? descriptor.address : descriptor.adapterId + "|" + descriptor.name;
+            const current = byAddress[key];
+            if (!current || (descriptor.connected && !current.connected) || (descriptor.paired && !current.paired))
+                byAddress[key] = descriptor;
+
+        }
+        return Object.keys(byAddress).map((key) => {
+            return byAddress[key];
+        }).sort((a, b) => {
+            if (a.connected !== b.connected)
+                return a.connected ? -1 : 1;
+
+            if ((a.paired || a.bonded) !== (b.paired || b.bonded))
+                return (a.paired || a.bonded) ? -1 : 1;
+
+            return a.name.localeCompare(b.name);
+        });
     }
 
     function _resolveAdapter(adapterLike) {
-        const adapterId = typeof adapterLike === "string"
-            ? adapterLike
-            : adapterLike ? String(adapterLike.id || adapterLike.adapterId || "") : "";
+        const adapterId = typeof adapterLike === "string" ? adapterLike : adapterLike ? String(adapterLike.id || adapterLike.adapterId || "") : "";
         if (adapterId.length === 0)
             return root.adapter;
-        return root._nativeAdapters.find(candidate => candidate && candidate.adapterId === adapterId) || null;
+
+        return root._nativeAdapters.find((candidate) => {
+            return candidate && candidate.adapterId === adapterId;
+        }) || null;
     }
 
     function _resolveDevice(deviceLike) {
         if (!deviceLike)
             return null;
-        const address = typeof deviceLike === "string"
-            ? deviceLike
-            : String(deviceLike.address || "");
-        const adapterId = typeof deviceLike === "string"
-            ? ""
-            : String(deviceLike.adapterId || "");
-        return root._nativeDevices.find(device => device
-            && device.address === address
-            && (adapterId.length === 0
-                || (device.adapter && device.adapter.adapterId === adapterId))) || null;
+
+        const address = typeof deviceLike === "string" ? deviceLike : String(deviceLike.address || "");
+        const adapterId = typeof deviceLike === "string" ? "" : String(deviceLike.adapterId || "");
+        return root._nativeDevices.find((device) => {
+            return device && device.address === address && (adapterId.length === 0 || (device.adapter && device.adapter.adapterId === adapterId));
+        }) || null;
     }
 
     function _beginOperation(operation) {
@@ -162,7 +172,8 @@ Singleton {
 
     function _finishOperationSucceeded() {
         if (root._pendingOperation.length === 0)
-            return;
+            return ;
+
         const operation = root._pendingOperation;
         operationTimeout.stop();
         root._clearPendingOperation();
@@ -171,7 +182,8 @@ Singleton {
 
     function _finishOperationFailed(message) {
         if (root._pendingOperation.length === 0)
-            return;
+            return ;
+
         const operation = root._pendingOperation;
         root.lastError = String(message || qsTr("蓝牙操作失败"));
         operationTimeout.stop();
@@ -196,17 +208,18 @@ Singleton {
         if (!nativeAdapter) {
             root.lastError = qsTr("未检测到蓝牙适配器");
             root.operationFailed("set-adapter-enabled", root.lastError);
-            return;
+            return ;
         }
         if (requested && nativeAdapter.state === BluetoothAdapterState.Blocked) {
             root.lastError = qsTr("蓝牙适配器已被 rfkill 阻止");
             root.operationFailed("set-adapter-enabled", root.lastError);
-            return;
+            return ;
         }
         if (nativeAdapter.enabled === requested)
-            return;
+            return ;
+
         if (!root._beginOperation("set-adapter-enabled"))
-            return;
+            return ;
 
         root._pendingAdapter = nativeAdapter;
         root._pendingAdapterId = String(nativeAdapter.adapterId || "");
@@ -228,12 +241,14 @@ Singleton {
         if (!nativeAdapter || !nativeAdapter.enabled) {
             root.lastError = nativeAdapter ? qsTr("蓝牙适配器已关闭") : qsTr("未检测到蓝牙适配器");
             root.operationFailed("set-discoverable", root.lastError);
-            return;
+            return ;
         }
         if (nativeAdapter.discoverable === requested)
-            return;
+            return ;
+
         if (!root._beginOperation("set-discoverable"))
-            return;
+            return ;
+
         root._pendingAdapter = nativeAdapter;
         root._pendingTargetState = requested;
         nativeAdapter.discoverable = requested;
@@ -245,12 +260,14 @@ Singleton {
         if (!nativeAdapter || !nativeAdapter.enabled) {
             root.lastError = nativeAdapter ? qsTr("蓝牙适配器已关闭") : qsTr("未检测到蓝牙适配器");
             root.operationFailed("set-pairable", root.lastError);
-            return;
+            return ;
         }
         if (nativeAdapter.pairable === requested)
-            return;
+            return ;
+
         if (!root._beginOperation("set-pairable"))
-            return;
+            return ;
+
         root._pendingAdapter = nativeAdapter;
         root._pendingTargetState = requested;
         nativeAdapter.pairable = requested;
@@ -262,7 +279,8 @@ Singleton {
 
     function acquireDiscovery(owner) {
         const key = root._discoveryOwnerKey(owner);
-        const next = Object.assign({}, root._discoveryOwners);
+        const next = Object.assign({
+        }, root._discoveryOwners);
         next[key] = Number(next[key] || 0) + 1;
         root._discoveryOwners = next;
         root._applyDiscovery();
@@ -270,9 +288,11 @@ Singleton {
 
     function releaseDiscovery(owner) {
         const key = root._discoveryOwnerKey(owner);
-        const next = Object.assign({}, root._discoveryOwners);
+        const next = Object.assign({
+        }, root._discoveryOwners);
         if (!next[key])
-            return;
+            return ;
+
         if (next[key] <= 1)
             delete next[key];
         else
@@ -285,12 +305,12 @@ Singleton {
         if (!root.available) {
             root.lastError = qsTr("未检测到蓝牙适配器或 BlueZ 不可用");
             root.operationFailed("discovery", root.lastError);
-            return;
+            return ;
         }
         if (!root.enabled) {
             root.lastError = qsTr("蓝牙适配器已关闭");
             root.operationFailed("discovery", root.lastError);
-            return;
+            return ;
         }
         root.lastError = "";
         root._manualDiscoveryActive = true;
@@ -307,14 +327,15 @@ Singleton {
     }
 
     function _applyDiscovery() {
-        const requested = root._manualDiscoveryActive
-            || Object.keys(root._discoveryOwners).length > 0;
+        const requested = root._manualDiscoveryActive || Object.keys(root._discoveryOwners).length > 0;
         for (const nativeAdapter of root._nativeAdapters) {
             if (!nativeAdapter)
                 continue;
+
             const shouldDiscover = requested && nativeAdapter.enabled;
             if (nativeAdapter.discovering !== shouldDiscover)
                 nativeAdapter.discovering = shouldDiscover;
+
         }
     }
 
@@ -332,6 +353,7 @@ Singleton {
         }
         if (!root._beginOperation(operation))
             return null;
+
         root._pendingDevice = nativeDevice;
         root._pendingAddress = String(nativeDevice.address || "");
         root._pendingAdapterId = nativeDevice.adapter ? String(nativeDevice.adapter.adapterId || "") : "";
@@ -342,19 +364,23 @@ Singleton {
     function connectDevice(device) {
         const current = root._resolveDevice(device);
         if (current && current.connected)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation("connect", device, true);
         if (nativeDevice)
             nativeDevice.connect();
+
     }
 
     function disconnectDevice(device) {
         const current = root._resolveDevice(device);
         if (current && !current.connected)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation("disconnect", device, false);
         if (nativeDevice)
             nativeDevice.disconnect();
+
     }
 
     function pairDevice(device) {
@@ -362,103 +388,128 @@ Singleton {
         // project-owned BlueZ agent, which the installed Quickshell API does not expose.
         const current = root._resolveDevice(device);
         if (current && current.paired)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation("pair", device, true);
         if (nativeDevice)
             nativeDevice.pair();
+
     }
 
     function cancelPairing(device) {
         const current = root._resolveDevice(device);
         if (current && !current.pairing)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation("cancel-pair", device, false);
         if (nativeDevice)
             nativeDevice.cancelPair();
+
     }
 
     function forgetDevice(device) {
         const nativeDevice = root._beginDeviceOperation("forget", device, false);
         if (nativeDevice)
             nativeDevice.forget();
+
     }
 
     function setDeviceTrusted(device, value) {
         const current = root._resolveDevice(device);
         if (current && current.trusted === !!value)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation("set-trusted", device, value);
         if (nativeDevice)
             nativeDevice.trusted = !!value;
+
     }
 
     function setDeviceBlocked(device, value) {
         const current = root._resolveDevice(device);
         if (current && current.blocked === !!value)
-            return;
+            return ;
+
         const nativeDevice = root._beginDeviceOperation(value ? "block" : "unblock", device, value);
         if (nativeDevice)
             nativeDevice.blocked = !!value;
+
+    }
+
+    function setDeviceWakeAllowed(device, value) {
+        const current = root._resolveDevice(device);
+        if (current && current.wakeAllowed === !!value)
+            return ;
+
+        const nativeDevice = root._beginDeviceOperation("set-wake-allowed", device, value);
+        if (nativeDevice)
+            nativeDevice.wakeAllowed = !!value;
+
+    }
+
+    Component.onCompleted: root._applyDiscovery()
+    Component.onDestruction: {
+        for (const nativeAdapter of root._nativeAdapters) {
+            if (nativeAdapter && nativeAdapter.discovering)
+                nativeAdapter.discovering = false;
+
+        }
     }
 
     Connections {
-        target: Bluetooth
-
         function onDefaultAdapterChanged() {
             Qt.callLater(root._applyDiscovery);
         }
+
+        target: Bluetooth
     }
 
     Connections {
-        target: Bluetooth.adapters
-
         function onValuesChanged() {
             Qt.callLater(root._applyDiscovery);
         }
+
+        target: Bluetooth.adapters
     }
 
     Connections {
-        target: Bluetooth.devices
-
         function onValuesChanged() {
-            if (root._pendingOperation === "forget"
-                    && root._pendingAddress.length > 0
-                    && !root._resolveDevice({
-                        "address": root._pendingAddress,
-                        "adapterId": root._pendingAdapterId
-                    }))
+            if (root._pendingOperation === "forget" && root._pendingAddress.length > 0 && !root._resolveDevice({
+                "address": root._pendingAddress,
+                "adapterId": root._pendingAdapterId
+            }))
                 root._finishOperationSucceeded();
+
         }
+
+        target: Bluetooth.devices
     }
 
     Connections {
-        target: root._pendingAdapter
-        enabled: root._pendingAdapter !== null
-
         function onEnabledChanged() {
             root._applyDiscovery();
-            if (root._pendingOperation === "set-adapter-enabled"
-                    && root._pendingAdapter.enabled === root._pendingTargetState)
+            if (root._pendingOperation === "set-adapter-enabled" && root._pendingAdapter.enabled === root._pendingTargetState)
                 root._finishOperationSucceeded();
+
         }
 
         function onDiscoverableChanged() {
-            if (root._pendingOperation === "set-discoverable"
-                    && root._pendingAdapter.discoverable === root._pendingTargetState)
+            if (root._pendingOperation === "set-discoverable" && root._pendingAdapter.discoverable === root._pendingTargetState)
                 root._finishOperationSucceeded();
+
         }
 
         function onPairableChanged() {
-            if (root._pendingOperation === "set-pairable"
-                    && root._pendingAdapter.pairable === root._pendingTargetState)
+            if (root._pendingOperation === "set-pairable" && root._pendingAdapter.pairable === root._pendingTargetState)
                 root._finishOperationSucceeded();
+
         }
+
+        target: root._pendingAdapter
+        enabled: root._pendingAdapter !== null
     }
 
     Connections {
-        target: root._pendingDevice
-        enabled: root._pendingDevice !== null
-
         function onConnectedChanged() {
             if (root._pendingOperation === "connect" && root._pendingDevice.connected)
                 root._finishOperationSucceeded();
@@ -468,58 +519,66 @@ Singleton {
 
         function onStateChanged() {
             if (!root._pendingDevice)
-                return;
-            if (root._pendingDevice.state === BluetoothDeviceState.Connecting
-                    || root._pendingDevice.state === BluetoothDeviceState.Disconnecting)
+                return ;
+
+            if (root._pendingDevice.state === BluetoothDeviceState.Connecting || root._pendingDevice.state === BluetoothDeviceState.Disconnecting)
                 root._pendingStateWasChanging = true;
-            if (root._pendingOperation === "connect"
-                    && root._pendingStateWasChanging
-                    && root._pendingDevice.state === BluetoothDeviceState.Disconnected)
+
+            if (root._pendingOperation === "connect" && root._pendingStateWasChanging && root._pendingDevice.state === BluetoothDeviceState.Disconnected)
                 root._finishOperationFailed(qsTr("设备连接失败"));
+
         }
 
         function onPairingChanged() {
             if (!root._pendingDevice)
-                return;
+                return ;
+
             if (root._pendingDevice.pairing)
                 root._pendingPairingStarted = true;
             else if (root._pendingOperation === "cancel-pair")
                 root._finishOperationSucceeded();
-            else if (root._pendingOperation === "pair"
-                    && root._pendingPairingStarted
-                    && !root._pendingDevice.paired)
-                root._finishOperationFailed(qsTr("配对失败；需要 PIN/Passkey 交互的设备将在第二阶段支持"));
+            else if (root._pendingOperation === "pair" && root._pendingPairingStarted && !root._pendingDevice.paired)
+                root._finishOperationFailed(qsTr("配对失败"));
         }
 
         function onPairedChanged() {
             if (root._pendingOperation === "pair" && root._pendingDevice.paired)
                 root._finishOperationSucceeded();
-            else if (root._pendingOperation === "forget"
-                    && !root._pendingDevice.paired && !root._pendingDevice.bonded)
+            else if (root._pendingOperation === "forget" && !root._pendingDevice.paired && !root._pendingDevice.bonded)
                 root._finishOperationSucceeded();
         }
 
         function onBondedChanged() {
-            if (root._pendingOperation === "forget"
-                    && !root._pendingDevice.paired && !root._pendingDevice.bonded)
+            if (root._pendingOperation === "forget" && !root._pendingDevice.paired && !root._pendingDevice.bonded)
                 root._finishOperationSucceeded();
+
         }
 
         function onTrustedChanged() {
-            if (root._pendingOperation === "set-trusted"
-                    && root._pendingDevice.trusted === root._pendingTargetState)
+            if (root._pendingOperation === "set-trusted" && root._pendingDevice.trusted === root._pendingTargetState)
                 root._finishOperationSucceeded();
+
         }
 
         function onBlockedChanged() {
-            if ((root._pendingOperation === "block" || root._pendingOperation === "unblock")
-                    && root._pendingDevice.blocked === root._pendingTargetState)
+            if ((root._pendingOperation === "block" || root._pendingOperation === "unblock") && root._pendingDevice.blocked === root._pendingTargetState)
                 root._finishOperationSucceeded();
+
         }
+
+        function onWakeAllowedChanged() {
+            if (root._pendingOperation === "set-wake-allowed" && root._pendingDevice.wakeAllowed === root._pendingTargetState)
+                root._finishOperationSucceeded();
+
+        }
+
+        target: root._pendingDevice
+        enabled: root._pendingDevice !== null
     }
 
     Timer {
         id: manualDiscoveryReleaseTimer
+
         interval: 30000
         repeat: false
         onTriggered: {
@@ -530,16 +589,10 @@ Singleton {
 
     Timer {
         id: operationTimeout
+
         interval: 60000
         repeat: false
         onTriggered: root._finishOperationFailed(qsTr("蓝牙操作超时；当前 Quickshell API 未提供更详细的 BlueZ 错误"))
     }
 
-    Component.onCompleted: root._applyDiscovery()
-    Component.onDestruction: {
-        for (const nativeAdapter of root._nativeAdapters) {
-            if (nativeAdapter && nativeAdapter.discovering)
-                nativeAdapter.discovering = false;
-        }
-    }
 }
