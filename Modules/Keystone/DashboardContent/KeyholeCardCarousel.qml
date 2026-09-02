@@ -271,15 +271,7 @@ Item {
 
         default property alias content: innerContainer.data
         property real contentMargin: 14
-        readonly property Item glassBackgroundItem: glassBlurRegion
-
-        Rectangle {
-            id: glassBlurRegion
-
-            anchors.fill: parent
-            radius: 24
-            color: "transparent"
-        }
+        readonly property Item glassBackgroundItem: glassBackground
 
         Rectangle {
             id: glassBackground
