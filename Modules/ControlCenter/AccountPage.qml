@@ -383,7 +383,7 @@ Item {
                         Layout.fillWidth: true
                         text: qsTr("更多蓝牙设置")
                         trailingIconName: "chevron_right"
-                        onClicked: console.warn("[Account] detailed Bluetooth settings are unavailable")
+                        onClicked: root.navigateRequested("connected-devices")
                     }
                 }
 

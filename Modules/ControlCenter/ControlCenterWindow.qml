@@ -55,6 +55,7 @@ FloatingWindow {
     property real contentPadding: 8
     property int currentPage: 0
     property bool navExpanded: width > 900
+    property string pendingPageSection: ""
     readonly property var pages: [
         ({ "id": "account", "title": qsTr("账户"), "icon": "account_circle", "source": "AccountPage.qml" }),
         ({ "id": "general", "title": qsTr("通用"), "icon": "settings", "source": "GeneralPage.qml" }),
@@ -79,6 +80,27 @@ FloatingWindow {
             }
         }
         return false;
+    }
+
+    function openPageSection(pageId, section) {
+        root.pendingPageSection = section;
+        if (!root.openPage(pageId)) {
+            root.pendingPageSection = "";
+            return false;
+        }
+        root.applyPendingPageSection();
+        return true;
+    }
+
+    function applyPendingPageSection() {
+        if (!root.pendingPageSection || !pageLoader.item)
+            return;
+        if (root.pages[root.currentPage].id !== "general"
+                || typeof pageLoader.item.openSection !== "function")
+            return;
+        const section = root.pendingPageSection;
+        root.pendingPageSection = "";
+        pageLoader.item.openSection(section);
     }
 
     function closeChildWindows() {
@@ -276,6 +298,7 @@ FloatingWindow {
                                 item.parentModal = parentModal;
                             if (item && "presentationActive" in item)
                                 item.presentationActive = Qt.binding(function() { return root.visible; });
+                            root.applyPendingPageSection();
                         }
                     }
 
@@ -284,6 +307,10 @@ FloatingWindow {
                         ignoreUnknownSignals: true
 
                         function onNavigateRequested(pageId) {
+                            if (pageId === "connected-devices") {
+                                root.openPageSection("general", pageId);
+                                return;
+                            }
                             root.openPage(pageId);
                         }
                     }
