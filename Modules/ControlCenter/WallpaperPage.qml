@@ -850,26 +850,15 @@ StyledFlickable {
                             Accessible.name: qsTr("编辑贝塞尔")
                             onClicked: easingCurveEditor.openCoordinateEditor()
 
-                            contentItem: RowLayout {
-                                anchors.centerIn: parent
+                            contentItem: ButtonLabel {
+                                iconName: "edit"
+                                primaryText: qsTr("编辑贝塞尔")
                                 spacing: 8
-
-                                MaterialSymbol {
-                                    Layout.preferredWidth: 20
-                                    Layout.preferredHeight: 20
-                                    text: "edit"
-                                    iconSize: 19
-                                    fill: 1
-                                    color: Appearance.colors.colOnPrimaryContainer
-                                }
-
-                                Text {
-                                    text: qsTr("编辑贝塞尔")
-                                    color: Appearance.colors.colOnPrimaryContainer
-                                    font.family: Fonts.ui
-                                    font.pixelSize: 14
-                                    font.weight: Font.Medium
-                                }
+                                iconSize: 19
+                                iconFill: 1
+                                iconColor: Appearance.colors.colOnPrimaryContainer
+                                primaryColor: Appearance.colors.colOnPrimaryContainer
+                                primaryPixelSize: 14
                             }
 
                         }

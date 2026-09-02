@@ -1030,28 +1030,17 @@ FloatingWindow {
             enabled: miniFab.enabled
             onClicked: miniFab.clicked()
 
-            contentItem: RowLayout {
-            id: contentRow
+            contentItem: ButtonLabel {
+                id: contentRow
 
-            anchors.centerIn: parent
-            spacing: 8
-
-            MaterialSymbol {
-                Layout.preferredWidth: 21
-                Layout.preferredHeight: 21
-                text: miniFab.iconName
+                iconName: miniFab.iconName
+                primaryText: miniFab.labelText
+                spacing: 8
                 iconSize: 20
-                color: Appearance.colors.colOnPrimaryContainer
-                fill: miniButton.pointerHovered ? 1 : 0
-            }
-
-            Text {
-                text: miniFab.labelText
-                color: Appearance.colors.colOnPrimaryContainer
-                font.family: Fonts.ui
-                font.pixelSize: 13
-                font.weight: Font.Medium
-            }
+                iconFill: miniButton.pointerHovered ? 1 : 0
+                iconColor: Appearance.colors.colOnPrimaryContainer
+                primaryColor: Appearance.colors.colOnPrimaryContainer
+                primaryPixelSize: 13
             }
         }
     }

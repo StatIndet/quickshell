@@ -313,41 +313,16 @@ Rectangle {
                 : root.networkStatusText
             onClicked: root.networkActivated()
 
-            contentItem: RowLayout {
+            contentItem: ButtonLabel {
                 id: networkContent
 
-                spacing: Appearance.spacing.small
-
-                MaterialSymbol {
-                    text: root.networkIconName
-                    iconSize: 20
-                    color: Appearance.colors.colPrimary
-                }
-
-                ColumnLayout {
-                    Layout.maximumWidth: 180
-                    spacing: 0
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: root.networkStatusText
-                        color: Appearance.colors.colOnSurface
-                        font.family: Fonts.ui
-                        font.pixelSize: Typography.bodyMedium.pixelSize
-                        font.weight: Font.DemiBold
-                        elide: Text.ElideRight
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        visible: root.networkStatusDetail.length > 0
-                        text: root.networkStatusDetail
-                        color: Appearance.colors.colOnSurfaceVariant
-                        font.family: Fonts.ui
-                        font.pixelSize: Typography.labelSmall.pixelSize
-                        elide: Text.ElideRight
-                    }
-                }
+                iconName: root.networkIconName
+                primaryText: root.networkStatusText
+                supportingText: root.networkStatusDetail
+                maximumTextWidth: 180
+                iconColor: Appearance.colors.colPrimary
+                primaryPixelSize: Typography.bodyMedium.pixelSize
+                primaryWeight: Font.DemiBold
             }
         }
     }
