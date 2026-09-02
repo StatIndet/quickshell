@@ -15,9 +15,10 @@ Rectangle {
     property string distroId: "linux"
     property string distroName: "Linux"
     property string uptimeText: ""
-    property int totalPackageCount: -1
-    property int pendingUpdateCount: -1
-    property bool showPackageStats: true
+    property bool showNetworkStatus: false
+    property string networkIconName: "wifi_off"
+    property string networkStatusText: ""
+    property string networkStatusDetail: ""
     property string avatarActionLabel: qsTr("更改头像")
     property real coverHeight: Math.max(150, Math.min(220, width * 0.23))
     property real profileAreaHeight: 120
@@ -25,6 +26,7 @@ Rectangle {
     property real avatarCoverFraction: 0.42
 
     signal avatarActivated()
+    signal networkActivated()
 
     property color surfaceColor: Appearance.m3colors.m3surfaceContainerHigh
     readonly property color profileSurfaceColor: surfaceColor
@@ -293,70 +295,58 @@ Rectangle {
             }
         }
 
-        ColumnLayout {
+        RippleButton {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-            visible: root.showPackageStats
-            spacing: Appearance.spacing.small
+            visible: root.showNetworkStatus
+            implicitWidth: networkContent.implicitWidth + Appearance.spacing.large * 2
+            implicitHeight: 48
+            buttonRadius: Appearance.rounding.full
+            containerColor: "transparent"
+            stateLayerColor: Appearance.colors.colSecondaryContainer
+            pressedStateLayerColor: Appearance.colors.colSecondaryContainer
+            hoverStateLayerOpacity: 0.5
+            focusStateLayerOpacity: 0.5
+            pressedStateLayerOpacity: 0.7
+            rippleColor: Appearance.colors.colPrimary
+            Accessible.name: root.networkStatusDetail.length > 0
+                ? root.networkStatusText + ", " + root.networkStatusDetail
+                : root.networkStatusText
+            onClicked: root.networkActivated()
 
-            RowLayout {
-                Layout.alignment: Qt.AlignRight
+            contentItem: RowLayout {
+                id: networkContent
+
                 spacing: Appearance.spacing.small
 
                 MaterialSymbol {
-                    text: "inventory_2"
-                    iconSize: 18
-                    color: Appearance.colors.colOnSurfaceVariant
+                    text: root.networkIconName
+                    iconSize: 20
+                    color: Appearance.colors.colPrimary
                 }
 
-                Text {
-                    text: qsTr("软件包")
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Fonts.ui
-                    font.pixelSize: Typography.bodyMedium.pixelSize
-                }
+                ColumnLayout {
+                    Layout.maximumWidth: 180
+                    spacing: 0
 
-                Text {
-                    Layout.minimumWidth: 34
-                    text: root.totalPackageCount >= 0
-                        ? root.totalPackageCount : "—"
-                    horizontalAlignment: Text.AlignRight
-                    color: Appearance.colors.colOnSurface
-                    font.family: Fonts.numeric
-                    font.pixelSize: Typography.bodyMedium.pixelSize
-                    font.weight: Font.DemiBold
-                }
-            }
+                    Text {
+                        Layout.fillWidth: true
+                        text: root.networkStatusText
+                        color: Appearance.colors.colOnSurface
+                        font.family: Fonts.ui
+                        font.pixelSize: Typography.bodyMedium.pixelSize
+                        font.weight: Font.DemiBold
+                        elide: Text.ElideRight
+                    }
 
-            RowLayout {
-                Layout.alignment: Qt.AlignRight
-                spacing: Appearance.spacing.small
-
-                MaterialSymbol {
-                    text: "system_update_alt"
-                    iconSize: 18
-                    color: root.pendingUpdateCount > 0
-                        ? Appearance.colors.colPrimary
-                        : Appearance.colors.colOnSurfaceVariant
-                }
-
-                Text {
-                    text: qsTr("待更新")
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Fonts.ui
-                    font.pixelSize: Typography.bodyMedium.pixelSize
-                }
-
-                Text {
-                    Layout.minimumWidth: 34
-                    text: root.pendingUpdateCount >= 0
-                        ? root.pendingUpdateCount : "—"
-                    horizontalAlignment: Text.AlignRight
-                    color: root.pendingUpdateCount > 0
-                        ? Appearance.colors.colPrimary
-                        : Appearance.colors.colOnSurface
-                    font.family: Fonts.numeric
-                    font.pixelSize: Typography.bodyMedium.pixelSize
-                    font.weight: Font.DemiBold
+                    Text {
+                        Layout.fillWidth: true
+                        visible: root.networkStatusDetail.length > 0
+                        text: root.networkStatusDetail
+                        color: Appearance.colors.colOnSurfaceVariant
+                        font.family: Fonts.ui
+                        font.pixelSize: Typography.labelSmall.pixelSize
+                        elide: Text.ElideRight
+                    }
                 }
             }
         }

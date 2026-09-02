@@ -307,7 +307,7 @@ FloatingWindow {
                         ignoreUnknownSignals: true
 
                         function onNavigateRequested(pageId) {
-                            if (pageId === "connected-devices") {
+                            if (pageId === "connected-devices" || pageId === "network") {
                                 root.openPageSection("general", pageId);
                                 return;
                             }

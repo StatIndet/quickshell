@@ -69,178 +69,209 @@
         <translation>連線</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="191"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="160"/>
+        <source>网络不可用</source>
+        <translation>網路無法使用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="162"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="170"/>
+        <source>正在连接</source>
+        <translation>正在連線</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="165"/>
+        <source>未连接</source>
+        <translation>未連線</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="174"/>
+        <source>已连接，有线</source>
+        <translation>已連線，有線</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="176"/>
+        <source>已连接，安全</source>
+        <translation>已連線，安全</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="176"/>
+        <source>已连接，开放</source>
+        <translation>已連線，開放</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="229"/>
         <source>语言</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="228"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="266"/>
         <source>蓝牙设备</source>
         <translation>藍牙裝置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="238"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="276"/>
         <source>蓝牙</source>
         <translation>藍牙</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="238"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="276"/>
         <source>开启蓝牙以连接设备</source>
         <translation>開啟藍牙以連線裝置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="247"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="285"/>
         <source>蓝牙开关</source>
         <translation>藍牙開關</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="304"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="348"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="386"/>
         <source>未命名设备</source>
         <translation>未命名裝置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="384"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="422"/>
         <source>更多蓝牙设置</source>
         <translation>更多藍牙設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="396"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="434"/>
         <source>云存储</source>
         <translation>雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="428"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="466"/>
         <source>刷新云存储信息</source>
         <translation>重新整理雲端儲存資訊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="447"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="485"/>
         <source>正在读取容量…</source>
         <translation>正在讀取容量…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="458"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="496"/>
         <source>云存储已使用容量</source>
         <translation>雲端儲存已使用容量</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="487"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="525"/>
         <source>正在备份</source>
         <translation>正在備份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="503"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="541"/>
         <source>已扫描 %1 个项目</source>
         <translation>已掃描 %1 個項目</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="505"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="543"/>
         <source>正在扫描文件…</source>
         <translation>正在掃描檔案…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="521"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="559"/>
         <source>电脑备份</source>
         <translation>電腦備份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="530"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="568"/>
         <source>管理云存储</source>
         <translation>管理雲端儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="544"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="582"/>
         <source>个性化</source>
         <translation>個性化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="202"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="240"/>
         <source>显示语言</source>
         <translation>顯示語言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="213"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="251"/>
         <source>选择语言</source>
         <translation>選擇語言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="346"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="384"/>
         <source>%1 的更多选项</source>
         <translation>%1 的更多選項</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="358"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="396"/>
         <source>遗忘设备</source>
         <translation>遺忘裝置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="375"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="413"/>
         <source>暂无已配对设备</source>
         <translation>暫無已配對裝置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="442"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="480"/>
         <source>容量：已使用 %1，共 %2（%3%）</source>
         <translation>容量：已使用 %1，共 %2（%3%）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="493"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="531"/>
         <source>正在停止备份…</source>
         <translation>正在停止備份…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="496"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="534"/>
         <source>%1：当前文件夹 %2%</source>
         <translation>%1：目前資料夾 %2%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="501"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="539"/>
         <source>正在检查文件…</source>
         <translation>正在檢查檔案…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="506"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="544"/>
         <source>正在准备备份</source>
         <translation>正在準備備份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="575"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="613"/>
         <source>使用壁纸 %1</source>
         <translation>使用桌布 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="656"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="694"/>
         <source>色彩模式</source>
         <translation>色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="666"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="704"/>
         <source>浅色</source>
         <translation>淺色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="667"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="705"/>
         <source>深色</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="670"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="708"/>
         <source>选择色彩模式</source>
         <translation>選擇色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="682"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="720"/>
         <source>壁纸</source>
         <translation>桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="690"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="728"/>
         <source>主题</source>
         <translation>主題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="706"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="744"/>
         <source>选择头像</source>
         <translation>選擇頭像</translation>
     </message>
@@ -248,24 +279,14 @@
 <context>
     <name>AccountProfileHeader</name>
     <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="21"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="22"/>
         <source>更改头像</source>
         <translation>更改頭像</translation>
     </message>
     <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="287"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="289"/>
         <source>已运行 %1</source>
         <translation>已執行 %1</translation>
-    </message>
-    <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="312"/>
-        <source>软件包</source>
-        <translation>軟體套件</translation>
-    </message>
-    <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="343"/>
-        <source>待更新</source>
-        <translation>待更新</translation>
     </message>
 </context>
 <context>
@@ -2476,52 +2497,52 @@
 <context>
     <name>ControlCenterWindow</name>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="137"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="159"/>
         <source>设置</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="59"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="60"/>
         <source>账户</source>
         <translation>賬戶</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="60"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="61"/>
         <source>通用</source>
         <translation>通用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="61"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="62"/>
         <source>壁纸</source>
         <translation>桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="63"/>
         <source>主题</source>
         <translation>主題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="64"/>
         <source>钥石</source>
         <translation>鑰石</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="64"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="65"/>
         <source>天气</source>
         <translation>天氣</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="65"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="66"/>
         <source>高级</source>
         <translation>進階</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="245"/>
         <source>路径已复制</source>
         <translation>路徑已複製</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="245"/>
         <source>配置文件</source>
         <translation>配置檔案</translation>
     </message>

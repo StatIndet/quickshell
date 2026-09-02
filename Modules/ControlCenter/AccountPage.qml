@@ -141,6 +141,41 @@ Item {
         return qsTr("连接");
     }
 
+    function networkStatusIcon() {
+        if (NetworkService.wifiConnecting)
+            return "wifi_find";
+        if (!NetworkService.available || !NetworkService.connected)
+            return "wifi_off";
+        if (NetworkService.activeNetwork && NetworkService.activeNetwork.type === "wired")
+            return "settings_ethernet";
+        if (NetworkService.signalStrength >= 70)
+            return "signal_wifi_4_bar";
+        if (NetworkService.signalStrength >= 35)
+            return "network_wifi_2_bar";
+        return "network_wifi_1_bar";
+    }
+
+    function networkStatusText() {
+        if (!NetworkService.available)
+            return qsTr("网络不可用");
+        if (NetworkService.wifiConnecting)
+            return NetworkService.connectTargetSsid || qsTr("正在连接");
+        if (NetworkService.connected)
+            return NetworkService.activeConnection;
+        return qsTr("未连接");
+    }
+
+    function networkStatusDetail() {
+        if (NetworkService.wifiConnecting)
+            return NetworkService.connectTargetSsid ? qsTr("正在连接") : "";
+        if (!NetworkService.connected)
+            return "";
+        if (NetworkService.activeNetwork && NetworkService.activeNetwork.type === "wired")
+            return qsTr("已连接，有线");
+        return NetworkService.activeWifi && NetworkService.activeWifi.isSecure
+            ? qsTr("已连接，安全") : qsTr("已连接，开放");
+    }
+
     Component.onCompleted: {
         SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive);
         if (WallpaperService.wallpapers.length === 0 && !WallpaperService.scanning)
@@ -170,9 +205,12 @@ Item {
                 distroId: SystemIdentityService.distroId
                 distroName: SystemIdentityService.distroName
                 uptimeText: SystemIdentityService.uptimeText
-                totalPackageCount: PackageService.totalPackages
-                pendingUpdateCount: PackageService.pendingUpdates
+                showNetworkStatus: true
+                networkIconName: root.networkStatusIcon()
+                networkStatusText: root.networkStatusText()
+                networkStatusDetail: root.networkStatusDetail()
                 onAvatarActivated: avatarPicker.openAt(avatarPicker.picturesDir)
+                onNetworkActivated: root.navigateRequested("network")
             }
 
             Item {

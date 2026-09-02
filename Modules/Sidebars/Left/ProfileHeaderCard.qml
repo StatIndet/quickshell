@@ -25,7 +25,7 @@ AccountProfileHeader {
     distroId: SystemIdentityService.distroId
     distroName: SystemIdentityService.distroName
     uptimeText: SystemIdentityService.uptimeText
-    showPackageStats: false
+    showNetworkStatus: false
     surfaceColor: BlurService.opaqueBackgroundColor(
         Appearance.m3colors.m3surfaceContainerHigh)
     avatarActionLabel: qsTr("打开设置中心")
