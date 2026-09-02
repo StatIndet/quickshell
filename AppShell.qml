@@ -6,6 +6,7 @@ import qs.Common
 import qs.Modules.Bar
 import qs.Modules.ControlCenter
 import qs.Modules.DesktopCards
+import qs.Modules.Debug
 import qs.Modules.Keystone
 import qs.Modules.Launcher
 import qs.Modules.Lock
@@ -53,6 +54,9 @@ Item {
     // Desktop cards are an independent bottom-layer subsystem.  It remains
     // loaded when the awww backend hides Clavis' wallpaper renderer.
     DesktopCardHost {
+    }
+
+    MapLibreProbeHost {
     }
 
     LazyLoader {
