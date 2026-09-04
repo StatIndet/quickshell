@@ -19,7 +19,7 @@ Item {
     property bool markerVisible: true
     property bool markerDraggable: false
     property real overlayOpacity: 0.72
-    property int overlayMaximumZoom: 7
+    property real overlayMaximumDisplayZoom: -1
     readonly property bool ready: mapView.map.mapReady
     readonly property string errorString: mapView.map.error !== 0 ? mapView.map.errorString : ""
 
@@ -109,17 +109,13 @@ Item {
 
             LayerParameter {
                 property string source: "clavis-weather-overlay-source"
-                // MapLibre Native Qt 3.0 drops source maxzoom, but forwards layer maxzoom.
-                property real maxzoom: root.overlayMaximumZoom + 1
+                // Qt's display zoom is one level above the native style zoom.
+                property real maxzoom: root.overlayMaximumDisplayZoom > 0 ? root.overlayMaximumDisplayZoom - 1 : 25
 
                 styleId: "clavis-weather-overlay-layer"
                 type: "raster"
                 paint: {
-                    "raster-opacity": root.overlayOpacity,
-                    "raster-opacity-transition": {
-                        "duration": 200,
-                        "delay": 0
-                    }
+                    "raster-opacity": root.overlayOpacity
                 }
             }
 

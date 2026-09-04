@@ -4550,27 +4550,27 @@
         <translation>经度必须在 -180 到 180 之间</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="120"/>
         <source>回到已选位置</source>
         <translation>回到已选位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="154"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="129"/>
         <source>展开地图</source>
         <translation>展开地图</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="154"/>
         <source>坐标</source>
         <translation>坐标</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="170"/>
         <source>保存位置</source>
         <translation>保存位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="176"/>
         <source>使用自动位置</source>
         <translation>使用自动位置</translation>
     </message>
@@ -4583,17 +4583,17 @@
         <translation>选择天气位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="114"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="90"/>
         <source>回到已选位置</source>
         <translation>回到已选位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="125"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="99"/>
         <source>关闭</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="140"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="112"/>
         <source>保存位置</source>
         <translation>保存位置</translation>
     </message>
@@ -9219,32 +9219,37 @@
 <context>
     <name>WeatherMapCard</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="147"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="158"/>
         <source>回到天气位置</source>
         <translation>回到天气位置</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="34"/>
         <source>当前使用 OpenFreeMap</source>
         <translation>当前使用 OpenFreeMap</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="35"/>
         <source>当前使用 RainViewer</source>
         <translation>当前使用 RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="36"/>
         <source>正在加载天气图层</source>
         <translation>正在加载天气图层</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="37"/>
         <source>天气图层暂时不可用</source>
         <translation>天气图层暂时不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="194"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="33"/>
+        <source>雷达已达到最大缩放级别</source>
+        <translation>雷达已达到最大缩放级别</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="205"/>
         <source>天气位置暂不可用</source>
         <translation>天气位置暂不可用</translation>
     </message>
@@ -9252,7 +9257,7 @@
 <context>
     <name>WeatherMapLayerSelector</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="25"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="26"/>
         <source>天气地图图层</source>
         <translation>天气地图图层</translation>
     </message>
@@ -9265,37 +9270,37 @@
         <translation>RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="14"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="16"/>
         <source>OpenWeather</source>
         <translation>OpenWeather</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="22"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="24"/>
         <source>雷达</source>
         <translation>雷达</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="27"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="29"/>
         <source>温度</source>
         <translation>温度</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="32"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="34"/>
         <source>降水</source>
         <translation>降水</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="37"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="39"/>
         <source>云量</source>
         <translation>云量</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="42"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="44"/>
         <source>风速</source>
         <translation>风速</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="47"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="49"/>
         <source>气压</source>
         <translation>气压</translation>
     </message>

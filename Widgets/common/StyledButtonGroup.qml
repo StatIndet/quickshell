@@ -26,14 +26,21 @@ RowLayout {
     property string tooltipRole: "tooltip"
     property string enabledRole: "enabled"
     property string widthRole: "width"
+    property color activeContainerColor: Appearance.colors.colPrimary
+    property color activeHoverContainerColor: Appearance.colors.colPrimaryHover
+    property color activePressedContainerColor: Appearance.colors.colPrimaryActive
+    property color inactiveContainerColor: Appearance.colors.colSecondaryContainer
+    property color inactiveHoverContainerColor: Appearance.colors.colSecondaryContainerHover
+    property color inactivePressedContainerColor: Appearance.colors.colSecondaryContainerActive
+    property color activeContentColor: Appearance.colors.colOnPrimary
+    property color inactiveContentColor: Appearance.colors.colOnSecondaryContainer
 
     signal valueSelected(var value, var modelData)
-
-    spacing: Metrics.spacingXS
 
     function roleValue(item, role, fallback) {
         if (item === undefined || item === null)
             return fallback;
+
         const value = item[role];
         return value === undefined || value === null ? fallback : value;
     }
@@ -68,25 +75,22 @@ RowLayout {
 
         const labelVisible = !iconOnly && textFor(item) !== "";
         const iconVisible = iconFor(item) !== "";
-        const contentWidth = (labelVisible ? labelWidth : 0)
-                           + (iconVisible ? iconWidth : 0)
-                           + (labelVisible && iconVisible ? contentSpacing : 0);
+        const contentWidth = (labelVisible ? labelWidth : 0) + (iconVisible ? iconWidth : 0) + (labelVisible && iconVisible ? contentSpacing : 0);
         return Math.max(buttonMinWidth, contentWidth + horizontalPadding);
     }
 
     function fillColor(active, hovered, pressed) {
         if (active)
-            return pressed ? Appearance.colors.colPrimaryActive
-                           : hovered ? Appearance.colors.colPrimaryHover
-                                     : Appearance.colors.colPrimary;
-        return pressed ? Appearance.colors.colSecondaryContainerActive
-                       : hovered ? Appearance.colors.colSecondaryContainerHover
-                                 : Appearance.colors.colSecondaryContainer;
+            return pressed ? activePressedContainerColor : hovered ? activeHoverContainerColor : activeContainerColor;
+
+        return pressed ? inactivePressedContainerColor : hovered ? inactiveHoverContainerColor : inactiveContainerColor;
     }
 
     function contentColor(active) {
-        return active ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSecondaryContainer;
+        return active ? activeContentColor : inactiveContentColor;
     }
+
+    spacing: Metrics.spacingXS
 
     Repeater {
         model: root.model
@@ -96,7 +100,6 @@ RowLayout {
 
             required property int index
             required property var modelData
-
             readonly property var segmentValue: root.valueFor(modelData, index)
             readonly property bool segmentEnabled: root.enabledFor(modelData)
             readonly property bool active: root.currentValue === segmentValue
@@ -104,43 +107,19 @@ RowLayout {
             readonly property bool last: index === root.model.length - 1
             readonly property bool pressed: segmentMouse.pressed && segmentEnabled
             readonly property bool hovered: segmentMouse.containsMouse && segmentEnabled
-            readonly property real leftRadius: (active
-                || (root.roundOuterSegments && first)
-                || (pressed && root.pressedExpansion > 0))
-                    ? root.edgeRadius : root.innerRadius
-            readonly property real rightRadius: (active
-                || (root.roundOuterSegments && last)
-                || (pressed && root.pressedExpansion > 0))
-                    ? root.edgeRadius : root.innerRadius
+            readonly property real leftRadius: (active || (root.roundOuterSegments && first) || (pressed && root.pressedExpansion > 0)) ? root.edgeRadius : root.innerRadius
+            readonly property real rightRadius: (active || (root.roundOuterSegments && last) || (pressed && root.pressedExpansion > 0)) ? root.edgeRadius : root.innerRadius
             readonly property color segmentColor: root.fillColor(active, hovered, pressed)
             readonly property color inkColor: root.contentColor(active)
             readonly property string labelText: root.textFor(modelData)
             readonly property string iconText: root.iconFor(modelData)
             readonly property string tooltipText: root.tooltipFor(modelData)
 
-            Layout.preferredWidth: root.segmentWidth(modelData,
-                label.implicitWidth, root.iconSize)
-                + (pressed ? root.pressedExpansion : 0)
+            Layout.preferredWidth: root.segmentWidth(modelData, label.implicitWidth, root.iconSize) + (pressed ? root.pressedExpansion : 0)
             Layout.preferredHeight: root.buttonHeight
             opacity: segmentEnabled ? 1 : 0.45
             scale: pressed && root.pressedExpansion > 0 ? 0.97 : 1
             z: pressed ? 3 : active ? 2 : hovered ? 1 : 0
-
-            Behavior on Layout.preferredWidth {
-                NumberAnimation {
-                    duration: Appearance.animation.elementResize.duration
-                    easing.type: Appearance.animation.elementResize.type
-                    easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
-                }
-            }
-
-            Behavior on scale {
-                NumberAnimation {
-                    duration: Appearance.animation.clickBounce.duration
-                    easing.type: Appearance.animation.clickBounce.type
-                    easing.bezierCurve: Appearance.animation.clickBounce.bezierCurve
-                }
-            }
 
             Rectangle {
                 anchors.fill: parent
@@ -157,6 +136,7 @@ RowLayout {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
+
                 }
 
                 Behavior on color {
@@ -165,6 +145,7 @@ RowLayout {
                         easing.type: Appearance.animation.expressiveEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                     }
+
                 }
 
                 Behavior on topRightRadius {
@@ -173,6 +154,7 @@ RowLayout {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
+
                 }
 
                 Behavior on bottomLeftRadius {
@@ -181,6 +163,7 @@ RowLayout {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
+
                 }
 
                 Behavior on bottomRightRadius {
@@ -189,7 +172,9 @@ RowLayout {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
+
                 }
+
             }
 
             Row {
@@ -210,7 +195,9 @@ RowLayout {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
+
                     }
+
                 }
 
                 Text {
@@ -230,8 +217,11 @@ RowLayout {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
+
                     }
+
                 }
+
             }
 
             MouseArea {
@@ -249,6 +239,27 @@ RowLayout {
                 extraVisibleCondition: segmentMouse.containsMouse && segment.tooltipText !== ""
                 text: segment.tooltipText
             }
+
+            Behavior on Layout.preferredWidth {
+                NumberAnimation {
+                    duration: Appearance.animation.elementResize.duration
+                    easing.type: Appearance.animation.elementResize.type
+                    easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
+                }
+
+            }
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: Appearance.animation.clickBounce.duration
+                    easing.type: Appearance.animation.clickBounce.type
+                    easing.bezierCurve: Appearance.animation.clickBounce.bezierCurve
+                }
+
+            }
+
         }
+
     }
+
 }

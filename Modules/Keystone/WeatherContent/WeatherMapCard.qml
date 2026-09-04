@@ -16,6 +16,7 @@ Rectangle {
     property bool showLayerSelector: true
     property string selectedLayer: "radar"
     property bool mapTilerRuntimeFallback: false
+    property real currentMapZoom: 6
     readonly property string preferredBase: UiPreferences.weatherMapBaseProvider
     readonly property string preferredOverlay: UiPreferences.weatherMapOverlayProvider
     readonly property bool mapTilerAvailable: WeatherMapPlugin.mapTilerStatus === "ready" || WeatherMapPlugin.mapTilerStatus === "loading"
@@ -27,6 +28,13 @@ Rectangle {
     readonly property string overlayTileUrl: effectiveOverlay === "rainviewer" ? WeatherMapPlugin.radarTileUrl : WeatherMapPlugin.openWeatherTileUrl(selectedLayer)
     readonly property bool overlayLoading: effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarStatus === "loading"
     readonly property bool overlayFailed: effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarStatus !== "idle" && WeatherMapPlugin.radarStatus !== "loading" && WeatherMapPlugin.radarStatus !== "ready"
+    readonly property real rainViewerMaximumDisplayZoom: WeatherMapProviders.provider("rainviewer").maximumDisplayZoom
+    readonly property bool rainViewerOutOfRange: effectiveOverlay === "rainviewer" && currentMapZoom > rainViewerMaximumDisplayZoom
+    readonly property string radarMaximumZoomText: qsTranslate("WeatherMapCard", "雷达已达到最大缩放级别")
+    readonly property string openFreeMapFallbackText: qsTranslate("WeatherMapCard", "当前使用 OpenFreeMap")
+    readonly property string rainViewerFallbackText: qsTranslate("WeatherMapCard", "当前使用 RainViewer")
+    readonly property string overlayLoadingText: qsTranslate("WeatherMapCard", "正在加载天气图层")
+    readonly property string overlayUnavailableText: qsTranslate("WeatherMapCard", "天气图层暂时不可用")
 
     function refreshMap() {
         if (root.effectiveOverlay === "rainviewer")
@@ -106,7 +114,10 @@ Rectangle {
         markerVisible: root.locationAvailable
         overlayTileUrl: root.overlayTileUrl
         overlayOpacity: 0.72
-        overlayMaximumZoom: root.effectiveOverlay === "rainviewer" ? 7 : 19
+        overlayMaximumDisplayZoom: root.effectiveOverlay === "rainviewer" ? root.rainViewerMaximumDisplayZoom : -1
+        onCameraMoved: (latitudeValue, longitudeValue, zoom, bearingValue, tiltValue) => {
+            root.currentMapZoom = zoom;
+        }
         onMapStateChanged: {
             if (mapState === "error" && root.effectiveBase === "maptiler")
                 root.mapTilerRuntimeFallback = true;
@@ -130,7 +141,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: Metrics.spacingM
-        visible: root.locationAvailable && root.overlayTileUrl !== ""
+        visible: root.locationAvailable && root.overlayTileUrl !== "" && !root.rainViewerOutOfRange
         providerId: root.effectiveOverlay
         mode: root.selectedLayer
         updatedAt: root.effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarFrameTime > 0 ? new Date(WeatherMapPlugin.radarFrameTime * 1000) : new Date(NaN)
@@ -145,34 +156,24 @@ Rectangle {
         visible: root.locationAvailable
         iconName: "my_location"
         accessibleName: qsTr("回到天气位置")
-        variant: "filled"
-        normalContainerColor: "#D9111111"
-        normalHoverStateLayerColor: "#ED111111"
-        normalPressedStateLayerColor: "#FF111111"
-        iconColor: "white"
+        iconColor: "#FF111111"
+        normalHoverStateLayerColor: "#14111111"
+        normalPressedStateLayerColor: "#1F111111"
         onClicked: map.recenter(root.latitude, root.longitude, 6)
     }
 
-    Rectangle {
+    Text {
+        id: overlayStatus
+
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: Metrics.spacingM
-        width: overlayStatus.implicitWidth + Metrics.spacingM * 2
-        height: overlayStatus.implicitHeight + Metrics.spacingS * 2
-        radius: Appearance.rounding.full
-        visible: root.overlayLoading || root.overlayFailed || root.preferredBase !== root.effectiveBase || root.preferredOverlay !== root.effectiveOverlay
-        color: Appearance.colors.colSurfaceContainerHighest
-
-        Text {
-            id: overlayStatus
-
-            anchors.centerIn: parent
-            text: root.preferredBase !== root.effectiveBase ? qsTr("当前使用 OpenFreeMap") : root.preferredOverlay !== root.effectiveOverlay ? qsTr("当前使用 RainViewer") : root.overlayLoading ? qsTr("正在加载天气图层") : qsTr("天气图层暂时不可用")
-            color: Appearance.colors.colOnSurfaceVariant
-            font.family: Typography.labelSmall.family
-            font.pixelSize: Typography.labelSmall.pixelSize
-        }
-
+        visible: root.rainViewerOutOfRange || root.overlayLoading || root.overlayFailed || root.preferredBase !== root.effectiveBase || root.preferredOverlay !== root.effectiveOverlay
+        text: root.rainViewerOutOfRange ? root.radarMaximumZoomText : root.preferredBase !== root.effectiveBase ? root.openFreeMapFallbackText : root.preferredOverlay !== root.effectiveOverlay ? root.rainViewerFallbackText : root.overlayLoading ? root.overlayLoadingText : root.overlayUnavailableText
+        color: "#FF111111"
+        font.family: Typography.labelMedium.family
+        font.pixelSize: Typography.labelMedium.pixelSize
+        font.weight: Typography.labelMedium.weight
     }
 
     Text {
@@ -182,7 +183,7 @@ Rectangle {
         anchors.bottomMargin: Metrics.spacingM + Metrics.controlHeightM + 4
         visible: root.effectiveOverlay === "rainviewer"
         text: "Weather data by RainViewer"
-        color: Appearance.colors.colOnImage
+        color: "#B3111111"
         font.family: Typography.labelSmall.family
         font.pixelSize: 9
     }

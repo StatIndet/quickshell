@@ -16,7 +16,7 @@ Item {
     property bool markerDraggable: false
     property string overlayTileUrl: ""
     property real overlayOpacity: 0.72
-    property int overlayMaximumZoom: 7
+    property real overlayMaximumDisplayZoom: -1
     property string mapState: "inactive"
     property string errorMessage: ""
     property var styleRequest: null
@@ -67,7 +67,7 @@ Item {
                 renderer = "MapLibreWeatherMap.qml";
                 properties.overlayTileUrl = root.overlayTileUrl;
                 properties.overlayOpacity = root.overlayOpacity;
-                properties.overlayMaximumZoom = root.overlayMaximumZoom;
+                properties.overlayMaximumDisplayZoom = root.overlayMaximumDisplayZoom;
             }
             mapLoader.setSource(Qt.resolvedUrl(renderer), properties);
             mapLoader.active = true;

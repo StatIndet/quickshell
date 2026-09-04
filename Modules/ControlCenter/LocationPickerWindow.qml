@@ -17,9 +17,9 @@ FloatingWindow {
     property real markerLongitude: 0
     property real zoomLevel: 12
     property real bearing: 0
-    property string viewMode: "2d"
+    property real tilt: 0
 
-    signal cameraChanged(real latitude, real longitude, real zoom, real bearing)
+    signal cameraChanged(real latitude, real longitude, real zoom, real bearing, real tilt)
     signal markerChanged(real latitude, real longitude)
     signal saveRequested()
     signal dismissed()
@@ -70,31 +70,13 @@ FloatingWindow {
             markerVisible: true
             markerDraggable: true
             zoomLevel: root.zoomLevel
-            bearing: root.viewMode === "3d" ? root.bearing : 0
-            tilt: root.viewMode === "3d" ? 50 : 0
+            bearing: root.bearing
+            tilt: root.tilt
             onCameraMoved: (latitudeValue, longitudeValue, zoom, bearingValue, tiltValue) => {
-                root.cameraChanged(latitudeValue, longitudeValue, zoom, bearingValue);
+                root.cameraChanged(latitudeValue, longitudeValue, zoom, bearingValue, tiltValue);
             }
             onMarkerMoved: (latitudeValue, longitudeValue) => {
                 root.markerChanged(latitudeValue, longitudeValue);
-            }
-        }
-
-        StyledButtonGroup {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.margins: Metrics.spacingL
-            model: [{
-                "value": "2d",
-                "label": "2D"
-            }, {
-                "value": "3d",
-                "label": "3D"
-            }]
-            currentValue: root.viewMode
-            buttonMinWidth: 58
-            onValueSelected: (value) => {
-                return root.viewMode = value;
             }
         }
 

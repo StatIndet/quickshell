@@ -11,13 +11,13 @@ ColumnLayout {
 
     property var parentModal: null
     property bool active: visible
-    property string viewMode: "2d"
     property real candidateLatitude: Number(WeatherPlugin.latitude)
     property real candidateLongitude: Number(WeatherPlugin.longitude)
     property real cameraLatitude: candidateLatitude
     property real cameraLongitude: candidateLongitude
     property real mapZoom: 12
     property real mapBearing: 35
+    property real mapTilt: 0
     property string coordinateError: ""
     readonly property bool expanded: expandedWindow.visible
 
@@ -96,41 +96,18 @@ ColumnLayout {
             markerVisible: true
             markerDraggable: true
             zoomLevel: root.mapZoom
-            bearing: root.viewMode === "3d" ? root.mapBearing : 0
-            tilt: root.viewMode === "3d" ? 50 : 0
+            bearing: root.mapBearing
+            tilt: root.mapTilt
             onCameraMoved: (latitudeValue, longitudeValue, zoom, bearingValue, tiltValue) => {
                 root.mapZoom = zoom;
                 root.cameraLatitude = latitudeValue;
                 root.cameraLongitude = longitudeValue;
-                if (root.viewMode === "3d")
-                    root.mapBearing = bearingValue;
-
+                root.mapBearing = bearingValue;
+                root.mapTilt = tiltValue;
             }
             onMarkerMoved: (latitudeValue, longitudeValue) => {
                 return root.setCandidate(latitudeValue, longitudeValue);
             }
-        }
-
-        RowLayout {
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.margins: Metrics.spacingM
-
-            StyledButtonGroup {
-                model: [{
-                    "value": "2d",
-                    "label": "2D"
-                }, {
-                    "value": "3d",
-                    "label": "3D"
-                }]
-                currentValue: root.viewMode
-                buttonMinWidth: 52
-                onValueSelected: (value) => {
-                    return root.viewMode = value;
-                }
-            }
-
         }
 
         RowLayout {
@@ -190,9 +167,21 @@ ColumnLayout {
         }
 
         ActionButton {
+            id: saveLocationButton
+
             text: qsTr("保存位置")
             iconName: "save"
             onClicked: root.saveCoordinate()
+
+            BrailleSpinner {
+                anchors.right: parent.left
+                anchors.rightMargin: Metrics.spacingS
+                anchors.verticalCenter: parent.verticalCenter
+                visible: WeatherPlugin.loading
+                running: visible
+                dotColor: Appearance.colors.colPrimary
+            }
+
         }
 
         ActionButton {
@@ -200,11 +189,6 @@ ColumnLayout {
             iconName: "my_location"
             enabled: WeatherPlugin.hasManualLocation && !WeatherPlugin.loading
             onClicked: root.useAutomaticLocation()
-        }
-
-        MaterialLoadingIndicator {
-            visible: WeatherPlugin.loading
-            running: visible
         }
 
     }
@@ -235,12 +219,11 @@ ColumnLayout {
         markerLongitude: root.candidateLongitude
         zoomLevel: root.mapZoom
         bearing: root.mapBearing
-        viewMode: root.viewMode
-        onCameraChanged: (latitudeValue, longitudeValue, zoom, bearingValue) => {
+        tilt: root.mapTilt
+        onCameraChanged: (latitudeValue, longitudeValue, zoom, bearingValue, tiltValue) => {
             root.mapZoom = zoom;
-            if (root.viewMode === "3d")
-                root.mapBearing = bearingValue;
-
+            root.mapBearing = bearingValue;
+            root.mapTilt = tiltValue;
             root.cameraLatitude = latitudeValue;
             root.cameraLongitude = longitudeValue;
         }
@@ -248,7 +231,6 @@ ColumnLayout {
             return root.setCandidate(latitudeValue, longitudeValue);
         }
         onSaveRequested: root.saveCoordinate()
-        onViewModeChanged: root.viewMode = expandedWindow.viewMode
     }
 
 }

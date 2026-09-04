@@ -11,7 +11,15 @@ Rectangle {
     property date updatedAt
     property bool stale: false
     property Item backdropSource: null
-    property rect backdropRect: Qt.rect(0, 0, width, height)
+    readonly property point backdropOrigin: {
+        root.x;
+        root.y;
+        if (!root.backdropSource)
+            return Qt.point(0, 0);
+
+        return root.backdropSource.mapFromItem(root, 0, 0);
+    }
+    readonly property rect backdropRect: Qt.rect(backdropOrigin.x, backdropOrigin.y, width, height)
     property bool backdropLive: true
 
     function colorsForMode() {
@@ -22,10 +30,10 @@ Rectangle {
             return ["#6e40aa", "#3b82f6", "#55c667", "#fde725", "#ef4444"];
 
         if (mode === "precipitation")
-            return ["#dbeafe", "#60a5fa", "#2563eb", "#7c3aed"];
+            return ["#dbeafe", "#93c5fd", "#60a5fa", "#2563eb", "#7c3aed"];
 
         if (mode === "clouds")
-            return ["#eef2f6", "#b9c3cf", "#66717f"];
+            return ["#eef2f6", "#d9e0e8", "#b9c3cf", "#8e99a6", "#66717f"];
 
         if (mode === "wind")
             return ["#dbeafe", "#5eead4", "#facc15", "#f97316", "#dc2626"];
@@ -164,40 +172,39 @@ Rectangle {
 
         }
 
-        Canvas {
-            id: colorScale
-
+        Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 8
-            antialiasing: true
-            onPaint: {
-                const ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                const colors = root.colorsForMode();
-                const gradient = ctx.createLinearGradient(0, 0, width, 0);
-                for (let index = 0; index < colors.length; ++index) {
-                    gradient.addColorStop(index / Math.max(1, colors.length - 1), colors[index]);
-                }
-                const radius = Math.min(height / 2, width / 2);
-                ctx.beginPath();
-                ctx.moveTo(radius, 0);
-                ctx.lineTo(width - radius, 0);
-                ctx.arc(width - radius, radius, radius, -Math.PI / 2, Math.PI / 2, false);
-                ctx.lineTo(radius, height);
-                ctx.arc(radius, radius, radius, Math.PI / 2, Math.PI * 1.5, false);
-                ctx.closePath();
-                ctx.fillStyle = gradient;
-                ctx.fill();
-            }
-            onWidthChanged: requestPaint()
-            onHeightChanged: requestPaint()
+            radius: height / 2
 
-            Connections {
-                function onModeChanged() {
-                    colorScale.requestPaint();
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+
+                GradientStop {
+                    position: 0
+                    color: root.colorsForMode()[0]
                 }
 
-                target: root
+                GradientStop {
+                    position: 0.25
+                    color: root.colorsForMode()[1]
+                }
+
+                GradientStop {
+                    position: 0.5
+                    color: root.colorsForMode()[2]
+                }
+
+                GradientStop {
+                    position: 0.75
+                    color: root.colorsForMode()[3]
+                }
+
+                GradientStop {
+                    position: 1
+                    color: root.colorsForMode()[4]
+                }
+
             }
 
         }

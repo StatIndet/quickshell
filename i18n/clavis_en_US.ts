@@ -4550,27 +4550,27 @@ Scroll to adjust</translation>
         <translation>Longitude must be between -180 and 180</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="120"/>
         <source>回到已选位置</source>
         <translation>Return to saved location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="154"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="129"/>
         <source>展开地图</source>
         <translation>Expand map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="154"/>
         <source>坐标</source>
         <translation>Coordinates</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="170"/>
         <source>保存位置</source>
         <translation>Save location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="176"/>
         <source>使用自动位置</source>
         <translation>Use automatic location</translation>
     </message>
@@ -4583,17 +4583,17 @@ Scroll to adjust</translation>
         <translation>Choose weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="114"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="90"/>
         <source>回到已选位置</source>
         <translation>Return to saved location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="125"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="99"/>
         <source>关闭</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="140"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="112"/>
         <source>保存位置</source>
         <translation>Save location</translation>
     </message>
@@ -9220,32 +9220,37 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherMapCard</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="147"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="158"/>
         <source>回到天气位置</source>
         <translation>Return to weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="34"/>
         <source>当前使用 OpenFreeMap</source>
         <translation>Using OpenFreeMap</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="35"/>
         <source>当前使用 RainViewer</source>
         <translation>Using RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="36"/>
         <source>正在加载天气图层</source>
         <translation>Loading weather layer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="37"/>
         <source>天气图层暂时不可用</source>
         <translation>Weather layer temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="194"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="33"/>
+        <source>雷达已达到最大缩放级别</source>
+        <translation>Radar reached maximum zoom</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="205"/>
         <source>天气位置暂不可用</source>
         <translation>Weather location temporarily unavailable</translation>
     </message>
@@ -9253,7 +9258,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherMapLayerSelector</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="25"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="26"/>
         <source>天气地图图层</source>
         <translation>Weather map layer</translation>
     </message>
@@ -9266,37 +9271,37 @@ Scroll to adjust; click to open sound</translation>
         <translation>RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="14"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="16"/>
         <source>OpenWeather</source>
         <translation>OpenWeather</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="22"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="24"/>
         <source>雷达</source>
         <translation>Radar</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="27"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="29"/>
         <source>温度</source>
         <translation>Temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="32"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="34"/>
         <source>降水</source>
         <translation>Precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="37"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="39"/>
         <source>云量</source>
         <translation>Cloud cover</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="42"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="44"/>
         <source>风速</source>
         <translation>Wind speed</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/WeatherMapProviders.qml" line="47"/>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="49"/>
         <source>气压</source>
         <translation>Pressure</translation>
     </message>

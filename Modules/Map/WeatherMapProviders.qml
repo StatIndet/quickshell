@@ -7,6 +7,8 @@ QtObject {
             "id": "rainviewer",
             "label": qsTr("RainViewer"),
             "requiresKey": false,
+            "maximumTileZoom": 7,
+            "maximumDisplayZoom": 7.5,
             "supportedLayers": ["radar"]
         },
         "openweather": {
