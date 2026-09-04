@@ -9374,52 +9374,62 @@
 <context>
     <name>WeatherMetricTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="39"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="36"/>
+        <source>标准</source>
+        <translation>標準</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="36"/>
+        <source>预警水平</source>
+        <translation>預警水平</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="49"/>
         <source>昨天</source>
         <translation>昨天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="42"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="52"/>
         <source>今天</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="45"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="55"/>
         <source>明天</source>
         <translation>明天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周日</source>
         <translation>週日</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周一</source>
         <translation>週一</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周二</source>
         <translation>週二</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周三</source>
         <translation>週三</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周四</source>
         <translation>週四</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周五</source>
         <translation>週五</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
         <source>周六</source>
         <translation>週六</translation>
     </message>
