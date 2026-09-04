@@ -20,6 +20,7 @@ FloatingWindow {
     property string viewMode: "2d"
 
     signal cameraChanged(real latitude, real longitude, real zoom, real bearing)
+    signal markerChanged(real latitude, real longitude)
     signal saveRequested()
     signal dismissed()
 
@@ -64,25 +65,19 @@ FloatingWindow {
             styleUrl: "https://tiles.openfreemap.org/styles/liberty"
             centerLatitude: root.centerLatitude
             centerLongitude: root.centerLongitude
-            markerVisible: false
+            markerLatitude: root.markerLatitude
+            markerLongitude: root.markerLongitude
+            markerVisible: true
+            markerDraggable: true
             zoomLevel: root.zoomLevel
             bearing: root.viewMode === "3d" ? root.bearing : 0
             tilt: root.viewMode === "3d" ? 50 : 0
             onCameraMoved: (latitudeValue, longitudeValue, zoom, bearingValue, tiltValue) => {
-                root.zoomLevel = zoom;
-                root.centerLatitude = latitudeValue;
-                root.centerLongitude = longitudeValue;
-                if (root.viewMode === "3d")
-                    root.bearing = bearingValue;
-
                 root.cameraChanged(latitudeValue, longitudeValue, zoom, bearingValue);
             }
-        }
-
-        MapCenterPin {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: parent.height / 2 - height + 3
-            z: 3
+            onMarkerMoved: (latitudeValue, longitudeValue) => {
+                root.markerChanged(latitudeValue, longitudeValue);
+            }
         }
 
         StyledButtonGroup {
@@ -113,6 +108,8 @@ FloatingWindow {
                 accessibleName: qsTr("回到已选位置")
                 variant: "filled"
                 normalContainerColor: "#D9111111"
+                normalHoverStateLayerColor: "#ED111111"
+                normalPressedStateLayerColor: "#FF111111"
                 iconColor: "white"
                 onClicked: map.recenter(root.markerLatitude, root.markerLongitude, root.zoomLevel)
             }
@@ -122,6 +119,8 @@ FloatingWindow {
                 accessibleName: qsTr("关闭")
                 variant: "filled"
                 normalContainerColor: "#D9111111"
+                normalHoverStateLayerColor: "#ED111111"
+                normalPressedStateLayerColor: "#FF111111"
                 iconColor: "white"
                 onClicked: root.dismiss()
             }
@@ -150,7 +149,7 @@ FloatingWindow {
                 id: coordinateLabel
 
                 anchors.centerIn: parent
-                text: Number(root.centerLatitude).toFixed(6) + ", " + Number(root.centerLongitude).toFixed(6)
+                text: Number(root.markerLatitude).toFixed(6) + ", " + Number(root.markerLongitude).toFixed(6)
                 color: "white"
                 font.family: Typography.labelMedium.family
                 font.pixelSize: Typography.labelMedium.pixelSize

@@ -16,12 +16,14 @@ Item {
     property real bearing: 0
     property real tilt: 0
     property bool markerVisible: true
+    property bool markerDraggable: false
     readonly property bool ready: mapView.map.mapReady
     readonly property string errorString: mapView.map.error !== 0 ? mapView.map.errorString : ""
 
     signal mapReady()
     signal mapFailed(string message)
     signal coordinateTapped(real latitude, real longitude)
+    signal markerMoved(real latitude, real longitude)
     signal cameraMoved(real latitude, real longitude, real zoom, real bearing, real tilt)
 
     function recenter(latitudeValue, longitudeValue, zoomValue) {
@@ -29,6 +31,19 @@ Item {
         if (zoomValue !== undefined)
             mapView.map.zoomLevel = zoomValue;
 
+    }
+
+    function moveMarkerToMapPoint(mapPoint) {
+        const coordinate = mapView.map.toCoordinate(mapPoint, false);
+        if (!coordinate.isValid)
+            return ;
+
+        root.markerMoved(coordinate.latitude, coordinate.longitude);
+    }
+
+    function nudgeMarker(horizontalPixels, verticalPixels) {
+        const markerPoint = mapView.map.fromCoordinate(QtPositioning.coordinate(root.markerLatitude, root.markerLongitude), false);
+        root.moveMarkerToMapPoint(Qt.point(markerPoint.x + horizontalPixels, markerPoint.y + verticalPixels));
     }
 
     Component.onCompleted: {
@@ -60,6 +75,20 @@ Item {
         map.tilt: root.tilt
         map.copyrightsVisible: true
         map.color: Appearance.colors.colSurfaceContainerHigh
+
+        TapHandler {
+            enabled: root.markerDraggable
+            acceptedButtons: Qt.LeftButton
+            gesturePolicy: TapHandler.DragThreshold
+            onTapped: (eventPoint) => {
+                const coordinate = mapView.map.toCoordinate(eventPoint.position, false);
+                if (!coordinate.isValid)
+                    return ;
+
+                root.coordinateTapped(coordinate.latitude, coordinate.longitude);
+                root.markerMoved(coordinate.latitude, coordinate.longitude);
+            }
+        }
 
         Connections {
             function onMapReadyChanged() {
@@ -102,16 +131,20 @@ Item {
         parent: mapView.map
         visible: root.markerVisible
         coordinate: QtPositioning.coordinate(root.markerLatitude, root.markerLongitude)
-        anchorPoint: Qt.point(11, 11)
+        anchorPoint: Qt.point(24, 24)
         zoomLevel: 0
 
-        sourceItem: Rectangle {
-            width: 22
-            height: 22
-            radius: Appearance.rounding.full
-            color: Appearance.colors.colPrimary
-            border.width: 3
-            border.color: Appearance.colors.colOnPrimary
+        sourceItem: MapCoordinateMarker {
+            id: markerVisual
+
+            draggable: root.markerDraggable
+            onDragPositionChanged: (localX, localY) => {
+                const mapPoint = mapView.map.mapFromItem(markerVisual, localX, localY);
+                root.moveMarkerToMapPoint(mapPoint);
+            }
+            onNudgeRequested: (horizontalPixels, verticalPixels) => {
+                return root.nudgeMarker(horizontalPixels, verticalPixels);
+            }
         }
 
     }

@@ -91,7 +91,10 @@ ColumnLayout {
             styleUrl: "https://tiles.openfreemap.org/styles/liberty"
             centerLatitude: root.cameraLatitude
             centerLongitude: root.cameraLongitude
-            markerVisible: false
+            markerLatitude: root.candidateLatitude
+            markerLongitude: root.candidateLongitude
+            markerVisible: true
+            markerDraggable: true
             zoomLevel: root.mapZoom
             bearing: root.viewMode === "3d" ? root.mapBearing : 0
             tilt: root.viewMode === "3d" ? 50 : 0
@@ -99,17 +102,13 @@ ColumnLayout {
                 root.mapZoom = zoom;
                 root.cameraLatitude = latitudeValue;
                 root.cameraLongitude = longitudeValue;
-                root.setCandidate(latitudeValue, longitudeValue);
                 if (root.viewMode === "3d")
                     root.mapBearing = bearingValue;
 
             }
-        }
-
-        MapCenterPin {
-            anchors.horizontalCenter: parent.horizontalCenter
-            y: parent.height / 2 - height + 3
-            z: 3
+            onMarkerMoved: (latitudeValue, longitudeValue) => {
+                return root.setCandidate(latitudeValue, longitudeValue);
+            }
         }
 
         RowLayout {
@@ -144,8 +143,10 @@ ColumnLayout {
                 accessibleName: qsTr("回到已选位置")
                 variant: "filled"
                 normalContainerColor: "#D9111111"
+                normalHoverStateLayerColor: "#ED111111"
+                normalPressedStateLayerColor: "#FF111111"
                 iconColor: "white"
-                onClicked: embeddedMap.recenter(Number(WeatherPlugin.latitude), Number(WeatherPlugin.longitude), root.mapZoom)
+                onClicked: embeddedMap.recenter(root.candidateLatitude, root.candidateLongitude, root.mapZoom)
             }
 
             IconButton {
@@ -153,6 +154,8 @@ ColumnLayout {
                 accessibleName: qsTr("展开地图")
                 variant: "filled"
                 normalContainerColor: "#D9111111"
+                normalHoverStateLayerColor: "#ED111111"
+                normalPressedStateLayerColor: "#FF111111"
                 iconColor: "white"
                 onClicked: expandedWindow.showWindow()
             }
@@ -232,17 +235,21 @@ ColumnLayout {
         parentModal: root.parentModal
         centerLatitude: root.cameraLatitude
         centerLongitude: root.cameraLongitude
-        markerLatitude: Number(WeatherPlugin.latitude)
-        markerLongitude: Number(WeatherPlugin.longitude)
+        markerLatitude: root.candidateLatitude
+        markerLongitude: root.candidateLongitude
         zoomLevel: root.mapZoom
         bearing: root.mapBearing
         viewMode: root.viewMode
         onCameraChanged: (latitudeValue, longitudeValue, zoom, bearingValue) => {
             root.mapZoom = zoom;
-            root.mapBearing = bearingValue;
+            if (root.viewMode === "3d")
+                root.mapBearing = bearingValue;
+
             root.cameraLatitude = latitudeValue;
             root.cameraLongitude = longitudeValue;
-            root.setCandidate(latitudeValue, longitudeValue);
+        }
+        onMarkerChanged: (latitudeValue, longitudeValue) => {
+            return root.setCandidate(latitudeValue, longitudeValue);
         }
         onSaveRequested: root.saveCoordinate()
         onViewModeChanged: root.viewMode = expandedWindow.viewMode

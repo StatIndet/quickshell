@@ -120,7 +120,11 @@ QString WeatherMapProvider::openWeatherTileUrl(const QString &layerId) const
     QUrlQuery query;
     query.addQueryItem(QStringLiteral("appid"), QString::fromUtf8(m_apiKey));
     url.setQuery(query);
-    return url.toString(QUrl::FullyEncoded);
+    QString tileTemplate = url.toString(QUrl::FullyEncoded);
+    tileTemplate.replace(QStringLiteral("%7Bz%7D"), QStringLiteral("{z}"));
+    tileTemplate.replace(QStringLiteral("%7Bx%7D"), QStringLiteral("{x}"));
+    tileTemplate.replace(QStringLiteral("%7By%7D"), QStringLiteral("{y}"));
+    return tileTemplate;
 }
 
 void WeatherMapProvider::validateMapTilerStyle(const QString &styleId)

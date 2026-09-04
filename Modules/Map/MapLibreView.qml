@@ -13,6 +13,7 @@ Item {
     property real bearing: 0
     property real tilt: 0
     property bool markerVisible: true
+    property bool markerDraggable: false
     property string overlayTileUrl: ""
     property real overlayOpacity: 0.72
     property int overlayMaximumZoom: 7
@@ -22,6 +23,7 @@ Item {
     readonly property bool ready: mapState === "ready"
 
     signal coordinateTapped(real latitude, real longitude)
+    signal markerMoved(real latitude, real longitude)
     signal cameraMoved(real latitude, real longitude, real zoom, real bearing, real tilt)
 
     function reload() {
@@ -57,7 +59,8 @@ Item {
                 "zoomLevel": root.zoomLevel,
                 "bearing": root.bearing,
                 "tilt": root.tilt,
-                "markerVisible": root.markerVisible
+                "markerVisible": root.markerVisible,
+                "markerDraggable": root.markerDraggable
             };
             let renderer = "MapLibreMap.qml";
             if (root.overlayTileUrl !== "") {
@@ -133,6 +136,7 @@ Item {
                 });
                 item.mapFailed.connect(root.fail);
                 item.coordinateTapped.connect(root.coordinateTapped);
+                item.markerMoved.connect(root.markerMoved);
                 item.cameraMoved.connect(root.cameraMoved);
                 if (item.ready)
                     root.mapState = "ready";
@@ -195,6 +199,13 @@ Item {
         target: mapLoader.item
         property: "markerVisible"
         value: root.markerVisible
+        when: mapLoader.status === Loader.Ready
+    }
+
+    Binding {
+        target: mapLoader.item
+        property: "markerDraggable"
+        value: root.markerDraggable
         when: mapLoader.status === Loader.Ready
     }
 

@@ -17,6 +17,7 @@ Item {
     property real bearing: 0
     property real tilt: 0
     property bool markerVisible: true
+    property bool markerDraggable: false
     property real overlayOpacity: 0.72
     property int overlayMaximumZoom: 7
     readonly property bool ready: mapView.map.mapReady
@@ -25,6 +26,7 @@ Item {
     signal mapReady()
     signal mapFailed(string message)
     signal coordinateTapped(real latitude, real longitude)
+    signal markerMoved(real latitude, real longitude)
     signal cameraMoved(real latitude, real longitude, real zoom, real bearing, real tilt)
 
     function recenter(latitudeValue, longitudeValue, zoomValue) {
@@ -100,7 +102,6 @@ Item {
             SourceParameter {
                 property var tiles: [root.overlayTileUrl]
                 property int tileSize: 256
-                property int maxzoom: root.overlayMaximumZoom
 
                 styleId: "clavis-weather-overlay-source"
                 type: "raster"
@@ -108,6 +109,8 @@ Item {
 
             LayerParameter {
                 property string source: "clavis-weather-overlay-source"
+                // MapLibre Native Qt 3.0 drops source maxzoom, but forwards layer maxzoom.
+                property real maxzoom: root.overlayMaximumZoom + 1
 
                 styleId: "clavis-weather-overlay-layer"
                 type: "raster"
@@ -128,16 +131,10 @@ Item {
         parent: mapView.map
         visible: root.markerVisible
         coordinate: QtPositioning.coordinate(root.markerLatitude, root.markerLongitude)
-        anchorPoint: Qt.point(11, 11)
+        anchorPoint: Qt.point(24, 24)
         zoomLevel: 0
 
-        sourceItem: Rectangle {
-            width: 22
-            height: 22
-            radius: Appearance.rounding.full
-            color: Appearance.colors.colPrimary
-            border.width: 3
-            border.color: Appearance.colors.colOnPrimary
+        sourceItem: MapCoordinateMarker {
         }
 
     }

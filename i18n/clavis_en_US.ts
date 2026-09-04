@@ -4475,42 +4475,27 @@ Scroll to adjust</translation>
         <translation>Weather temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="153"/>
-        <source>侧边栏、灵动岛与锁屏天气的温度单位</source>
-        <translation>Temperature unit for sidebar, Dynamic Island, and lock-screen weather</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="174"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="173"/>
         <source>硬件温度</source>
         <translation>Hardware temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="175"/>
-        <source>CPU、GPU 与系统监测组件的温度单位</source>
-        <translation>Temperature unit for CPU, GPU, and system monitors</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="199"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="197"/>
         <source>时间与日期</source>
         <translation>Time &amp; date</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="202"/>
         <source>时钟格式</source>
         <translation>Clock format</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="205"/>
-        <source>用于灵动岛、侧边栏与锁屏时钟</source>
-        <translation>Used by Dynamic Island, sidebar, and lock-screen clocks</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="210"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="207"/>
         <source>24 小时</source>
         <translation>24-hour</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="213"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="210"/>
         <source>12 小时</source>
         <translation>12-hour</translation>
     </message>
@@ -4565,27 +4550,27 @@ Scroll to adjust</translation>
         <translation>Longitude must be between -180 and 180</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="144"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="143"/>
         <source>回到已选位置</source>
         <translation>Return to saved location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="153"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="154"/>
         <source>展开地图</source>
         <translation>Expand map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="181"/>
         <source>坐标</source>
         <translation>Coordinates</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="194"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="197"/>
         <source>保存位置</source>
         <translation>Save location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="203"/>
         <source>使用自动位置</source>
         <translation>Use automatic location</translation>
     </message>
@@ -4593,22 +4578,22 @@ Scroll to adjust</translation>
 <context>
     <name>LocationPickerWindow</name>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="40"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="41"/>
         <source>选择天气位置</source>
         <translation>Choose weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="113"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="114"/>
         <source>回到已选位置</source>
         <translation>Return to saved location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="122"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="125"/>
         <source>关闭</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="135"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="140"/>
         <source>保存位置</source>
         <translation>Save location</translation>
     </message>
@@ -4634,6 +4619,19 @@ Scroll to adjust</translation>
         <location filename="../Modules/Lock/LockContent.qml" line="396"/>
         <source>数字锁定已开启。</source>
         <translation>Num Lock is on.</translation>
+    </message>
+</context>
+<context>
+    <name>MapCoordinateMarker</name>
+    <message>
+        <location filename="../Modules/Map/MapCoordinateMarker.qml" line="18"/>
+        <source>已选坐标</source>
+        <translation>Selected coordinate</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/MapCoordinateMarker.qml" line="19"/>
+        <source>拖动或使用方向键调整坐标</source>
+        <translation>Drag or use the arrow keys to adjust the coordinate</translation>
     </message>
 </context>
 <context>
@@ -4760,23 +4758,23 @@ Scroll to adjust</translation>
 <context>
     <name>MapLibreView</name>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="42"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="44"/>
         <source>地图样式暂时不可用</source>
         <translation>Map style temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="48"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="50"/>
         <source>地图样式无效</source>
         <translation>Invalid map style</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="84"/>
-        <location filename="../Modules/Map/MapLibreView.qml" line="200"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="92"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="216"/>
         <source>地图暂时不可用</source>
         <translation>Map temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="124"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="132"/>
         <source>无法创建地图</source>
         <translation>Unable to create map</translation>
     </message>
@@ -4784,87 +4782,87 @@ Scroll to adjust</translation>
 <context>
     <name>MapTilerApiSettingsCard</name>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="23"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="22"/>
         <source>请输入有效的 MapTiler API key</source>
         <translation>Enter a valid MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="29"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="28"/>
         <source>无法更新 MapTiler API key</source>
         <translation>Could not update the MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="34"/>
         <source>无法清除 MapTiler API key</source>
         <translation>Could not clear the MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
         <source>正在检查</source>
         <translation>Checking</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
         <source>处理中</source>
         <translation>Processing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
         <source>读取失败</source>
         <translation>Read failed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
         <source>已配置</source>
         <translation>Configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
         <source>未配置</source>
         <translation>Not configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="158"/>
         <source>输入 MapTiler API key</source>
         <translation>Enter MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="164"/>
         <source>安全保存到系统密钥环</source>
         <translation>Saved securely in the system keyring</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="179"/>
         <source>隐藏 API key</source>
         <translation>Hide API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="179"/>
         <source>显示 API key</source>
         <translation>Show API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="194"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="193"/>
         <source>密钥保存在系统密钥环中，保存后立即生效。</source>
         <translation>The key is stored in the system keyring and takes effect immediately after saving.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="247"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="246"/>
         <source>清除密钥</source>
         <translation>Clear key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="252"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="251"/>
         <source>从系统密钥环移除 MapTiler API key</source>
         <translation>Remove the MapTiler API key from the system keyring</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="259"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="258"/>
         <source>保存密钥</source>
         <translation>Save key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="266"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="265"/>
         <source>安全保存并立即应用，无需重启</source>
         <translation>Save securely and apply immediately without restarting</translation>
     </message>
@@ -9227,27 +9225,27 @@ Scroll to adjust; click to open sound</translation>
         <translation>Return to weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
         <source>当前使用 OpenFreeMap</source>
         <translation>Using OpenFreeMap</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
         <source>当前使用 RainViewer</source>
         <translation>Using RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
         <source>正在加载天气图层</source>
         <translation>Loading weather layer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="170"/>
         <source>天气图层暂时不可用</source>
         <translation>Weather layer temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="192"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="194"/>
         <source>天气位置暂不可用</source>
         <translation>Weather location temporarily unavailable</translation>
     </message>

@@ -147,6 +147,8 @@ Rectangle {
         accessibleName: qsTr("回到天气位置")
         variant: "filled"
         normalContainerColor: "#D9111111"
+        normalHoverStateLayerColor: "#ED111111"
+        normalPressedStateLayerColor: "#FF111111"
         iconColor: "white"
         onClicked: map.recenter(root.latitude, root.longitude, 6)
     }

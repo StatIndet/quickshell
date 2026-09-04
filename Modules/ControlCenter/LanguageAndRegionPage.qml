@@ -150,7 +150,6 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("天气温度")
-                supportingText: qsTr("侧边栏、灵动岛与锁屏天气的温度单位")
 
                 trailing: StyledButtonGroup {
                     model: [({
@@ -172,7 +171,6 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("硬件温度")
-                supportingText: qsTr("CPU、GPU 与系统监测组件的温度单位")
 
                 trailing: StyledButtonGroup {
                     model: [({
@@ -202,7 +200,6 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("时钟格式")
-                supportingText: qsTr("用于灵动岛、侧边栏与锁屏时钟")
 
                 trailing: StyledButtonGroup {
                     model: [({
