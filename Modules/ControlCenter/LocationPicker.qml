@@ -138,25 +138,25 @@ ColumnLayout {
             anchors.bottom: parent.bottom
             anchors.margins: Metrics.spacingM
 
-            IconButton {
+            ActionButton {
+                text: qsTr("回到已选位置")
                 iconName: "my_location"
-                accessibleName: qsTr("回到已选位置")
-                variant: "filled"
-                normalContainerColor: "#D9111111"
-                normalHoverStateLayerColor: "#ED111111"
-                normalPressedStateLayerColor: "#FF111111"
-                iconColor: "white"
+                contentColor: "#FF111111"
+                rippleColor: "#FF111111"
+                stateLayerColor: "#FF111111"
+                hoverStateLayerColor: "#FF111111"
+                pressedStateLayerColor: "#FF111111"
                 onClicked: embeddedMap.recenter(root.candidateLatitude, root.candidateLongitude, root.mapZoom)
             }
 
-            IconButton {
+            ActionButton {
+                text: qsTr("展开地图")
                 iconName: "open_in_full"
-                accessibleName: qsTr("展开地图")
-                variant: "filled"
-                normalContainerColor: "#D9111111"
-                normalHoverStateLayerColor: "#ED111111"
-                normalPressedStateLayerColor: "#FF111111"
-                iconColor: "white"
+                contentColor: "#FF111111"
+                rippleColor: "#FF111111"
+                stateLayerColor: "#FF111111"
+                hoverStateLayerColor: "#FF111111"
+                pressedStateLayerColor: "#FF111111"
                 onClicked: expandedWindow.showWindow()
             }
 

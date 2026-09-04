@@ -103,25 +103,25 @@ FloatingWindow {
             anchors.top: parent.top
             anchors.margins: Metrics.spacingL
 
-            IconButton {
+            ActionButton {
+                text: qsTr("回到已选位置")
                 iconName: "my_location"
-                accessibleName: qsTr("回到已选位置")
-                variant: "filled"
-                normalContainerColor: "#D9111111"
-                normalHoverStateLayerColor: "#ED111111"
-                normalPressedStateLayerColor: "#FF111111"
-                iconColor: "white"
+                contentColor: "#FF111111"
+                rippleColor: "#FF111111"
+                stateLayerColor: "#FF111111"
+                hoverStateLayerColor: "#FF111111"
+                pressedStateLayerColor: "#FF111111"
                 onClicked: map.recenter(root.markerLatitude, root.markerLongitude, root.zoomLevel)
             }
 
-            IconButton {
+            ActionButton {
+                text: qsTr("关闭")
                 iconName: "close"
-                accessibleName: qsTr("关闭")
-                variant: "filled"
-                normalContainerColor: "#D9111111"
-                normalHoverStateLayerColor: "#ED111111"
-                normalPressedStateLayerColor: "#FF111111"
-                iconColor: "white"
+                contentColor: "#FF111111"
+                rippleColor: "#FF111111"
+                stateLayerColor: "#FF111111"
+                hoverStateLayerColor: "#FF111111"
+                pressedStateLayerColor: "#FF111111"
                 onClicked: root.dismiss()
             }
 
@@ -133,28 +133,25 @@ FloatingWindow {
             anchors.margins: Metrics.spacingL
             text: qsTr("保存位置")
             iconName: "save"
+            contentColor: "#FF111111"
+            rippleColor: "#FF111111"
+            stateLayerColor: "#FF111111"
+            hoverStateLayerColor: "#FF111111"
+            pressedStateLayerColor: "#FF111111"
             onClicked: root.saveRequested()
         }
 
-        Rectangle {
+        Text {
+            id: coordinateLabel
+
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             anchors.margins: Metrics.spacingL
-            implicitWidth: coordinateLabel.implicitWidth + Metrics.spacingL * 2
-            implicitHeight: Metrics.controlHeightM
-            radius: Appearance.rounding.full
-            color: "#D9111111"
-
-            Text {
-                id: coordinateLabel
-
-                anchors.centerIn: parent
-                text: Number(root.markerLatitude).toFixed(6) + ", " + Number(root.markerLongitude).toFixed(6)
-                color: "white"
-                font.family: Typography.labelMedium.family
-                font.pixelSize: Typography.labelMedium.pixelSize
-            }
-
+            text: Number(root.markerLatitude).toFixed(6) + ", " + Number(root.markerLongitude).toFixed(6)
+            color: "#FF111111"
+            font.family: Typography.labelMedium.family
+            font.pixelSize: Typography.labelMedium.pixelSize
+            font.weight: Typography.labelMedium.weight
         }
 
         FocusScope {

@@ -8,6 +8,7 @@ RippleButton {
 
     property bool filled: false
     property string iconName: ""
+    property color contentColor: root.filled ? Appearance.colors.colOnPrimary : Appearance.colors.colPrimary
 
     implicitWidth: Math.max(64, actionContent.implicitWidth + Metrics.spacingL * 2)
     implicitHeight: Metrics.controlHeightM
@@ -41,19 +42,22 @@ RippleButton {
                 visible: root.iconName !== ""
                 text: root.iconName
                 iconSize: Metrics.iconS + Metrics.spacingXXS
-                color: root.filled ? Appearance.colors.colOnPrimary : Appearance.colors.colPrimary
+                color: root.contentColor
             }
 
             Text {
                 Layout.alignment: Qt.AlignVCenter
                 text: root.text
-                color: root.filled ? Appearance.colors.colOnPrimary : Appearance.colors.colPrimary
+                color: root.contentColor
                 font.family: Typography.labelLarge.family
                 font.pixelSize: Typography.labelLarge.pixelSize
                 font.weight: Typography.labelLarge.weight
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
+
         }
+
     }
+
 }
