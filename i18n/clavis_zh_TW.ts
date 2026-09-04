@@ -2653,101 +2653,101 @@
 <context>
     <name>DailyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="276"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="87"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="280"/>
         <source>紫外线指数</source>
         <translation>紫外線指數</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="283"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="87"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="284"/>
         <source>降水量</source>
         <translation>降水量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="290"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="87"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="288"/>
         <source>日照</source>
         <translation>日照</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="297"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="87"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="292"/>
         <source>体感温度</source>
         <translation>體感溫度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="114"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="113"/>
         <source>昨天</source>
         <translation>昨天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="117"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="116"/>
         <source>今天</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="120"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="119"/>
         <source>明天</source>
         <translation>明天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周日</source>
         <translation>週日</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周一</source>
         <translation>週一</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周二</source>
         <translation>週二</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周三</source>
         <translation>週三</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周四</source>
         <translation>週四</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周五</source>
         <translation>週五</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="124"/>
         <source>周六</source>
         <translation>週六</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="208"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="207"/>
         <source>每日预报</source>
         <translation>每日預報</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="230"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="229"/>
         <source>天气情况</source>
         <translation>天氣情況</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="233"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="232"/>
         <source>空气质量</source>
         <translation>空氣質量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="236"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="235"/>
         <source>风况</source>
         <translation>風況</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="265"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="266"/>
         <source>每日预报更多选项</source>
         <translation>每日預報更多選項</translation>
     </message>
@@ -4105,69 +4105,69 @@
 <context>
     <name>HourlyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="221"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="226"/>
         <source>紫外线指数</source>
         <translation>紫外線指數</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="228"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="230"/>
         <source>降水量</source>
         <translation>降水量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="235"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="234"/>
         <source>体感温度</source>
         <translation>體感溫度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="242"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="238"/>
         <source>相对湿度 / 露点</source>
         <translation>相對濕度 / 露點</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="249"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="242"/>
         <source>气压</source>
         <translation>氣壓</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="256"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="246"/>
         <source>云量</source>
         <translation>雲量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="263"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="250"/>
         <source>能见度</source>
         <translation>能見度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="153"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="152"/>
         <source>逐小时预报</source>
         <translation>逐小時預報</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="175"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="174"/>
         <source>天气情况</source>
         <translation>天氣情況</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="178"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="177"/>
         <source>空气质量</source>
         <translation>空氣質量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="181"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="180"/>
         <source>风况</source>
         <translation>風況</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="210"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="211"/>
         <source>逐小时预报更多选项</source>
         <translation>逐小時預報更多選項</translation>
     </message>
@@ -4848,89 +4848,19 @@
 <context>
     <name>MapTilerApiSettingsCard</name>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="11"/>
         <source>请输入有效的 MapTiler API key</source>
         <translation>請輸入有效的 MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="28"/>
-        <source>无法更新 MapTiler API key</source>
-        <translation>無法更新 MapTiler API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="34"/>
-        <source>无法清除 MapTiler API key</source>
-        <translation>無法清除 MapTiler API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
-        <source>正在检查</source>
-        <translation>正在檢查</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
-        <source>处理中</source>
-        <translation>處理中</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
-        <source>读取失败</source>
-        <translation>讀取失敗</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
-        <source>已配置</source>
-        <translation>已配置</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="120"/>
-        <source>未配置</source>
-        <translation>未配置</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="158"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="10"/>
         <source>输入 MapTiler API key</source>
         <translation>輸入 MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="164"/>
-        <source>安全保存到系统密钥环</source>
-        <translation>安全儲存到系統金鑰環</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="179"/>
-        <source>隐藏 API key</source>
-        <translation>隱藏 API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="179"/>
-        <source>显示 API key</source>
-        <translation>顯示 API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="193"/>
-        <source>密钥保存在系统密钥环中，保存后立即生效。</source>
-        <translation>金鑰儲存在系統金鑰環中，儲存後立即生效。</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="246"/>
-        <source>清除密钥</source>
-        <translation>清除金鑰</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="251"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="12"/>
         <source>从系统密钥环移除 MapTiler API key</source>
         <translation>從系統金鑰環移除 MapTiler API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="258"/>
-        <source>保存密钥</source>
-        <translation>儲存金鑰</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="265"/>
-        <source>安全保存并立即应用，无需重启</source>
-        <translation>安全儲存並立即應用，無需重啟</translation>
     </message>
 </context>
 <context>
@@ -5943,64 +5873,19 @@
 <context>
     <name>OpenWeatherApiSettingsCard</name>
     <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="21"/>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="11"/>
         <source>请输入有效的 OpenWeather API key</source>
         <translation>請輸入有效的 OpenWeather API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="27"/>
-        <source>无法更新 API key</source>
-        <translation>無法更新 API key</translation>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="12"/>
+        <source>从系统密钥环移除 OpenWeather API key</source>
+        <translation>從系統金鑰環移除 OpenWeather API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="33"/>
-        <source>无法清除 API key</source>
-        <translation>無法清除 API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
-        <source>正在检查</source>
-        <translation>正在檢查</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
-        <source>已配置</source>
-        <translation>已設定</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
-        <source>未配置</source>
-        <translation>未設定</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="107"/>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="10"/>
         <source>输入 OpenWeather API key</source>
         <translation>輸入 OpenWeather API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="111"/>
-        <source>安全保存到系统密钥环</source>
-        <translation>安全儲存到系統金鑰環</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="129"/>
-        <source>隐藏</source>
-        <translation>隱藏</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="129"/>
-        <source>显示</source>
-        <translation>顯示</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="135"/>
-        <source>清除密钥</source>
-        <translation>清除金鑰</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="142"/>
-        <source>保存密钥</source>
-        <translation>儲存金鑰</translation>
     </message>
 </context>
 <context>
@@ -9564,6 +9449,79 @@
     </message>
 </context>
 <context>
+    <name>WeatherServiceApiKeyCard</name>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="42"/>
+        <source>无法保存 API key</source>
+        <translation>無法儲存 API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="48"/>
+        <source>无法清除 API key</source>
+        <translation>無法清除 API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="122"/>
+        <source>正在检查</source>
+        <translation>正在檢查</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="122"/>
+        <source>处理中</source>
+        <translation>處理中</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="122"/>
+        <source>读取失败</source>
+        <translation>讀取失敗</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="122"/>
+        <source>密钥已保存</source>
+        <translation>金鑰已儲存</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="122"/>
+        <source>未保存密钥</source>
+        <translation>未儲存金鑰</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="163"/>
+        <source>安全保存到系统密钥环</source>
+        <translation>安全儲存到系統金鑰環</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="178"/>
+        <source>隐藏 API key</source>
+        <translation>隱藏 API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="178"/>
+        <source>显示 API key</source>
+        <translation>顯示 API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="190"/>
+        <source>密钥保存在系统密钥环中，保存后立即生效。</source>
+        <translation>金鑰儲存在系統金鑰環中，儲存後立即生效。</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="245"/>
+        <source>清除密钥</source>
+        <translation>清除金鑰</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="254"/>
+        <source>保存密钥</source>
+        <translation>儲存金鑰</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WeatherServiceApiKeyCard.qml" line="258"/>
+        <source>安全保存并立即应用，无需重启</source>
+        <translation>安全儲存並立即應用，無需重啟</translation>
+    </message>
+</context>
+<context>
     <name>WeatherSunriseSunset</name>
     <message>
         <location filename="../Modules/Keystone/WeatherContent/WeatherSunriseSunset.qml" line="92"/>
@@ -9579,12 +9537,12 @@
 <context>
     <name>WeatherTemperatureNormalLine</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="13"/>
+        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="14"/>
         <source>标准值</source>
         <translation>標準值</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="21"/>
+        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="22"/>
         <source>1991–2020 常年平均</source>
         <translation>1991–2020 常年平均</translation>
     </message>
@@ -9600,194 +9558,194 @@
 <context>
     <name>WeatherView</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="76"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="75"/>
         <source>正在刷新</source>
         <translation>正在重新整理</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="80"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="79"/>
         <source>更新于 </source>
         <translation>更新於 </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="83"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="82"/>
         <source>数据较旧</source>
         <translation>資料較舊</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="85"/>
         <source>更新失败</source>
         <translation>更新失敗</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="87"/>
         <source>待更新</source>
         <translation>待更新</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="92"/>
         <source>今天</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="96"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="95"/>
         <source>明天</source>
         <translation>明天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="106"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="105"/>
         <source>低</source>
         <translation>低</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="109"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="108"/>
         <source>中</source>
         <translation>中</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="112"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="111"/>
         <source>高</source>
         <translation>高</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="115"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="114"/>
         <source>很高</source>
         <translation>很高</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="117"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="116"/>
         <source>极高</source>
         <translation>極高</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="222"/>
         <source>白天降雪总量</source>
         <translation>白天降雪總量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="222"/>
         <source>夜间降雪总量</source>
         <translation>夜間降雪總量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="226"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="225"/>
         <source>白天降雨总量</source>
         <translation>白天降雨總量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="226"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="225"/>
         <source>夜间降雨总量</source>
         <translation>夜間降雨總量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="229"/>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="231"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="228"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="230"/>
         <source>白天总降水</source>
         <translation>白天總降水</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="229"/>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="231"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="228"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="230"/>
         <source>夜间总降水</source>
         <translation>夜間總降水</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="244"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="243"/>
         <source>极清晰</source>
         <translation>極清晰</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="247"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="246"/>
         <source>清晰</source>
         <translation>清晰</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="250"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="249"/>
         <source>良好</source>
         <translation>良好</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="253"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="252"/>
         <source>朦胧</source>
         <translation>朦朧</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="256"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="255"/>
         <source>较低</source>
         <translation>較低</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="258"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="257"/>
         <source>浓雾</source>
         <translation>濃霧</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>优</source>
         <translation>優</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>良</source>
         <translation>良</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>差</source>
         <translation>差</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>不健康</source>
         <translation>不健康</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>很不健康</source>
         <translation>很不健康</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="309"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
         <source>危险</source>
         <translation>危險</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="466"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="465"/>
         <source>天气</source>
         <translation>天氣</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="483"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="482"/>
         <source>编辑天气位置</source>
         <translation>編輯天氣位置</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="496"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="495"/>
         <source>刷新天气</source>
         <translation>重新整理天氣</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="568"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="567"/>
         <source>未知</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="614"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="613"/>
         <source>体感温度: </source>
         <translation>體感溫度: </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="624"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="623"/>
         <source>最高 </source>
         <translation>最高 </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="624"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="623"/>
         <source> · 最低 </source>
         <translation> · 最低 </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="698"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="697"/>
         <source>阵风 </source>
         <translation>陣風 </translation>
     </message>

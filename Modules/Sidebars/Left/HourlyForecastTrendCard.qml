@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
@@ -200,72 +199,60 @@ Rectangle {
                 }
 
                 IconButton {
+                    id: moreButton
+
                     Layout.alignment: Qt.AlignVCenter
                     controlSize: 36
                     iconName: "more_horiz"
                     iconSize: 20
                     iconColor: Appearance.colors.colOnSurfaceVariant
-                    selected: root.currentTab >= 3
+                    selected: root.currentTab >= 3 || extraMenu.opened
                     selectedIconColor: Appearance.colors.colOnPrimaryContainer
                     accessibleName: qsTr("逐小时预报更多选项")
                     normalContainerColor: Appearance.colors.colLayer2
                     selectedContainerColor: Appearance.colors.colPrimaryContainer
                     hoverStateLayerColor: Appearance.colors.colLayer4
                     pressedStateLayerColor: Appearance.colors.colLayer4Active
-                    onClicked: extraMenu.open()
+                    onClicked: extraMenu.opened ? extraMenu.close() : extraMenu.open()
 
-                    Menu {
+                    WeatherMetricMenu {
                         id: extraMenu
 
-                        MenuItem {
-                            text: qsTr("紫外线指数")
-                            checkable: true
-                            checked: root.currentTab === 3
-                            onTriggered: root.currentTab = 3
+                        anchorItem: moreButton
+                        selectedValue: root.currentTab
+                        openAbove: true
+                        options: [{
+                            "value": 3,
+                            "label": qsTr("紫外线指数"),
+                            "icon": "sunny"
+                        }, {
+                            "value": 4,
+                            "label": qsTr("降水量"),
+                            "icon": "water_drop"
+                        }, {
+                            "value": 5,
+                            "label": qsTr("体感温度"),
+                            "icon": "thermostat"
+                        }, {
+                            "value": 6,
+                            "label": qsTr("相对湿度 / 露点"),
+                            "icon": "humidity_percentage"
+                        }, {
+                            "value": 7,
+                            "label": qsTr("气压"),
+                            "icon": "speed"
+                        }, {
+                            "value": 8,
+                            "label": qsTr("云量"),
+                            "icon": "cloud"
+                        }, {
+                            "value": 9,
+                            "label": qsTr("能见度"),
+                            "icon": "visibility"
+                        }]
+                        onValueSelected: (value) => {
+                            return root.currentTab = value;
                         }
-
-                        MenuItem {
-                            text: qsTr("降水量")
-                            checkable: true
-                            checked: root.currentTab === 4
-                            onTriggered: root.currentTab = 4
-                        }
-
-                        MenuItem {
-                            text: qsTr("体感温度")
-                            checkable: true
-                            checked: root.currentTab === 5
-                            onTriggered: root.currentTab = 5
-                        }
-
-                        MenuItem {
-                            text: qsTr("相对湿度 / 露点")
-                            checkable: true
-                            checked: root.currentTab === 6
-                            onTriggered: root.currentTab = 6
-                        }
-
-                        MenuItem {
-                            text: qsTr("气压")
-                            checkable: true
-                            checked: root.currentTab === 7
-                            onTriggered: root.currentTab = 7
-                        }
-
-                        MenuItem {
-                            text: qsTr("云量")
-                            checkable: true
-                            checked: root.currentTab === 8
-                            onTriggered: root.currentTab = 8
-                        }
-
-                        MenuItem {
-                            text: qsTr("能见度")
-                            checkable: true
-                            checked: root.currentTab === 9
-                            onTriggered: root.currentTab = 9
-                        }
-
                     }
 
                 }

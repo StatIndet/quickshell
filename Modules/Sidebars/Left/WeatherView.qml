@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import qs.Common
 import qs.Widgets.common
@@ -483,7 +482,7 @@ Item {
                         accessibleName: qsTr("编辑天气位置")
                         hoverStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g, root.headerInkMuted.b, 0.1)
                         pressedStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g, root.headerInkMuted.b, 0.18)
-                        onClicked: console.warn("[Weather] settings action is unavailable")
+                        onClicked: ControlCenterService.open("language-region")
                     }
 
                     IconButton {
