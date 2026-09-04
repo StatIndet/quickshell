@@ -33,6 +33,10 @@ target_sources(ClavisWeatherCore PRIVATE
     weather_calculator.cpp
     weather_cache.h
     weather_cache.cpp
+    weather_climate_normals.h
+    weather_climate_normals.cpp
+    weather_normals_cache.h
+    weather_normals_cache.cpp
     openmeteo_client.h
     openmeteo_client.cpp
     weather_backend.h

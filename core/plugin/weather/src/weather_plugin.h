@@ -12,6 +12,11 @@ class WeatherPlugin : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
+    Q_PROPERTY(bool normalsAvailable READ normalsAvailable NOTIFY normalsChanged)
+    Q_PROPERTY(bool normalsLoading READ normalsLoading NOTIFY normalsLoadingChanged)
+    Q_PROPERTY(int normalsPeriodStartYear READ normalsPeriodStartYear NOTIFY normalsChanged)
+    Q_PROPERTY(int normalsPeriodEndYear READ normalsPeriodEndYear NOTIFY normalsChanged)
+    Q_PROPERTY(QString normalsModel READ normalsModel NOTIFY normalsChanged)
     Q_PROPERTY(bool hasValidData READ hasValidData NOTIFY dataChanged)
     Q_PROPERTY(bool hasManualLocation READ hasManualLocation NOTIFY dataChanged)
     Q_PROPERTY(QString status READ status NOTIFY dataChanged)
@@ -47,6 +52,11 @@ class WeatherPlugin : public QObject {
     explicit WeatherPlugin(QObject *parent = nullptr);
 
     bool loading() const;
+    bool normalsAvailable() const;
+    bool normalsLoading() const;
+    int normalsPeriodStartYear() const;
+    int normalsPeriodEndYear() const;
+    QString normalsModel() const;
     bool hasValidData() const;
     bool hasManualLocation() const;
     QString status() const;
@@ -82,10 +92,14 @@ class WeatherPlugin : public QObject {
     Q_INVOKABLE void setManualLocation(double latitude, double longitude, const QString &name);
     Q_INVOKABLE void clearManualLocation();
     Q_INVOKABLE QVariantMap current() const;
+    Q_INVOKABLE double normalDaytimeTemperatureC(int month) const;
+    Q_INVOKABLE double normalNighttimeTemperatureC(int month) const;
 
   signals:
     void dataChanged();
     void loadingChanged();
+    void normalsChanged();
+    void normalsLoadingChanged();
 
   private:
     WeatherBackend m_backend;

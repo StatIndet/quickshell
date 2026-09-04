@@ -397,13 +397,6 @@ Item {
 
             anchors.fill: parent
             layer.enabled: true
-            layer.effect: OpacityMask {
-                maskSource: Rectangle {
-                    width: weatherPanel.width
-                    height: weatherPanel.height
-                    radius: weatherPanel.radius
-                }
-            }
 
             WeatherBackground {
                 id: weatherBackground
@@ -414,12 +407,21 @@ Item {
                 windSpeedMs: root.weatherSource.currentWindSpeedMs
                 windGustsMs: root.weatherSource.currentWindGustsMs
                 night: root.currentIsNight()
-                rainBounceY:
-                    flick.y + dailyForecastCard.y - flick.contentY
-                scrollProgress:
-                    Math.max(0, Math.min(1, flick.contentY / 340))
+                rainBounceY: flick.y + dailyForecastCard.y - flick.contentY
+                scrollProgress: Math.max(0, Math.min(1, flick.contentY / 340))
                 animate: root.presentationActive
             }
+
+            layer.effect: OpacityMask {
+
+                maskSource: Rectangle {
+                    width: weatherPanel.width
+                    height: weatherPanel.height
+                    radius: weatherPanel.radius
+                }
+
+            }
+
         }
 
         Rectangle {
@@ -602,12 +604,7 @@ Item {
                                 weatherCode: root.weatherSource.currentWeatherCode
                                 iconName: root.weatherSource.currentIconName
                                 night: root.currentIsNight()
-                                playing: root.presentationActive
-                                    && currentSummary.y
-                                        + currentSummary.height
-                                        >= flick.contentY
-                                    && currentSummary.y
-                                        <= flick.contentY + flick.height
+                                playing: root.presentationActive && currentSummary.y + currentSummary.height >= flick.contentY && currentSummary.y <= flick.contentY + flick.height
                             }
 
                         }
@@ -642,24 +639,18 @@ Item {
                     width: parent.width
                     height: 452
                     sourceModel: root.weatherSource.dailyTrendForecast
-                    foreground: root.presentationActive
-                        && dailyForecastCard.y
-                            + dailyForecastCard.height >= flick.contentY
-                        && dailyForecastCard.y
-                            <= flick.contentY + flick.height
+                    normalsSource: root.weatherSource
+                    foreground: root.presentationActive && dailyForecastCard.y + dailyForecastCard.height >= flick.contentY && dailyForecastCard.y <= flick.contentY + flick.height
                 }
 
                 HourlyForecastTrendCard {
                     id: hourlyForecastCard
 
                     width: parent.width
-                    height: 286
+                    height: 340
                     sourceModel: root.weatherSource.hourlyForecast
-                    foreground: root.presentationActive
-                        && hourlyForecastCard.y
-                            + hourlyForecastCard.height >= flick.contentY
-                        && hourlyForecastCard.y
-                            <= flick.contentY + flick.height
+                    normalsSource: root.weatherSource
+                    foreground: root.presentationActive && hourlyForecastCard.y + hourlyForecastCard.height >= flick.contentY && hourlyForecastCard.y <= flick.contentY + flick.height
                 }
 
                 RowLayout {

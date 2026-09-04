@@ -23,6 +23,9 @@ class OpenMeteoClient : public QObject {
     void requestIpLocation(LocationCallback callback);
     void requestForecast(double latitude, double longitude, JsonCallback callback);
     void requestAirQuality(double latitude, double longitude, JsonCallback callback);
+    void requestClimateNormals(double latitude, double longitude, JsonCallback callback);
+
+    static QUrl climateNormalsUrl(double latitude, double longitude);
 
   private:
     QNetworkAccessManager m_manager;

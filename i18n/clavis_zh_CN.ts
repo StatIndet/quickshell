@@ -2653,101 +2653,101 @@
 <context>
     <name>DailyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="276"/>
         <source>紫外线指数</source>
         <translation>紫外线指数</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="230"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="283"/>
         <source>降水量</source>
         <translation>降水量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="237"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="290"/>
         <source>日照</source>
         <translation>日照</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="244"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="297"/>
         <source>体感温度</source>
         <translation>体感温度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="71"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="114"/>
         <source>昨天</source>
         <translation>昨天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="74"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="117"/>
         <source>今天</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="77"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="120"/>
         <source>明天</source>
         <translation>明天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周日</source>
         <translation>周日</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周一</source>
         <translation>周一</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周二</source>
         <translation>周二</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周三</source>
         <translation>周三</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周四</source>
         <translation>周四</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周五</source>
         <translation>周五</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="125"/>
         <source>周六</source>
         <translation>周六</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="155"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="208"/>
         <source>每日预报</source>
         <translation>每日预报</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="177"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="230"/>
         <source>天气情况</source>
         <translation>天气情况</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="180"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="233"/>
         <source>空气质量</source>
         <translation>空气质量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="183"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="236"/>
         <source>风况</source>
         <translation>风况</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="212"/>
+        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="265"/>
         <source>每日预报更多选项</source>
         <translation>每日预报更多选项</translation>
     </message>
@@ -4105,69 +4105,69 @@
 <context>
     <name>HourlyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="170"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="221"/>
         <source>紫外线指数</source>
         <translation>紫外线指数</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="177"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="228"/>
         <source>降水量</source>
         <translation>降水量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="184"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="235"/>
         <source>体感温度</source>
         <translation>体感温度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="191"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="242"/>
         <source>相对湿度 / 露点</source>
         <translation>相对湿度 / 露点</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="198"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="249"/>
         <source>气压</source>
         <translation>气压</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="205"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="256"/>
         <source>云量</source>
         <translation>云量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="45"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="212"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="263"/>
         <source>能见度</source>
         <translation>能见度</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="102"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="153"/>
         <source>逐小时预报</source>
         <translation>逐小时预报</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="124"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="175"/>
         <source>天气情况</source>
         <translation>天气情况</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="127"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="178"/>
         <source>空气质量</source>
         <translation>空气质量</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="130"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="181"/>
         <source>风况</source>
         <translation>风况</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="159"/>
+        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="210"/>
         <source>逐小时预报更多选项</source>
         <translation>逐小时预报更多选项</translation>
     </message>
@@ -9374,62 +9374,62 @@
 <context>
     <name>WeatherMetricTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="36"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="37"/>
         <source>标准</source>
         <translation>标准</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="36"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="37"/>
         <source>预警水平</source>
         <translation>预警水平</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="49"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="50"/>
         <source>昨天</source>
         <translation>昨天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="52"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="53"/>
         <source>今天</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="55"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="56"/>
         <source>明天</source>
         <translation>明天</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周日</source>
         <translation>周日</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周一</source>
         <translation>周一</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周二</source>
         <translation>周二</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周三</source>
         <translation>周三</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周四</source>
         <translation>周四</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周五</source>
         <translation>周五</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="60"/>
+        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="61"/>
         <source>周六</source>
         <translation>周六</translation>
     </message>
@@ -9574,6 +9574,19 @@
         <location filename="../Modules/Keystone/WeatherContent/WeatherSunriseSunset.qml" line="112"/>
         <source>日落</source>
         <translation>日落</translation>
+    </message>
+</context>
+<context>
+    <name>WeatherTemperatureNormalLine</name>
+    <message>
+        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="13"/>
+        <source>标准值</source>
+        <translation>标准值</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="21"/>
+        <source>1991–2020 常年平均</source>
+        <translation>1991–2020 常年平均</translation>
     </message>
 </context>
 <context>
@@ -9739,42 +9752,42 @@
         <translation>危险</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="464"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="466"/>
         <source>天气</source>
         <translation>天气</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="481"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="483"/>
         <source>编辑天气位置</source>
         <translation>编辑天气位置</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="494"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="496"/>
         <source>刷新天气</source>
         <translation>刷新天气</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="566"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="568"/>
         <source>未知</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="617"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="614"/>
         <source>体感温度: </source>
         <translation>体感温度: </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="627"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="624"/>
         <source>最高 </source>
         <translation>最高 </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="627"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="624"/>
         <source> · 最低 </source>
         <translation> · 最低 </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="707"/>
+        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="698"/>
         <source>阵风 </source>
         <translation>阵风 </translation>
     </message>

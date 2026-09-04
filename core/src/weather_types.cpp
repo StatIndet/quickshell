@@ -1,5 +1,53 @@
 #include "weather_types.h"
 
+QVariantMap MonthlyTemperatureNormal::toVariantMap() const
+{
+    return {{"daytimeValid", daytimeValid},
+            {"nighttimeValid", nighttimeValid},
+            {"daytimeTemperatureC", daytimeTemperatureC},
+            {"nighttimeTemperatureC", nighttimeTemperatureC}};
+}
+
+MonthlyTemperatureNormal MonthlyTemperatureNormal::fromVariantMap(const QVariantMap &map)
+{
+    MonthlyTemperatureNormal normal;
+    normal.daytimeValid = map.value("daytimeValid").toBool();
+    normal.nighttimeValid = map.value("nighttimeValid").toBool();
+    normal.daytimeTemperatureC = map.value("daytimeTemperatureC").toDouble();
+    normal.nighttimeTemperatureC = map.value("nighttimeTemperatureC").toDouble();
+    return normal;
+}
+
+QVariantMap WeatherClimateNormals::toVariantMap() const
+{
+    QVariantList monthList;
+    for (auto it = months.cbegin(); it != months.cend(); ++it) {
+        QVariantMap month = it.value().toVariantMap();
+        month["month"] = it.key();
+        monthList.append(month);
+    }
+    return {{"latitude", latitude},           {"longitude", longitude}, {"periodStartYear", periodStartYear},
+            {"periodEndYear", periodEndYear}, {"model", model},         {"months", monthList}};
+}
+
+WeatherClimateNormals WeatherClimateNormals::fromVariantMap(const QVariantMap &map)
+{
+    WeatherClimateNormals normals;
+    normals.latitude = map.value("latitude").toDouble();
+    normals.longitude = map.value("longitude").toDouble();
+    normals.periodStartYear = map.value("periodStartYear").toInt();
+    normals.periodEndYear = map.value("periodEndYear").toInt();
+    normals.model = map.value("model").toString();
+    for (const QVariant &value : map.value("months").toList()) {
+        const QVariantMap monthMap = value.toMap();
+        const int month = monthMap.value("month").toInt();
+        if (month >= 1 && month <= 12)
+            normals.months.insert(month, MonthlyTemperatureNormal::fromVariantMap(monthMap));
+    }
+    normals.valid = !normals.months.isEmpty();
+    return normals;
+}
+
 QVariantMap WeatherSnapshot::toVariantMap() const
 {
     QVariantMap map;

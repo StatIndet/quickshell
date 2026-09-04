@@ -125,3 +125,20 @@ target_include_directories(wallpaper_analyzer_tests PRIVATE
 )
 
 add_test(NAME wallpaper_analyzer_tests COMMAND wallpaper_analyzer_tests)
+
+qt_add_executable(weather_climate_normals_tests
+    weather_climate_normals_test.cpp
+)
+
+target_link_libraries(weather_climate_normals_tests PRIVATE
+    ClavisWeatherCore
+    Qt6::Core
+    Qt6::Network
+    Qt6::Test
+)
+
+target_include_directories(weather_climate_normals_tests PRIVATE
+    ${CLAVIS_SOURCE_ROOT}/core/src
+)
+
+add_test(NAME weather_climate_normals_tests COMMAND weather_climate_normals_tests)

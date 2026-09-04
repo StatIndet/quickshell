@@ -1,5 +1,7 @@
 #include "weather_plugin.h"
 
+#include <QtMath>
+
 WeatherPlugin::WeatherPlugin(QObject *parent)
     : QObject(parent), m_backend(this), m_hourly(this), m_daily(this), m_dailyTrend(this), m_minutely(this)
 {
@@ -8,10 +10,17 @@ WeatherPlugin::WeatherPlugin(QObject *parent)
         emit dataChanged();
     });
     connect(&m_backend, &WeatherBackend::loadingChanged, this, &WeatherPlugin::loadingChanged);
+    connect(&m_backend, &WeatherBackend::normalsChanged, this, &WeatherPlugin::normalsChanged);
+    connect(&m_backend, &WeatherBackend::normalsLoadingChanged, this, &WeatherPlugin::normalsLoadingChanged);
     syncModels();
 }
 
 bool WeatherPlugin::loading() const { return m_backend.loading(); }
+bool WeatherPlugin::normalsAvailable() const { return m_backend.climateNormals().valid; }
+bool WeatherPlugin::normalsLoading() const { return m_backend.normalsLoading(); }
+int WeatherPlugin::normalsPeriodStartYear() const { return m_backend.climateNormals().periodStartYear; }
+int WeatherPlugin::normalsPeriodEndYear() const { return m_backend.climateNormals().periodEndYear; }
+QString WeatherPlugin::normalsModel() const { return m_backend.climateNormals().model; }
 bool WeatherPlugin::hasValidData() const { return m_backend.snapshot().valid; }
 bool WeatherPlugin::hasManualLocation() const { return m_backend.hasManualLocation(); }
 QString WeatherPlugin::status() const { return m_backend.snapshot().status; }
@@ -62,6 +71,18 @@ void WeatherPlugin::setManualLocation(double latitude, double longitude, const Q
 }
 void WeatherPlugin::clearManualLocation() { m_backend.clearManualLocation(); }
 QVariantMap WeatherPlugin::current() const { return m_backend.snapshot().current; }
+
+double WeatherPlugin::normalDaytimeTemperatureC(int month) const
+{
+    const MonthlyTemperatureNormal normal = m_backend.climateNormals().months.value(month);
+    return normal.daytimeValid ? normal.daytimeTemperatureC : qQNaN();
+}
+
+double WeatherPlugin::normalNighttimeTemperatureC(int month) const
+{
+    const MonthlyTemperatureNormal normal = m_backend.climateNormals().months.value(month);
+    return normal.nighttimeValid ? normal.nighttimeTemperatureC : qQNaN();
+}
 
 QVariant WeatherPlugin::currentValue(const QString &key, const QVariant &fallback) const
 {

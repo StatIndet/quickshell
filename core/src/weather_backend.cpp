@@ -2,6 +2,8 @@
 
 #include "weather_cache.h"
 #include "weather_calculator.h"
+#include "weather_climate_normals.h"
+#include "weather_normals_cache.h"
 
 #include <QHash>
 #include <QJsonArray>
@@ -52,7 +54,9 @@ QVariantMap airAt(const QJsonObject &hourly, int index)
 }
 } // namespace
 
-WeatherBackend::WeatherBackend(QObject *parent) : QObject(parent), m_cachePath(WeatherCache::defaultPath())
+WeatherBackend::WeatherBackend(QObject *parent)
+    : QObject(parent), m_cachePath(WeatherCache::defaultPath()),
+      m_normalsCachePath(WeatherNormalsCache::defaultPath())
 {
     loadSettings();
     m_snapshot = WeatherCache::load(m_cachePath);
@@ -111,8 +115,75 @@ void WeatherBackend::setLoading(bool loading)
     emit loadingChanged();
 }
 
+void WeatherBackend::setNormalsLoading(bool loading)
+{
+    if (m_normalsLoading == loading)
+        return;
+    m_normalsLoading = loading;
+    emit normalsLoadingChanged();
+}
+
+void WeatherBackend::ensureClimateNormals(const WeatherLocation &location)
+{
+    const QString requestKey = WeatherNormalsCache::key(
+        location.latitude, location.longitude, WeatherClimateNormals::PeriodStartYear,
+        WeatherClimateNormals::PeriodEndYear, QStringLiteral("era5_land"));
+    m_activeNormalsKey = requestKey;
+
+    if (m_climateNormals.valid &&
+        WeatherNormalsCache::key(m_climateNormals.latitude, m_climateNormals.longitude,
+                                 m_climateNormals.periodStartYear, m_climateNormals.periodEndYear,
+                                 m_climateNormals.model) == requestKey) {
+        setNormalsLoading(false);
+        return;
+    }
+
+    const WeatherClimateNormals cached =
+        WeatherNormalsCache::load(m_normalsCachePath, location.latitude, location.longitude);
+    if (cached.valid) {
+        setNormalsLoading(false);
+        const bool changed =
+            !m_climateNormals.valid ||
+            WeatherNormalsCache::key(m_climateNormals.latitude, m_climateNormals.longitude,
+                                     m_climateNormals.periodStartYear, m_climateNormals.periodEndYear,
+                                     m_climateNormals.model) != requestKey;
+        m_climateNormals = cached;
+        if (changed)
+            emit normalsChanged();
+        return;
+    }
+
+    if (m_attemptedNormalsKeys.contains(requestKey))
+        return;
+    m_attemptedNormalsKeys.insert(requestKey);
+    if (m_climateNormals.valid) {
+        m_climateNormals = {};
+        emit normalsChanged();
+    }
+    setNormalsLoading(true);
+    m_client.requestClimateNormals(
+        location.latitude, location.longitude,
+        [this, location, requestKey](bool ok, const QJsonObject &response, const QString &) {
+            WeatherClimateNormals normals;
+            if (ok)
+                normals = WeatherClimateNormalsAggregator::aggregate(response, location.latitude,
+                                                                     location.longitude);
+            if (normals.valid)
+                WeatherNormalsCache::save(m_normalsCachePath, normals);
+
+            if (m_activeNormalsKey == requestKey) {
+                setNormalsLoading(false);
+                if (normals.valid) {
+                    m_climateNormals = normals;
+                    emit normalsChanged();
+                }
+            }
+        });
+}
+
 void WeatherBackend::startFetch(const WeatherLocation &location)
 {
+    ensureClimateNormals(location);
     m_client.requestForecast(
         location.latitude, location.longitude,
         [this, location](bool forecastOk, const QJsonObject &forecast, const QString &forecastError) {

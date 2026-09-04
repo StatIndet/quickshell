@@ -75,6 +75,27 @@ void OpenMeteoClient::requestAirQuality(double latitude, double longitude, JsonC
     getJson(url, callback);
 }
 
+QUrl OpenMeteoClient::climateNormalsUrl(double latitude, double longitude)
+{
+    QUrl url("https://archive-api.open-meteo.com/v1/archive");
+    QUrlQuery query;
+    query.addQueryItem("latitude", QString::number(latitude, 'f', 6));
+    query.addQueryItem("longitude", QString::number(longitude, 'f', 6));
+    query.addQueryItem("start_date", "1991-01-01");
+    query.addQueryItem("end_date", "2020-12-31");
+    query.addQueryItem("models", "era5_land");
+    query.addQueryItem("daily", "temperature_2m_max,temperature_2m_min");
+    query.addQueryItem("timezone", "auto");
+    query.addQueryItem("temperature_unit", "celsius");
+    url.setQuery(query);
+    return url;
+}
+
+void OpenMeteoClient::requestClimateNormals(double latitude, double longitude, JsonCallback callback)
+{
+    getJson(climateNormalsUrl(latitude, longitude), callback);
+}
+
 void OpenMeteoClient::getJson(const QUrl &url, JsonCallback callback)
 {
     QNetworkRequest request(url);

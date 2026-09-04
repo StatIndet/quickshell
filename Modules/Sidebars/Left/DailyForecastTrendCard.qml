@@ -5,15 +5,21 @@ import qs.Common
 import qs.Services
 import qs.Widgets.common
 import qs.Widgets.weather
+import "WeatherChartMath.js" as WeatherChartMath
 
 Rectangle {
     id: root
 
     property var sourceModel
+    property var normalsSource
     property real itemWidth: trendFlick.width > 0 ? trendFlick.width / 6 : 122
     property int maxItems: 16
     property int currentTab: 0
     property bool foreground: false
+    property var displayTemperatureDomain: [0, 1]
+    readonly property int normalMonth: new Date().getMonth() + 1
+    readonly property real normalDaytimeC: normalTemperature(true)
+    readonly property real normalNighttimeC: normalTemperature(false)
 
     function modelCount() {
         if (!sourceModel)
@@ -39,6 +45,43 @@ Rectangle {
 
     function fmtPercent(value) {
         return value !== undefined && value !== null && !isNaN(value) ? Math.round(value) + "%" : "--";
+    }
+
+    function normalTemperature(daytime) {
+        const source = root.normalsSource;
+        if (!source || !source.normalsAvailable)
+            return NaN;
+
+        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) : source.normalNighttimeTemperatureC(root.normalMonth);
+        return root.valueAt({
+            "value": value
+        }, "value", NaN);
+    }
+
+    function forecastTemperatures() {
+        const values = [];
+        const count = root.modelCount();
+        for (let i = 0; i < count; ++i) {
+            const item = root.itemAt(i);
+            const day = item.day || ({
+            });
+            const night = item.night || ({
+            });
+            const dayTemp = root.valueAt(day, "temperatureC", root.valueAt(item, "temperatureMaxC", NaN));
+            const nightTemp = root.valueAt(night, "temperatureC", root.valueAt(item, "temperatureMinC", NaN));
+            if (!isNaN(dayTemp))
+                values.push(dayTemp);
+
+            if (!isNaN(nightTemp))
+                values.push(nightTemp);
+
+        }
+        return values;
+    }
+
+    function updateTemperatureDomain() {
+        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(), root.normalDaytimeC, root.normalNighttimeC);
+        trendCanvas.requestPaint();
     }
 
     function extraTabLabel() {
@@ -95,7 +138,7 @@ Rectangle {
     onSourceModelChanged: {
         trendFlick.initialPositionApplied = false;
         initialPositionTimer.restart();
-        trendCanvas.requestPaint();
+        updateTemperatureDomain();
     }
     onCurrentTabChanged: {
         if (root.currentTab === 0)
@@ -109,6 +152,7 @@ Rectangle {
     }
     onWidthChanged: trendCanvas.requestPaint()
     onHeightChanged: trendCanvas.requestPaint()
+    Component.onCompleted: updateTemperatureDomain()
 
     Connections {
         function onWeatherTemperatureUnitChanged() {
@@ -116,6 +160,15 @@ Rectangle {
         }
 
         target: UiPreferences
+    }
+
+    Connections {
+        function onNormalsChanged() {
+            root.updateTemperatureDomain();
+        }
+
+        target: root.normalsSource
+        ignoreUnknownSignals: true
     }
 
     Timer {
@@ -370,8 +423,6 @@ Rectangle {
                             let dayValues = [];
                             let nightValues = [];
                             let precipitationValues = [];
-                            let minTemp = 999;
-                            let maxTemp = -999;
                             for (let i = 0; i < count; ++i) {
                                 const item = root.itemAt(i);
                                 const day = item.day || ({
@@ -384,22 +435,13 @@ Rectangle {
                                 dayValues.push(dayTemp);
                                 nightValues.push(nightTemp);
                                 precipitationValues.push(pop);
-                                if (!isNaN(dayTemp)) {
-                                    minTemp = Math.min(minTemp, dayTemp);
-                                    maxTemp = Math.max(maxTemp, dayTemp);
-                                }
-                                if (!isNaN(nightTemp)) {
-                                    minTemp = Math.min(minTemp, nightTemp);
-                                    maxTemp = Math.max(maxTemp, nightTemp);
-                                }
                             }
-                            if (maxTemp < minTemp)
+                            if (root.forecastTemperatures().length === 0)
                                 return ;
 
-                            if (Math.abs(maxTemp - minTemp) < 0.1) {
-                                maxTemp += 1;
-                                minTemp -= 1;
-                            }
+                            const domain = root.displayTemperatureDomain;
+                            const minTemp = domain[0];
+                            const maxTemp = domain[1];
                             ctx.beginPath();
                             for (let f = 0; f < count; ++f) {
                                 const xFill = pointX(f);
@@ -571,6 +613,38 @@ Rectangle {
 
             }
 
+            WeatherTemperatureNormalLine {
+                z: 10
+                visible: root.currentTab === 0 && !isNaN(root.normalDaytimeC)
+                width: parent.width
+                temperatureC: root.normalDaytimeC
+                domainMinimumC: root.displayTemperatureDomain[0]
+                domainMaximumC: root.displayTemperatureDomain[1]
+                chartTop: trendContent.chartTopInset
+                chartBottom: trendContent.chartBottomInset
+                temperatureText: root.fmtTemp(root.normalDaytimeC)
+                numericFontFamily: Fonts.numeric
+                uiFontFamily: Fonts.ui
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                labelColor: Appearance.colors.colOnSurfaceVariant
+            }
+
+            WeatherTemperatureNormalLine {
+                z: 10
+                visible: root.currentTab === 0 && !isNaN(root.normalNighttimeC)
+                width: parent.width
+                temperatureC: root.normalNighttimeC
+                domainMinimumC: root.displayTemperatureDomain[0]
+                domainMaximumC: root.displayTemperatureDomain[1]
+                chartTop: trendContent.chartTopInset
+                chartBottom: trendContent.chartBottomInset
+                temperatureText: root.fmtTemp(root.normalNighttimeC)
+                numericFontFamily: Fonts.numeric
+                uiFontFamily: Fonts.ui
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                labelColor: Appearance.colors.colOnSurfaceVariant
+            }
+
             Item {
                 anchors.fill: parent
                 visible: root.currentTab === 1
@@ -633,21 +707,21 @@ Rectangle {
         function onModelReset() {
             trendFlick.initialPositionApplied = false;
             initialPositionTimer.restart();
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onDataChanged() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onRowsInserted() {
             trendFlick.initialPositionApplied = false;
             initialPositionTimer.restart();
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onRowsRemoved() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         target: root.sourceModel

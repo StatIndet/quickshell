@@ -5,15 +5,21 @@ import qs.Common
 import qs.Services
 import qs.Widgets.common
 import qs.Widgets.weather
+import "WeatherChartMath.js" as WeatherChartMath
 
 Rectangle {
     id: root
 
     property var sourceModel
+    property var normalsSource
     property real itemWidth: trendFlick.width > 0 ? trendFlick.width / 6 : 122
     property int maxItems: 25
     property int currentTab: 0
     property bool foreground: false
+    property var displayTemperatureDomain: [0, 1]
+    readonly property int normalMonth: new Date().getMonth() + 1
+    readonly property real normalDaytimeC: normalTemperature(true)
+    readonly property real normalNighttimeC: normalTemperature(false)
 
     function modelCount() {
         if (!sourceModel)
@@ -37,6 +43,41 @@ Rectangle {
         return value !== undefined && value !== null && !isNaN(value) ? Math.round(UiPreferences.weatherTemperature(value)) + "°" : "--";
     }
 
+    function fmtRain(value) {
+        if (value === undefined || value === null || isNaN(value) || value <= 0)
+            return "";
+
+        return Number(value).toFixed(value < 10 ? 1 : 0).replace(/\.0$/, "");
+    }
+
+    function normalTemperature(daytime) {
+        const source = root.normalsSource;
+        if (!source || !source.normalsAvailable)
+            return NaN;
+
+        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) : source.normalNighttimeTemperatureC(root.normalMonth);
+        return root.valueAt({
+            "value": value
+        }, "value", NaN);
+    }
+
+    function forecastTemperatures() {
+        const values = [];
+        const count = root.modelCount();
+        for (let i = 0; i < count; ++i) {
+            const temperature = root.valueAt(root.itemAt(i), "temperatureC", NaN);
+            if (!isNaN(temperature))
+                values.push(temperature);
+
+        }
+        return values;
+    }
+
+    function updateTemperatureDomain() {
+        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(), root.normalDaytimeC, root.normalNighttimeC);
+        trendCanvas.requestPaint();
+    }
+
     function hourLabel(epoch) {
         return epoch ? UiPreferences.hourTime(new Date(epoch * 1000)) : "--";
     }
@@ -51,7 +92,7 @@ Rectangle {
     border.width: 1
     border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.42)
     clip: true
-    onSourceModelChanged: trendCanvas.requestPaint()
+    onSourceModelChanged: updateTemperatureDomain()
     onCurrentTabChanged: {
         if (root.currentTab === 0)
             trendCanvas.requestPaint();
@@ -64,6 +105,7 @@ Rectangle {
     }
     onWidthChanged: trendCanvas.requestPaint()
     onHeightChanged: trendCanvas.requestPaint()
+    Component.onCompleted: updateTemperatureDomain()
 
     Connections {
         function onWeatherTemperatureUnitChanged() {
@@ -71,6 +113,15 @@ Rectangle {
         }
 
         target: UiPreferences
+    }
+
+    Connections {
+        function onNormalsChanged() {
+            root.updateTemperatureDomain();
+        }
+
+        target: root.normalsSource
+        ignoreUnknownSignals: true
     }
 
     ColumnLayout {
@@ -246,8 +297,10 @@ Rectangle {
                     property real topTextY: 6
                     property real iconY: 28
                     property real iconSize: Math.max(46, Math.min(60, root.itemWidth * 0.46))
-                    property real chartTopInset: 96
-                    property real chartBottomInset: Math.max(chartTopInset + 70, height - 30)
+                    property real chartTopInset: 94
+                    property real chartBottomInset: Math.max(chartTopInset + 72, height - 68)
+                    property real rainTopInset: chartBottomInset + 17
+                    property real rainBottomInset: height - 8
 
                     width: trendFlick.contentWidth
                     height: trendFlick.height
@@ -258,6 +311,7 @@ Rectangle {
                         property color primaryColor: Appearance.colors.colPrimary
                         property color pointInnerColor: Appearance.colors.colLayer4
                         property color textColor: Appearance.colors.colOnSurface
+                        property color rainColor: "#64b5f6"
                         property real chartTop: trendContent.chartTopInset
                         property real chartBottom: trendContent.chartBottomInset
 
@@ -282,24 +336,51 @@ Rectangle {
                                 return ;
 
                             let values = [];
-                            let minTemp = 999;
-                            let maxTemp = -999;
+                            let rainValues = [];
                             for (let i = 0; i < count; ++i) {
                                 const item = root.itemAt(i);
                                 const temp = root.valueAt(item, "temperatureC", NaN);
                                 values.push(temp);
-                                if (!isNaN(temp)) {
-                                    minTemp = Math.min(minTemp, temp);
-                                    maxTemp = Math.max(maxTemp, temp);
-                                }
+                                rainValues.push(Math.max(0, root.valueAt(item, "rainMm", 0)));
                             }
-                            if (maxTemp < minTemp)
+                            if (root.forecastTemperatures().length === 0)
                                 return ;
 
-                            if (Math.abs(maxTemp - minTemp) < 0.1) {
-                                maxTemp += 1;
-                                minTemp -= 1;
+                            const domain = root.displayTemperatureDomain;
+                            const minTemp = domain[0];
+                            const maxTemp = domain[1];
+                            const maxRain = WeatherChartMath.rainMaximum(rainValues);
+                            const rainBandHeight = Math.max(0, trendContent.rainBottomInset - trendContent.rainTopInset - 16);
+                            if (maxRain > 0) {
+                                const barWidth = Math.max(7, Math.min(12, root.itemWidth * 0.16));
+                                for (let r = 0; r < count; ++r) {
+                                    const rain = rainValues[r];
+                                    const barHeight = WeatherChartMath.rainBarHeight(rain, maxRain, rainBandHeight);
+                                    if (barHeight <= 0)
+                                        continue;
+
+                                    const rainX = pointX(r);
+                                    const rainY = trendContent.rainBottomInset - barHeight;
+                                    ctx.fillStyle = Qt.rgba(rainColor.r, rainColor.g, rainColor.b, 0.62);
+                                    ctx.beginPath();
+                                    ctx.roundedRect(rainX - barWidth / 2, rainY, barWidth, barHeight, barWidth / 2, barWidth / 2);
+                                    ctx.fill();
+                                    ctx.fillStyle = rainColor;
+                                    ctx.font = "bold 10px " + Fonts.cssFamily(Fonts.numeric);
+                                    ctx.textAlign = "center";
+                                    ctx.fillText(root.fmtRain(rain), rainX, trendContent.rainTopInset + 10);
+                                }
                             }
+                            const areaGradient = ctx.createLinearGradient(0, chartTop, 0, chartBottom);
+                            areaGradient.addColorStop(0, Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.2));
+                            areaGradient.addColorStop(1, Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.02));
+                            ctx.fillStyle = areaGradient;
+                            ctx.beginPath();
+                            ctx.moveTo(pointX(0), chartBottom);
+                            for (let a = 0; a < count; ++a) ctx.lineTo(pointX(a), yAt(values[a], minTemp, maxTemp))
+                            ctx.lineTo(pointX(count - 1), chartBottom);
+                            ctx.closePath();
+                            ctx.fill();
                             ctx.strokeStyle = primaryColor;
                             ctx.lineWidth = 3;
                             ctx.lineJoin = "round";
@@ -402,6 +483,38 @@ Rectangle {
 
             }
 
+            WeatherTemperatureNormalLine {
+                z: 10
+                visible: root.currentTab === 0 && !isNaN(root.normalDaytimeC)
+                width: parent.width
+                temperatureC: root.normalDaytimeC
+                domainMinimumC: root.displayTemperatureDomain[0]
+                domainMaximumC: root.displayTemperatureDomain[1]
+                chartTop: trendContent.chartTopInset
+                chartBottom: trendContent.chartBottomInset
+                temperatureText: root.fmtTemp(root.normalDaytimeC)
+                numericFontFamily: Fonts.numeric
+                uiFontFamily: Fonts.ui
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                labelColor: Appearance.colors.colOnSurfaceVariant
+            }
+
+            WeatherTemperatureNormalLine {
+                z: 10
+                visible: root.currentTab === 0 && !isNaN(root.normalNighttimeC)
+                width: parent.width
+                temperatureC: root.normalNighttimeC
+                domainMinimumC: root.displayTemperatureDomain[0]
+                domainMaximumC: root.displayTemperatureDomain[1]
+                chartTop: trendContent.chartTopInset
+                chartBottom: trendContent.chartBottomInset
+                temperatureText: root.fmtTemp(root.normalNighttimeC)
+                numericFontFamily: Fonts.numeric
+                uiFontFamily: Fonts.ui
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                labelColor: Appearance.colors.colOnSurfaceVariant
+            }
+
             Item {
                 anchors.fill: parent
                 visible: root.currentTab === 1
@@ -479,19 +592,19 @@ Rectangle {
 
     Connections {
         function onModelReset() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onDataChanged() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onRowsInserted() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         function onRowsRemoved() {
-            trendCanvas.requestPaint();
+            root.updateTemperatureDomain();
         }
 
         target: root.sourceModel
