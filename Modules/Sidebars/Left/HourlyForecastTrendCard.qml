@@ -41,6 +41,11 @@ Rectangle {
         return epoch ? UiPreferences.hourTime(new Date(epoch * 1000)) : "--";
     }
 
+    function extraTabLabel() {
+        const labels = [qsTr("紫外线指数"), qsTr("降水量"), qsTr("体感温度"), qsTr("相对湿度 / 露点"), qsTr("气压"), qsTr("云量"), qsTr("能见度")];
+        return currentTab >= 3 && currentTab < 10 ? labels[currentTab - 3] : "";
+    }
+
     radius: 26
     color: Appearance.colors.colWeatherCardSurface
     border.width: 1
@@ -133,17 +138,85 @@ Rectangle {
                     Layout.fillWidth: true
                 }
 
+                Text {
+                    visible: root.currentTab >= 3
+                    text: root.extraTabLabel()
+                    color: Appearance.colors.colPrimary
+                    font.family: Fonts.ui
+                    font.pixelSize: 13
+                    font.bold: true
+                    Layout.alignment: Qt.AlignVCenter
+                }
+
                 IconButton {
                     Layout.alignment: Qt.AlignVCenter
                     controlSize: 36
                     iconName: "more_horiz"
                     iconSize: 20
                     iconColor: Appearance.colors.colOnSurfaceVariant
+                    selected: root.currentTab >= 3
+                    selectedIconColor: Appearance.colors.colOnPrimaryContainer
                     accessibleName: qsTr("逐小时预报更多选项")
                     normalContainerColor: Appearance.colors.colLayer2
+                    selectedContainerColor: Appearance.colors.colPrimaryContainer
                     hoverStateLayerColor: Appearance.colors.colLayer4
                     pressedStateLayerColor: Appearance.colors.colLayer4Active
-                    onClicked: console.warn("[Weather] hourly forecast menu is unavailable")
+                    onClicked: extraMenu.open()
+
+                    Menu {
+                        id: extraMenu
+
+                        MenuItem {
+                            text: qsTr("紫外线指数")
+                            checkable: true
+                            checked: root.currentTab === 3
+                            onTriggered: root.currentTab = 3
+                        }
+
+                        MenuItem {
+                            text: qsTr("降水量")
+                            checkable: true
+                            checked: root.currentTab === 4
+                            onTriggered: root.currentTab = 4
+                        }
+
+                        MenuItem {
+                            text: qsTr("体感温度")
+                            checkable: true
+                            checked: root.currentTab === 5
+                            onTriggered: root.currentTab = 5
+                        }
+
+                        MenuItem {
+                            text: qsTr("相对湿度 / 露点")
+                            checkable: true
+                            checked: root.currentTab === 6
+                            onTriggered: root.currentTab = 6
+                        }
+
+                        MenuItem {
+                            text: qsTr("气压")
+                            checkable: true
+                            checked: root.currentTab === 7
+                            onTriggered: root.currentTab = 7
+                        }
+
+                        MenuItem {
+                            text: qsTr("云量")
+                            checkable: true
+                            checked: root.currentTab === 8
+                            onTriggered: root.currentTab = 8
+                        }
+
+                        MenuItem {
+                            text: qsTr("能见度")
+                            checkable: true
+                            checked: root.currentTab === 9
+                            onTriggered: root.currentTab = 9
+                        }
+
+                    }
+
                 }
 
             }
@@ -166,6 +239,7 @@ Rectangle {
                 contentWidth: Math.max(width, root.modelCount() * root.itemWidth)
                 contentHeight: height
                 visible: root.currentTab === 0
+
                 Item {
                     id: trendContent
 
@@ -348,6 +422,55 @@ Rectangle {
                     sourceModel: root.sourceModel
                 }
 
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 3
+                sourceModel: root.sourceModel
+                metric: "uv"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 4
+                sourceModel: root.sourceModel
+                metric: "precipitation"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 5
+                sourceModel: root.sourceModel
+                metric: "feels"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 6
+                sourceModel: root.sourceModel
+                metric: "humidity"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 7
+                sourceModel: root.sourceModel
+                metric: "pressure"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 8
+                sourceModel: root.sourceModel
+                metric: "cloud"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 9
+                sourceModel: root.sourceModel
+                metric: "visibility"
             }
 
         }

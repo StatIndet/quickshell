@@ -41,6 +41,11 @@ Rectangle {
         return value !== undefined && value !== null && !isNaN(value) ? Math.round(value) + "%" : "--";
     }
 
+    function extraTabLabel() {
+        const labels = [qsTr("紫外线指数"), qsTr("降水量"), qsTr("日照"), qsTr("体感温度")];
+        return currentTab >= 3 && currentTab < 7 ? labels[currentTab - 3] : "";
+    }
+
     function applyInitialPosition() {
         if (trendFlick.initialPositionApplied)
             return ;
@@ -186,17 +191,64 @@ Rectangle {
                     Layout.fillWidth: true
                 }
 
+                Text {
+                    visible: root.currentTab >= 3
+                    text: root.extraTabLabel()
+                    color: Appearance.colors.colPrimary
+                    font.family: Fonts.ui
+                    font.pixelSize: 13
+                    font.bold: true
+                    Layout.alignment: Qt.AlignVCenter
+                }
+
                 IconButton {
                     Layout.alignment: Qt.AlignVCenter
                     controlSize: 36
                     iconName: "more_horiz"
                     iconSize: 20
                     iconColor: Appearance.colors.colOnSurfaceVariant
+                    selected: root.currentTab >= 3
+                    selectedIconColor: Appearance.colors.colOnPrimaryContainer
                     accessibleName: qsTr("每日预报更多选项")
                     normalContainerColor: Appearance.colors.colLayer2
+                    selectedContainerColor: Appearance.colors.colPrimaryContainer
                     hoverStateLayerColor: Appearance.colors.colLayer4
                     pressedStateLayerColor: Appearance.colors.colLayer4Active
-                    onClicked: console.warn("[Weather] daily forecast menu is unavailable")
+                    onClicked: extraMenu.open()
+
+                    Menu {
+                        id: extraMenu
+
+                        MenuItem {
+                            text: qsTr("紫外线指数")
+                            checkable: true
+                            checked: root.currentTab === 3
+                            onTriggered: root.currentTab = 3
+                        }
+
+                        MenuItem {
+                            text: qsTr("降水量")
+                            checkable: true
+                            checked: root.currentTab === 4
+                            onTriggered: root.currentTab = 4
+                        }
+
+                        MenuItem {
+                            text: qsTr("日照")
+                            checkable: true
+                            checked: root.currentTab === 5
+                            onTriggered: root.currentTab = 5
+                        }
+
+                        MenuItem {
+                            text: qsTr("体感温度")
+                            checkable: true
+                            checked: root.currentTab === 6
+                            onTriggered: root.currentTab = 6
+                        }
+
+                    }
+
                 }
 
             }
@@ -539,6 +591,38 @@ Rectangle {
                     sourceModel: root.sourceModel
                 }
 
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 3
+                sourceModel: root.sourceModel
+                daily: true
+                metric: "uv"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 4
+                sourceModel: root.sourceModel
+                daily: true
+                metric: "precipitation"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 5
+                sourceModel: root.sourceModel
+                daily: true
+                metric: "sunshine"
+            }
+
+            WeatherMetricTrendPane {
+                anchors.fill: parent
+                visible: root.currentTab === 6
+                sourceModel: root.sourceModel
+                daily: true
+                metric: "feels"
             }
 
         }
