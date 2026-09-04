@@ -103,25 +103,21 @@ FloatingWindow {
             anchors.top: parent.top
             anchors.margins: Metrics.spacingL
 
-            ActionButton {
-                text: qsTr("回到已选位置")
+            IconButton {
                 iconName: "my_location"
-                contentColor: "#FF111111"
-                rippleColor: "#FF111111"
-                stateLayerColor: "#FF111111"
-                hoverStateLayerColor: "#FF111111"
-                pressedStateLayerColor: "#FF111111"
+                accessibleName: qsTr("回到已选位置")
+                iconColor: "#FF111111"
+                normalHoverStateLayerColor: "#14111111"
+                normalPressedStateLayerColor: "#1F111111"
                 onClicked: map.recenter(root.markerLatitude, root.markerLongitude, root.zoomLevel)
             }
 
-            ActionButton {
-                text: qsTr("关闭")
+            IconButton {
                 iconName: "close"
-                contentColor: "#FF111111"
-                rippleColor: "#FF111111"
-                stateLayerColor: "#FF111111"
-                hoverStateLayerColor: "#FF111111"
-                pressedStateLayerColor: "#FF111111"
+                accessibleName: qsTr("关闭")
+                iconColor: "#FF111111"
+                normalHoverStateLayerColor: "#14111111"
+                normalPressedStateLayerColor: "#1F111111"
                 onClicked: root.dismiss()
             }
 

@@ -12,14 +12,15 @@ StyledButtonGroup {
 
     currentValue: currentLayer
     buttonHeight: 34
-    horizontalPadding: 11
-    buttonMinWidth: 42
-    textPixelSize: 11
+    horizontalPadding: 8
+    buttonMinWidth: 36
+    iconOnly: true
     model: WeatherMapProviders.layerOptions(providerId).map((layer) => {
         return ({
             "value": layer.id,
             "label": layer.label,
-            "icon": layer.icon
+            "icon": layer.icon,
+            "tooltip": layer.label
         });
     })
     Accessible.name: qsTr("天气地图图层")
