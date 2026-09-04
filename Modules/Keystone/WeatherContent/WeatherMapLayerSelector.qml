@@ -1,45 +1,29 @@
 import QtQuick
+import qs.Modules.Map
 import qs.Widgets.common
 
 StyledButtonGroup {
     id: root
 
-    property string currentMode: "temp"
-    signal modeSelected(string mode)
+    property string providerId: "rainviewer"
+    property string currentLayer: "radar"
 
-    currentValue: currentMode
+    signal layerSelected(string layerId)
+
+    currentValue: currentLayer
     buttonHeight: 34
     horizontalPadding: 11
     buttonMinWidth: 42
     textPixelSize: 11
-    model: [
-        ({
-            "value": "temp",
-            "label": qsTr("温度"),
-            "tooltip": qsTr("温度热力图")
-        }),
-        ({
-            "value": "rain",
-            "label": qsTr("降水"),
-            "tooltip": qsTr("当前降水地图")
-        }),
-        ({
-            "value": "clouds",
-            "label": qsTr("云量"),
-            "tooltip": qsTr("当前云量地图")
-        }),
-        ({
-            "value": "wind",
-            "label": qsTr("风速"),
-            "tooltip": qsTr("当前风速地图")
-        }),
-        ({
-            "value": "pressure",
-            "label": qsTr("气压"),
-            "tooltip": qsTr("当前大气压地图")
-        })
-    ]
-
+    model: WeatherMapProviders.layerOptions(providerId).map((layer) => {
+        return ({
+            "value": layer.id,
+            "label": layer.label,
+            "icon": layer.icon
+        });
+    })
     Accessible.name: qsTr("天气地图图层")
-    onValueSelected: value => root.modeSelected(value)
+    onValueSelected: (value) => {
+        return root.layerSelected(value);
+    }
 }

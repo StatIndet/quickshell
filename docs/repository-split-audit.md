@@ -5,7 +5,7 @@
 `core/src/` 和 `core/plugin/` 提供：
 
 - `Clavis.Niri`：Niri IPC、窗口、工作区、输出和窗口图标；
-- `Clavis.Weather` / `Clavis.WeatherMap`：Open-Meteo、TTL/普通缓存和瓦片图像；
+- `Clavis.Weather` / `Clavis.WeatherMap`：Open-Meteo、地图凭据和 RainViewer metadata；地图渲染与网络瓦片缓存由 MapLibre Native Qt 负责；
 - `Clavis.Cava`：PipeWire 实时采集、RMS/Peak、频谱和 libcava；
 - `Clavis.Lyrics`：异步 Local/LRCLIB/NetEase provider、缓存、LRC 和 seek 映射；
 - `Clavis.Media`、`Clavis.Keyboard`、`Clavis.I18n`、`Clavis.Runtime`、`M3Shapes`。

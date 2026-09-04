@@ -51,6 +51,7 @@ Core development dependencies include:
 - CMake
 - Ninja
 - QtKeychain
+- MapLibre Native Qt (`maplibre-native-qt` on Arch Linux)
 - PipeWire
 - libcava
 

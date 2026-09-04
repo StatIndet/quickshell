@@ -4,6 +4,7 @@
 
 - Qt 6 Core、Gui、Qml、Quick、Network、ShaderTools、LinguistTools
 - Qt6Keychain
+- MapLibre Native Qt（Arch Linux 软件包：`maplibre-native-qt`，包含 QtLocation `maplibre` plugin 与 `MapLibre 3.0` QML module）
 - CMake 与 Ninja
 - PipeWire `libpipewire-0.3`
 - libcava/cava

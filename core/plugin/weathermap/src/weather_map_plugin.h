@@ -19,6 +19,10 @@ class WeatherMapPlugin : public QObject {
     Q_PROPERTY(QString status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY statusChanged)
     Q_PROPERTY(QString mapTilerStatus READ mapTilerStatus NOTIFY mapTilerStatusChanged)
+    Q_PROPERTY(QString radarStatus READ radarStatus NOTIFY radarStatusChanged)
+    Q_PROPERTY(QString radarErrorMessage READ radarErrorMessage NOTIFY radarStatusChanged)
+    Q_PROPERTY(QString radarTileUrl READ radarTileUrl NOTIFY radarFrameChanged)
+    Q_PROPERTY(qint64 radarFrameTime READ radarFrameTime NOTIFY radarFrameChanged)
 
   public:
     explicit WeatherMapPlugin(QObject *parent = nullptr);
@@ -33,15 +37,21 @@ class WeatherMapPlugin : public QObject {
     QString status() const;
     QString errorMessage() const;
     QString mapTilerStatus() const;
+    QString radarStatus() const;
+    QString radarErrorMessage() const;
+    QString radarTileUrl() const;
+    qint64 radarFrameTime() const;
 
-    Q_INVOKABLE void beginViewport(int generation);
-    Q_INVOKABLE QVariantMap requestTile(const QString &kind, const QString &layer, int zoom, int x, int y,
-                                        int generation, bool forceRefresh);
     Q_INVOKABLE QVariantMap storeApiKey(const QString &apiKey);
     Q_INVOKABLE QVariantMap clearApiKey();
     Q_INVOKABLE QVariantMap storeMapTilerApiKey(const QString &apiKey);
     Q_INVOKABLE QVariantMap clearMapTilerApiKey();
     Q_INVOKABLE void reloadCredentials();
+    Q_INVOKABLE QString mapTilerStyleUrl(const QString &styleId) const;
+    Q_INVOKABLE QString openWeatherTileUrl(const QString &layerId) const;
+    Q_INVOKABLE void validateMapTilerStyle(const QString &styleId);
+    Q_INVOKABLE void validateOpenWeatherLayer(const QString &layerId);
+    Q_INVOKABLE void refreshRadarMetadata();
 
   signals:
     void activeChanged();
@@ -55,11 +65,8 @@ class WeatherMapPlugin : public QObject {
     void credentialOperationFinished(const QString &operation, bool success, const QString &message);
     void busyChanged();
     void statusChanged();
-    void tileReady(const QString &kind, const QString &layer, int zoom, int x, int y, int generation,
-                   const QString &localUrl, bool stale);
-    void tileFailed(const QString &kind, const QString &layer, int zoom, int x, int y, int generation,
-                    const QString &errorCode);
-    void tileActivity(const QString &layer, int zoom, int x, int y, int generation, bool hasSignal);
+    void radarStatusChanged();
+    void radarFrameChanged();
 
   private:
     WeatherMapProvider m_provider;

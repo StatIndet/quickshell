@@ -359,7 +359,7 @@
 <context>
     <name>AdvancedPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="51"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="50"/>
         <source>请输入 remote 内的相对目录，不要包含 remote 名称或冒号</source>
         <translation>Enter a relative directory inside the remote; do not include a remote name or colon</translation>
     </message>
@@ -369,67 +369,72 @@
         <translation>Enter a valid remote directory</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="143"/>
         <source>云存储</source>
         <translation>Cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="135"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="154"/>
         <source>尚未选择云存储</source>
         <translation>No cloud storage selected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="194"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="204"/>
         <source>添加云存储</source>
         <translation>Add cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="216"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="226"/>
         <source>电脑备份位置</source>
         <translation>Computer backup location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="176"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>刷新配置</source>
         <translation>Refresh configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="23"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="21"/>
         <source>此云存储不支持写入，不能设为默认</source>
         <translation>This cloud storage is read-only and cannot be set as default</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="172"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="128"/>
+        <source>地图与天气服务</source>
+        <translation>Map and weather services</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>正在刷新配置</source>
         <translation>Refreshing configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="176"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
         <source>配置已刷新</source>
         <translation>Configuration refreshed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="196"/>
         <source>查看云存储</source>
         <translation>View cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="205"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="215"/>
         <source>文件上传位置</source>
         <translation>File upload location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="227"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="238"/>
         <source>正在为已启用的程序生成 Matugen 配色…</source>
         <translation>Generating Matugen colors for enabled applications…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="233"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="244"/>
         <source>Matugen 模板生成</source>
         <translation>Matugen template generation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="248"/>
+        <location filename="../Modules/ControlCenter/AdvancedPage.qml" line="259"/>
         <source>启用 %1 Matugen 模板</source>
         <translation>Enable the %1 Matugen template</translation>
     </message>
@@ -1320,7 +1325,7 @@
         <translation>Enter manually</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/BezierCurveLayerEditor.qml" line="1150"/>
+        <location filename="../Modules/ControlCenter/BezierCurveLayerEditor.qml" line="1139"/>
         <source>应用到草稿</source>
         <translation>Apply to draft</translation>
     </message>
@@ -2497,52 +2502,47 @@ Scroll to adjust</translation>
 <context>
     <name>ControlCenterWindow</name>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="187"/>
         <source>设置</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="60"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="23"/>
         <source>账户</source>
         <translation>Account</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="61"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="28"/>
         <source>通用</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="33"/>
         <source>壁纸</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="38"/>
         <source>主题</source>
         <translation>Theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="64"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="43"/>
         <source>钥石</source>
         <translation>Keystone</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="65"/>
-        <source>天气</source>
-        <translation>Weather</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="66"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="48"/>
         <source>高级</source>
         <translation>Advanced</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="274"/>
         <source>路径已复制</source>
         <translation>Path copied</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="274"/>
         <source>配置文件</source>
         <translation>config file</translation>
     </message>
@@ -3511,57 +3511,57 @@ Scroll to adjust</translation>
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="65"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="67"/>
         <source>条栏</source>
         <translation>Bar</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="67"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="69"/>
         <source>侧边栏</source>
         <translation>Sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="75"/>
         <source>开机启动</source>
         <translation>Autostart</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="75"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
         <source>默认应用</source>
         <translation>Default applications</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
         <source>网络</source>
         <translation type="unfinished">Network</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
         <source>连接的设备</source>
         <translation>Connected devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="83"/>
         <source>配对新设备</source>
         <translation>Pair new device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="87"/>
         <source>蓝牙设备</source>
         <translation>Bluetooth device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="88"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="90"/>
         <source>通用</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="69"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
         <source>透明与模糊</source>
         <translation>Transparency and blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
         <source>语言与地区</source>
         <translation>Language &amp; region</translation>
     </message>
@@ -4420,87 +4420,97 @@ Scroll to adjust</translation>
 <context>
     <name>LanguageAndRegionPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="26"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="35"/>
         <source>语言</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="32"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="41"/>
         <source>界面语言</source>
         <translation>Interface language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="33"/>
-        <source>用于 Clavis Quickshell 界面的显示语言</source>
-        <translation>Display language for the Clavis Quickshell interface</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="39"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="47"/>
         <source>选择语言</source>
         <translation>Select language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="55"/>
-        <source>天气</source>
-        <translation>Weather</translation>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="63"/>
+        <source>地区与天气位置</source>
+        <translation>Region &amp; weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="77"/>
-        <source>天气位置地图即将推出</source>
-        <translation>Weather location map coming soon</translation>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="79"/>
+        <source>天气地图</source>
+        <translation>Weather map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="87"/>
-        <source>后续可在地图上选择天气位置</source>
-        <translation>You will be able to choose a weather location on the map</translation>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="84"/>
+        <source>底图服务</source>
+        <translation>Base map service</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="104"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="106"/>
+        <source>MapTiler 未配置，当前使用 OpenFreeMap</source>
+        <translation>MapTiler is not configured; using OpenFreeMap</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="114"/>
+        <source>天气图层服务</source>
+        <translation>Weather layer service</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="136"/>
+        <source>OpenWeather 未配置，当前使用 RainViewer</source>
+        <translation>OpenWeather is not configured; using RainViewer</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="147"/>
         <source>单位</source>
         <translation>Units</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="109"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="152"/>
         <source>天气温度</source>
         <translation>Weather temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="110"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="153"/>
         <source>侧边栏、灵动岛与锁屏天气的温度单位</source>
         <translation>Temperature unit for sidebar, Dynamic Island, and lock-screen weather</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="131"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="174"/>
         <source>硬件温度</source>
         <translation>Hardware temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="132"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="175"/>
         <source>CPU、GPU 与系统监测组件的温度单位</source>
         <translation>Temperature unit for CPU, GPU, and system monitors</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="156"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="199"/>
         <source>时间与日期</source>
         <translation>Time &amp; date</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="161"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="204"/>
         <source>时钟格式</source>
         <translation>Clock format</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="162"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="205"/>
         <source>用于灵动岛、侧边栏与锁屏时钟</source>
         <translation>Used by Dynamic Island, sidebar, and lock-screen clocks</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="167"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="210"/>
         <source>24 小时</source>
         <translation>24-hour</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/LanguageAndRegionPage.qml" line="213"/>
         <source>12 小时</source>
         <translation>12-hour</translation>
     </message>
@@ -4538,6 +4548,72 @@ Scroll to adjust</translation>
     </message>
 </context>
 <context>
+    <name>LocationPicker</name>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="38"/>
+        <source>请输入纬度和经度</source>
+        <translation>Enter latitude and longitude</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="44"/>
+        <source>纬度必须在 -90 到 90 之间</source>
+        <translation>Latitude must be between -90 and 90</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="48"/>
+        <source>经度必须在 -180 到 180 之间</source>
+        <translation>Longitude must be between -180 and 180</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="144"/>
+        <source>回到已选位置</source>
+        <translation>Return to saved location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="153"/>
+        <source>展开地图</source>
+        <translation>Expand map</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="178"/>
+        <source>坐标</source>
+        <translation>Coordinates</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="194"/>
+        <source>保存位置</source>
+        <translation>Save location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="200"/>
+        <source>使用自动位置</source>
+        <translation>Use automatic location</translation>
+    </message>
+</context>
+<context>
+    <name>LocationPickerWindow</name>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="40"/>
+        <source>选择天气位置</source>
+        <translation>Choose weather location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="113"/>
+        <source>回到已选位置</source>
+        <translation>Return to saved location</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="122"/>
+        <source>关闭</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="135"/>
+        <source>保存位置</source>
+        <translation>Save location</translation>
+    </message>
+</context>
+<context>
     <name>LockContent</name>
     <message>
         <location filename="../Modules/Lock/LockContent.qml" line="202"/>
@@ -4561,182 +4637,234 @@ Scroll to adjust</translation>
     </message>
 </context>
 <context>
+    <name>MapFallback</name>
+    <message>
+        <location filename="../Modules/Map/MapFallback.qml" line="10"/>
+        <source>地图暂时不可用</source>
+        <translation>Map temporarily unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/MapFallback.qml" line="53"/>
+        <source>重试</source>
+        <translation>Retry</translation>
+    </message>
+</context>
+<context>
     <name>MapLegend</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="37"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="41"/>
+        <source>雷达</source>
+        <translation>Radar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="44"/>
         <source>温度</source>
         <translation>Temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="40"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="47"/>
         <source>降水</source>
         <translation>Precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="43"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="50"/>
         <source>云量</source>
         <translation>Cloud cover</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="46"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="53"/>
         <source>风速</source>
         <translation>Wind speed</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="49"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="56"/>
         <source>气压</source>
         <translation>Pressure</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="51"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="58"/>
         <source>天气</source>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="56"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="63"/>
+        <source>小雨</source>
+        <translation>Light rain</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="66"/>
         <source>低温</source>
         <translation>Cold</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="59"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="69"/>
         <source>少量</source>
         <translation>Light</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="62"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="72"/>
         <source>晴朗</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="65"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="75"/>
         <source>平静</source>
         <translation>Calm</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="68"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="78"/>
         <source>低</source>
         <translation>Low</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="75"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="85"/>
+        <source>强降水</source>
+        <translation>Heavy precipitation</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="88"/>
         <source>高温</source>
         <translation>Hot</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="78"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="91"/>
         <source>大量</source>
         <translation>Heavy</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="81"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="94"/>
         <source>阴天</source>
         <translation>Overcast</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="84"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="97"/>
         <source>强劲</source>
         <translation>Strong</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="87"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="100"/>
         <source>高</source>
         <translation>High</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="98"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="111"/>
         <source>缓存</source>
         <translation>Cached</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="98"/>
+        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="111"/>
         <source> · 缓存</source>
         <translation> · Cached</translation>
     </message>
 </context>
 <context>
+    <name>MapLibreView</name>
+    <message>
+        <location filename="../Modules/Map/MapLibreView.qml" line="42"/>
+        <source>地图样式暂时不可用</source>
+        <translation>Map style temporarily unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/MapLibreView.qml" line="48"/>
+        <source>地图样式无效</source>
+        <translation>Invalid map style</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/MapLibreView.qml" line="84"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="200"/>
+        <source>地图暂时不可用</source>
+        <translation>Map temporarily unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/MapLibreView.qml" line="124"/>
+        <source>无法创建地图</source>
+        <translation>Unable to create map</translation>
+    </message>
+</context>
+<context>
     <name>MapTilerApiSettingsCard</name>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="30"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="23"/>
         <source>请输入有效的 MapTiler API key</source>
         <translation>Enter a valid MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="29"/>
         <source>无法更新 MapTiler API key</source>
         <translation>Could not update the MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="43"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="35"/>
         <source>无法清除 MapTiler API key</source>
         <translation>Could not clear the MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
         <source>正在检查</source>
         <translation>Checking</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="161"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
         <source>处理中</source>
         <translation>Processing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="163"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
         <source>读取失败</source>
         <translation>Read failed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
         <source>已配置</source>
         <translation>Configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="166"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="121"/>
         <source>未配置</source>
         <translation>Not configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="205"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="159"/>
         <source>输入 MapTiler API key</source>
         <translation>Enter MapTiler API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="231"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="165"/>
         <source>安全保存到系统密钥环</source>
         <translation>Saved securely in the system keyring</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="180"/>
         <source>隐藏 API key</source>
         <translation>Hide API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="224"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="180"/>
         <source>显示 API key</source>
         <translation>Show API key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="244"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="194"/>
         <source>密钥保存在系统密钥环中，保存后立即生效。</source>
         <translation>The key is stored in the system keyring and takes effect immediately after saving.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="305"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="247"/>
         <source>清除密钥</source>
         <translation>Clear key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="311"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="252"/>
         <source>从系统密钥环移除 MapTiler API key</source>
         <translation>Remove the MapTiler API key from the system keyring</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="318"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="259"/>
         <source>保存密钥</source>
         <translation>Save key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="327"/>
+        <location filename="../Modules/ControlCenter/MapTilerApiSettingsCard.qml" line="266"/>
         <source>安全保存并立即应用，无需重启</source>
         <translation>Save securely and apply immediately without restarting</translation>
     </message>
@@ -5746,6 +5874,69 @@ Click to open network settings</translation>
         <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="20"/>
         <source>昨天</source>
         <translation>Yesterday</translation>
+    </message>
+</context>
+<context>
+    <name>OpenWeatherApiSettingsCard</name>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="21"/>
+        <source>请输入有效的 OpenWeather API key</source>
+        <translation>Enter a valid OpenWeather API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="27"/>
+        <source>无法更新 API key</source>
+        <translation>Could not update the API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="33"/>
+        <source>无法清除 API key</source>
+        <translation>Could not clear the API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
+        <source>正在检查</source>
+        <translation>Checking</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
+        <source>已配置</source>
+        <translation>Configured</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="93"/>
+        <source>未配置</source>
+        <translation>Not configured</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="107"/>
+        <source>输入 OpenWeather API key</source>
+        <translation>Enter OpenWeather API key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="111"/>
+        <source>安全保存到系统密钥环</source>
+        <translation>Saved securely in the system keyring</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="129"/>
+        <source>隐藏</source>
+        <translation>Hide</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="129"/>
+        <source>显示</source>
+        <translation>Show</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="135"/>
+        <source>清除密钥</source>
+        <translation>Clear key</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/OpenWeatherApiSettingsCard.qml" line="142"/>
+        <source>保存密钥</source>
+        <translation>Save key</translation>
     </message>
 </context>
 <context>
@@ -8174,7 +8365,7 @@ detected</translation>
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="609"/>
+        <location filename="../Services/UiPreferences.qml" line="641"/>
         <source>无法同步系统亮暗色设置</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8466,14 +8657,14 @@ Scroll to adjust; click to open sound</translation>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="490"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1161"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1167"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1150"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1156"/>
         <source>每显示器独立壁纸</source>
         <translation>Per-monitor wallpapers</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="507"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1177"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1166"/>
         <source>选择输出</source>
         <translation>Select output</translation>
     </message>
@@ -8504,7 +8695,7 @@ Scroll to adjust; click to open sound</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="536"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1186"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1175"/>
         <source>转场类型</source>
         <translation>Transition type</translation>
     </message>
@@ -8524,51 +8715,51 @@ Scroll to adjust; click to open sound</translation>
         <translation>The current transition does not use duration.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="892"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="881"/>
         <source>当前转场不使用缓动曲线。</source>
         <translation>The current transition does not use an easing curve.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="988"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="995"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="977"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="984"/>
         <source>随平铺窗口焦点移动</source>
         <translation>Follow tiled-window focus</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1007"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1022"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="996"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1011"/>
         <source>壁纸缩放</source>
         <translation>Wallpaper scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1036"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1052"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1025"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1041"/>
         <source>横向行程列数</source>
         <translation>Horizontal travel columns</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1065"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1054"/>
         <source>桌面视差仅适用于 Quickshell。</source>
         <translation>Desktop parallax is available only with Quickshell.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1084"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1073"/>
         <source>缺少 niri backdrop 规则，请按文档手动配置 clavis-overview-wallpaper。</source>
         <translation>The niri backdrop rule is missing. Configure clavis-overview-wallpaper manually as documented.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1095"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1084"/>
         <source>niri 工作区背景不透明，请在 layout 中手动设置 background-color &quot;transparent&quot;。</source>
         <translation>The niri workspace background is opaque. Manually set background-color &quot;transparent&quot; in layout.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1132"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1138"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1121"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1127"/>
         <source>启用背景</source>
         <translation>Enable background</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1213"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1202"/>
         <source>图像效果</source>
         <translation>Image effects</translation>
     </message>
@@ -8608,86 +8799,86 @@ Scroll to adjust; click to open sound</translation>
         <translation>The none transition does not use transition step.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="898"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="887"/>
         <source>视差效果</source>
         <translation>Parallax effects</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="916"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="922"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="905"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="911"/>
         <source>垂直视差</source>
         <translation>Vertical parallax</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="931"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="920"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="943"/>
         <source>随工作区移动</source>
         <translation>Follow workspaces</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="965"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
         <source>需要先启用垂直视差。</source>
         <translation>Enable vertical parallax first.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="973"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="979"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="962"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="968"/>
         <source>随侧边栏移动</source>
         <translation>Follow sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1071"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1060"/>
         <source>Overview 背景</source>
         <translation>Overview background</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1147"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1152"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1136"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1141"/>
         <source>使用桌面壁纸</source>
         <translation>Use desktop wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1178"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1167"/>
         <source>overview 壁纸输出</source>
         <translation>Overview wallpaper output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1222"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1211"/>
         <source>模糊</source>
         <translation>Blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1237"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1226"/>
         <source>overview 模糊</source>
         <translation>Overview blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1250"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1239"/>
         <source>暗化</source>
         <translation>Dim</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1264"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1253"/>
         <source>overview 暗化</source>
         <translation>Overview dimming</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1277"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1266"/>
         <source>饱和度</source>
         <translation>Saturation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1292"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1281"/>
         <source>overview 饱和度</source>
         <translation>Overview saturation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1305"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1294"/>
         <source>对比度</source>
         <translation>Contrast</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1320"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1309"/>
         <source>overview 对比度</source>
         <translation>Overview contrast</translation>
     </message>
@@ -8708,7 +8899,7 @@ Scroll to adjust; click to open sound</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="850"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="867"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="855"/>
         <source>编辑贝塞尔</source>
         <translation>Edit Bézier curve</translation>
     </message>
@@ -8771,99 +8962,6 @@ Scroll to adjust; click to open sound</translation>
         <location filename="../Modules/Keystone/WeatherContent/WeatherAQIIndicator.qml" line="71"/>
         <source>空气质量</source>
         <translation>Air quality</translation>
-    </message>
-</context>
-<context>
-    <name>WeatherApiSettings</name>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="36"/>
-        <source>请输入有效的 OpenWeather API key</source>
-        <translation>Enter a valid OpenWeather API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="43"/>
-        <source>无法更新 API key</source>
-        <translation>Could not update the API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="49"/>
-        <source>无法清除 API key</source>
-        <translation>Could not clear the API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="131"/>
-        <source>天气</source>
-        <translation>Weather</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="222"/>
-        <source>正在检查</source>
-        <translation>Checking</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="224"/>
-        <source>处理中</source>
-        <translation>Processing</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="226"/>
-        <source>已配置</source>
-        <translation>Configured</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="227"/>
-        <source>未配置</source>
-        <translation>Not configured</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="264"/>
-        <source>输入 OpenWeather API key</source>
-        <translation>Enter OpenWeather API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="294"/>
-        <source>安全保存到系统密钥环</source>
-        <translation>Saved securely in the system keyring</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="283"/>
-        <source>隐藏 API key</source>
-        <translation>Hide API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="284"/>
-        <source>显示 API key</source>
-        <translation>Show API key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="307"/>
-        <source>密钥保存在系统密钥环中，保存后立即生效。</source>
-        <translation>The key is stored in the system keyring and takes effect immediately after saving.</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="368"/>
-        <source>清除密钥</source>
-        <translation>Clear key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="374"/>
-        <source>从系统密钥环移除 OpenWeather API key</source>
-        <translation>Remove the OpenWeather API key from the system keyring</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="381"/>
-        <source>保存密钥</source>
-        <translation>Save key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="390"/>
-        <source>安全保存并立即应用，无需重启</source>
-        <translation>Save securely and apply immediately without restarting</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/WeatherApiSettings.qml" line="437"/>
-        <source>密钥仅保存在系统密钥环中，不会写入项目配置或显示在界面中。</source>
-        <translation>The key is stored only in the system keyring and is never written to project configuration or shown in the interface.</translation>
     </message>
 </context>
 <context>
@@ -9124,133 +9222,85 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherMapCard</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="71"/>
-        <source>温度天气地图</source>
-        <translation>Temperature weather map</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="147"/>
+        <source>回到天气位置</source>
+        <translation>Return to weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="73"/>
-        <source>当前降水天气地图</source>
-        <translation>Current precipitation weather map</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <source>当前使用 OpenFreeMap</source>
+        <translation>Using OpenFreeMap</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="75"/>
-        <source>云量天气地图</source>
-        <translation>Cloud-cover weather map</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <source>当前使用 RainViewer</source>
+        <translation>Using RainViewer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="77"/>
-        <source>风速天气地图</source>
-        <translation>Wind-speed weather map</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <source>正在加载天气图层</source>
+        <translation>Loading weather layer</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="79"/>
-        <source>大气压天气地图</source>
-        <translation>Atmospheric-pressure weather map</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="168"/>
+        <source>天气图层暂时不可用</source>
+        <translation>Weather layer temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="80"/>
-        <source>天气地图</source>
-        <translation>Weather map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="81"/>
-        <source>拖动地图以移动，或使用鼠标滚轮缩放</source>
-        <translation>Drag to move the map, or use the mouse wheel to zoom</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="140"/>
-        <source>MapTiler 底图未配置</source>
-        <translation>MapTiler base map is not configured</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="142"/>
-        <source>无法访问 MapTiler 密钥</source>
-        <translation>Could not access the MapTiler key</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="144"/>
-        <source>MapTiler API key 无效</source>
-        <translation>The MapTiler API key is invalid</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="146"/>
-        <source>MapTiler 请求频率受限</source>
-        <translation>MapTiler request rate limited</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="148"/>
-        <source>底图网络不可用，正在使用缓存</source>
-        <translation>Base-map network unavailable; using cache</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="582"/>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="625"/>
-        <source>返回当前位置</source>
-        <translation>Back to current location</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="685"/>
-        <source>正在等待天气位置</source>
-        <translation>Waiting for weather location</translation>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="192"/>
+        <source>天气位置暂不可用</source>
+        <translation>Weather location temporarily unavailable</translation>
     </message>
 </context>
 <context>
     <name>WeatherMapLayerSelector</name>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="18"/>
-        <source>温度</source>
-        <translation>Temp</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="19"/>
-        <source>温度热力图</source>
-        <translation>Temperature heat map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="23"/>
-        <source>降水</source>
-        <translation>Rain</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="24"/>
-        <source>当前降水地图</source>
-        <translation>Current precipitation map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="28"/>
-        <source>云量</source>
-        <translation>Cloud</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="29"/>
-        <source>当前云量地图</source>
-        <translation>Current cloud-cover map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="33"/>
-        <source>风速</source>
-        <translation>Wind</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="34"/>
-        <source>当前风速地图</source>
-        <translation>Current wind-speed map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="38"/>
-        <source>气压</source>
-        <translation>Pressure</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="39"/>
-        <source>当前大气压地图</source>
-        <translation>Current atmospheric-pressure map</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="43"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapLayerSelector.qml" line="25"/>
         <source>天气地图图层</source>
         <translation>Weather map layer</translation>
+    </message>
+</context>
+<context>
+    <name>WeatherMapProviders</name>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="8"/>
+        <source>RainViewer</source>
+        <translation>RainViewer</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="14"/>
+        <source>OpenWeather</source>
+        <translation>OpenWeather</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="22"/>
+        <source>雷达</source>
+        <translation>Radar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="27"/>
+        <source>温度</source>
+        <translation>Temperature</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="32"/>
+        <source>降水</source>
+        <translation>Precipitation</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="37"/>
+        <source>云量</source>
+        <translation>Cloud cover</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="42"/>
+        <source>风速</source>
+        <translation>Wind speed</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Map/WeatherMapProviders.qml" line="47"/>
+        <source>气压</source>
+        <translation>Pressure</translation>
     </message>
 </context>
 <context>

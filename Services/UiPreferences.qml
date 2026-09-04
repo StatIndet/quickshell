@@ -15,6 +15,8 @@ Singleton {
     property string language: normalizedLanguage(Qt.locale().name)
     property string weatherTemperatureUnit: "celsius"
     property string systemTemperatureUnit: "celsius"
+    property string weatherMapBaseProvider: "openfreemap"
+    property string weatherMapOverlayProvider: "rainviewer"
     property string systemMonitorGpuId: "auto"
     property string systemMonitorDiskDevice: ""
     property string systemMonitorNetworkInterface: ""
@@ -104,6 +106,32 @@ Singleton {
             return ;
 
         root.systemTemperatureUnit = normalized;
+        root.save();
+    }
+
+    function normalizedWeatherMapBaseProvider(value) {
+        return root.allowedValue(value, ["openfreemap", "maptiler"], "openfreemap");
+    }
+
+    function normalizedWeatherMapOverlayProvider(value) {
+        return root.allowedValue(value, ["rainviewer", "openweather"], "rainviewer");
+    }
+
+    function setWeatherMapBaseProvider(value) {
+        const normalized = root.normalizedWeatherMapBaseProvider(value);
+        if (root.weatherMapBaseProvider === normalized)
+            return ;
+
+        root.weatherMapBaseProvider = normalized;
+        root.save();
+    }
+
+    function setWeatherMapOverlayProvider(value) {
+        const normalized = root.normalizedWeatherMapOverlayProvider(value);
+        if (root.weatherMapOverlayProvider === normalized)
+            return ;
+
+        root.weatherMapOverlayProvider = normalized;
         root.save();
     }
 
@@ -462,6 +490,8 @@ Singleton {
             "language": root.language,
             "weatherTemperatureUnit": root.weatherTemperatureUnit,
             "systemTemperatureUnit": root.systemTemperatureUnit,
+            "weatherMapBaseProvider": root.weatherMapBaseProvider,
+            "weatherMapOverlayProvider": root.weatherMapOverlayProvider,
             "systemMonitorGpuId": root.systemMonitorGpuId,
             "systemMonitorDiskDevice": root.systemMonitorDiskDevice,
             "systemMonitorNetworkInterface": root.systemMonitorNetworkInterface,
@@ -525,6 +555,8 @@ Singleton {
                 root.language = root.normalizedLanguage(parsed.language || Qt.locale().name);
                 root.weatherTemperatureUnit = root.normalizedTemperatureUnit(parsed.weatherTemperatureUnit);
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
+                root.weatherMapBaseProvider = root.normalizedWeatherMapBaseProvider(parsed.weatherMapBaseProvider);
+                root.weatherMapOverlayProvider = root.normalizedWeatherMapOverlayProvider(parsed.weatherMapOverlayProvider);
                 root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);
                 root.systemMonitorDiskDevice = root.normalizedDiskDevice(parsed.systemMonitorDiskDevice, "");
                 root.systemMonitorNetworkInterface = String(parsed.systemMonitorNetworkInterface || "").trim();

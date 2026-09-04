@@ -1,11 +1,9 @@
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Controls.Material
-import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import Clavis.WeatherMap
 import qs.Common
-import qs.Components
+import qs.Modules.Map
+import qs.Services
 import qs.Widgets.common
 
 Rectangle {
@@ -13,684 +11,196 @@ Rectangle {
 
     property real latitude: 0
     property real longitude: 0
-    property bool active: false
-    property bool locationAvailable: true
-    property string selectedMode: "temp"
-    property int zoomLevel: 6
-    property real centerLatitude: latitude
-    property real centerLongitude: longitude
-    property bool followingLocation: true
-    property bool initialized: false
-    property int viewportGeneration: 0
-    property var visibleTiles: []
-    property string tileSetSignature: ""
-    property real dragOffsetX: 0
-    property real dragOffsetY: 0
-    property bool dragging: false
-    property date layerUpdatedAt
+    property bool locationAvailable: false
+    property bool active: visible
     property bool showLayerSelector: true
+    property string selectedLayer: "radar"
+    property bool mapTilerRuntimeFallback: false
+    readonly property string preferredBase: UiPreferences.weatherMapBaseProvider
+    readonly property string preferredOverlay: UiPreferences.weatherMapOverlayProvider
+    readonly property bool mapTilerAvailable: WeatherMapPlugin.mapTilerStatus === "ready" || WeatherMapPlugin.mapTilerStatus === "loading"
+    readonly property bool openWeatherAvailable: WeatherMapPlugin.status === "ready" || WeatherMapPlugin.status === "loading"
+    readonly property string effectiveBase: preferredBase === "maptiler" && WeatherMapPlugin.mapTilerConfigured && mapTilerAvailable && !mapTilerRuntimeFallback ? "maptiler" : "openfreemap"
+    readonly property string effectiveOverlay: preferredOverlay === "openweather" && WeatherMapPlugin.apiConfigured && openWeatherAvailable ? "openweather" : "rainviewer"
+    readonly property bool darkBase: effectiveOverlay === "openweather" && selectedLayer === "clouds"
+    readonly property string baseStyleUrl: effectiveBase === "maptiler" ? WeatherMapPlugin.mapTilerStyleUrl(darkBase ? "dataviz-dark" : "dataviz") : "https://tiles.openfreemap.org/styles/" + (darkBase ? "dark" : "positron")
+    readonly property string overlayTileUrl: effectiveOverlay === "rainviewer" ? WeatherMapPlugin.radarTileUrl : WeatherMapPlugin.openWeatherTileUrl(selectedLayer)
+    readonly property bool overlayLoading: effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarStatus === "loading"
+    readonly property bool overlayFailed: effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarStatus !== "idle" && WeatherMapPlugin.radarStatus !== "loading" && WeatherMapPlugin.radarStatus !== "ready"
 
-    readonly property real maximumMercatorLatitude: 85.05112878
-    readonly property int tileSize: 256
-    readonly property string weatherLayer: selectedMode === "temp"
-        ? "temp_new"
-        : selectedMode === "rain"
-            ? "precipitation_new"
-            : selectedMode === "clouds"
-                ? "clouds_new"
-                : selectedMode === "wind"
-                    ? "wind_new"
-                    : selectedMode === "pressure"
-                        ? "pressure_new"
-                        : "temp_new"
-    readonly property real weatherOpacity: selectedMode === "temp"
-        ? 0.56
-        : selectedMode === "rain"
-            ? 0.72
-            : selectedMode === "clouds"
-                ? 0.64
-                : selectedMode === "wind"
-                    ? 0.62
-                    : 0.62
-    readonly property bool hasCoordinates: locationAvailable
-        && isFinite(latitude)
-        && isFinite(longitude)
-        && latitude >= -90
-        && latitude <= 90
-        && longitude >= -180
-        && longitude <= 180
+    function refreshMap() {
+        if (root.effectiveOverlay === "rainviewer")
+            WeatherMapPlugin.refreshRadarMetadata();
+        else
+            WeatherMapPlugin.validateOpenWeatherLayer(root.selectedLayer);
+        if (root.effectiveBase === "maptiler")
+            WeatherMapPlugin.validateMapTilerStyle(root.darkBase ? "dataviz-dark" : "dataviz");
+
+        map.reload();
+    }
+
+    function validatePreferredProviders() {
+        if (!root.active)
+            return ;
+
+        if (root.preferredBase === "maptiler" && WeatherMapPlugin.mapTilerConfigured)
+            WeatherMapPlugin.validateMapTilerStyle(root.darkBase ? "dataviz-dark" : "dataviz");
+
+        if (root.preferredOverlay === "openweather" && WeatherMapPlugin.apiConfigured)
+            WeatherMapPlugin.validateOpenWeatherLayer(root.selectedLayer);
+
+    }
+
+    function normalizeLayer() {
+        const normalized = WeatherMapProviders.normalizedLayer(root.effectiveOverlay, root.selectedLayer);
+        if (root.selectedLayer !== normalized)
+            root.selectedLayer = normalized;
+
+    }
 
     radius: Appearance.rounding.large
     color: Appearance.colors.colSurfaceContainerHigh
     clip: true
-
-    Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
-    Material.accent: Appearance.colors.colPrimary
-
-    Accessible.name: selectedMode === "temp"
-        ? qsTr("温度天气地图")
-        : selectedMode === "rain"
-            ? qsTr("当前降水天气地图")
-            : selectedMode === "clouds"
-                ? qsTr("云量天气地图")
-                : selectedMode === "wind"
-                    ? qsTr("风速天气地图")
-                    : selectedMode === "pressure"
-                        ? qsTr("大气压天气地图")
-                        : qsTr("天气地图")
-    Accessible.description: qsTr("拖动地图以移动，或使用鼠标滚轮缩放")
-
-    function clampLatitude(value) {
-        return Math.max(
-            -maximumMercatorLatitude,
-            Math.min(maximumMercatorLatitude, value)
-        )
-    }
-
-    function worldSize(zoom) {
-        return tileSize * Math.pow(2, zoom)
-    }
-
-    function longitudeToWorldX(value, zoom) {
-        return (value + 180) / 360 * worldSize(zoom)
-    }
-
-    function latitudeToWorldY(value, zoom) {
-        const latitudeRadians = clampLatitude(value) * Math.PI / 180
-        const sine = Math.sin(latitudeRadians)
-        const normalized = 0.5 - Math.log(
-            (1 + sine) / (1 - sine)
-        ) / (4 * Math.PI)
-        return normalized * worldSize(zoom)
-    }
-
-    function normalizeWorldX(value, zoom) {
-        const size = worldSize(zoom)
-        return ((value % size) + size) % size
-    }
-
-    function worldXToLongitude(value, zoom) {
-        return normalizeWorldX(value, zoom) / worldSize(zoom) * 360 - 180
-    }
-
-    function worldYToLatitude(value, zoom) {
-        const size = worldSize(zoom)
-        const normalized = Math.max(0, Math.min(size, value)) / size
-        const mercator = Math.PI - 2 * Math.PI * normalized
-        const sinh = (Math.exp(mercator) - Math.exp(-mercator)) / 2
-        return Math.atan(sinh) * 180 / Math.PI
-    }
-
-    function wrappedTileX(value, zoom) {
-        const count = Math.pow(2, zoom)
-        return ((value % count) + count) % count
-    }
-
-    function refreshMap() {
-        if (!root.active || !root.hasCoordinates)
-            return
-
-        tileLayer.refreshBase(true)
-        tileLayer.refreshWeather(true)
-    }
-
-    function mapStatusText() {
-        switch (WeatherMapPlugin.mapTilerStatus) {
-        case "not_configured":
-            return qsTr("MapTiler 底图未配置")
-        case "keychain_error":
-            return qsTr("无法访问 MapTiler 密钥")
-        case "invalid_key":
-            return qsTr("MapTiler API key 无效")
-        case "rate_limited":
-            return qsTr("MapTiler 请求频率受限")
-        case "network_error":
-            return qsTr("底图网络不可用，正在使用缓存")
-        default:
-            return WeatherMapPlugin.errorMessage
-        }
-    }
-
-    function hasMapError() {
-        const baseStatus = WeatherMapPlugin.mapTilerStatus
-        return (WeatherMapPlugin.credentialsReady
-                && !WeatherMapPlugin.mapTilerConfigured)
-            || baseStatus === "keychain_error"
-            || baseStatus === "invalid_key"
-            || baseStatus === "rate_limited"
-            || baseStatus === "network_error"
-            || (WeatherMapPlugin.credentialsReady
-                && !WeatherMapPlugin.apiConfigured)
-            || WeatherMapPlugin.status === "keychain_error"
-            || WeatherMapPlugin.status === "invalid_key"
-            || WeatherMapPlugin.status === "rate_limited"
-            || WeatherMapPlugin.status === "network_error"
-    }
-
-    function rebuildTiles() {
-        if (!root.active
-            || !root.hasCoordinates
-            || mapViewport.width < 2
-            || mapViewport.height < 2) {
-            root.visibleTiles = []
-            root.tileSetSignature = ""
-            return
-        }
-
-        const anchorCenterX = longitudeToWorldX(
-            centerLongitude,
-            zoomLevel
-        )
-        const anchorCenterY = latitudeToWorldY(
-            centerLatitude,
-            zoomLevel
-        )
-        const effectiveCenterX = anchorCenterX - dragOffsetX
-        const effectiveCenterY = anchorCenterY - dragOffsetY
-        const left = effectiveCenterX - mapViewport.width / 2
-        const top = effectiveCenterY - mapViewport.height / 2
-        const minimumX = Math.floor(left / tileSize) - 1
-        const maximumX = Math.floor(
-            (left + mapViewport.width) / tileSize
-        ) + 1
-        const minimumY = Math.max(0, Math.floor(top / tileSize) - 1)
-        const tileCount = Math.pow(2, zoomLevel)
-        const maximumY = Math.min(
-            tileCount - 1,
-            Math.floor((top + mapViewport.height) / tileSize) + 1
-        )
-        const nextTiles = []
-        const nextKeys = []
-
-        for (let rawY = minimumY; rawY <= maximumY; ++rawY) {
-            for (let rawX = minimumX; rawX <= maximumX; ++rawX) {
-                const tileX = wrappedTileX(rawX, zoomLevel)
-                const key = zoomLevel + "/" + tileX + "/" + rawY
-                const screenX = rawX * tileSize - anchorCenterX
-                    + mapViewport.width / 2
-                const screenY = rawY * tileSize - anchorCenterY
-                    + mapViewport.height / 2
-                nextKeys.push(key)
-                nextTiles.push({
-                    key: key,
-                    zoom: zoomLevel,
-                    x: tileX,
-                    y: rawY,
-                    screenX: screenX,
-                    screenY: screenY
-                })
-            }
-        }
-
-        const nextSignature = nextKeys.join("|")
-        if (nextSignature !== root.tileSetSignature) {
-            root.viewportGeneration += 1
-            WeatherMapPlugin.beginViewport(root.viewportGeneration)
-            root.tileSetSignature = nextSignature
-        }
-        root.visibleTiles = nextTiles
-    }
-
-    function scheduleRebuild() {
-        if (root.active)
-            rebuildTimer.restart()
-    }
-
-    function setCenterFromWorld(worldX, worldY, zoom) {
-        const size = worldSize(zoom)
-        root.centerLongitude = worldXToLongitude(worldX, zoom)
-        root.centerLatitude = worldYToLatitude(
-            Math.max(0, Math.min(size, worldY)),
-            zoom
-        )
-    }
-
-    function commitPan() {
-        if (dragOffsetX === 0 && dragOffsetY === 0)
-            return
-
-        const centerX = longitudeToWorldX(centerLongitude, zoomLevel)
-        const centerY = latitudeToWorldY(centerLatitude, zoomLevel)
-        setCenterFromWorld(
-            centerX - dragOffsetX,
-            centerY - dragOffsetY,
-            zoomLevel
-        )
-        dragOffsetX = 0
-        dragOffsetY = 0
-        followingLocation = false
-        rebuildTiles()
-    }
-
-    function changeZoom(delta, focusX, focusY) {
-        const nextZoom = Math.max(3, Math.min(8, zoomLevel + delta))
-        if (nextZoom === zoomLevel)
-            return
-
-        const oldZoom = zoomLevel
-        const oldCenterX = longitudeToWorldX(centerLongitude, oldZoom)
-        const oldCenterY = latitudeToWorldY(centerLatitude, oldZoom)
-        const offsetX = focusX - mapViewport.width / 2
-        const offsetY = focusY - mapViewport.height / 2
-        const scale = Math.pow(2, nextZoom - oldZoom)
-        const nextCenterX = (oldCenterX + offsetX) * scale - offsetX
-        const nextCenterY = (oldCenterY + offsetY) * scale - offsetY
-
-        zoomLevel = nextZoom
-        setCenterFromWorld(nextCenterX, nextCenterY, nextZoom)
-        followingLocation = false
-        rebuildTiles()
-    }
-
-    function recenter() {
-        if (!hasCoordinates)
-            return
-        centerLatitude = clampLatitude(latitude)
-        centerLongitude = longitude
-        zoomLevel = 6
-        followingLocation = true
-        rebuildTiles()
-    }
-
-    function markerX() {
-        const size = worldSize(zoomLevel)
-        let delta = longitudeToWorldX(longitude, zoomLevel)
-            - longitudeToWorldX(centerLongitude, zoomLevel)
-        if (delta > size / 2)
-            delta -= size
-        else if (delta < -size / 2)
-            delta += size
-        return mapViewport.width / 2 + delta
-    }
-
-    function markerY() {
-        return mapViewport.height / 2
-            + latitudeToWorldY(latitude, zoomLevel)
-            - latitudeToWorldY(centerLatitude, zoomLevel)
-    }
-
+    layer.enabled: true
+    layer.samples: 4
+    onPreferredBaseChanged: mapTilerRuntimeFallback = false
+    onSelectedLayerChanged: root.validatePreferredProviders()
     onActiveChanged: {
-        WeatherMapPlugin.active = active
-        if (active) {
-            if (!initialized && hasCoordinates) {
-                initialized = true
-                centerLatitude = clampLatitude(latitude)
-                centerLongitude = longitude
-            }
-            scheduleRebuild()
-        } else {
-            rebuildTimer.stop()
-        }
+        WeatherMapPlugin.active = active;
+        root.validatePreferredProviders();
     }
-
-    onLatitudeChanged: {
-        if (followingLocation && hasCoordinates) {
-            centerLatitude = clampLatitude(latitude)
-            scheduleRebuild()
-        }
-    }
-
-    onLongitudeChanged: {
-        if (followingLocation && hasCoordinates) {
-            centerLongitude = longitude
-            scheduleRebuild()
-        }
-    }
-
     Component.onCompleted: {
-        WeatherMapPlugin.active = active
-        if (hasCoordinates) {
-            initialized = true
-            centerLatitude = clampLatitude(latitude)
-            centerLongitude = longitude
-        }
-        scheduleRebuild()
+        root.normalizeLayer();
+        WeatherMapPlugin.active = root.active;
+        root.validatePreferredProviders();
     }
-
     Component.onDestruction: WeatherMapPlugin.active = false
-
-    Timer {
-        id: rebuildTimer
-        interval: 40
-        repeat: false
-        onTriggered: root.rebuildTiles()
-    }
-
-    Timer {
-        id: panSyncTimer
-        interval: 32
-        repeat: true
-        running: root.active && root.dragging
-        onTriggered: root.rebuildTiles()
-    }
-
-    Timer {
-        interval: 15 * 60 * 1000
-        running: root.active
-        repeat: true
-        onTriggered: tileLayer.refreshWeather(false)
+    onEffectiveOverlayChanged: {
+        root.normalizeLayer();
     }
 
     Connections {
-        target: WeatherMapPlugin
-
         function onApiKeyChanged() {
-            if (root.active)
-                tileLayer.refreshWeather(true)
+            root.validatePreferredProviders();
         }
 
         function onMapTilerApiKeyChanged() {
-            if (root.active)
-                tileLayer.refreshBase(true)
+            root.mapTilerRuntimeFallback = false;
+            root.validatePreferredProviders();
         }
+
+        target: WeatherMapPlugin
     }
 
-    ColumnLayout {
+    MapLibreView {
+        id: map
+
         anchors.fill: parent
-        spacing: 0
-
-        Item {
-            id: mapViewport
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            clip: true
-
-            onWidthChanged: root.scheduleRebuild()
-            onHeightChanged: root.scheduleRebuild()
-
-            Item {
-                id: mapBackdrop
-
-                anchors.fill: parent
-                layer.enabled: true
-                layer.effect: OpacityMask {
-                    maskSource: Rectangle {
-                        width: mapBackdrop.width
-                        height: mapBackdrop.height
-                        radius: root.radius
-                    }
-                }
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: Appearance.colors.colWeatherCardSurface
-                }
-
-                Item {
-                    id: panningLayer
-
-                    anchors.fill: parent
-                    transform: Translate {
-                        x: root.dragOffsetX
-                        y: root.dragOffsetY
-                    }
-
-                    WeatherTileLayer {
-                        id: tileLayer
-
-                        anchors.fill: parent
-                        active: root.active && root.hasCoordinates
-                        tiles: root.visibleTiles
-                        weatherLayer: root.weatherLayer
-                        weatherOpacity: root.weatherOpacity
-                        zoomLevel: root.zoomLevel
-                        generation: root.viewportGeneration
-                        onFirstWeatherTileReady: root.layerUpdatedAt = new Date()
-                    }
-
-                    Item {
-                        x: root.markerX() - width / 2
-                        y: root.markerY() - height
-                        width: 32
-                        height: 32
-                        visible: root.hasCoordinates
-
-                        MaterialSymbol {
-                            anchors.fill: parent
-                            text: "location_on"
-                            iconSize: 30
-                            fill: 1
-                            color: Appearance.colors.colPrimary
-                            style: Text.Outline
-                            styleColor: Appearance.colors.colSurfaceContainerHighest
-                        }
-                    }
-                }
-            }
-
-            MouseArea {
-                id: mapInteraction
-
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton
-                hoverEnabled: true
-                preventStealing: true
-                cursorShape: pressed
-                    ? Qt.ClosedHandCursor
-                    : Qt.OpenHandCursor
-                property real pressedX: 0
-                property real pressedY: 0
-
-                onPressed: mouse => {
-                    pressedX = mouse.x
-                    pressedY = mouse.y
-                    root.dragging = true
-                    mouse.accepted = true
-                }
-
-                onPositionChanged: mouse => {
-                    if (!pressed)
-                        return
-                    root.dragOffsetX = mouse.x - pressedX
-                    root.dragOffsetY = mouse.y - pressedY
-                    mouse.accepted = true
-                }
-
-                onReleased: mouse => {
-                    root.dragging = false
-                    root.commitPan()
-                    mouse.accepted = true
-                }
-
-                onCanceled: {
-                    root.dragOffsetX = 0
-                    root.dragOffsetY = 0
-                    root.dragging = false
-                }
-
-                onWheel: wheel => {
-                    root.changeZoom(
-                        wheel.angleDelta.y >= 0 ? 1 : -1,
-                        wheel.x,
-                        wheel.y
-                    )
-                    wheel.accepted = true
-                }
-            }
-
-            WeatherMapLayerSelector {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.leftMargin: 12
-                anchors.topMargin: 12
-                visible: root.showLayerSelector
-                z: 20
-                currentMode: root.selectedMode
-                onModeSelected: mode => root.selectedMode = mode
-            }
-
-            Rectangle {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.leftMargin: 12
-                anchors.topMargin: 56
-                z: 20
-                width: Math.min(
-                    statusText.implicitWidth + 16,
-                    parent.width - 220
-                )
-                height: 28
-                radius: Appearance.rounding.full
-                color: Appearance.applyAlpha(
-                    Appearance.colors.colSurfaceContainerHighest,
-                    0.94
-                )
-                visible: root.hasMapError()
-
-                Text {
-                    id: statusText
-                    anchors.fill: parent
-                    anchors.leftMargin: 8
-                    anchors.rightMargin: 8
-                    text: root.mapStatusText()
-                    color: Appearance.colors.colOnSurfaceVariant
-                    font.family: Fonts.ui
-                    font.pixelSize: 10
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                    textFormat: Text.PlainText
-                }
-            }
-
-            MapLegend {
-                id: mapLegend
-
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.margins: 12
-                z: 20
-                backdropSource: mapBackdrop
-                backdropRect: Qt.rect(x, y, width, height)
-                mode: root.selectedMode
-                updatedAt: root.layerUpdatedAt
-                stale: WeatherMapPlugin.status === "network_error"
-            }
-
-            ToolButton {
-                id: recenterButton
-
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: 12
-                z: 20
-                width: 40
-                height: 40
-                enabled: root.hasCoordinates
-                hoverEnabled: true
-                focusPolicy: Qt.StrongFocus
-                Accessible.name: qsTr("返回当前位置")
-                onClicked: root.recenter()
-
-                background: FrostedMapSurface {
-                    sourceItem: mapBackdrop
-                    sourceRect: Qt.rect(
-                        recenterButton.x,
-                        recenterButton.y,
-                        recenterButton.width,
-                        recenterButton.height
-                    )
-                    radius: Appearance.rounding.full
-                    blurAmount: 0.66
-                    tint: recenterButton.down
-                        ? Appearance.applyAlpha(
-                            Appearance.colors.colScrim,
-                            0.68
-                        )
-                        : recenterButton.hovered || recenterButton.activeFocus
-                            ? Appearance.applyAlpha(
-                                Appearance.colors.colScrim,
-                                0.60
-                            )
-                            : Appearance.applyAlpha(
-                                Appearance.colors.colScrim,
-                                0.52
-                            )
-                }
-
-                contentItem: MaterialSymbol {
-                    text: "my_location"
-                    iconSize: 20
-                    fill: root.followingLocation ? 1 : 0
-                    color: recenterButton.enabled
-                        ? Appearance.colors.colOnImage
-                        : Appearance.applyAlpha(
-                            Appearance.colors.colOnImage,
-                            0.38
-                        )
-                }
-
-                StyledToolTip {
-                    extraVisibleCondition: recenterButton.hovered
-                    text: qsTr("返回当前位置")
-                }
-            }
-
-            BusyIndicator {
-                anchors.right: recenterButton.left
-                anchors.rightMargin: 8
-                anchors.verticalCenter: recenterButton.verticalCenter
-                z: 20
-                width: 24
-                height: 24
-                running: root.active
-                    && (WeatherMapPlugin.busy
-                        || WeatherMapPlugin.credentialBusy)
-                visible: running
-                Material.accent: Appearance.colors.colPrimary
-            }
-
-            Text {
-                id: attributionText
-
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 12
-                anchors.bottomMargin: 12
-                z: 20
-                text: "© MapTiler · © OpenStreetMap contributors"
-                    + " · Weather: OpenWeather"
-                color: Appearance.colors.colOnPrimaryFixed
-                font.family: Fonts.ui
-                font.pixelSize: 11
-                font.weight: Font.Medium
-                textFormat: Text.PlainText
-            }
-
-            Rectangle {
-                anchors.centerIn: parent
-                visible: !root.hasCoordinates
-                width: waitingColumn.implicitWidth + 24
-                height: waitingColumn.implicitHeight + 18
-                radius: Appearance.rounding.normal
-                color: Appearance.applyAlpha(
-                    Appearance.colors.colSurfaceContainerHighest,
-                    0.94
-                )
-
-                ColumnLayout {
-                    id: waitingColumn
-
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    MaterialSymbol {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: "location_off"
-                        iconSize: 28
-                        color: Appearance.colors.colOnSurfaceVariant
-                    }
-
-                    Text {
-                        text: qsTr("正在等待天气位置")
-                        color: Appearance.colors.colOnSurfaceVariant
-                        font.family: Fonts.ui
-                        font.pixelSize: 11
-                        textFormat: Text.PlainText
-                    }
-                }
-            }
+        active: root.active && root.locationAvailable
+        styleUrl: root.baseStyleUrl
+        centerLatitude: root.latitude
+        centerLongitude: root.longitude
+        markerLatitude: root.latitude
+        markerLongitude: root.longitude
+        zoomLevel: 6
+        markerVisible: root.locationAvailable
+        overlayTileUrl: root.overlayTileUrl
+        overlayOpacity: 0.72
+        overlayMaximumZoom: root.effectiveOverlay === "rainviewer" ? 7 : 19
+        onMapStateChanged: {
+            if (mapState === "error" && root.effectiveBase === "maptiler")
+                root.mapTilerRuntimeFallback = true;
 
         }
     }
+
+    WeatherMapLayerSelector {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.margins: Metrics.spacingM
+        visible: root.showLayerSelector && root.locationAvailable
+        providerId: root.effectiveOverlay
+        currentLayer: root.selectedLayer
+        onLayerSelected: (layerId) => {
+            return root.selectedLayer = layerId;
+        }
+    }
+
+    MapLegend {
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.margins: Metrics.spacingM
+        visible: root.locationAvailable && root.overlayTileUrl !== ""
+        providerId: root.effectiveOverlay
+        mode: root.selectedLayer
+        updatedAt: root.effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarFrameTime > 0 ? new Date(WeatherMapPlugin.radarFrameTime * 1000) : new Date(NaN)
+        stale: root.overlayFailed
+        backdropSource: map
+    }
+
+    IconButton {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: Metrics.spacingM
+        visible: root.locationAvailable
+        iconName: "my_location"
+        accessibleName: qsTr("回到天气位置")
+        variant: "filled"
+        normalContainerColor: "#D9111111"
+        iconColor: "white"
+        onClicked: map.recenter(root.latitude, root.longitude, 6)
+    }
+
+    Rectangle {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: Metrics.spacingM
+        width: overlayStatus.implicitWidth + Metrics.spacingM * 2
+        height: overlayStatus.implicitHeight + Metrics.spacingS * 2
+        radius: Appearance.rounding.full
+        visible: root.overlayLoading || root.overlayFailed || root.preferredBase !== root.effectiveBase || root.preferredOverlay !== root.effectiveOverlay
+        color: Appearance.colors.colSurfaceContainerHighest
+
+        Text {
+            id: overlayStatus
+
+            anchors.centerIn: parent
+            text: root.preferredBase !== root.effectiveBase ? qsTr("当前使用 OpenFreeMap") : root.preferredOverlay !== root.effectiveOverlay ? qsTr("当前使用 RainViewer") : root.overlayLoading ? qsTr("正在加载天气图层") : qsTr("天气图层暂时不可用")
+            color: Appearance.colors.colOnSurfaceVariant
+            font.family: Typography.labelSmall.family
+            font.pixelSize: Typography.labelSmall.pixelSize
+        }
+
+    }
+
+    Text {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: Metrics.spacingM
+        anchors.bottomMargin: Metrics.spacingM + Metrics.controlHeightM + 4
+        visible: root.effectiveOverlay === "rainviewer"
+        text: "Weather data by RainViewer"
+        color: Appearance.colors.colOnImage
+        font.family: Typography.labelSmall.family
+        font.pixelSize: 9
+    }
+
+    MapFallback {
+        anchors.fill: parent
+        visible: !root.locationAvailable
+        loading: false
+        message: qsTr("天气位置暂不可用")
+        onRetryRequested: WeatherPlugin.refresh()
+    }
+
+    layer.effect: OpacityMask {
+
+        maskSource: Rectangle {
+            width: root.width
+            height: root.height
+            radius: root.radius
+        }
+
+    }
+
 }

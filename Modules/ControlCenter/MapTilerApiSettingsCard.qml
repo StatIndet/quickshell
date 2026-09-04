@@ -2,11 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
-import Quickshell
 import Clavis.WeatherMap
 import qs.Common
 import qs.Components
-import qs.Services
 import qs.Widgets.common
 
 Rectangle {
@@ -15,63 +13,45 @@ Rectangle {
     property bool revealApiKey: false
     property string feedbackText: ""
     property bool feedbackError: false
+    readonly property bool statusError: WeatherMapPlugin.mapTilerStatus === "keychain_error"
 
-    readonly property bool statusError:
-        WeatherMapPlugin.mapTilerStatus === "keychain_error"
+    function applyApiKey() {
+        const value = mapTilerApiKeyField.text.trim();
+        if (value.length < 16) {
+            feedbackError = true;
+            feedbackText = qsTr("请输入有效的 MapTiler API key");
+            mapTilerApiKeyField.forceActiveFocus();
+            return ;
+        }
+        const result = WeatherMapPlugin.storeMapTilerApiKey(value);
+        feedbackError = !result.ok;
+        feedbackText = result.message || qsTr("无法更新 MapTiler API key");
+    }
+
+    function clearApiKey() {
+        const result = WeatherMapPlugin.clearMapTilerApiKey();
+        feedbackError = !result.ok;
+        feedbackText = result.message || qsTr("无法清除 MapTiler API key");
+    }
 
     implicitHeight: serviceContent.implicitHeight + 48
     radius: Appearance.rounding.large
     color: Appearance.colors.colSurfaceContainer
 
-    function applyApiKey() {
-        const value = mapTilerApiKeyField.text.trim()
-        if (value.length < 16) {
-            feedbackError = true
-            feedbackText = qsTr("请输入有效的 MapTiler API key")
-            mapTilerApiKeyField.forceActiveFocus()
-            return
-        }
-
-        const result = WeatherMapPlugin.storeMapTilerApiKey(value)
-        feedbackError = !result.ok
-        feedbackText = result.message || qsTr("无法更新 MapTiler API key")
-    }
-
-    function clearApiKey() {
-        const result = WeatherMapPlugin.clearMapTilerApiKey()
-        feedbackError = !result.ok
-        feedbackText = result.message || qsTr("无法清除 MapTiler API key")
-    }
-
-    function notifyMainShell() {
-        Quickshell.execDetached([
-            "qs",
-            "--path",
-            Paths.shellDir + "/shell.qml",
-            "ipc",
-            "call",
-            "weather-map",
-            "reloadCredentials"
-        ])
-    }
-
     Connections {
-        target: WeatherMapPlugin
-
         function onCredentialOperationFinished(operation, success, message) {
-            if (operation !== "maptiler_store"
-                && operation !== "maptiler_clear") {
-                return
-            }
+            if (operation !== "maptiler_store" && operation !== "maptiler_clear")
+                return ;
 
-            root.feedbackError = !success
-            root.feedbackText = message
+            root.feedbackError = !success;
+            root.feedbackText = message;
             if (success) {
-                mapTilerApiKeyField.clear()
-                root.revealApiKey = false
-                root.notifyMainShell()
+                mapTilerApiKeyField.clear();
+                root.revealApiKey = false;
             }
         }
+
+        target: WeatherMapPlugin
     }
 
     ColumnLayout {
@@ -98,6 +78,7 @@ Rectangle {
                     fill: 1
                     color: Appearance.colors.colOnPrimaryContainer
                 }
+
             }
 
             ColumnLayout {
@@ -120,11 +101,7 @@ Rectangle {
                 implicitWidth: statusContent.implicitWidth + 24
                 implicitHeight: 34
                 radius: Appearance.rounding.full
-                color: root.statusError
-                    ? Appearance.colors.colErrorContainer
-                    : WeatherMapPlugin.mapTilerConfigured
-                        ? Appearance.colors.colPrimaryContainer
-                        : Appearance.colors.colSurfaceContainerHighest
+                color: root.statusError ? Appearance.colors.colErrorContainer : WeatherMapPlugin.mapTilerConfigured ? Appearance.colors.colPrimaryContainer : Appearance.colors.colSurfaceContainerHighest
 
                 RowLayout {
                     id: statusContent
@@ -133,49 +110,25 @@ Rectangle {
                     spacing: 6
 
                     MaterialSymbol {
-                        text: !WeatherMapPlugin.credentialsReady
-                            || WeatherMapPlugin.mapTilerStatus
-                                === "loading_credentials"
-                            || WeatherMapPlugin.credentialBusy
-                            ? "sync"
-                            : root.statusError
-                                ? "error"
-                                : WeatherMapPlugin.mapTilerConfigured
-                                    ? "check_circle"
-                                    : "key_off"
+                        text: !WeatherMapPlugin.credentialsReady || WeatherMapPlugin.mapTilerStatus === "loading_credentials" || WeatherMapPlugin.credentialBusy ? "sync" : root.statusError ? "error" : WeatherMapPlugin.mapTilerConfigured ? "check_circle" : "key_off"
                         iconSize: 17
                         fill: WeatherMapPlugin.mapTilerConfigured ? 1 : 0
-                        color: root.statusError
-                            ? Appearance.colors.colOnErrorContainer
-                            : WeatherMapPlugin.mapTilerConfigured
-                                ? Appearance.colors.colOnPrimaryContainer
-                                : Appearance.colors.colOnSurfaceVariant
+                        color: root.statusError ? Appearance.colors.colOnErrorContainer : WeatherMapPlugin.mapTilerConfigured ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurfaceVariant
                     }
 
                     Text {
-                        text: !WeatherMapPlugin.credentialsReady
-                            || WeatherMapPlugin.mapTilerStatus
-                                === "loading_credentials"
-                            ? qsTr("正在检查")
-                            : WeatherMapPlugin.credentialBusy
-                                ? qsTr("处理中")
-                                : root.statusError
-                                    ? qsTr("读取失败")
-                                    : WeatherMapPlugin.mapTilerConfigured
-                                        ? qsTr("已配置")
-                                        : qsTr("未配置")
-                        color: root.statusError
-                            ? Appearance.colors.colOnErrorContainer
-                            : WeatherMapPlugin.mapTilerConfigured
-                                ? Appearance.colors.colOnPrimaryContainer
-                                : Appearance.colors.colOnSurfaceVariant
+                        text: !WeatherMapPlugin.credentialsReady || WeatherMapPlugin.mapTilerStatus === "loading_credentials" ? qsTr("正在检查") : WeatherMapPlugin.credentialBusy ? qsTr("处理中") : root.statusError ? qsTr("读取失败") : WeatherMapPlugin.mapTilerConfigured ? qsTr("已配置") : qsTr("未配置")
+                        color: root.statusError ? Appearance.colors.colOnErrorContainer : WeatherMapPlugin.mapTilerConfigured ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
                         font.pixelSize: 13
                         font.weight: Font.DemiBold
                         textFormat: Text.PlainText
                     }
+
                 }
+
             }
+
         }
 
         Rectangle {
@@ -203,40 +156,36 @@ Rectangle {
 
                 anchors.fill: parent
                 placeholderText: qsTr("输入 MapTiler API key")
-                echoMode: root.revealApiKey
-                    ? TextInput.Normal
-                    : TextInput.Password
-                inputMethodHints: Qt.ImhSensitiveData
-                    | Qt.ImhNoPredictiveText
-                    | Qt.ImhNoAutoUppercase
+                echoMode: root.revealApiKey ? TextInput.Normal : TextInput.Password
+                inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText | Qt.ImhNoAutoUppercase
                 maximumLength: 128
-                enabled: WeatherMapPlugin.credentialsReady
-                    && !WeatherMapPlugin.credentialBusy
-                trailingContent: Component {
-                    IconButton {
-                        anchors.fill: parent
-                        iconName: root.revealApiKey
-                            ? "visibility_off" : "visibility"
-                        iconSize: 20
-                        iconColor: Appearance.colors.colOnSurfaceVariant
-                        accessibleName: root.revealApiKey
-                            ? qsTr("隐藏 API key")
-                            : qsTr("显示 API key")
-                        hoverStateLayerColor: Appearance.colors.colLayer3Hover
-                        pressedStateLayerColor: Appearance.colors.colLayer3Active
-                        onClicked: root.revealApiKey = !root.revealApiKey
-                    }
-                }
+                enabled: WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.credentialBusy
                 Accessible.name: "MapTiler API key"
                 Accessible.description: qsTr("安全保存到系统密钥环")
                 onTextChanged: {
                     if (root.feedbackError) {
-                        root.feedbackError = false
-                        root.feedbackText = ""
+                        root.feedbackError = false;
+                        root.feedbackText = "";
                     }
                 }
                 onAccepted: root.applyApiKey()
+
+                trailingContent: Component {
+                    IconButton {
+                        anchors.fill: parent
+                        iconName: root.revealApiKey ? "visibility_off" : "visibility"
+                        iconSize: 20
+                        iconColor: Appearance.colors.colOnSurfaceVariant
+                        accessibleName: root.revealApiKey ? qsTr("隐藏 API key") : qsTr("显示 API key")
+                        hoverStateLayerColor: Appearance.colors.colLayer3Hover
+                        pressedStateLayerColor: Appearance.colors.colLayer3Active
+                        onClicked: root.revealApiKey = !root.revealApiKey
+                    }
+
+                }
+
             }
+
         }
 
         Text {
@@ -255,9 +204,7 @@ Rectangle {
             Layout.preferredHeight: feedbackRow.implicitHeight + 20
             radius: Appearance.rounding.small
             visible: root.feedbackText !== ""
-            color: root.feedbackError
-                ? Appearance.colors.colErrorContainer
-                : Appearance.colors.colPrimaryContainer
+            color: root.feedbackError ? Appearance.colors.colErrorContainer : Appearance.colors.colPrimaryContainer
 
             RowLayout {
                 id: feedbackRow
@@ -267,30 +214,24 @@ Rectangle {
                 spacing: 8
 
                 MaterialSymbol {
-                    text: WeatherMapPlugin.credentialBusy
-                        ? "sync"
-                        : root.feedbackError
-                            ? "error"
-                            : "check_circle"
+                    text: WeatherMapPlugin.credentialBusy ? "sync" : root.feedbackError ? "error" : "check_circle"
                     iconSize: 18
                     fill: WeatherMapPlugin.credentialBusy ? 0 : 1
-                    color: root.feedbackError
-                        ? Appearance.colors.colOnErrorContainer
-                        : Appearance.colors.colOnPrimaryContainer
+                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnPrimaryContainer
                 }
 
                 Text {
                     Layout.fillWidth: true
                     text: root.feedbackText
-                    color: root.feedbackError
-                        ? Appearance.colors.colOnErrorContainer
-                        : Appearance.colors.colOnPrimaryContainer
+                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnPrimaryContainer
                     font.family: Fonts.ui
                     font.pixelSize: 12
                     wrapMode: Text.WordWrap
                     textFormat: Text.PlainText
                 }
+
             }
+
         }
 
         RowLayout {
@@ -304,8 +245,7 @@ Rectangle {
             Button {
                 text: qsTr("清除密钥")
                 flat: true
-                enabled: WeatherMapPlugin.mapTilerConfigured
-                    && !WeatherMapPlugin.credentialBusy
+                enabled: WeatherMapPlugin.mapTilerConfigured && !WeatherMapPlugin.credentialBusy
                 focusPolicy: Qt.StrongFocus
                 Material.foreground: Appearance.colors.colOnSurfaceVariant
                 Accessible.description: qsTr("从系统密钥环移除 MapTiler API key")
@@ -317,9 +257,7 @@ Rectangle {
 
                 text: qsTr("保存密钥")
                 highlighted: true
-                enabled: WeatherMapPlugin.credentialsReady
-                    && !WeatherMapPlugin.credentialBusy
-                    && mapTilerApiKeyField.text.trim().length >= 16
+                enabled: WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.credentialBusy && mapTilerApiKeyField.text.trim().length >= 16
                 focusPolicy: Qt.StrongFocus
                 Material.background: Appearance.colors.colPrimary
                 Material.foreground: Appearance.colors.colOnPrimary
@@ -329,18 +267,17 @@ Rectangle {
 
                 contentItem: Text {
                     text: saveButton.text
-                    color: saveButton.enabled
-                        ? Appearance.colors.colOnPrimary
-                        : Appearance.applyAlpha(
-                            Appearance.colors.colOnSurface,
-                            0.72
-                        )
+                    color: saveButton.enabled ? Appearance.colors.colOnPrimary : Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.72)
                     font: saveButton.font
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     textFormat: Text.PlainText
                 }
+
             }
+
         }
+
     }
+
 }

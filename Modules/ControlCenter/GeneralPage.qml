@@ -11,6 +11,8 @@ Item {
     property string selectedBluetoothAddress: ""
     property string selectedBluetoothAdapterId: ""
 
+    signal navigateRequested(string pageId)
+
     function selectedBluetoothDevice() {
         return BluetoothService.devices.find((device) => {
             return device.address === root.selectedBluetoothAddress && (root.selectedBluetoothAdapterId.length === 0 || device.adapterId === root.selectedBluetoothAdapterId);
@@ -188,6 +190,10 @@ Item {
 
         function onReturnRequested() {
             root.showConnectedDevices();
+        }
+
+        function onNavigateRequested(pageId) {
+            root.navigateRequested(pageId);
         }
 
         target: pageLoader.item

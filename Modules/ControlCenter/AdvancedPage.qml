@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
@@ -13,15 +11,16 @@ StyledFlickable {
     property bool refreshRequested: false
     property bool refreshConfirmed: false
     readonly property real pageContentWidth: 600
-    readonly property var remoteOptions: RcloneService.remotes.map((remote) => ({
-        "label": remote.name,
-        "value": remote.name,
-        "remoteName": remote.name,
-        "remoteType": remote.type,
-        "enabled": !RcloneService.isReadOnly(remote),
-        "tooltip": RcloneService.isReadOnly(remote)
-            ? qsTr("此云存储不支持写入，不能设为默认") : ""
-    }))
+    readonly property var remoteOptions: RcloneService.remotes.map((remote) => {
+        return ({
+            "label": remote.name,
+            "value": remote.name,
+            "remoteName": remote.name,
+            "remoteType": remote.type,
+            "enabled": !RcloneService.isReadOnly(remote),
+            "tooltip": RcloneService.isReadOnly(remote) ? qsTr("此云存储不支持写入，不能设为默认") : ""
+        });
+    })
     readonly property var templatePrograms: [({
         "id": "btop",
         "title": "btop",
@@ -49,9 +48,11 @@ StyledFlickable {
         const raw = String(value || "").trim();
         if (raw.indexOf(":") >= 0)
             return qsTr("请输入 remote 内的相对目录，不要包含 remote 名称或冒号");
+
         const relative = raw.replace(/^\/+|\/+$/g, "");
         if (relative === "." || relative === "..")
             return qsTr("请输入有效的远程目录");
+
         return "";
     }
 
@@ -59,6 +60,7 @@ StyledFlickable {
         const error = root.cloudRootError(backupRootField.text);
         if (error !== "")
             return ;
+
         UiPreferences.setCloudBackupRoot(backupRootField.text);
         backupRootField.text = "/" + UiPreferences.cloudBackupRoot;
     }
@@ -67,6 +69,7 @@ StyledFlickable {
         const error = root.cloudRootError(uploadRootField.text);
         if (error !== "")
             return ;
+
         UiPreferences.setCloudUploadRoot(uploadRootField.text);
         uploadRootField.text = "/" + UiPreferences.cloudUploadRoot;
     }
@@ -74,6 +77,7 @@ StyledFlickable {
     function refreshConfiguration() {
         if (RcloneService.remotesLoading)
             return ;
+
         refreshConfirmationTimer.stop();
         root.refreshRequested = true;
         root.refreshConfirmed = false;
@@ -83,15 +87,13 @@ StyledFlickable {
     clip: true
     contentWidth: width
     contentHeight: contentColumn.y + contentColumn.implicitHeight + 24
-
     Component.onCompleted: {
         if (RcloneService.providers.length === 0)
             RcloneService.loadProviders();
+
     }
 
     Connections {
-        target: RcloneService
-
         function onRemotesLoadingChanged() {
             if (RcloneService.remotesLoading || !root.refreshRequested)
                 return ;
@@ -102,6 +104,8 @@ StyledFlickable {
                 refreshConfirmationTimer.restart();
             }
         }
+
+        target: RcloneService
     }
 
     Timer {
@@ -118,6 +122,21 @@ StyledFlickable {
         x: Math.max(24, (root.width - width) / 2)
         y: 28
         spacing: Appearance.spacing.medium
+
+        SettingsSection {
+            Layout.fillWidth: true
+            title: qsTr("地图与天气服务")
+            iconName: "map"
+
+            MapTilerApiSettingsCard {
+                Layout.fillWidth: true
+            }
+
+            OpenWeatherApiSettingsCard {
+                Layout.fillWidth: true
+            }
+
+        }
 
         SettingsSection {
             Layout.fillWidth: true
@@ -139,7 +158,9 @@ StyledFlickable {
                     itemHeight: Metrics.controlHeightXL
                     leadingWidth: Metrics.iconM
                     enabled: options.length > 0
-                    onAccepted: (value) => RcloneService.setDefaultRemote(value)
+                    onAccepted: (value) => {
+                        return RcloneService.setDefaultRemote(value);
+                    }
 
                     leadingDelegate: Component {
                         CloudProviderIcon {
@@ -149,7 +170,9 @@ StyledFlickable {
                             remoteType: optionData ? optionData.remoteType : ""
                             iconSize: Metrics.iconM
                         }
+
                     }
+
                 }
 
                 IconButton {
@@ -157,28 +180,15 @@ StyledFlickable {
 
                     Layout.preferredWidth: Metrics.controlHeightXL
                     Layout.preferredHeight: Metrics.controlHeightXL
-                    iconName: RcloneService.remotesError !== ""
-                        && !RcloneService.remotesLoading
-                        ? "sync_problem"
-                        : root.refreshConfirmed ? "check" : "refresh"
+                    iconName: RcloneService.remotesError !== "" && !RcloneService.remotesLoading ? "sync_problem" : root.refreshConfirmed ? "check" : "refresh"
                     iconFill: root.refreshConfirmed ? 1 : 0
-                    iconColor: RcloneService.remotesError !== ""
-                        && !RcloneService.remotesLoading
-                        ? Appearance.colors.colError
-                        : root.refreshConfirmed
-                            ? Appearance.colors.colPrimary
-                            : Appearance.colors.colOnSurfaceVariant
-                    tooltipText: RcloneService.remotesLoading
-                        ? qsTr("正在刷新配置")
-                        : RcloneService.remotesError !== ""
-                            ? RcloneService.remotesError
-                            : root.refreshConfirmed
-                                ? qsTr("配置已刷新") : qsTr("刷新配置")
+                    iconColor: RcloneService.remotesError !== "" && !RcloneService.remotesLoading ? Appearance.colors.colError : root.refreshConfirmed ? Appearance.colors.colPrimary : Appearance.colors.colOnSurfaceVariant
+                    tooltipText: RcloneService.remotesLoading ? qsTr("正在刷新配置") : RcloneService.remotesError !== "" ? RcloneService.remotesError : root.refreshConfirmed ? qsTr("配置已刷新") : qsTr("刷新配置")
                     accessibleName: tooltipText
-                    enabled: !RcloneService.remotesLoading
-                        && !RcloneService.configBusy
+                    enabled: !RcloneService.remotesLoading && !RcloneService.configBusy
                     onClicked: root.refreshConfiguration()
                 }
+
             }
 
             SettingsActionRow {
@@ -219,6 +229,7 @@ StyledFlickable {
                 onAccepted: root.saveBackupRoot()
                 onEditingFinished: root.saveBackupRoot()
             }
+
         }
 
         InlineStatusBanner {
@@ -248,14 +259,18 @@ StyledFlickable {
                         Accessible.name: qsTr("启用 %1 Matugen 模板").arg(modelData.title)
                         onToggled: ThemeService.setMatugenTemplateEnabled(modelData.id, checked)
                     }
+
                 }
+
             }
+
         }
 
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 24
         }
+
     }
 
     CloudRemoteWizard {
@@ -269,4 +284,5 @@ StyledFlickable {
 
         parentModal: root.parentModal
     }
+
 }

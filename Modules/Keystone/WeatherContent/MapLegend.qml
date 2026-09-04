@@ -6,7 +6,8 @@ import qs.Services
 Rectangle {
     id: root
 
-    property string mode: "temp"
+    property string providerId: "rainviewer"
+    property string mode: "radar"
     property date updatedAt
     property bool stale: false
     property Item backdropSource: null
@@ -14,10 +15,13 @@ Rectangle {
     property bool backdropLive: true
 
     function colorsForMode() {
-        if (mode === "temp")
+        if (mode === "radar")
+            return ["#8ec7ff", "#3f83f8", "#22c55e", "#facc15", "#ef4444"];
+
+        if (mode === "temperature")
             return ["#6e40aa", "#3b82f6", "#55c667", "#fde725", "#ef4444"];
 
-        if (mode === "rain")
+        if (mode === "precipitation")
             return ["#dbeafe", "#60a5fa", "#2563eb", "#7c3aed"];
 
         if (mode === "clouds")
@@ -33,10 +37,13 @@ Rectangle {
     }
 
     function titleText() {
-        if (mode === "temp")
+        if (mode === "radar")
+            return qsTr("雷达");
+
+        if (mode === "temperature")
             return qsTr("温度");
 
-        if (mode === "rain")
+        if (mode === "precipitation")
             return qsTr("降水");
 
         if (mode === "clouds")
@@ -52,10 +59,13 @@ Rectangle {
     }
 
     function minimumLabel() {
-        if (mode === "temp")
+        if (mode === "radar")
+            return qsTr("小雨");
+
+        if (mode === "temperature")
             return qsTr("低温");
 
-        if (mode === "rain")
+        if (mode === "precipitation")
             return qsTr("少量");
 
         if (mode === "clouds")
@@ -71,10 +81,13 @@ Rectangle {
     }
 
     function maximumLabel() {
-        if (mode === "temp")
+        if (mode === "radar")
+            return qsTr("强降水");
+
+        if (mode === "temperature")
             return qsTr("高温");
 
-        if (mode === "rain")
+        if (mode === "precipitation")
             return qsTr("大量");
 
         if (mode === "clouds")

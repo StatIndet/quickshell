@@ -20,9 +20,9 @@ WeatherMapPlugin::WeatherMapPlugin(QObject *parent) : QObject(parent), m_provide
             &WeatherMapPlugin::credentialOperationFinished);
     connect(&m_provider, &WeatherMapProvider::busyChanged, this, &WeatherMapPlugin::busyChanged);
     connect(&m_provider, &WeatherMapProvider::statusChanged, this, &WeatherMapPlugin::statusChanged);
-    connect(&m_provider, &WeatherMapProvider::tileReady, this, &WeatherMapPlugin::tileReady);
-    connect(&m_provider, &WeatherMapProvider::tileFailed, this, &WeatherMapPlugin::tileFailed);
-    connect(&m_provider, &WeatherMapProvider::tileActivity, this, &WeatherMapPlugin::tileActivity);
+    connect(&m_provider, &WeatherMapProvider::radarStatusChanged, this,
+            &WeatherMapPlugin::radarStatusChanged);
+    connect(&m_provider, &WeatherMapProvider::radarFrameChanged, this, &WeatherMapPlugin::radarFrameChanged);
 }
 
 bool WeatherMapPlugin::active() const { return m_provider.active(); }
@@ -45,13 +45,13 @@ QString WeatherMapPlugin::errorMessage() const { return m_provider.errorMessage(
 
 QString WeatherMapPlugin::mapTilerStatus() const { return m_provider.mapTilerStatus(); }
 
-void WeatherMapPlugin::beginViewport(int generation) { m_provider.beginViewport(generation); }
+QString WeatherMapPlugin::radarStatus() const { return m_provider.radarStatus(); }
 
-QVariantMap WeatherMapPlugin::requestTile(const QString &kind, const QString &layer, int zoom, int x, int y,
-                                          int generation, bool forceRefresh)
-{
-    return m_provider.requestTile(kind, layer, zoom, x, y, generation, forceRefresh);
-}
+QString WeatherMapPlugin::radarErrorMessage() const { return m_provider.radarErrorMessage(); }
+
+QString WeatherMapPlugin::radarTileUrl() const { return m_provider.radarTileUrl(); }
+
+qint64 WeatherMapPlugin::radarFrameTime() const { return m_provider.radarFrameTime(); }
 
 QVariantMap WeatherMapPlugin::storeApiKey(const QString &apiKey) { return m_provider.storeApiKey(apiKey); }
 
@@ -65,3 +65,25 @@ QVariantMap WeatherMapPlugin::storeMapTilerApiKey(const QString &apiKey)
 QVariantMap WeatherMapPlugin::clearMapTilerApiKey() { return m_provider.clearMapTilerApiKey(); }
 
 void WeatherMapPlugin::reloadCredentials() { m_provider.reloadCredentials(); }
+
+QString WeatherMapPlugin::mapTilerStyleUrl(const QString &styleId) const
+{
+    return m_provider.mapTilerStyleUrl(styleId);
+}
+
+QString WeatherMapPlugin::openWeatherTileUrl(const QString &layerId) const
+{
+    return m_provider.openWeatherTileUrl(layerId);
+}
+
+void WeatherMapPlugin::validateMapTilerStyle(const QString &styleId)
+{
+    m_provider.validateMapTilerStyle(styleId);
+}
+
+void WeatherMapPlugin::validateOpenWeatherLayer(const QString &layerId)
+{
+    m_provider.validateOpenWeatherLayer(layerId);
+}
+
+void WeatherMapPlugin::refreshRadarMetadata() { m_provider.refreshRadarMetadata(); }

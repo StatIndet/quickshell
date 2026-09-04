@@ -1,12 +1,21 @@
 import QtQuick
 import QtQuick.Layouts
+import Clavis.WeatherMap
 import qs.Common
-import qs.Components
 import qs.Services
 import qs.Widgets.common
 
 StyledFlickable {
     id: root
+
+    property var parentModal: null
+    property bool presentationActive: false
+
+    signal navigateRequested(string pageId)
+
+    function closeChildWindows() {
+        locationPicker.closeChildWindows();
+    }
 
     clip: true
     contentWidth: width
@@ -30,7 +39,6 @@ StyledFlickable {
                 Layout.fillWidth: true
                 iconName: "language"
                 title: qsTr("界面语言")
-                supportingText: qsTr("用于 Clavis Quickshell 界面的显示语言")
 
                 trailing: SearchSelectMenuField {
                     Layout.preferredWidth: 190
@@ -52,48 +60,83 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("天气")
+            title: qsTr("地区与天气位置")
             iconName: "map"
 
-            Item {
+            LocationPicker {
+                id: locationPicker
+
                 Layout.fillWidth: true
-                Layout.preferredHeight: 150
+                parentModal: root.parentModal
+                active: root.presentationActive && root.visible
+            }
 
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    width: Math.min(parent.width - Metrics.spacingL * 2, 420)
-                    spacing: Metrics.spacingXS
+        }
 
-                    MaterialSymbol {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: "map"
-                        iconSize: 44
-                        fill: 0
-                        color: Appearance.colors.colOutline
+        SettingsSection {
+            Layout.fillWidth: true
+            flat: true
+            title: qsTr("天气地图")
+            iconName: "layers"
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("底图服务")
+
+                trailing: StyledButtonGroup {
+                    model: [{
+                        "value": "openfreemap",
+                        "label": "OpenFreeMap"
+                    }, {
+                        "value": "maptiler",
+                        "label": "MapTiler"
+                    }]
+                    currentValue: UiPreferences.weatherMapBaseProvider
+                    buttonMinWidth: 104
+                    onValueSelected: (value) => {
+                        return UiPreferences.setWeatherMapBaseProvider(value);
                     }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: qsTr("天气位置地图即将推出")
-                        color: Appearance.colors.colOnSurfaceVariant
-                        font.family: Typography.titleSmall.family
-                        font.pixelSize: Typography.titleSmall.pixelSize
-                        font.weight: Typography.titleSmall.weight
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: qsTr("后续可在地图上选择天气位置")
-                        color: Appearance.colors.colOutline
-                        font.family: Typography.bodySmall.family
-                        font.pixelSize: Typography.bodySmall.pixelSize
-                        horizontalAlignment: Text.AlignHCenter
-                        wrapMode: Text.WordWrap
-                    }
-
                 }
 
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
+                visible: UiPreferences.weatherMapBaseProvider === "maptiler" && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.mapTilerConfigured
+                text: qsTr("MapTiler 未配置，当前使用 OpenFreeMap")
+                iconName: "key_off"
+                trailingIconName: "arrow_forward"
+                onClicked: root.navigateRequested("advanced")
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("天气图层服务")
+
+                trailing: StyledButtonGroup {
+                    model: [{
+                        "value": "rainviewer",
+                        "label": "RainViewer"
+                    }, {
+                        "value": "openweather",
+                        "label": "OpenWeather"
+                    }]
+                    currentValue: UiPreferences.weatherMapOverlayProvider
+                    buttonMinWidth: 104
+                    onValueSelected: (value) => {
+                        return UiPreferences.setWeatherMapOverlayProvider(value);
+                    }
+                }
+
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
+                visible: UiPreferences.weatherMapOverlayProvider === "openweather" && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.apiConfigured
+                text: qsTr("OpenWeather 未配置，当前使用 RainViewer")
+                iconName: "key_off"
+                trailingIconName: "arrow_forward"
+                onClicked: root.navigateRequested("advanced")
             }
 
         }
