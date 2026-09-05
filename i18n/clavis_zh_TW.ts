@@ -9854,4 +9854,15 @@
 視窗: </translation>
     </message>
 </context>
+<context>
+    <name>SpotlightPage</name>
+    <message>
+        <source>网页搜索</source>
+        <translation>網頁搜尋</translation>
+    </message>
+    <message>
+        <source>搜索引擎</source>
+        <translation>搜尋引擎</translation>
+    </message>
+</context>
 </TS>

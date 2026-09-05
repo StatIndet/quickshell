@@ -104,10 +104,6 @@ QtObject {
     readonly property var railCurve: [0.33, 0, 0.67, 1, 1, 1]
     readonly property var webCurve: Appearance.animationCurves.standard
 
-    readonly property string searchEngineName: "Google"
-    readonly property string searchEngineUrlTemplate:
-        "https://www.google.com/search?q={query}"
-
     function clamp(value, lower, upper) {
         return Math.max(lower, Math.min(upper, value));
     }

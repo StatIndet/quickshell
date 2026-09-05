@@ -29,6 +29,7 @@ PanelWindow {
         ? Material.Dark : Material.Light
     Material.accent: Appearance.colors.colPrimary
 
+    property string pendingWebUrl: ""
     property string windowPhase: "hidden"
     property string mode: "apps"
     property string previousLocalMode: "apps"
@@ -188,6 +189,8 @@ PanelWindow {
     }
 
     function openSpotlight(requestedMode) {
+        root.pendingWebUrl = "";
+        SpotlightSearchService.cancelActivation();
         const localMode = normalizedMode(requestedMode);
         if (localMode !== "")
             setLocalMode(localMode);
@@ -426,10 +429,10 @@ PanelWindow {
         const value = String(root.query || "").trim();
         if (value === "")
             return false;
-        const encoded = encodeURIComponent(value);
-        const url = style.searchEngineUrlTemplate.replace(
-            "{query}", encoded);
-        return Qt.openUrlExternally(url);
+        if (root.windowPhase === "closing" || root.windowPhase === "hidden")
+            return false;
+        root.pendingWebUrl = SpotlightSearchService.searchUrl(value);
+        return root.requestClose();
     }
 
     function resetClipboardAction() {
@@ -712,6 +715,11 @@ PanelWindow {
             root.windowProgress = 0;
             root.windowPhase = "hidden";
             root.visible = false;
+            if (root.pendingWebUrl !== "") {
+                const url = root.pendingWebUrl;
+                root.pendingWebUrl = "";
+                SpotlightSearchService.openUrl(url);
+            }
             root.query = "";
             root.mode = "apps";
             root.previousLocalMode = "apps";

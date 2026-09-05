@@ -9855,4 +9855,15 @@ Scroll to adjust; click to open sound</translation>
 Windows: </translation>
     </message>
 </context>
+<context>
+    <name>SpotlightPage</name>
+    <message>
+        <source>网页搜索</source>
+        <translation>Web search</translation>
+    </message>
+    <message>
+        <source>搜索引擎</source>
+        <translation>Search engine</translation>
+    </message>
+</context>
 </TS>

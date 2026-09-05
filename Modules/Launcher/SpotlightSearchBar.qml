@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import qs.Services
 import qs.Common
 import qs.Components
 import qs.Widgets.common
@@ -167,7 +168,7 @@ Item {
 
             Text {
                 anchors.centerIn: parent
-                text: root.style.searchEngineName
+                text: SpotlightSearchService.searchEngineName
                 color: Appearance.colors.colOnSecondaryContainer
                 font.family: Fonts.ui
                 font.pixelSize: 14

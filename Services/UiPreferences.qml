@@ -4,12 +4,14 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import "../Common/functions/SpotlightSearch.js" as SpotlightSearch
 
 Singleton {
     id: root
 
     readonly property string configDir: Paths.configHome
     readonly property string filePath: configDir + "/ui-preferences.json"
+    property string spotlightSearchEngine: "google"
     property bool dndEnabled: false
     property bool darkMode: false
     property string language: normalizedLanguage(Qt.locale().name)
@@ -67,6 +69,15 @@ Singleton {
             return "zh_TW";
 
         return "zh_CN";
+    }
+
+    function setSpotlightSearchEngine(value) {
+        const normalized = SpotlightSearch.normalizedEngine(value);
+        if (root.spotlightSearchEngine === normalized)
+            return ;
+
+        root.spotlightSearchEngine = normalized;
+        root.save();
     }
 
     function setDndEnabled(value) {
@@ -490,6 +501,7 @@ Singleton {
             "language": root.language,
             "weatherTemperatureUnit": root.weatherTemperatureUnit,
             "systemTemperatureUnit": root.systemTemperatureUnit,
+            "spotlightSearchEngine": root.spotlightSearchEngine,
             "weatherMapBaseProvider": root.weatherMapBaseProvider,
             "weatherMapOverlayProvider": root.weatherMapOverlayProvider,
             "systemMonitorGpuId": root.systemMonitorGpuId,
@@ -555,6 +567,7 @@ Singleton {
                 root.language = root.normalizedLanguage(parsed.language || Qt.locale().name);
                 root.weatherTemperatureUnit = root.normalizedTemperatureUnit(parsed.weatherTemperatureUnit);
                 root.systemTemperatureUnit = root.normalizedTemperatureUnit(parsed.systemTemperatureUnit);
+                root.spotlightSearchEngine = SpotlightSearch.normalizedEngine(parsed.spotlightSearchEngine);
                 root.weatherMapBaseProvider = root.normalizedWeatherMapBaseProvider(parsed.weatherMapBaseProvider);
                 root.weatherMapOverlayProvider = root.normalizedWeatherMapOverlayProvider(parsed.weatherMapOverlayProvider);
                 root.systemMonitorGpuId = root.normalizedSystemMonitorGpuId(parsed.systemMonitorGpuId);

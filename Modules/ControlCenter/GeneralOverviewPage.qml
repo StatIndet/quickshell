@@ -44,6 +44,14 @@ StyledFlickable {
 
             SettingsActionRow {
                 Layout.fillWidth: true
+                iconName: "search"
+                text: "Spotlight"
+                trailingIconName: "chevron_right"
+                onClicked: root.sectionRequested("spotlight")
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
                 iconName: "blur_on"
                 text: qsTr("透明与模糊")
                 trailingIconName: "chevron_right"

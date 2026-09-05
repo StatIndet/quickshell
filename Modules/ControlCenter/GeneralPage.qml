@@ -67,6 +67,8 @@ Item {
                 return qsTr("条栏");
             case "sidebar":
                 return qsTr("侧边栏");
+            case "spotlight":
+                return "Spotlight";
             case "effects":
                 return qsTr("透明与模糊");
             case "language-region":
@@ -96,6 +98,8 @@ Item {
                 return "dock_to_bottom";
             case "sidebar":
                 return "side_navigation";
+            case "spotlight":
+                return "search";
             case "effects":
                 return "blur_on";
             case "language-region":
@@ -134,6 +138,8 @@ Item {
                 return Qt.resolvedUrl("GeneralBarPage.qml");
             case "sidebar":
                 return Qt.resolvedUrl("GeneralSidebarPage.qml");
+            case "spotlight":
+                return Qt.resolvedUrl("SpotlightPage.qml");
             case "effects":
                 return Qt.resolvedUrl("GeneralEffectsPage.qml");
             case "language-region":

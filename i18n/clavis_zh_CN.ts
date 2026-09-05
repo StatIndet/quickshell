@@ -9854,4 +9854,15 @@
 窗口: </translation>
     </message>
 </context>
+<context>
+    <name>SpotlightPage</name>
+    <message>
+        <source>网页搜索</source>
+        <translation>网页搜索</translation>
+    </message>
+    <message>
+        <source>搜索引擎</source>
+        <translation>搜索引擎</translation>
+    </message>
+</context>
 </TS>
