@@ -1,4 +1,7 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.Services
@@ -21,25 +24,18 @@ StyledFlickable {
             "tooltip": RcloneService.isReadOnly(remote) ? qsTr("此云存储不支持写入，不能设为默认") : ""
         });
     })
-    readonly property var templatePrograms: [({
-        "id": "btop",
-        "title": "btop",
-        "icon": "monitoring"
-    }), ({
-        "id": "cava",
-        "title": "Cava",
-        "icon": "graphic_eq"
-    }), ({
-        "id": "kitty",
-        "title": "Kitty",
-        "icon": "terminal"
-    }), ({
-        "id": "yazi",
-        "title": "Yazi",
-        "icon": "folder"
-    })]
+    property var pendingTemplate: null
+    property bool deletingTemplate: false
+
+    function requestTemplateAction(template, deleting) {
+        root.pendingTemplate = template;
+        root.deletingTemplate = deleting;
+        templateDialog.open();
+    }
 
     function closeChildWindows() {
+        templateAddWindow.dismiss();
+        templateDialog.close();
         cloudWizard.dismiss();
         cloudManager.dismiss();
     }
@@ -243,27 +239,108 @@ StyledFlickable {
             Layout.fillWidth: true
             title: qsTr("Matugen 模板生成")
 
+            RowLayout {
+                Layout.fillWidth: true
+                Item {
+                    Layout.fillWidth: true
+                }
+                IconButton {
+                    iconName: "refresh"
+                    tooltipText: qsTr("刷新模板")
+                    onClicked: MatugenTemplateService.refresh()
+                }
+                ActionButton {
+                    text: qsTr("添加")
+                    iconName: "add"
+                    enabled: !MatugenTemplateService.busy && PersonalizationConfig.ready
+                    onClicked: templateAddWindow.showWindow()
+                }
+            }
+
+            InlineStatusBanner {
+                Layout.fillWidth: true
+                visible: MatugenTemplateService.error !== ""
+                tone: "error"
+                message: MatugenTemplateService.error
+            }
+            InlineStatusBanner {
+                Layout.fillWidth: true
+                visible: !templateAddWindow.visible && MatugenTemplateService.operationError !== ""
+                tone: "error"
+                message: MatugenTemplateService.operationError
+            }
+            InlineStatusBanner {
+                Layout.fillWidth: true
+                visible: ThemeService.generationError !== "" || ThemeService.externalGenerationError !== ""
+                tone: "error"
+                message: ThemeService.generationError !== "" ? qsTr("Matugen 配色生成失败") : qsTr(
+                                                                   "部分 Matugen 模板生成失败")
+                StyledToolTip {
+                    extraVisibleCondition: errorHover.hovered
+                    text: ThemeService.generationError || ThemeService.externalGenerationError
+                }
+                HoverHandler {
+                    id: errorHover
+                }
+            }
+
             Repeater {
-                model: root.templatePrograms
+                model: MatugenTemplateService.templates
 
                 SettingsRow {
+                    id: templateRow
                     required property var modelData
 
                     Layout.fillWidth: true
-                    iconName: modelData.icon
+                    iconName: modelData.valid ? modelData.icon : "error"
                     title: modelData.title
+                    supportingText: !modelData.valid ? modelData.error : modelData.origin === "user" ? qsTr(
+                                                                                                           "用户模板") : ""
 
-                    trailing: StyledSwitch {
-                        enabled: !ThemeService.generating
-                        checked: PersonalizationConfig.isMatugenTemplateEnabled(modelData.id)
-                        Accessible.name: qsTr("启用 %1 Matugen 模板").arg(modelData.title)
-                        onToggled: ThemeService.setMatugenTemplateEnabled(modelData.id, checked)
+                    trailing: RowLayout {
+                        IconButton {
+                            visible: templateRow.modelData.hasPostHook
+                            iconName: "terminal"
+                            tooltipText: qsTr("每次生成后执行：%1").arg(templateRow.modelData.postHook)
+                            onClicked: root.requestTemplateAction(templateRow.modelData, false)
+                            enabled: templateRow.modelData.valid && !ThemeService.generating
+                        }
+                        IconButton {
+                            visible: templateRow.modelData.origin === "user"
+                            iconName: "folder_open"
+                            tooltipText: qsTr("打开模板位置") + "\n" + templateRow.modelData.inputPath + "\n" + qsTr(
+                                             "输出：%1").arg(templateRow.modelData.outputPath)
+                            onClicked: MatugenTemplateService.openLocation(templateRow.modelData)
+                        }
+                        IconButton {
+                            visible: templateRow.modelData.origin === "user"
+                            iconName: "delete"
+                            tooltipText: qsTr("删除模板")
+                            enabled: !MatugenTemplateService.busy && !ThemeService.generating
+                                     && PersonalizationConfig.ready
+                            onClicked: root.requestTemplateAction(templateRow.modelData, true)
+                        }
+                        StyledSwitch {
+                            enabled: templateRow.modelData.valid && !ThemeService.generating &&
+                                     !MatugenTemplateService.busy && PersonalizationConfig.ready
+                            checked: templateRow.modelData.valid
+                                     && PersonalizationConfig.isMatugenTemplateEnabled(
+                                         templateRow.modelData.id)
+                            Accessible.name: qsTr("启用 %1 Matugen 模板").arg(templateRow.modelData.title)
+                            onToggled: {
+                                if (checked && templateRow.modelData.origin === "user"
+                                        && templateRow.modelData.hasPostHook) {
+                                    checked = Qt.binding(() => templateRow.modelData.valid
+                                        && PersonalizationConfig.isMatugenTemplateEnabled(templateRow.modelData.id));
+                                    root.requestTemplateAction(templateRow.modelData, false);
+                                } else {
+                                    ThemeService.setMatugenTemplateEnabled(templateRow.modelData.id, checked);
+                                }
+                            }
+                        }
                     }
-
                 }
-
             }
-
         }
 
         Item {
@@ -271,6 +348,47 @@ StyledFlickable {
             Layout.preferredHeight: 24
         }
 
+    }
+
+    MatugenTemplateAddWindow {
+        id: templateAddWindow
+        parentModal: root.parentModal
+    }
+
+    MaterialDialog {
+        id: templateDialog
+        anchors.centerIn: Overlay.overlay
+        width: Math.min(480, root.width - 32)
+        dialogTitle: root.pendingTemplate
+            ? (root.deletingTemplate ? qsTr("删除“%1”？") : qsTr("启用“%1”？")).arg(root.pendingTemplate.title) : ""
+        messageText: !root.pendingTemplate ? "" : root.deletingTemplate
+            ? qsTr("删除模板及其注册信息，保留已生成的输出文件。")
+            : qsTr("该命令会在每次 Matugen 重新生成主题后执行。仅启用可信模板。") + "\n\n" + root.pendingTemplate.postHook
+        actionsComponent: Component {
+            RowLayout {
+                Item {
+                    Layout.fillWidth: true
+                }
+                ActionButton {
+                    text: qsTr("取消")
+                    onClicked: templateDialog.close()
+                }
+                ActionButton {
+                    text: root.deletingTemplate ? qsTr("删除") : qsTr("启用")
+                    enabled: !MatugenTemplateService.busy && !ThemeService.generating
+                             && PersonalizationConfig.ready
+                    onClicked: {
+                        if (root.pendingTemplate) {
+                            if (root.deletingTemplate)
+                                MatugenTemplateService.remove(root.pendingTemplate.id);
+                            else
+                                ThemeService.setMatugenTemplateEnabled(root.pendingTemplate.id, true);
+                        }
+                        templateDialog.close();
+                    }
+                }
+            }
+        }
     }
 
     CloudRemoteWizard {

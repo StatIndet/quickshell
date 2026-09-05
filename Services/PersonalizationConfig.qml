@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import qs.Services
 
 Singleton {
     id: root
@@ -167,7 +168,6 @@ Singleton {
         "value": "scheme-rainbow",
         "label": qsTr("彩虹")
     })]
-    readonly property var matugenTemplateIds: ["btop", "cava", "kitty", "yazi"]
     readonly property var keystoneStyles: [({
         "value": "bangs",
         "label": qsTr("刘海")
@@ -245,12 +245,7 @@ Singleton {
     property real parallaxPreferredScale: 1.1
     property int parallaxTiledColumnSpan: 6
     property string matugenScheme: "scheme-tonal-spot"
-    property var matugenTemplates: ({
-        "btop": true,
-        "cava": true,
-        "kitty": true,
-        "yazi": true
-    })
+    property var matugenTemplates: ({})
     property string themeMode: "dark"
     property string cursorTheme: ""
     property int cursorSize: 24
@@ -566,13 +561,12 @@ Singleton {
     }
 
     function normalizedMatugenTemplates(raw) {
-        const source = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {
-        };
-        const result = {
-        };
-        for (let i = 0; i < root.matugenTemplateIds.length; i += 1) {
-            const id = root.matugenTemplateIds[i];
-            result[id] = source[id] === undefined ? true : !!source[id];
+        const source = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+        const result = Object.create(null);
+        for (const id of Object.keys(source)) {
+            if (/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(id)
+                    && id !== "quickshell" && typeof source[id] === "boolean")
+                result[id] = source[id];
         }
         return result;
     }
@@ -984,25 +978,50 @@ Singleton {
     }
 
     function isMatugenTemplateEnabled(id) {
-        if (root.matugenTemplateIds.indexOf(id) === -1)
+        const template = MatugenTemplateService.templateById(id);
+        if (!template || !template.valid)
             return false;
-
-        return root.matugenTemplates[id] !== false;
+        if (Object.prototype.hasOwnProperty.call(root.matugenTemplates, id))
+            return root.matugenTemplates[id] === true;
+        return template.origin === "builtin";
     }
 
     function setMatugenTemplateEnabled(id, enabled) {
-        if (root.matugenTemplateIds.indexOf(id) === -1)
+        const template = MatugenTemplateService.templateById(id);
+        if (!root.ready || !template || !template.valid)
             return false;
-
         const nextEnabled = !!enabled;
         if (root.isMatugenTemplateEnabled(id) === nextEnabled)
             return false;
-
-        const next = root.cloneMap(root.matugenTemplates);
+        const next = root.normalizedMatugenTemplates(root.matugenTemplates);
         next[id] = nextEnabled;
         root.matugenTemplates = next;
         root.save();
         return true;
+    }
+
+    function discoverMatugenTemplates(templates) {
+        if (!root.ready)
+            return;
+        const next = root.normalizedMatugenTemplates(root.matugenTemplates);
+        let changed = false;
+        for (const template of templates) {
+            if (!Object.prototype.hasOwnProperty.call(next, template.id)) {
+                next[template.id] = template.origin === "builtin";
+                changed = true;
+            }
+        }
+        if (changed) {
+            root.matugenTemplates = next;
+            root.save();
+        }
+    }
+
+    function removeMatugenTemplate(id) {
+        const next = root.normalizedMatugenTemplates(root.matugenTemplates);
+        delete next[id];
+        root.matugenTemplates = next;
+        root.save();
     }
 
     function setThemeMode(value) {
@@ -1431,7 +1450,7 @@ Singleton {
             },
             "theme": {
                 "matugenScheme": root.matugenScheme,
-                "matugenTemplates": root.cloneMap(root.matugenTemplates),
+                "matugenTemplates": root.normalizedMatugenTemplates(root.matugenTemplates),
                 "mode": root.themeMode,
                 "cursorTheme": root.cursorTheme,
                 "cursorSize": root.cursorSize,

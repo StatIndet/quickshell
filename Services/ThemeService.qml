@@ -9,6 +9,10 @@ import qs.Services
 Singleton {
     id: root
 
+    property string generationError: ""
+    property string externalGenerationError: ""
+    property var pendingGeneration: null
+    property bool coreReloaded: false
     property bool generating: false
     property string lastSource: ""
     property bool cursorIntegrationReady: false
@@ -42,12 +46,10 @@ Singleton {
 
     function enabledMatugenTemplates() {
         const enabled = [];
-        for (let i = 0;
-             i < PersonalizationConfig.matugenTemplateIds.length;
-             i += 1) {
-            const id = PersonalizationConfig.matugenTemplateIds[i];
-            if (PersonalizationConfig.isMatugenTemplateEnabled(id))
-                enabled.push(id);
+        for (const template of MatugenTemplateService.templates) {
+            if (template.valid && PersonalizationConfig.isMatugenTemplateEnabled(template.id)
+                    && enabled.indexOf(template.id) === -1)
+                enabled.push(template.id);
         }
         return enabled;
     }
@@ -214,9 +216,38 @@ Singleton {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
+        root.startGeneration(command);
+    }
+
+    function startGeneration(command) {
+        if (generateColorsProcess.running || !MatugenTemplateService.ready || !PersonalizationConfig.ready) {
+            root.pendingGeneration = command;
+            return;
+        }
+        root.pendingGeneration = null;
+        root.generationError = "";
+        root.externalGenerationError = "";
+        root.coreReloaded = false;
         generateColorsProcess.command = command;
-        generateColorsProcess.running = false;
         generateColorsProcess.running = true;
+    }
+
+    function resumeGeneration() {
+        if (!root.pendingGeneration)
+            return;
+        const command = root.pendingGeneration.slice();
+        command[command.indexOf("--templates") + 1] = root.enabledMatugenTemplates().join(",");
+        command[command.indexOf("--scheme") + 1] = PersonalizationConfig.matugenScheme;
+        command[command.indexOf("--mode") + 1] = PersonalizationConfig.themeMode;
+        root.startGeneration(command);
+    }
+
+    Connections {
+        target: MatugenTemplateService
+        function onReadyChanged() {
+            if (MatugenTemplateService.ready && root.pendingGeneration)
+                root.resumeGeneration();
+        }
     }
 
     function opaqueHexFromColor(value) {
@@ -241,9 +272,7 @@ Singleton {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
-        generateColorsProcess.command = command;
-        generateColorsProcess.running = false;
-        generateColorsProcess.running = true;
+        root.startGeneration(command);
     }
 
     function regenerateFromCurrentWallpaper() {
@@ -275,6 +304,8 @@ Singleton {
         }
 
         function onSettingsLoaded() {
+            if (root.pendingGeneration)
+                root.resumeGeneration();
             root.applyCursorSettings();
         }
 
@@ -362,13 +393,42 @@ Singleton {
 
     Process {
         id: generateColorsProcess
-        onRunningChanged: if (running) root.generating = true
+        onRunningChanged: if (running)
+                              root.generating = true
+        stderr: StdioCollector {
+            id: generationStderr
+        }
+        stdout: SplitParser {
+            onRead: data => {
+                try {
+                    const status = JSON.parse(data);
+                    if (status.schemaVersion !== 1)
+                        return;
+                    if (status.event === "core-ready") {
+                        root.coreReloaded = true;
+                        Appearance.reloadColors();
+                    } else if (status.event === "external-error") {
+                        root.externalGenerationError += (root.externalGenerationError ? "\n" : "")
+                                + status.id + ": " + status.error;
+                    } else if (status.event === "core-error") {
+                        root.generationError = status.error;
+                    }
+                } catch (e) {
+                    console.warn("Invalid Matugen generation status:", data);
+                }
+            }
+        }
         onExited: exitCode => {
             root.generating = false;
-            if (exitCode === 0)
+            if ((exitCode === 0 || exitCode === 3) && !root.coreReloaded)
                 Appearance.reloadColors();
-            else
-                console.error("Matugen color generation failed with exit code", exitCode);
+            if (exitCode !== 0 && exitCode !== 3)
+                root.generationError = root.generationError || generationStderr.text.trim() || qsTr(
+                            "Matugen 配色生成失败");
+            if (exitCode === 3 && !root.externalGenerationError)
+                root.externalGenerationError = generationStderr.text.trim() || qsTr("部分 Matugen 模板生成失败");
+            if (root.pendingGeneration)
+                Qt.callLater(root.resumeGeneration);
         }
     }
 }

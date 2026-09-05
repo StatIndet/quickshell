@@ -17,6 +17,13 @@ add_test(
 )
 
 add_test(
+    NAME matugen_registry_tests
+    COMMAND ${BASH_EXECUTABLE}
+        ${CLAVIS_SOURCE_ROOT}/tests/test_matugen_registry.sh
+)
+set_tests_properties(matugen_registry_tests PROPERTIES SKIP_RETURN_CODE 77)
+
+add_test(
     NAME qml_unit_tests
     COMMAND Qt6::qmltestrunner -input ${CLAVIS_SOURCE_ROOT}/tests/qml
 )

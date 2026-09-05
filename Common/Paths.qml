@@ -10,6 +10,8 @@ Singleton {
     // directory. Both installed and source shells therefore use the same
     // relative resource paths.
     readonly property string shareRoot: shellDir
+    readonly property string builtinMatugenDir: shareRoot + "/matugen"
+    readonly property string userMatugenDir: configHome + "/matugen"
     readonly property string assetsDir: shareRoot + "/assets"
     readonly property string fontsDir: assetsDir + "/fonts"
     readonly property string iconsDir: assetsDir + "/icons"

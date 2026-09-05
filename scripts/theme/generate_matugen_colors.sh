@@ -2,19 +2,11 @@
 set -euo pipefail
 
 script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-scripts_dir=$(cd -- "$script_dir/.." && pwd)
-# shellcheck source=scripts/lib/clavis-paths.sh
-source "$scripts_dir/lib/clavis-paths.sh"
-clavis_paths_init
-
-share_root=$(cd -- "$scripts_dir/.." && pwd)
-matugen_dir="$share_root/defaults/matugen"
-if [[ ! -d "$matugen_dir/templates" ]]; then
-    matugen_dir="$share_root/matugen"
-fi
-config_path="$matugen_dir/config.toml"
+# shellcheck source=scripts/lib/matugen-registry.sh
+source "$script_dir/../lib/matugen-registry.sh"
+matugen_registry_init
 mode=dark
-scheme=scheme-tonal-spot
+scheme="scheme-tonal-spot"
 image_path=""
 source_color=""
 dry_run=false
@@ -81,118 +73,75 @@ if ! command -v matugen >/dev/null 2>&1; then
     printf 'matugen is required but was not found in PATH\n' >&2
     exit 1
 fi
-if [[ ! -f "$config_path" ]]; then
-    printf 'Missing matugen config: %s\n' "$config_path" >&2
+# Core generation is independent of external validation and execution.
+registry=$(matugen_registry_list)
+core=$(jq -c '[.templates[] | select(.origin == "builtin" and .id == "quickshell")] | if length == 1 then .[0] else null end' <<< "$registry")
+if ! jq -e '. != null and .valid' <<< "$core" >/dev/null; then
+    printf 'Missing or invalid internal quickshell template\n' >&2
     exit 1
 fi
-
-all_external_templates=(
-    btop
-    cava
-    kitty
-    yazi
-)
-
-selected_templates=(quickshell)
-if [[ "$templates_requested" == false ]]; then
-    selected_templates+=("${all_external_templates[@]}")
-elif [[ -n "$templates_csv" ]]; then
-    IFS=',' read -r -a requested_templates <<< "$templates_csv"
-    for template_id in "${requested_templates[@]}"; do
-        case "$template_id" in
-            btop|cava|kitty|yazi)
-                ;;
-            *)
-                printf 'Unknown matugen template: %s\n' "$template_id" >&2
-                exit 2
-                ;;
-        esac
-        already_selected=false
-        for selected_id in "${selected_templates[@]}"; do
-            if [[ "$selected_id" == "$template_id" ]]; then
-                already_selected=true
-                break
-            fi
-        done
-        if [[ "$already_selected" == false ]]; then
-            selected_templates+=("$template_id")
-        fi
-    done
-fi
-
-template_file() {
-    case "$1" in
-        quickshell) printf '%s\n' quickshell-colors.json ;;
-        btop) printf '%s\n' btop.theme ;;
-        cava) printf '%s\n' cava-colors.ini ;;
-        kitty) printf '%s\n' kitty-colors.conf ;;
-        yazi) printf '%s\n' yazi-theme.toml ;;
-    esac
-}
-
-for template_id in "${selected_templates[@]}"; do
-    template_path="$matugen_dir/templates/$(template_file "$template_id")"
-    [[ -f "$template_path" ]] || {
-        printf 'Missing matugen template: %s\n' "$template_path" >&2
-        exit 1
-    }
-done
-
-if [[ "$dry_run" == false ]]; then
-    mkdir -p "$CLAVIS_GENERATED_HOME/clavis"
-    for template_id in "${selected_templates[@]}"; do
-        case "$template_id" in
-            btop) mkdir -p "$HOME/.config/btop/themes" ;;
-            cava) mkdir -p "$HOME/.config/cava/themes" ;;
-            kitty) mkdir -p "$HOME/.config/kitty/themes" ;;
-            yazi) mkdir -p "$HOME/.config/yazi" ;;
-        esac
-    done
-fi
-
-enabled_sections=,
-for template_id in "${selected_templates[@]}"; do
-    enabled_sections+="$template_id,"
-done
-
-mkdir -p "$CLAVIS_RUNTIME_HOME/temporary"
+mkdir -p -- "$CLAVIS_RUNTIME_HOME/temporary"
 runtime_dir=$(mktemp -d "$CLAVIS_RUNTIME_HOME/temporary/matugen.XXXXXX")
-cleanup() {
-    rm -rf -- "$runtime_dir"
-}
-trap cleanup EXIT HUP INT TERM
+cleanup() { rm -rf -- "$runtime_dir"; }
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
 runtime_config="$runtime_dir/config.toml"
 
-awk \
-    -v enabled="$enabled_sections" \
-    -v matugen_dir="$matugen_dir" \
-    -v generated_home="$CLAVIS_GENERATED_HOME" '
-    /^\[templates\.[^]]+\]$/ {
-        name = $0
-        sub(/^\[templates\./, "", name)
-        sub(/\]$/, "", name)
-        emit = index(enabled, "," name ",") > 0
-    }
-    /^\[config\]$/ { emit = 1 }
-    /^\[[^]]+\]$/ && $0 !~ /^\[templates\./ && $0 !~ /^\[config\]$/ {
-        emit = 0
-    }
-    emit {
-        line = $0
-        if (line ~ /^input_path = "templates\//)
-            sub(/^input_path = "/, "input_path = \"" matugen_dir "/", line)
-        gsub(/@CLAVIS_GENERATED_HOME@/, generated_home, line)
-        print line
-    }
-' "$config_path" > "$runtime_config"
+run_template() {
+    local entry=$1 output
+    {
+        printf '[config]\nversion_check = false\n\n'
+        matugen_render_entry <<< "$entry"
+    } > "$runtime_config"
+    output=$(jq -r '.outputPath' <<< "$entry")
+    if [[ "$dry_run" == false ]]; then
+        mkdir -p -- "$(dirname -- "$output")" || return
+    fi
+    local common_args=(--mode "$mode" --type "$scheme" --config "$runtime_config")
+    if [[ "$dry_run" == true ]]; then common_args+=(--dry-run); fi
+    if [[ -n "$image_path" ]]; then
+        matugen --source-color-index 0 image "$image_path" "${common_args[@]}"
+    else
+        matugen color hex "$source_color" "${common_args[@]}"
+    fi
+}
 
-common_args=(--mode "$mode" --type "$scheme" --config "$runtime_config")
-if [[ "$dry_run" == true ]]; then
-    common_args+=(--dry-run)
+event() {
+    jq -nc --arg event "$1" --arg id "${2:-}" --arg error "${3:-}" '{schemaVersion: 1, event: $event, id: $id, error: ($error | gsub("\u001b\\[[0-9;]*[A-Za-z]"; ""))}'
+}
+if ! run_template "$core" > "$runtime_dir/log" 2>&1; then
+    cat -- "$runtime_dir/log" >&2
+    event core-error quickshell "$(tail -c 3000 "$runtime_dir/log")"
+    exit 1
 fi
-
-if [[ -n "$image_path" ]]; then
-    matugen --source-color-index 0 image "$image_path" "${common_args[@]}"
-else
-    matugen color hex "$source_color" "${common_args[@]}"
+if [[ "$dry_run" == false ]]; then event core-ready; fi
+external_failed=false
+report_external_error() {
+    external_failed=true
+    event external-error "$1" "$2"
+    printf '%s: %s\n' "$1" "$2" >&2
+}
+registry_error=$(jq -r '.errors | join("; ")' <<< "$registry")
+if [[ -n "$registry_error" ]]; then report_external_error registry "$registry_error"; fi
+if [[ "$templates_requested" == false ]]; then
+    templates_csv=$(jq -r '[.templates[] | select(.origin == "builtin" and .id != "quickshell") | .id] | join(",")' <<< "$registry")
 fi
+IFS=',' read -r -a requested_templates <<< "$templates_csv"
+seen=,
+for template_id in "${requested_templates[@]}"; do
+    [[ -n "$template_id" && "$template_id" != quickshell ]] || continue
+    if [[ "$seen" == *",$template_id,"* ]]; then continue; fi
+    seen+="$template_id,"
+    entry=$(jq -c --arg id "$template_id" '[.templates[] | select(.id == $id)] | .[0] // null' <<< "$registry")
+    if ! jq -e '. != null and .valid' <<< "$entry" >/dev/null; then
+        report_external_error "$template_id" "$(jq -r '.error // "Unknown template"' <<< "$entry")"
+        continue
+    fi
+    if ! run_template "$entry" > "$runtime_dir/log" 2>&1; then
+        report_external_error "$template_id" "$(tail -c 3000 "$runtime_dir/log")"
+    fi
+done
+event finished
+# Exit 3 specifically means core succeeded but external work failed.
+if [[ "$external_failed" == true ]]; then exit 3; fi
