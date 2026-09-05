@@ -667,12 +667,19 @@ FocusScope {
                                 Loader {
                                     id: optionLeadingLoader
 
-                                    x: root.showCheckmark ? 30 : 0
+                                    x: optionItem.selected && root.showCheckmark ? 30 : 0
                                     anchors.verticalCenter: parent.verticalCenter
                                     width: active ? root.leadingWidth : 0
                                     height: active ? root.leadingWidth : 0
                                     active: root.leadingDelegate !== null
                                     sourceComponent: root.leadingDelegate
+                                    Behavior on x {
+                                        NumberAnimation {
+                                            duration: Appearance.animation.expressiveFastSpatial.duration
+                                            easing.type: Appearance.animation.expressiveFastSpatial.type
+                                            easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
+                                        }
+                                    }
                                     onLoaded: {
                                         if (item && "optionData" in item)
                                             item.optionData = optionItem.modelData;
@@ -680,7 +687,7 @@ FocusScope {
                                 }
 
                                 Text {
-                                    x: (root.showCheckmark ? 32 : 0)
+                                    x: (optionItem.selected && root.showCheckmark ? 32 : 0)
                                         + (optionLeadingLoader.active
                                             ? root.leadingWidth + 10 : 0)
                                     width: parent.width - x
