@@ -6,8 +6,9 @@ Item {
     id: root
 
     property var panelScreen: null
-    property real sidebarWidth: Metrics.sidebarWidthCompact
-    property int gap: 24
+    property real sidebarWidth: Math.min(Metrics.sidebarWidthCompact, Math.max(0, width - gap * 2))
+    property int gap: Math.min(Metrics.pageMargin, Math.max(Metrics.spacingS, Math.min(width, height)
+                                                            * 0.025))
     readonly property alias blurBackgroundItem: panelSurface
     property int qsTargetHeight: 640
     // The host window already starts inside layer-shell's usable geometry.
@@ -19,64 +20,61 @@ Item {
     property bool panelPresented: false
     property bool contentRetained: false
     property bool presentationOpen: false
-    readonly property bool contentReady:
-        quickSettingsLoader.status === Loader.Ready
-            && quickSettingsLoader.item !== null
-            && quickSettingsLoader.item.readyForPresentation
+    readonly property bool contentReady: quickSettingsLoader.status === Loader.Ready
+                                         && quickSettingsLoader.item !== null
+                                         && quickSettingsLoader.item.readyForPresentation
     // A presented surface is only created after contentReady. It remains
     // operational during closing so its contents leave with the panel.
     readonly property bool contentOperational: panelPresented
     readonly property bool panelActive: panelPresented
 
     function preparePresentation() {
-        contentRetained = true
-        startPresentation()
+        contentRetained = true;
+        startPresentation();
     }
 
     function startPresentation() {
         if (!requestedOpen || !contentReady)
-            return
-
-        panelPresented = true
-        presentationOpen = true
+            return;
+        panelPresented = true;
+        presentationOpen = true;
     }
 
     function beginClosing() {
-        presentationOpen = false
+        presentationOpen = false;
         if (panelPresented)
-            return
-
+            return;
         if (!PersonalizationConfig.keepSidebarsLoaded)
-            contentRetained = false
+            contentRetained = false;
     }
 
     function finishClosing() {
         if (requestedOpen)
-            return
+            return;
 
         // Hide the already off-screen surface before releasing its layout tree.
-        panelPresented = false
+        panelPresented = false;
         if (!PersonalizationConfig.keepSidebarsLoaded)
-            contentRetained = false
+            contentRetained = false;
     }
 
     Component.onCompleted: {
         if (PersonalizationConfig.keepSidebarsLoaded)
-            contentRetained = true
+            contentRetained = true;
         if (requestedOpen)
-            preparePresentation()
+            preparePresentation();
     }
 
     onRequestedOpenChanged: {
         if (requestedOpen)
-            preparePresentation()
+            preparePresentation();
         else
-            beginClosing()
+            beginClosing();
     }
 
     onContentReadyChanged: {
         if (contentReady)
-            startPresentation()
+            startPresentation();
     }
 
     Connections {
@@ -84,21 +82,17 @@ Item {
 
         function onKeepSidebarsLoadedChanged() {
             if (PersonalizationConfig.keepSidebarsLoaded) {
-                root.contentRetained = true
-            } else if (!requestedOpen
-                    && !root.panelPresented) {
-                root.contentRetained = false
+                root.contentRetained = true;
+            } else if (!requestedOpen && !root.panelPresented) {
+                root.contentRetained = false;
             }
         }
     }
 
     function containsPoint(hostX, hostY) {
-        const localPosition =
-            sidebarContentFrame.mapFromItem(root, hostX, hostY);
-        return localPosition.x >= 0
-            && localPosition.x <= sidebarContentFrame.width
-            && localPosition.y >= 0
-            && localPosition.y <= sidebarContentFrame.height;
+        const localPosition = sidebarContentFrame.mapFromItem(root, hostX, hostY);
+        return localPosition.x >= 0 && localPosition.x <= sidebarContentFrame.width && localPosition.y >= 0
+                && localPosition.y <= sidebarContentFrame.height;
     }
 
     Item {
@@ -165,14 +159,11 @@ Item {
         id: panelSurface
 
         visible: root.panelActive
-        x: root.width - root.sidebarWidth - root.gap
-            + animController.slideOffset
+        x: root.width - root.sidebarWidth - root.gap + animController.slideOffset
         y: root.sidebarY
         width: root.sidebarWidth
-        height: Math.min(root.qsTargetHeight,
-            Math.max(0, root.height - root.sidebarY - root.gap))
-        color: BlurService.backgroundColor(
-            Appearance.colors.colLayer0)
+        height: Math.min(root.qsTargetHeight, Math.max(0, root.height - root.sidebarY - root.gap))
+        color: BlurService.backgroundColor(Appearance.colors.colLayer0)
         radius: Appearance.rounding.large
     }
 

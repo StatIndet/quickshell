@@ -29,7 +29,6 @@ Popup {
     onOpened: {
         if (menuRepeater.count > 0)
             menuRepeater.itemAt(0).forceActiveFocus();
-
     }
 
     enter: Transition {
@@ -49,9 +48,7 @@ Popup {
                 duration: 200
                 easing.type: Easing.OutCubic
             }
-
         }
-
     }
 
     exit: Transition {
@@ -71,9 +68,7 @@ Popup {
                 duration: 120
                 easing.type: Easing.InCubic
             }
-
         }
-
     }
 
     background: Rectangle {
@@ -99,7 +94,7 @@ Popup {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Metrics.touchTarget
                 buttonRadius: Appearance.rounding.small
-                buttonRadiusPressed: Appearance.rounding.medium
+                buttonRadiusPressed: Appearance.rounding.normal
                 toggled: root.selectedValue === Number(modelData.value)
                 selectedStateLayerEnabled: toggled
                 containerColor: "transparent"
@@ -129,13 +124,16 @@ Popup {
                         text: modelData.icon
                         iconSize: Metrics.iconM
                         fill: root.selectedValue === Number(modelData.value) ? 1 : 0
-                        color: root.selectedValue === Number(modelData.value) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurfaceVariant
+                        color: root.selectedValue === Number(modelData.value)
+                               ? Appearance.colors.colOnSecondaryContainer :
+                                 Appearance.colors.colOnSurfaceVariant
                     }
 
                     Text {
                         Layout.fillWidth: true
                         text: modelData.label
-                        color: root.selectedValue === Number(modelData.value) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurface
+                        color: root.selectedValue === Number(modelData.value)
+                               ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurface
                         font.family: Typography.labelLarge.family
                         font.pixelSize: Typography.labelLarge.pixelSize
                         font.weight: Typography.labelLarge.weight
@@ -150,13 +148,8 @@ Popup {
                         visible: root.selectedValue === Number(modelData.value)
                         color: Appearance.colors.colOnSecondaryContainer
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

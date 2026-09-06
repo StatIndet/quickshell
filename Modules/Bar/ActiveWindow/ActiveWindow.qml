@@ -10,6 +10,7 @@ Item {
     id: root
 
     property bool vertical: false
+    property real maximumTitleWidth: 250
     readonly property string edge: PersonalizationConfig.barPosition
     readonly property var activeWindow: Niri.focusedWindow
     readonly property string activeTitle: activeWindow.title || qsTr("桌面")
@@ -18,10 +19,13 @@ Item {
     readonly property bool isDesktop: !activeWindow.id
     readonly property string verticalAppName: activeAppName || qsTr("桌面")
     readonly property bool verticalAppNameIsCjk: root.containsCjk(verticalAppName)
-    readonly property string detailedTooltipText: activeAppName && activeAppName !== activeTitle ? activeAppName + "\n" + activeTitle : activeTitle
+    readonly property string detailedTooltipText: activeAppName && activeAppName !== activeTitle
+                                                  ? activeAppName + "\n" + activeTitle : activeTitle
 
     function containsCjk(value) {
-        return /[\u2e80-\u2fff\u3040-\u30ff\u31f0-\u31ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uf900-\ufaff]/.test(String(value || ""));
+        const cjkPattern =
+              /[\u2e80-\u2fff\u3040-\u30ff\u31f0-\u31ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uf900-\ufaff]/;
+        return cjkPattern.test(String(value || ""));
     }
 
     function limitedVerticalTitle(value) {
@@ -87,13 +91,16 @@ Item {
                 font.bold: true
                 visible: !root.isDesktop && !appIcon.visible
             }
-
         }
 
         Item {
-            implicitWidth: root.vertical ? (root.verticalAppNameIsCjk ? verticalCjkTitle.implicitWidth : verticalRotatedTitle.implicitHeight) : horizontalTitle.implicitWidth
-            implicitHeight: root.vertical ? (root.verticalAppNameIsCjk ? verticalCjkTitle.implicitHeight : verticalRotatedTitle.implicitWidth) : horizontalTitle.implicitHeight
-            Layout.maximumWidth: 250
+            implicitWidth: root.vertical ? (root.verticalAppNameIsCjk ? verticalCjkTitle.implicitWidth :
+                                                                        verticalRotatedTitle.implicitHeight) :
+                                           horizontalTitle.implicitWidth
+            implicitHeight: root.vertical ? (root.verticalAppNameIsCjk ? verticalCjkTitle.implicitHeight :
+                                                                         verticalRotatedTitle.implicitWidth) :
+                                            horizontalTitle.implicitHeight
+            Layout.maximumWidth: root.maximumTitleWidth
             Layout.alignment: Qt.AlignCenter
 
             Text {
@@ -134,9 +141,7 @@ Item {
                 rotation: root.edge === "left" ? -90 : 90
                 visible: root.vertical && !root.verticalAppNameIsCjk
             }
-
         }
-
     }
 
     MouseArea {
@@ -158,7 +163,6 @@ Item {
             duration: 300
             easing.type: Easing.OutCubic
         }
-
     }
 
     Behavior on implicitHeight {
@@ -166,7 +170,5 @@ Item {
             duration: 300
             easing.type: Easing.OutCubic
         }
-
     }
-
 }

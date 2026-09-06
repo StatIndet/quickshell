@@ -41,7 +41,6 @@ Loader {
             screenName: root.screen.name
             vertical: root.vertical
         }
-
     }
 
     Component {
@@ -50,16 +49,16 @@ Loader {
         SidebarButton {
             vertical: root.vertical
         }
-
     }
 
     Component {
         id: activeWindowComponent
 
         ActiveWindow {
+            maximumTitleWidth: root.vertical ? 250 : Math.max(48, Math.min(250, root.barVisualItem.width
+                                                                           * 0.18))
             vertical: root.vertical
         }
-
     }
 
     Component {
@@ -71,7 +70,6 @@ Loader {
             vertical: root.vertical
             barVisualItem: root.barVisualItem
         }
-
     }
 
     Component {
@@ -81,7 +79,6 @@ Loader {
             ownerId: "bar-sysmonitor:" + root.screen.name
             vertical: root.vertical
         }
-
     }
 
     Component {
@@ -91,7 +88,5 @@ Loader {
             screen: root.screen
             vertical: root.vertical
         }
-
     }
-
 }

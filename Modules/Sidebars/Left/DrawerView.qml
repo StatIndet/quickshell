@@ -21,7 +21,8 @@ Item {
         // Keep the hidden source delegate available while the unified
         // presentation host owns the drag visual. It is not a second
         // ownership record and never suppresses the Desktop delegate.
-        if (SystemCardDragSession.active && SystemCardDragSession.tileId !== "" && ids.indexOf(SystemCardDragSession.tileId) === -1)
+        if (SystemCardDragSession.active && SystemCardDragSession.tileId !== "" && ids.indexOf(
+                    SystemCardDragSession.tileId) === -1)
             ids.push(SystemCardDragSession.tileId);
 
         return ids;
@@ -32,12 +33,13 @@ Item {
     readonly property real gridGap: CardGeometry.cellGap
     readonly property int gridCellWidth: CardGeometry.baseCellWidth
     readonly property int gridCellHeight: CardGeometry.baseCellHeight
-    readonly property int gridContentWidth: root.gridColumns * root.gridCellWidth + (root.gridColumns - 1) * root.gridGap
-    readonly property int gridContentHeight: root.gridRows * root.gridCellHeight + (root.gridRows - 1) * root.gridGap
+    readonly property int gridContentWidth: root.gridColumns * root.gridCellWidth + (root.gridColumns - 1)
+                                            * root.gridGap
+    readonly property int gridContentHeight: root.gridRows * root.gridCellHeight + (root.gridRows - 1)
+                                             * root.gridGap
     readonly property var sidebarAnchors: {
-        const result = {
-        };
-        root.activeSidebarIds.forEach(function(id) {
+        const result = {};
+        root.activeSidebarIds.forEach(function (id) {
             result[id] = SystemCardService.sidebarAnchor(id);
         });
         return result;
@@ -83,17 +85,17 @@ Item {
     }
 
     function applyStoredLayout(forceRefresh) {
-        if ((!forceRefresh && root.preferencesApplied) || !UiPreferences.preferencesReady || root.draggingTileId.length > 0)
-            return ;
+        if ((!forceRefresh && root.preferencesApplied) || !UiPreferences.preferencesReady
+                || root.draggingTileId.length > 0)
+            return;
 
-        const hydrated = GridLayout.hydrateSaved(UiPreferences.drawerGridLayout, root.activeSidebarIds, root.sidebarAnchors);
+        const hydrated = GridLayout.hydrateSaved(UiPreferences.drawerGridLayout, root.activeSidebarIds,
+                                                 root.sidebarAnchors);
         const normalized = GridLayout.serializeLayout(hydrated, root.activeSidebarIds);
         root.committedLayout = hydrated;
         root.preferencesApplied = true;
-        if (JSON.stringify(normalized) !== JSON.stringify(UiPreferences.drawerGridLayout || {
-        }))
+        if (JSON.stringify(normalized) !== JSON.stringify(UiPreferences.drawerGridLayout || {}))
             UiPreferences.setDrawerGridLayout(normalized);
-
     }
 
     function beginDrag(tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX, pointerLocalY) {
@@ -101,7 +103,7 @@ Item {
             root.cancelDrag();
 
         if (!SystemCardDragSession.begin(tileId, sourceItem, grabLocalX, grabLocalY))
-            return ;
+            return;
 
         root.draggingTileId = tileId;
         root.dragSourceItem = sourceItem;
@@ -116,64 +118,75 @@ Item {
     function promoteToPresentation(tileId, sourceItem, pointerLocalX, pointerLocalY) {
         const geometry = DesktopPresentationService.geometry(root.screenName);
         const sourceRect = DesktopPresentationService.mapItemRect(root.screenName, sourceItem);
-        const mappedGrabPoint = DesktopPresentationService.mapItemPoint(root.screenName, sourceItem, SystemCardDragSession.grabLocalX, SystemCardDragSession.grabLocalY);
-        const presentationPointer = DesktopPresentationService.mapItemPoint(root.screenName, sourceItem, pointerLocalX, pointerLocalY);
+        const mappedGrabPoint = DesktopPresentationService.mapItemPoint(root.screenName, sourceItem,
+                                                                        SystemCardDragSession.grabLocalX,
+                                                                        SystemCardDragSession.grabLocalY);
+        const presentationPointer = DesktopPresentationService.mapItemPoint(root.screenName, sourceItem,
+                                                                            pointerLocalX, pointerLocalY);
         if (!geometry || !sourceRect || !mappedGrabPoint || !presentationPointer) {
             console.warn("[SystemCards] presentation host unavailable", root.screenName, tileId);
             return false;
         }
-        return SystemCardDragSession.promoteToPresentation(root.screenName, presentationPointer.x, presentationPointer.y, mappedGrabPoint.x - sourceRect.x, mappedGrabPoint.y - sourceRect.y, sourceRect.width, sourceRect.height, geometry.width, geometry.height);
+        return SystemCardDragSession.promoteToPresentation(root.screenName, presentationPointer.x,
+                                                           presentationPointer.y, mappedGrabPoint.x
+                                                           - sourceRect.x, mappedGrabPoint.y - sourceRect.y,
+                                                           sourceRect.width, sourceRect.height, geometry.width,
+                                                           geometry.height);
     }
 
     function updateDrag(tileId, pointerLocalX, pointerLocalY) {
         if (tileId !== root.draggingTileId)
-            return ;
+            return;
 
         if (root.desktopExtraction) {
-            const presentationPointer = DesktopPresentationService.mapItemPoint(root.screenName, root.dragSourceItem, pointerLocalX, pointerLocalY);
+            const presentationPointer = DesktopPresentationService.mapItemPoint(root.screenName,
+                                                                                root.dragSourceItem,
+                                                                                pointerLocalX, pointerLocalY);
             if (presentationPointer)
                 SystemCardDragSession.update(presentationPointer.x, presentationPointer.y);
 
-            return ;
+            return;
         }
         const sidebarPointer = root.dragSourceItem.mapToItem(null, pointerLocalX, pointerLocalY);
         if (!root.sidebarContainsPoint(sidebarPointer.x, sidebarPointer.y)) {
             if (!root.promoteToPresentation(tileId, root.dragSourceItem, pointerLocalX, pointerLocalY)) {
                 root.cancelDrag(tileId);
-                return ;
+                return;
             }
             root.desktopExtraction = true;
             root.previewLayout = [];
             root.dragTargetValid = false;
             root.targetColumn = -1;
             root.targetRow = -1;
-            return ;
+            return;
         }
         const localPoint = dashboard.mapFromItem(root.dragSourceItem, pointerLocalX, pointerLocalY);
         const sourceOrigin = dashboard.mapFromItem(root.dragSourceItem, 0, 0);
-        const initialGrabPoint = dashboard.mapFromItem(root.dragSourceItem, SystemCardDragSession.grabLocalX, SystemCardDragSession.grabLocalY);
+        const initialGrabPoint = dashboard.mapFromItem(root.dragSourceItem, SystemCardDragSession.grabLocalX,
+                                                       SystemCardDragSession.grabLocalY);
         const grabVectorX = initialGrabPoint.x - sourceOrigin.x;
         const grabVectorY = initialGrabPoint.y - sourceOrigin.y;
         const definition = GridLayout.tileDefinitionFor(tileId);
         if (!definition)
-            return ;
+            return;
 
         const rawColumn = Math.round((localPoint.x - grabVectorX) / dashboard.columnStride);
         const rawRow = Math.round((localPoint.y - grabVectorY) / dashboard.rowStride);
         const anchor = GridLayout.clampAnchor(definition, rawColumn, rawRow);
         if (anchor.column === root.targetColumn && anchor.row === root.targetRow)
-            return ;
+            return;
 
         root.targetColumn = anchor.column;
         root.targetRow = anchor.row;
-        const solved = GridLayout.moveLayout(root.committedLayout, tileId, anchor.column, anchor.row, root.activeSidebarIds);
+        const solved = GridLayout.moveLayout(root.committedLayout, tileId, anchor.column, anchor.row,
+                                             root.activeSidebarIds);
         root.previewLayout = solved || [];
         root.dragTargetValid = solved !== null;
     }
 
     function finishDrag(tileId) {
         if (tileId !== root.draggingTileId)
-            return ;
+            return;
 
         if (root.desktopExtraction) {
             // Every user drag commits the top-left corner in the output-local
@@ -184,10 +197,13 @@ Item {
                 "height": SystemCardDragSession.hostHeight
             };
             const size = SystemCardService.cardSize(tileId);
-            let screenX = Math.max(0, Math.min(Math.max(0, output.width - size.width), SystemCardDragSession.ghostX));
-            let screenY = Math.max(0, Math.min(Math.max(0, output.height - size.height), SystemCardDragSession.ghostY));
+            let screenX = Math.max(0, Math.min(Math.max(0, output.width - size.width),
+                                               SystemCardDragSession.ghostX));
+            let screenY = Math.max(0, Math.min(Math.max(0, output.height - size.height),
+                                               SystemCardDragSession.ghostY));
             if (PersonalizationConfig.desktopCardGridSnapEnabled) {
-                const snapped = DesktopCardLayout.snapPoint(screenX, screenY, size.width, size.height, output.width, output.height);
+                const snapped = DesktopCardLayout.snapPoint(screenX, screenY, size.width, size.height,
+                                                            output.width, output.height);
                 screenX = snapped.x;
                 screenY = snapped.y;
             }
@@ -195,63 +211,69 @@ Item {
             if (!SystemCardDragSession.freezeGhost(screenX, screenY)) {
                 SystemCardDragSession.cancel();
                 root.resetDragState(false);
-                return ;
+                return;
             }
             if (!SystemCardDragSession.prepareVisualHandoff(tileId)) {
                 SystemCardDragSession.cancel();
                 root.resetDragState(false);
-                return ;
+                return;
             }
             // Resolve the drop against the live Desktop host before the
             // ownership transaction. The incoming card is authoritative at
             // the drop point; existing Desktop cards are the only cards that
             // may be displaced. This keeps Sidebar -> Desktop on the same
             // collision path as a free Desktop drag.
-            const collisionRects = DesktopPresentationService.resolveDropCollision(root.screenName, tileId, screenX, screenY, size.width, size.height);
+            const collisionRects = DesktopPresentationService.resolveDropCollision(root.screenName, tileId,
+                                                                                   screenX, screenY,
+                                                                                   size.width, size.height);
             const collisionPositions = [];
             if (Array.isArray(collisionRects))
-                collisionRects.forEach(function(rect) {
-                if (!rect || typeof rect.id !== "string")
-                    return ;
+                collisionRects.forEach(function (rect) {
+                    if (!rect || typeof rect.id !== "string")
+                        return;
 
-                const point = Placement.normalizedPosition(rect.x, rect.y, output.width, output.height);
-                collisionPositions.push({
-                    "id": rect.id,
-                    "xNorm": point.xNorm,
-                    "yNorm": point.yNorm
+                    const point = Placement.normalizedPosition(rect.x, rect.y, output.width, output.height);
+                    collisionPositions.push({
+                                                "id": rect.id,
+                                                "xNorm": point.xNorm,
+                                                "yNorm": point.yNorm
+                                            });
                 });
-            });
 
             if (collisionPositions.length === 0)
                 collisionPositions.push({
-                "id": tileId,
-                "xNorm": normalized.xNorm,
-                "yNorm": normalized.yNorm
-            });
+                                            "id": tileId,
+                                            "xNorm": normalized.xNorm,
+                                            "yNorm": normalized.yNorm
+                                        });
 
-            const committed = SystemCardService.transferToDesktop(tileId, root.screenName, normalized.xNorm, normalized.yNorm, collisionPositions, !SystemCardService.isFreeLayoutMode(SystemCardService.globalDesktopLayoutMode));
+            const committed = SystemCardService.transferToDesktop(tileId, root.screenName, normalized.xNorm,
+                                                                  normalized.yNorm, collisionPositions,
+                                                                  !SystemCardService.isFreeLayoutMode(
+                                                                      SystemCardService.globalDesktopLayoutMode));
             const card = SystemCardService.card(tileId);
             if (!committed || !card || !card.enabled || card.container !== "desktop") {
                 console.warn("[SystemCards] desktop transfer rejected", tileId);
                 SystemCardDragSession.cancel();
                 root.resetDragState(false);
-                return ;
+                return;
             }
             if (!SystemCardDragSession.markTransferCommitted(tileId)) {
                 console.warn("[SystemCards] desktop transfer commit failed", tileId);
                 SystemCardDragSession.cancel();
                 root.resetDragState(false);
-                return ;
+                return;
             }
             SystemCardDragSession.requestVisualHandoffCheck(tileId);
             root.resetDragState(true);
             WidgetState.leftSidebarOpen = false;
             SystemCardDragSession.finishTransfer();
-            return ;
+            return;
         }
         if (root.dragTargetValid) {
             root.committedLayout = root.previewLayout;
-            UiPreferences.setDrawerGridLayout(GridLayout.serializeLayout(root.committedLayout, root.activeSidebarIds));
+            UiPreferences.setDrawerGridLayout(GridLayout.serializeLayout(root.committedLayout,
+                                                                         root.activeSidebarIds));
             SystemCardService.setSidebarLayout(root.committedLayout);
         }
         root.resetDragState(false);
@@ -259,7 +281,7 @@ Item {
 
     function cancelDrag(tileId) {
         if (tileId && tileId !== root.draggingTileId)
-            return ;
+            return;
 
         if (SystemCardDragSession.active)
             SystemCardDragSession.cancel();
@@ -294,7 +316,6 @@ Item {
     onActiveSidebarIdsChanged: {
         if (root.draggingTileId.length === 0)
             root.applyStoredLayout(true);
-
     }
     Component.onCompleted: {
         root.applyStoredLayout();
@@ -306,7 +327,6 @@ Item {
 
         if (root.serviceForegroundAcquired)
             SystemCardService.setSidebarForeground("sidebar:" + root.screenName, false);
-
     }
 
     Connections {
@@ -317,7 +337,6 @@ Item {
         function onDrawerGridLayoutChanged() {
             if (root.preferencesApplied)
                 root.applyStoredLayout(true);
-
         }
 
         target: UiPreferences
@@ -329,7 +348,7 @@ Item {
                 const card = SystemCardService.card(root.draggingTileId);
                 if (!card || !card.enabled) {
                     root.cancelDrag(root.draggingTileId);
-                    return ;
+                    return;
                 }
             }
             root.applyStoredLayout(true);
@@ -342,7 +361,6 @@ Item {
         function onCancelRequested(tileId) {
             if (root.draggingTileId === String(tileId))
                 root.cancelDrag(String(tileId));
-
         }
 
         function onCanceled() {
@@ -351,7 +369,6 @@ Item {
             // local gesture UI; no CardState rollback is performed here.
             if (root.draggingTileId !== "")
                 root.resetDragState(false);
-
         }
 
         target: SystemCardDragSession
@@ -366,14 +383,17 @@ Item {
         SystemLoadingState {
             anchors.fill: parent
             active: root.isForeground && !SystemMonitorService.error
-            visible: !SystemMonitorService.hasData && !SystemMonitorService.error && !SystemMonitorService.reconnecting
+            visible: !SystemMonitorService.hasData && !SystemMonitorService.error &&
+                     !SystemMonitorService.reconnecting
             message: qsTr("正在连接 keytop")
         }
 
         SystemUnavailableState {
-            visible: !SystemMonitorService.hasData && (SystemMonitorService.error || SystemMonitorService.reconnecting)
+            visible: !SystemMonitorService.hasData && (SystemMonitorService.error
+                                                       || SystemMonitorService.reconnecting)
             title: SystemMonitorService.reconnecting ? qsTr("正在重新连接") : qsTr("系统监测暂不可用")
-            message: SystemMonitorService.error ? qsTr("数据暂时缺失，页面将在后台退避重试。") : qsTr("连接中断后会自动恢复；已有数据不会被伪装成正常值。")
+            message: SystemMonitorService.error ? qsTr("数据暂时缺失，页面将在后台退避重试。") : qsTr(
+                                                      "连接中断后会自动恢复；已有数据不会被伪装成正常值。")
             reconnecting: SystemMonitorService.reconnecting
             onRetryRequested: SystemMonitorService.retry()
 
@@ -382,7 +402,6 @@ Item {
                 topMargin: Appearance.spacing.large
                 bottomMargin: Appearance.spacing.large
             }
-
         }
 
         StyledFlickable {
@@ -397,7 +416,7 @@ Item {
             anchors.fill: parent
             visible: SystemMonitorService.hasData
             contentWidth: width
-            contentHeight: Math.max(height, root.gridContentHeight)
+            contentHeight: Math.max(height, root.gridContentHeight * dashboard.scale)
             // This page scrolls through wheel/touchpad and keyboard input.
             // Flickable's direct mouse drag otherwise competes with the
             // DrawerGridTile DragHandler and interactive card controls.
@@ -406,14 +425,14 @@ Item {
             showVerticalScrollBar: contentHeight > height + 1
             activeFocusOnTab: contentHeight > height + 1
             Accessible.name: contentHeight > height + 1 ? qsTr("抽屉网格，可滚动并可拖动卡片") : qsTr("抽屉网格，可拖动卡片")
-            Keys.onPressed: (event) => {
+            Keys.onPressed: event => {
                 if (root.draggingTileId.length > 0 && event.key === Qt.Key_Escape) {
                     root.cancelDrag();
                     event.accepted = true;
-                    return ;
+                    return;
                 }
                 if (dashboardScroll.contentHeight <= dashboardScroll.height + 1)
-                    return ;
+                    return;
 
                 if (event.key === Qt.Key_Up)
                     dashboardScroll.scrollBy(-64);
@@ -428,7 +447,7 @@ Item {
                 else if (event.key === Qt.Key_End)
                     dashboardScroll.scrollBy(dashboardScroll.contentHeight);
                 else
-                    return ;
+                    return;
                 event.accepted = true;
             }
 
@@ -440,13 +459,17 @@ Item {
                 readonly property real columnStride: cellWidth + root.gridGap
                 readonly property real rowStride: cellHeight + root.gridGap
 
-                x: Math.max(0, Math.floor((dashboardScroll.width - root.gridContentWidth) / 2))
+                // Preserve the shared card geometry and drag coordinates. Only a
+                // constrained viewport shrinks the grid as a single surface.
+                scale: Math.min(1, Math.max(0.01, dashboardScroll.width / root.gridContentWidth))
+                transformOrigin: Item.TopLeft
+                x: Math.max(0, Math.floor((dashboardScroll.width - root.gridContentWidth * scale) / 2))
                 width: root.gridContentWidth
                 height: root.gridContentHeight
                 focus: root.draggingTileId.length > 0
-                Keys.onEscapePressed: (event) => {
+                Keys.onEscapePressed: event => {
                     if (root.draggingTileId.length === 0)
-                        return ;
+                        return;
 
                     root.cancelDrag();
                     event.accepted = true;
@@ -465,11 +488,14 @@ Item {
                         const definition = GridLayout.tileDefinitionFor(root.draggingTileId);
                         return definition ? CardGeometry.heightForSpan(definition.rowSpan) : 0;
                     }
-                    visible: root.draggingTileId.length > 0 && !root.desktopExtraction && root.targetColumn >= 0 && root.targetRow >= 0
+                    visible: root.draggingTileId.length > 0 && !root.desktopExtraction && root.targetColumn
+                             >= 0 && root.targetRow >= 0
                     radius: Appearance.rounding.extraLarge
-                    color: Appearance.applyAlpha(root.dragTargetValid ? Appearance.colors.colPrimary : Appearance.colors.colError, 0.14)
+                    color: Appearance.applyAlpha(root.dragTargetValid ? Appearance.colors.colPrimary :
+                                                                        Appearance.colors.colError, 0.14)
                     border.width: 2
-                    border.color: root.dragTargetValid ? Appearance.colors.colPrimary : Appearance.colors.colError
+                    border.color: root.dragTargetValid ? Appearance.colors.colPrimary :
+                                                         Appearance.colors.colError
                     z: 20
 
                     Behavior on x {
@@ -478,7 +504,6 @@ Item {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
 
                     Behavior on y {
@@ -487,9 +512,7 @@ Item {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
-
                 }
 
                 Repeater {
@@ -512,26 +535,23 @@ Item {
                         active: root.isForeground
                         dragging: root.draggingTileId === tile.tileId
                         z: dragging ? 30 : 1
-                        onDragStarted: (tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX, pointerLocalY) => {
-                            return root.beginDrag(tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX, pointerLocalY);
-                        }
+                        onDragStarted: (tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX,
+                                        pointerLocalY) => {
+                                            return root.beginDrag(tileId, sourceItem, grabLocalX, grabLocalY,
+                                                                  pointerLocalX, pointerLocalY);
+                                        }
                         onDragMoved: (tileId, pointerLocalX, pointerLocalY) => {
                             return root.updateDrag(tileId, pointerLocalX, pointerLocalY);
                         }
-                        onDragFinished: (tileId) => {
+                        onDragFinished: tileId => {
                             return root.finishDrag(tileId);
                         }
-                        onDragCanceled: (tileId) => {
+                        onDragCanceled: tileId => {
                             return root.cancelDrag(tileId);
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

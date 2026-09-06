@@ -25,8 +25,7 @@ PanelWindow {
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
-    Material.theme: Appearance.m3colors.darkmode
-        ? Material.Dark : Material.Light
+    Material.theme: Appearance.m3colors.darkmode ? Material.Dark : Material.Light
     Material.accent: Appearance.colors.colPrimary
 
     property string pendingWebUrl: ""
@@ -55,38 +54,30 @@ PanelWindow {
 
     onWebProgressChanged: spotlightBlur.publish()
 
-    readonly property var activeResults: mode === "apps"
-        ? appProvider.results
-        : (mode === "wallpapers"
-            ? wallpaperProvider.results
-            : (mode === "clipboard" ? clipboardProvider.results : []))
+    readonly property var activeResults: mode === "apps" ? appProvider.results : (mode === "wallpapers"
+                                                                                  ? wallpaperProvider.results :
+                                                                                    (mode === "clipboard"
+                                                                                     ? clipboardProvider.results :
+                                                                                       []))
     readonly property bool clipboardMode: mode === "clipboard"
     readonly property bool spotlightModalActive: resultsPanel.modalActive
-    readonly property bool clipboardCanRestore:
-        clipboardProvider.canRestore
+    readonly property bool clipboardCanRestore: clipboardProvider.canRestore
     readonly property bool wallpaperMode: mode === "wallpapers"
-    readonly property bool showing:
-        windowPhase !== "hidden" && root.visible
+    readonly property bool showing: windowPhase !== "hidden" && root.visible
     readonly property bool searchHasFocus: searchBar.inputActiveFocus
     readonly property real searchMainLeft: searchBar.mainLeft
     readonly property real searchMainRight: searchBar.mainRight
-    readonly property real searchRequestedWidth:
-        searchBar.requestedMainWidth
+    readonly property real searchRequestedWidth: searchBar.requestedMainWidth
     readonly property real webPressDepth: searchBar.pressDepth
     readonly property real webPressScaleX: searchBar.pressScaleX
     readonly property real webPressScaleY: searchBar.pressScaleY
-    readonly property real searchShadowBlur:
-        searchBar.pressShadowBlur
-    readonly property real searchShadowVerticalOffset:
-        searchBar.pressShadowVerticalOffset
+    readonly property real searchShadowBlur: searchBar.pressShadowBlur
+    readonly property real searchShadowVerticalOffset: searchBar.pressShadowVerticalOffset
     readonly property real resultsPanelWidth: resultsPanel.width
     readonly property real resultsPanelHeight: resultsPanel.height
-    readonly property int wallpaperGridColumns:
-        resultsPanel.wallpaperColumnCount
-    readonly property real wallpaperPreviewWidth:
-        resultsPanel.wallpaperPreviewWidth
-    readonly property int blurRegionCount:
-        spotlightBlur.regionObjects.length
+    readonly property int wallpaperGridColumns: resultsPanel.wallpaperColumnCount
+    readonly property real wallpaperPreviewWidth: resultsPanel.wallpaperPreviewWidth
+    readonly property int blurRegionCount: spotlightBlur.regionObjects.length
 
     SpotlightStyle {
         id: style
@@ -106,8 +97,7 @@ PanelWindow {
         id: clipboardProvider
         query: root.query
         onRestored: id => root.finishClipboardRestore(id)
-        onRestoreFailed: (id, code, message) =>
-            root.failClipboardRestore(id, code, message)
+        onRestoreFailed: (id, code, message) => root.failClipboardRestore(id, code, message)
         onDeleteFailed: (id, code, message) => {
             root.clipboardSelectionRecoveryPending = false;
             root.clipboardSelectionRecoveryTargetId = "";
@@ -130,9 +120,8 @@ PanelWindow {
 
     function normalizedMode(value) {
         const requested = String(value || "").toLowerCase();
-        return requested === "apps"
-            || requested === "wallpapers"
-            || requested === "clipboard" ? requested : "";
+        return requested === "apps" || requested === "wallpapers" || requested === "clipboard" ? requested :
+                                                                                                 "";
     }
 
     function modeIndex(value) {
@@ -144,9 +133,7 @@ PanelWindow {
     }
 
     function modeForIndex(index) {
-        return ["apps", "wallpapers", "clipboard"][
-            Math.max(0, Math.min(2, index))
-        ];
+        return ["apps", "wallpapers", "clipboard"][Math.max(0, Math.min(2, index))];
     }
 
     function animateWindow(target) {
@@ -154,13 +141,9 @@ PanelWindow {
         windowAnimation.stop();
         windowAnimation.from = root.windowProgress;
         windowAnimation.to = target;
-        windowAnimation.duration = Math.max(
-            1,
-            (target > root.windowProgress
-                ? style.windowOpenDuration
-                : style.windowCloseDuration)
-                * Math.abs(target - root.windowProgress)
-        );
+        windowAnimation.duration = Math.max(1, (target > root.windowProgress ? style.windowOpenDuration :
+                                                                               style.windowCloseDuration)
+                                            * Math.abs(target - root.windowProgress));
         windowAnimation.restart();
     }
 
@@ -169,10 +152,7 @@ PanelWindow {
         railAnimation.stop();
         railAnimation.from = root.railProgress;
         railAnimation.to = target;
-        railAnimation.duration = Math.max(
-            1,
-            style.railDuration * Math.abs(target - root.railProgress)
-        );
+        railAnimation.duration = Math.max(1, style.railDuration * Math.abs(target - root.railProgress));
         railAnimation.restart();
     }
 
@@ -181,10 +161,7 @@ PanelWindow {
         webAnimation.stop();
         webAnimation.from = root.webProgress;
         webAnimation.to = target;
-        webAnimation.duration = Math.max(
-            1,
-            style.webDuration * Math.abs(target - root.webProgress)
-        );
+        webAnimation.duration = Math.max(1, style.webDuration * Math.abs(target - root.webProgress));
         webAnimation.restart();
     }
 
@@ -197,8 +174,7 @@ PanelWindow {
         else if (root.windowPhase === "hidden")
             setLocalMode("apps");
 
-        if (root.windowPhase === "open"
-                || root.windowPhase === "opening") {
+        if (root.windowPhase === "open" || root.windowPhase === "opening") {
             root.focusSpotlight();
             return true;
         }
@@ -221,8 +197,7 @@ PanelWindow {
     }
 
     function requestClose() {
-        if (root.windowPhase === "hidden"
-                || root.windowPhase === "closing")
+        if (root.windowPhase === "hidden" || root.windowPhase === "closing")
             return false;
         root.windowPhase = "closing";
         root.modeRailExpanded = false;
@@ -233,8 +208,7 @@ PanelWindow {
     }
 
     function toggleWindow() {
-        if (root.windowPhase === "hidden"
-                || root.windowPhase === "closing")
+        if (root.windowPhase === "hidden" || root.windowPhase === "closing")
             return root.openSpotlight();
         return root.requestClose();
     }
@@ -244,8 +218,7 @@ PanelWindow {
     }
 
     function setRailExpanded(expanded) {
-        if (root.modeRailExpanded === expanded
-                && root._railAnimationTarget === (expanded ? 1 : 0))
+        if (root.modeRailExpanded === expanded && root._railAnimationTarget === (expanded ? 1 : 0))
             return;
         root.modeRailExpanded = expanded;
         if (!expanded)
@@ -257,10 +230,8 @@ PanelWindow {
         const localMode = normalizedMode(requestedMode);
         if (localMode === "")
             return false;
-        const enteringWallpapers = root.mode !== "wallpapers"
-            && localMode === "wallpapers";
-        const enteringClipboard = root.mode !== "clipboard"
-            && localMode === "clipboard";
+        const enteringWallpapers = root.mode !== "wallpapers" && localMode === "wallpapers";
+        const enteringClipboard = root.mode !== "clipboard" && localMode === "clipboard";
         if (root.mode === "web")
             root.animateWeb(0);
         root.selectedResultId = "";
@@ -282,8 +253,7 @@ PanelWindow {
     }
 
     function enterWeb() {
-        if (root.mode === "web"
-                && root._webAnimationTarget === 1)
+        if (root.mode === "web" && root._webAnimationTarget === 1)
             return true;
         if (root.mode !== "web")
             root.previousLocalMode = root.mode;
@@ -299,8 +269,7 @@ PanelWindow {
     function exitWeb() {
         if (root.mode !== "web")
             return false;
-        root.mode = root.normalizedMode(root.previousLocalMode) !== ""
-            ? root.previousLocalMode : "apps";
+        root.mode = root.normalizedMode(root.previousLocalMode) !== "" ? root.previousLocalMode : "apps";
         root.animateWeb(0);
         root.selectedResultId = "";
         root.selectResult(root.activeResults.length > 0 ? 0 : -1);
@@ -312,13 +281,11 @@ PanelWindow {
 
     function moveModeFocus(delta) {
         if (!root.modeRailExpanded) {
-            root.modeFocusIndex = root.mode === "web"
-                ? 0 : root.modeIndex(root.mode);
+            root.modeFocusIndex = root.mode === "web" ? 0 : root.modeIndex(root.mode);
             root.setRailExpanded(true);
             return;
         }
-        const current = root.modeFocusIndex < 0
-            ? 0 : root.modeFocusIndex;
+        const current = root.modeFocusIndex < 0 ? 0 : root.modeFocusIndex;
         root.modeFocusIndex = (current + delta + 3) % 3;
     }
 
@@ -329,44 +296,26 @@ PanelWindow {
             return false;
         }
 
-        const bounded = Math.max(
-            0,
-            Math.min(root.activeResults.length - 1, index)
-        );
+        const bounded = Math.max(0, Math.min(root.activeResults.length - 1, index));
         const result = root.activeResults[bounded];
         root.selectedResultIndex = bounded;
-        root.selectedResultId = result && result.id !== undefined
-            ? String(result.id) : "";
+        root.selectedResultId = result && result.id !== undefined ? String(result.id) : "";
         return true;
     }
 
     function moveSelectionByOffset(offset) {
         if (root.mode === "web" || root.activeResults.length === 0)
             return;
-        const current = root.selectedResultIndex < 0
-            ? 0 : root.selectedResultIndex;
-        if (root.mode === "wallpapers"
-                && wallpaperProvider.hasMore
-                && current + offset >= root.activeResults.length - 1) {
-            wallpaperProvider.loadMore(
-                current + Math.abs(offset)
-                    + root.wallpaperGridColumns * 2);
+        const current = root.selectedResultIndex < 0 ? 0 : root.selectedResultIndex;
+        if (root.mode === "wallpapers" && wallpaperProvider.hasMore && current + offset >= root.activeResults.length
+                - 1) {
+            wallpaperProvider.loadMore(current + Math.abs(offset) + root.wallpaperGridColumns * 2);
         }
-        root.selectResult(
-            Math.max(
-                0,
-                Math.min(
-                    root.activeResults.length - 1,
-                    current + offset
-                )
-            )
-        );
+        root.selectResult(Math.max(0, Math.min(root.activeResults.length - 1, current + offset)));
     }
 
     function moveSelection(direction) {
-        root.moveSelectionByOffset(
-            resultsPanel.navigationStep(direction)
-        );
+        root.moveSelectionByOffset(resultsPanel.navigationStep(direction));
     }
 
     function reconcileSelection() {
@@ -380,13 +329,11 @@ PanelWindow {
 
         if (root.clipboardSelectionRecoveryPending) {
             const targetId = root.clipboardSelectionRecoveryTargetId;
-            const targetStillPresent = root.activeResults.some(
-                result => result
-                    && String(result.id || "") === targetId);
+            const targetStillPresent = root.activeResults.some(result => result && String(result.id || "")
+                                                                         === targetId);
             if (targetStillPresent) {
-                const targetIndex = root.activeResults.findIndex(
-                    result => result
-                        && String(result.id || "") === targetId);
+                const targetIndex = root.activeResults.findIndex(result => result && String(result.id || "")
+                                                                           === targetId);
                 if (targetIndex >= 0)
                     root.selectResult(targetIndex);
                 return;
@@ -397,9 +344,7 @@ PanelWindow {
             root.clipboardSelectionRecoveryTargetId = "";
             root.clipboardSelectionRecoveryId = "";
             if (recoveryId !== "") {
-                for (let index = 0;
-                        index < root.activeResults.length;
-                        index += 1) {
+                for (let index = 0; index < root.activeResults.length; index += 1) {
                     const result = root.activeResults[index];
                     if (result && String(result.id) === recoveryId) {
                         root.selectResult(index);
@@ -411,12 +356,9 @@ PanelWindow {
 
         let restoredIndex = -1;
         if (root.selectedResultId !== "") {
-            for (let index = 0;
-                    index < root.activeResults.length;
-                    index += 1) {
+            for (let index = 0; index < root.activeResults.length; index += 1) {
                 const result = root.activeResults[index];
-                if (result && String(result.id)
-                        === root.selectedResultId) {
+                if (result && String(result.id) === root.selectedResultId) {
                     restoredIndex = index;
                     break;
                 }
@@ -453,8 +395,7 @@ PanelWindow {
         if (root.clipboardActionState === "copying") {
             if (root.clipboardActionEntryId === id)
                 return false;
-            root.clipboardActionError = qsTr(
-                "已有剪贴板操作正在执行");
+            root.clipboardActionError = qsTr("已有剪贴板操作正在执行");
             return false;
         }
         clipboardFeedbackTimer.stop();
@@ -479,20 +420,17 @@ PanelWindow {
     }
 
     function finishClipboardRestore(id) {
-        if (root.clipboardActionState !== "copying"
-                || String(id) !== root.clipboardActionEntryId)
+        if (root.clipboardActionState !== "copying" || String(id) !== root.clipboardActionEntryId)
             return;
         root.clipboardActionState = "copied";
         root.clipboardActionError = "";
-        clipboardFeedbackTimer.interval =
-            root.clipboardActionKeepOpen ? 800 : 230;
+        clipboardFeedbackTimer.interval = root.clipboardActionKeepOpen ? 800 : 230;
         clipboardFeedbackTimer.restart();
     }
 
     function failClipboardRestore(id, code, message) {
-        if (root.clipboardActionState === "copying"
-                && root.clipboardActionEntryId !== ""
-                && String(id) !== root.clipboardActionEntryId)
+        if (root.clipboardActionState === "copying" && root.clipboardActionEntryId !== "" && String(id)
+                !== root.clipboardActionEntryId)
             return;
         root.clipboardActionEntryId = String(id);
         root.clipboardActionState = "error";
@@ -508,17 +446,13 @@ PanelWindow {
         if (!target)
             return false;
 
-        root.clipboardSelectionRecoveryPending =
-            root.selectedResultId === String(target.id || "");
-        root.clipboardSelectionRecoveryTargetId =
-            root.clipboardSelectionRecoveryPending
-            ? String(target.id || "") : "";
+        root.clipboardSelectionRecoveryPending = root.selectedResultId === String(target.id || "");
+        root.clipboardSelectionRecoveryTargetId = root.clipboardSelectionRecoveryPending ? String(target.id
+                                                                                                  || "") : "";
         root.clipboardSelectionRecoveryId = "";
         if (root.clipboardSelectionRecoveryPending) {
-            const successor = root.activeResults[index + 1]
-                || root.activeResults[index - 1];
-            root.clipboardSelectionRecoveryId = successor
-                ? String(successor.id || "") : "";
+            const successor = root.activeResults[index + 1] || root.activeResults[index - 1];
+            root.clipboardSelectionRecoveryId = successor ? String(successor.id || "") : "";
         }
 
         const started = clipboardProvider.deleteEntry(index);
@@ -646,10 +580,8 @@ PanelWindow {
             event.accepted = true;
             return;
         }
-        if (event.key === Qt.Key_Tab
-                || event.key === Qt.Key_Backtab) {
-            root.moveModeFocus(
-                event.key === Qt.Key_Backtab || shift ? -1 : 1);
+        if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+            root.moveModeFocus(event.key === Qt.Key_Backtab || shift ? -1 : 1);
             event.accepted = true;
             return;
         }
@@ -668,27 +600,22 @@ PanelWindow {
             event.accepted = true;
             return;
         }
-        if (root.mode === "wallpapers"
-                && event.key === Qt.Key_Left) {
+        if (root.mode === "wallpapers" && event.key === Qt.Key_Left) {
             root.moveSelectionByOffset(-1);
             event.accepted = true;
             return;
         }
-        if (root.mode === "wallpapers"
-                && event.key === Qt.Key_Right) {
+        if (root.mode === "wallpapers" && event.key === Qt.Key_Right) {
             root.moveSelectionByOffset(1);
             event.accepted = true;
             return;
         }
-        if (event.key === Qt.Key_Return
-                || event.key === Qt.Key_Enter) {
+        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
             root.activateSelected(root.mode === "clipboard" && shift);
             event.accepted = true;
             return;
         }
-        if (event.key === Qt.Key_Delete
-                && root.mode === "clipboard"
-                && root.selectedResultIndex >= 0) {
+        if (event.key === Qt.Key_Delete && root.mode === "clipboard" && root.selectedResultIndex >= 0) {
             root.deleteClipboardEntry(root.selectedResultIndex);
             event.accepted = true;
         }
@@ -702,8 +629,8 @@ PanelWindow {
         target: root
         property: "windowProgress"
         easing.type: Easing.BezierSpline
-        easing.bezierCurve: root._windowAnimationTarget > root.windowProgress
-            ? style.windowEnterCurve : style.windowExitCurve
+        easing.bezierCurve: root._windowAnimationTarget > root.windowProgress ? style.windowEnterCurve :
+                                                                                style.windowExitCurve
 
         onFinished: {
             if (root._windowAnimationTarget >= 1) {
@@ -759,11 +686,8 @@ PanelWindow {
 
         targetWindow: root
         backgroundItem: searchBar.blurRegionItems[0]
-        additionalBackgroundItems:
-            searchBar.blurRegionItems.slice(1).concat([
-                resultsPanel.blurRegionItem,
-                resultsPanel.modalBlurRegionItem
-            ])
+        additionalBackgroundItems: searchBar.blurRegionItems.slice(1).concat([resultsPanel.blurRegionItem,
+                                                                              resultsPanel.modalBlurRegionItem])
         blurEnabled: root.showing
     }
 
@@ -779,25 +703,24 @@ PanelWindow {
         Keys.priority: Keys.BeforeItem
         Keys.onPressed: event => root.handleKey(event)
 
-        readonly property real baseY:
-            Math.max(40, root.height * 0.22 - searchBar.height / 2)
+        readonly property real baseY: Math.max(Metrics.popupMargin, Math.min(root.height * 0.22
+                                                                             - searchBar.height / 2,
+                                                                             root.height - searchBar.height
+                                                                             - style.resultGap - Math.min(
+                                                                                 style.resultMaxHeight,
+                                                                                 root.height * 0.55)
+                                                                             - style.windowBottomMargin))
 
-        width: Math.min(
-            root.wallpaperMode
-                ? style.wallpaperPanelWidth : style.canvasWidth,
-            Math.max(
-                360,
-                root.width - style.windowHorizontalMargin * 2
-            )
-        )
-        height: searchBar.height
-            + style.resultGap + resultsPanel.height
+        width: Math.min(root.wallpaperMode ? style.wallpaperPanelWidth : style.canvasWidth, Math.max(0, root.width
+                                                                                                     - Math.min(
+                                                                                                         style.windowHorizontalMargin,
+                                                                                                         Metrics.popupMargin)
+                                                                                                     * 2))
+        height: searchBar.height + style.resultGap + resultsPanel.height
         anchors.horizontalCenter: parent.horizontalCenter
-        y: baseY
-            + style.initialYOffset * (1 - root.windowProgress)
+        y: baseY + style.initialYOffset * (1 - root.windowProgress)
         opacity: root.windowProgress
-        scale: style.initialScale
-            + (1 - style.initialScale) * root.windowProgress
+        scale: style.initialScale + (1 - style.initialScale) * root.windowProgress
         transformOrigin: Item.Top
 
         MouseArea {
@@ -816,13 +739,8 @@ PanelWindow {
             modeFocusIndex: root.modeFocusIndex
             railProgress: root.railProgress
             webProgress: root.webProgress
-            requestedMainWidth: Math.max(
-                420,
-                Math.min(
-                    style.searchWidth,
-                    width - style.compactSideReserve
-                )
-            )
+            requestedMainWidth: Math.min(width, Math.max(Math.min(420, width), Math.min(style.searchWidth, width
+                                                                                        - style.compactSideReserve)))
             text: root.query
             onTextChanged: root.query = text
             onRoutedKey: event => root.handleKey(event)
@@ -836,12 +754,9 @@ PanelWindow {
         SpotlightResultsPanel {
             id: resultsPanel
 
-            width: root.wallpaperMode
-                ? Math.min(
-                    style.wallpaperPanelWidth,
-                    spotlightRoot.width
-                )
-                : searchBar.requestedMainWidth
+            width: root.wallpaperMode ? Math.min(style.wallpaperPanelWidth, spotlightRoot.width) :
+                                        searchBar.requestedMainWidth
+
             anchors.top: searchBar.bottom
             anchors.topMargin: style.resultGap
             anchors.horizontalCenter: parent.horizontalCenter
@@ -852,43 +767,28 @@ PanelWindow {
             clipboardModel: clipboardProvider.resultModel
             selectedIndex: root.selectedResultIndex
             loading: root.clipboardMode && clipboardProvider.loading
-            providerAvailable:
-                !root.clipboardMode || clipboardProvider.available
-            canRestore:
-                !root.clipboardMode || clipboardProvider.canRestore
-            providerError:
-                root.clipboardMode ? clipboardProvider.error : null
+            providerAvailable: !root.clipboardMode || clipboardProvider.available
+            canRestore: !root.clipboardMode || clipboardProvider.canRestore
+            providerError: root.clipboardMode ? clipboardProvider.error : null
             clipboardActionState: root.clipboardActionState
             clipboardActionEntryId: root.clipboardActionEntryId
             clipboardActionError: root.clipboardActionError
-            clipboardActionRunning: clipboardProvider.actionRunning
-                || root.clipboardActionState === "copying"
-                || root.clipboardActionState === "copied"
+            clipboardActionRunning: clipboardProvider.actionRunning || root.clipboardActionState
+                                    === "copying" || root.clipboardActionState === "copied"
             wallpaperHasMore: wallpaperProvider.hasMore
-            availableHeight: Math.max(
-                style.emptyHeight,
-                root.height
-                    - spotlightRoot.baseY
-                    - searchBar.height
-                    - style.resultGap
-                    - style.windowBottomMargin
-            )
+            availableHeight: Math.max(0, root.height - spotlightRoot.baseY - searchBar.height
+                                      - style.resultGap - style.windowBottomMargin)
 
-            onSelectionRequested: index =>
-                root.selectResult(index)
+            onSelectionRequested: index => root.selectResult(index)
             onActivationRequested: (index, keepOpen) => {
                 root.activateResult(index, keepOpen);
             }
-            onDeleteRequested: index =>
-                root.deleteClipboardEntry(index)
+            onDeleteRequested: index => root.deleteClipboardEntry(index)
             onClearRequested: clipboardProvider.clear()
-            onInspectionRequested: id =>
-                clipboardProvider.requestDetails(id)
-            onInspectionReleased: id =>
-                clipboardProvider.releaseDetails(id)
+            onInspectionRequested: id => clipboardProvider.requestDetails(id)
+            onInspectionReleased: id => clipboardProvider.releaseDetails(id)
             onModalClosed: root.focusSpotlight()
-            onWallpaperMoreRequested: minimumCount =>
-                wallpaperProvider.loadMore(minimumCount)
+            onWallpaperMoreRequested: minimumCount => wallpaperProvider.loadMore(minimumCount)
         }
     }
 }

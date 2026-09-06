@@ -25,13 +25,13 @@ Rectangle {
     property real avatarSize: 104
     property real avatarCoverFraction: 0.42
 
-    signal avatarActivated()
-    signal networkActivated()
+    signal avatarActivated
+    signal networkActivated
 
     property color surfaceColor: Appearance.m3colors.m3surfaceContainerHigh
     readonly property color profileSurfaceColor: surfaceColor
-    readonly property string wallpaperUrl: wallpaperPath !== "" && !colorWallpaper
-        ? Paths.fileUrl(wallpaperPath) : ""
+    readonly property string wallpaperUrl: wallpaperPath !== "" && !colorWallpaper ? Paths.fileUrl(
+                                                                                         wallpaperPath) : ""
 
     function distroLogo() {
         const logos = {
@@ -67,17 +67,21 @@ Rectangle {
         height: root.coverHeight
         topLeftRadius: root.radius
         topRightRadius: root.radius
-        color: root.colorWallpaper
-            ? root.wallpaperPath : Appearance.colors.colPrimaryContainer
+        color: root.colorWallpaper ? root.wallpaperPath : Appearance.colors.colPrimaryContainer
 
-        gradient: root.wallpaperUrl === "" && !root.colorWallpaper
-            ? fallbackGradient : null
+        gradient: root.wallpaperUrl === "" && !root.colorWallpaper ? fallbackGradient : null
 
         Gradient {
             id: fallbackGradient
             orientation: Gradient.Horizontal
-            GradientStop { position: 0; color: Appearance.colors.colPrimaryContainer }
-            GradientStop { position: 1; color: Appearance.colors.colTertiaryContainer }
+            GradientStop {
+                position: 0
+                color: Appearance.colors.colPrimaryContainer
+            }
+            GradientStop {
+                position: 1
+                color: Appearance.colors.colTertiaryContainer
+            }
         }
 
         Image {
@@ -117,8 +121,7 @@ Rectangle {
                 NumberAnimation {
                     duration: Appearance.animation.expressiveDefaultEffects.duration
                     easing.type: Appearance.animation.expressiveDefaultEffects.type
-                    easing.bezierCurve:
-                        Appearance.animation.expressiveDefaultEffects.bezierCurve
+                    easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                 }
             }
         }
@@ -178,20 +181,17 @@ Rectangle {
 
             MultiEffect {
                 anchors.fill: parent
-                source: profileAvatar.status === Image.Ready
-                    ? profileAvatar : fallbackAvatar
+                source: profileAvatar.status === Image.Ready ? profileAvatar : fallbackAvatar
                 maskEnabled: true
                 maskSource: avatarMask
                 maskThresholdMin: 0.5
                 maskSpreadAtMin: 1
-                visible: profileAvatar.status === Image.Ready
-                    || fallbackAvatar.status === Image.Ready
+                visible: profileAvatar.status === Image.Ready || fallbackAvatar.status === Image.Ready
             }
 
             MaterialSymbol {
                 anchors.centerIn: parent
-                visible: profileAvatar.status !== Image.Ready
-                    && fallbackAvatar.status !== Image.Ready
+                visible: profileAvatar.status !== Image.Ready && fallbackAvatar.status !== Image.Ready
                 text: "account_circle"
                 iconSize: 42
                 color: Appearance.colors.colOnPrimaryContainer
@@ -203,7 +203,11 @@ Rectangle {
                 color: Appearance.applyAlpha(Appearance.m3colors.m3scrim, 0.68)
                 opacity: avatarButton.pointerHovered ? 1 : 0
 
-                Behavior on opacity { NumberAnimation { duration: 160 } }
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 160
+                    }
+                }
 
                 MaterialSymbol {
                     anchors.centerIn: parent
@@ -227,14 +231,16 @@ Rectangle {
             rippleColor: Appearance.colors.colOnImage
             Accessible.name: root.avatarActionLabel
             onClicked: {
-                focus = false
-                root.avatarActivated()
+                focus = false;
+                root.avatarActivated();
             }
             contentItem: Item {}
         }
     }
 
     RowLayout {
+        id: profileDetails
+
         anchors.left: avatarFrame.right
         anchors.leftMargin: Appearance.spacing.large
         anchors.right: parent.right
@@ -270,7 +276,8 @@ Rectangle {
                 }
 
                 Text {
-                    Layout.maximumWidth: parent.width * 0.44
+                    Layout.minimumWidth: 0
+                    Layout.maximumWidth: Math.max(0, profileDetails.width * 0.32)
                     text: root.distroName
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
@@ -298,6 +305,7 @@ Rectangle {
         RippleButton {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             visible: root.showNetworkStatus
+            Layout.maximumWidth: Math.max(48, profileDetails.width * 0.4)
             implicitWidth: networkContent.implicitWidth + Appearance.spacing.large * 2
             implicitHeight: 48
             buttonRadius: Appearance.rounding.full
@@ -308,9 +316,9 @@ Rectangle {
             focusStateLayerOpacity: 0.5
             pressedStateLayerOpacity: 0.7
             rippleColor: Appearance.colors.colPrimary
-            Accessible.name: root.networkStatusDetail.length > 0
-                ? root.networkStatusText + ", " + root.networkStatusDetail
-                : root.networkStatusText
+            Accessible.name: root.networkStatusDetail.length > 0 ? root.networkStatusText + ", "
+                                                                   + root.networkStatusDetail :
+                                                                   root.networkStatusText
             onClicked: root.networkActivated()
 
             contentItem: ButtonLabel {

@@ -20,7 +20,6 @@ Item {
             const loader = componentInstantiator.objectAt(index);
             if (loader && loader.item)
                 items.push(loader.item);
-
         }
         return items;
     }
@@ -29,6 +28,7 @@ Item {
         id: leadingSection
 
         vertical: root.vertical
+        compact: (root.vertical ? root.height : root.width) < 1000
         componentCount: PersonalizationConfig.barLeadingComponents.length
 
         anchors {
@@ -39,13 +39,13 @@ Item {
             verticalCenter: root.vertical ? undefined : parent.verticalCenter
             horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
         }
-
     }
 
     BarSection {
         id: trailingSection
 
         vertical: root.vertical
+        compact: (root.vertical ? root.height : root.width) < 1000
         componentCount: PersonalizationConfig.barTrailingComponents.length
 
         anchors {
@@ -56,7 +56,6 @@ Item {
             verticalCenter: root.vertical ? undefined : parent.verticalCenter
             horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
         }
-
     }
 
     Instantiator {
@@ -71,7 +70,8 @@ Item {
 
             required property string modelData
             readonly property int leadingIndex: PersonalizationConfig.barLeadingComponents.indexOf(modelData)
-            readonly property int trailingIndex: PersonalizationConfig.barTrailingComponents.indexOf(modelData)
+            readonly property int trailingIndex: PersonalizationConfig.barTrailingComponents.indexOf(
+                                                     modelData)
             readonly property int zoneIndex: leadingIndex >= 0 ? leadingIndex : trailingIndex
 
             componentId: modelData
@@ -87,7 +87,5 @@ Item {
             Layout.alignment: Qt.AlignCenter
             onItemChanged: root.itemRevision += 1
         }
-
     }
-
 }

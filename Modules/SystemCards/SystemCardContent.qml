@@ -18,14 +18,22 @@ Item {
     // surface introduced by the sidebar background work.
     property bool useShellManagedSurface: false
     readonly property var catalogEntry: CardCatalog.definitionFor(root.tileId)
-    readonly property bool preserveDefaultSurface: root.catalogEntry !== null && root.catalogEntry.preserveDefaultSurface === true
+    readonly property bool preserveDefaultSurface: root.catalogEntry !== null
+                                                   && root.catalogEntry.preserveDefaultSurface === true
     readonly property bool shellManagedSurface: root.useShellManagedSurface && !root.preserveDefaultSurface
-    readonly property int chartUpdateInterval: Math.max(250, Number(SystemMonitorService.sourceIntervalMs) || SystemMonitorService.intervalMs)
+    readonly property int chartUpdateInterval: Math.max(250, Number(SystemMonitorService.sourceIntervalMs)
+                                                        || SystemMonitorService.intervalMs)
     readonly property var primaryGpu: SystemMonitorService.selectedGpu
-    readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius) ? SystemMonitorService.cpu.packageTemperatureCelsius : SystemMonitorService.cpu.temperatureCelsius
+    readonly property var cpuTemperature: Format.isNumber(SystemMonitorService.cpu.packageTemperatureCelsius)
+                                          ? SystemMonitorService.cpu.packageTemperatureCelsius :
+                                            SystemMonitorService.cpu.temperatureCelsius
     readonly property var ioDisk: root.diskForDevice(UiPreferences.systemMonitorDiskDevice, true)
-    readonly property var capacityDisk: UiPreferences.storageCapacityDiskDevice === "follow-io" ? root.ioDisk : root.diskForDevice(UiPreferences.storageCapacityDiskDevice, false)
-    readonly property bool usesRectangularShadow: ["cpu", "gpu", "network", "storage", "calendar"].indexOf(root.tileId) >= 0
+    readonly property var capacityDisk: UiPreferences.storageCapacityDiskDevice === "follow-io" ? root.ioDisk :
+                                                                                                  root.diskForDevice(
+                                                                                                      UiPreferences.storageCapacityDiskDevice,
+                                                                                                      false)
+    readonly property bool usesRectangularShadow: ["cpu", "gpu", "network", "storage", "calendar"].indexOf(
+        root.tileId) >= 0
     readonly property int shadowShape: {
         switch (root.tileId) {
         case "memoryUsed":
@@ -43,20 +51,24 @@ Item {
         case "battery":
         case "gpu":
         case "storageCapacity":
-            return root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer);
+            return root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
+                                     Appearance.colors.colSecondaryContainer);
         case "cpu":
         case "memoryUsed":
-            return root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer);
+            return root.surfaceColor(Appearance.m3colors.m3primaryContainer,
+                                     Appearance.colors.colPrimaryContainer);
         case "wifi":
-            return root.surfaceColor(Appearance.m3colors.m3tertiaryContainer, Appearance.colors.colTertiaryContainer);
+            return root.surfaceColor(Appearance.m3colors.m3tertiaryContainer,
+                                     Appearance.colors.colTertiaryContainer);
         case "network":
             return root.surfaceColor(Appearance.m3colors.m3primary, Appearance.colors.colPrimary);
         case "storage":
             return root.surfaceColor(Appearance.m3colors.m3tertiary, Appearance.colors.colTertiary);
         case "calendar":
-            return root.surfaceColor(Appearance.m3colors.m3surfaceContainerHigh, Appearance.colors.colSurfaceContainerHigh);
+            return root.surfaceColor(Appearance.m3colors.m3surfaceContainerHigh,
+                                     Appearance.colors.colSurfaceContainerHigh);
         default:
-            return Appearance.colors.colSurface;
+            return Appearance.m3colors.m3surface;
         }
     }
 
@@ -70,10 +82,9 @@ Item {
             const disk = SystemMonitorService.disks[index];
             if (String(disk.device || "") === wanted)
                 return disk;
-
         }
-        return fallbackToFirst && SystemMonitorService.disks.length > 0 ? SystemMonitorService.disks[0] : ({
-        });
+        return fallbackToFirst && SystemMonitorService.disks.length > 0 ? SystemMonitorService.disks[0] : (
+                                                                              {});
     }
 
     function surfaceColor(sidebarBaseColor, defaultColor) {
@@ -159,7 +170,6 @@ Item {
             shadowHorizontalOffset: 0
             autoPaddingEnabled: true
         }
-
     }
 
     MaterialShape {
@@ -181,7 +191,6 @@ Item {
             shadowHorizontalOffset: 0
             autoPaddingEnabled: true
         }
-
     }
 
     Loader {
@@ -196,19 +205,18 @@ Item {
         SystemClockCard {
             active: root.active
         }
-
     }
 
     Component {
         id: batteryComponent
 
         SystemBatteryTank {
-            containerColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer)
+            containerColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
+                                              Appearance.colors.colSecondaryContainer)
             // The battery fill is data visualization, not the card surface;
             // keep it visible while the surrounding tank is transparent.
             levelColor: root.surfaceColor(Appearance.m3colors.m3secondary, Appearance.colors.colSecondary)
         }
-
     }
 
     Component {
@@ -227,12 +235,12 @@ Item {
             updateInterval: root.chartUpdateInterval
             decorationSize: 50
             valueSize: Typography.headlineMedium.pixelSize
-            containerColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer)
+            containerColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer,
+                                              Appearance.colors.colPrimaryContainer)
             foregroundColor: Appearance.colors.colOnPrimaryContainer
             accentColor: Appearance.colors.colPrimary
             accentForegroundColor: Appearance.colors.colOnPrimary
         }
-
     }
 
     Component {
@@ -242,22 +250,25 @@ Item {
             label: qsTr("GPU")
             iconName: "developer_board"
             detailText: root.primaryGpu.name || qsTr("图形设备")
-            valueText: SystemMonitorService.selectedGpuId !== "" ? Format.percent(root.primaryGpu.utilizationPercent, 0) : "—"
+            valueText: SystemMonitorService.selectedGpuId !== "" ? Format.percent(
+                                                                       root.primaryGpu.utilizationPercent, 0) :
+                                                                   "—"
             supportingText: root.gpuSupporting()
             temperatureText: root.temperatureBadge(root.primaryGpu.temperatureCelsius)
-            usage: SystemMonitorService.selectedGpuId !== "" ? root.normalizedPercent(root.primaryGpu.utilizationPercent) : -1
+            usage: SystemMonitorService.selectedGpuId !== "" ? root.normalizedPercent(
+                                                                   root.primaryGpu.utilizationPercent) : -1
             trendValues: SystemMonitorService.gpuHistory
             chartActive: root.active
             updateInterval: root.chartUpdateInterval
             shapeOverride: MaterialShape.Gem
             decorationSize: 50
             valueSize: Typography.headlineMedium.pixelSize
-            containerColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer)
+            containerColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
+                                              Appearance.colors.colSecondaryContainer)
             foregroundColor: Appearance.colors.colOnSecondaryContainer
             accentColor: Appearance.colors.colSecondary
             accentForegroundColor: Appearance.colors.colOnSecondary
         }
-
     }
 
     Component {
@@ -266,16 +277,19 @@ Item {
         SystemLiquidMetricCard {
             iconName: "memory_alt"
             valueText: Format.percent(SystemMonitorService.memory.usagePercent, 0)
-            supportingText: Format.bytes(SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(SystemMonitorService.memory.totalBytes)
+            supportingText: Format.bytes(SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(
+                                SystemMonitorService.memory.totalBytes)
             level: root.normalizedPercent(SystemMonitorService.memory.usagePercent)
             valueAvailable: Format.isNumber(SystemMonitorService.memory.usagePercent)
-            accessibilityName: qsTr("内存已使用 ") + Format.percent(SystemMonitorService.memory.usagePercent, 0) + "，" + Format.bytes(SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(SystemMonitorService.memory.totalBytes)
+            accessibilityName: qsTr("内存已使用 ") + Format.percent(SystemMonitorService.memory.usagePercent, 0)
+                               + "，" + Format.bytes(SystemMonitorService.memory.usedBytes) + " / "
+                               + Format.bytes(SystemMonitorService.memory.totalBytes)
             shapeId: MaterialShape.Slanted
-            shapeColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer)
+            shapeColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer,
+                                          Appearance.colors.colPrimaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colTertiary, 0.66)
             contentColor: Appearance.colors.colOnPrimaryContainer
         }
-
     }
 
     Component {
@@ -287,13 +301,15 @@ Item {
             supportingText: qsTr("Wi-Fi 信号强度")
             level: root.normalizedPercent(NetworkService.signalStrength)
             valueAvailable: NetworkService.wifiConnected
-            accessibilityName: NetworkService.wifiConnected ? qsTr("Wi-Fi 信号强度 ") + Format.percent(NetworkService.signalStrength, 0) : qsTr("Wi-Fi 未连接")
+            accessibilityName: NetworkService.wifiConnected ? qsTr("Wi-Fi 信号强度 ") + Format.percent(
+                                                                  NetworkService.signalStrength, 0) : qsTr(
+                                                                  "Wi-Fi 未连接")
             shapeId: MaterialShape.Pentagon
-            shapeColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer, Appearance.colors.colTertiaryContainer)
+            shapeColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer,
+                                          Appearance.colors.colTertiaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colTertiary, 0.64)
             contentColor: Appearance.colors.colOnTertiaryContainer
         }
-
     }
 
     Component {
@@ -309,12 +325,12 @@ Item {
             chartActive: root.active
             updateInterval: root.chartUpdateInterval
             surfaceColor: root.surfaceColor(Appearance.m3colors.m3primary, Appearance.colors.colPrimary)
-            panelColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer, Appearance.colors.colPrimaryContainer)
-            onInterfaceSelected: (networkInterface) => {
+            panelColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer,
+                                          Appearance.colors.colPrimaryContainer)
+            onInterfaceSelected: networkInterface => {
                 return UiPreferences.setSystemMonitorNetworkInterface(networkInterface);
             }
         }
-
     }
 
     Component {
@@ -328,12 +344,12 @@ Item {
             chartActive: root.active
             updateInterval: root.chartUpdateInterval
             surfaceColor: root.surfaceColor(Appearance.m3colors.m3tertiary, Appearance.colors.colTertiary)
-            panelColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer, Appearance.colors.colTertiaryContainer)
-            onDiskSelected: (device) => {
+            panelColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer,
+                                          Appearance.colors.colTertiaryContainer)
+            onDiskSelected: device => {
                 return UiPreferences.setSystemMonitorDiskDevice(device);
             }
         }
-
     }
 
     Component {
@@ -341,20 +357,30 @@ Item {
 
         SystemLiquidMetricCard {
             readonly property bool diskAvailable: String(root.capacityDisk.device || "") !== ""
-            readonly property bool capacityAvailable: diskAvailable && Format.isNumber(root.capacityDisk.usagePercent)
+            readonly property bool capacityAvailable: diskAvailable && Format.isNumber(
+                                                          root.capacityDisk.usagePercent)
 
             iconName: "data_usage"
             valueText: capacityAvailable ? Format.percent(root.capacityDisk.usagePercent, 0) : "—"
-            supportingText: diskAvailable ? Format.bytes(root.capacityDisk.usedBytes) + " / " + Format.bytes(root.capacityDisk.totalBytes) : qsTr("未检测到磁盘")
+            supportingText: diskAvailable ? Format.bytes(root.capacityDisk.usedBytes) + " / " + Format.bytes(
+                                                root.capacityDisk.totalBytes) : qsTr("未检测到磁盘")
             level: root.normalizedPercent(root.capacityDisk.usagePercent)
             valueAvailable: capacityAvailable
-            accessibilityName: diskAvailable ? qsTr("磁盘 %1，已使用 %2，共 %3，占用 %4").arg(String(root.capacityDisk.device), Format.bytes(root.capacityDisk.usedBytes), Format.bytes(root.capacityDisk.totalBytes), Format.percent(root.capacityDisk.usagePercent, 0)) : qsTr("未检测到磁盘")
+            accessibilityName: diskAvailable ? qsTr("磁盘 %1，已使用 %2，共 %3，占用 %4").arg(String(
+                                                                                       root.capacityDisk.device),
+                                                                                   Format.bytes(
+                                                                                       root.capacityDisk.usedBytes),
+                                                                                   Format.bytes(
+                                                                                       root.capacityDisk.totalBytes),
+                                                                                   Format.percent(
+                                                                                       root.capacityDisk.usagePercent,
+                                                                                       0)) : qsTr("未检测到磁盘")
             shapeId: MaterialShape.Cookie9Sided
-            shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer, Appearance.colors.colSecondaryContainer)
+            shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
+                                          Appearance.colors.colSecondaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.66)
             contentColor: Appearance.colors.colOnSecondaryContainer
         }
-
     }
 
     Component {
@@ -362,17 +388,14 @@ Item {
 
         SystemCalendarCard {
             active: root.active
-            surfaceColor: root.surfaceColor(Appearance.m3colors.m3surfaceContainerHigh, Appearance.colors.colSurfaceContainerHigh)
+            surfaceColor: root.surfaceColor(Appearance.m3colors.m3surfaceContainerHigh,
+                                            Appearance.colors.colSurfaceContainerHigh)
         }
-
     }
 
     Component {
         id: weatherComponent
 
-        SystemWeatherCard {
-        }
-
+        SystemWeatherCard {}
     }
-
 }
