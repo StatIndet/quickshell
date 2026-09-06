@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
-import Quickshell.Wayland
+import Quickshell.Io
+import qs.Common
 
 Scope {
     id: root
@@ -8,13 +9,10 @@ Scope {
     readonly property bool busy: pendingCount > 0
     property int requestId: 0
     property int pendingCount: 0
-    property var pendingScreens: ({
-    })
-    property var frames: ({
-    })
+    property var pendingScreens: ({})
+    property var frames: ({})
 
     signal captureRequested(int requestId)
-    signal captureCancelled(int requestId)
     signal completed(int requestId)
 
     function screenKey(screen) {
@@ -30,10 +28,8 @@ Scope {
             return 0;
 
         requestId += 1;
-        frames = {
-        };
-        pendingScreens = {
-        };
+        frames = {};
+        pendingScreens = {};
         pendingCount = 0;
         for (const screen of Quickshell.screens) {
             const key = screenKey(screen);
@@ -57,44 +53,40 @@ Scope {
 
     function finishScreen(screenName, captureRequestId, result) {
         if (!busy || captureRequestId !== requestId || !isPending(screenName))
-            return ;
+            return;
 
         delete pendingScreens[screenName];
         pendingCount -= 1;
-        if (result && result.url)
-            frames[screenName] = {
-            "url": result.url,
-            "result": result
-        };
-        else
-            console.warn("Pre-lock capture failed for output " + screenName);
+        if (result && result.url) {
+            const nextFrames = Object.assign({}, frames);
+            nextFrames[screenName] = result;
+            frames = nextFrames;
+        } else {
+            console.warn("Pre-lock capture failed for output " + screenName + "; using lock wallpaper");
+        }
         if (pendingCount === 0)
             finishRequest(captureRequestId);
-
     }
 
     function finishRequest(captureRequestId) {
         if (captureRequestId !== requestId)
-            return ;
+            return;
 
         deadline.stop();
         pendingCount = 0;
-        pendingScreens = {
-        };
-        captureCancelled(captureRequestId);
-        completed(captureRequestId);
+        pendingScreens = {};
+        // Never complete inside captureRequested: the caller must first receive
+        // the new request id, even when every output fails synchronously.
+        Qt.callLater(() => root.completed(captureRequestId));
     }
 
     function cancel() {
         if (!busy)
-            return ;
+            return;
 
-        const cancelledRequest = requestId;
         pendingCount = 0;
-        pendingScreens = {
-        };
+        pendingScreens = {};
         deadline.stop();
-        captureCancelled(cancelledRequest);
     }
 
     function snapshot(screen) {
@@ -104,15 +96,13 @@ Scope {
 
     function clear() {
         if (!busy)
-            frames = {
-        };
-
+            frames = {};
     }
 
     Timer {
         id: deadline
 
-        interval: 300
+        interval: 1500
         repeat: false
         onTriggered: {
             const expiredRequest = root.requestId;
@@ -124,116 +114,47 @@ Scope {
     Variants {
         model: Quickshell.screens
 
-        PanelWindow {
-            id: captureHost
-
+        Scope {
+            id: worker
             required property var modelData
             readonly property string screenName: root.screenKey(modelData)
             property int activeRequestId: 0
-            property bool doneForRequest: true
-            property bool grabInProgress: false
-
-            function captureSize() {
-                const source = captureView.sourceSize;
-                return Qt.size(Math.max(1, source.width || 1), Math.max(1, source.height || 1));
-            }
-
-            function startCapture(captureRequestId) {
-                if (!root.isPending(screenName))
-                    return ;
-
-                activeRequestId = captureRequestId;
-                doneForRequest = false;
-                grabInProgress = false;
-                captureView.captureSource = modelData;
-            }
-
-            function grabSnapshot() {
-                if (doneForRequest || grabInProgress || !captureView.hasContent)
-                    return ;
-
-                const callbackRequestId = activeRequestId;
-                grabInProgress = true;
-                const accepted = captureView.grabToImage((result) => {
-                    if (callbackRequestId !== activeRequestId)
-                        return ;
-
-                    grabInProgress = false;
-                    doneForRequest = true;
-                    captureView.captureSource = null;
-                    root.finishScreen(screenName, callbackRequestId, result);
-                }, captureSize());
-                if (!accepted) {
-                    grabInProgress = false;
-                    doneForRequest = true;
-                    captureView.captureSource = null;
-                    root.finishScreen(screenName, callbackRequestId, null);
-                }
-            }
-
-            screen: modelData
-            visible: true
-            color: "transparent"
-            implicitWidth: 1
-            implicitHeight: 1
-            exclusiveZone: 0
-            exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.layer: WlrLayer.Background
-            WlrLayershell.namespace: "clavis-lock-prelock-capture"
-            Component.onDestruction: {
-                if (!doneForRequest)
-                    root.finishScreen(screenName, activeRequestId, null);
-
-            }
 
             Connections {
-                function onCaptureRequested(captureRequestId) {
-                    captureHost.startCapture(captureRequestId);
-                }
-
-                function onCaptureCancelled(captureRequestId) {
-                    if (captureHost.activeRequestId !== captureRequestId)
-                        return ;
-
-                    captureHost.activeRequestId = 0;
-                    captureHost.doneForRequest = true;
-                    captureHost.grabInProgress = false;
-                    captureView.captureSource = null;
-                }
-
                 target: root
-            }
-
-            ScreencopyView {
-                id: captureView
-
-                readonly property bool sourceReady: sourceSize.width > 0 && sourceSize.height > 0
-
-                width: Math.max(1, sourceReady ? sourceSize.width : 1)
-                height: Math.max(1, sourceReady ? sourceSize.height : 1)
-                captureSource: null
-                live: false
-                paintCursor: false
-                visible: !captureHost.doneForRequest
-                onHasContentChanged: {
-                    if (hasContent)
-                        captureHost.grabSnapshot();
-
-                }
-                onStopped: {
-                    if (!captureHost.doneForRequest && !captureHost.grabInProgress) {
-                        captureHost.doneForRequest = true;
-                        captureView.captureSource = null;
-                        root.finishScreen(captureHost.screenName, captureHost.activeRequestId, null);
+                function onCaptureRequested(captureRequestId) {
+                    if (!root.isPending(worker.screenName))
+                        return;
+                    if (captureProcess.running) {
+                        root.finishScreen(worker.screenName, captureRequestId, null);
+                        return;
                     }
+                    worker.activeRequestId = captureRequestId;
+                    captureProcess.command = ["bash", Paths.captureScriptsDir + "/lock_snapshot.sh",
+                                              worker.screenName];
+                    captureProcess.running = true;
                 }
             }
 
-            mask: Region {
+            Process {
+                id: captureProcess
+                onExited: (exitCode, exitStatus) => {
+                    const encoded = captureOutput.text.trim();
+                    const valid = exitCode === 0 && exitStatus === 0 && encoded.startsWith("iVBORw0KGgo");
+                    root.finishScreen(worker.screenName, worker.activeRequestId, valid ? {
+                                                                                             url: "data:image/png;base64,"
+                                                                                                  + encoded
+                                                                                         } : null);
+                }
+                stdout: StdioCollector {
+                    id: captureOutput
+                }
+                stderr: StdioCollector {}
             }
 
+            Component.onDestruction: {
+                root.finishScreen(screenName, activeRequestId, null);
+            }
         }
-
     }
-
 }

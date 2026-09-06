@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import Quickshell.Wayland
 import qs.Common
 import qs.Services
@@ -32,22 +31,10 @@ WlSessionLockSurface {
     Component {
         id: defaultStyle
         DefaultLock {
+            snapshotProvider: root.snapshotProvider
             lock: root.lock
             context: root.context
-            snapshotProvider: root.snapshotProvider
             screen: root.screen
         }
-    }
-
-    // Development escape hatch: deliberately bypasses authentication.
-    // Keep outside the animated style so a broken animation cannot hide it.
-    Button {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.margins: 16
-        z: 100
-        text: "let me out"
-        focusPolicy: Qt.NoFocus
-        onClicked: root.context.emergencyUnlock()
     }
 }

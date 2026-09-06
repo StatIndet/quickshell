@@ -12,7 +12,9 @@ Item {
     required property var context
     property var snapshotProvider: null
     property var screen: null
-    property var snapshotResult: null
+    readonly property var snapshotResult: snapshotProvider && screen ? snapshotProvider.snapshot(screen) :
+                                                                       null
+    readonly property bool snapshotReady: snapshotResult !== null && snapshot.status === Image.Ready
     property bool started: false
     property bool exiting: false
     property real reveal: 0
@@ -20,26 +22,31 @@ Item {
     readonly property string screenName: screen ? screen.name : ""
 
     function startReveal() {
-        if (started || !screen)
+        if (started || exiting || !screen)
             return;
-        snapshotResult = snapshotProvider ? snapshotProvider.snapshot(screen) : null;
         if (snapshotResult && snapshot.status !== Image.Ready && snapshot.status !== Image.Error)
             return;
+        if (!wallpaper.ready && wallpaper.imageStatus !== Image.Error)
+            return;
         started = true;
-        entrance.start();
+        if (snapshotReady)
+            entrance.start();
+        else
+            reveal = 1;
         content.forceAuthFocus();
     }
 
     onScreenChanged: Qt.callLater(startReveal)
     Component.onCompleted: Qt.callLater(startReveal)
 
-    // The compositor keeps the desktop inaccessible throughout the reveal.
-    // Only a frozen pre-lock frame is visible outside the growing disc.
+    // Captured before acquiring the session lock. Decode synchronously so the
+    // first surface frame already has a desktop underneath the reveal.
     Image {
         id: snapshot
         anchors.fill: parent
         source: root.snapshotResult ? root.snapshotResult.url : ""
         fillMode: Image.Stretch
+        asynchronous: false
         cache: false
         onStatusChanged: Qt.callLater(root.startReveal)
     }
@@ -64,10 +71,10 @@ Item {
     Item {
         id: scene
         anchors.fill: parent
-        opacity: root.sceneOpacity
+        opacity: root.snapshotReady ? root.sceneOpacity : 1
         layer.enabled: true
         layer.effect: MultiEffect {
-            maskEnabled: true
+            maskEnabled: root.snapshotReady
             maskSource: discMask
             maskThresholdMin: 0.5
             maskSpreadAtMin: 0.5
@@ -79,6 +86,9 @@ Item {
         }
 
         WallpaperImageViewport {
+            id: wallpaper
+            onReadyChanged: Qt.callLater(root.startReveal)
+            onImageStatusChanged: Qt.callLater(root.startReveal)
             anchors.fill: parent
             sourcePath: WallpaperService.wallpaperForScreen(root.screenName)
             imageFillMode: WallpaperService.qtFillMode(WallpaperService.fillModeForScreen(root.screenName))

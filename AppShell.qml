@@ -20,7 +20,7 @@ Item {
 
     function runSecurePowerAction() {
         if (pendingSecurePowerAction === "" || !sessionLocker.secure)
-            return ;
+            return;
 
         const action = pendingSecurePowerAction;
         pendingSecurePowerAction = "";
@@ -29,11 +29,11 @@ Item {
 
     function requestSecurePowerAction(action) {
         if (pendingSecurePowerAction !== "")
-            return ;
+            return;
 
         const result = sessionLocker.open();
         if (result !== "LOCKED" && result !== "ALREADY_LOCKED")
-            return ;
+            return;
 
         pendingSecurePowerAction = action;
         runSecurePowerAction();
@@ -45,13 +45,11 @@ Item {
         SystemIdentityService.initialize();
     }
 
-    WallpaperBackground {
-    }
+    WallpaperBackground {}
 
     // Desktop cards are an independent bottom-layer subsystem.  It remains
     // loaded when the awww backend hides Clavis' wallpaper renderer.
-    DesktopCardHost {
-    }
+    DesktopCardHost {}
 
     LazyLoader {
         id: controlCenterLoader
@@ -61,7 +59,6 @@ Item {
         onItemChanged: {
             if (item)
                 ControlCenterService.registerWindow(item);
-
         }
 
         ControlCenterWindow {
@@ -69,30 +66,21 @@ Item {
 
             onPopoutClosed: ControlCenterService.windowClosed(controlCenterWindow)
         }
-
     }
 
-    Bar {
-    }
+    Bar {}
 
-    Keystone {
-    }
+    Keystone {}
 
-    RegionSelector {
-    }
+    RegionSelector {}
 
-    SidebarHostWindow {
-    }
-
-    LockWarmup {
-    }
+    SidebarHostWindow {}
 
     Lock {
         id: sessionLocker
     }
 
-    PowerMenu {
-    }
+    PowerMenu {}
 
     Connections {
         function onActionRequested(action) {
@@ -129,7 +117,6 @@ Item {
         function onActiveChanged() {
             if (!sessionLocker.active)
                 root.pendingSecurePowerAction = "";
-
         }
 
         target: sessionLocker
@@ -160,28 +147,28 @@ Item {
     }
 
     IpcHandler {
-        function toggle() : string {
+        function toggle(): string {
             spotlightLauncher.toggleWindow();
             return spotlightLauncher.windowPhase.toUpperCase();
         }
 
-        function open() : string {
+        function open(): string {
             spotlightLauncher.openSpotlight();
             return spotlightLauncher.windowPhase.toUpperCase();
         }
 
-        function close() : string {
+        function close(): string {
             spotlightLauncher.requestClose();
             return spotlightLauncher.windowPhase.toUpperCase();
         }
 
-        function web() : string {
+        function web(): string {
             spotlightLauncher.openSpotlight();
             spotlightLauncher.enterWeb();
             return "WEB";
         }
 
-        function openMode(mode: string) : string {
+        function openMode(mode: string): string {
             if (spotlightLauncher.normalizedMode(mode || "") === "")
                 return "INVALID_MODE";
 
@@ -193,35 +180,35 @@ Item {
     }
 
     IpcHandler {
-        function set(path: string) : string {
+        function set(path: string): string {
             return WallpaperService.setWallpaper(path || "", "") ? "OK" : "INVALID";
         }
 
-        function setForScreen(path: string, screenName: string) : string {
+        function setForScreen(path: string, screenName: string): string {
             return WallpaperService.setWallpaper(path || "", screenName || "") ? "OK" : "INVALID";
         }
 
-        function clear() : string {
+        function clear(): string {
             return WallpaperService.clearWallpaper("") ? "OK" : "INVALID";
         }
 
-        function clearForScreen(screenName: string) : string {
+        function clearForScreen(screenName: string): string {
             return WallpaperService.clearWallpaper(screenName || "") ? "OK" : "INVALID";
         }
 
-        function previous() : string {
+        function previous(): string {
             return WallpaperService.cyclePrevious() ? "OK" : "PENDING";
         }
 
-        function next() : string {
+        function next(): string {
             return WallpaperService.cycleNext() ? "OK" : "PENDING";
         }
 
-        function random() : string {
+        function random(): string {
             return WallpaperService.cycleRandom() ? "OK" : "PENDING";
         }
 
-        function setFolder(path: string) : string {
+        function setFolder(path: string): string {
             return WallpaperService.setWallpaperFolder(path || "") ? "OK" : "INVALID";
         }
 
@@ -229,19 +216,18 @@ Item {
     }
 
     IpcHandler {
-        function open(pageId: string) : string {
+        function open(pageId: string): string {
             return ControlCenterService.open(pageId || "") ? "OK" : "UNAVAILABLE";
         }
 
-        function close() : string {
+        function close(): string {
             return ControlCenterService.close() ? "OK" : "CLOSED";
         }
 
-        function toggle(pageId: string) : string {
+        function toggle(pageId: string): string {
             return ControlCenterService.toggle(pageId || "") ? "OPENING" : "CLOSING";
         }
 
         target: "control-center"
     }
-
 }

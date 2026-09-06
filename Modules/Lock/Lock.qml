@@ -80,13 +80,6 @@ Scope {
             pam.start();
         }
 
-        function emergencyUnlock() {
-            pam.abort();
-            currentText = "";
-            unlockInProgress = false;
-            finishUnlock();
-        }
-
         function finishUnlock() {
             if (!sessionLock.locked)
                 return;

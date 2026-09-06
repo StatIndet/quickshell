@@ -13,19 +13,49 @@ Item {
     property date now: new Date()
     readonly property bool authenticating: context.authRevealed
     readonly property bool busy: context.unlockInProgress
-    property real authProgress: authenticating ? 1 : 0
-    readonly property real contentWidth: Math.min(560, width - 48)
-    readonly property real avatarSize: Math.min(112, contentWidth * 0.22)
+    readonly property real uiScale: Math.min(1, Math.max(0.45, (width - 48) / 880), Math.max(0.45, height
+                                                                                             / 800))
+    readonly property real contentWidth: 880 * uiScale
+    readonly property real avatarSize: 240 * uiScale
+    readonly property real columnGap: 40 * uiScale
+    readonly property real fieldHeight: 64 * uiScale
+    property real clockOpacity: authenticating ? 0 : 1
+    property real clockOffset: authenticating ? -80 * uiScale : 0
+    property real authOpacity: authenticating ? 1 : 0
+    property real authOffset: authenticating ? 0 : 56 * uiScale
 
     function forceAuthFocus() {
         input.forceActiveFocus();
     }
 
-    Behavior on authProgress {
+    // Independent effects and spatial curves keep the incoming form legible
+    // while the clock clears it. Reversing midway continues from current values.
+    Behavior on clockOpacity {
         NumberAnimation {
-            duration: 480
+            duration: 240
             easing.type: Easing.BezierSpline
-            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+            easing.bezierCurve: [0.3, 0, 0.8, 0.15, 1, 1]
+        }
+    }
+    Behavior on clockOffset {
+        NumberAnimation {
+            duration: 380
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: [0.4, 0, 0.2, 1, 1, 1]
+        }
+    }
+    Behavior on authOpacity {
+        NumberAnimation {
+            duration: 360
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: [0.4, 0, 0.2, 1, 1, 1]
+        }
+    }
+    Behavior on authOffset {
+        NumberAnimation {
+            duration: 460
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: [0.16, 1, 0.3, 1, 1, 1]
         }
     }
 
@@ -46,10 +76,10 @@ Item {
 
     Column {
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: -24 - 100 * root.authProgress
+        anchors.verticalCenterOffset: -24 * root.uiScale + root.clockOffset
         width: parent.width - 48
         spacing: 12
-        opacity: 1 - root.authProgress
+        opacity: root.clockOpacity
 
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -92,11 +122,11 @@ Item {
     Row {
         id: authRow
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: 32 * (1 - root.authProgress)
+        anchors.verticalCenterOffset: -24 * root.uiScale + root.authOffset
         width: root.contentWidth
-        spacing: 24
-        opacity: root.authProgress
-        scale: 0.96 + 0.04 * root.authProgress
+        height: root.avatarSize
+        spacing: root.columnGap
+        opacity: root.authOpacity
 
         Rectangle {
             width: root.avatarSize
@@ -135,23 +165,26 @@ Item {
         }
 
         Column {
+            anchors.verticalCenter: parent.verticalCenter
             width: parent.width - root.avatarSize - parent.spacing
-            spacing: 12
+            spacing: 24 * root.uiScale
 
             Text {
                 width: parent.width
+                height: 88 * root.uiScale
+                verticalAlignment: Text.AlignVCenter
                 text: SystemIdentityService.accountName
                 color: "white"
                 font.family: Fonts.ui
-                font.pixelSize: 28
+                font.pixelSize: 64 * root.uiScale
                 font.weight: Font.Medium
                 elide: Text.ElideRight
             }
 
             Rectangle {
                 id: field
-                width: parent.width
-                height: 64
+                width: Math.min(parent.width, 400 * root.uiScale)
+                height: root.fieldHeight
                 radius: height / 2
                 color: Appearance.colors.colSurfaceContainerHigh
                 border.width: root.context.showFailure ? 2 : 0
@@ -160,8 +193,8 @@ Item {
                 TextInput {
                     id: input
                     anchors.fill: parent
-                    anchors.leftMargin: 24
-                    anchors.rightMargin: 64
+                    anchors.leftMargin: 24 * root.uiScale
+                    anchors.rightMargin: root.fieldHeight
                     color: "transparent"
                     selectionColor: "transparent"
                     selectedTextColor: "transparent"
@@ -206,12 +239,12 @@ Item {
 
                 Text {
                     anchors.left: parent.left
-                    anchors.leftMargin: 24
+                    anchors.leftMargin: 24 * root.uiScale
                     anchors.verticalCenter: parent.verticalCenter
                     visible: input.text.length === 0
                     text: qsTr("密码")
                     font.family: Fonts.ui
-                    font.pixelSize: 17
+                    font.pixelSize: 20 * root.uiScale
                     color: Appearance.colors.colOnSurfaceVariant
                 }
 
@@ -223,20 +256,20 @@ Item {
                     id: dotsView
                     anchors.left: parent.left
                     anchors.right: submit.left
-                    anchors.margins: 24
+                    anchors.margins: 24 * root.uiScale
                     anchors.verticalCenter: parent.verticalCenter
-                    height: 26
+                    height: 28 * root.uiScale
                     orientation: ListView.Horizontal
                     interactive: false
                     clip: true
-                    spacing: 10
+                    spacing: 10 * root.uiScale
                     model: dots
                     onCountChanged: Qt.callLater(positionViewAtEnd)
 
                     delegate: Item {
                         id: dot
-                        width: 14
-                        height: 26
+                        width: 16 * root.uiScale
+                        height: 28 * root.uiScale
                         ListView.onRemove: {
                             ListView.delayRemove = true;
                             appear.stop();
@@ -245,7 +278,7 @@ Item {
                         Rectangle {
                             id: circle
                             anchors.centerIn: parent
-                            width: 14
+                            width: 16 * root.uiScale
                             height: width
                             radius: width / 2
                             color: Appearance.colors.colOnSurface
@@ -287,10 +320,10 @@ Item {
                 Button {
                     id: submit
                     anchors.right: parent.right
-                    anchors.rightMargin: 8
+                    anchors.rightMargin: 8 * root.uiScale
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 48
-                    height: 48
+                    width: 48 * root.uiScale
+                    height: width
                     focusPolicy: Qt.NoFocus
                     enabled: !root.busy && input.text.length > 0
                     Accessible.name: qsTr("解锁")
@@ -303,7 +336,7 @@ Item {
                     contentItem: Text {
                         text: root.busy ? "" : "arrow_forward"
                         font.family: Fonts.materialSymbolsRounded
-                        font.pixelSize: 24
+                        font.pixelSize: 26 * root.uiScale
                         color: Appearance.colors.colOnPrimary
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -313,23 +346,29 @@ Item {
                         busy: root.busy
                         spinnerColor: Appearance.colors.colOnPrimary
                     }
-                    ToolTip.visible: hovered
-                    ToolTip.text: qsTr("解锁")
+                    StyledToolTip {
+                        text: qsTr("解锁")
+                        extraVisibleCondition: root.authenticating && submit.hovered
+                    }
                 }
             }
-
-            Text {
-                width: parent.width
-                height: 32
-                text: root.context.showFailure ? qsTr("密码错误，请重试") : KeyboardLockState.capsLock ? qsTr(
-                                                                                                     "大写锁定已开启") :
-                                                                                                 ""
-                color: root.context.showFailure ? Appearance.colors.colError : "white"
-                font.family: Fonts.ui
-                font.pixelSize: 14
-                wrapMode: Text.WordWrap
-            }
         }
+
+        // Status belongs below the aligned avatar/form block, outside Row layout.
+    }
+
+    Text {
+        anchors.top: authRow.bottom
+        anchors.topMargin: 16 * root.uiScale
+        x: authRow.x + root.avatarSize + root.columnGap
+        width: root.contentWidth - root.avatarSize - root.columnGap
+        opacity: root.authOpacity
+        text: root.context.showFailure ? qsTr("密码错误，请重试") : (KeyboardLockState.capsLock ? qsTr("大写锁定已开启") :
+                                                                                          "")
+        color: root.context.showFailure ? Appearance.colors.colError : "white"
+        font.family: Fonts.ui
+        font.pixelSize: 20 * root.uiScale
+        wrapMode: Text.WordWrap
     }
 
     Connections {
