@@ -445,10 +445,10 @@ Variants {
                                                !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse
                                                                       || collapsedInputArea.containsMouse)
-                readonly property bool escapeDismissActive: !contentPresentationActive && (expanded
-                                                                                           || isLyricsMode
-                                                                                           || isHubMode
-                                                                                           || isToolsMode)
+                // Lyrics remain visible while the user works in desktop windows.
+                // They can coexist with expanded state, so exclude them explicitly.
+                readonly property bool escapeDismissActive: !contentPresentationActive && !isLyricsMode && (
+                                                                expanded || isHubMode || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(
                                                                    keystoneWindow.modelData.name || "default")
