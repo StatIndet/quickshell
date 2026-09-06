@@ -367,14 +367,11 @@ Item {
             level: root.normalizedPercent(root.capacityDisk.usagePercent)
             valueAvailable: capacityAvailable
             accessibilityName: diskAvailable ? qsTr("磁盘 %1，已使用 %2，共 %3，占用 %4").arg(String(
-                                                                                       root.capacityDisk.device),
-                                                                                   Format.bytes(
-                                                                                       root.capacityDisk.usedBytes),
-                                                                                   Format.bytes(
-                                                                                       root.capacityDisk.totalBytes),
-                                                                                   Format.percent(
-                                                                                       root.capacityDisk.usagePercent,
-                                                                                       0)) : qsTr("未检测到磁盘")
+                                                                                       root.capacityDisk.device)).arg(
+                                                   Format.bytes(root.capacityDisk.usedBytes)).arg(Format.bytes(
+                                                                                                      root.capacityDisk.totalBytes)).arg(
+                                                   Format.percent(root.capacityDisk.usagePercent, 0)) : qsTr(
+                                                   "未检测到磁盘")
             shapeId: MaterialShape.Cookie9Sided
             shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
                                           Appearance.colors.colSecondaryContainer)

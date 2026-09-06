@@ -10,7 +10,8 @@ PanelWindow {
     required property string edge
     readonly property real visualThickness: Sizes.barVisualThickness
     readonly property real outerEdgeMargin: Sizes.barOuterEdgeMargin
-    readonly property real surfaceThickness: outerEdgeMargin + visualThickness
+    // Shadow pixels need surface space, but must not reserve desktop space.
+    readonly property real surfaceThickness: outerEdgeMargin + visualThickness + Sizes.barShadowBuffer
     readonly property real exclusiveThickness: outerEdgeMargin + visualThickness
 
     implicitHeight: surfaceThickness
@@ -37,7 +38,7 @@ PanelWindow {
         id: visualBand
 
         x: 0
-        y: axis.isTop ? root.outerEdgeMargin : 0
+        y: axis.isTop ? root.outerEdgeMargin : Sizes.barShadowBuffer
         width: parent.width
         height: root.visualThickness
 
@@ -48,7 +49,6 @@ PanelWindow {
             screen: root.screen
             axis: axis
         }
-
     }
 
     CompositorBlurRegion {
@@ -66,7 +66,5 @@ PanelWindow {
         Region {
             item: content.trailingInputRegionItem
         }
-
     }
-
 }

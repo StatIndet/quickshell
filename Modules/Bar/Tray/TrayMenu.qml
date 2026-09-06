@@ -19,13 +19,20 @@ PopupWindow {
     property string edge: "top"
     property real padding: 10
     property bool opened: false
+    readonly property real verticalAnchorPadding: {
+        if (!root.anchorItem || !root.barVisualItem || (root.edge !== "left" && root.edge !== "right")
+                || root.barVisualItem.QsWindow.window !== root.anchorItem.QsWindow.window)
+            return 0;
+        return Math.max(0, (root.barVisualItem.width - root.anchorItem.width) / 2 + Sizes.barPopupGap
+                        - root.padding);
+    }
 
-    signal menuClosed()
+    signal menuClosed
     signal menuOpened(var qsWindow)
 
     function open() {
         if (root.opened)
-            return ;
+            return;
 
         root.opened = true;
         root.visible = true;
@@ -39,10 +46,11 @@ PopupWindow {
 
     function finishClose() {
         if (!root.opened)
-            return ;
+            return;
 
         root.opened = false;
-        while (stackView.depth > 1)stackView.pop()
+        while (stackView.depth > 1)
+            stackView.pop();
         root.menuClosed();
     }
 
@@ -54,15 +62,27 @@ PopupWindow {
     onVisibleChanged: {
         if (!visible)
             root.finishClose();
-
     }
 
     anchor {
-        window: root.anchorItem ? root.anchorItem.QsWindow.window : null
         item: root.anchorItem
-        edges: root.edge === "left" ? Edges.Right : root.edge === "right" ? Edges.Left : root.edge === "bottom" ? Edges.Top : Edges.Bottom
-        gravity: root.edge === "left" ? Edges.Right : root.edge === "right" ? Edges.Left : root.edge === "bottom" ? Edges.Top : Edges.Bottom
-        adjustment: root.edge === "left" || root.edge === "right" ? PopupAdjustment.SlideY : PopupAdjustment.SlideX
+        // Keep the native item anchor so Quickshell maps the icon into its
+        // window before positioning the popup. Expand only the vertical bar's
+        // cross-axis bounds to leave room between the pill and visible menu.
+        rect.x: -root.verticalAnchorPadding
+        rect.y: 0
+        rect.width: Math.max(1, (root.anchorItem ? root.anchorItem.width : 1) + root.verticalAnchorPadding
+                             * 2)
+        rect.height: Math.max(1, root.anchorItem ? root.anchorItem.height : 1)
+        edges: root.edge === "left" ? Edges.Right : root.edge === "right" ? Edges.Left : root.edge
+                                                                            === "bottom" ? Edges.Top :
+                                                                                           Edges.Bottom
+        gravity: root.edge === "left" ? Edges.Right : root.edge === "right" ? Edges.Left : root.edge
+                                                                              === "bottom" ? Edges.Top :
+                                                                                             Edges.Bottom
+        adjustment: root.edge === "left" || root.edge === "right" ? PopupAdjustment.SlideY :
+                                                                    PopupAdjustment.SlideX
+
     }
 
     PanelWindow {
@@ -86,7 +106,6 @@ PopupWindow {
             acceptedButtons: Qt.AllButtons
             onClicked: root.close()
         }
-
     }
 
     FocusScope {
@@ -94,7 +113,7 @@ PopupWindow {
 
         anchors.fill: parent
         focus: root.visible
-        Keys.onEscapePressed: (event) => {
+        Keys.onEscapePressed: event => {
             if (stackView.depth > 1)
                 stackView.pop();
             else
@@ -105,8 +124,9 @@ PopupWindow {
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.BackButton | Qt.RightButton
-            onPressed: (event) => {
-                if ((event.button === Qt.BackButton || event.button === Qt.RightButton) && stackView.depth > 1) {
+            onPressed: event => {
+                if ((event.button === Qt.BackButton || event.button === Qt.RightButton) && stackView.depth
+                        > 1) {
                     stackView.pop();
                     event.accepted = true;
                 } else {
@@ -147,22 +167,17 @@ PopupWindow {
                         margins: popupBackground.popupPadding
                     }
 
-                    pushEnter: NoAnimation {
-                    }
+                    pushEnter: NoAnimation {}
 
-                    pushExit: NoAnimation {
-                    }
+                    pushExit: NoAnimation {}
 
-                    popEnter: NoAnimation {
-                    }
+                    popEnter: NoAnimation {}
 
-                    popExit: NoAnimation {
-                    }
+                    popExit: NoAnimation {}
 
                     initialItem: SubMenu {
                         handle: root.trayItemMenuHandle
                     }
-
                 }
 
                 Behavior on opacity {
@@ -172,7 +187,6 @@ PopupWindow {
                         easing.type: Appearance.animation.expressiveEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                     }
-
                 }
 
                 Behavior on implicitWidth {
@@ -182,7 +196,6 @@ PopupWindow {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
-
                 }
 
                 Behavior on implicitHeight {
@@ -192,13 +205,9 @@ PopupWindow {
                         easing.type: Appearance.animation.elementResize.type
                         easing.bezierCurve: Appearance.animation.elementResize.bezierCurve
                     }
-
                 }
-
             }
-
         }
-
     }
 
     CompositorBlurRegion {
@@ -209,16 +218,13 @@ PopupWindow {
     Component {
         id: subMenuComponent
 
-        SubMenu {
-        }
-
+        SubMenu {}
     }
 
     component NoAnimation: Transition {
         NumberAnimation {
             duration: 0
         }
-
     }
 
     component SubMenu: ColumnLayout {
@@ -276,21 +282,20 @@ PopupWindow {
                     MaterialSymbol {
                         text: "chevron_left"
                         iconSize: 20
-                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
+                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer :
+                                                           Appearance.colors.colOnLayer0
                     }
 
                     Text {
                         text: qsTr("返回")
-                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
+                        color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer :
+                                                           Appearance.colors.colOnLayer0
                         font.family: Fonts.ui
                         font.pixelSize: 13
                         Layout.fillWidth: true
                     }
-
                 }
-
             }
-
         }
 
         Repeater {
@@ -302,7 +307,6 @@ PopupWindow {
                     const entry = entries[i];
                     if (entry && (entry.icon || "").length > 0)
                         return true;
-
                 }
                 return false;
             }
@@ -312,7 +316,6 @@ PopupWindow {
                     const entry = entries[i];
                     if (entry && entry.buttonType !== QsMenuButtonType.None)
                         return true;
-
                 }
                 return false;
             }
@@ -327,14 +330,13 @@ PopupWindow {
                 forceSpecialInteractionColumn: menuEntriesRepeater.specialInteractionColumnNeeded
                 buttonRadius: popupBackground.radius - popupBackground.popupPadding
                 onDismiss: root.close()
-                onOpenSubmenu: (handle) => {
+                onOpenSubmenu: handle => {
                     stackView.push(subMenuComponent, {
-                        "handle": handle,
-                        "isSubmenu": true
-                    });
+                                       "handle": handle,
+                                       "isSubmenu": true
+                                   });
                 }
             }
-
         }
 
         Behavior on opacity {
@@ -344,9 +346,6 @@ PopupWindow {
                 easing.type: Appearance.animation.expressiveEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
             }
-
         }
-
     }
-
 }
