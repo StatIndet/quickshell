@@ -14,35 +14,41 @@ Item {
     readonly property int buttonSpacing: 40
     readonly property int buttonsExtent: 480
     readonly property int crossExtent: 72
-    property var toolsModel: [{
-        "action": "color-picker",
-        "icon": "colorize",
-        "tip": qsTr("取色器")
-    }, {
-        "action": "record-video",
-        "icon": "videocam",
-        "tip": qsTr("录屏")
-    }, {
-        "action": "record-gif",
-        "icon": "gif",
-        "tip": qsTr("录制 GIF")
-    }, {
-        "action": "audio-mic",
-        "icon": "mic",
-        "tip": qsTr("录麦克风")
-    }, {
-        "action": "audio-system",
-        "icon": "speaker",
-        "tip": qsTr("录电脑声音")
-    }]
+    property var toolsModel: [
+        {
+            "action": "color-picker",
+            "icon": "colorize",
+            "tip": qsTr("取色器")
+        },
+        {
+            "action": "record-video",
+            "icon": "videocam",
+            "tip": qsTr("录屏")
+        },
+        {
+            "action": "record-gif",
+            "icon": "gif",
+            "tip": qsTr("录制 GIF")
+        },
+        {
+            "action": "audio-mic",
+            "icon": "mic",
+            "tip": qsTr("录麦克风")
+        },
+        {
+            "action": "audio-system",
+            "icon": "speaker",
+            "tip": qsTr("录电脑声音")
+        }
+    ]
     property int selectedIndex: 0
 
-    signal requestHideKeystone()
+    signal requestHideKeystone
 
     function triggerSelected() {
         const tool = toolsModel[selectedIndex];
         if (!tool)
-            return ;
+            return;
 
         toolsRoot.requestHideKeystone();
         switch (tool.action) {
@@ -76,9 +82,11 @@ Item {
 
     implicitWidth: vertical ? crossExtent : buttonsExtent
     implicitHeight: vertical ? buttonsExtent : crossExtent
-    focus: visible
-    onVisibleChanged: {
-        if (visible) {
+    property bool keyboardActive: visible
+    enabled: keyboardActive
+    focus: keyboardActive
+    onKeyboardActiveChanged: {
+        if (keyboardActive) {
             selectedIndex = 0;
             forceActiveFocus();
         }
@@ -92,12 +100,10 @@ Item {
     Keys.onUpPressed: {
         if (toolsRoot.vertical)
             selectedIndex = (selectedIndex - 1 + toolsModel.length) % toolsModel.length;
-
     }
     Keys.onDownPressed: {
         if (toolsRoot.vertical)
             selectedIndex = (selectedIndex + 1) % toolsModel.length;
-
     }
     Keys.onReturnPressed: triggerSelected()
     Keys.onEnterPressed: triggerSelected()
@@ -130,16 +136,12 @@ Item {
                 onPointerHoveredChanged: {
                     if (pointerHovered)
                         toolsRoot.selectedIndex = index;
-
                 }
                 onClicked: {
                     toolsRoot.selectedIndex = index;
                     toolsRoot.triggerSelected();
                 }
             }
-
         }
-
     }
-
 }

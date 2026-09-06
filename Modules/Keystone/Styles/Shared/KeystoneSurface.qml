@@ -39,7 +39,6 @@ Variants {
                 const instance = instances[index];
                 if (instance && instance.screen && instance.screen.name === outputName)
                     return instance;
-
             }
         }
         return instances[0];
@@ -53,23 +52,23 @@ Variants {
         return instance[methodName]();
     }
 
-    function cancelRecord() : string {
+    function cancelRecord(): string {
         return invoke("cancelRecord");
     }
 
-    function closeAllOthers() : string {
+    function closeAllOthers(): string {
         return invoke("closeAllOthers");
     }
 
-    function hub() : string {
+    function hub(): string {
         return invoke("hub");
     }
 
-    function dashboard() : string {
+    function dashboard(): string {
         return invoke("dashboard");
     }
 
-    function tools() : string {
+    function tools(): string {
         return invoke("tools");
     }
 
@@ -90,19 +89,20 @@ Variants {
         property real edgeCurveSideControl: 0.58
         property real edgeCurveOuterControl: 0.42
 
-        function cancelRecord() : string {
+        function cancelRecord(): string {
             RecordingService.refresh();
             return "RECORD_CANCELLED";
         }
 
-        function closeAllOthers() : string {
+        function closeAllOthers(): string {
+            root.showHub = false;
             root.showLyrics = false;
             root.showTools = false;
             root.expanded = false;
             return "OTHERS_CLOSED";
         }
 
-        function hub() : string {
+        function hub(): string {
             if (root.showHub) {
                 root.showHub = false;
                 return "HUB_CLOSED";
@@ -112,7 +112,7 @@ Variants {
             return "HUB_OPENED";
         }
 
-        function dashboard() : string {
+        function dashboard(): string {
             if (root.showHub && root.hubTabIndex === 0) {
                 root.showHub = false;
                 return "DASHBOARD_CLOSED";
@@ -123,7 +123,7 @@ Variants {
             return "DASHBOARD_OPENED";
         }
 
-        function tools() : string {
+        function tools(): string {
             if (root.showTools) {
                 root.showTools = false;
                 return "TOOLS_CLOSED";
@@ -140,7 +140,10 @@ Variants {
         WlrLayershell.namespace: "clavis-shell-keystone"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+        // Layer-shell owns desktop focus. Release it as soon as the panel
+        // closes, even while its visual exit animation is still running.
+        WlrLayershell.keyboardFocus: root.escapeDismissActive ? WlrKeyboardFocus.Exclusive :
+                                                                WlrKeyboardFocus.None
 
         anchors {
             top: true
@@ -175,12 +178,13 @@ Variants {
                 fillColor: "black"
 
                 anchors {
-                    right: keystoneWindow.horizontalEdge ? rootShadow.left : keystoneWindow.rightEdge ? rootShadow.right : undefined
+                    right: keystoneWindow.horizontalEdge ? rootShadow.left : keystoneWindow.rightEdge
+                                                           ? rootShadow.right : undefined
                     left: keystoneWindow.leftEdge ? rootShadow.left : undefined
-                    bottom: !keystoneWindow.horizontalEdge ? rootShadow.top : keystoneWindow.bottomEdge ? rootShadow.bottom : undefined
+                    bottom: !keystoneWindow.horizontalEdge ? rootShadow.top : keystoneWindow.bottomEdge
+                                                             ? rootShadow.bottom : undefined
                     top: keystoneWindow.topEdge ? rootShadow.top : undefined
                 }
-
             }
 
             Item {
@@ -202,7 +206,6 @@ Variants {
                             anchors.horizontalCenter: shadowSource.horizontalCenter
                             anchors.verticalCenter: undefined
                         }
-
                     },
                     State {
                         name: "bottom"
@@ -216,7 +219,6 @@ Variants {
                             anchors.horizontalCenter: shadowSource.horizontalCenter
                             anchors.verticalCenter: undefined
                         }
-
                     },
                     State {
                         name: "left"
@@ -230,7 +232,6 @@ Variants {
                             anchors.horizontalCenter: undefined
                             anchors.verticalCenter: shadowSource.verticalCenter
                         }
-
                     },
                     State {
                         name: "right"
@@ -244,7 +245,6 @@ Variants {
                             anchors.horizontalCenter: undefined
                             anchors.verticalCenter: shadowSource.verticalCenter
                         }
-
                     }
                 ]
 
@@ -252,13 +252,16 @@ Variants {
                     id: solidShadowBg
 
                     anchors.fill: parent
-                    topLeftRadius: styleSurface.detached || (!keystoneWindow.topEdge && !keystoneWindow.leftEdge) ? root.radius : 0
-                    topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge && !keystoneWindow.rightEdge) ? root.radius : 0
-                    bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.leftEdge) ? root.radius : 0
-                    bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.rightEdge) ? root.radius : 0
+                    topLeftRadius: styleSurface.detached || (!keystoneWindow.topEdge &&
+                                                             !keystoneWindow.leftEdge) ? root.radius : 0
+                    topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge &&
+                                                              !keystoneWindow.rightEdge) ? root.radius : 0
+                    bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge &&
+                                                                !keystoneWindow.leftEdge) ? root.radius : 0
+                    bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge &&
+                                                                 !keystoneWindow.rightEdge) ? root.radius : 0
                     color: "black"
                 }
-
             }
 
             AttachedEdgeCurve {
@@ -274,14 +277,14 @@ Variants {
                 fillColor: "black"
 
                 anchors {
-                    left: keystoneWindow.leftEdge ? rootShadow.left : (keystoneWindow.horizontalEdge ? rootShadow.right : undefined)
+                    left: keystoneWindow.leftEdge ? rootShadow.left : (keystoneWindow.horizontalEdge
+                                                                       ? rootShadow.right : undefined)
                     right: keystoneWindow.rightEdge ? rootShadow.right : undefined
-                    top: keystoneWindow.topEdge ? rootShadow.top : (!keystoneWindow.horizontalEdge ? rootShadow.bottom : undefined)
+                    top: keystoneWindow.topEdge ? rootShadow.top : (!keystoneWindow.horizontalEdge
+                                                                    ? rootShadow.bottom : undefined)
                     bottom: keystoneWindow.bottomEdge ? rootShadow.bottom : undefined
                 }
-
             }
-
         }
 
         DropShadow {
@@ -322,7 +325,6 @@ Variants {
                         anchors.horizontalCenter: keystoneWindow.contentItem.horizontalCenter
                         anchors.verticalCenter: undefined
                     }
-
                 },
                 State {
                     name: "bottom"
@@ -336,7 +338,6 @@ Variants {
                         anchors.horizontalCenter: keystoneWindow.contentItem.horizontalCenter
                         anchors.verticalCenter: undefined
                     }
-
                 },
                 State {
                     name: "left"
@@ -350,7 +351,6 @@ Variants {
                         anchors.horizontalCenter: undefined
                         anchors.verticalCenter: keystoneWindow.contentItem.verticalCenter
                     }
-
                 },
                 State {
                     name: "right"
@@ -364,7 +364,6 @@ Variants {
                         anchors.horizontalCenter: undefined
                         anchors.verticalCenter: keystoneWindow.contentItem.verticalCenter
                     }
-
                 }
             ]
 
@@ -381,9 +380,12 @@ Variants {
                 fillColor: root.color
 
                 anchors {
-                    right: keystoneWindow.horizontalEdge ? root.left : keystoneWindow.rightEdge ? root.right : undefined
+                    right: keystoneWindow.horizontalEdge ? root.left : keystoneWindow.rightEdge ? root.right :
+                                                                                                  undefined
+
                     left: keystoneWindow.leftEdge ? root.left : undefined
-                    bottom: !keystoneWindow.horizontalEdge ? root.top : keystoneWindow.bottomEdge ? root.bottom : undefined
+                    bottom: !keystoneWindow.horizontalEdge ? root.top : keystoneWindow.bottomEdge
+                                                             ? root.bottom : undefined
                     top: keystoneWindow.topEdge ? root.top : undefined
                 }
 
@@ -394,7 +396,6 @@ Variants {
 
                     target: root
                 }
-
             }
 
             Item {
@@ -409,30 +410,48 @@ Variants {
                 property bool componentReady: false
                 property bool pillStopFusionMinimumActive: false
                 readonly property bool backendFinalizing: RecordingService.isFinalizing
-                readonly property bool stopPresentationActive: RecordingService.isStopPending || (styleSurface.detached && pillStopFusionMinimumActive)
+                readonly property bool stopPresentationActive: RecordingService.isStopPending || (
+                                                                   styleSurface.detached
+                                                                   && pillStopFusionMinimumActive)
                 readonly property bool isRecording: RecordingService.isRecording && !stopPresentationActive
                 readonly property bool isFinalizing: backendFinalizing || stopPresentationActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
                 property bool recordingExitActive: false
-                readonly property bool recordingPresentationActive: isRecordingMode || recordingExitActive || recordingInfoProgress > 0.01 || recordingActionProgress > 0.01 || processingContentProgress > 0.01
+                readonly property bool recordingPresentationActive: isRecordingMode || recordingExitActive
+                                                                    || recordingInfoProgress > 0.01
+                                                                    || recordingActionProgress > 0.01
+                                                                    || processingContentProgress > 0.01
                 readonly property int audioPhaseHidden: 0
                 readonly property int audioPhaseExpanded: 1
                 readonly property int audioPhaseCollapsing: 2
                 property int audioPresentationPhase: audioPhaseHidden
                 readonly property bool audioSessionActive: AudioRecordingService.isActive
-                readonly property bool audioPresentationActive: audioSessionActive || audioPresentationPhase !== audioPhaseHidden
-                readonly property bool audioGeometryActive: audioSessionActive || audioPresentationPhase === audioPhaseExpanded
-                readonly property bool contentPresentationActive: recordingPresentationActive || audioPresentationActive
+                readonly property bool audioPresentationActive: audioSessionActive || audioPresentationPhase
+                                                                !== audioPhaseHidden
+                readonly property bool audioGeometryActive: audioSessionActive || audioPresentationPhase
+                                                            === audioPhaseExpanded
+                readonly property bool contentPresentationActive: recordingPresentationActive
+                                                                  || audioPresentationActive
                 property bool isLyricsMode: showLyrics && !contentPresentationActive
                 property bool isToolsMode: !contentPresentationActive && showTools && !isLyricsMode
-                property bool isHubMode: !contentPresentationActive && showHub && !isToolsMode && !isLyricsMode
-                property bool isVolumeMode: !contentPresentationActive && showVolume && !expanded && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isNotifMode: !contentPresentationActive && NotificationManager.hasNotifs && !expanded && !showVolume && !isHubMode && !isToolsMode && !isLyricsMode
-                property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode && !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
-                property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse || collapsedInputArea.containsMouse)
-                readonly property bool escapeDismissActive: !contentPresentationActive && (expanded || isLyricsMode || isHubMode || isToolsMode)
+                property bool isHubMode: !contentPresentationActive && showHub && !isToolsMode &&
+                                         !isLyricsMode
+                property bool isVolumeMode: !contentPresentationActive && showVolume && !expanded &&
+                                            !isHubMode && !isToolsMode && !isLyricsMode
+                property bool isNotifMode: !contentPresentationActive && NotificationManager.hasNotifs &&
+                                           !expanded && !showVolume && !isHubMode && !isToolsMode &&
+                                           !isLyricsMode
+                property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode &&
+                                               !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
+                property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse
+                                                                      || collapsedInputArea.containsMouse)
+                readonly property bool escapeDismissActive: !contentPresentationActive && (expanded
+                                                                                           || isLyricsMode
+                                                                                           || isHubMode
+                                                                                           || isToolsMode)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
-                readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(keystoneWindow.modelData.name || "default")
+                readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(
+                                                                   keystoneWindow.modelData.name || "default")
                 readonly property bool showDashboardKeyhole: dashboardTabActive
                 property real pillMorphProgress: 0
                 property real recordingInfoProgress: 0
@@ -446,14 +465,26 @@ Variants {
                     return height + (NotificationManager.normalActions(notif).length > 0 ? 104 : 64);
                 }, 0) + Math.max(0, NotificationManager.popupList.length - 1) * 10
                 property color color: BlurService.backgroundColor(Appearance.colors.colLayer0)
-                readonly property QtObject activeLayout: keystoneWindow.horizontalEdge ? horizontalLayout : verticalLayout
-                readonly property real recordingVisualWidth: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitWidth : activeLayout.attachedRecordingWidth
-                readonly property real recordingVisualHeight: styleSurface.detached && pillRecordingPresenter.item ? pillRecordingPresenter.item.implicitHeight : activeLayout.attachedRecordingHeight
-                readonly property bool useRecordingBlurRegions: styleSurface.detached && root.recordingPresentationActive && pillRecordingPresenter.item !== null
-                readonly property var recordingBlurBackgroundItems: useRecordingBlurRegions ? pillRecordingPresenter.item.blurBackgroundItems : []
+                readonly property QtObject activeLayout: keystoneWindow.horizontalEdge ? horizontalLayout :
+                                                                                         verticalLayout
+                readonly property real recordingVisualWidth: styleSurface.detached
+                                                             && pillRecordingPresenter.item
+                                                             ? pillRecordingPresenter.item.implicitWidth :
+                                                               activeLayout.attachedRecordingWidth
+                readonly property real recordingVisualHeight: styleSurface.detached
+                                                              && pillRecordingPresenter.item
+                                                              ? pillRecordingPresenter.item.implicitHeight :
+                                                                activeLayout.attachedRecordingHeight
+                readonly property bool useRecordingBlurRegions: styleSurface.detached
+                                                                && root.recordingPresentationActive
+                                                                && pillRecordingPresenter.item !== null
+                readonly property var recordingBlurBackgroundItems: useRecordingBlurRegions
+                                                                    ? pillRecordingPresenter.item.blurBackgroundItems :
+                                                                      []
                 property real targetW: activeLayout.targetWidth
                 property real targetH: activeLayout.targetHeight
-                property int targetR: styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) : 12
+                property int targetR: styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) :
+                                                              12
                 property int wDuration: KeystoneMotion.expandingDuration
                 property int hDuration: KeystoneMotion.expandingDuration
                 property int rDuration: KeystoneMotion.radiusDuration
@@ -462,7 +493,8 @@ Variants {
                 property var rBezier: KeystoneMotion.radiusBezier
                 property real radius: targetR
                 property var audioNode: Pipewire.defaultAudioSink ? Pipewire.defaultAudioSink.audio : null
-                property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio : null
+                property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio :
+                                                                            null
                 property string sliderMode: "volume"
                 readonly property var currentPlayer: MediaManager.active
 
@@ -486,12 +518,12 @@ Variants {
                     root.showTools = false;
                     if (root.isNotifMode)
                         NotificationManager.hideAllPopups();
-
                 }
 
                 function triggerSliderOSD(mode) {
-                    if (root.contentPresentationActive || root.showHub || root.showTools || root.expanded || root.showLyrics)
-                        return ;
+                    if (root.contentPresentationActive || root.showHub || root.showTools || root.expanded
+                            || root.showLyrics)
+                        return;
 
                     root.sliderMode = mode;
                     root.showVolume = true;
@@ -503,10 +535,9 @@ Variants {
                 }
 
                 function requestKeyboardFocus() {
-                    keystoneWindow.requestActivate();
                     Qt.callLater(() => {
                         if (!root.escapeDismissActive)
-                            return ;
+                            return;
 
                         if (root.isToolsMode)
                             toolsWidget.forceActiveFocus();
@@ -515,15 +546,20 @@ Variants {
                     });
                 }
 
-                onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive)
-                Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, false)
+                onIsToolsModeChanged: {
+                    if (root.isToolsMode)
+                        root.requestKeyboardFocus();
+                }
+                onDashboardTabActiveChanged: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
+                                                                                     root.dashboardTabActive)
+                Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
+                                                                                 false)
                 focus: root.escapeDismissActive
                 onEscapeDismissActiveChanged: {
                     if (root.escapeDismissActive)
                         root.requestKeyboardFocus();
-
                 }
-                Keys.onEscapePressed: (event) => {
+                Keys.onEscapePressed: event => {
                     WidgetState.closeAllPopups();
                     event.accepted = true;
                 }
@@ -535,7 +571,6 @@ Variants {
                 onHubTabIndexChanged: {
                     if (hub.currentIndex !== root.hubTabIndex)
                         hub.currentIndex = root.hubTabIndex;
-
                 }
                 clip: true
                 z: 100
@@ -552,15 +587,14 @@ Variants {
                         if (root.componentReady)
                             audioRecordingVisual.beginEntry();
 
-                        return ;
+                        return;
                     }
                     if (root.audioPresentationPhase === root.audioPhaseExpanded)
                         audioRecordingVisual.beginExit();
-
                 }
                 onIsRecordingChanged: {
                     if (!root.isRecording)
-                        return ;
+                        return;
 
                     contentResetTimer.stop();
                     recordingPresentationOut.stop();
@@ -578,7 +612,7 @@ Variants {
                 }
                 onIsFinalizingChanged: {
                     if (!root.isFinalizing)
-                        return ;
+                        return;
 
                     recordingContentIn.stop();
                     processingContentIn.stop();
@@ -586,7 +620,8 @@ Variants {
                     recordingActionOut.restart();
                     if (styleSurface.detached) {
                         pillGeometryEntry.stop();
-                        root.pillActiveFusionDuration = Math.max(220, Math.round(root.pillFusionDuration * root.pillMorphProgress));
+                        root.pillActiveFusionDuration = Math.max(220, Math.round(root.pillFusionDuration
+                                                                                 * root.pillMorphProgress));
                         pillRecordingInfoOut.restart();
                         pillGeometryExit.restart();
                     } else {
@@ -595,7 +630,8 @@ Variants {
                     }
                 }
                 onBackendFinalizingChanged: {
-                    if (root.backendFinalizing && (!styleSurface.detached || root.pillMorphProgress <= 0.01) && root.processingContentProgress < 0.99) {
+                    if (root.backendFinalizing && (!styleSurface.detached || root.pillMorphProgress <= 0.01)
+                            && root.processingContentProgress < 0.99) {
                         if (styleSurface.detached)
                             processingContentIn.restart();
                         else
@@ -604,7 +640,7 @@ Variants {
                 }
                 onIsRecordingModeChanged: {
                     if (root.isRecordingMode)
-                        return ;
+                        return;
 
                     root.pillStopFusionMinimumActive = false;
                     pillRecordingInfoOut.stop();
@@ -615,7 +651,8 @@ Variants {
                     recordingPresentationOut.restart();
                 }
                 Component.onCompleted: {
-                    SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner, root.dashboardTabActive);
+                    SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
+                                                            root.dashboardTabActive);
                     root.componentReady = true;
                     recordingContentIn.stop();
                     recordingPresentationOut.stop();
@@ -631,49 +668,51 @@ Variants {
                     root.recordingInfoProgress = root.isRecording ? 1 : 0;
                     root.recordingActionProgress = root.isRecording ? 1 : 0;
                     root.processingContentProgress = root.isFinalizing ? 1 : 0;
-                    root.audioPresentationPhase = root.audioSessionActive ? root.audioPhaseExpanded : root.audioPhaseHidden;
+                    root.audioPresentationPhase = root.audioSessionActive ? root.audioPhaseExpanded :
+                                                                            root.audioPhaseHidden;
                     if (root.audioSessionActive)
                         audioRecordingVisual.beginEntry();
-
                 }
                 onTargetWChanged: {
                     if (root.audioPresentationPhase === root.audioPhaseCollapsing) {
                         wDuration = KeystoneMotion.audioCollapseDuration;
                         wBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     if (targetW === root.activeLayout.audioWidth && root.audioGeometryActive) {
                         wDuration = KeystoneMotion.audioExpandDuration;
                         wBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     if (root.isHoverWidthMotion(targetW)) {
                         wDuration = KeystoneMotion.hoverDuration;
                         wBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     const isExpanding = targetW > width;
-                    wDuration = isExpanding ? KeystoneMotion.expandingDuration : KeystoneMotion.shrinkingDuration;
+                    wDuration = isExpanding ? KeystoneMotion.expandingDuration :
+                                              KeystoneMotion.shrinkingDuration;
                     wBezier = isExpanding ? KeystoneMotion.expandingBezier : KeystoneMotion.shrinkingBezier;
                 }
                 onTargetHChanged: {
                     if (root.audioPresentationPhase === root.audioPhaseCollapsing) {
                         hDuration = KeystoneMotion.audioCollapseDuration;
                         hBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     if (targetH === root.activeLayout.audioHeight && root.audioGeometryActive) {
                         hDuration = KeystoneMotion.audioExpandDuration;
                         hBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     if (root.isHoverHeightMotion(targetH)) {
                         hDuration = KeystoneMotion.hoverDuration;
                         hBezier = KeystoneMotion.hoverBezier;
-                        return ;
+                        return;
                     }
                     const isExpanding = targetH > height;
-                    hDuration = isExpanding ? KeystoneMotion.expandingDuration : KeystoneMotion.shrinkingDuration;
+                    hDuration = isExpanding ? KeystoneMotion.expandingDuration :
+                                              KeystoneMotion.shrinkingDuration;
                     hBezier = isExpanding ? KeystoneMotion.expandingBezier : KeystoneMotion.shrinkingBezier;
                 }
                 onTargetRChanged: {
@@ -698,7 +737,6 @@ Variants {
                             anchors.horizontalCenter: maskContainer.horizontalCenter
                             anchors.verticalCenter: undefined
                         }
-
                     },
                     State {
                         name: "bottom"
@@ -712,7 +750,6 @@ Variants {
                             anchors.horizontalCenter: maskContainer.horizontalCenter
                             anchors.verticalCenter: undefined
                         }
-
                     },
                     State {
                         name: "left"
@@ -726,7 +763,6 @@ Variants {
                             anchors.horizontalCenter: undefined
                             anchors.verticalCenter: maskContainer.verticalCenter
                         }
-
                     },
                     State {
                         name: "right"
@@ -740,7 +776,6 @@ Variants {
                             anchors.horizontalCenter: undefined
                             anchors.verticalCenter: maskContainer.verticalCenter
                         }
-
                     }
                 ]
 
@@ -827,11 +862,8 @@ Variants {
                                 easing.type: Appearance.animation.expressiveSlowEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                             }
-
                         }
-
                     }
-
                 }
 
                 NumberAnimation {
@@ -859,7 +891,8 @@ Variants {
                     id: pillRecordingInfoOut
 
                     PauseAnimation {
-                        duration: Math.max(0, root.pillActiveFusionDuration - Appearance.animation.expressiveSlowEffects.duration)
+                        duration: Math.max(0, root.pillActiveFusionDuration
+                                           - Appearance.animation.expressiveSlowEffects.duration)
                     }
 
                     NumberAnimation {
@@ -870,7 +903,6 @@ Variants {
                         easing.type: Appearance.animation.expressiveSlowEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                     }
-
                 }
 
                 NumberAnimation {
@@ -897,7 +929,6 @@ Variants {
                         root.pillStopFusionMinimumActive = false;
                         if (shouldShowProcessing)
                             processingContentIn.restart();
-
                     }
                 }
 
@@ -927,7 +958,6 @@ Variants {
                         easing.type: Appearance.animation.expressiveSlowEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveSlowEffects.bezierCurve
                     }
-
                 }
 
                 ParallelAnimation {
@@ -964,7 +994,6 @@ Variants {
                         easing.type: Appearance.animation.emphasizedAccel.type
                         easing.bezierCurve: Appearance.animation.emphasizedAccel.bezierCurve
                     }
-
                 }
 
                 Timer {
@@ -973,7 +1002,7 @@ Variants {
                     interval: 60
                     onTriggered: {
                         if (root.recordingPresentationActive)
-                            return ;
+                            return;
 
                         recordingContentIn.stop();
                         recordingPresentationOut.stop();
@@ -1010,10 +1039,18 @@ Variants {
 
                     readonly property color surfaceColor: root.color
                     readonly property real outerRadius: root.radius
-                    readonly property real topLeftRadius: styleSurface.detached || (!keystoneWindow.topEdge && !keystoneWindow.leftEdge) ? outerRadius : 0
-                    readonly property real topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge && !keystoneWindow.rightEdge) ? outerRadius : 0
-                    readonly property real bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.rightEdge) ? outerRadius : 0
-                    readonly property real bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge && !keystoneWindow.leftEdge) ? outerRadius : 0
+                    readonly property real topLeftRadius: styleSurface.detached || (!keystoneWindow.topEdge
+                                                                                    && !keystoneWindow.leftEdge)
+                                                          ? outerRadius : 0
+                    readonly property real topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge
+                                                                                     && !keystoneWindow.rightEdge)
+                                                           ? outerRadius : 0
+                    readonly property real bottomRightRadius: styleSurface.detached || (
+                                                                  !keystoneWindow.bottomEdge &&
+                                                                  !keystoneWindow.rightEdge) ? outerRadius : 0
+                    readonly property real bottomLeftRadius: styleSurface.detached || (
+                                                                 !keystoneWindow.bottomEdge &&
+                                                                 !keystoneWindow.leftEdge) ? outerRadius : 0
                     readonly property bool cutoutVisible: root.showDashboardKeyhole
                     readonly property real cutoutX: dashboardKeyholeCutout.x
                     readonly property real cutoutY: dashboardKeyholeCutout.y
@@ -1021,7 +1058,8 @@ Variants {
                     readonly property real cutoutHeight: dashboardKeyholeCutout.height
                     readonly property real cutoutRadius: dashboardKeyholeCutout.radius
 
-                    function addRoundedRect(context, x, y, width, height, topLeft, topRight, bottomRight, bottomLeft) {
+                    function addRoundedRect(context, x, y, width, height, topLeft, topRight, bottomRight,
+                                            bottomLeft) {
                         const maxRadius = Math.min(width / 2, height / 2);
                         const tl = Math.min(topLeft, maxRadius);
                         const tr = Math.min(topRight, maxRadius);
@@ -1047,12 +1085,14 @@ Variants {
                         const context = getContext("2d");
                         context.reset();
                         context.clearRect(0, 0, width, height);
-                        addRoundedRect(context, 0, 0, width, height, topLeftRadius, topRightRadius, bottomRightRadius, bottomLeftRadius);
+                        addRoundedRect(context, 0, 0, width, height, topLeftRadius, topRightRadius,
+                                       bottomRightRadius, bottomLeftRadius);
                         context.fillStyle = surfaceColor;
                         context.fill();
                         if (cutoutVisible) {
                             context.globalCompositeOperation = "destination-out";
-                            addRoundedRect(context, cutoutX, cutoutY, cutoutWidth, cutoutHeight, cutoutRadius, cutoutRadius, cutoutRadius, cutoutRadius);
+                            addRoundedRect(context, cutoutX, cutoutY, cutoutWidth, cutoutHeight, cutoutRadius,
+                                           cutoutRadius, cutoutRadius, cutoutRadius);
                             context.fillStyle = "white";
                             context.fill();
                             context.globalCompositeOperation = "source-over";
@@ -1132,7 +1172,7 @@ Variants {
                     hoverEnabled: true
                     enabled: !root.contentPresentationActive && !root.isNotifMode && !root.isVolumeMode
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                    onClicked: (mouse) => {
+                    onClicked: mouse => {
                         if (mouse.button === Qt.MiddleButton) {
                             if (root.showHub)
                                 root.showHub = false;
@@ -1141,10 +1181,9 @@ Variants {
                             root.showLyrics = !root.showLyrics;
                             if (root.showLyrics)
                                 root.expanded = false;
-
                         } else {
                             if (root.isLyricsMode || root.isHubMode || root.isToolsMode)
-                                return ;
+                                return;
 
                             root.expanded = !root.expanded;
                         }
@@ -1168,15 +1207,15 @@ Variants {
                         height: root.activeLayout.volumeHeight
                         vertical: !keystoneWindow.horizontalEdge
                         mode: root.sliderMode
-                        audioNode: root.sliderMode === "volume" ? root.audioNode : root.sliderMode === "mic" ? root.sourceAudioNode : null
+                        audioNode: root.sliderMode === "volume" ? root.audioNode : root.sliderMode === "mic"
+                                                                  ? root.sourceAudioNode : null
                         externalValue: Brightness.brightnessValue
                         iconName: root.sliderMode === "brightness" ? "brightness_medium" : ""
                         opacity: root.isVolumeMode ? 1 : 0
                         visible: opacity > 0.01
-                        onMoved: (value) => {
+                        onMoved: value => {
                             if (root.sliderMode === "brightness")
                                 Brightness.setBrightness(value);
-
                         }
 
                         Behavior on opacity {
@@ -1185,9 +1224,7 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     NotificationContent {
@@ -1206,9 +1243,7 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     LyricsContent {
@@ -1231,9 +1266,7 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     MediaContent {
@@ -1242,7 +1275,8 @@ Variants {
                         anchors.topMargin: 20
                         width: root.activeLayout.expandedWidth - 40
                         height: root.activeLayout.expandedHeight - 40
-                        opacity: (!root.contentPresentationActive && root.expanded && !root.isLyricsMode && !root.isHubMode) ? 1 : 0
+                        opacity: (!root.contentPresentationActive && root.expanded && !root.isLyricsMode &&
+                                  !root.isHubMode) ? 1 : 0
                         visible: opacity > 0.01
 
                         Behavior on opacity {
@@ -1251,9 +1285,7 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     HubContent {
@@ -1269,12 +1301,10 @@ Variants {
                         onCurrentIndexChanged: {
                             if (root.hubTabIndex !== currentIndex)
                                 root.hubTabIndex = currentIndex;
-
                         }
                         Component.onCompleted: {
                             if (currentIndex !== root.hubTabIndex)
                                 currentIndex = root.hubTabIndex;
-
                         }
                         onCloseRequested: root.showHub = false
                         onAvatarEditRequested: {
@@ -1290,14 +1320,13 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     ToolsContent {
                         id: toolsWidget
 
+                        keyboardActive: root.isToolsMode
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: implicitWidth
@@ -1316,11 +1345,8 @@ Variants {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
-
                 }
 
                 DropArea {
@@ -1329,11 +1355,12 @@ Variants {
                     anchors.fill: parent
                     z: 20000
                     enabled: !root.contentPresentationActive && (root.isCollapsedMode || root.isHubMode)
-                    onEntered: (drag) => {
-                        const supportsUrls = drag.hasUrls && drag.formats.indexOf("text/uri-list") >= 0 && CloudUploadService.hasLocalUrls(drag.urls);
+                    onEntered: drag => {
+                        const supportsUrls = drag.hasUrls && drag.formats.indexOf("text/uri-list") >= 0
+                              && CloudUploadService.hasLocalUrls(drag.urls);
                         drag.accepted = enabled && supportsUrls;
                         if (!drag.accepted)
-                            return ;
+                            return;
 
                         root.expanded = false;
                         root.showLyrics = false;
@@ -1342,11 +1369,12 @@ Variants {
                         root.hubTabIndex = 2;
                         root.showHub = true;
                     }
-                    onDropped: (drop) => {
-                        const supportsUrls = drop.hasUrls && drop.formats.indexOf("text/uri-list") >= 0 && CloudUploadService.hasLocalUrls(drop.urls);
+                    onDropped: drop => {
+                        const supportsUrls = drop.hasUrls && drop.formats.indexOf("text/uri-list") >= 0
+                              && CloudUploadService.hasLocalUrls(drop.urls);
                         if (!enabled || !supportsUrls) {
                             drop.accepted = false;
-                            return ;
+                            return;
                         }
                         const addedCount = CloudUploadService.enqueueUrls(drop.urls);
                         hub.finishCloudUploadDrop(addedCount);
@@ -1371,12 +1399,11 @@ Variants {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                    onClicked: (mouse) => {
+                    onClicked: mouse => {
                         if (mouse.button === Qt.MiddleButton) {
                             root.showLyrics = !root.showLyrics;
                             if (root.showLyrics)
                                 root.expanded = false;
-
                         } else if (mouse.button === Qt.LeftButton) {
                             root.expanded = true;
                         }
@@ -1385,25 +1412,25 @@ Variants {
                 }
 
                 Behavior on width {
-                    enabled: !(styleSurface.detached && root.recordingPresentationActive && keystoneWindow.horizontalEdge)
+                    enabled: !(styleSurface.detached && root.recordingPresentationActive
+                               && keystoneWindow.horizontalEdge)
 
                     NumberAnimation {
                         duration: root.wDuration
                         easing.type: KeystoneMotion.type
                         easing.bezierCurve: root.wBezier
                     }
-
                 }
 
                 Behavior on height {
-                    enabled: !(styleSurface.detached && root.recordingPresentationActive && !keystoneWindow.horizontalEdge)
+                    enabled: !(styleSurface.detached && root.recordingPresentationActive &&
+                               !keystoneWindow.horizontalEdge)
 
                     NumberAnimation {
                         duration: root.hDuration
                         easing.type: KeystoneMotion.type
                         easing.bezierCurve: root.hBezier
                     }
-
                 }
 
                 Behavior on radius {
@@ -1412,9 +1439,7 @@ Variants {
                         easing.type: KeystoneMotion.type
                         easing.bezierCurve: root.rBezier
                     }
-
                 }
-
             }
 
             AudioRecordingVisual {
@@ -1437,10 +1462,10 @@ Variants {
                 onCollapseRequested: {
                     if (!root.audioSessionActive)
                         root.audioPresentationPhase = root.audioPhaseCollapsing;
-
                 }
                 onExitFinished: {
-                    root.audioPresentationPhase = root.audioSessionActive ? root.audioPhaseExpanded : root.audioPhaseHidden;
+                    root.audioPresentationPhase = root.audioSessionActive ? root.audioPhaseExpanded :
+                                                                            root.audioPhaseHidden;
                 }
             }
 
@@ -1461,13 +1486,15 @@ Variants {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: root.isCollapsedMode ? Appearance.animation.expressiveSlowEffects.duration : Appearance.animation.expressiveFastEffects.duration
-                        easing.type: root.isCollapsedMode ? Appearance.animation.expressiveSlowEffects.type : Appearance.animation.expressiveFastEffects.type
-                        easing.bezierCurve: root.isCollapsedMode ? Appearance.animation.expressiveSlowEffects.bezierCurve : Appearance.animation.expressiveFastEffects.bezierCurve
+                        duration: root.isCollapsedMode ? Appearance.animation.expressiveSlowEffects.duration :
+                                                         Appearance.animation.expressiveFastEffects.duration
+                        easing.type: root.isCollapsedMode ? Appearance.animation.expressiveSlowEffects.type :
+                                                            Appearance.animation.expressiveFastEffects.type
+                        easing.bezierCurve: root.isCollapsedMode
+                                            ? Appearance.animation.expressiveSlowEffects.bezierCurve :
+                                              Appearance.animation.expressiveFastEffects.bezierCurve
                     }
-
                 }
-
             }
 
             Loader {
@@ -1475,7 +1502,8 @@ Variants {
 
                 anchors.fill: root
                 visible: styleSurface.detached && root.recordingPresentationActive
-                sourceComponent: keystoneWindow.horizontalEdge ? horizontalPillRecordingComponent : verticalPillRecordingComponent
+                sourceComponent: keystoneWindow.horizontalEdge ? horizontalPillRecordingComponent :
+                                                                 verticalPillRecordingComponent
                 z: root.z + 2
             }
 
@@ -1496,7 +1524,6 @@ Variants {
                     layoutHeight: horizontalLayout.collapsedHeight
                     edge: keystoneWindow.edge
                 }
-
             }
 
             Component {
@@ -1516,13 +1543,12 @@ Variants {
                     layoutWidth: verticalLayout.collapsedWidth
                     edge: keystoneWindow.edge
                 }
-
             }
 
             Connections {
                 function onStopRequested() {
                     if (!RecordingService.stop())
-                        return ;
+                        return;
 
                     root.pillStopFusionMinimumActive = true;
                 }
@@ -1564,9 +1590,12 @@ Variants {
                 fillColor: root.color
 
                 anchors {
-                    left: keystoneWindow.leftEdge ? root.left : (keystoneWindow.horizontalEdge ? root.right : undefined)
+                    left: keystoneWindow.leftEdge ? root.left : (keystoneWindow.horizontalEdge ? root.right :
+                                                                                                 undefined)
+
                     right: keystoneWindow.rightEdge ? root.right : undefined
-                    top: keystoneWindow.topEdge ? root.top : (!keystoneWindow.horizontalEdge ? root.bottom : undefined)
+                    top: keystoneWindow.topEdge ? root.top : (!keystoneWindow.horizontalEdge ? root.bottom :
+                                                                                               undefined)
                     bottom: keystoneWindow.bottomEdge ? root.bottom : undefined
                 }
 
@@ -1577,7 +1606,6 @@ Variants {
 
                     target: root
                 }
-
             }
 
             CompositorBlurRegion {
@@ -1585,20 +1613,17 @@ Variants {
                 backgroundItem: root.useRecordingBlurRegions ? null : root
                 additionalBackgroundItems: root.recordingBlurBackgroundItems
                 subtractedBackgroundItems: root.showDashboardKeyhole ? [dashboardKeyholeCutout] : []
-                postSubtractionBackgroundItems: root.showDashboardKeyhole ? hub.dashboardKeyholeGlassItems : []
+                postSubtractionBackgroundItems: root.showDashboardKeyhole ? hub.dashboardKeyholeGlassItems :
+                                                                            []
                 postSubtractionClipItem: root.showDashboardKeyhole ? dashboardKeyholeCutout : null
                 radius: root.radius
             }
-
         }
 
         mask: Region {
             Region {
                 item: maskContainer
             }
-
         }
-
     }
-
 }
