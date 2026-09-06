@@ -100,6 +100,15 @@ normalize。普通 format/check 只处理当前改动的 QML，避免 legacy tre
   icon/text、switch/status text、badge/description 是否重复，同一状态是否在相邻 section
   重复出现，以及 implementation detail 是否泄漏到 user-facing copy。
 
+## Settings 等待反馈
+
+Settings Center 的短暂异步等待默认复用 `BrailleSpinner`，优先通过
+`Widgets/common/InlineBusyIndicator.qml` 在触发控件附近的已有空白区域中作为不参与布局的
+覆盖层显示。不得为等待指示器新增布局占位，也不得因 busy 状态插入/删除整行或改变按钮、
+section 的位置、间距或几何尺寸。单个操作只标记实际触发它的控件；全局操作可显示在
+section header 附近的已有空白区域。`InlineStatusBanner`
+保留给错误、警告和需要关注的信息，不用于单纯“正在处理”。不另建 loading 动画体系。
+
 ## Test Policy
 
 质量检查和 tests 分开。`qmllint`、`qmlformat`、`clang-format`、`bash -n`、

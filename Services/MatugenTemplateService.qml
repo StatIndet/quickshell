@@ -15,7 +15,10 @@ Singleton {
     property bool ready: false
     property string error: ""
     property string operationError: ""
+    // Start the asynchronous desktop-entry scan before an open-location request.
+    readonly property var desktopApplications: DesktopEntries.applications.values
     readonly property bool busy: mutation.running || pendingOperation !== null
+    readonly property bool adding: busy && (pendingOperation ? pendingOperation.name : operation) === "add"
     property var pendingOperation: null
     property bool refreshPending: false
     property string operation: ""
@@ -64,9 +67,37 @@ Singleton {
         return root.runOperation("remove", [templateId]);
     }
     function openLocation(template) {
-        const path = template.inputPath;
-        Qt.openUrlExternally("file://" + path.substring(0, path.lastIndexOf("/")).split("/").map(
-                                 encodeURIComponent).join("/"));
+        const path = template && typeof template.inputPath === "string" ? template.inputPath : "";
+        if (!path.startsWith("/") || path.endsWith("/") || /[\u0000-\u001f\u007f]/.test(path)
+                || path.endsWith("/.") || path.endsWith("/..")) {
+            console.warn("Cannot open template location: invalid absolute source path");
+            return;
+        }
+        const directory = path.substring(0, path.lastIndexOf("/")) || "/";
+        if (locationHandler.running)
+            return;
+        locationHandler.directory = directory;
+        locationHandler.running = true;
+    }
+
+    Process {
+        id: locationHandler
+        property string directory: ""
+        command: ["xdg-mime", "query", "default", "inode/directory"]
+        stdout: StdioCollector {
+            id: locationDesktopId
+        }
+        onExited: exitCode => {
+            const desktopId = exitCode === 0 ? locationDesktopId.text.trim() : "";
+            const applicationId = desktopId.replace(/\.desktop$/, "");
+            const application = root.desktopApplications.find(entry => entry.id === applicationId);
+            // xdg-open's generic backend ignores Terminal=true. Give terminal
+            // file managers a terminal without changing the user's MIME defaults.
+            const command = application && application.runInTerminal
+                ? ["xdg-terminal-exec", "xdg-open", locationHandler.directory]
+                : ["xdg-open", locationHandler.directory];
+            Quickshell.execDetached(command);
+        }
     }
 
     Connections {

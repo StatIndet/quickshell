@@ -66,8 +66,9 @@ ID 区分大小写，由字母、数字、下划线、连字符组成，可用�
 无效模板不能启用，也不会被设置中心送入生成。配置文件监听加 5 秒轮询刷新负责发现
 首次创建的 registry、手工编辑以及输入文件的删除/恢复。
 
-添加窗口复用 FilePicker，接收任意普通 UTF-8 模板文件。先静态校验并调用 Matugen
-`--dry-run`（使用固定验证色，移除 hook），再允许添加；添加时重复校验。Matugen 的
+添加窗口复用 FilePicker，接收任意普通 UTF-8 模板文件。点击添加后由管理器静态校验并调用 Matugen
+`--dry-run`（使用固定验证色，移除 hook），成功才写入注册。独立 `validate` CLI 保留，
+UI 不要求用户先点击验证。添加期间使用固定占位的 BrailleSpinner，失败保持窗口并显示错误。Matugen 的
 `--dry-run` 不渲染模板表达式，因此语法/渲染问题仍可能在实际生成时报告。
 管理器复制源文件至用户 `templates/<ID>.<原扩展名>`，临时写入同目录 config 后
 rename 替换；Clavis 写入者通过 flock 串行化，提交前检查配置是否被外部编辑。
@@ -78,8 +79,13 @@ rename 替换；Clavis 写入者通过 flock 串行化，提交前检查配置�
 引用、且位于托管目录直属位置的普通源文件。手工注册的外部源文件、symlink 源和共享
 源保留。**任何 output_path 都不会因关闭开关或删除注册而被删除。**
 
+“打开模板位置”通过 argv 调用 `xdg-open` 打开源文件父目录，不打开生成目标。
+默认目录处理器声明 `Terminal=true` 时，使用 `xdg-terminal-exec` 提供终端，避免
+`xdg-open` 通用后端直接启动终端文件管理器却没有 TTY。不修改 MIME 默认配置。
+
 模板中的 `post_hook` 是以用户权限执行的任意命令，不是沙箱。新发现用户模板默认
-关闭；设置中心显示命令标记，启用带命令的用户模板前展示命令及每次生成后执行的说明。
+关闭；设置中心显示无点击/键盘动作的 terminal 信息标记，通过 tooltip 展示命令。
+开关直接控制整个模板，不存在独立 hook 权限或启用确认。
 验证和添加不执行 hook。用户启用模板即信任其内容，之后应谨慎修改模板和 hook。
 
 每次生成在 `$CLAVIS_RUNTIME_HOME/temporary/matugen.XXXXXX/config.toml` 中写入 runtime

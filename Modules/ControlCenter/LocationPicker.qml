@@ -166,22 +166,16 @@ ColumnLayout {
             Layout.fillWidth: true
         }
 
+        InlineBusyIndicator {
+            busy: WeatherPlugin.loading
+        }
+
         ActionButton {
             id: saveLocationButton
 
             text: qsTr("保存位置")
             iconName: "save"
             onClicked: root.saveCoordinate()
-
-            BrailleSpinner {
-                anchors.right: parent.left
-                anchors.rightMargin: Metrics.spacingS
-                anchors.verticalCenter: parent.verticalCenter
-                visible: WeatherPlugin.loading
-                running: visible
-                dotColor: Appearance.colors.colPrimary
-            }
-
         }
 
         ActionButton {

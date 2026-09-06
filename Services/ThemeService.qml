@@ -11,6 +11,8 @@ Singleton {
 
     property string generationError: ""
     property string externalGenerationError: ""
+    property string generationTemplateId: ""
+    property string pendingGenerationTemplateId: ""
     property var pendingGeneration: null
     property bool coreReloaded: false
     property bool generating: false
@@ -58,7 +60,7 @@ Singleton {
         let changed =
             PersonalizationConfig.setMatugenTemplateEnabled(id, enabled);
         if (changed && enabled)
-            root.regenerateFromCurrentWallpaper();
+            root.regenerateFromCurrentWallpaper(id);
     }
 
     function setThemeMode(value) {
@@ -203,7 +205,7 @@ Singleton {
         writeNiriCursorProcess.running = true;
     }
 
-    function generateFromWallpaper(path) {
+    function generateFromWallpaper(path, templateId) {
         if (!path || path === "")
             return;
 
@@ -216,14 +218,17 @@ Singleton {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
-        root.startGeneration(command);
+        root.startGeneration(command, templateId);
     }
 
-    function startGeneration(command) {
+    function startGeneration(command, templateId) {
         if (generateColorsProcess.running || !MatugenTemplateService.ready || !PersonalizationConfig.ready) {
+            root.pendingGenerationTemplateId = templateId || "";
             root.pendingGeneration = command;
             return;
         }
+        root.generationTemplateId = templateId || "";
+        root.pendingGenerationTemplateId = "";
         root.pendingGeneration = null;
         root.generationError = "";
         root.externalGenerationError = "";
@@ -239,7 +244,7 @@ Singleton {
         command[command.indexOf("--templates") + 1] = root.enabledMatugenTemplates().join(",");
         command[command.indexOf("--scheme") + 1] = PersonalizationConfig.matugenScheme;
         command[command.indexOf("--mode") + 1] = PersonalizationConfig.themeMode;
-        root.startGeneration(command);
+        root.startGeneration(command, root.pendingGenerationTemplateId);
     }
 
     Connections {
@@ -258,7 +263,7 @@ Singleton {
         return "#" + r + g + b;
     }
 
-    function generateFromColor(value) {
+    function generateFromColor(value, templateId) {
         if (!value || value === "")
             return;
 
@@ -272,16 +277,16 @@ Singleton {
             "--mode", PersonalizationConfig.themeMode,
             "--templates", root.enabledMatugenTemplates().join(",")
         ];
-        root.startGeneration(command);
+        root.startGeneration(command, templateId);
     }
 
-    function regenerateFromCurrentWallpaper() {
+    function regenerateFromCurrentWallpaper(templateId) {
         const path = WallpaperService.currentWallpaper
             || PersonalizationConfig.wallpaperPath;
         if (path && path !== "" && WallpaperService.isImagePath(path))
-            root.generateFromWallpaper(path);
+            root.generateFromWallpaper(path, templateId);
         else if (path && path !== "" && WallpaperService.isColorSource(path))
-            root.generateFromColor(path);
+            root.generateFromColor(path, templateId);
     }
 
     Component.onCompleted: {
@@ -420,6 +425,7 @@ Singleton {
         }
         onExited: exitCode => {
             root.generating = false;
+            root.generationTemplateId = "";
             if ((exitCode === 0 || exitCode === 3) && !root.coreReloaded)
                 Appearance.reloadColors();
             if (exitCode !== 0 && exitCode !== 3)

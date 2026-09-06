@@ -15,10 +15,6 @@ FloatingWindow {
     property var parentModal: null
     property string sourcePath: ""
     property bool advanced: false
-    property bool validated: false
-    property string validatedDraft: ""
-    readonly property string draft: JSON.stringify([idField.text, sourcePath, outputField.text,
-                                                    hookField.text])
 
     function showWindow() {
         root.sourcePath = "";
@@ -26,7 +22,6 @@ FloatingWindow {
         outputField.text = "";
         hookField.text = "";
         root.advanced = false;
-        root.validated = false;
         MatugenTemplateService.operationError = "";
         root.visible = true;
     }
@@ -43,13 +38,9 @@ FloatingWindow {
     minimumSize: Qt.size(460, 480)
     color: "transparent"
     onClosed: root.dismiss()
-    onDraftChanged: root.validated = false
 
     Connections {
         target: MatugenTemplateService
-        function onValidated(valid) {
-            root.validated = valid && root.draft === root.validatedDraft;
-        }
         function onAdded(templateId) {
             if (root.visible)
                 root.dismiss();
@@ -143,28 +134,38 @@ FloatingWindow {
                     }
                 }
             }
-            RowLayout {
+            Item {
                 Layout.fillWidth: true
-                Item {
-                    Layout.fillWidth: true
+                implicitHeight: addActions.implicitHeight
+
+                InlineBusyIndicator {
+                    anchors.right: addActions.left
+                    anchors.rightMargin: Metrics.spacingXS
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: implicitWidth
+                    height: implicitHeight
+                    busy: MatugenTemplateService.adding
                 }
-                ActionButton {
-                    text: qsTr("验证")
-                    iconName: root.validated ? "check" : ""
-                    enabled: !MatugenTemplateService.busy && root.sourcePath !== "" && idField.text !== "" &&
-                             !idField.error && outputField.text !== ""
-                    onClicked: {
-                        root.validatedDraft = root.draft;
-                        MatugenTemplateService.validate(idField.text, root.sourcePath, outputField.text,
-                                                        hookField.text);
+
+                RowLayout {
+                    id: addActions
+
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    ActionButton {
+                        text: qsTr("取消")
+                        enabled: !MatugenTemplateService.adding
+                        onClicked: root.dismiss()
                     }
-                }
-                ActionButton {
-                    text: qsTr("添加")
-                    filled: true
-                    enabled: root.validated && !MatugenTemplateService.busy
-                    onClicked: MatugenTemplateService.add(idField.text, root.sourcePath, outputField.text,
-                                                          hookField.text)
+                    ActionButton {
+                        text: qsTr("添加")
+                        filled: true
+                        enabled: !MatugenTemplateService.busy && root.sourcePath !== "" && idField.text !== ""
+                                 && !idField.error && outputField.text.trim() !== ""
+                        onClicked: MatugenTemplateService.add(idField.text, root.sourcePath, outputField.text,
+                                                              hookField.text)
+                    }
                 }
             }
         }
