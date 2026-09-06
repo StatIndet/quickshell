@@ -1,0 +1,142 @@
+import QtQuick
+import QtQuick.Effects
+import Quickshell.Wayland
+import qs.Common
+import qs.Services
+import qs.Modules.Wallpaper
+
+Item {
+    id: root
+
+    required property WlSessionLock lock
+    required property var context
+    property var snapshotProvider: null
+    property var screen: null
+    property var snapshotResult: null
+    property bool started: false
+    property bool exiting: false
+    property real reveal: 0
+    property real sceneOpacity: 1
+    readonly property string screenName: screen ? screen.name : ""
+
+    function startReveal() {
+        if (started || !screen)
+            return;
+        snapshotResult = snapshotProvider ? snapshotProvider.snapshot(screen) : null;
+        if (snapshotResult && snapshot.status !== Image.Ready && snapshot.status !== Image.Error)
+            return;
+        started = true;
+        entrance.start();
+        content.forceAuthFocus();
+    }
+
+    onScreenChanged: Qt.callLater(startReveal)
+    Component.onCompleted: Qt.callLater(startReveal)
+
+    // The compositor keeps the desktop inaccessible throughout the reveal.
+    // Only a frozen pre-lock frame is visible outside the growing disc.
+    Image {
+        id: snapshot
+        anchors.fill: parent
+        source: root.snapshotResult ? root.snapshotResult.url : ""
+        fillMode: Image.Stretch
+        cache: false
+        onStatusChanged: Qt.callLater(root.startReveal)
+    }
+
+    Item {
+        id: discMask
+        anchors.fill: parent
+        visible: false
+        layer.enabled: true
+
+        Rectangle {
+            readonly property real discRadius: Math.hypot(root.width, root.height) * root.reveal
+            x: -discRadius
+            y: -discRadius
+            width: discRadius * 2
+            height: width
+            radius: discRadius
+            color: "white"
+        }
+    }
+
+    Item {
+        id: scene
+        anchors.fill: parent
+        opacity: root.sceneOpacity
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            maskEnabled: true
+            maskSource: discMask
+            maskThresholdMin: 0.5
+            maskSpreadAtMin: 0.5
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: Appearance.colors.colLayer0Base
+        }
+
+        WallpaperImageViewport {
+            anchors.fill: parent
+            sourcePath: WallpaperService.wallpaperForScreen(root.screenName)
+            imageFillMode: WallpaperService.qtFillMode(WallpaperService.fillModeForScreen(root.screenName))
+            panoramaEnabled: WallpaperService.fillModeForScreen(root.screenName) === "panorama"
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                autoPaddingEnabled: false
+                blurEnabled: true
+                blurMax: 64
+                blur: 1
+                blurMultiplier: 1
+                saturation: -0.2
+            }
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#66000000"
+        }
+
+        DefaultLockContent {
+            id: content
+            anchors.fill: parent
+            context: root.context
+            enabled: !root.exiting
+        }
+    }
+
+    Connections {
+        target: root.lock
+        function onUnlock() {
+            if (root.exiting)
+                return;
+            root.exiting = true;
+            entrance.stop();
+            exitAnimation.start();
+        }
+    }
+
+    NumberAnimation {
+        id: entrance
+        target: root
+        property: "reveal"
+        from: 0
+        to: 1
+        duration: 850
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+    }
+
+    NumberAnimation {
+        id: exitAnimation
+        target: root
+        property: "sceneOpacity"
+        to: 0
+        duration: 300
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: [0.3, 0, 1, 1, 1, 1]
+        onFinished: root.context.finishUnlock()
+    }
+}

@@ -440,8 +440,7 @@ StyledFlickable {
             stepSize: sliderRow.stepSize
             value: sliderRow.value
             accessibleName: sliderRow.title
-            valueFormatter: sliderValue => Math.round(sliderValue).toString()
-                + sliderRow.suffix
+            valueFormatter: sliderValue => Math.round(sliderValue).toString() + sliderRow.suffix
             onMoved: value => sliderRow.moved(Math.round(value))
         }
     }
@@ -495,6 +494,21 @@ StyledFlickable {
                     horizontalPadding: 24
                     onValueSelected: value => ThemeService.setMatugenScheme(value)
                 }
+            }
+        }
+
+        Section {
+            title: qsTr("锁屏")
+            iconName: "lock"
+
+            SearchSelectMenuField {
+                Layout.preferredWidth: 240
+                Layout.preferredHeight: 40
+                options: PersonalizationConfig.lockScreenStyles
+                value: PersonalizationConfig.lockScreenStyle
+                textRole: "label"
+                valueRole: "value"
+                onAccepted: value => PersonalizationConfig.setLockScreenStyle(value)
             }
         }
 
@@ -567,8 +581,7 @@ StyledFlickable {
                 value: PersonalizationConfig.uiFontFamily
                 placeholder: qsTr("选择界面字体")
                 fieldWidth: 280
-                onAccepted: value =>
-                    PersonalizationConfig.setFontFamily("ui", value)
+                onAccepted: value => PersonalizationConfig.setFontFamily("ui", value)
             }
 
             SearchSelectSettingRow {
@@ -578,8 +591,7 @@ StyledFlickable {
                 value: PersonalizationConfig.monoFontFamily
                 placeholder: qsTr("选择等宽字体")
                 fieldWidth: 280
-                onAccepted: value =>
-                    PersonalizationConfig.setFontFamily("mono", value)
+                onAccepted: value => PersonalizationConfig.setFontFamily("mono", value)
             }
 
             SearchSelectSettingRow {
@@ -589,8 +601,7 @@ StyledFlickable {
                 value: PersonalizationConfig.numericFontFamily
                 placeholder: qsTr("选择数字字体")
                 fieldWidth: 280
-                onAccepted: value =>
-                    PersonalizationConfig.setFontFamily("numeric", value)
+                onAccepted: value => PersonalizationConfig.setFontFamily("numeric", value)
             }
 
             SearchSelectSettingRow {
@@ -600,8 +611,7 @@ StyledFlickable {
                 value: PersonalizationConfig.expressiveFontFamily
                 placeholder: qsTr("选择表现性字体")
                 fieldWidth: 280
-                onAccepted: value =>
-                    PersonalizationConfig.setFontFamily("expressive", value)
+                onAccepted: value => PersonalizationConfig.setFontFamily("expressive", value)
             }
 
             RowLayout {

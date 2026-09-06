@@ -246,6 +246,8 @@ Singleton {
     property int parallaxTiledColumnSpan: 6
     property string matugenScheme: "scheme-tonal-spot"
     property var matugenTemplates: ({})
+    readonly property var lockScreenStyles: [{value: "default", label: "default"}, {value: "caelestia", label: "caelestia"}]
+    property string lockScreenStyle: "default"
     property string themeMode: "dark"
     property string cursorTheme: ""
     property int cursorSize: 24
@@ -1048,6 +1050,10 @@ Singleton {
         setValue("iconTheme", value || "");
     }
 
+    function setLockScreenStyle(value) {
+        setValue("lockScreenStyle", normalizedOption(root.lockScreenStyles, value, "default"));
+    }
+
     function setKeystoneStyle(value) {
         setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "bangs"));
     }
@@ -1452,6 +1458,7 @@ Singleton {
                 "matugenScheme": root.matugenScheme,
                 "matugenTemplates": root.normalizedMatugenTemplates(root.matugenTemplates),
                 "mode": root.themeMode,
+                "lockScreenStyle": root.lockScreenStyle,
                 "cursorTheme": root.cursorTheme,
                 "cursorSize": root.cursorSize,
                 "cursorHideWhenTyping": root.cursorHideWhenTyping,
@@ -1575,6 +1582,7 @@ Singleton {
         root.parallaxTiledColumnSpan = normalizedBoundedInt(parallax.tiledColumnSpan, 6, 2, 12);
         root.matugenScheme = normalizedOption(root.matugenSchemes, theme.matugenScheme, "scheme-tonal-spot");
         root.matugenTemplates = normalizedMatugenTemplates(theme.matugenTemplates);
+        root.lockScreenStyle = normalizedOption(root.lockScreenStyles, theme.lockScreenStyle, "default");
         root.themeMode = theme.mode === "light" ? "light" : "dark";
         root.cursorTheme = root.normalizedCursorTheme(theme.cursorTheme);
         root.cursorSize = root.normalizedBoundedInt(theme.cursorSize, 24, 12, 128);

@@ -12,14 +12,17 @@ Scope {
     readonly property bool secure: sessionLock.secure
     property bool capturePending: false
     property int activeCaptureRequestId: 0
+    property string sessionStyle: "default"
 
-    signal unlocked()
-    signal secured()
+    signal unlocked
+    signal secured
 
     function open() {
         if (sessionLock.locked || capturePending)
             return "ALREADY_LOCKED";
 
+        sessionStyle = PersonalizationConfig.lockScreenStyle;
+        internalContext.authRevealed = false;
         internalContext.currentText = "";
         internalContext.unlockInProgress = false;
         internalContext.showFailure = false;
@@ -34,7 +37,7 @@ Scope {
 
     function finishCapture(captureRequestId) {
         if (!capturePending || captureRequestId !== activeCaptureRequestId)
-            return ;
+            return;
 
         sessionLock.locked = true;
         capturePending = false;
@@ -54,7 +57,7 @@ Scope {
     PreLockCapture {
         id: preLockCapture
 
-        onCompleted: (captureRequestId) => {
+        onCompleted: captureRequestId => {
             return root.finishCapture(captureRequestId);
         }
     }
@@ -62,21 +65,31 @@ Scope {
     Scope {
         id: internalContext
 
+        property bool authRevealed: false
         property string currentText: ""
         property bool unlockInProgress: false
         property bool showFailure: false
 
-        signal unlockFailed()
+        signal unlockFailed
 
         function tryUnlock() {
             if (currentText === "" || unlockInProgress)
-                return ;
+                return;
 
             internalContext.unlockInProgress = true;
             pam.start();
         }
 
+        function emergencyUnlock() {
+            pam.abort();
+            currentText = "";
+            unlockInProgress = false;
+            finishUnlock();
+        }
+
         function finishUnlock() {
+            if (!sessionLock.locked)
+                return;
             sessionLock.locked = false;
             root.unlocked();
             Qt.callLater(preLockCapture.clear);
@@ -90,9 +103,8 @@ Scope {
             onPamMessage: {
                 if (this.responseRequired)
                     this.respond(internalContext.currentText);
-
             }
-            onCompleted: (result) => {
+            onCompleted: result => {
                 if (result == PamResult.Success) {
                     internalContext.currentText = "";
                     internalContext.showFailure = false;
@@ -105,26 +117,23 @@ Scope {
                 internalContext.unlockInProgress = false;
             }
         }
-
     }
 
     WlSessionLock {
         id: sessionLock
 
-        signal unlock()
+        signal unlock
 
         onSecureStateChanged: {
             if (secure)
                 root.secured();
-
         }
 
         LockSurface {
             lock: sessionLock
             context: internalContext
             snapshotProvider: preLockCapture
+            style: root.sessionStyle
         }
-
     }
-
 }
