@@ -14,6 +14,7 @@ Scope {
 
     signal captureRequested(int requestId)
     signal completed(int requestId)
+    signal releaseFrames
 
     function screenKey(screen) {
         return screen && screen.name ? String(screen.name) : "";
@@ -27,6 +28,7 @@ Scope {
         if (busy)
             return 0;
 
+        releaseFrames();
         requestId += 1;
         frames = {};
         pendingScreens = {};
@@ -87,6 +89,7 @@ Scope {
         pendingCount = 0;
         pendingScreens = {};
         deadline.stop();
+        releaseFrames();
     }
 
     function snapshot(screen) {
@@ -95,8 +98,10 @@ Scope {
     }
 
     function clear() {
-        if (!busy)
+        if (!busy) {
             frames = {};
+            releaseFrames();
+        }
     }
 
     Timer {
@@ -119,35 +124,102 @@ Scope {
             required property var modelData
             readonly property string screenName: root.screenKey(modelData)
             property int activeRequestId: 0
+            property int queuedRequestId: 0
+            property bool published: false
+            property string snapshotUrl: ""
+            property double startedAt: 0
+
+            function startRequest(captureRequestId) {
+                if (captureRequestId !== root.requestId || !root.isPending(screenName))
+                    return;
+                activeRequestId = captureRequestId;
+                published = false;
+                startedAt = Date.now();
+                captureProcess.command = ["bash", Paths.captureScriptsDir + "/lock_snapshot.sh", screenName];
+                captureProcess.running = true;
+            }
+
+            function release(keepQueued) {
+                if (!keepQueued)
+                    queuedRequestId = 0;
+                snapshotUrl = "";
+                if (captureProcess.running)
+                    captureProcess.write("release\n");
+            }
+
+            function publish() {
+                if (published || snapshotUrl === "" || preload.status === Image.Loading)
+                    return;
+                if (activeRequestId !== root.requestId || !root.isPending(screenName)) {
+                    release(true);
+                    return;
+                }
+                published = true;
+                if (preload.status === Image.Ready) {
+                    console.debug("Lock snapshot ready for " + screenName + " in " + (Date.now() - startedAt)
+                                  + " ms");
+                    root.finishScreen(screenName, activeRequestId, {
+                                          url: snapshotUrl
+                                      });
+                } else {
+                    release();
+                    root.finishScreen(screenName, activeRequestId, null);
+                }
+            }
 
             Connections {
                 target: root
+                function onReleaseFrames() {
+                    worker.release();
+                }
                 function onCaptureRequested(captureRequestId) {
                     if (!root.isPending(worker.screenName))
                         return;
                     if (captureProcess.running) {
-                        root.finishScreen(worker.screenName, captureRequestId, null);
+                        worker.queuedRequestId = captureRequestId;
                         return;
                     }
-                    worker.activeRequestId = captureRequestId;
-                    captureProcess.command = ["bash", Paths.captureScriptsDir + "/lock_snapshot.sh",
-                                              worker.screenName];
-                    captureProcess.running = true;
+                    worker.startRequest(captureRequestId);
                 }
+            }
+
+            // Hold the decoded pixmap before requesting WlSessionLock. The lock
+            // Images use the same local URL and cache settings, not data: URLs.
+            Image {
+                id: preload
+                source: worker.snapshotUrl
+                asynchronous: false
+                cache: true
+                visible: false
+                onStatusChanged: Qt.callLater(worker.publish)
             }
 
             Process {
                 id: captureProcess
-                onExited: (exitCode, exitStatus) => {
-                    const encoded = captureOutput.text.trim();
-                    const valid = exitCode === 0 && exitStatus === 0 && encoded.startsWith("iVBORw0KGgo");
-                    root.finishScreen(worker.screenName, worker.activeRequestId, valid ? {
-                                                                                             url: "data:image/png;base64,"
-                                                                                                  + encoded
-                                                                                         } : null);
+                stdinEnabled: true
+                onExited: {
+                    if (!worker.published)
+                        root.finishScreen(worker.screenName, worker.activeRequestId, null);
+                    const next = worker.queuedRequestId;
+                    worker.queuedRequestId = 0;
+                    if (next === root.requestId && root.isPending(worker.screenName))
+                        Qt.callLater(() => worker.startRequest(next));
                 }
-                stdout: StdioCollector {
-                    id: captureOutput
+                stdout: SplitParser {
+                    onRead: data => {
+                        if (worker.published || worker.activeRequestId !== root.requestId || !root.isPending(
+                                    worker.screenName)) {
+                            worker.release(true);
+                            return;
+                        }
+                        if (!data.startsWith("/") || !data.endsWith("/frame.bmp")) {
+                            worker.release();
+                            root.finishScreen(worker.screenName, worker.activeRequestId, null);
+                            return;
+                        }
+                        worker.snapshotUrl = Paths.fileUrl(data);
+                        Qt.callLater(worker.publish);
+                    }
                 }
                 stderr: StdioCollector {}
             }

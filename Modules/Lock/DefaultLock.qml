@@ -49,7 +49,7 @@ Item {
         source: root.snapshotResult ? root.snapshotResult.url : ""
         fillMode: Image.Stretch
         asynchronous: false
-        cache: false
+        cache: true
         onStatusChanged: Qt.callLater(root.startReveal)
     }
 

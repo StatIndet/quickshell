@@ -10,8 +10,11 @@ in `DefaultLockContent.qml`. Both styles share the session lock and PAM context.
 The new style uses Qt Quick MultiEffect for blur and the circular reveal mask.
 Both styles capture through a short-lived Quickshell `ScreencopyView` config before
 acquiring the session lock. No external screenshot program is required. The helper
-uses a private temporary directory in XDG_RUNTIME_DIR (TMPDIR fallback) for its PNG,
-returns base64 over stdout, and deletes the directory on exit. Default keeps
+uses a private temporary directory in XDG_RUNTIME_DIR (TMPDIR fallback) for a BMP.
+It returns the local path and holds the file until the main shell releases its stdin
+lease at unlock/cancellation. Main-shell Image preloading completes before requesting
+the session lock; display Images reuse the same URL and decoded image cache.
+There is no PNG/base64/data-URL round trip. Default keeps
 the snapshot underneath its wallpaper layer for the top-left disc reveal and exit
 fade. The wallpaper itself is still sourced from the current wallpaper image.
 

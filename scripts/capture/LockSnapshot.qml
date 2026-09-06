@@ -49,7 +49,7 @@ ShellRoot {
         grabbing = true;
         if (!capture.grabToImage(result => {
             result.saveToFile(root.outputPath);
-            Qt.callLater(Qt.quit);
+            Qt.callLater(() => Qt.quit());
         }, capture.sourceSize))
             Qt.quit();
     }

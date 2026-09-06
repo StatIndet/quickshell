@@ -85,7 +85,7 @@ Item {
         source: root.snapshotResult ? root.snapshotResult.url : ""
         fillMode: Image.Stretch
         asynchronous: false
-        cache: false
+        cache: true
         visible: source !== ""
         layer.enabled: true
         onStatusChanged: root.maybeStartStartupAnimation()
