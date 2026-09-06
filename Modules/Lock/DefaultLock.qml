@@ -15,6 +15,7 @@ Item {
     readonly property var snapshotResult: snapshotProvider && screen ? snapshotProvider.snapshot(screen) :
                                                                        null
     readonly property bool snapshotReady: snapshotResult !== null && snapshot.status === Image.Ready
+    property bool useSnapshot: true
     property bool started: false
     property bool exiting: false
     property real reveal: 0
@@ -28,6 +29,7 @@ Item {
             return;
         if (!wallpaper.ready && wallpaper.imageStatus !== Image.Error)
             return;
+        useSnapshot = snapshotReady;
         started = true;
         if (snapshotReady)
             entrance.start();
@@ -71,10 +73,10 @@ Item {
     Item {
         id: scene
         anchors.fill: parent
-        opacity: root.snapshotReady ? root.sceneOpacity : 1
+        opacity: root.started ? (root.useSnapshot ? root.sceneOpacity : 1) : 0
         layer.enabled: true
         layer.effect: MultiEffect {
-            maskEnabled: root.snapshotReady
+            maskEnabled: true
             maskSource: discMask
             maskThresholdMin: 0.5
             maskSpreadAtMin: 0.5

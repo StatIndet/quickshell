@@ -102,7 +102,7 @@ Scope {
     Timer {
         id: deadline
 
-        interval: 1500
+        interval: 1800
         repeat: false
         onTriggered: {
             const expiredRequest = root.requestId;

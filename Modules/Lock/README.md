@@ -8,9 +8,10 @@ Missing or invalid values use `default`; each lock session keeps its initial sel
 blurred wallpaper over a frozen pre-lock desktop frame, with authentication UI
 in `DefaultLockContent.qml`. Both styles share the session lock and PAM context.
 The new style uses Qt Quick MultiEffect for blur and the circular reveal mask.
-Both styles capture the desktop through a bounded `grim` subprocess before acquiring
-the session lock. PNG data is passed through stdout in memory, never saved to disk.
-This needs `grim`, `timeout`, and `base64` (the latter two from coreutils). Default keeps
+Both styles capture through a short-lived Quickshell `ScreencopyView` config before
+acquiring the session lock. No external screenshot program is required. The helper
+uses a private temporary directory in XDG_RUNTIME_DIR (TMPDIR fallback) for its PNG,
+returns base64 over stdout, and deletes the directory on exit. Default keeps
 the snapshot underneath its wallpaper layer for the top-left disc reveal and exit
 fade. The wallpaper itself is still sourced from the current wallpaper image.
 
@@ -24,7 +25,8 @@ Manual visual checks in a graphical session:
 - Verify entrance reveals the blurred wallpaper over the desktop snapshot without a black flash.
 
 If capture fails or times out, locking still proceeds. Default shows the wallpaper
-without a disc reveal or a fade to a missing snapshot. In-process ScreencopyView
-and its warmup are intentionally not used for locking.
+without a disc reveal or a fade to a missing snapshot. The main shell does not
+create a ScreencopyView: native capture stays on a separate Wayland connection
+until the helper exits. The helper is bounded by a 1.5-second timeout.
 
 No real session lock is started by development checks.

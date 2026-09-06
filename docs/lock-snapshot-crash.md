@@ -27,17 +27,23 @@ This was investigated without starting a session lock or restarting Quickshell.
 
 ## Local fix
 
-Lock capture uses a separate `grim` Wayland client, already used by the project's
-screenshot command. Its PNG is base64-encoded over stdout; no screenshot files
-are created. The helper propagates failures through `pipefail`, bounds grim to
-one second with a 200 ms kill grace, and the QML request has a 1500 ms deadline.
-Per-output requests run concurrently. Stale responses cannot populate a newer
-request. Completion is deferred so callers receive the request ID first.
+Lock capture now uses `scripts/capture/LockSnapshot.qml`, a standalone Quickshell
+config with a native ScreencopyView. The initial grim workaround was removed at
+the user's request. This adds no external screenshot dependency.
 
-The lock no longer creates ScreencopyView, screenshot host PanelWindows or a
-warmup view. This avoids the offending OutputTransformQuery path in this process;
-it does not patch the installed Qt or Quickshell binaries. Other users of
-ScreencopyView elsewhere may still encounter upstream defects.
+The short-lived helper keeps its native context alive until process exit, without
+clearing captureSource in frame callbacks. It isolates the known output-object
+bug from the main shell's long-lived Wayland connection, rather than patching the
+installed Qt/Quickshell binaries. The shell wrapper bounds it to 1.5 seconds plus
+200 ms kill grace; QML bounds the whole request to 1800 ms. Outputs run concurrently.
+A private temporary PNG bridges the processes and is removed by an EXIT trap.
+Stale responses cannot populate newer requests; completion is deferred until the
+caller has received the request ID.
+
+The reveal mask no longer depends on the asynchronously changing Image.Ready
+state. It stays enabled from construction, and the scene remains transparent
+until startup resolves. This prevents the full wallpaper/clock appearing before
+the disc animation. Successful versus fallback startup is latched for the session.
 
 If capture fails, authentication still starts. DefaultLock skips its masked
 reveal and missing-snapshot exit fade, showing its wallpaper directly. Missing
