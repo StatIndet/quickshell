@@ -18,7 +18,8 @@ Item {
     property bool presentationActive: false
     signal navigateRequested(string pageId)
 
-    onPresentationActiveChanged: SystemIdentityService.setUptimeConsumer("account-page", root.presentationActive)
+    onPresentationActiveChanged: SystemIdentityService.setUptimeConsumer("account-page",
+                                                                         root.presentationActive)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
     function closeChildWindows() {
@@ -26,27 +27,24 @@ Item {
         backupWindow.dismiss();
     }
 
-    readonly property bool wideLayout: width >= 880
+    readonly property real maximumContentWidth: 1024
+    readonly property bool wideLayout: pageColumn.width >= 848
     readonly property real cardGap: Appearance.spacing.medium
-    readonly property real columnWidth: wideLayout
-        ? (cardLayout.width - cardGap) / 2 : cardLayout.width
+    readonly property real columnWidth: wideLayout ? (cardLayout.width - cardGap) / 2 : cardLayout.width
     readonly property real wallpaperPreviewMaximumWidth: 152
-    readonly property real wallpaperPreviewWidth: Math.min(
-        wallpaperPreviewMaximumWidth,
-        Math.floor((personalizationCard.width
-            - Appearance.spacing.large * 2
-            - Appearance.spacing.medium * 2
-            - Appearance.spacing.small * 2) / 3))
-    readonly property real wallpaperPreviewHeight:
-        Math.round(wallpaperPreviewWidth / 1.25)
+    readonly property real wallpaperPreviewWidth: Math.min(wallpaperPreviewMaximumWidth, Math.floor((
+                                                                                                        personalizationCard.width
+                                                                                                        - Appearance.spacing.large
+                                                                                                        * 2 - Appearance.spacing.medium
+                                                                                                        * 2 - Appearance.spacing.small
+                                                                                                        * 2) / 3))
+    readonly property real wallpaperPreviewHeight: Math.round(wallpaperPreviewWidth / 1.25)
     readonly property var pairedBluetoothDevices: {
         const result = [];
         const seen = {};
-        const groups = [
-            BluetoothService.connectedDevices.filter(device =>
-                device.paired || device.bonded || device.trusted),
-            BluetoothService.pairedDevices
-        ];
+        const groups = [BluetoothService.connectedDevices.filter(device => device.paired || device.bonded
+                                                                           || device.trusted),
+                        BluetoothService.pairedDevices];
         for (const group of groups) {
             for (const device of group) {
                 const key = String(device.address || device.id || device.name || "");
@@ -93,17 +91,24 @@ Item {
         const type = String(remote.type || "").toLowerCase();
         const name = String(remote.name || "").toLowerCase();
         switch (type) {
-        case "drive": return "Google Drive";
-        case "onedrive": return "Microsoft OneDrive";
-        case "dropbox": return "Dropbox";
+        case "drive":
+            return "Google Drive";
+        case "onedrive":
+            return "Microsoft OneDrive";
+        case "dropbox":
+            return "Dropbox";
         case "s3":
-            return name.indexOf("r2") >= 0 || name.indexOf("cloudflare") >= 0
-                ? "Cloudflare R2" : "Amazon S3";
-        case "http": return "HTTP";
-        case "smb": return "SMB";
-        case "ftp": return "FTP";
-        case "sftp": return "SFTP";
-        case "webdav": return "WebDAV";
+            return name.indexOf("r2") >= 0 || name.indexOf("cloudflare") >= 0 ? "Cloudflare R2" : "Amazon S3";
+        case "http":
+            return "HTTP";
+        case "smb":
+            return "SMB";
+        case "ftp":
+            return "FTP";
+        case "sftp":
+            return "SFTP";
+        case "webdav":
+            return "WebDAV";
         default:
             return remote.type || qsTr("其他云存储");
         }
@@ -172,8 +177,8 @@ Item {
             return "";
         if (NetworkService.activeNetwork && NetworkService.activeNetwork.type === "wired")
             return qsTr("已连接，有线");
-        return NetworkService.activeWifi && NetworkService.activeWifi.isSecure
-            ? qsTr("已连接，安全") : qsTr("已连接，开放");
+        return NetworkService.activeWifi && NetworkService.activeWifi.isSecure ? qsTr("已连接，安全") : qsTr(
+                                                                                     "已连接，开放");
     }
 
     Component.onCompleted: {
@@ -190,9 +195,11 @@ Item {
         Column {
             id: pageColumn
 
-            x: Appearance.spacing.large
+            x: (parent.width - width) / 2
             y: Appearance.spacing.large
-            width: parent.width - Appearance.spacing.large * 2
+            width: Math.min(root.maximumContentWidth, Math.max(0, parent.width - Appearance.spacing.large
+                                                               * 2))
+
             spacing: Appearance.spacing.large
 
             AccountProfileHeader {
@@ -217,10 +224,9 @@ Item {
                 id: cardLayout
 
                 width: parent.width
-                height: root.wideLayout
-                    ? Math.max(bluetoothCard.y + bluetoothCard.height,
-                               personalizationCard.y + personalizationCard.height)
-                    : personalizationCard.y + personalizationCard.height
+                height: root.wideLayout ? Math.max(bluetoothCard.y + bluetoothCard.height,
+                                                   personalizationCard.y + personalizationCard.height) :
+                                          personalizationCard.y + personalizationCard.height
 
                 MaterialCard {
                     id: languageCard
@@ -228,8 +234,7 @@ Item {
                     width: root.columnWidth
                     title: qsTr("语言")
                     iconName: "translate"
-                    containerColor:
-                        Appearance.m3colors.m3surfaceContainerHigh
+                    containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -265,8 +270,7 @@ Item {
                     width: root.columnWidth
                     title: qsTr("蓝牙设备")
                     iconName: BluetoothService.enabled ? "bluetooth" : "bluetooth_disabled"
-                    containerColor:
-                        Appearance.m3colors.m3surfaceContainerHigh
+                    containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -291,11 +295,9 @@ Item {
                         id: pairedDeviceList
 
                         Layout.fillWidth: true
-                        Layout.preferredHeight: Math.min(
-                            pairedDeviceColumn.implicitHeight,
-                            56 * 3 + Appearance.spacing.small * 2)
-                        Layout.maximumHeight: 56 * 3
-                            + Appearance.spacing.small * 2
+                        Layout.preferredHeight: Math.min(pairedDeviceColumn.implicitHeight, 56 * 3
+                                                         + Appearance.spacing.small * 2)
+                        Layout.maximumHeight: 56 * 3 + Appearance.spacing.small * 2
                         contentWidth: width
                         contentHeight: pairedDeviceColumn.implicitHeight
                         clip: true
@@ -338,8 +340,7 @@ Item {
 
                                             Text {
                                                 Layout.fillWidth: true
-                                                text: deviceRow.modelData.name
-                                                    || qsTr("未命名设备")
+                                                text: deviceRow.modelData.name || qsTr("未命名设备")
                                                 color: Appearance.colors.colOnSurface
                                                 font.family: Fonts.ui
                                                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -348,8 +349,7 @@ Item {
 
                                             Text {
                                                 Layout.fillWidth: true
-                                                text: root.bluetoothState(
-                                                    deviceRow.modelData)
+                                                text: root.bluetoothState(deviceRow.modelData)
                                                 color: Appearance.colors.colOnSurfaceVariant
                                                 font.family: Fonts.ui
                                                 font.pixelSize: Typography.bodySmall.pixelSize
@@ -357,19 +357,14 @@ Item {
                                         }
 
                                         ActionButton {
-                                            text: root.bluetoothActionText(
-                                                deviceRow.modelData)
-                                            enabled: BluetoothService.enabled
-                                                && !BluetoothService.busy
-                                            onClicked: root.bluetoothAction(
-                                                deviceRow.modelData)
+                                            text: root.bluetoothActionText(deviceRow.modelData)
+                                            enabled: BluetoothService.enabled && !BluetoothService.busy
+                                            onClicked: root.bluetoothAction(deviceRow.modelData)
                                         }
 
                                         Item {
-                                            Layout.preferredWidth:
-                                                Metrics.controlHeightM
-                                            Layout.preferredHeight:
-                                                Metrics.controlHeightM
+                                            Layout.preferredWidth: Metrics.controlHeightM
+                                            Layout.preferredHeight: Metrics.controlHeightM
 
                                             IconButton {
                                                 id: moreButton
@@ -378,12 +373,9 @@ Item {
                                                 enabled: !BluetoothService.busy
                                                 iconName: "more_horiz"
                                                 iconSize: 22
-                                                iconColor:
-                                                    Appearance.colors.colOnSurfaceVariant
-                                                accessibleName:
-                                                    qsTr("%1 的更多选项").arg(
-                                                        deviceRow.modelData.name
-                                                            || qsTr("未命名设备"))
+                                                iconColor: Appearance.colors.colOnSurfaceVariant
+                                                accessibleName: qsTr("%1 的更多选项").arg(deviceRow.modelData.name
+                                                                                     || qsTr("未命名设备"))
                                                 onClicked: forgetMenu.open()
                                             }
 
@@ -394,9 +386,8 @@ Item {
 
                                                 MenuItem {
                                                     text: qsTr("遗忘设备")
-                                                    onTriggered:
-                                                        BluetoothService.forgetDevice(
-                                                            deviceRow.modelData)
+                                                    onTriggered: BluetoothService.forgetDevice(
+                                                                     deviceRow.modelData)
                                                 }
                                             }
                                         }
@@ -408,8 +399,7 @@ Item {
 
                     Text {
                         Layout.fillWidth: true
-                        visible: BluetoothService.enabled
-                            && root.pairedBluetoothDevices.length === 0
+                        visible: BluetoothService.enabled && root.pairedBluetoothDevices.length === 0
                         text: qsTr("暂无已配对设备")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
@@ -433,18 +423,15 @@ Item {
                     width: root.columnWidth
                     title: qsTr("云存储")
                     iconName: "cloud"
-                    containerColor:
-                        Appearance.m3colors.m3surfaceContainerHigh
+                    containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: Appearance.spacing.small
 
                         CloudProviderIcon {
-                            remoteName: RcloneService.selectedRemote
-                                ? RcloneService.selectedRemote.name : ""
-                            remoteType: RcloneService.selectedRemote
-                                ? RcloneService.selectedRemote.type : ""
+                            remoteName: RcloneService.selectedRemote ? RcloneService.selectedRemote.name : ""
+                            remoteType: RcloneService.selectedRemote ? RcloneService.selectedRemote.type : ""
                             iconSize: 34
                         }
 
@@ -464,8 +451,8 @@ Item {
                             iconSize: 22
                             iconColor: Appearance.colors.colOnSurfaceVariant
                             accessibleName: qsTr("刷新云存储信息")
-                            enabled: RcloneService.selectedRemote !== null
-                                && RcloneService.quotaState !== "loading"
+                            enabled: RcloneService.selectedRemote !== null && RcloneService.quotaState
+                                     !== "loading"
                             onClicked: RcloneService.refreshCard()
                         }
                     }
@@ -476,14 +463,15 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: RcloneService.quotaAvailable
-                                ? qsTr("容量：已使用 %1，共 %2（%3%）")
-                                    .arg(root.formatBytes(RcloneService.usedBytes))
-                                    .arg(root.formatBytes(RcloneService.totalBytes))
-                                    .arg(Math.round(RcloneService.usageRatio * 100))
-                                : RcloneService.quotaState === "loading"
-                                  ? qsTr("正在读取容量…")
-                                  : RcloneService.quotaMessage
+                            text: RcloneService.quotaAvailable ? qsTr("容量：已使用 %1，共 %2（%3%）").arg(
+                                                                     root.formatBytes(
+                                                                         RcloneService.usedBytes)).arg(
+                                                                     root.formatBytes(
+                                                                         RcloneService.totalBytes)).arg(
+                                                                     Math.round(RcloneService.usageRatio
+                                                                                * 100)) : RcloneService.quotaState
+                                                                 === "loading" ? qsTr("正在读取容量…") :
+                                                                                 RcloneService.quotaMessage
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodyMedium.pixelSize
@@ -505,9 +493,8 @@ Item {
                         Text {
                             Layout.fillWidth: true
                             text: RcloneService.backupMessage
-                            color: RcloneService.backupState === "error"
-                                ? Appearance.colors.colError
-                                : Appearance.colors.colOnSurfaceVariant
+                            color: RcloneService.backupState === "error" ? Appearance.colors.colError :
+                                                                           Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodySmall.pixelSize
                             wrapMode: Text.Wrap
@@ -527,21 +514,26 @@ Item {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: RcloneService.backupState === "stopping"
-                                    ? qsTr("正在停止备份…")
-                                    : RcloneService.backupPhase === "transferring"
-                                      && RcloneService.backupProgress >= 0
-                                        ? qsTr("%1：当前文件夹 %2%")
-                                            .arg(RcloneService.backupCurrentFolderName)
-                                            .arg(Math.round(RcloneService.backupProgress * 100))
-                                        : RcloneService.backupPhase === "checking"
-                                            ? RcloneService.backupChecks > 0
-                                                ? qsTr("正在检查文件…")
-                                                : RcloneService.backupListed > 0
-                                                    ? qsTr("已扫描 %1 个项目")
-                                                        .arg(RcloneService.backupListed)
-                                                    : qsTr("正在扫描文件…")
-                                            : qsTr("正在准备备份")
+                                text: RcloneService.backupState === "stopping" ? qsTr("正在停止备份…") :
+                                                                                 RcloneService.backupPhase
+                                                                                 === "transferring"
+                                                                                 && RcloneService.backupProgress
+                                                                                 >= 0 ? qsTr(
+                                                                                            "%1：当前文件夹 %2%").arg(
+                                                                                            RcloneService.backupCurrentFolderName).arg(
+                                                                                            Math.round(
+                                                                                                RcloneService.backupProgress
+                                                                                                * 100)) : RcloneService.backupPhase
+                                                                                        === "checking"
+                                                                                        ? RcloneService.backupChecks
+                                                                                          > 0 ? qsTr(
+                                                                                                    "正在检查文件…") :
+                                                                                                RcloneService.backupListed
+                                                                                                > 0 ? qsTr(
+                                                                                                          "已扫描 %1 个项目").arg(
+                                                                                                          RcloneService.backupListed) :
+                                                                                                      qsTr("正在扫描文件…") :
+                                                                                                      qsTr("正在准备备份")
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Typography.labelMedium.family
                                 font.pixelSize: Typography.labelMedium.pixelSize
@@ -558,8 +550,8 @@ Item {
                             Layout.fillWidth: true
                             text: qsTr("电脑备份")
                             iconName: "backup"
-                            enabled: RcloneService.selectedRemote !== null
-                                && !RcloneService.isReadOnly(RcloneService.selectedRemote)
+                            enabled: RcloneService.selectedRemote !== null && !RcloneService.isReadOnly(
+                                         RcloneService.selectedRemote)
                             onClicked: backupWindow.showWindow()
                         }
 
@@ -581,8 +573,7 @@ Item {
                     width: root.columnWidth
                     title: qsTr("个性化")
                     iconName: "palette"
-                    containerColor:
-                        Appearance.m3colors.m3surfaceContainerHigh
+                    containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
                     GridLayout {
                         Layout.fillWidth: true
@@ -607,31 +598,28 @@ Item {
                                 buttonRadius: Appearance.rounding.small
                                 containerColor: Appearance.colors.colSurfaceContainer
                                 hoverStateLayerOpacity: 0
-                                pressedStateLayerOpacity:
-                                    Appearance.interaction.pressedStateLayerOpacity
+                                pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
                                 rippleColor: Appearance.colors.colOnSurface
-                                Accessible.name: qsTr("使用壁纸 %1").arg(
-                                    WallpaperService.basename(modelData))
+                                Accessible.name: qsTr("使用壁纸 %1").arg(WallpaperService.basename(modelData))
                                 onClicked: WallpaperService.setWallpaper(modelData)
 
                                 backgroundContent: Rectangle {
                                     anchors.fill: parent
                                     radius: Appearance.rounding.small
                                     color: WallpaperService.isColorSource(wallpaperChoice.modelData)
-                                        ? wallpaperChoice.modelData
-                                        : Appearance.colors.colSurfaceContainer
+                                           ? wallpaperChoice.modelData : Appearance.colors.colSurfaceContainer
 
                                     Image {
                                         id: wallpaperImage
 
                                         anchors.fill: parent
                                         source: WallpaperService.isColorSource(wallpaperChoice.modelData)
-                                            ? "" : Paths.fileUrl(wallpaperChoice.modelData)
-                                        sourceSize: Qt.size(
-                                            Math.max(1, Math.ceil(
-                                                width * Screen.devicePixelRatio * 2)),
-                                            Math.max(1, Math.ceil(
-                                                height * Screen.devicePixelRatio * 2)))
+                                                ? "" : Paths.fileUrl(wallpaperChoice.modelData)
+                                        sourceSize: Qt.size(Math.max(1, Math.ceil(width
+                                                                                  * Screen.devicePixelRatio
+                                                                                  * 2)), Math.max(1, Math.ceil(
+                                                                                                      height * Screen.devicePixelRatio
+                                                                                                      * 2)))
                                         fillMode: Image.PreserveAspectCrop
                                         asynchronous: true
                                         cache: true
@@ -656,7 +644,6 @@ Item {
                                         visible: false
                                         layer.enabled: true
                                     }
-
                                 }
 
                                 contentItem: Item {}
@@ -700,10 +687,13 @@ Item {
 
                         SearchSelectMenuField {
                             Layout.preferredWidth: 142
-                            options: [
-                                ({ "label": qsTr("浅色"), "value": "light" }),
-                                ({ "label": qsTr("深色"), "value": "dark" })
-                            ]
+                            options: [({
+                                           "label": qsTr("浅色"),
+                                           "value": "light"
+                                       }), ({
+                                                "label": qsTr("深色"),
+                                                "value": "dark"
+                                            })]
                             value: PersonalizationConfig.themeMode
                             placeholder: qsTr("选择色彩模式")
                             closeOnAccept: true
@@ -753,5 +743,4 @@ Item {
 
         parentModal: root.parentModal
     }
-
 }
