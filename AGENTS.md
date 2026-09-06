@@ -64,16 +64,16 @@ QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
 `-I` 传给 `qmllint`。如果 offscreen 环境不能生成有效 VFS，脚本必须失败并报告人工
 恢复命令，不得伪造 lint 成功。
 
-```bash
-scripts/dev/format-qml.sh
-scripts/dev/format-qml.sh --check
-scripts/dev/lint-qml.sh
-```
+日常只用 `scripts/dev/check.sh` 作为验证入口（范围见 Validation），不再先后重复执行
+format-check、lint 和完整 check。需要格式化时先运行 `scripts/dev/format-qml.sh`，
+它只写当前改动的 QML；随后的 check 检查结果。
 
-`.qmlformat.ini` 使用 4 空格、Unix newline、禁止 tab，并关闭激进 import/order
-normalize。普通 format/check 只处理当前改动的 QML，避免 legacy tree 被批量重写；只有
-明确要迁移整棵树时才使用 `scripts/dev/format-qml.sh --all`。除非确有语义需要，不要
-借格式化顺手重排大范围属性或对象。
+格式化与 lint 自动优先使用 Qt 6 工具（Arch: `/usr/lib/qt6/bin/`），支持
+`QMLFORMAT` / `QMLLINT` 显式覆盖；不得误用 PATH 中的 Qt 5 工具。
+`.qmlformat.ini` 使用 4 空格、Unix newline，关闭 import/order normalize。
+`format-qml.sh --check` 和 `lint-qml.sh` 默认只处理 HEAD 以来 staged、unstaged、
+未跟踪且未忽略的 QML。只有明确迁移格式时用 `format-qml.sh --all`，全树 lint 用
+`lint-qml.sh --all`。不借格式化重排无关文件。
 
 ## UI copy and information density
 
@@ -143,17 +143,35 @@ Loader、id、Item child、函数名、文件布局、当前 object hierarchy �
 
 ## Validation
 
-Codex 应优先运行已有质量入口，而不是为当前任务临时发明测试：
+每轮按改动风险选择一次必要验证，不把下面各项当成串行必跑清单：
 
-```bash
-git diff --check
-scripts/dev/format-qml.sh --check
-scripts/dev/lint-qml.sh
-scripts/dev/check.sh
-```
+| 改动 | 必要验证 |
+| --- | --- |
+| 文档、文案资源、静态素材 | `scripts/dev/check.sh`（通常只有 diff 空白检查） |
+| QML UI | 修改文件格式化后 `scripts/dev/check.sh`：仅改动 QML 的格式与 lint；按需要人工视觉检查 |
+| Shell / Python | `scripts/dev/check.sh`：改动文件语法与 ShellCheck；匹配的现有脚本集成测试 |
+| `core/`、CMake、`tests/qml/` | `scripts/dev/check.sh`：另加 configure/build 和现有 CTest |
+| QML/JS 纯状态或数学逻辑 | `check.sh` 后运行对应现有 QtTest；若涉及 native 接口或影响范围不明，用 `check.sh --native` 一次替代 |
+| 跨模块接口、共享 QML 类型/import、依赖升级或明确要求全面检查 | `scripts/dev/check.sh --full` |
 
-`check.sh` 还会运行 first-party C++ clang-format check、shell syntax/shellcheck、
-Python compileall、CMake configure/build 和 CTest。它不得 install、sudo、修改系统或
-启动持久后台服务。默认不安装、不重启进程、不提交；只有用户明确要求时才执行这些
-外部操作。不得编辑 `build/`、用户 Niri 配置、系统 Qt import 根或已安装文件来修复
-源码。
+`--native` 在改动检查之外强制构建与 CTest。`--full` 检查全树 first-party C++/Shell/
+Python 和 QML lint，构建并运行 CTest；QML 格式仍仅检查改动文件，legacy 全树格式审计
+是单独的 `format-qml.sh --check-all`，不作为普通任务 gate。
+脚本按文件路径选择检查，不能替代语义判断：共享函数、配置、fixture 或删除文件影响到
+未自动选中的消费者时，补跑对应现有测试；不要重复运行已覆盖的测试。
+原生测试集合目前很小，触发 native 时运行整组；普通 UI 改动不触发整组 CTest。
+
+通过后停止。只有新修改、具体失败或尚未验证的风险才补跑受影响阶段；不要在末尾再跑
+一遍全量流程。没有相关 tests 就明确说明，不新增实现形状测试或临时 source audit。
+全量检查仅用于上表场景，不因为“更保险”而每轮使用。
+
+失败先区分代码失败与工具/环境阻断。工具缺失、版本不兼容、VFS 无效等同一原因只诊断
+一次，报告原因、未完成项与人工恢复命令；本任务未涉及工具链时不反复重跑或顺手迁移。
+`check.sh` 成功输出短摘要，失败保留完整日志并仅输出末尾 60 行；先阅读对应日志片段，
+不把数千行诊断灌入对话。QML lint 的既有 warning 仍为 advisory，摘要必须报告 warning
+数量与日志位置，不能称为零警告通过；语法/import 等工具返回的非零退出仍阻断。
+
+依赖与基线诊断见 `docs/development-checks.md`。检查不得 install、sudo、修改系统或启动
+持久后台服务。默认不安装、不重启进程、不提交；只有用户明确要求时才执行这些外部操作。
+不得手改 `build/`、用户 Niri 配置、系统 Qt import 根或已安装文件来修复源码；正常 CMake
+生成构建产物除外。

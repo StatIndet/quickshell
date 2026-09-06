@@ -13,41 +13,27 @@ qml_build_dir=${CLAVIS_QML_BUILD_DIR:-${build_root}/qml}
 qmlls_config=${repo_root}/.qmlls.ini
 tooling_timeout=${CLAVIS_QML_TOOLING_TIMEOUT:-5}
 
+scope=changed
+case "${1:-}" in
+    '') ;;
+    --all) scope=all ;;
+    -h|--help) printf 'Usage: %s [--all]\n' "$0"; exit 0 ;;
+    *) printf 'error: unknown option: %s\n' "$1" >&2; exit 2 ;;
+esac
+[[ $# -le 1 ]] || exit 2
+cd "${repo_root}"
+# shellcheck source=scripts/dev/files.sh
+source "${script_dir}/files.sh"
+mapfile -d '' -t qml_files < <(clavis_qml_files "${scope}")
+if [[ ${#qml_files[@]} -eq 0 ]]; then
+    printf 'lint-qml: no QML files in scope\n'
+    exit 0
+fi
+qmllint_bin=$(clavis_qt_tool qmllint "${QMLLINT:-}")
 command -v qs >/dev/null 2>&1 || {
-    printf 'error: Quickshell qs is required to generate QML tooling data\n' >&2
+    printf 'error: Quickshell qs is required for QML tooling\n' >&2
     exit 127
 }
-command -v cmake >/dev/null 2>&1 || {
-    printf 'error: cmake is required when the native QML build is missing\n' >&2
-    exit 127
-}
-
-resolve_qmllint() {
-    if [[ -n "${QMLLINT:-}" ]]; then
-        printf '%s\n' "${QMLLINT}"
-        return 0
-    fi
-
-    local candidate
-    for candidate in /usr/lib/qt6/bin/qmllint qmllint6 qmllint-qt6 qmllint; do
-        if [[ "${candidate}" == /* && -x "${candidate}" ]] \
-            || command -v "${candidate}" >/dev/null 2>&1; then
-            printf '%s\n' "${candidate}"
-            return 0
-        fi
-    done
-    return 1
-}
-
-if ! qmllint_bin=$(resolve_qmllint); then
-    printf 'error: qmllint is required (set QMLLINT to a Qt 6 qmllint binary)\n' >&2
-    exit 127
-fi
-qmllint_version=$("${qmllint_bin}" --version 2>/dev/null || true)
-if [[ "${qmllint_version}" != *" 6."* ]]; then
-    printf 'error: Qt 6 qmllint is required; found %s\n' "${qmllint_version:-unknown}" >&2
-    exit 1
-fi
 
 native_build_ready() {
     [[ -f "${qml_build_dir}/Clavis/Weather/qmldir" ]] \
@@ -109,7 +95,7 @@ refresh_tooling() {
     QT_QPA_PLATFORM="${CLAVIS_QML_TOOLING_PLATFORM:-offscreen}" \
     QML2_IMPORT_PATH="${qml_build_dir}${QML2_IMPORT_PATH:+:${QML2_IMPORT_PATH}}" \
     QML_IMPORT_PATH="${qml_build_dir}${QML_IMPORT_PATH:+:${QML_IMPORT_PATH}}" \
-        timeout --signal=TERM "${tooling_timeout}s" qs -p "${repo_root}" -n \
+        timeout --kill-after=2s --signal=TERM "${tooling_timeout}s" qs -p "${repo_root}" -n \
         >"${log_file}" 2>&1
     qs_status=$?
     set -e
@@ -117,10 +103,10 @@ refresh_tooling() {
     if ! tooling_config_valid; then
         printf 'error: Quickshell did not produce a valid %s\n' "${qmlls_config}" >&2
         printf 'Quickshell output:\n' >&2
-        sed -n '1,240p' "${log_file}" >&2
-        rm -f -- "${log_file}"
-        printf 'Try running qs -p %q in a graphical session, then rerun this script.\n' \
-            "${repo_root}" >&2
+        sed -n '1,60p' "${log_file}" >&2
+        printf 'Full Quickshell log: %s\n' "${log_file}" >&2
+        printf 'In a graphical session run: QML_IMPORT_PATH=%q qs -p %q\nThen rerun this script.\n' \
+            "${qml_build_dir}${QML_IMPORT_PATH:+:${QML_IMPORT_PATH}}" "${repo_root}" >&2
         return 1
     fi
 
@@ -154,21 +140,6 @@ IFS=':' read -r -a import_paths <<< "${import_paths_raw}"
 for path in "${import_paths[@]}"; do
     [[ -n "${path}" ]] && qml_import_args+=(-I "${path}")
 done
-
-mapfile -d '' -t qml_files < <(
-    find "${repo_root}" \
-        \( -path "${repo_root}/build" \
-        -o -path "${repo_root}/generated" \
-        -o -path "${repo_root}/third-party" \
-        -o -path "${repo_root}/vendor" \) -prune \
-        -o -type f -name '*.qml' -print0 \
-        | sort -z
-)
-
-if [[ ${#qml_files[@]} -eq 0 ]]; then
-    printf 'lint-qml: no QML files found\n'
-    exit 0
-fi
 
 printf 'lint-qml: checking %d first-party QML files\n' "${#qml_files[@]}"
 "${qmllint_bin}" "${qml_import_args[@]}" "${qml_files[@]}"

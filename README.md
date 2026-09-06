@@ -125,18 +125,20 @@ The settings center can generate themes for supported applications including bto
 ## Development checks
 
 ```bash
-scripts/dev/format-qml.sh --check
-scripts/dev/lint-qml.sh
-scripts/dev/check.sh
+scripts/dev/check.sh          # changed files; native build/tests only when affected
+scripts/dev/check.sh --native # force native build and CTest
+scripts/dev/check.sh --full   # explicit whole-tree lint, build and CTest
 ```
 
-`lint-qml.sh` refreshes the ignored `.qmlls.ini` tooling data when needed and uses the
-Quickshell VFS `buildDir` plus its `importPaths`. The quality gate also checks C++ format,
-shell syntax/lint, Python syntax, compiler warnings, the native build and CTest. Install the
-Qt/Quickshell tooling and `clang-format`/`shellcheck` in the development environment before
-running the complete gate. `format-qml.sh --check` keeps the normal check limited to changed
-QML files so legacy QML is not mass-rewritten; use `format-qml.sh --all` only for an explicit
-whole-tree formatter migration.
+Use one appropriate command, not all three. When editing QML, run
+`scripts/dev/format-qml.sh` before checking. Qt 6 tools are selected explicitly;
+normal formatting and linting cover changed files only. Shared QML interfaces may
+need `--full` to check their consumers. A native build is also needed on a fresh
+checkout before QML tooling can resolve native imports.
+
+See [development checks](docs/development-checks.md) for scope, dependencies,
+known environment failures and diagnostic logs. Whole-tree QML formatting is an
+explicit migration, never part of routine checks.
 
 ## Acknowledgements
 

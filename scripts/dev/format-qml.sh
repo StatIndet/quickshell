@@ -31,57 +31,22 @@ if [[ $# -gt 1 ]]; then
     exit 2
 fi
 
-command -v qmlformat >/dev/null 2>&1 || {
-    printf 'error: qmlformat is required\n' >&2
-    exit 127
-}
-
-mapfile -d '' -t all_qml_files < <(
-    find "${repo_root}" \
-        \( -path "${repo_root}/build" \
-        -o -path "${repo_root}/generated" \
-        -o -path "${repo_root}/third-party" \
-        -o -path "${repo_root}/vendor" \) -prune \
-        -o -type f -name '*.qml' -print0 \
-        | sort -z
-)
-
-if [[ "${scope}" == all ]]; then
-    qml_files=("${all_qml_files[@]}")
-else
-    mapfile -d '' -t qml_files < <(
-        {
-            git -C "${repo_root}" diff --name-only -z HEAD -- '*.qml'
-            git -C "${repo_root}" ls-files --others --exclude-standard -z -- '*.qml'
-        } | sort -zu | while IFS= read -r -d '' relative; do
-            file="${repo_root}/${relative}"
-            [[ -f "${file}" ]] && printf '%s\0' "${file}"
-        done
-    )
-fi
-
+cd "${repo_root}"
+# shellcheck source=scripts/dev/files.sh
+source "${script_dir}/files.sh"
+mapfile -d '' -t qml_files < <(clavis_qml_files "${scope}")
 if [[ ${#qml_files[@]} -eq 0 ]]; then
-    printf 'format-qml: no changed QML files (use --all to format the tree)\n'
-else
-    if [[ "${mode}" == format ]]; then
-        for file in "${qml_files[@]}"; do
-            qmlformat --no-sort --inplace "${file}"
-        done
-        printf 'format-qml: formatted %d changed files\n' "${#qml_files[@]}"
-    fi
-fi
-
-if [[ "${mode}" == format ]]; then
+    printf 'format-qml: no QML files in scope\n'
     exit 0
 fi
-
-if rg -n --no-heading --fixed-strings $'\t' "${all_qml_files[@]}"; then
-    printf 'error: QML files contain tabs; use four spaces\n' >&2
-    exit 1
-fi
-if rg -n --no-heading $'\r$' "${all_qml_files[@]}"; then
-    printf 'error: QML files contain CRLF line endings; use Unix newlines\n' >&2
-    exit 1
+qmlformat_bin=$(clavis_qt_tool qmlformat "${QMLFORMAT:-}")
+printf 'format-qml: %s (%d files)\n' "$("${qmlformat_bin}" --version)" "${#qml_files[@]}"
+# Qt 6 keeps import/property order unless normalization/sorting is requested.
+if [[ "${mode}" == format ]]; then
+    for file in "${qml_files[@]}"; do
+        "${qmlformat_bin}" --inplace "${file}"
+    done
+    exit 0
 fi
 
 temporary_dir=$(mktemp -d "${TMPDIR:-/tmp}/clavis-qmlformat.XXXXXX")
@@ -95,7 +60,7 @@ for file in "${qml_files[@]}"; do
     relative=${file#"${repo_root}/"}
     expected="${temporary_dir}/${relative}"
     mkdir -p -- "$(dirname -- "${expected}")"
-    if ! qmlformat --no-sort "${file}" >"${expected}"; then
+    if ! "${qmlformat_bin}" "${file}" >"${expected}"; then
         printf 'format-qml: unable to format %s\n' "${relative}" >&2
         failed=1
         continue
