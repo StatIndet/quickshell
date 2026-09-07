@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import Clavis.Keyboard
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -86,6 +85,12 @@ Item {
             root.context.authRevealed = true;
             root.forceAuthFocus();
         }
+    }
+
+    DefaultLockStatus {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 24
     }
 
     Column {
@@ -405,20 +410,6 @@ Item {
         busy: root.busy && input.text.length > 0
         spinnerColor: "#F5F7FA"
         opacity: root.authOpacity
-    }
-
-    Text {
-        anchors.top: authRow.bottom
-        anchors.topMargin: 40 * root.uiScale
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: root.contentWidth
-        opacity: root.authOpacity
-        text: KeyboardLockState.capsLock ? qsTr("大写锁定已开启") : ""
-        horizontalAlignment: Text.AlignHCenter
-        color: "white"
-        font.family: Fonts.ui
-        font.pixelSize: 18 * root.uiScale
-        wrapMode: Text.WordWrap
     }
 
     Connections {
