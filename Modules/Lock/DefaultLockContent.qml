@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Effects
 import Clavis.Keyboard
 import qs.Common
@@ -13,12 +12,27 @@ Item {
     property date now: new Date()
     readonly property bool authenticating: context.authRevealed
     readonly property bool busy: context.unlockInProgress
-    readonly property real uiScale: Math.min(1, Math.max(0.45, (width - 48) / 880), Math.max(0.45, height
-                                                                                             / 800))
-    readonly property real contentWidth: 880 * uiScale
+    readonly property real uiScale: Math.min(1, (width - 48) / 360, height / 720)
+    readonly property real contentWidth: 360 * uiScale
     readonly property real avatarSize: 240 * uiScale
-    readonly property real columnGap: 40 * uiScale
     readonly property real fieldHeight: 64 * uiScale
+    property real clockScale: authenticating ? 1.08 : 1
+    property real authScale: authenticating ? 1 : 0.94
+
+    Behavior on clockScale {
+        NumberAnimation {
+            duration: 380
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: [0.4, 0, 0.2, 1, 1, 1]
+        }
+    }
+    Behavior on authScale {
+        NumberAnimation {
+            duration: 460
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: [0.16, 1, 0.3, 1, 1, 1]
+        }
+    }
     property real clockOpacity: authenticating ? 0 : 1
     property real clockOffset: authenticating ? -80 * uiScale : 0
     property real authOpacity: authenticating ? 1 : 0
@@ -80,6 +94,7 @@ Item {
         width: parent.width - 48
         spacing: 12
         opacity: root.clockOpacity
+        scale: root.clockScale
 
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
@@ -119,21 +134,21 @@ Item {
         }
     }
 
-    Row {
+    Column {
         id: authRow
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -24 * root.uiScale + root.authOffset
         width: root.contentWidth
-        height: root.avatarSize
-        spacing: root.columnGap
+        spacing: 24 * root.uiScale
         opacity: root.authOpacity
+        scale: root.authScale
 
         Rectangle {
             width: root.avatarSize
             height: width
             radius: width / 2
             color: Appearance.colors.colSecondaryContainer
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
 
             Text {
                 anchors.centerIn: parent
@@ -165,36 +180,37 @@ Item {
         }
 
         Column {
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - root.avatarSize - parent.spacing
-            spacing: 24 * root.uiScale
+            width: parent.width
+            spacing: 18 * root.uiScale
 
             Text {
                 width: parent.width
-                height: 88 * root.uiScale
+                height: 52 * root.uiScale
                 verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
                 text: SystemIdentityService.accountName
                 color: "white"
                 font.family: Fonts.ui
-                font.pixelSize: 64 * root.uiScale
+                font.pixelSize: 40 * root.uiScale
                 font.weight: Font.Medium
                 elide: Text.ElideRight
             }
 
             Rectangle {
                 id: field
-                width: Math.min(parent.width, 400 * root.uiScale)
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: 280 * root.uiScale
                 height: root.fieldHeight
                 radius: height / 2
                 color: Appearance.colors.colSurfaceContainerHigh
-                border.width: root.context.showFailure ? 2 : 0
-                border.color: Appearance.colors.colError
+                border.width: 2 * root.uiScale
+                border.color: Appearance.colors.colOutline
 
                 TextInput {
                     id: input
                     anchors.fill: parent
                     anchors.leftMargin: 24 * root.uiScale
-                    anchors.rightMargin: root.fieldHeight
+                    anchors.rightMargin: 24 * root.uiScale
                     color: "transparent"
                     selectionColor: "transparent"
                     selectedTextColor: "transparent"
@@ -206,6 +222,7 @@ Item {
                     cursorVisible: false
                     maximumLength: 4096
                     Accessible.name: qsTr("密码")
+                    Accessible.description: root.context.showFailure ? qsTr("密码错误") : ""
                     onCursorVisibleChanged: {
                         if (cursorVisible)
                             cursorVisible = false;
@@ -221,7 +238,6 @@ Item {
                             dots.append({});
                         while (dots.count > text.length)
                             dots.remove(dots.count - 1);
-                        dotsView.positionViewAtEnd();
                     }
                     onAccepted: {
                         root.context.authRevealed = true;
@@ -238,10 +254,8 @@ Item {
                 }
 
                 Text {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 24 * root.uiScale
-                    anchors.verticalCenter: parent.verticalCenter
-                    visible: input.text.length === 0
+                    anchors.centerIn: parent
+                    visible: input.text.length === 0 && !root.busy
                     text: qsTr("密码")
                     font.family: Fonts.ui
                     font.pixelSize: 20 * root.uiScale
@@ -254,10 +268,12 @@ Item {
 
                 ListView {
                     id: dotsView
-                    anchors.left: parent.left
-                    anchors.right: submit.left
-                    anchors.margins: 24 * root.uiScale
-                    anchors.verticalCenter: parent.verticalCenter
+                    readonly property real naturalWidth: count > 0 ? count * (26 * root.uiScale) - spacing + 8
+                                                                     * root.uiScale : 0
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width - 48 * root.uiScale, naturalWidth)
+                    leftMargin: 4 * root.uiScale
+                    rightMargin: 4 * root.uiScale
                     height: 28 * root.uiScale
                     orientation: ListView.Horizontal
                     interactive: false
@@ -265,6 +281,14 @@ Item {
                     spacing: 10 * root.uiScale
                     model: dots
                     onCountChanged: Qt.callLater(positionViewAtEnd)
+                    onWidthChanged: positionViewAtEnd()
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 180
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+                        }
+                    }
 
                     delegate: Item {
                         id: dot
@@ -317,57 +341,71 @@ Item {
                     }
                 }
 
-                Button {
-                    id: submit
-                    anchors.right: parent.right
-                    anchors.rightMargin: 8 * root.uiScale
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 48 * root.uiScale
-                    height: width
-                    focusPolicy: Qt.NoFocus
-                    enabled: !root.busy && input.text.length > 0
-                    Accessible.name: qsTr("解锁")
-                    onClicked: root.context.tryUnlock()
-                    background: Rectangle {
-                        radius: width / 2
-                        color: Appearance.colors.colPrimary
-                        opacity: submit.down ? 0.7 : 1
+                Rectangle {
+                    id: errorBorder
+                    anchors.fill: parent
+                    radius: field.radius
+                    color: "transparent"
+                    border.width: 3 * root.uiScale
+                    border.color: Appearance.colors.colError
+                    opacity: 0
+
+                    SequentialAnimation {
+                        id: failureFlash
+                        loops: 2
+                        NumberAnimation {
+                            target: errorBorder
+                            property: "opacity"
+                            from: 0
+                            to: 1
+                            duration: 120
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+                        }
+                        PauseAnimation {
+                            duration: 80
+                        }
+                        NumberAnimation {
+                            target: errorBorder
+                            property: "opacity"
+                            to: 0
+                            duration: 180
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: [0.3, 0, 1, 1, 1, 1]
+                        }
+                        PauseAnimation {
+                            duration: 80
+                        }
                     }
-                    contentItem: Text {
-                        text: root.busy ? "" : "arrow_forward"
-                        font.family: Fonts.materialSymbolsRounded
-                        font.pixelSize: 26 * root.uiScale
-                        color: Appearance.colors.colOnPrimary
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    InlineBusyIndicator {
-                        anchors.centerIn: parent
-                        busy: root.busy
-                        spinnerColor: Appearance.colors.colOnPrimary
-                    }
-                    StyledToolTip {
-                        text: qsTr("解锁")
-                        extraVisibleCondition: root.authenticating && submit.hovered
-                    }
+                }
+
+                InlineBusyIndicator {
+                    anchors.centerIn: parent
+                    busy: root.busy && input.text.length === 0
                 }
             }
         }
+    }
 
-        // Status belongs below the aligned avatar/form block, outside Row layout.
+    InlineBusyIndicator {
+        anchors.top: authRow.bottom
+        anchors.topMargin: 12 * root.uiScale
+        anchors.horizontalCenter: parent.horizontalCenter
+        busy: root.busy && input.text.length > 0
+        opacity: root.authOpacity
     }
 
     Text {
         anchors.top: authRow.bottom
-        anchors.topMargin: 16 * root.uiScale
-        x: authRow.x + root.avatarSize + root.columnGap
-        width: root.contentWidth - root.avatarSize - root.columnGap
+        anchors.topMargin: 40 * root.uiScale
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: root.contentWidth
         opacity: root.authOpacity
-        text: root.context.showFailure ? qsTr("密码错误，请重试") : (KeyboardLockState.capsLock ? qsTr("大写锁定已开启") :
-                                                                                          "")
-        color: root.context.showFailure ? Appearance.colors.colError : "white"
+        text: KeyboardLockState.capsLock ? qsTr("大写锁定已开启") : ""
+        horizontalAlignment: Text.AlignHCenter
+        color: "white"
         font.family: Fonts.ui
-        font.pixelSize: 20 * root.uiScale
+        font.pixelSize: 18 * root.uiScale
         wrapMode: Text.WordWrap
     }
 
@@ -378,6 +416,7 @@ Item {
                 input.text = root.context.currentText;
         }
         function onUnlockFailed() {
+            failureFlash.restart();
             root.forceAuthFocus();
         }
     }
