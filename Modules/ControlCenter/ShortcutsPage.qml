@@ -181,8 +181,8 @@ StyledFlickable {
 
     ColumnLayout {
         id: column
-        width: Math.max(0, root.width - Metrics.pageMargin * 2)
-        x: Metrics.pageMargin
+        width: Math.min(640, Math.max(0, root.width - Metrics.pageMargin * 2))
+        x: Math.max(Metrics.pageMargin, (root.width - width) / 2)
         y: Metrics.pageMargin
         spacing: Metrics.spacingM
 
@@ -229,46 +229,82 @@ StyledFlickable {
                              ).indexOf(root.query) >= 0
                 spacing: Metrics.spacingS
 
-                Text {
+                RowLayout {
                     Layout.fillWidth: true
-                    text: row.modelData.name
-                    textFormat: Text.PlainText
-                    wrapMode: Text.Wrap
-                    color: Appearance.colors.colOnLayer0
-                    font.family: Typography.bodyMedium.family
-                    font.pixelSize: Typography.bodyMedium.pixelSize
-                }
-                Flow {
-                    Layout.fillWidth: true
-                    spacing: Metrics.spacingXS
-                    Repeater {
-                        model: row.modelData.chips
-                        delegate: ActionButton {
-                            required property var modelData
-                            text: modelData.key
-                            filled: modelData.effective
-                            opacity: modelData.effective ? 1 : 0.55
-                            onClicked: root.edit(row.modelData, modelData)
-                            StyledToolTip {
-                                text: parent.modelData.draft ? qsTr("Not configured") : root.sourceText(
-                                                                   parent.modelData)
+                    spacing: Metrics.spacingM
+
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: row.width * 0.38
+                        Layout.minimumWidth: 0
+                        text: row.modelData.name
+                        textFormat: Text.PlainText
+                        wrapMode: Text.Wrap
+                        color: Appearance.colors.colOnLayer0
+                        font.family: Typography.bodyMedium.family
+                        font.pixelSize: Typography.bodyMedium.pixelSize
+                    }
+                    Flow {
+                        id: chips
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: row.width * 0.62
+                        Layout.minimumWidth: 0
+                        spacing: Metrics.spacingXS
+                        layoutDirection: Qt.RightToLeft
+
+                        Repeater {
+                            // Keep the stable binding order when right-aligning the chips.
+                            model: row.modelData.chips.slice().reverse()
+                            delegate: RippleButton {
+                                id: chip
+                                required property var modelData
+                                text: modelData.key
+                                implicitWidth: chipLabel.implicitWidth + Metrics.spacingM * 2
+                                implicitHeight: Metrics.controlHeightS
+                                width: Math.min(implicitWidth, chips.width)
+                                leftPadding: Metrics.spacingM
+                                rightPadding: Metrics.spacingM
+                                buttonRadius: Appearance.rounding.small
+                                containerColor: Appearance.colors.colLayer2
+                                opacity: modelData.effective ? 1 : 0.55
+                                onClicked: root.edit(row.modelData, modelData)
+                                contentItem: Text {
+                                    id: chipLabel
+                                    text: chip.text
+                                    textFormat: Text.PlainText
+                                    elide: Text.ElideRight
+                                    verticalAlignment: Text.AlignVCenter
+                                    horizontalAlignment: Text.AlignHCenter
+                                    color: Appearance.colors.colOnLayer0
+                                    font.family: Typography.labelMedium.family
+                                    font.pixelSize: Typography.labelMedium.pixelSize
+                                }
+                                StyledToolTip {
+                                    text: chip.modelData.draft ? qsTr("Not configured") : chip.modelData.key
+                                                                 + "\n" + root.sourceText(chip.modelData)
+                                }
                             }
                         }
+                        Text {
+                            visible: row.modelData.chips.length === 0
+                            width: Math.min(implicitWidth, chips.width)
+                            text: row.modelData.supported ? qsTr("Not configured") : qsTr(
+                                                                "Unavailable in this niri version")
+                            color: Appearance.colors.colSubtext
+                            font.pixelSize: Typography.bodyMedium.pixelSize
+                            wrapMode: Text.Wrap
+                            horizontalAlignment: Text.AlignRight
+                            height: Math.max(implicitHeight, Metrics.controlHeightS)
+                            verticalAlignment: Text.AlignVCenter
+                        }
                     }
-                    Text {
-                        visible: row.modelData.chips.length === 0
-                        text: row.modelData.supported ? qsTr("Not configured") : qsTr(
-                                                            "Unavailable in this niri version")
-                        color: Appearance.colors.colSubtext
-                        font.pixelSize: Typography.bodyMedium.pixelSize
-                        height: Metrics.controlHeightM
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    ActionButton {
-                        text: "+"
+                    IconButton {
+                        iconName: "add_circle"
+                        controlSize: Metrics.controlHeightS
+                        iconSize: Metrics.iconS
                         enabled: row.modelData.supported && NiriConfigService.ready("binds") &&
                                  !NiriConfigService.busy
-                        Accessible.name: qsTr("Add shortcut")
+                        accessibleName: qsTr("Add shortcut")
                         onClicked: root.edit(row.modelData, null)
                     }
                 }
