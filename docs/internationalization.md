@@ -52,8 +52,8 @@ for the extraction behavior introduced in Qt 6.7.
 
 Review all three TS files and finish new or changed translations. A normal
 build compiles and embeds the QM catalogs. Run the appropriate single
-`scripts/dev/check.sh` validation scope from `AGENTS.md`; changes to the shared
-language interface require `--full`.
+`scripts/dev/check.sh` validation scope from `AGENTS.md`; shared language interface changes follow its consumer-scope rules. Use `--full`
+when that impact cannot be reliably bounded, not for ordinary message edits.
 
 Review placeholder preservation, singular/plural forms, language switching,
 long English labels, and Chinese rendering. The native i18n tests exercise

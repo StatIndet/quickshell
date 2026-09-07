@@ -22,25 +22,12 @@ Clavis 测试必须在单独 clone 后成立，不能依赖 `../keytop`、`../ke
 歌词脚本、内嵌 C++ key CLI、release manager、rollback、`current` 软链接、`releases/`、
 `setup.sh`、`justfile` 或 Makefile。参考仓库只读，不能修改。
 
-## Build
+## Development entry
 
-顶层 CMake 统一构建原生 module、测试和 QML 源码安装，不调用 sudo：
-
-```bash
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
-
-开发入口是 `~/.config/quickshell/clavis` 指向当前源码；稳定外部入口使用
-`${CLAVIS_KEY:-key}`。开发原生 module 使用：
-
-```bash
-QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
-```
-
-不能把仓库绝对路径或构建路径写入用户 Niri 配置。IPC 文档和快捷键使用 `key ipc ...`，
-不使用裸 `quickshell ipc`。
+顶层 CMake/Ninja 统一构建原生 module、测试与 QML 安装；构建命令与开发入口见
+[docs/development.md](docs/development.md)，仅在准备开发环境或启动 shell 时阅读。
+开发入口 `~/.config/quickshell/clavis` 指向源码；外部入口使用 `${CLAVIS_KEY:-key}`。
+IPC 文档与快捷键使用 `key ipc ...`。不得将仓库或构建绝对路径写入 Niri 配置。
 
 ## QML modules
 
@@ -56,25 +43,6 @@ QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
 - FFmpeg、pactl、ffprobe、录音 PID、临时音频文件和 finalizer 属于 `key audio`；歌词
   获取、缓存、LRC 解析和 MPRIS seek 属于 `Clavis.Lyrics`。
 
-## QML tooling
-
-`.qmlls.ini` 是 Quickshell 生成的机器相关文件，已加入 `.gitignore`，不得提交。正确
-流程是先 configure/build native modules，再由 `scripts/dev/lint-qml.sh` 通过 Quickshell
-生成或刷新 tooling VFS，读取其中的 `buildDir` 和 `importPaths`，最后把真实路径作为
-`-I` 传给 `qmllint`。如果 offscreen 环境不能生成有效 VFS，脚本必须失败并报告人工
-恢复命令，不得伪造 lint 成功。
-
-日常只用 `scripts/dev/check.sh` 作为验证入口（范围见 Validation），不再先后重复执行
-format-check、lint 和完整 check。需要格式化时先运行 `scripts/dev/format-qml.sh`，
-它只写当前改动的 QML；随后的 check 检查结果。
-
-格式化与 lint 自动优先使用 Qt 6 工具（Arch: `/usr/lib/qt6/bin/`），支持
-`QMLFORMAT` / `QMLLINT` 显式覆盖；不得误用 PATH 中的 Qt 5 工具。
-`.qmlformat.ini` 使用 4 空格、Unix newline，关闭 import/order normalize。
-`format-qml.sh --check` 和 `lint-qml.sh` 默认只处理 HEAD 以来 staged、unstaged、
-未跟踪且未忽略的 QML。只有明确迁移格式时用 `format-qml.sh --all`，全树 lint 用
-`lint-qml.sh --all`。不借格式化重排无关文件。
-
 ## Internationalization
 
 面向用户的可翻译源文案统一使用英文，沿用 `qsTr()` / `qsTranslate()` 的 context 与
@@ -86,39 +54,16 @@ format-check、lint 和完整 check。需要格式化时先运行 `scripts/dev/f
 语言选项保留自称；中文注释、文档、协议值与用户数据不属于源文案迁移范围。
 维护流程与术语见 `docs/internationalization.md`；不得以汉字扫描代替国际化审查。
 
-## UI copy and information density
+## Task-specific guidance
 
-- 设置页面默认不写 supporting text。只有标题、图标、控件状态无法表达的新信息才可
-  添加 supporting text，例如动态数值、当前模式、不可用原因、错误或验证要求。
-- 禁止用文字重复 boolean control state；`Wi-Fi / 已开启 / switch ON` 中的“已开启”
-  必须删除。正常状态通常无需说明，硬件阻止、权限失败、backend 不可用等异常状态应
-  使用简短文案说明原因。
-- 禁止 subtitle 改写或重复 title；例如“添加网络 / 手动添加网络”是无效文案。
-- 普通 UI 不得暴露没有用户价值的 backend 实现术语，例如 `NetworkManager 配置`、
-  `DBus backend`、内部 UUID；只有明确的高级诊断页面可以展示这些信息。
-- 一个语义只保留一种主要表达。selected/highlighted shape、switch、icon、badge 或
-  dynamic value 已完整表达状态时，不再追加一句文字重复解释。
-- 信息层级和状态优先通过项目现有的 Material Design / expressive shape、icon、badge、
-  state layer、tooltip、switch、slider 和 animation 表达，不得另造平行组件体系。
-- Tooltip 用于 icon-only action、次要解释，以及不值得长期占据 layout 的辅助信息；
-  不要为了避免 tooltip 而把所有解释永久铺在页面上。
-- 面向全球用户使用简短、一致的名词或动词短语，避免完整说明句、实现术语和不必要的
-  翻译负担。错误、破坏性操作警告、验证规则、认证或权限失败及歧义操作标签不得因精简
-  文案而隐藏。
-- Material expressive UI 应先以视觉建立 hierarchy，copy 只辅助视觉无法可靠传达的
-  内容，不得依靠大量 prose 创建页面结构。
-- 新增或修改设置页面时必须主动执行 semantic redundancy audit：检查 title/subtitle、
-  icon/text、switch/status text、badge/description 是否重复，同一状态是否在相邻 section
-  重复出现，以及 implementation detail 是否泄漏到 user-facing copy。
+仅在相关任务中阅读，不要求每轮读取所有文档：
 
-## Settings 等待反馈
-
-Settings Center 的短暂异步等待默认复用 `BrailleSpinner`，优先通过
-`Widgets/common/InlineBusyIndicator.qml` 在触发控件附近的已有空白区域中作为不参与布局的
-覆盖层显示。不得为等待指示器新增布局占位，也不得因 busy 状态插入/删除整行或改变按钮、
-section 的位置、间距或几何尺寸。单个操作只标记实际触发它的控件；全局操作可显示在
-section header 附近的已有空白区域。`InlineStatusBanner`
-保留给错误、警告和需要关注的信息，不用于单纯“正在处理”。不另建 loading 动画体系。
+- 修改 UI 文案、设置页布局或交互：[UI 规范](docs/ui-guidelines.md)。复用既有组件，
+  保留错误与认证信息；信息密度审查只覆盖本次改动。
+- 修改可翻译源文案、翻译目录或语言解析：[国际化规范](docs/internationalization.md)。
+- 修改检查工具链或遇到检查失败：[开发检查](docs/development-checks.md)的相关章节。
+- 应用 skill 时仅采用适用于当前平台与任务的章节；QML 任务不触发 Android/Web 的
+  构建或模拟器检查。设计合规报告仅在用户要求设计审计时生成。
 
 ## Test Policy
 
@@ -130,7 +75,7 @@ quality checks，不是 tests。
 
 **Fixing a bug does not automatically require a regression test.**
 
-新增 test 前必须能够说明：
+新增 test 前判断以下事项；这是选型依据，不要求每轮输出逐项论证报告：
 
 1. 测试验证的 stable behavior 或 public contract 是什么；
 2. 为什么 lint/build 无法覆盖它；
@@ -152,37 +97,43 @@ Loader、id、Item child、函数名、文件布局、当前 object hierarchy �
 不要追求 coverage %，不要引入 coverage.py/gcov/lcov/codecov/threshold，也不要为了
 本任务引入 clang-tidy、`-Werror`、mypy、pyright 或大型 pre-commit 体系。
 
-## Validation
+## Workflow and validation
 
-每轮按改动风险选择一次必要验证，不把下面各项当成串行必跑清单：
+用户仅请求分析、比较或讨论时，进行回答所需的只读调查，不修改文件或运行无关检查。
+用户要求实施时，完成已授权工作和必要验证；可由现有代码与约定确定的细节自行处理。
+只有影响结果的重大产品选择、破坏性操作或超出授权范围的事项才询问。
 
-| 改动 | 必要验证 |
+日常验证入口为 `scripts/dev/check.sh`。修改 QML 后先用 `scripts/dev/format-qml.sh`
+格式化改动文件，再运行所选范围的 check；不先后重复 format-check、lint 和 check。
+默认范围为 HEAD 以来 staged、unstaged、未跟踪且未忽略的文件，不重排无关文件。
+
+| 改动 | 必要验证（选择对应范围，不是串行清单） |
 | --- | --- |
-| 文档、文案资源、静态素材 | `scripts/dev/check.sh`（通常只有 diff 空白检查） |
-| QML UI | 修改文件格式化后 `scripts/dev/check.sh`：仅改动 QML 的格式与 lint；按需要人工视觉检查 |
-| Shell / Python | `scripts/dev/check.sh`：改动文件语法与 ShellCheck；匹配的现有脚本集成测试 |
-| `core/`、CMake、`tests/qml/` | `scripts/dev/check.sh`：另加 configure/build 和现有 CTest |
-| QML/JS 纯状态或数学逻辑 | `check.sh` 后运行对应现有 QtTest；若涉及 native 接口或影响范围不明，用 `check.sh --native` 一次替代 |
-| 跨模块接口、共享 QML 类型/import、依赖升级或明确要求全面检查 | `scripts/dev/check.sh --full` |
+| 文档、静态素材 | `check.sh`，通常仅 diff 空白检查 |
+| QML UI，包括共享组件内部的局部视觉或文案调整 | `check.sh`：改动 QML 格式与 lint；按需视觉检查 |
+| 翻译目录或可翻译源文案 | `check.sh`，另按国际化规范更新、编译受影响目录 |
+| Shell / Python | `check.sh`：改动文件语法、ShellCheck 及匹配的现有集成测试 |
+| `core/`、CMake、`tests/qml/` | `check.sh` 自动 configure/build 并运行现有 CTest |
+| QML/JS 纯状态或数学逻辑 | `check.sh` 加对应已有 QtTest；需原生构建时用 `--native` 替代入口 |
+| 公共接口、模块解析或依赖影响 | 按下述条件界定范围 |
 
-`--native` 在改动检查之外强制构建与 CTest。`--full` 检查全树 first-party C++/Shell/
-Python 和 QML lint，构建并运行 CTest；QML 格式仍仅检查改动文件，legacy 全树格式审计
-是单独的 `format-qml.sh --check-all`，不作为普通任务 gate。
-脚本按文件路径选择检查，不能替代语义判断：共享函数、配置、fixture 或删除文件影响到
-未自动选中的消费者时，补跑对应现有测试；不要重复运行已覆盖的测试。
-原生测试集合目前很小，触发 native 时运行整组；普通 UI 改动不触发整组 CTest。
+共享组件被多处引用本身不触发全量检查。改变公共属性、信号、required property、模块
+导出或 import 解析时，先界定受影响消费者：能可靠界定则运行对应范围的检查与现有测试；
+无法界定、广泛依赖升级或用户明确要求全面检查时使用 `check.sh --full`。
+不得以缩小范围为由遗漏消费者；默认脚本按路径选择，不能代替这项判断。
 
-通过后停止。只有新修改、具体失败或尚未验证的风险才补跑受影响阶段；不要在末尾再跑
-一遍全量流程。没有相关 tests 就明确说明，不新增实现形状测试或临时 source audit。
-全量检查仅用于上表场景，不因为“更保险”而每轮使用。
+`--native` 在改动检查外强制构建与整组现有 CTest；`--full` 扩展为全树 first-party
+质量检查、构建与 CTest，但 QML 格式仍只检查改动文件。普通 UI 不触发整组 CTest。
+工具参数、VFS 准备与故障处理见开发检查文档，不手写 `.qmlls.ini`、qmldir 或伪造 lint。
 
-失败先区分代码失败与工具/环境阻断。工具缺失、版本不兼容、VFS 无效等同一原因只诊断
-一次，报告原因、未完成项与人工恢复命令；本任务未涉及工具链时不反复重跑或顺手迁移。
-`check.sh` 成功输出短摘要，失败保留完整日志并仅输出末尾 60 行；先阅读对应日志片段，
-不把数千行诊断灌入对话。QML lint 的既有 warning 仍为 advisory，摘要必须报告 warning
-数量与日志位置，不能称为零警告通过；语法/import 等工具返回的非零退出仍阻断。
+必要验证通过且授权工作完成后停止。只有新修改、具体失败或尚未验证的依赖影响才补跑
+受影响阶段；不在末尾再跑全量流程。同一工具/环境阻断只诊断一次；确认是工具问题后，
+保留阻断结果并继续可独立执行的必要检查，不伪报全部通过，不顺手迁移工具链。
 
-依赖与基线诊断见 `docs/development-checks.md`。检查不得 install、sudo、修改系统或启动
-持久后台服务。默认不安装、不重启进程、不提交；只有用户明确要求时才执行这些外部操作。
-不得手改 `build/`、用户 Niri 配置、系统 Qt import 根或已安装文件来修复源码；正常 CMake
-生成构建产物除外。
+默认不安装、不重启进程、不提交；这些操作需用户明确要求。检查不得 sudo、修改系统或
+启动持久后台服务。不得手改 build、用户 Niri 配置、系统 Qt import 根或已安装文件来
+修复源码；正常 CMake 生成构建产物除外。
+
+最终回复说明完成内容、必要验证结果及未验证或阻断事项。QML advisory warning 报告
+数量与日志位置，不称零警告通过；没有相关 tests 时如实说明。正常成功不逐条复述命令，
+仅需要用户操作时提供步骤。除非用户要求，不新增开发总结或审计报告。

@@ -18,10 +18,20 @@ format-check 和 lint。`--native` 强制构建/CTest；`--full` 扩展为全仓
 构建/CTest，但不要求 legacy QML 全树格式迁移。显式格式审计用
 `format-qml.sh --check-all`，写入全树用 `--all`。
 
-路径选择不能推导所有语义依赖。修改共享 QML 类型/import 时用 `--full`；纯状态/math
-逻辑需补跑对应已有 QtTest。已有构建可用 `ctest --test-dir build -R '<test-name>'
---output-on-failure --no-tests=error` 运行相关测试；原生源码改动先 build。
-QML 单元测试目前注册为 `qml_unit_tests`。普通视觉调整不自动增加测试。
+验证范围和扩大检查的条件统一见 [AGENTS.md](../AGENTS.md#workflow-and-validation)。
+共享组件内部的视觉调整不自动触发全量检查。已有构建可用
+`ctest --test-dir build -R '<test-name>' --output-on-failure --no-tests=error`
+运行受影响测试；需要原生构建时先 build。QML 单元测试注册为 `qml_unit_tests`。
+
+## QML 工具与生成物
+
+Qt 6 工具优先使用 `/usr/lib/qt6/bin/`，可用 `QMLFORMAT` / `QMLLINT` 覆盖；
+不得误用 PATH 中的 Qt 5。`.qmlformat.ini` 采用 4 空格、Unix newline，关闭 import/order
+normalize。仅明确格式迁移时使用全树写入 `--all`；`--check-all` 不属于日常 gate。
+
+`.qmlls.ini` 是 Quickshell 生成且被忽略的机器文件，不得提交。先准备 native build，
+由 `lint-qml.sh` 生成或刷新真实 tooling VFS，再读取 `buildDir` / `importPaths` 并作为
+`-I` 参数传给 qmllint。普通 QML 任务由脚本按需准备，不额外重复构建。
 
 ## 依赖（Arch Linux）
 
@@ -83,3 +93,11 @@ QML tooling 依赖 Quickshell 生成的 `.qmlls.ini` 及其 VFS；不能伪造 q
 这类问题不是再安装一个格式化包就能解决的。
 
 同一个环境阻断只诊断一次，报告未完成项和恢复方式。通过的阶段不为最终总结重复运行。
+
+### 格式化工具阻断
+
+普通格式差异应修正后继续；只有已确认的版本不兼容、格式化不收敛等工具问题才属于
+阻断。`check.sh` 当前遇到失败即退出，不会自动继续其他阶段，也没有跳过格式的选项。
+此时保留失败日志，按本次范围单独运行不依赖格式化的 `scripts/dev/lint-qml.sh`，以及
+确有需要的语法、构建或现有测试。不要重跑已通过阶段，也不要修改脚本来隐藏失败。
+最终分别说明已通过、阻断和未执行项；提供对应日志中的人工恢复命令。
