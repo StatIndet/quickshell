@@ -9866,4 +9866,92 @@ Windows: </translation>
         <translation>Search engine</translation>
     </message>
 </context>
+
+<context>
+    <name>DefaultLockContent</name>
+    <message>
+        <source>密码</source>
+        <translation>Password</translation>
+    </message>
+    <message>
+        <source>密码错误</source>
+        <translation>Incorrect password</translation>
+    </message>
+    <message>
+        <source>yyyy MMMM d, dddd</source>
+        <translation>yyyy MMMM d, dddd</translation>
+    </message>
+</context>
+
+<context>
+    <name>DefaultLockStatus</name>
+    <message>
+        <source>没有媒体</source>
+        <translation>No media</translation>
+    </message>
+    <message>
+        <source>上一首</source>
+        <translation>Previous track</translation>
+    </message>
+    <message>
+        <source>下一首</source>
+        <translation>Next track</translation>
+    </message>
+    <message>
+        <source>暂停</source>
+        <translation>Pause</translation>
+    </message>
+    <message>
+        <source>播放</source>
+        <translation>Play</translation>
+    </message>
+    <message>
+        <source>天气不可用</source>
+        <translation>Weather unavailable</translation>
+    </message>
+    <message>
+        <source>网络不可用</source>
+        <translation>Network unavailable</translation>
+    </message>
+    <message>
+        <source>网络已连接</source>
+        <translation>Connected</translation>
+    </message>
+    <message>
+        <source>网络未连接</source>
+        <translation>Disconnected</translation>
+    </message>
+    <message>
+        <source>大写锁定已开启</source>
+        <translation>Caps Lock on</translation>
+    </message>
+    <message>
+        <source>大写锁定已关闭</source>
+        <translation>Caps Lock off</translation>
+    </message>
+    <message>
+        <source>数字锁定已开启</source>
+        <translation>Num Lock on</translation>
+    </message>
+    <message>
+        <source>数字锁定已关闭</source>
+        <translation>Num Lock off</translation>
+    </message>
+    <message>
+        <source>已充满</source>
+        <translation>Fully charged</translation>
+    </message>
+    <message>
+        <source>充电中</source>
+        <translation>Charging</translation>
+    </message>
+    <message>
+        <source>已接通电源</source>
+        <translation>Plugged in</translation>
+    </message>
+    <message>
+        <source>使用电池</source>
+        <translation>On battery</translation>
+    </message>
+</context>
 </TS>

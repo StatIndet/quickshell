@@ -9865,4 +9865,92 @@
         <translation>搜尋引擎</translation>
     </message>
 </context>
+
+<context>
+    <name>DefaultLockContent</name>
+    <message>
+        <source>密码</source>
+        <translation>密碼</translation>
+    </message>
+    <message>
+        <source>密码错误</source>
+        <translation>密碼錯誤</translation>
+    </message>
+    <message>
+        <source>yyyy MMMM d, dddd</source>
+        <translation>yyyy年M月d日 dddd</translation>
+    </message>
+</context>
+
+<context>
+    <name>DefaultLockStatus</name>
+    <message>
+        <source>没有媒体</source>
+        <translation>沒有媒體</translation>
+    </message>
+    <message>
+        <source>上一首</source>
+        <translation>上一首</translation>
+    </message>
+    <message>
+        <source>下一首</source>
+        <translation>下一首</translation>
+    </message>
+    <message>
+        <source>暂停</source>
+        <translation>暫停</translation>
+    </message>
+    <message>
+        <source>播放</source>
+        <translation>播放</translation>
+    </message>
+    <message>
+        <source>天气不可用</source>
+        <translation>天氣無法使用</translation>
+    </message>
+    <message>
+        <source>网络不可用</source>
+        <translation>網路無法使用</translation>
+    </message>
+    <message>
+        <source>网络已连接</source>
+        <translation>網路已連線</translation>
+    </message>
+    <message>
+        <source>网络未连接</source>
+        <translation>網路未連線</translation>
+    </message>
+    <message>
+        <source>大写锁定已开启</source>
+        <translation>大寫鎖定已開啟</translation>
+    </message>
+    <message>
+        <source>大写锁定已关闭</source>
+        <translation>大寫鎖定已關閉</translation>
+    </message>
+    <message>
+        <source>数字锁定已开启</source>
+        <translation>數字鎖定已開啟</translation>
+    </message>
+    <message>
+        <source>数字锁定已关闭</source>
+        <translation>數字鎖定已關閉</translation>
+    </message>
+    <message>
+        <source>已充满</source>
+        <translation>已充滿</translation>
+    </message>
+    <message>
+        <source>充电中</source>
+        <translation>充電中</translation>
+    </message>
+    <message>
+        <source>已接通电源</source>
+        <translation>已接通電源</translation>
+    </message>
+    <message>
+        <source>使用电池</source>
+        <translation>使用電池</translation>
+    </message>
+</context>
 </TS>
