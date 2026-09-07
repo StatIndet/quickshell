@@ -21,6 +21,8 @@ ListView {
     property var unset: []
     property bool advanced: false
     property bool recording: false
+    property bool inhibitionUnavailable: false
+    onRecordingChanged: inhibitionUnavailable = false
     property bool inlineRecording: false
     property bool editorOpen: false
     property string query: ""
@@ -339,13 +341,25 @@ ListView {
         }
     }
 
+    // The compositor acknowledges inhibition asynchronously. Do not insert a warning
+    // into the list header during the normal request/acknowledgement round trip.
+    Timer {
+        interval: 500
+        running: root.recording && !inhibitor.active
+        onTriggered: root.inhibitionUnavailable = true
+    }
+
     ShortcutInhibitor {
         id: inhibitor
         window: root.parentModal
         enabled: root.recording && root.presentationActive
         onCancelled: root.stopRecording()
-        onActiveChanged: if (!active && root.recording)
-                             root.stopRecording()
+        onActiveChanged: {
+            if (active)
+                root.inhibitionUnavailable = false;
+            else if (root.recording)
+                root.stopRecording();
+        }
     }
 
     header: ColumnLayout {
@@ -373,7 +387,7 @@ ListView {
         }
         InlineStatusBanner {
             Layout.fillWidth: true
-            visible: root.inlineRecording && root.recording && !inhibitor.active
+            visible: root.inlineRecording && root.recording && root.inhibitionUnavailable
             message: qsTr(
                          "Shortcut inhibition is not active. Use manual key input if recording is unavailable.")
         }
@@ -637,7 +651,7 @@ ListView {
             }
             InlineStatusBanner {
                 Layout.fillWidth: true
-                visible: root.recording && !inhibitor.active
+                visible: root.recording && root.inhibitionUnavailable
                 message: qsTr(
                              "Shortcut inhibition is not active. Use manual key input if recording is unavailable.")
             }
