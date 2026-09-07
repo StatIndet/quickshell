@@ -84,7 +84,7 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: Appearance.colors.colLayer0Base
+            color: "#15191D"
         }
 
         WallpaperImageViewport {

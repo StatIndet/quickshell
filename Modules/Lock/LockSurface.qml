@@ -11,7 +11,7 @@ WlSessionLockSurface {
     property var snapshotProvider: null
     // Freeze the selection for this lock session.
     property string style: "default"
-    color: Appearance.colors.colLayer0Base
+    color: root.style === "caelestia" ? Appearance.colors.colLayer0Base : "#15191D"
 
     Loader {
         anchors.fill: parent

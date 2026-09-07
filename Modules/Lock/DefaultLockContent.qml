@@ -147,7 +147,7 @@ Item {
             width: root.avatarSize
             height: width
             radius: width / 2
-            color: Appearance.colors.colSecondaryContainer
+            color: "#53616B"
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text {
@@ -155,7 +155,7 @@ Item {
                 text: SystemIdentityService.accountName.slice(0, 1).toUpperCase()
                 font.family: Fonts.ui
                 font.pixelSize: parent.width * 0.4
-                color: Appearance.colors.colOnSecondaryContainer
+                color: "#F5F7FA"
             }
 
             Image {
@@ -202,9 +202,9 @@ Item {
                 width: 280 * root.uiScale
                 height: root.fieldHeight
                 radius: height / 2
-                color: Appearance.colors.colSurfaceContainerHigh
+                color: "#D6DCE0"
                 border.width: 2 * root.uiScale
-                border.color: Appearance.colors.colOutline
+                border.color: "#647078"
 
                 TextInput {
                     id: input
@@ -259,7 +259,7 @@ Item {
                     text: qsTr("密码")
                     font.family: Fonts.ui
                     font.pixelSize: 20 * root.uiScale
-                    color: Appearance.colors.colOnSurfaceVariant
+                    color: "#4D5861"
                 }
 
                 ListModel {
@@ -268,10 +268,11 @@ Item {
 
                 ListView {
                     id: dotsView
+                    readonly property real availableWidth: field.width - 48 * root.uiScale
                     readonly property real naturalWidth: count > 0 ? count * (26 * root.uiScale) - spacing + 8
                                                                      * root.uiScale : 0
                     anchors.centerIn: parent
-                    width: Math.min(parent.width - 48 * root.uiScale, naturalWidth)
+                    width: Math.min(availableWidth, naturalWidth)
                     leftMargin: 4 * root.uiScale
                     rightMargin: 4 * root.uiScale
                     height: 28 * root.uiScale
@@ -282,7 +283,8 @@ Item {
                     model: dots
                     // Center short input; smoothly follow the tail once it fills
                     // the viewport. Never jump by a whole dot with positionViewAtEnd.
-                    contentX: Math.max(0, naturalWidth - width) - leftMargin
+                    // Use capacity, not the animated width, to avoid transient overflow.
+                    contentX: Math.max(0, naturalWidth - availableWidth) - leftMargin
                     cacheBuffer: 52 * root.uiScale
                     Behavior on contentX {
                         NumberAnimation {
@@ -302,15 +304,13 @@ Item {
                     delegate: Item {
                         id: dot
                         readonly property real viewportCenter: x + width / 2 - dotsView.contentX
-                        readonly property real edgeFade: dotsView.naturalWidth > dotsView.width ? Math.min(1,
-                                                                                                           Math.max(0,
-                                                                                                                    viewportCenter
-                                                                                                                    / (14 * root.uiScale)),
-                                                                                                           Math.max(0,
-                                                                                                                    (dotsView.width
-                                                                                                                     - viewportCenter)
-                                                                                                                    / (14 * root.uiScale))) :
-                                                                                                  1
+                        readonly property real edgeFade: dotsView.naturalWidth > dotsView.availableWidth
+                                                         ? Math.min(1, Math.max(0, viewportCenter / (14
+                                                                                                     * root.uiScale)),
+                                                                    Math.max(0, (dotsView.width
+                                                                                 - viewportCenter) / (14
+                                                                                                      * root.uiScale))) :
+                                                           1
                         opacity: edgeFade
                         width: 16 * root.uiScale
                         height: 28 * root.uiScale
@@ -325,27 +325,17 @@ Item {
                             width: 16 * root.uiScale
                             height: width
                             radius: width / 2
-                            color: Appearance.colors.colOnSurface
-                            SequentialAnimation {
+                            color: "#20252B"
+                            NumberAnimation {
                                 id: appear
                                 running: true
-                                NumberAnimation {
-                                    target: circle
-                                    properties: "scale,opacity"
-                                    from: 0
-                                    to: 1.3
-                                    duration: 180
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: [0.05, 0.7, 0.1, 1, 1, 1]
-                                }
-                                NumberAnimation {
-                                    target: circle
-                                    property: "scale"
-                                    to: 1
-                                    duration: 240
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
-                                }
+                                target: circle
+                                properties: "scale,opacity"
+                                from: 0
+                                to: 1
+                                duration: 220
+                                easing.type: Easing.BezierSpline
+                                easing.bezierCurve: [0.16, 1, 0.3, 1, 1, 1]
                             }
                             NumberAnimation {
                                 id: disappear
@@ -365,9 +355,9 @@ Item {
                     id: errorBorder
                     anchors.fill: parent
                     radius: field.radius
-                    color: "transparent"
+                    color: "#30FFB4BC"
                     border.width: 3 * root.uiScale
-                    border.color: Appearance.colors.colError
+                    border.color: "#FFB4BC"
                     opacity: 0
 
                     SequentialAnimation {
@@ -402,6 +392,7 @@ Item {
                 InlineBusyIndicator {
                     anchors.centerIn: parent
                     busy: root.busy && input.text.length === 0
+                    spinnerColor: "#20252B"
                 }
             }
         }
@@ -412,6 +403,7 @@ Item {
         anchors.topMargin: 12 * root.uiScale
         anchors.horizontalCenter: parent.horizontalCenter
         busy: root.busy && input.text.length > 0
+        spinnerColor: "#F5F7FA"
         opacity: root.authOpacity
     }
 
