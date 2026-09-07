@@ -21,8 +21,8 @@ ListView {
     property var unset: []
     property bool advanced: false
     property bool recording: false
-    property bool inhibitionUnavailable: false
-    onRecordingChanged: inhibitionUnavailable = false
+    readonly property string recordingPrompt: inhibitor.active ? qsTr("Press shortcut…") : qsTr(
+                                                                     "Preparing to record…")
     property bool inlineRecording: false
     property bool editorOpen: false
     property string query: ""
@@ -55,6 +55,19 @@ ListView {
             visibleGroups = filtered;
         // ListView retains the current delegate even when it scrolls out of view.
         currentIndex = visibleGroups.findIndex(group => group.id === draftGroup);
+    }
+
+    TextMetrics {
+        id: preparingPromptMetrics
+        text: qsTr("Preparing to record…")
+        font.family: Typography.labelMedium.family
+        font.pixelSize: Typography.labelMedium.pixelSize
+    }
+    TextMetrics {
+        id: readyPromptMetrics
+        text: qsTr("Press shortcut…")
+        font.family: Typography.labelMedium.family
+        font.pixelSize: Typography.labelMedium.pixelSize
     }
 
     component ShortcutChip: RippleButton {
@@ -341,25 +354,13 @@ ListView {
         }
     }
 
-    // The compositor acknowledges inhibition asynchronously. Do not insert a warning
-    // into the list header during the normal request/acknowledgement round trip.
-    Timer {
-        interval: 500
-        running: root.recording && !inhibitor.active
-        onTriggered: root.inhibitionUnavailable = true
-    }
-
     ShortcutInhibitor {
         id: inhibitor
         window: root.parentModal
         enabled: root.recording && root.presentationActive
         onCancelled: root.stopRecording()
-        onActiveChanged: {
-            if (active)
-                root.inhibitionUnavailable = false;
-            else if (root.recording)
-                root.stopRecording();
-        }
+        onActiveChanged: if (!active && root.recording)
+                             root.stopRecording()
     }
 
     header: ColumnLayout {
@@ -384,12 +385,6 @@ ListView {
             visible: NiriConfigService.ready("binds") && NiriConfigService.error !== ""
             tone: "error"
             message: NiriConfigService.error
-        }
-        InlineStatusBanner {
-            Layout.fillWidth: true
-            visible: root.inlineRecording && root.recording && root.inhibitionUnavailable
-            message: qsTr(
-                         "Shortcut inhibition is not active. Use manual key input if recording is unavailable.")
         }
         RowLayout {
             Layout.fillWidth: true
@@ -476,7 +471,16 @@ ListView {
 
                     ShortcutChip {
                         visible: root.inlineRecording && root.draftGroup === row.modelData.id
-                        text: root.recording ? qsTr("Press shortcut…") : (root.draft ? root.draft.key : "")
+                        text: root.recording ? root.recordingPrompt : (root.draft ? root.draft.key : "")
+                        // Both capture states occupy the same space, including near a wrap boundary.
+                        implicitWidth: Math.max(preparingPromptMetrics.width, readyPromptMetrics.width,
+                                                capturedPromptMetrics.width) + Metrics.spacingM * 2
+                        TextMetrics {
+                            id: capturedPromptMetrics
+                            text: root.draft ? root.draft.key : ""
+                            font.family: Typography.labelMedium.family
+                            font.pixelSize: Typography.labelMedium.pixelSize
+                        }
 
                         recordingStyle: true
                         focusPolicy: Qt.TabFocus
@@ -616,7 +620,7 @@ ListView {
                 MaterialFilledTextField {
                     id: keyField
                     Layout.fillWidth: true
-                    labelText: qsTr("Key")
+                    labelText: root.recording && !root.inlineRecording ? root.recordingPrompt : qsTr("Key")
                     text: editorContent.bindingDraft.key
                     readOnly: !editorContent.bindingDraft.managed || root.recording
                     onActiveFocusChanged: if (!activeFocus)
@@ -648,12 +652,6 @@ ListView {
                         }
                     }
                 }
-            }
-            InlineStatusBanner {
-                Layout.fillWidth: true
-                visible: root.recording && root.inhibitionUnavailable
-                message: qsTr(
-                             "Shortcut inhibition is not active. Use manual key input if recording is unavailable.")
             }
             InlineStatusBanner {
                 Layout.fillWidth: true
