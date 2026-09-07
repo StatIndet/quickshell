@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
 import qs.Common
@@ -8,7 +9,7 @@ import Clavis.Keyboard
 import qs.Services
 import qs.Widgets.common
 
-StyledFlickable {
+ListView {
     id: root
     property var parentModal: null
     property bool presentationActive: false
@@ -26,7 +27,33 @@ StyledFlickable {
     property string category: "all"
     clip: true
     contentWidth: width
-    contentHeight: column.implicitHeight + Metrics.pageMargin * 2
+    maximumFlickVelocity: 3500
+    boundsBehavior: Flickable.DragOverBounds
+    spacing: Metrics.spacingM
+    topMargin: Metrics.pageMargin
+    bottomMargin: Metrics.pageMargin
+    ScrollBar.vertical: StyledScrollBar {}
+    property var visibleGroups: []
+    model: visibleGroups
+    keyNavigationEnabled: false
+    onGroupsChanged: updateVisibleGroups()
+    onQueryChanged: updateVisibleGroups()
+    onCategoryChanged: updateVisibleGroups()
+    onDraftGroupChanged: updateVisibleGroups()
+
+    function updateVisibleGroups() {
+        const filtered = groups.filter(group => draftGroup === group.id || (matchesCategory(group) && (query
+                                                                                                       === "" || (
+                                                                                                           group.name
+                                                                                                           + " " + group.expression).toLowerCase(
+                                                                                                           ).indexOf(
+                                                                                                           query) >= 0)));
+        // Selecting another chip must not reset the list and destroy its open editor.
+        if (JSON.stringify(visibleGroups) !== JSON.stringify(filtered))
+            visibleGroups = filtered;
+        // ListView retains the current delegate even when it scrolls out of view.
+        currentIndex = visibleGroups.findIndex(group => group.id === draftGroup);
+    }
 
     component ShortcutChip: RippleButton {
         id: shortcutChip
@@ -141,7 +168,9 @@ StyledFlickable {
             if (titled)
                 group.name = titled.props["hotkey-overlay-title"];
         });
-        groups = result;
+        // Status notifications can carry an unchanged snapshot. Keep the delegates in that case.
+        if (JSON.stringify(groups) !== JSON.stringify(result))
+            groups = result;
     }
 
     function edit(group, binding, expand = true) {
@@ -292,10 +321,8 @@ StyledFlickable {
     }
     onPresentationActiveChanged: if (!presentationActive)
                                      cancel()
-    Component.onCompleted: {
-        rebuild();
-        NiriConfigService.refresh();
-    }
+    // The shared service loads once and watches the configuration files thereafter.
+    Component.onCompleted: rebuild()
     Component.onDestruction: recording = false
 
     Connections {
@@ -321,11 +348,10 @@ StyledFlickable {
                              root.stopRecording()
     }
 
-    ColumnLayout {
+    header: ColumnLayout {
         id: column
         width: Math.min(640, Math.max(0, root.width - Metrics.pageMargin * 2))
         x: Math.max(Metrics.pageMargin, (root.width - width) / 2)
-        y: Metrics.pageMargin
         spacing: Metrics.spacingM
 
         NiriSetupPrompt {
@@ -395,161 +421,159 @@ StyledFlickable {
                 root.category = value;
             }
         }
+    }
 
-        Repeater {
-            model: root.groups
-            delegate: ColumnLayout {
-                id: row
-                required property var modelData
+    delegate: Item {
+        id: rowContainer
+        required property var modelData
+        width: root.width
+        implicitHeight: row.implicitHeight
+
+        // ListView positions the delegate. Center the content inside it instead.
+        ColumnLayout {
+            id: row
+            readonly property var modelData: rowContainer.modelData
+            width: Math.min(640, Math.max(0, root.width - Metrics.pageMargin * 2))
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Metrics.spacingS
+
+            RowLayout {
                 Layout.fillWidth: true
-                visible: root.draftGroup === modelData.id || (root.matchesCategory(modelData) && (root.query
-                                                                                                  === "" || (
-                                                                                                      modelData.name
-                                                                                                      + " " + modelData.expression).toLowerCase(
-                                                                                                      ).indexOf(
-                                                                                                      root.query)
-                                                                                                  >= 0))
-                spacing: Metrics.spacingS
+                spacing: Metrics.spacingM
 
-                RowLayout {
+                Text {
                     Layout.fillWidth: true
-                    spacing: Metrics.spacingM
+                    Layout.preferredWidth: row.width * 0.38
+                    Layout.minimumWidth: 0
+                    text: row.modelData.name
+                    textFormat: Text.PlainText
+                    wrapMode: Text.Wrap
+                    color: Appearance.colors.colOnLayer0
+                    font.family: Typography.bodyMedium.family
+                    font.pixelSize: Typography.bodyMedium.pixelSize
+                }
+                Flow {
+                    id: chips
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: row.width * 0.62
+                    Layout.minimumWidth: 0
+                    spacing: Metrics.spacingXS
+                    layoutDirection: Qt.RightToLeft
 
-                    Text {
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: row.width * 0.38
-                        Layout.minimumWidth: 0
-                        text: row.modelData.name
-                        textFormat: Text.PlainText
-                        wrapMode: Text.Wrap
-                        color: Appearance.colors.colOnLayer0
-                        font.family: Typography.bodyMedium.family
-                        font.pixelSize: Typography.bodyMedium.pixelSize
+                    ShortcutChip {
+                        visible: root.inlineRecording && root.draftGroup === row.modelData.id
+                        text: root.recording ? qsTr("Press shortcut…") : (root.draft ? root.draft.key : "")
+
+                        recordingStyle: true
+                        focusPolicy: Qt.TabFocus
+                        width: Math.min(implicitWidth, chips.width)
+                        enabled: !NiriConfigService.busy
+                        onClicked: {
+                            cleanup.stop();
+                            root.recording = false;
+                            root.inlineRecording = false;
+                            root.editorOpen = true;
+                        }
                     }
-                    Flow {
-                        id: chips
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: row.width * 0.62
-                        Layout.minimumWidth: 0
-                        spacing: Metrics.spacingXS
-                        layoutDirection: Qt.RightToLeft
-
-                        ShortcutChip {
-                            visible: root.inlineRecording && root.draftGroup === row.modelData.id
-                            text: root.recording ? qsTr("Press shortcut…") : (root.draft ? root.draft.key :
-                                                                                           "")
-
-                            recordingStyle: true
-                            focusPolicy: Qt.TabFocus
+                    Repeater {
+                        // Keep the stable binding order when right-aligning the chips.
+                        model: (root.category === "managed" ? row.modelData.chips.filter(binding
+                                                                                         => binding.managed) :
+                                                              row.modelData.chips).slice().reverse()
+                        delegate: ShortcutChip {
+                            required property var modelData
+                            text: modelData.key
+                            removable: !!modelData.id && modelData.managed
+                            removalEnabled: NiriConfigService.ready("binds") && (!root.draft
+                                                                                 || root.draftRevision
+                                                                                 === NiriConfigService.revision)
+                            removalLabel: modelData.override ? qsTr("Remove override") : qsTr("Delete")
+                            onRemoveRequested: {
+                                root.recording = false;
+                                NiriConfigService.save({
+                                                           operation: "delete",
+                                                           id: modelData.id,
+                                                           revision: root.draft ? root.draftRevision :
+                                                                                  NiriConfigService.revision
+                                                       });
+                            }
                             width: Math.min(implicitWidth, chips.width)
                             enabled: !NiriConfigService.busy
-                            onClicked: {
-                                cleanup.stop();
-                                root.recording = false;
-                                root.inlineRecording = false;
-                                root.editorOpen = true;
-                            }
-                        }
-                        Repeater {
-                            // Keep the stable binding order when right-aligning the chips.
-                            model: (root.category === "managed" ? row.modelData.chips.filter(binding => binding.managed) :
-                                                                  row.modelData.chips).slice().reverse()
-                            delegate: ShortcutChip {
-                                required property var modelData
-                                text: modelData.key
-                                removable: !!modelData.id && modelData.managed
-                                removalEnabled: NiriConfigService.ready("binds") && (!root.draft
-                                                                                     || root.draftRevision
-                                                                                     === NiriConfigService.revision)
-                                removalLabel: modelData.override ? qsTr("Remove override") : qsTr("Delete")
-                                onRemoveRequested: {
-                                    root.recording = false;
-                                    NiriConfigService.save({
-                                                               operation: "delete",
-                                                               id: modelData.id,
-                                                               revision: root.draft ? root.draftRevision :
-                                                                                      NiriConfigService.revision
-                                                           });
-                                }
-                                width: Math.min(implicitWidth, chips.width)
-                                enabled: !NiriConfigService.busy
-                                opacity: modelData.effective ? 1 : 0.55
-                                onClicked: root.edit(row.modelData, modelData)
-                            }
-                        }
-                        Text {
-                            visible: row.modelData.chips.length === 0 && !(root.inlineRecording
-                                                                           && root.draftGroup
-                                                                           === row.modelData.id)
-                            width: Math.min(implicitWidth, chips.width)
-                            text: row.modelData.supported ? qsTr("Not configured") : qsTr(
-                                                                "Unavailable in this niri version")
-                            color: Appearance.colors.colSubtext
-                            font.pixelSize: Typography.bodyMedium.pixelSize
-                            wrapMode: Text.Wrap
-                            horizontalAlignment: Text.AlignRight
-                            height: Math.max(implicitHeight, Metrics.controlHeightS)
-                            verticalAlignment: Text.AlignVCenter
+                            opacity: modelData.effective ? 1 : 0.55
+                            onClicked: root.edit(row.modelData, modelData)
                         }
                     }
-                    IconButton {
-                        iconName: "delete"
-                        iconColor: Appearance.colors.colError
-                        controlSize: Metrics.controlHeightS
-                        iconSize: Metrics.iconS
-                        visible: !row.modelData.builtin && row.modelData.chips.some(chip => chip.managed)
-                        enabled: !root.draft && NiriConfigService.ready("binds") && !NiriConfigService.busy
-                        accessibleName: qsTr("Delete action")
-                        onClicked: NiriConfigService.save({
-                                                              operation: "delete-group",
-                                                              group: row.modelData.identity,
-                                                              revision: NiriConfigService.revision
-                                                          })
-                    }
-                    IconButton {
-                        iconName: "add_circle"
-                        controlSize: Metrics.controlHeightS
-                        iconSize: Metrics.iconS
-                        enabled: row.modelData.supported && NiriConfigService.ready("binds") &&
-                                 !NiriConfigService.busy
-                        accessibleName: qsTr("Add shortcut")
-                        onClicked: root.addShortcut(row.modelData)
+                    Text {
+                        visible: row.modelData.chips.length === 0 && !(root.inlineRecording && root.draftGroup
+                                                                       === row.modelData.id)
+                        width: Math.min(implicitWidth, chips.width)
+                        text: row.modelData.supported ? qsTr("Not configured") : qsTr(
+                                                            "Unavailable in this niri version")
+                        color: Appearance.colors.colSubtext
+                        font.pixelSize: Typography.bodyMedium.pixelSize
+                        wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignRight
+                        height: Math.max(implicitHeight, Metrics.controlHeightS)
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
-                Item {
-                    id: editorHost
-                    readonly property bool expanded: root.editorOpen && root.draftGroup === row.modelData.id
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: expanded ? editorLoader.implicitHeight : 0
-                    clip: true
-                    enabled: expanded
-                    opacity: expanded ? 1 : 0
-                    Behavior on Layout.preferredHeight {
-                        ElementMoveAnimation {}
+                IconButton {
+                    iconName: "delete"
+                    iconColor: Appearance.colors.colError
+                    controlSize: Metrics.controlHeightS
+                    iconSize: Metrics.iconS
+                    visible: !row.modelData.builtin && row.modelData.chips.some(chip => chip.managed)
+                    enabled: !root.draft && NiriConfigService.ready("binds") && !NiriConfigService.busy
+                    accessibleName: qsTr("Delete action")
+                    onClicked: NiriConfigService.save({
+                                                          operation: "delete-group",
+                                                          group: row.modelData.identity,
+                                                          revision: NiriConfigService.revision
+                                                      })
+                }
+                IconButton {
+                    iconName: "add_circle"
+                    controlSize: Metrics.controlHeightS
+                    iconSize: Metrics.iconS
+                    enabled: row.modelData.supported && NiriConfigService.ready("binds") &&
+                             !NiriConfigService.busy
+                    accessibleName: qsTr("Add shortcut")
+                    onClicked: root.addShortcut(row.modelData)
+                }
+            }
+            Item {
+                id: editorHost
+                readonly property bool expanded: root.editorOpen && root.draftGroup === row.modelData.id
+                Layout.fillWidth: true
+                Layout.preferredHeight: expanded ? editorLoader.implicitHeight : 0
+                clip: true
+                enabled: expanded
+                opacity: expanded ? 1 : 0
+                Behavior on Layout.preferredHeight {
+                    ElementMoveAnimation {}
+                }
+                Behavior on opacity {
+                    ElementMoveAnimation {}
+                }
+                Loader {
+                    id: editorLoader
+                    width: parent.width
+                    active: editorHost.expanded || editorHost.height > 0
+                    property var bindingDraft: ({
+                                                    props: {}
+                                                })
+                    Component.onCompleted: {
+                        if (root.draftGroup === row.modelData.id && root.draft)
+                            bindingDraft = root.draft;
                     }
-                    Behavior on opacity {
-                        ElementMoveAnimation {}
-                    }
-                    Loader {
-                        id: editorLoader
-                        width: parent.width
-                        active: editorHost.expanded || editorHost.height > 0
-                        property var bindingDraft: ({
-                                                        props: {}
-                                                    })
-                        Component.onCompleted: {
+                    Connections {
+                        target: root
+                        function onDraftChanged() {
                             if (root.draftGroup === row.modelData.id && root.draft)
-                                bindingDraft = root.draft;
+                                editorLoader.bindingDraft = root.draft;
                         }
-                        Connections {
-                            target: root
-                            function onDraftChanged() {
-                                if (root.draftGroup === row.modelData.id && root.draft)
-                                    editorLoader.bindingDraft = root.draft;
-                            }
-                        }
-                        sourceComponent: editor
                     }
+                    sourceComponent: editor
                 }
             }
         }
