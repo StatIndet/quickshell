@@ -11,10 +11,12 @@ StyledFlickable {
     property string errorMessage: ""
     readonly property bool secure: securitySelect.value === "personal"
     readonly property int ssidBytes: utf8Length(ssidField.text)
-    readonly property bool validPassword: !secure || (passwordField.text.length >= 8 && passwordField.text.length <= 63) || /^[0-9A-Fa-f]{64}$/.test(passwordField.text)
+    readonly property bool validPassword: !secure || (passwordField.text.length >= 8
+                                                      && passwordField.text.length <= 63) ||
+                                          /^[0-9A-Fa-f]{64}$/.test(passwordField.text)
     readonly property bool valid: ssidBytes > 0 && ssidBytes <= 32 && validPassword
 
-    signal completed()
+    signal completed
 
     function utf8Length(value) {
         try {
@@ -45,7 +47,7 @@ StyledFlickable {
     Connections {
         function onAddWifiFinished(success, result, errorMessage) {
             if (!root.submitting)
-                return ;
+                return;
 
             root.submitting = false;
             if (success) {
@@ -69,7 +71,7 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("网络信息")
+            title: qsTr("Network information")
             iconName: "add_link"
             contentSpacing: Metrics.spacingL
 
@@ -82,25 +84,23 @@ StyledFlickable {
 
                     Layout.fillWidth: true
                     labelText: qsTr("SSID")
-                    errorText: root.ssidBytes > 32 ? qsTr("SSID 最多 32 个 UTF-8 字节") : ""
+                    errorText: root.ssidBytes > 32 ? qsTr("SSID can be at most 32 UTF-8 bytes") : ""
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("隐藏网络")
-                supportingText: qsTr("即使扫描列表中没有该 SSID 也尝试连接")
+                title: qsTr("Hidden network")
+                supportingText: qsTr("Try to connect even when this SSID is not in the scan results")
 
                 trailing: StyledSwitch {
                     id: hiddenSwitch
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("安全类型")
+                title: qsTr("Security type")
 
                 trailing: SearchSelectMenuField {
                     id: securitySelect
@@ -108,18 +108,20 @@ StyledFlickable {
                     Layout.preferredWidth: 240
                     value: "personal"
                     closeOnAccept: true
-                    options: [{
-                        "value": "personal",
-                        "label": qsTr("WPA/WPA2 Personal")
-                    }, {
-                        "value": "open",
-                        "label": qsTr("无 / 开放")
-                    }]
-                    onAccepted: (value) => {
+                    options: [
+                        {
+                            "value": "personal",
+                            "label": qsTr("WPA/WPA2 Personal")
+                        },
+                        {
+                            "value": "open",
+                            "label": qsTr("None / Open")
+                        }
+                    ]
+                    onAccepted: value => {
                         return securitySelect.value = value;
                     }
                 }
-
             }
 
             ColumnLayout {
@@ -131,13 +133,13 @@ StyledFlickable {
                     id: passwordField
 
                     Layout.fillWidth: true
-                    labelText: qsTr("密码")
+                    labelText: qsTr("Password")
                     passwordToggle: true
-                    errorText: text.length > 0 && !root.validPassword ? qsTr("密码需为 8–63 个字符，或 64 位十六进制 PSK") : ""
+                    errorText: text.length > 0 && !root.validPassword ? qsTr(
+                                                                            "Password must be 8–63 characters or a 64-digit hexadecimal PSK") :
+                                                                        ""
                 }
-
             }
-
         }
 
         InlineStatusBanner {
@@ -163,19 +165,17 @@ StyledFlickable {
             }
 
             ActionButton {
-                text: qsTr("连接并添加")
+                text: qsTr("Connect and add")
                 iconName: "add_link"
                 filled: true
                 enabled: root.valid && !root.submitting
                 onClicked: {
                     root.errorMessage = "";
                     root.submitting = true;
-                    NetworkService.addWifiNetwork(ssidField.text, hiddenSwitch.checked, root.secure, passwordField.text);
+                    NetworkService.addWifiNetwork(ssidField.text, hiddenSwitch.checked, root.secure,
+                                                  passwordField.text);
                 }
             }
-
         }
-
     }
-
 }

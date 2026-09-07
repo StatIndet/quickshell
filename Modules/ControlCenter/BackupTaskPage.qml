@@ -10,14 +10,17 @@ Item {
     id: root
 
     readonly property bool taskActive: RcloneService.backupActive
-    readonly property bool checking: RcloneService.backupState === "running" && (RcloneService.backupPhase === "preparing" || RcloneService.backupPhase === "checking")
+    readonly property bool checking: RcloneService.backupState === "running" && (RcloneService.backupPhase
+                                                                                 === "preparing"
+                                                                                 || RcloneService.backupPhase
+                                                                                 === "checking")
     readonly property bool transferring: RcloneService.backupPhase === "transferring"
     readonly property bool terminal: ["success", "cancelled", "error"].indexOf(RcloneService.backupState) >= 0
 
-    signal backRequested()
-    signal closeRequested()
-    signal stopRequested()
-    signal restartRequested()
+    signal backRequested
+    signal closeRequested
+    signal stopRequested
+    signal restartRequested
 
     function countText(value) {
         const number = Number(value);
@@ -28,43 +31,45 @@ Item {
         if (RcloneService.backupTotalCount <= 0)
             return "";
 
-        return qsTr("文件夹 %1 / %2").arg(RcloneService.backupCurrentIndex).arg(RcloneService.backupTotalCount);
+        return qsTr("Folder %1 / %2").arg(RcloneService.backupCurrentIndex).arg(
+                    RcloneService.backupTotalCount);
     }
 
     function checkingStatusText() {
         if (RcloneService.backupChecks > 0) {
             if (RcloneService.backupTotalChecks > 0)
-                return qsTr("已检查 %1 / %2").arg(countText(RcloneService.backupChecks)).arg(countText(RcloneService.backupTotalChecks));
+                return qsTr("Checked %1 / %2").arg(countText(RcloneService.backupChecks)).arg(countText(
+                                                                                                  RcloneService.backupTotalChecks));
 
-            return qsTr("已检查 %1 个项目").arg(countText(RcloneService.backupChecks));
+            return qsTr("%1 items checked").arg(countText(RcloneService.backupChecks));
         }
         if (RcloneService.backupListed > 0)
-            return qsTr("已扫描 %1 个项目").arg(countText(RcloneService.backupListed));
+            return qsTr("%1 items scanned").arg(countText(RcloneService.backupListed));
 
-        return qsTr("正在读取文件列表…");
+        return qsTr("Reading the file list…");
     }
 
     function taskTitle() {
         if (RcloneService.backupState === "stopping")
-            return qsTr("正在停止备份…");
+            return qsTr("Stopping backup…");
 
         if (RcloneService.backupPhase === "preparing")
-            return qsTr("正在准备备份");
+            return qsTr("Preparing backup");
 
         if (RcloneService.backupPhase === "checking")
-            return RcloneService.backupChecks > 0 ? qsTr("正在检查文件…") : qsTr("正在扫描文件…");
+            return RcloneService.backupChecks > 0 ? qsTr("Checking files…") : qsTr("Scanning files…");
 
-        return qsTr("正在备份");
+        return qsTr("Backing up");
     }
 
     function terminalTitle() {
         switch (RcloneService.backupState) {
         case "success":
-            return qsTr("备份已完成");
+            return qsTr("Backup complete");
         case "cancelled":
-            return qsTr("备份已停止");
+            return qsTr("Backup stopped");
         case "error":
-            return qsTr("备份失败");
+            return qsTr("Backup failed");
         default:
             return "";
         }
@@ -94,13 +99,13 @@ Item {
 
             IconButton {
                 iconName: "arrow_back"
-                accessibleName: qsTr("返回备份配置")
+                accessibleName: qsTr("Back to backup settings")
                 onClicked: root.backRequested()
             }
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("电脑备份")
+                text: qsTr("Computer backup")
                 color: Appearance.colors.colOnSurface
                 font.family: Typography.headlineSmall.family
                 font.pixelSize: Typography.headlineSmall.pixelSize
@@ -109,10 +114,9 @@ Item {
 
             IconButton {
                 iconName: "close"
-                accessibleName: qsTr("关闭")
+                accessibleName: qsTr("Close")
                 onClicked: root.closeRequested()
             }
-
         }
 
         ColumnLayout {
@@ -178,7 +182,6 @@ Item {
                                 font.pixelSize: Typography.bodyMedium.pixelSize
                                 elide: Text.ElideMiddle
                             }
-
                         }
 
                         Text {
@@ -188,7 +191,6 @@ Item {
                             font.pixelSize: Typography.labelLarge.pixelSize
                             font.weight: Typography.labelLarge.weight
                         }
-
                     }
 
                     ColumnLayout {
@@ -208,7 +210,6 @@ Item {
                                 radius: Appearance.rounding.full
                                 color: Appearance.colors.colOnPrimaryContainer
                             }
-
                         }
 
                         RowLayout {
@@ -227,14 +228,13 @@ Item {
                             }
 
                             Text {
-                                text: qsTr("%1 / %2").arg(Format.bytes(RcloneService.backupBytes)).arg(Format.bytes(RcloneService.backupTotalBytes))
+                                text: qsTr("%1 / %2").arg(Format.bytes(RcloneService.backupBytes)).arg(
+                                          Format.bytes(RcloneService.backupTotalBytes))
                                 color: Appearance.colors.colOnPrimaryContainer
                                 font.family: Typography.bodyMedium.family
                                 font.pixelSize: Typography.bodyMedium.pixelSize
                             }
-
                         }
-
                     }
 
                     Text {
@@ -245,9 +245,7 @@ Item {
                         font.family: Typography.bodyMedium.family
                         font.pixelSize: Typography.bodyMedium.pixelSize
                     }
-
                 }
-
             }
 
             GridLayout {
@@ -262,7 +260,7 @@ Item {
                     spacing: Metrics.spacingXXS
 
                     Text {
-                        text: qsTr("传输速度")
+                        text: qsTr("Transfer speed")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.labelMedium.family
                         font.pixelSize: Typography.labelMedium.pixelSize
@@ -275,7 +273,6 @@ Item {
                         font.pixelSize: Typography.titleMedium.pixelSize
                         font.weight: Typography.titleMedium.weight
                     }
-
                 }
 
                 ColumnLayout {
@@ -283,20 +280,21 @@ Item {
                     spacing: Metrics.spacingXXS
 
                     Text {
-                        text: qsTr("剩余时间")
+                        text: qsTr("Time remaining")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.labelMedium.family
                         font.pixelSize: Typography.labelMedium.pixelSize
                     }
 
                     Text {
-                        text: RcloneService.backupEtaSeconds >= 0 ? qsTr("约 %1").arg(Format.duration(RcloneService.backupEtaSeconds)) : qsTr("正在计算")
+                        text: RcloneService.backupEtaSeconds >= 0 ? qsTr("About %1").arg(Format.duration(
+                                                                                             RcloneService.backupEtaSeconds)) :
+                                                                    qsTr("Calculating")
                         color: Appearance.colors.colOnSurface
                         font.family: Typography.titleMedium.family
                         font.pixelSize: Typography.titleMedium.pixelSize
                         font.weight: Typography.titleMedium.weight
                     }
-
                 }
 
                 ColumnLayout {
@@ -304,20 +302,24 @@ Item {
                     spacing: Metrics.spacingXXS
 
                     Text {
-                        text: qsTr("已传输")
+                        text: qsTr("Transferred")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.labelMedium.family
                         font.pixelSize: Typography.labelMedium.pixelSize
                     }
 
                     Text {
-                        text: RcloneService.backupTotalTransfers >= 0 ? qsTr("%1 / %2").arg(root.countText(RcloneService.backupTransfers)).arg(root.countText(RcloneService.backupTotalTransfers)) : root.countText(RcloneService.backupTransfers)
+                        text: RcloneService.backupTotalTransfers >= 0 ? qsTr("%1 / %2").arg(root.countText(
+                                                                                                RcloneService.backupTransfers)).arg(
+                                                                            root.countText(
+                                                                                RcloneService.backupTotalTransfers)) :
+                                                                        root.countText(
+                                                                            RcloneService.backupTransfers)
                         color: Appearance.colors.colOnSurface
                         font.family: Typography.titleMedium.family
                         font.pixelSize: Typography.titleMedium.pixelSize
                         font.weight: Typography.titleMedium.weight
                     }
-
                 }
 
                 ColumnLayout {
@@ -325,28 +327,31 @@ Item {
                     spacing: Metrics.spacingXXS
 
                     Text {
-                        text: qsTr("已检查")
+                        text: qsTr("Checked")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.labelMedium.family
                         font.pixelSize: Typography.labelMedium.pixelSize
                     }
 
                     Text {
-                        text: RcloneService.backupTotalChecks >= 0 ? qsTr("%1 / %2").arg(root.countText(RcloneService.backupChecks)).arg(root.countText(RcloneService.backupTotalChecks)) : root.countText(RcloneService.backupChecks)
+                        text: RcloneService.backupTotalChecks >= 0 ? qsTr("%1 / %2").arg(root.countText(
+                                                                                             RcloneService.backupChecks)).arg(
+                                                                         root.countText(
+                                                                             RcloneService.backupTotalChecks)) :
+                                                                     root.countText(
+                                                                         RcloneService.backupChecks)
                         color: Appearance.colors.colOnSurface
                         font.family: Typography.titleMedium.family
                         font.pixelSize: Typography.titleMedium.pixelSize
                         font.weight: Typography.titleMedium.weight
                     }
-
                 }
-
             }
 
             Text {
                 Layout.fillWidth: true
                 visible: root.transferring && RcloneService.backupErrors > 0
-                text: qsTr("错误 %1").arg(root.countText(RcloneService.backupErrors))
+                text: qsTr("Errors %1").arg(root.countText(RcloneService.backupErrors))
                 color: Appearance.colors.colError
                 font.family: Typography.bodyMedium.family
                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -356,7 +361,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 visible: root.transferring
-                text: qsTr("正在传输")
+                text: qsTr("Current transfers")
                 color: Appearance.colors.colOnSurface
                 font.family: Typography.titleMedium.family
                 font.pixelSize: Typography.titleMedium.pixelSize
@@ -408,7 +413,6 @@ Item {
                                 font.pixelSize: Typography.labelMedium.pixelSize
                                 font.weight: Typography.labelMedium.weight
                             }
-
                         }
 
                         Rectangle {
@@ -419,25 +423,23 @@ Item {
                             color: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.2)
 
                             Rectangle {
-                                width: parent.width * Math.max(0, Math.min(1, transferRow.modelData.percentage / 100))
+                                width: parent.width * Math.max(0, Math.min(1,
+                                                                           transferRow.modelData.percentage
+                                                                           / 100))
                                 height: parent.height
                                 radius: Appearance.rounding.full
                                 color: Appearance.colors.colPrimary
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
             Text {
                 Layout.fillWidth: true
                 Layout.fillHeight: root.transferring && RcloneService.backupTransferring.length === 0
                 visible: root.transferring && RcloneService.backupTransferring.length === 0
-                text: qsTr("正在等待下一个传输项目…")
+                text: qsTr("Waiting for the next transfer…")
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Typography.bodyMedium.family
                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -457,14 +459,12 @@ Item {
                 }
 
                 ActionButton {
-                    text: RcloneService.backupState === "stopping" ? qsTr("正在停止") : qsTr("停止备份")
+                    text: RcloneService.backupState === "stopping" ? qsTr("Stopping") : qsTr("Stop backup")
                     iconName: "stop_circle"
                     enabled: RcloneService.backupState === "running"
                     onClicked: root.stopRequested()
                 }
-
             }
-
         }
 
         ColumnLayout {
@@ -482,16 +482,17 @@ Item {
                 Layout.preferredWidth: 88
                 Layout.preferredHeight: 88
                 radius: Appearance.rounding.full
-                color: RcloneService.backupState === "error" ? Appearance.colors.colErrorContainer : Appearance.colors.colSecondaryContainer
+                color: RcloneService.backupState === "error" ? Appearance.colors.colErrorContainer :
+                                                               Appearance.colors.colSecondaryContainer
 
                 MaterialSymbol {
                     anchors.centerIn: parent
                     text: root.terminalIcon()
                     iconSize: 48
                     fill: 1
-                    color: RcloneService.backupState === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSecondaryContainer
+                    color: RcloneService.backupState === "error" ? Appearance.colors.colOnErrorContainer :
+                                                                   Appearance.colors.colOnSecondaryContainer
                 }
-
             }
 
             Text {
@@ -518,7 +519,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 visible: RcloneService.backupState === "cancelled"
-                text: qsTr("已经成功同步到远端的文件会继续保留。")
+                text: qsTr("Files already synchronized to the remote will be retained.")
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Typography.bodyMedium.family
                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -529,7 +530,9 @@ Item {
             Text {
                 Layout.fillWidth: true
                 visible: RcloneService.backupState === "success"
-                text: qsTr("%1 · %2 个文件已同步").arg(Format.bytes(RcloneService.backupCompletedBytes)).arg(root.countText(RcloneService.backupCompletedTransfers))
+                text: qsTr("%1 · %2 files synchronized").arg(Format.bytes(
+                                                                 RcloneService.backupCompletedBytes)).arg(
+                          root.countText(RcloneService.backupCompletedTransfers))
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Typography.titleMedium.family
                 font.pixelSize: Typography.titleMedium.pixelSize
@@ -540,7 +543,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 visible: RcloneService.backupElapsedSeconds > 0
-                text: qsTr("耗时 %1").arg(Format.duration(RcloneService.backupElapsedSeconds))
+                text: qsTr("Elapsed %1").arg(Format.duration(RcloneService.backupElapsedSeconds))
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Typography.bodyMedium.family
                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -559,23 +562,20 @@ Item {
                 }
 
                 ActionButton {
-                    text: qsTr("返回")
+                    text: qsTr("Back")
                     iconName: "arrow_back"
                     onClicked: root.backRequested()
                 }
 
                 ActionButton {
-                    visible: RcloneService.backupState === "cancelled" || RcloneService.backupState === "error"
-                    text: RcloneService.backupState === "error" ? qsTr("重试") : qsTr("重新开始")
+                    visible: RcloneService.backupState === "cancelled" || RcloneService.backupState
+                             === "error"
+                    text: RcloneService.backupState === "error" ? qsTr("Retry") : qsTr("Start again")
                     iconName: "refresh"
                     filled: true
                     onClicked: root.restartRequested()
                 }
-
             }
-
         }
-
     }
-
 }

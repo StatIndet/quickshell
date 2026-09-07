@@ -34,7 +34,8 @@ Item {
                 root.sunriseTime = WeatherPlugin.current().sunrise || 0;
                 root.sunsetTime = WeatherPlugin.current().sunset || 0;
             } else {
-                const today = WeatherPlugin.dailyForecast.count() > 0 ? WeatherPlugin.dailyForecast.get(0) : null;
+                const today = WeatherPlugin.dailyForecast.count() > 0 ? WeatherPlugin.dailyForecast.get(0) :
+                                                                        null;
                 if (today) {
                     root.sunriseTime = today.sunrise || 0;
                     root.sunsetTime = today.sunset || 0;
@@ -80,7 +81,7 @@ Item {
             ColumnLayout {
                 anchors.left: parent.left
                 spacing: 2
-                
+
                 MaterialSymbol {
                     text: "wb_twilight"
                     fill: 1
@@ -89,7 +90,7 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
-                    text: qsTr("日出")
+                    text: qsTr("Sunrise")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
                     font.pixelSize: 16
@@ -100,7 +101,7 @@ Item {
             ColumnLayout {
                 anchors.right: parent.right
                 spacing: 2
-                
+
                 MaterialSymbol {
                     text: "wb_twilight"
                     fill: 1
@@ -109,7 +110,7 @@ Item {
                     Layout.alignment: Qt.AlignHCenter
                 }
                 Text {
-                    text: qsTr("日落")
+                    text: qsTr("Sunset")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
                     font.pixelSize: 16
@@ -172,7 +173,8 @@ Item {
             Text {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                text: root.sunriseTime > 0 ? Qt.formatDateTime(new Date(root.sunriseTime * 1000), "HH:mm") : "--:--"
+                text: root.sunriseTime > 0 ? Qt.formatDateTime(new Date(root.sunriseTime * 1000), "HH:mm") :
+                                             "--:--"
                 color: Appearance.colors.colOnSurface
                 font.family: Fonts.numeric
                 font.pixelSize: 32
@@ -182,7 +184,9 @@ Item {
             Text {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                text: root.sunsetTime > 0 ? Qt.formatDateTime(new Date(root.sunsetTime * 1000), "HH:mm") : "--:--"
+                text: root.sunsetTime > 0 ? Qt.formatDateTime(new Date(root.sunsetTime * 1000), "HH:mm") :
+                                            "--:--"
+
                 color: Appearance.colors.colOnSurface
                 font.family: Fonts.numeric
                 font.pixelSize: 32

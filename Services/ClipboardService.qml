@@ -17,10 +17,17 @@ Singleton {
     property bool canList: false
     property bool canRestore: false
     property bool watcherRunning: false
-    property var dependencies: ({ cliphist: false, wlCopy: false,
-        wlPaste: false })
-    property var capabilities: ({ inspect: false, preview: false,
-        mimeRestore: false, mimeAwareStore: false })
+    property var dependencies: ({
+                                    cliphist: false,
+                                    wlCopy: false,
+                                    wlPaste: false
+                                })
+    property var capabilities: ({
+                                    inspect: false,
+                                    preview: false,
+                                    mimeRestore: false,
+                                    mimeAwareStore: false
+                                })
     property var entries: []
     property var detailsById: ({})
     property var error: null
@@ -52,52 +59,38 @@ Singleton {
 
     signal restored(string id)
     signal deleted(string id)
-    signal cleared()
+    signal cleared
     signal inspected(string id)
     signal inspectFailed(string id, string code, string message)
     signal actionFailed(string action, string id, string code, string message)
 
     function normalizedError(value, fallbackCode, fallbackMessage) {
-        const code = value && typeof value === "object"
-            ? String(value.code || fallbackCode) : fallbackCode;
+        const code = value && typeof value === "object" ? String(value.code || fallbackCode) : fallbackCode;
         const localized = {
-            cliphist_watcher_inactive:
-                qsTr("cliphist 监听服务未运行；请启用服务后重新复制内容"),
-            cliphist_unavailable:
-                qsTr("缺少 cliphist，无法读取剪贴板历史"),
-            wl_copy_unavailable:
-                qsTr("缺少 wl-copy，无法恢复剪贴板内容"),
-            clipboard_dependency_unavailable:
-                qsTr("缺少 cliphist 或 wl-copy，剪贴板历史不可用"),
-            cliphist_decode_failed:
-                qsTr("无法从 cliphist 解码该条目"),
-            clipboard_inspect_failed:
-                qsTr("无法检查该剪贴板条目"),
-            clipboard_preview_failed:
-                qsTr("无法生成剪贴板预览"),
-            clipboard_payload_too_large:
-                qsTr("该剪贴板内容超过安全大小限制"),
-            clipboard_image_decode_failed:
-                qsTr("图片数据已损坏或尺寸过大"),
-            clipboard_file_missing:
-                qsTr("剪贴板中的文件已不存在"),
-            clipboard_mime_unsupported:
-                qsTr("无法可靠恢复该剪贴板格式"),
-            wl_copy_failed:
-                qsTr("wl-copy 写入系统剪贴板失败"),
-            invalid_clipboard_response:
-                qsTr("剪贴板服务返回了无效数据"),
-            clipboard_capability_missing:
-                qsTr("当前 key 不提供所需的剪贴板能力"),
-            clipboard_action_busy:
-                qsTr("已有剪贴板操作正在执行")
+            cliphist_watcher_inactive: qsTr(
+                                           "The cliphist watcher is not running; enable the service and copy content again"),
+            cliphist_unavailable: qsTr("cliphist is missing; clipboard history cannot be read"),
+            wl_copy_unavailable: qsTr("wl-copy is missing; clipboard contents cannot be restored"),
+            clipboard_dependency_unavailable: qsTr(
+                                                  "cliphist or wl-copy is missing; clipboard history is unavailable"),
+            cliphist_decode_failed: qsTr("Unable to decode this entry from cliphist"),
+            clipboard_inspect_failed: qsTr("Unable to inspect this clipboard entry"),
+            clipboard_preview_failed: qsTr("Unable to generate a clipboard preview"),
+            clipboard_payload_too_large: qsTr("This clipboard content exceeds the safe size limit"),
+            clipboard_image_decode_failed: qsTr("Image data is damaged or too large"),
+            clipboard_file_missing: qsTr("The file in the clipboard no longer exists"),
+            clipboard_mime_unsupported: qsTr("This clipboard format cannot be restored reliably"),
+            wl_copy_failed: qsTr("wl-copy failed to write the system clipboard"),
+            invalid_clipboard_response: qsTr("The clipboard service returned invalid data"),
+            clipboard_capability_missing: qsTr(
+                                              "The current key does not provide the required clipboard capability"),
+            clipboard_action_busy: qsTr("A clipboard operation is already running")
         };
         return {
             code: code,
-            message: localized[code] || (
-                value && typeof value === "object"
-                    ? String(value.message || fallbackMessage)
-                    : fallbackMessage)
+            message: localized[code] || (value && typeof value === "object" ? String(value.message
+                                                                                     || fallbackMessage) :
+                                                                              fallbackMessage)
         };
     }
 
@@ -112,19 +105,13 @@ Singleton {
 
     function responseHasCurrentCapabilities(response) {
         const capabilities = response && response.capabilities;
-        return capabilities
-            && capabilities.inspect === true
-            && capabilities.preview === true
-            && capabilities.mimeRestore === true
-            && capabilities.mimeAwareStore === true;
+        return capabilities && capabilities.inspect === true && capabilities.preview === true
+                && capabilities.mimeRestore === true && capabilities.mimeAwareStore === true;
     }
 
     function responseIsCurrent(response, command) {
-        return response
-            && !Array.isArray(response)
-            && response.schemaVersion === 1
-            && response.command === command
-            && root.responseHasCurrentCapabilities(response);
+        return response && !Array.isArray(response) && response.schemaVersion === 1 && response.command === command
+                && root.responseHasCurrentCapabilities(response);
     }
 
     function applyListResponse(text) {
@@ -135,23 +122,21 @@ Singleton {
             root.canRestore = false;
             root.watcherRunning = false;
             root.entries = [];
-            root.error = root.normalizedError(
-                null, "invalid_clipboard_response",
-                qsTr("剪贴板服务返回了无效数据"));
+            root.error = root.normalizedError(null, "invalid_clipboard_response", qsTr(
+                                                  "The clipboard service returned invalid data"));
             root.revision += 1;
             return;
         }
-        if (!response || Array.isArray(response)
-                || response.schemaVersion !== 1
-                || response.command !== "clipboard.list") {
+        if (!response || Array.isArray(response) || response.schemaVersion !== 1 || response.command
+                !== "clipboard.list") {
+
             root.available = false;
             root.canList = false;
             root.canRestore = false;
             root.watcherRunning = false;
             root.entries = [];
-            root.error = root.normalizedError(
-                null, "invalid_clipboard_response",
-                qsTr("剪贴板服务返回了无效数据"));
+            root.error = root.normalizedError(null, "invalid_clipboard_response", qsTr(
+                                                  "The clipboard service returned invalid data"));
             root.revision += 1;
             return;
         }
@@ -161,16 +146,19 @@ Singleton {
             root.canRestore = false;
             root.watcherRunning = response.watcherRunning === true;
             root.dependencies = response.dependencies || {
-                cliphist: false, wlCopy: false, wlPaste: false
+                cliphist: false,
+                wlCopy: false,
+                wlPaste: false
             };
             root.capabilities = response.capabilities || {
-                inspect: false, preview: false,
-                mimeRestore: false, mimeAwareStore: false
+                inspect: false,
+                preview: false,
+                mimeRestore: false,
+                mimeAwareStore: false
             };
             root.entries = [];
-            root.error = root.normalizedError(
-                null, "clipboard_capability_missing",
-                qsTr("当前 key 不支持所需的剪贴板能力"));
+            root.error = root.normalizedError(null, "clipboard_capability_missing", qsTr(
+                                                  "The current key does not support the required clipboard capabilities"));
             root.revision += 1;
             return;
         }
@@ -180,24 +168,21 @@ Singleton {
         root.canRestore = response.canRestore === true;
         root.watcherRunning = response.watcherRunning === true;
         root.dependencies = response.dependencies || {
-            cliphist: false, wlCopy: false, wlPaste: false
+            cliphist: false,
+            wlCopy: false,
+            wlPaste: false
         };
         root.capabilities = response.capabilities;
-        const nextEntries = Array.isArray(response.entries)
-            ? response.entries : [];
+        const nextEntries = Array.isArray(response.entries) ? response.entries : [];
         root.entries = nextEntries;
         root.pruneDetails(nextEntries);
-        root.error = response.ok === true
-            ? null
-            : root.normalizedError(
-                response.error,
-                "clipboard_unavailable",
-                qsTr("剪贴板历史不可用"));
+        root.error = response.ok === true ? null : root.normalizedError(response.error, "clipboard_unavailable",
+                                                                        qsTr("Clipboard history is unavailable"));
         root.revision += 1;
     }
 
     function pruneDetails(entries) {
-        const activeIds = ({ });
+        const activeIds = ({});
         const source = Array.isArray(entries) ? entries : [];
         for (let index = 0; index < source.length; index += 1) {
             const id = String(source[index].id || "");
@@ -205,8 +190,8 @@ Singleton {
                 activeIds[id] = true;
         }
 
-        const current = root.detailsById || ({ });
-        const next = ({ });
+        const current = root.detailsById || ({});
+        const next = ({});
         let changed = false;
         for (const id in current) {
             if (activeIds[id])
@@ -230,10 +215,8 @@ Singleton {
         root._listExited = false;
         root._listStdoutFinished = false;
         root._listExitCode = -1;
-        listProcess.command = [
-            root.commandName, "clipboard", "list",
-            "--format", "json", "--limit", String(safeLimit)
-        ];
+        listProcess.command = [root.commandName, "clipboard", "list", "--format", "json", "--limit", String(
+                                   safeLimit)];
         listProcess.running = true;
         return true;
     }
@@ -246,14 +229,11 @@ Singleton {
     }
 
     function runAction(action, id) {
-        const normalizedId =
-            id === undefined || id === null ? "" : String(id);
+        const normalizedId = id === undefined || id === null ? "" : String(id);
         if (actionProcess.running || root.actionRunning) {
-            const failure = root.normalizedError(
-                null, "clipboard_action_busy",
-                qsTr("已有剪贴板操作正在执行"));
-            root.actionFailed(action, normalizedId,
-                              failure.code, failure.message);
+            const failure = root.normalizedError(null, "clipboard_action_busy", qsTr(
+                                                     "A clipboard operation is already running"));
+            root.actionFailed(action, normalizedId, failure.code, failure.message);
             return false;
         }
         const command = [root.commandName, "clipboard", action];
@@ -293,22 +273,14 @@ Singleton {
             return;
         root.actionRunning = false;
         root.lastActionExitCode = root._actionExitCode;
-        root.lastActionStderr =
-            String(root._actionErrorOutput || "").slice(0, 512);
+        root.lastActionStderr = String(root._actionErrorOutput || "").slice(0, 512);
         const response = root.parseResponse(root._actionOutput);
-        if (root._actionExitCode !== 0
-                || !response || Array.isArray(response)
-                || response.schemaVersion !== 1
-                || response.command !== "clipboard." + root._actionName
-                || response.ok !== true) {
-            const failure = root.normalizedError(
-                response ? response.error : null,
-                response ? "clipboard_action_failed"
-                         : "invalid_clipboard_response",
-                qsTr("剪贴板操作失败"));
+        if (root._actionExitCode !== 0 || !response || Array.isArray(response) || response.schemaVersion
+                !== 1 || response.command !== "clipboard." + root._actionName || response.ok !== true) {
+            const failure = root.normalizedError(response ? response.error : null, response ? "clipboard_action_failed" : "invalid_clipboard_response",
+                                                 qsTr("Clipboard operation failed"));
             root.lastActionError = failure;
-            root.actionFailed(root._actionName, root._actionId,
-                              failure.code, failure.message);
+            root.actionFailed(root._actionName, root._actionId, failure.code, failure.message);
             return;
         }
         root.lastActionError = null;
@@ -316,8 +288,7 @@ Singleton {
         if (root._actionName === "restore") {
             root.restored(responseId);
         } else if (root._actionName === "delete") {
-            root.entries = (root.entries || []).filter(
-                entry => String(entry.id || "") !== responseId);
+            root.entries = (root.entries || []).filter(entry => String(entry.id || "") !== responseId);
             const nextDetails = Object.assign({}, root.detailsById);
             delete nextDetails[responseId];
             root.detailsById = nextDetails;
@@ -339,8 +310,7 @@ Singleton {
         const normalizedId = String(id || "");
         if (normalizedId === "" || root.detailsById[normalizedId])
             return normalizedId !== "";
-        if (root._inspectId === normalizedId
-                || root._inspectQueue.indexOf(normalizedId) >= 0)
+        if (root._inspectId === normalizedId || root._inspectQueue.indexOf(normalizedId) >= 0)
             return true;
         const nextQueue = root._inspectQueue.slice();
         nextQueue.push(normalizedId);
@@ -353,19 +323,16 @@ Singleton {
         const normalizedId = String(id || "");
         if (normalizedId === "" || normalizedId === root._inspectId)
             return false;
-        const nextQueue = root._inspectQueue.filter(
-            queuedId => String(queuedId) !== normalizedId);
+        const nextQueue = root._inspectQueue.filter(queuedId => String(queuedId) !== normalizedId);
         if (nextQueue.length === root._inspectQueue.length)
             return false;
         root._inspectQueue = nextQueue;
-        root.inspecting = root._inspectId !== ""
-            || root._inspectQueue.length > 0;
+        root.inspecting = root._inspectId !== "" || root._inspectQueue.length > 0;
         return true;
     }
 
     function startNextInspect() {
-        if (inspectProcess.running || root._inspectId !== ""
-                || root._inspectQueue.length === 0)
+        if (inspectProcess.running || root._inspectId !== "" || root._inspectQueue.length === 0)
             return;
         const nextQueue = root._inspectQueue.slice();
         root._inspectId = String(nextQueue.shift());
@@ -375,10 +342,8 @@ Singleton {
         root._inspectStdoutFinished = false;
         root._inspectExitCode = -1;
         root.inspecting = true;
-        inspectProcess.command = [
-            root.commandName, "clipboard", "inspect",
-            root._inspectId, "--format", "json"
-        ];
+        inspectProcess.command = [root.commandName, "clipboard", "inspect", root._inspectId, "--format",
+                                  "json"];
         inspectProcess.running = true;
     }
 
@@ -387,13 +352,9 @@ Singleton {
             return;
         const id = root._inspectId;
         const response = root.parseResponse(root._inspectOutput);
-        if (root._inspectExitCode === 0 && response
-                && !Array.isArray(response)
-                && response.schemaVersion === 1
-                && response.command === "clipboard.inspect"
-                && response.ok === true) {
-            const stillListed = (root.entries || []).some(
-                entry => String(entry.id || "") === id);
+        if (root._inspectExitCode === 0 && response && !Array.isArray(response) && response.schemaVersion
+                === 1 && response.command === "clipboard.inspect" && response.ok === true) {
+            const stillListed = (root.entries || []).some(entry => String(entry.id || "") === id);
             if (stillListed) {
                 const nextDetails = Object.assign({}, root.detailsById);
                 nextDetails[id] = response;
@@ -402,11 +363,8 @@ Singleton {
                 root.inspected(id);
             }
         } else {
-            const failure = root.normalizedError(
-                response ? response.error : null,
-                response ? "clipboard_inspect_failed"
-                         : "invalid_clipboard_response",
-                qsTr("无法检查剪贴板条目"));
+            const failure = root.normalizedError(response ? response.error : null, response ? "clipboard_inspect_failed" : "invalid_clipboard_response",
+                                                 qsTr("Unable to inspect clipboard entry"));
             root.inspectFailed(id, failure.code, failure.message);
         }
         root._inspectId = "";

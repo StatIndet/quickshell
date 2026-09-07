@@ -7,7 +7,8 @@ import qs.Widgets.common
 StyledFlickable {
     id: root
 
-    readonly property bool horizontalBar: PersonalizationConfig.barPosition === "top" || PersonalizationConfig.barPosition === "bottom"
+    readonly property bool horizontalBar: PersonalizationConfig.barPosition === "top"
+                                          || PersonalizationConfig.barPosition === "bottom"
 
     clip: true
     contentWidth: width
@@ -24,34 +25,32 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("位置")
+            title: qsTr("Position")
             iconName: "dock_to_bottom"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("屏幕边缘")
+                title: qsTr("Screen edge")
 
                 trailing: EdgePositionSelector {
                     position: PersonalizationConfig.barPosition
-                    onPositionSelected: (position) => {
+                    onPositionSelected: position => {
                         return PersonalizationConfig.setBarPosition(position);
                     }
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("组件")
+            title: qsTr("Components")
             iconName: "view_agenda"
-            supportingText: qsTr("拖动组件调整顺序，拖到另一侧可移动位置。")
+            supportingText: qsTr("Drag components to reorder them or move them to the other side.")
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: root.horizontalBar ? qsTr("左侧") : qsTr("上方")
+                title: root.horizontalBar ? qsTr("Left") : qsTr("Top")
 
                 trailing: SortableMultiSelectField {
                     id: leadingField
@@ -61,19 +60,18 @@ StyledFlickable {
                     options: PersonalizationConfig.barComponentOptions
                     zone: "leading"
                     dragCoordinator: dragCoordinator
-                    onToggled: (componentId) => {
+                    onToggled: componentId => {
                         return PersonalizationConfig.toggleBarComponent(componentId, zone);
                     }
-                    onRemoved: (componentId) => {
+                    onRemoved: componentId => {
                         return PersonalizationConfig.removeBarComponent(componentId);
                     }
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: root.horizontalBar ? qsTr("右侧") : qsTr("下方")
+                title: root.horizontalBar ? qsTr("Right") : qsTr("Bottom")
 
                 trailing: SortableMultiSelectField {
                     id: trailingField
@@ -83,14 +81,13 @@ StyledFlickable {
                     options: PersonalizationConfig.barComponentOptions
                     zone: "trailing"
                     dragCoordinator: dragCoordinator
-                    onToggled: (componentId) => {
+                    onToggled: componentId => {
                         return PersonalizationConfig.toggleBarComponent(componentId, zone);
                     }
-                    onRemoved: (componentId) => {
+                    onRemoved: componentId => {
                         return PersonalizationConfig.removeBarComponent(componentId);
                     }
                 }
-
             }
 
             ColumnLayout {
@@ -101,7 +98,7 @@ StyledFlickable {
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("快捷设置组件")
+                    text: qsTr("Quick settings widgets")
                     color: Appearance.colors.colOnSurface
                     font.family: Fonts.ui
                     font.pixelSize: Typography.bodyLarge.pixelSize
@@ -117,18 +114,15 @@ StyledFlickable {
                     options: PersonalizationConfig.quickSettingsComponentOptions
                     zone: "quickSettings"
                     dragCoordinator: quickSettingsDragCoordinator
-                    onToggled: (componentId) => {
+                    onToggled: componentId => {
                         return PersonalizationConfig.toggleQuickSettingsComponent(componentId);
                     }
-                    onRemoved: (componentId) => {
+                    onRemoved: componentId => {
                         return PersonalizationConfig.removeQuickSettingsComponent(componentId);
                     }
                 }
-
             }
-
         }
-
     }
 
     BarLayoutDragCoordinator {
@@ -152,5 +146,4 @@ StyledFlickable {
             return PersonalizationConfig.moveQuickSettingsComponent(componentId, targetIndex);
         }
     }
-
 }

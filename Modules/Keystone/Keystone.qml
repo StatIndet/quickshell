@@ -17,38 +17,45 @@ Item {
 
     function openAvatarPicker(screen) {
         avatarFilePicker.targetScreen = screen;
-        Qt.callLater(() => avatarFilePicker.openAt(
-            avatarFilePicker.picturesDir !== ""
-                ? avatarFilePicker.picturesDir
-                : Paths.homeDir
-        ));
+        Qt.callLater(() => avatarFilePicker.openAt(avatarFilePicker.picturesDir !== ""
+                                                   ? avatarFilePicker.picturesDir : Paths.homeDir));
     }
 
     Loader {
         id: styleLoader
 
-        sourceComponent: PersonalizationConfig.keystoneStyle === "pill"
-            ? pillStyle
-            : bangsStyle
+        sourceComponent: PersonalizationConfig.keystoneStyle === "pill" ? pillStyle : bangsStyle
     }
 
     FilePickerWindow {
         id: avatarFilePicker
 
-        dialogTitle: qsTr("选择用户头像")
-        description: qsTr("图片将复制到 ~/.face，并同步用于 Dashboard 与锁屏")
+        dialogTitle: qsTr("Choose user avatar")
+        description: qsTr("The image will be copied to ~/.face and used by the Dashboard and lock screen")
         onAccepted: path => AvatarService.setAvatar(path)
     }
 
     IpcHandler {
         target: "keystone"
 
-        function cancelRecord(): string { return root.invoke("cancelRecord"); }
-        function closeAllOthers(): string { return root.invoke("closeAllOthers"); }
-        function currentStyle(): string { return PersonalizationConfig.keystoneStyle; }
-        function dashboard(): string { return root.invoke("dashboard"); }
-        function hub(): string { return root.invoke("hub"); }
-        function tools(): string { return root.invoke("tools"); }
+        function cancelRecord(): string {
+            return root.invoke("cancelRecord");
+        }
+        function closeAllOthers(): string {
+            return root.invoke("closeAllOthers");
+        }
+        function currentStyle(): string {
+            return PersonalizationConfig.keystoneStyle;
+        }
+        function dashboard(): string {
+            return root.invoke("dashboard");
+        }
+        function hub(): string {
+            return root.invoke("hub");
+        }
+        function tools(): string {
+            return root.invoke("tools");
+        }
     }
 
     Component {

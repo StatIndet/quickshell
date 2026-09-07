@@ -35,18 +35,18 @@ ColumnLayout {
     function commitCoordinate() {
         const values = coordinateField.text.trim().split(/[\s,]+/);
         if (values.length !== 2 || values[0] === "" || values[1] === "") {
-            root.coordinateError = qsTr("请输入纬度和经度");
-            return ;
+            root.coordinateError = qsTr("Enter latitude and longitude");
+            return;
         }
         const latitudeValue = Number(values[0]);
         const longitudeValue = Number(values[1]);
         if (!isFinite(latitudeValue) || latitudeValue < -90 || latitudeValue > 90) {
-            root.coordinateError = qsTr("纬度必须在 -90 到 90 之间");
-            return ;
+            root.coordinateError = qsTr("Latitude must be between -90 and 90");
+            return;
         }
         if (!isFinite(longitudeValue) || longitudeValue < -180 || longitudeValue > 180) {
-            root.coordinateError = qsTr("经度必须在 -180 到 180 之间");
-            return ;
+            root.coordinateError = qsTr("Longitude must be between -180 and 180");
+            return;
         }
         root.setCandidate(latitudeValue, longitudeValue);
         root.cameraLatitude = latitudeValue;
@@ -57,9 +57,10 @@ ColumnLayout {
     function saveCoordinate() {
         root.commitCoordinate();
         if (root.coordinateError !== "")
-            return ;
+            return;
 
-        WeatherPlugin.setManualLocation(root.candidateLatitude, root.candidateLongitude, root.coordinateText(root.candidateLatitude, root.candidateLongitude));
+        WeatherPlugin.setManualLocation(root.candidateLatitude, root.candidateLongitude, root.coordinateText(
+                                            root.candidateLatitude, root.candidateLongitude));
     }
 
     function useAutomaticLocation() {
@@ -117,7 +118,7 @@ ColumnLayout {
 
             IconButton {
                 iconName: "my_location"
-                accessibleName: qsTr("回到已选位置")
+                accessibleName: qsTr("Return to saved location")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
@@ -126,13 +127,12 @@ ColumnLayout {
 
             IconButton {
                 iconName: "open_in_full"
-                accessibleName: qsTr("展开地图")
+                accessibleName: qsTr("Expand map")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
                 onClicked: expandedWindow.showWindow()
             }
-
         }
 
         layer.effect: OpacityMask {
@@ -142,16 +142,14 @@ ColumnLayout {
                 height: mapFrame.height
                 radius: Appearance.rounding.large
             }
-
         }
-
     }
 
     OutlinedTextField {
         id: coordinateField
 
         Layout.fillWidth: true
-        labelText: qsTr("坐标")
+        labelText: qsTr("Coordinates")
         errorText: root.coordinateError
         text: root.coordinateText(root.candidateLatitude, root.candidateLongitude)
         onTextChanged: root.coordinateError = ""
@@ -173,24 +171,23 @@ ColumnLayout {
         ActionButton {
             id: saveLocationButton
 
-            text: qsTr("保存位置")
+            text: qsTr("Save location")
             iconName: "save"
             onClicked: root.saveCoordinate()
         }
 
         ActionButton {
-            text: qsTr("使用自动位置")
+            text: qsTr("Use automatic location")
             iconName: "my_location"
             enabled: WeatherPlugin.hasManualLocation && !WeatherPlugin.loading
             onClicked: root.useAutomaticLocation()
         }
-
     }
 
     Connections {
         function onDataChanged() {
             if (WeatherPlugin.hasManualLocation)
-                return ;
+                return;
 
             root.candidateLatitude = Number(WeatherPlugin.latitude);
             root.candidateLongitude = Number(WeatherPlugin.longitude);
@@ -226,5 +223,4 @@ ColumnLayout {
         }
         onSaveRequested: root.saveCoordinate()
     }
-
 }

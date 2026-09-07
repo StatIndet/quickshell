@@ -9,7 +9,7 @@ Singleton {
     readonly property bool available: Networking.backend === NetworkBackendType.NetworkManager
     readonly property bool wifiEnabled: available && Networking.wifiEnabled
     readonly property bool wifiHardwareEnabled: available && Networking.wifiHardwareEnabled
-    readonly property bool connected: root._nativeDevices.some((device) => {
+    readonly property bool connected: root._nativeDevices.some(device => {
         return device && device.connected;
     })
     readonly property bool internetAvailable: Networking.connectivity === NetworkConnectivity.Full
@@ -18,10 +18,12 @@ Singleton {
     readonly property bool connectivityKnown: Networking.connectivity !== NetworkConnectivity.Unknown
     readonly property bool canCheckConnectivity: available && Networking.canCheckConnectivity
     readonly property bool connectivityCheckEnabled: available && Networking.connectivityCheckEnabled
-    readonly property bool busy: root._pendingOperation.length > 0 || root._pendingSettings !== null || root._pendingForgetSettings !== null || NetworkManagerExtras.mutationBusy
-    readonly property bool wifiConnecting: root._pendingOperation === "connect" || root._nativeWifiDevices.some((device) => {
-        return device && device.state === ConnectionState.Connecting;
-    })
+    readonly property bool busy: root._pendingOperation.length > 0 || root._pendingSettings !== null || root._pendingForgetSettings !== null
+                                 || NetworkManagerExtras.mutationBusy
+    readonly property bool wifiConnecting: root._pendingOperation === "connect"
+                                           || root._nativeWifiDevices.some(device => {
+                                               return device && device.state === ConnectionState.Connecting;
+                                           })
     property string lastError: ""
     property string passwordRequestSsid: ""
     property string passwordRequestDeviceName: ""
@@ -29,10 +31,10 @@ Singleton {
     property string connectTargetDeviceName: ""
     property string connectTargetUuid: ""
     readonly property var _nativeDevices: Networking.devices ? Networking.devices.values : []
-    readonly property var _nativeWifiDevices: _nativeDevices.filter((device) => {
+    readonly property var _nativeWifiDevices: _nativeDevices.filter(device => {
         return device && device.type === DeviceType.Wifi;
     })
-    readonly property var _nativeWiredDevices: _nativeDevices.filter((device) => {
+    readonly property var _nativeWiredDevices: _nativeDevices.filter(device => {
         return device && device.type === DeviceType.Wired;
     })
     readonly property var allWifiNetworks: {
@@ -41,7 +43,6 @@ Singleton {
             for (const network of (device && device.networks ? device.networks.values : [])) {
                 if (network && String(network.name || "").length > 0)
                     result.push(root._describeWifiNetwork(device, network));
-
             }
         }
         return result;
@@ -58,21 +59,21 @@ Singleton {
     // Quickshell keeps a WifiNetwork visible while it owns saved settings,
     // even when no AP is currently in range. Keep those entries on the Saved
     // Networks page instead of presenting them as nearby scan results.
-    readonly property var nearbyWifiNetworks: settingsWifiNetworks.filter((network) => {
+    readonly property var nearbyWifiNetworks: settingsWifiNetworks.filter(network => {
         return network.active || !network.known || network.strength > 0;
     })
-    readonly property var devices: _nativeDevices.map((device) => {
+    readonly property var devices: _nativeDevices.map(device => {
         return root._describeDevice(device);
     })
-    readonly property var wifiDevices: devices.filter((device) => {
+    readonly property var wifiDevices: devices.filter(device => {
         return device.type === "wifi";
     })
-    readonly property var wiredDevices: devices.filter((device) => {
+    readonly property var wiredDevices: devices.filter(device => {
         return device.type === "wired";
     })
     readonly property bool wifiAvailable: wifiDevices.length > 0
     readonly property bool wifiConnected: activeWifi !== null
-    readonly property bool wiredConnected: wiredDevices.some((device) => {
+    readonly property bool wiredConnected: wiredDevices.some(device => {
         return device.connected;
     })
     readonly property bool ethernetConnected: wiredConnected
@@ -80,8 +81,7 @@ Singleton {
     // strongest AP as the WifiNetwork representative. This second pass only merges the
     // same SSID across multiple Wi-Fi adapters.
     readonly property var accessPoints: {
-        const bySsid = {
-        };
+        const bySsid = {};
         for (const device of root._nativeWifiDevices) {
             const networks = device && device.networks ? device.networks.values : [];
             for (const network of networks) {
@@ -94,12 +94,13 @@ Singleton {
 
                 const candidate = root._describeWifiNetwork(device, network);
                 const current = bySsid[ssid];
-                if (!current || (candidate.active && !current.active) || (candidate.active === current.active && candidate.strength > current.strength))
+                if (!current || (candidate.active && !current.active) || (candidate.active === current.active
+                                                                          && candidate.strength
+                                                                          > current.strength))
                     bySsid[ssid] = candidate;
-
             }
         }
-        return Object.keys(bySsid).map((ssid) => {
+        return Object.keys(bySsid).map(ssid => {
             return bySsid[ssid];
         });
     }
@@ -113,22 +114,21 @@ Singleton {
 
         return b.strength - a.strength;
     })
-    readonly property var savedWifiNetworks: friendlyWifiNetworks.filter((network) => {
+    readonly property var savedWifiNetworks: friendlyWifiNetworks.filter(network => {
         return network.known;
     })
-    readonly property var availableWifiNetworks: friendlyWifiNetworks.filter((network) => {
+    readonly property var availableWifiNetworks: friendlyWifiNetworks.filter(network => {
         return !network.known;
     })
-    readonly property var savedWifiConnections: savedWifiNetworks.map((network) => {
+    readonly property var savedWifiConnections: savedWifiNetworks.map(network => {
         return ({
-            "ssid": network.ssid,
-            "deviceName": network.deviceName
-        });
+                    "ssid": network.ssid,
+                    "deviceName": network.deviceName
+                });
     })
     readonly property var savedWifiProfiles: {
         const profiles = [];
-        const byUuid = {
-        };
+        const byUuid = {};
         for (const network of root.allWifiNetworks) {
             for (const profile of network.profiles || []) {
                 const currentIndex = byUuid[profile.uuid];
@@ -137,9 +137,11 @@ Singleton {
                     profiles.push(profile);
                 } else {
                     const current = profiles[currentIndex];
-                    if ((profile.networkConnected && !current.networkConnected) || (profile.networkConnected === current.networkConnected && profile.strength > current.strength))
+                    if ((profile.networkConnected && !current.networkConnected) || (profile.networkConnected
+                                                                                    === current.networkConnected
+                                                                                    && profile.strength
+                                                                                    > current.strength))
                         profiles[currentIndex] = profile;
-
                 }
             }
         }
@@ -149,8 +151,7 @@ Singleton {
     }
     readonly property var wiredProfiles: {
         const profiles = [];
-        const seen = {
-        };
+        const seen = {};
         for (const device of root._nativeWiredDevices) {
             const network = device ? device.network : null;
             for (const settings of (network && network.nmSettings ? network.nmSettings : [])) {
@@ -163,8 +164,7 @@ Singleton {
         }
         return profiles;
     }
-    property var runtimeDetails: ({
-    })
+    property var runtimeDetails: ({})
     property bool runtimeDetailsLoading: false
     property string runtimeDetailsError: ""
     property int _runtimeRequestGeneration: 0
@@ -177,27 +177,29 @@ Singleton {
     property bool _addWifiPending: false
     property bool _addWifiUsesNative: false
     property var _addWifiTarget: null
-    readonly property var activeWifi: accessPoints.find((network) => {
+    readonly property var activeWifi: accessPoints.find(network => {
         return network.active;
     }) || null
     readonly property var activeNetwork: {
         for (const device of root._nativeWiredDevices) {
             if (device && device.connected && device.network)
                 return root._describeWiredNetwork(device, device.network);
-
         }
         return activeWifi;
     }
     readonly property string activeSsid: activeWifi ? activeWifi.ssid : ""
-    readonly property string activeConnection: activeNetwork ? activeNetwork.name : qsTr("已断开")
-    readonly property string activeConnectionType: activeNetwork ? (activeNetwork.type === "wired" ? qsTr("有线") : "Wi-Fi") : ""
+    readonly property string activeConnection: activeNetwork ? activeNetwork.name : qsTr("Disconnected")
+    readonly property string activeConnectionType: activeNetwork ? (activeNetwork.type === "wired" ? qsTr(
+                                                                                                         "Wired") :
+                                                                                                     "Wi-Fi") :
+                                                                   ""
     readonly property int signalStrength: activeWifi ? activeWifi.strength : 0
-    readonly property var wifiConnectTarget: connectTargetSsid.length > 0 ? accessPoints.find((network) => {
-        return network.ssid === connectTargetSsid && (connectTargetDeviceName.length === 0 || network.deviceName === connectTargetDeviceName);
+    readonly property var wifiConnectTarget: connectTargetSsid.length > 0 ? accessPoints.find(network => {
+        return network.ssid === connectTargetSsid && (connectTargetDeviceName.length === 0
+                                                      || network.deviceName === connectTargetDeviceName);
     }) || null : null
     readonly property bool passwordPromptActive: passwordRequestSsid.length > 0
-    property var _scanOwners: ({
-    })
+    property var _scanOwners: ({})
     property bool _manualScanActive: false
     property string _pendingOperation: ""
     property string _pendingSsid: ""
@@ -219,8 +221,7 @@ Singleton {
 
     function _describeDevice(device) {
         if (!device)
-            return {
-        };
+            return {};
 
         const isWifi = device.type === DeviceType.Wifi;
         return {
@@ -257,8 +258,10 @@ Singleton {
             "connected": !!network.connected,
             "state": ConnectionState.toString(network.state),
             "stateChanging": !!network.stateChanging,
-            "askingPassword": root.passwordRequestSsid === String(network.name || "") && (root.passwordRequestDeviceName.length === 0 || root.passwordRequestDeviceName === String(device.name || "")),
-            "profiles": (network.nmSettings || []).map((settings) => {
+            "askingPassword": root.passwordRequestSsid === String(network.name || "") && (
+                                  root.passwordRequestDeviceName.length === 0
+                                  || root.passwordRequestDeviceName === String(device.name || "")),
+            "profiles": (network.nmSettings || []).map(settings => {
                 return root._describeProfile(settings, network, device, "wifi");
             }),
             "nativeNetwork": network
@@ -266,12 +269,9 @@ Singleton {
     }
 
     function _describeProfile(settings, network, device, type) {
-        const map = settings ? settings.read() : {
-        };
-        const connection = map.connection || {
-        };
-        const ipv4 = map.ipv4 || {
-        };
+        const map = settings ? settings.read() : {};
+        const connection = map.connection || {};
+        const ipv4 = map.ipv4 || {};
         const dnsData = ipv4["dns-data"] || [];
         const legacyDns = ipv4.dns || [];
         return {
@@ -287,7 +287,8 @@ Singleton {
             "ipv4Method": String(ipv4.method || "auto"),
             "customDns": !!ipv4["ignore-auto-dns"] || dnsData.length > 0 || legacyDns.length > 0,
             "security": network ? WifiSecurityType.toString(network.security) : "",
-            "isSecure": !!(network && network.security !== WifiSecurityType.Open && network.security !== WifiSecurityType.Owe),
+            "isSecure": !!(network && network.security !== WifiSecurityType.Open && network.security
+                           !== WifiSecurityType.Owe),
             "nativeSettings": settings,
             "nativeNetwork": network
         };
@@ -295,7 +296,7 @@ Singleton {
 
     function _describeWiredNetwork(device, network) {
         return {
-            "name": String(network.name || device.name || qsTr("有线网络")),
+            "name": String(network.name || device.name || qsTr("Wired network")),
             "deviceName": String(device.name || ""),
             "address": String(device.address || ""),
             "type": "wired",
@@ -316,7 +317,7 @@ Singleton {
         const type = String(network.type || "wifi");
         const deviceName = String(network.deviceName || "");
         if (type === "wired") {
-            const wiredDevice = root._nativeWiredDevices.find((device) => {
+            const wiredDevice = root._nativeWiredDevices.find(device => {
                 return device && (deviceName.length === 0 || device.name === deviceName);
             });
             return wiredDevice ? wiredDevice.network : null;
@@ -326,19 +327,18 @@ Singleton {
             if (!device || (deviceName.length > 0 && device.name !== deviceName))
                 continue;
 
-            const match = (device.networks ? device.networks.values : []).find((candidate) => {
+            const match = (device.networks ? device.networks.values : []).find(candidate => {
                 return candidate && candidate.name === ssid;
             });
             if (match)
                 return match;
-
         }
         return null;
     }
 
     function _beginOperation(operation, network, ssid) {
         if (root.busy) {
-            root.operationFailed(operation, qsTr("另一项网络操作仍在进行"));
+            root.operationFailed(operation, qsTr("Another network operation is already in progress"));
             return false;
         }
         root.lastError = "";
@@ -354,7 +354,7 @@ Singleton {
 
     function _finishOperationSucceeded() {
         if (!root.busy)
-            return ;
+            return;
 
         const operation = root._pendingOperation;
         operationTimeout.stop();
@@ -364,10 +364,10 @@ Singleton {
 
     function _finishOperationFailed(message) {
         if (!root.busy)
-            return ;
+            return;
 
         const operation = root._pendingOperation;
-        root.lastError = String(message || qsTr("网络操作失败"));
+        root.lastError = String(message || qsTr("Network operation failed"));
         operationTimeout.stop();
         root._clearPendingOperation();
         root.operationFailed(operation, root.lastError);
@@ -387,26 +387,27 @@ Singleton {
     }
 
     function _isPskSecurity(securityType) {
-        return securityType === WifiSecurityType.WpaPsk || securityType === WifiSecurityType.Wpa2Psk || securityType === WifiSecurityType.Sae;
+        return securityType === WifiSecurityType.WpaPsk || securityType === WifiSecurityType.Wpa2Psk
+                || securityType === WifiSecurityType.Sae;
     }
 
     function setWifiEnabled(enabled) {
         const requested = !!enabled;
         if (!root.available) {
-            root.lastError = qsTr("NetworkManager 不可用");
+            root.lastError = qsTr("NetworkManager is unavailable");
             root.operationFailed("set-wifi-enabled", root.lastError);
-            return ;
+            return;
         }
         if (requested && !root.wifiHardwareEnabled) {
-            root.lastError = qsTr("Wi-Fi 已被硬件或 rfkill 阻止");
+            root.lastError = qsTr("Wi-Fi is blocked by hardware or rfkill");
             root.operationFailed("set-wifi-enabled", root.lastError);
-            return ;
+            return;
         }
         if (root.wifiEnabled === requested)
-            return ;
+            return;
 
         if (!root._beginOperation("set-wifi-enabled", null, ""))
-            return ;
+            return;
 
         root._pendingWifiState = requested;
         Networking.wifiEnabled = requested;
@@ -426,8 +427,7 @@ Singleton {
 
     function acquireScan(owner) {
         const key = root._scanOwnerKey(owner);
-        const next = Object.assign({
-        }, root._scanOwners);
+        const next = Object.assign({}, root._scanOwners);
         next[key] = Number(next[key] || 0) + 1;
         root._scanOwners = next;
         root._applyScanning();
@@ -435,10 +435,9 @@ Singleton {
 
     function releaseScan(owner) {
         const key = root._scanOwnerKey(owner);
-        const next = Object.assign({
-        }, root._scanOwners);
+        const next = Object.assign({}, root._scanOwners);
         if (!next[key])
-            return ;
+            return;
 
         if (next[key] <= 1)
             delete next[key];
@@ -450,19 +449,19 @@ Singleton {
 
     function requestScan() {
         if (!root.available) {
-            root.lastError = qsTr("NetworkManager 不可用");
+            root.lastError = qsTr("NetworkManager is unavailable");
             root.operationFailed("scan", root.lastError);
-            return ;
+            return;
         }
         if (!root.wifiAvailable) {
-            root.lastError = qsTr("未检测到 Wi-Fi 设备");
+            root.lastError = qsTr("No Wi-Fi device detected");
             root.operationFailed("scan", root.lastError);
-            return ;
+            return;
         }
         if (!root.wifiEnabled) {
-            root.lastError = qsTr("Wi-Fi 已关闭");
+            root.lastError = qsTr("Wi-Fi is off");
             root.operationFailed("scan", root.lastError);
-            return ;
+            return;
         }
         root.lastError = "";
         root._manualScanActive = true;
@@ -473,62 +472,67 @@ Singleton {
     }
 
     function _applyScanning() {
-        const shouldScan = root.wifiEnabled && (root._manualScanActive || Object.keys(root._scanOwners).length > 0);
+        const shouldScan = root.wifiEnabled && (root._manualScanActive || Object.keys(
+                                                    root._scanOwners).length > 0);
         for (const device of root._nativeWifiDevices) {
             if (device && device.scannerEnabled !== shouldScan)
                 device.scannerEnabled = shouldScan;
-
         }
     }
 
     function connectNetwork(network, credentials) {
         const nativeNetwork = root._resolveNativeNetwork(network);
         if (!nativeNetwork) {
-            root.lastError = qsTr("目标网络已不可用");
+            root.lastError = qsTr("The target network is no longer available");
             root.operationFailed("connect", root.lastError);
-            return ;
+            return;
         }
         const ssid = String(network.ssid || network.name || "");
-        const password = typeof credentials === "string" ? credentials : credentials && credentials.password ? String(credentials.password) : "";
+        const password = typeof credentials === "string" ? credentials : credentials && credentials.password ? String(
+                                                                                                                   credentials.password) :
+                                                                                                               "";
         if (String(network.type || "wifi") !== "wired" && password.length === 0) {
-            if (!nativeNetwork.known && nativeNetwork.security !== WifiSecurityType.Open && nativeNetwork.security !== WifiSecurityType.Owe) {
+            if (!nativeNetwork.known && nativeNetwork.security !== WifiSecurityType.Open
+                    && nativeNetwork.security !== WifiSecurityType.Owe) {
                 if (root._isPskSecurity(nativeNetwork.security)) {
                     root.openPasswordPrompt(network);
-                    return ;
+                    return;
                 }
-                root.lastError = qsTr("该网络认证类型需要第二阶段 Secret Agent/Extras 后端");
+                root.lastError = qsTr(
+                            "This authentication type requires the second-phase Secret Agent/Extras backend");
                 root.operationFailed("connect", root.lastError);
-                return ;
+                return;
             }
         }
         if (!root._beginOperation("connect", nativeNetwork, ssid))
-            return ;
+            return;
 
         root.connectTargetSsid = ssid;
         root.connectTargetDeviceName = String(network.deviceName || "");
         if (String(network.type || "wifi") === "wired") {
             nativeNetwork.connect();
-            return ;
+            return;
         }
         if (password.length > 0) {
             if (!root._isPskSecurity(nativeNetwork.security)) {
-                root._finishOperationFailed(qsTr("当前 Quickshell API 仅支持 WPA/WPA2-PSK 与 SAE 密码连接"));
-                return ;
+                root._finishOperationFailed(qsTr(
+                                                "The current Quickshell API only supports WPA/WPA2-PSK and SAE password connections"));
+                return;
             }
             root._pendingWithPsk = true;
             nativeNetwork.connectWithPsk(password);
-            return ;
+            return;
         }
         nativeNetwork.connect();
     }
 
     function connectToWifiNetwork(network) {
         if (!network)
-            return ;
+            return;
 
         if (network.active) {
             root.disconnectNetwork(network);
-            return ;
+            return;
         }
         root.connectNetwork(network, null);
     }
@@ -542,7 +546,9 @@ Singleton {
     function cancelPasswordRequest(network) {
         const ssid = network ? String(network.ssid || network.name || "") : "";
         const deviceName = network ? String(network.deviceName || "") : "";
-        if (ssid.length === 0 || (root.passwordRequestSsid === ssid && (deviceName.length === 0 || root.passwordRequestDeviceName === deviceName))) {
+        if (ssid.length === 0 || (root.passwordRequestSsid === ssid && (deviceName.length === 0
+                                                                        || root.passwordRequestDeviceName
+                                                                        === deviceName))) {
             root.passwordRequestSsid = "";
             root.passwordRequestDeviceName = "";
         }
@@ -550,29 +556,29 @@ Singleton {
 
     function changePassword(network, password) {
         if (!network)
-            return ;
+            return;
 
         const secret = String(password || "");
         if (secret.length === 0) {
             root.openPasswordPrompt(network);
-            return ;
+            return;
         }
         root.passwordRequestSsid = "";
         root.passwordRequestDeviceName = "";
         root.connectNetwork(network, {
-            "password": secret
-        });
+                                "password": secret
+                            });
     }
 
     function disconnectNetwork(network) {
         let nativeNetwork = root._resolveNativeNetwork(network || root.activeNetwork);
         if (!nativeNetwork) {
-            root.lastError = qsTr("没有可断开的活动网络");
+            root.lastError = qsTr("No active network to disconnect");
             root.operationFailed("disconnect", root.lastError);
-            return ;
+            return;
         }
         if (!root._beginOperation("disconnect", nativeNetwork, String(nativeNetwork.name || "")))
-            return ;
+            return;
 
         nativeNetwork.disconnect();
     }
@@ -584,18 +590,18 @@ Singleton {
     function forgetNetwork(network) {
         const nativeNetwork = root._resolveNativeNetwork(network);
         if (!nativeNetwork || !nativeNetwork.known) {
-            root.lastError = qsTr("未找到已保存的网络配置");
+            root.lastError = qsTr("No saved network configuration found");
             root.operationFailed("forget", root.lastError);
-            return ;
+            return;
         }
         if (!root._beginOperation("forget", nativeNetwork, String(nativeNetwork.name || "")))
-            return ;
+            return;
 
         nativeNetwork.forget();
     }
 
     function hasSavedSecret(ssid) {
-        return root.savedWifiConnections.some((connection) => {
+        return root.savedWifiConnections.some(connection => {
             return connection.ssid === ssid;
         });
     }
@@ -606,29 +612,30 @@ Singleton {
             return null;
 
         const map = settings.read();
-        const ipv4 = map.ipv4 || {
-        };
-        const connection = map.connection || {
-        };
+        const ipv4 = map.ipv4 || {};
+        const connection = map.connection || {};
         const addressData = ipv4["address-data"] || [];
         const legacyAddresses = ipv4.addresses || [];
         let address = "";
         if (addressData.length > 0) {
             const first = addressData[0];
-            address = String(first.address || "") + "/" + String(first.prefix === undefined ? 24 : first.prefix);
+            address = String(first.address || "") + "/" + String(first.prefix === undefined ? 24 :
+                                                                                              first.prefix);
         } else if (legacyAddresses.length > 0 && legacyAddresses[0].length >= 2) {
             address = root._uintToIpv4(Number(legacyAddresses[0][0])) + "/" + String(legacyAddresses[0][1]);
         }
         const dnsData = ipv4["dns-data"] || [];
-        const dns = dnsData.length > 0 ? dnsData.map((value) => {
+        const dns = dnsData.length > 0 ? dnsData.map(value => {
             return String(value);
-        }) : (ipv4.dns || []).map((value) => {
+        }) : (ipv4.dns || []).map(value => {
             return root._uintToIpv4(Number(value));
         });
         const customDns = !!ipv4["ignore-auto-dns"];
         const method = String(ipv4.method || "auto");
         return {
             "method": method === "manual" ? "manual" : method === "auto" ? (customDns ? "auto-dns" : "auto") : method,
+
+
             "address": address,
             "gateway": String(ipv4.gateway || ""),
             "dns": dns.join(", "),
@@ -649,13 +656,13 @@ Singleton {
 
     function _validIpv4(value) {
         const parts = String(value || "").split(".");
-        return parts.length === 4 && parts.every((part) => {
+        return parts.length === 4 && parts.every(part => {
             return /^\d{1,3}$/.test(part) && Number(part) >= 0 && Number(part) <= 255;
         });
     }
 
     function _normalizedDns(value) {
-        return String(value || "").trim().split(/[\s,]+/).filter((item) => {
+        return String(value || "").trim().split(/[\s,]+/).filter(item => {
             return item.length > 0;
         });
     }
@@ -670,15 +677,19 @@ Singleton {
 
     function _profileMatchesExpected(settings, expected) {
         const actual = root.profileSnapshot({
-            "nativeSettings": settings
-        });
-        return actual && actual.method === expected.method && actual.address === expected.address && actual.gateway === expected.gateway && root._normalizedDns(actual.dns).join(",") === root._normalizedDns(expected.dns).join(",") && actual.autoconnect === expected.autoconnect;
+                                                "nativeSettings": settings
+                                            });
+        return actual && actual.method === expected.method && actual.address === expected.address
+                && actual.gateway === expected.gateway && root._normalizedDns(actual.dns).join(",")
+                === root._normalizedDns(expected.dns).join(",") && actual.autoconnect
+                === expected.autoconnect;
     }
 
     function writeProfile(profile, values) {
         const settings = profile && profile.nativeSettings;
         if (!settings || root._pendingSettings) {
-            root.profileWriteFailed(profile ? profile.uuid : "", qsTr("网络配置当前不可写入"));
+            root.profileWriteFailed(profile ? profile.uuid : "", qsTr(
+                                        "The network profile cannot currently be written"));
             return false;
         }
         const mode = String(values.method || "auto");
@@ -686,10 +697,17 @@ Singleton {
         const dnsStrings = root._normalizedDns(values.dns);
         const addressPieces = String(values.address || "").trim().split("/");
         const gateway = String(values.gateway || "").trim();
-        const manualValid = mode !== "manual" || (addressPieces.length === 2 && root._validIpv4(addressPieces[0]) && /^\d{1,2}$/.test(addressPieces[1]) && Number(addressPieces[1]) >= 0 && Number(addressPieces[1]) <= 32 && (gateway.length === 0 || root._validIpv4(gateway)));
-        const dnsValid = mode === "auto" || (mode === "manual" && dnsStrings.length === 0) || (dnsStrings.length > 0 && dnsStrings.every(root._validIpv4));
+        const manualValid = mode !== "manual" || (addressPieces.length === 2 && root._validIpv4(
+                                                      addressPieces[0]) && /^\d{1,2}$/.test(addressPieces[1])
+                                                  && Number(addressPieces[1]) >= 0 && Number(
+                                                      addressPieces[1]) <= 32 && (gateway.length === 0
+                                                                                  || root._validIpv4(
+                                                                                      gateway)));
+        const dnsValid = mode === "auto" || (mode === "manual" && dnsStrings.length === 0) || (dnsStrings.length
+                                                                                               > 0 && dnsStrings.every(
+                                                                                                   root._validIpv4));
         if (!current || !manualValid || !dnsValid) {
-            root.profileWriteFailed(String(profile.uuid || ""), qsTr("IPv4 配置格式无效"));
+            root.profileWriteFailed(String(profile.uuid || ""), qsTr("Invalid IPv4 configuration format"));
             return false;
         }
         const requested = {
@@ -699,9 +717,12 @@ Singleton {
             "dns": mode === "auto" ? (current.method === "auto" ? current.dns : "") : dnsStrings.join(", "),
             "autoconnect": !!values.autoconnect
         };
-        const ipv4Changed = requested.method !== current.method || requested.address !== current.address || requested.gateway !== current.gateway || root._normalizedDns(requested.dns).join(",") !== root._normalizedDns(current.dns).join(",");
+        const ipv4Changed = requested.method !== current.method || requested.address !== current.address
+              || requested.gateway !== current.gateway || root._normalizedDns(requested.dns).join(",")
+              !== root._normalizedDns(current.dns).join(",");
         if (ipv4Changed && mode !== "auto" && mode !== "auto-dns" && mode !== "manual") {
-            root.profileWriteFailed(String(profile.uuid || ""), qsTr("当前 IPv4 模式不在此页面的编辑范围内"));
+            root.profileWriteFailed(String(profile.uuid || ""), qsTr(
+                                        "The current IPv4 mode cannot be edited on this page"));
             return false;
         }
         const ipv4 = {
@@ -711,11 +732,14 @@ Singleton {
             "dns-data": null
         };
         if (mode === "manual") {
-            ipv4["address-data"] = [{
-                "address": addressPieces[0],
-                "prefix": Number(addressPieces[1])
-            }];
-            ipv4.addresses = [[root._ipv4ToUint(addressPieces[0]), Number(addressPieces[1]), gateway.length > 0 ? root._ipv4ToUint(gateway) : 0]];
+            ipv4["address-data"] = [
+                        {
+                            "address": addressPieces[0],
+                            "prefix": Number(addressPieces[1])
+                        }
+                    ];
+            ipv4.addresses = [[root._ipv4ToUint(addressPieces[0]), Number(addressPieces[1]), gateway.length
+                               > 0 ? root._ipv4ToUint(gateway) : 0]];
             ipv4.gateway = gateway;
         } else {
             ipv4["address-data"] = null;
@@ -726,12 +750,11 @@ Singleton {
         root._pendingProfileUuid = String(profile.uuid || "");
         root._pendingProfileExpected = requested;
         profileWriteTimeout.restart();
-        const changes = {
-        };
+        const changes = {};
         if (requested.autoconnect !== current.autoconnect)
             changes.connection = {
-            "autoconnect": !!values.autoconnect
-        };
+                "autoconnect": !!values.autoconnect
+            };
 
         if (ipv4Changed)
             changes.ipv4 = ipv4;
@@ -752,7 +775,7 @@ Singleton {
         const settings = profile && profile.nativeSettings;
         const uuid = String(profile ? profile.uuid || "" : "");
         if (!settings || root._pendingForgetSettings) {
-            root.profileForgetFailed(uuid, qsTr("网络配置当前无法删除"));
+            root.profileForgetFailed(uuid, qsTr("The network profile cannot currently be deleted"));
             return false;
         }
         root._pendingForgetSettings = settings;
@@ -771,8 +794,7 @@ Singleton {
         };
         root.runtimeDetailsLoading = true;
         root.runtimeDetailsError = "";
-        root.runtimeDetails = {
-        };
+        root.runtimeDetails = {};
         root._queuedRuntimeRequest = request;
         if (!NetworkManagerExtras.busy)
             root._startRuntimeRequest();
@@ -783,19 +805,24 @@ Singleton {
     function _startRuntimeRequest() {
         const request = root._queuedRuntimeRequest;
         if (!request || NetworkManagerExtras.busy)
-            return ;
+            return;
 
         root._queuedRuntimeRequest = null;
-        NetworkManagerExtras.queryRuntimeDetails(request.interfaceName, request.isWifi, (success, details, errorMessage) => {
-            if (request.generation !== root._runtimeRequestGeneration)
-                return ;
+        NetworkManagerExtras.queryRuntimeDetails(request.interfaceName, request.isWifi, (success, details,
+                                                                                         errorMessage) => {
+                                                                                             if (request.generation
+                                                                                                     !== root._runtimeRequestGeneration)
+                                                                                                 return;
 
-            root.runtimeDetailsLoading = false;
-            if (success)
-                root.runtimeDetails = details;
-            else
-                root.runtimeDetailsError = errorMessage;
-        });
+                                                                                             root.runtimeDetailsLoading
+                                                                                                     = false;
+                                                                                             if (success)
+                                                                                                 root.runtimeDetails
+                                                                                                         = details;
+                                                                                             else
+                                                                                                 root.runtimeDetailsError
+                                                                                                         = errorMessage;
+                                                                                         });
     }
 
     function releaseRuntimeDetails() {
@@ -803,14 +830,13 @@ Singleton {
         root._queuedRuntimeRequest = null;
         root.runtimeDetailsLoading = false;
         root.runtimeDetailsError = "";
-        root.runtimeDetails = {
-        };
+        root.runtimeDetails = {};
         NetworkManagerExtras.cancelRuntimeDetails();
     }
 
     function _finishAddWifi(success, result, message) {
         if (!root._addWifiPending)
-            return ;
+            return;
 
         root._addWifiPending = false;
         root._addWifiUsesNative = false;
@@ -821,54 +847,62 @@ Singleton {
     function addWifiNetwork(ssid, hidden, secure, password) {
         const normalizedSsid = String(ssid || "");
         const secret = String(password || "");
-        const validSecret = !secure || (secret.length >= 8 && secret.length <= 63) || (/^[0-9A-Fa-f]{64}$/.test(secret));
+        const validSecret = !secure || (secret.length >= 8 && secret.length <= 63) || (/^[0-9A-Fa-f]{64}$/.test(
+                                                                                           secret));
         if (root._addWifiPending) {
-            root.addWifiFinished(false, null, qsTr("另一项添加操作仍在进行"));
+            root.addWifiFinished(false, null, qsTr("Another add operation is already in progress"));
             return false;
         }
-        if (normalizedSsid.length === 0 || normalizedSsid.indexOf("\0") >= 0 || root._utf8Length(normalizedSsid) > 32) {
-            root.addWifiFinished(false, null, qsTr("SSID 必须是 1 至 32 个 UTF-8 字节"));
+        if (normalizedSsid.length === 0 || normalizedSsid.indexOf("\0") >= 0 || root._utf8Length(
+                    normalizedSsid) > 32) {
+            root.addWifiFinished(false, null, qsTr("SSID must be 1–32 UTF-8 bytes"));
             return false;
         }
         if (!validSecret) {
-            root.addWifiFinished(false, null, qsTr("Wi-Fi 密码格式无效"));
+            root.addWifiFinished(false, null, qsTr("Invalid Wi-Fi password format"));
             return false;
         }
-        const matches = root.nearbyWifiNetworks.filter((network) => {
+        const matches = root.nearbyWifiNetworks.filter(network => {
             return network.ssid === normalizedSsid;
         });
         if (!hidden && matches.length > 1) {
-            root.addWifiFinished(false, null, qsTr("多个 Wi-Fi 设备发现了同名网络，请从附近网络列表选择具体设备"));
+            root.addWifiFinished(false, null, qsTr(
+                                     "Multiple Wi-Fi devices found networks with the same name; select a specific device from the nearby networks list"));
             return false;
         }
         root._addWifiPending = true;
         if (!hidden && matches.length === 1) {
             const match = matches[0];
-            const matchSecretValid = !match.isSecure || (secret.length >= 8 && secret.length <= 63) || (/^[0-9A-Fa-f]{64}$/.test(secret));
+            const matchSecretValid = !match.isSecure || (secret.length >= 8 && secret.length <= 63) || (
+                      /^[0-9A-Fa-f]{64}$/.test(secret));
             if (!matchSecretValid) {
-                root.addWifiFinished(false, null, qsTr("该网络需要有效的 Wi-Fi 密码"));
+                root.addWifiFinished(false, null, qsTr("This network requires a valid Wi-Fi password"));
                 return false;
             }
             root._addWifiUsesNative = true;
             root._addWifiTarget = match;
             root.connectNetwork(match, match.isSecure ? {
-                "password": secret
-            } : null);
+                                                            "password": secret
+                                                        } : null);
             return true;
         }
         root._addWifiUsesNative = false;
-        const started = NetworkManagerExtras.createHiddenWifi(normalizedSsid, hidden, secure, secret, (success, result, message) => {
-            root._finishAddWifi(success, result, message);
-        });
+        const started = NetworkManagerExtras.createHiddenWifi(normalizedSsid, hidden, secure, secret, (success,
+                                                                                                       result, message)
+                                                              => {
+                                                                  root._finishAddWifi(success, result,
+                                                                                      message);
+                                                              });
         if (!started)
-            root._finishAddWifi(false, null, NetworkManagerExtras.lastError || qsTr("无法创建 Wi-Fi 配置"));
+            root._finishAddWifi(false, null, NetworkManagerExtras.lastError || qsTr(
+                                    "Unable to create Wi-Fi profile"));
 
         return started;
     }
 
     function connectProfile(profile) {
         if (!profile || !profile.nativeNetwork || !profile.nativeSettings) {
-            root.lastError = qsTr("该 NetworkManager 配置当前无法连接");
+            root.lastError = qsTr("This NetworkManager profile cannot currently be connected");
             root.operationFailed("connect", root.lastError);
             return false;
         }
@@ -890,22 +924,21 @@ Singleton {
     }
 
     function savedConnectionForSsid(ssid) {
-        return root.savedWifiConnections.find((connection) => {
+        return root.savedWifiConnections.find(connection => {
             return connection.ssid === ssid;
         }) || null;
     }
 
     function connectHiddenNetwork(ssid, credentials) {
-        const values = credentials || {
-        };
+        const values = credentials || {};
         return root.addWifiNetwork(ssid, true, values.secure !== false, String(values.password || ""));
     }
 
     function recheckConnectivity() {
         if (!root.canCheckConnectivity || !root.connectivityCheckEnabled) {
-            root.lastError = qsTr("NetworkManager 连接性检查不可用或未启用");
+            root.lastError = qsTr("NetworkManager connectivity checking is unavailable or disabled");
             root.operationFailed("check-connectivity", root.lastError);
-            return ;
+            return;
         }
         root.lastError = "";
         Networking.checkConnectivity();
@@ -920,7 +953,6 @@ Singleton {
         for (const device of root._nativeWifiDevices) {
             if (device && device.scannerEnabled)
                 device.scannerEnabled = false;
-
         }
     }
 
@@ -928,7 +960,6 @@ Singleton {
         function onBusyChanged() {
             if (!NetworkManagerExtras.busy)
                 root._startRuntimeRequest();
-
         }
 
         target: NetworkManagerExtras
@@ -938,13 +969,11 @@ Singleton {
         function onOperationSucceeded(operation) {
             if (operation === "connect" && root._addWifiPending && root._addWifiUsesNative)
                 root._finishAddWifi(true, root._addWifiTarget, "");
-
         }
 
         function onOperationFailed(operation, message) {
             if (operation === "connect" && root._addWifiPending && root._addWifiUsesNative)
                 root._finishAddWifi(false, null, message);
-
         }
 
         target: root
@@ -952,10 +981,10 @@ Singleton {
 
     Connections {
         function onSavedWifiProfilesChanged() {
-            if (!root._pendingForgetSettings || root.savedWifiProfiles.some((profile) => {
+            if (!root._pendingForgetSettings || root.savedWifiProfiles.some(profile => {
                 return profile.uuid === root._pendingForgetUuid;
             }))
-                return ;
+                return;
 
             const uuid = root._pendingForgetUuid;
             profileForgetTimeout.stop();
@@ -972,7 +1001,6 @@ Singleton {
             root._applyScanning();
             if (root._pendingOperation === "set-wifi-enabled" && root.wifiEnabled === root._pendingWifiState)
                 root._finishOperationSucceeded();
-
         }
 
         target: Networking
@@ -989,11 +1017,13 @@ Singleton {
     Connections {
         function onConnectionFailed(reason) {
             if (root._pendingOperation !== "connect")
-                return ;
+                return;
 
             let message = ConnectionFailReason.toString(reason);
-            if (reason === ConnectionFailReason.NoSecrets || reason === ConnectionFailReason.WifiAuthTimeout) {
-                message = root._pendingWithPsk ? qsTr("密码错误或认证超时") : qsTr("网络需要密码");
+            if (reason === ConnectionFailReason.NoSecrets || reason
+                    === ConnectionFailReason.WifiAuthTimeout) {
+                message = root._pendingWithPsk ? qsTr("Incorrect password or authentication timed out") : qsTr(
+                                                     "Network password required");
                 if (root._pendingSsid.length > 0) {
                     root.passwordRequestSsid = root._pendingSsid;
                     root.passwordRequestDeviceName = root.connectTargetDeviceName;
@@ -1005,12 +1035,14 @@ Singleton {
         function onConnectedChanged() {
             if (root._pendingOperation === "connect" && root._pendingNetwork.connected) {
                 root._finishOperationSucceeded();
-            } else if (root._pendingOperation === "connect" && root._pendingConnectPhase === "disconnecting" && !root._pendingNetwork.connected) {
+            } else if (root._pendingOperation === "connect" && root._pendingConnectPhase === "disconnecting"
+                       && !root._pendingNetwork.connected) {
                 root._pendingConnectPhase = "waiting";
                 root._pendingStateWasChanging = false;
                 Qt.callLater(() => {
-                    if (root._pendingOperation !== "connect" || root._pendingConnectPhase !== "waiting" || !root._pendingNetwork || !root._pendingConnectSettings)
-                        return ;
+                    if (root._pendingOperation !== "connect" || root._pendingConnectPhase !== "waiting" ||
+                            !root._pendingNetwork || !root._pendingConnectSettings)
+                        return;
 
                     root._pendingConnectPhase = "activating";
                     root._pendingNetwork.connectWithSettings(root._pendingConnectSettings);
@@ -1023,19 +1055,19 @@ Singleton {
         function onKnownChanged() {
             if (root._pendingOperation === "forget" && !root._pendingNetwork.known)
                 root._finishOperationSucceeded();
-
         }
 
         function onStateChanged() {
             if (!root._pendingNetwork)
-                return ;
+                return;
 
             if (root._pendingNetwork.stateChanging)
                 root._pendingStateWasChanging = true;
 
-            if (root._pendingOperation === "connect" && root._pendingConnectPhase !== "disconnecting" && root._pendingConnectPhase !== "waiting" && root._pendingStateWasChanging && root._pendingNetwork.state === ConnectionState.Disconnected)
-                root._finishOperationFailed(qsTr("连接未完成"));
-
+            if (root._pendingOperation === "connect" && root._pendingConnectPhase !== "disconnecting"
+                    && root._pendingConnectPhase !== "waiting" && root._pendingStateWasChanging
+                    && root._pendingNetwork.state === ConnectionState.Disconnected)
+                root._finishOperationFailed(qsTr("Connection did not complete"));
         }
 
         target: root._pendingNetwork
@@ -1046,7 +1078,7 @@ Singleton {
         function onSettingsChanged() {
             const uuid = root._pendingProfileUuid;
             if (!root._profileMatchesExpected(root._pendingSettings, root._pendingProfileExpected))
-                return ;
+                return;
 
             profileWriteTimeout.stop();
             root._pendingSettings = null;
@@ -1069,7 +1101,7 @@ Singleton {
             root._pendingSettings = null;
             root._pendingProfileUuid = "";
             root._pendingProfileExpected = null;
-            root.profileWriteFailed(uuid, qsTr("NetworkManager 未确认配置写入"));
+            root.profileWriteFailed(uuid, qsTr("NetworkManager did not confirm the profile update"));
         }
     }
 
@@ -1082,7 +1114,7 @@ Singleton {
             const uuid = root._pendingForgetUuid;
             root._pendingForgetSettings = null;
             root._pendingForgetUuid = "";
-            root.profileForgetFailed(uuid, qsTr("NetworkManager 未确认配置删除"));
+            root.profileForgetFailed(uuid, qsTr("NetworkManager did not confirm profile deletion"));
         }
     }
 
@@ -1102,7 +1134,6 @@ Singleton {
 
         interval: 60000
         repeat: false
-        onTriggered: root._finishOperationFailed(qsTr("网络操作超时"))
+        onTriggered: root._finishOperationFailed(qsTr("Network operation timed out"))
     }
-
 }

@@ -48,7 +48,10 @@ Singleton {
             return false;
         root.operationError = "";
         if (listing.running) {
-            root.pendingOperation = {name: name, args: args};
+            root.pendingOperation = {
+                name: name,
+                args: args
+            };
             return true;
         }
         root.operation = name;
@@ -68,8 +71,8 @@ Singleton {
     }
     function openLocation(template) {
         const path = template && typeof template.inputPath === "string" ? template.inputPath : "";
-        if (!path.startsWith("/") || path.endsWith("/") || /[\u0000-\u001f\u007f]/.test(path)
-                || path.endsWith("/.") || path.endsWith("/..")) {
+        if (!path.startsWith("/") || path.endsWith("/") || /[\u0000-\u001f\u007f]/.test(path) || path.endsWith(
+                    "/.") || path.endsWith("/..")) {
             console.warn("Cannot open template location: invalid absolute source path");
             return;
         }
@@ -93,9 +96,10 @@ Singleton {
             const application = root.desktopApplications.find(entry => entry.id === applicationId);
             // xdg-open's generic backend ignores Terminal=true. Give terminal
             // file managers a terminal without changing the user's MIME defaults.
-            const command = application && application.runInTerminal
-                ? ["xdg-terminal-exec", "xdg-open", locationHandler.directory]
-                : ["xdg-open", locationHandler.directory];
+            const command = application && application.runInTerminal ? ["xdg-terminal-exec", "xdg-open",
+                                                                        locationHandler.directory] :
+                                                                       ["xdg-open",
+                                                                        locationHandler.directory];
             Quickshell.execDetached(command);
         }
     }
@@ -141,10 +145,10 @@ Singleton {
         onExited: exitCode => {
             try {
                 if (exitCode !== 0)
-                    throw new Error(listError.text.trim() || qsTr("无法读取模板"));
+                    throw new Error(listError.text.trim() || qsTr("Unable to read template"));
                 const result = JSON.parse(listOutput.text);
                 if (result.schemaVersion !== 1 || !Array.isArray(result.templates))
-                    throw new Error(qsTr("无效的模板数据"));
+                    throw new Error(qsTr("Invalid template data"));
                 const next = result.templates.filter(t => t.id !== "quickshell");
                 if (JSON.stringify(next) !== JSON.stringify(root.templates))
                     root.templates = next;
@@ -176,9 +180,9 @@ Singleton {
             try {
                 const result = JSON.parse(mutationOutput.text);
                 if (result.schemaVersion !== 1)
-                    throw new Error(qsTr("无效的模板数据"));
+                    throw new Error(qsTr("Invalid template data"));
                 ok = exitCode === 0 && result.ok === true;
-                root.operationError = ok ? "" : result.error || qsTr("模板操作失败");
+                root.operationError = ok ? "" : result.error || qsTr("Template operation failed");
             } catch (e) {
                 root.operationError = mutationError.text.trim() || String(e);
             }

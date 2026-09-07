@@ -11,8 +11,8 @@ RowLayout {
     property bool showBack: false
     property bool closeEnabled: true
 
-    signal backRequested()
-    signal closeRequested()
+    signal backRequested
+    signal closeRequested
 
     spacing: Metrics.spacingS
 
@@ -20,7 +20,7 @@ RowLayout {
         visible: root.showBack
         enabled: root.closeEnabled
         iconName: "arrow_back"
-        accessibleName: qsTr("返回")
+        accessibleName: qsTr("Back")
         onClicked: root.backRequested()
     }
 
@@ -53,7 +53,7 @@ RowLayout {
     IconButton {
         enabled: root.closeEnabled
         iconName: "close"
-        accessibleName: qsTr("关闭")
+        accessibleName: qsTr("Close")
         onClicked: root.closeRequested()
     }
 }

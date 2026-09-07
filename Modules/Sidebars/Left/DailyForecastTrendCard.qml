@@ -24,13 +24,13 @@ Rectangle {
         if (!sourceModel)
             return 0;
 
-        const count = typeof sourceModel.count === "function" ? sourceModel.count() : Number(sourceModel.count || 0);
+        const count = typeof sourceModel.count === "function" ? sourceModel.count() : Number(sourceModel.count
+                                                                                             || 0);
         return Math.min(maxItems, count);
     }
 
     function itemAt(index) {
-        return sourceModel && sourceModel.get ? sourceModel.get(index) : ({
-        });
+        return sourceModel && sourceModel.get ? sourceModel.get(index) : ({});
     }
 
     function valueAt(map, key, fallback) {
@@ -39,7 +39,9 @@ Rectangle {
     }
 
     function fmtTemp(value) {
-        return value !== undefined && value !== null && !isNaN(value) ? Math.round(UiPreferences.weatherTemperature(value)) + "°" : "--";
+        return value !== undefined && value !== null && !isNaN(value) ? Math.round(
+                                                                            UiPreferences.weatherTemperature(
+                                                                                value)) + "°" : "--";
     }
 
     function fmtPercent(value) {
@@ -51,10 +53,11 @@ Rectangle {
         if (!source || !source.normalsAvailable)
             return NaN;
 
-        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) : source.normalNighttimeTemperatureC(root.normalMonth);
+        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) :
+                                source.normalNighttimeTemperatureC(root.normalMonth);
         return root.valueAt({
-            "value": value
-        }, "value", NaN);
+                                "value": value
+                            }, "value", NaN);
     }
 
     function forecastTemperatures() {
@@ -62,10 +65,8 @@ Rectangle {
         const count = root.modelCount();
         for (let i = 0; i < count; ++i) {
             const item = root.itemAt(i);
-            const day = item.day || ({
-            });
-            const night = item.night || ({
-            });
+            const day = item.day || ({});
+            const night = item.night || ({});
             const dayTemp = root.valueAt(day, "temperatureC", root.valueAt(item, "temperatureMaxC", NaN));
             const nightTemp = root.valueAt(night, "temperatureC", root.valueAt(item, "temperatureMinC", NaN));
             if (!isNaN(dayTemp))
@@ -73,36 +74,37 @@ Rectangle {
 
             if (!isNaN(nightTemp))
                 values.push(nightTemp);
-
         }
         return values;
     }
 
     function updateTemperatureDomain() {
-        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(), root.normalDaytimeC, root.normalNighttimeC);
+        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(),
+                                                                           root.normalDaytimeC,
+                                                                           root.normalNighttimeC);
         trendCanvas.requestPaint();
     }
 
     function extraTabLabel() {
-        const labels = [qsTr("紫外线指数"), qsTr("降水量"), qsTr("日照"), qsTr("体感温度")];
+        const labels = [qsTr("UV index"), qsTr("Precipitation"), qsTr("Sunshine"), qsTr("Feels like")];
         return currentTab >= 3 && currentTab < 7 ? labels[currentTab - 3] : "";
     }
 
     function applyInitialPosition() {
         if (trendFlick.initialPositionApplied)
-            return ;
+            return;
 
         const count = root.modelCount();
         if (count < 2) {
             trendFlick.contentX = 0;
             trendFlick.initialPositionApplied = true;
-            return ;
+            return;
         }
         const maxX = Math.max(0, trendFlick.contentWidth - trendFlick.width);
         if (maxX <= 0) {
             trendFlick.contentX = 0;
             trendFlick.initialPositionApplied = true;
-            return ;
+            return;
         }
         trendFlick.contentX = Math.min(root.itemWidth, maxX);
         trendFlick.initialPositionApplied = true;
@@ -110,18 +112,19 @@ Rectangle {
 
     function dayLabel(index, epoch) {
         if (index === 0)
-            return qsTr("昨天");
+            return qsTr("Yesterday");
 
         if (index === 1)
-            return qsTr("今天");
+            return qsTr("Today");
 
         if (index === 2)
-            return qsTr("明天");
+            return qsTr("Tomorrow");
 
         if (!epoch)
             return "--";
 
-        const week = [qsTr("周日"), qsTr("周一"), qsTr("周二"), qsTr("周三"), qsTr("周四"), qsTr("周五"), qsTr("周六")];
+        const week = [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr(
+                          "Sat")];
         return week[new Date(epoch * 1000).getDay()];
     }
 
@@ -132,7 +135,8 @@ Rectangle {
     radius: 26
     color: Appearance.colors.colWeatherCardSurface
     border.width: 1
-    border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.42)
+    border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g,
+                          Appearance.colors.colOutlineVariant.b, 0.42)
     clip: true
     onSourceModelChanged: {
         trendFlick.initialPositionApplied = false;
@@ -142,12 +146,10 @@ Rectangle {
     onCurrentTabChanged: {
         if (root.currentTab === 0)
             trendCanvas.requestPaint();
-
     }
     onForegroundChanged: {
         if (root.foreground)
             trendCanvas.requestPaint();
-
     }
     onWidthChanged: trendCanvas.requestPaint()
     onHeightChanged: trendCanvas.requestPaint()
@@ -204,7 +206,7 @@ Rectangle {
                 }
 
                 Text {
-                    text: qsTr("每日预报")
+                    text: qsTr("Daily forecast")
                     color: Appearance.colors.colOnSurface
                     font.family: Fonts.ui
                     font.bold: true
@@ -215,7 +217,6 @@ Rectangle {
                 Item {
                     Layout.fillWidth: true
                 }
-
             }
 
             RowLayout {
@@ -225,16 +226,16 @@ Rectangle {
                 StyledButtonGroup {
                     currentValue: root.currentTab
                     model: [({
-                        "value": 0,
-                        "label": qsTr("天气情况")
-                    }), ({
-                        "value": 1,
-                        "label": qsTr("空气质量")
-                    }), ({
-                        "value": 2,
-                        "label": qsTr("风况")
-                    })]
-                    onValueSelected: (value) => {
+                                 "value": 0,
+                                 "label": qsTr("Conditions")
+                             }), ({
+                                      "value": 1,
+                                      "label": qsTr("Air quality")
+                                  }), ({
+                                           "value": 2,
+                                           "label": qsTr("Wind")
+                                       })]
+                    onValueSelected: value => {
                         return root.currentTab = value;
                     }
                 }
@@ -263,7 +264,7 @@ Rectangle {
                     iconColor: Appearance.colors.colOnSurfaceVariant
                     selected: root.currentTab >= 3 || extraMenu.opened
                     selectedIconColor: Appearance.colors.colOnPrimaryContainer
-                    accessibleName: qsTr("每日预报更多选项")
+                    accessibleName: qsTr("More daily forecast options")
                     normalContainerColor: Appearance.colors.colLayer2
                     selectedContainerColor: Appearance.colors.colPrimaryContainer
                     hoverStateLayerColor: Appearance.colors.colLayer4
@@ -275,32 +276,34 @@ Rectangle {
 
                         anchorItem: moreButton
                         selectedValue: root.currentTab
-                        options: [{
-                            "value": 3,
-                            "label": qsTr("紫外线指数"),
-                            "icon": "sunny"
-                        }, {
-                            "value": 4,
-                            "label": qsTr("降水量"),
-                            "icon": "water_drop"
-                        }, {
-                            "value": 5,
-                            "label": qsTr("日照"),
-                            "icon": "wb_sunny"
-                        }, {
-                            "value": 6,
-                            "label": qsTr("体感温度"),
-                            "icon": "thermostat"
-                        }]
-                        onValueSelected: (value) => {
+                        options: [
+                            {
+                                "value": 3,
+                                "label": qsTr("UV index"),
+                                "icon": "sunny"
+                            },
+                            {
+                                "value": 4,
+                                "label": qsTr("Precipitation"),
+                                "icon": "water_drop"
+                            },
+                            {
+                                "value": 5,
+                                "label": qsTr("Sunshine"),
+                                "icon": "wb_sunny"
+                            },
+                            {
+                                "value": 6,
+                                "label": qsTr("Feels like"),
+                                "icon": "thermostat"
+                            }
+                        ]
+                        onValueSelected: value => {
                             return root.currentTab = value;
                         }
                     }
-
                 }
-
             }
-
         }
 
         Item {
@@ -327,7 +330,6 @@ Rectangle {
                 onVisibleChanged: {
                     if (visible)
                         initialPositionTimer.restart();
-
                 }
 
                 Item {
@@ -362,7 +364,8 @@ Rectangle {
                         }
 
                         function yAt(value, minValue, maxValue) {
-                            return chartBottom - (value - minValue) / (maxValue - minValue) * (chartBottom - chartTop);
+                            return chartBottom - (value - minValue) / (maxValue - minValue) * (chartBottom
+                                                                                               - chartTop);
                         }
 
                         function drawSeries(ctx, values, minValue, maxValue, color, lineWidth) {
@@ -413,26 +416,29 @@ Rectangle {
                             ctx.clearRect(0, 0, width, height);
                             const count = root.modelCount();
                             if (count < 2)
-                                return ;
+                                return;
 
                             let dayValues = [];
                             let nightValues = [];
                             let precipitationValues = [];
                             for (let i = 0; i < count; ++i) {
                                 const item = root.itemAt(i);
-                                const day = item.day || ({
-                                });
-                                const night = item.night || ({
-                                });
-                                const dayTemp = root.valueAt(day, "temperatureC", root.valueAt(item, "temperatureMaxC", NaN));
-                                const nightTemp = root.valueAt(night, "temperatureC", root.valueAt(item, "temperatureMinC", NaN));
-                                const pop = Math.max(root.valueAt(day, "precipitationProbability", 0), root.valueAt(night, "precipitationProbability", 0));
+                                const day = item.day || ({});
+                                const night = item.night || ({});
+                                const dayTemp = root.valueAt(day, "temperatureC", root.valueAt(item,
+                                                                                               "temperatureMaxC",
+                                                                                               NaN));
+                                const nightTemp = root.valueAt(night, "temperatureC", root.valueAt(item,
+                                                                                                   "temperatureMinC",
+                                                                                                   NaN));
+                                const pop = Math.max(root.valueAt(day, "precipitationProbability", 0),
+                                                     root.valueAt(night, "precipitationProbability", 0));
                                 dayValues.push(dayTemp);
                                 nightValues.push(nightTemp);
                                 precipitationValues.push(pop);
                             }
                             if (root.forecastTemperatures().length === 0)
-                                return ;
+                                return;
 
                             const domain = root.displayTemperatureDomain;
                             const minTemp = domain[0];
@@ -451,8 +457,12 @@ Rectangle {
                             }
                             ctx.closePath();
                             const fillGradient = ctx.createLinearGradient(0, chartTop, 0, chartBottom);
-                            fillGradient.addColorStop(0, "rgba(" + Math.round(primaryColor.r * 255) + "," + Math.round(primaryColor.g * 255) + "," + Math.round(primaryColor.b * 255) + ",0.12)");
-                            fillGradient.addColorStop(1, "rgba(" + Math.round(primaryColor.r * 255) + "," + Math.round(primaryColor.g * 255) + "," + Math.round(primaryColor.b * 255) + ",0.02)");
+                            fillGradient.addColorStop(0, "rgba(" + Math.round(primaryColor.r * 255) + "," + Math.round(
+                                                          primaryColor.g * 255) + "," + Math.round(
+                                                          primaryColor.b * 255) + ",0.12)");
+                            fillGradient.addColorStop(1, "rgba(" + Math.round(primaryColor.r * 255) + "," + Math.round(
+                                                          primaryColor.g * 255) + "," + Math.round(
+                                                          primaryColor.b * 255) + ",0.02)");
                             ctx.fillStyle = fillGradient;
                             ctx.fill();
                             for (let p = 0; p < count; ++p) {
@@ -462,12 +472,18 @@ Rectangle {
 
                                 const x = pointX(p);
                                 const fadedBar = p === 0;
-                                const barTop = chartBottom - (chartBottom - chartTop) * Math.min(100, popValue) / 100;
-                                ctx.fillStyle = fadedBar ? Qt.rgba(secondaryColor.r, secondaryColor.g, secondaryColor.b, 0.1) : Qt.rgba(secondaryColor.r, secondaryColor.g, secondaryColor.b, 0.18);
+                                const barTop = chartBottom - (chartBottom - chartTop) * Math.min(100,
+                                                                                                 popValue)
+                                      / 100;
+                                ctx.fillStyle = fadedBar ? Qt.rgba(secondaryColor.r, secondaryColor.g,
+                                                                   secondaryColor.b, 0.1) : Qt.rgba(
+                                                               secondaryColor.r, secondaryColor.g,
+                                                               secondaryColor.b, 0.18);
                                 ctx.beginPath();
                                 roundedRect(ctx, x - 5, barTop, 10, chartBottom - barTop, 5);
                                 ctx.fill();
-                                ctx.fillStyle = fadedBar ? Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.42) : primaryColor;
+                                ctx.fillStyle = fadedBar ? Qt.rgba(primaryColor.r, primaryColor.g,
+                                                                   primaryColor.b, 0.42) : primaryColor;
                                 ctx.font = "bold 11px " + Fonts.cssFamily(Fonts.numeric);
                                 ctx.textAlign = "center";
                                 ctx.fillText(root.fmtPercent(popValue), x, trendContent.rainLabelY);
@@ -482,10 +498,8 @@ Rectangle {
 
                         delegate: Item {
                             property var dayItem: root.itemAt(index)
-                            property var dayPart: dayItem.day || ({
-                            })
-                            property var nightPart: dayItem.night || ({
-                            })
+                            property var dayPart: dayItem.day || ({})
+                            property var nightPart: dayItem.night || ({})
 
                             x: root.itemWidth * index
                             width: root.itemWidth
@@ -524,7 +538,6 @@ Rectangle {
                                     font.pixelSize: 13
                                     horizontalAlignment: Text.AlignHCenter
                                 }
-
                             }
 
                             MeteoIcon {
@@ -542,7 +555,9 @@ Rectangle {
                             Text {
                                 width: parent.width
                                 y: trendContent.highTempTextY
-                                text: root.fmtTemp(root.valueAt(dayPart, "temperatureC", root.valueAt(dayItem, "temperatureMaxC", NaN)))
+                                text: root.fmtTemp(root.valueAt(dayPart, "temperatureC", root.valueAt(dayItem,
+                                                                                                      "temperatureMaxC",
+                                                                                                      NaN)))
                                 color: Appearance.colors.colOnSurface
                                 font.family: Fonts.numeric
                                 font.pixelSize: 19
@@ -553,7 +568,8 @@ Rectangle {
                             Text {
                                 width: parent.width
                                 y: trendContent.lowTempTextY
-                                text: root.fmtTemp(root.valueAt(nightPart, "temperatureC", root.valueAt(dayItem, "temperatureMinC", NaN)))
+                                text: root.fmtTemp(root.valueAt(nightPart, "temperatureC", root.valueAt(
+                                                                    dayItem, "temperatureMinC", NaN)))
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Fonts.numeric
                                 font.pixelSize: 18
@@ -572,9 +588,7 @@ Rectangle {
                                 style: "fill"
                                 animated: false
                             }
-
                         }
-
                     }
 
                     MouseArea {
@@ -590,12 +604,12 @@ Rectangle {
                         acceptedButtons: Qt.LeftButton
                         preventStealing: true
                         cursorShape: pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-                        onPressed: function(mouse) {
+                        onPressed: function (mouse) {
                             lastMouseX = mouse.x;
                         }
-                        onPositionChanged: function(mouse) {
+                        onPositionChanged: function (mouse) {
                             if (!pressed)
-                                return ;
+                                return;
 
                             const dx = mouse.x - lastMouseX;
                             const maxX = Math.max(0, trendFlick.contentWidth - trendFlick.width);
@@ -603,9 +617,7 @@ Rectangle {
                             lastMouseX = mouse.x;
                         }
                     }
-
                 }
-
             }
 
             WeatherTemperatureNormalLine {
@@ -620,7 +632,9 @@ Rectangle {
                 temperatureText: root.fmtTemp(root.normalDaytimeC)
                 numericFontFamily: Fonts.numeric
                 uiFontFamily: Fonts.ui
-                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r,
+                                   Appearance.colors.colOutlineVariant.g,
+                                   Appearance.colors.colOutlineVariant.b, 0.58)
                 labelColor: Appearance.colors.colOnSurfaceVariant
             }
 
@@ -636,7 +650,9 @@ Rectangle {
                 temperatureText: root.fmtTemp(root.normalNighttimeC)
                 numericFontFamily: Fonts.numeric
                 uiFontFamily: Fonts.ui
-                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r,
+                                   Appearance.colors.colOutlineVariant.g,
+                                   Appearance.colors.colOutlineVariant.b, 0.58)
                 labelColor: Appearance.colors.colOnSurfaceVariant
             }
 
@@ -648,7 +664,6 @@ Rectangle {
                     anchors.fill: parent
                     sourceModel: root.sourceModel
                 }
-
             }
 
             Item {
@@ -659,7 +674,6 @@ Rectangle {
                     anchors.fill: parent
                     sourceModel: root.sourceModel
                 }
-
             }
 
             WeatherMetricTrendPane {
@@ -693,9 +707,7 @@ Rectangle {
                 daily: true
                 metric: "feels"
             }
-
         }
-
     }
 
     Connections {
@@ -730,5 +742,4 @@ Rectangle {
 
         target: Fonts
     }
-
 }

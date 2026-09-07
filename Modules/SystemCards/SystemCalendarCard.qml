@@ -7,36 +7,25 @@ Rectangle {
     property bool active: true
     property color surfaceColor: Appearance.colors.colSurfaceContainerHigh
     property date currentDate: new Date()
-    readonly property var monthNames: [
-        qsTr("一月"), qsTr("二月"), qsTr("三月"), qsTr("四月"),
-        qsTr("五月"), qsTr("六月"), qsTr("七月"), qsTr("八月"),
-        qsTr("九月"), qsTr("十月"), qsTr("十一月"), qsTr("十二月")
-    ]
-    readonly property var weekdayNames: [
-        qsTr("周日"), qsTr("周一"), qsTr("周二"), qsTr("周三"),
-        qsTr("周四"), qsTr("周五"), qsTr("周六")
-    ]
-    readonly property var accessibleWeekdayNames: [
-        qsTr("星期日"), qsTr("星期一"), qsTr("星期二"), qsTr("星期三"),
-        qsTr("星期四"), qsTr("星期五"), qsTr("星期六")
-    ]
+    readonly property var monthNames: [qsTr("January"), qsTr("February"), qsTr("March"), qsTr("April"), qsTr(
+            "May"), qsTr("June"), qsTr("July"), qsTr("August"), qsTr("September"), qsTr("October"), qsTr(
+            "November"), qsTr("December")]
+    readonly property var weekdayNames: [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr(
+            "Fri"), qsTr("Sat")]
+    readonly property var accessibleWeekdayNames: [qsTr("Sunday"), qsTr("Monday"), qsTr("Tuesday"), qsTr("Wednesday"),
+        qsTr("Thursday"), qsTr("Friday"), qsTr("Saturday")]
     readonly property string calendarFamily: Fonts.expressive
-    readonly property var calendarAxes:
-        Fonts.familyAvailable(Fonts.bundledFamilyName)
-            && Fonts.expressive === Fonts.bundledFamilyName
-            ? ({
-                "ROND": 45,
-                "wdth": 78
-            })
-            : ({})
+    readonly property var calendarAxes: Fonts.familyAvailable(Fonts.bundledFamilyName) && Fonts.expressive
+                                        === Fonts.bundledFamilyName ? ({
+                                                                           "ROND": 45,
+                                                                           "wdth": 78
+                                                                       }) : ({})
 
     radius: Appearance.rounding.extraLarge
     color: root.surfaceColor
     clip: true
-    Accessible.name: currentDate.getFullYear()
-        + qsTr("年") + (currentDate.getMonth() + 1)
-        + qsTr("月") + currentDate.getDate()
-        + qsTr("日，") + accessibleWeekdayNames[currentDate.getDay()]
+    Accessible.name: currentDate.getFullYear() + qsTr(" ") + (currentDate.getMonth() + 1) + qsTr("/")
+                     + currentDate.getDate() + qsTr(", ") + accessibleWeekdayNames[currentDate.getDay()]
 
     Timer {
         interval: 30000
@@ -63,16 +52,13 @@ Rectangle {
 
         Text {
             anchors.centerIn: parent
-            text: root.monthNames[root.currentDate.getMonth()]
-                + "  " + root.weekdayNames[root.currentDate.getDay()]
+            text: root.monthNames[root.currentDate.getMonth()] + "  "
+                  + root.weekdayNames[root.currentDate.getDay()]
             color: Appearance.colors.colOnSecondaryContainer
             renderType: Text.NativeRendering
             font {
                 family: root.calendarFamily
-                pixelSize: Math.min(
-                    Typography.titleMedium.pixelSize,
-                    headingBand.height * 0.36
-                )
+                pixelSize: Math.min(Typography.titleMedium.pixelSize, headingBand.height * 0.36)
                 weight: Font.Bold
                 letterSpacing: 0.8
                 variableAxes: root.calendarAxes

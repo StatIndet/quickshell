@@ -11,8 +11,8 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property string configHome:
-        root.localPath(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
+    readonly property string configHome: root.localPath(StandardPaths.writableLocation(
+                                                            StandardPaths.ConfigLocation))
     readonly property string autostartDir: root.configHome + "/autostart"
 
     property var entries: []
@@ -26,12 +26,10 @@ Singleton {
     property string lastMessage: ""
 
     readonly property bool initializing: initProcess.running
-    readonly property bool listing: root.initialized
-        && folderModel.status !== FolderListModel.Ready
+    readonly property bool listing: root.initialized && folderModel.status !== FolderListModel.Ready
     readonly property bool busy: root.initializing || root.operationBusy
-    readonly property bool ready: root.initialized
-        && folderModel.status === FolderListModel.Ready
-        && !root.operationBusy
+    readonly property bool ready: root.initialized && folderModel.status === FolderListModel.Ready &&
+                                  !root.operationBusy
 
     signal operationFinished(bool success, string operation)
 
@@ -93,15 +91,13 @@ Singleton {
         if (!path || path === directory || !path.startsWith(directory + "/"))
             return false;
         const fileName = path.substring(directory.length + 1);
-        return fileName !== "" && fileName !== "." && fileName !== ".."
-            && fileName.indexOf("/") < 0
-            && fileName.endsWith(".desktop");
+        return fileName !== "" && fileName !== "." && fileName !== ".." && fileName.indexOf("/") < 0
+                && fileName.endsWith(".desktop");
     }
 
     function entryExists(path) {
         const normalized = root.normalizeFolderPath(path);
-        if (root.entries.some(entry =>
-                root.normalizeFolderPath(entry.filePath) === normalized))
+        if (root.entries.some(entry => root.normalizeFolderPath(entry.filePath) === normalized))
             return true;
         for (let index = 0; index < folderModel.count; ++index) {
             if (root.pathForModel(index) === normalized)
@@ -112,32 +108,28 @@ Singleton {
 
     function entryForPath(path) {
         const normalized = root.normalizeFolderPath(path);
-        return root.entries.find(entry =>
-            root.normalizeFolderPath(entry.filePath) === normalized) || null;
+        return root.entries.find(entry => root.normalizeFolderPath(entry.filePath) === normalized) || null;
     }
 
     function desktopId(application) {
         const raw = String(application ? application.id || "" : "").trim();
-        if (raw === "" || raw.indexOf("/") >= 0 || raw.indexOf("\\") >= 0
-                || raw.indexOf("..") >= 0
-                || /[\u0000-\u001f\u007f]/.test(raw))
+        if (raw === "" || raw.indexOf("/") >= 0 || raw.indexOf("\\") >= 0 || raw.indexOf("..") >= 0 ||
+                /[\u0000-\u001f\u007f]/.test(raw))
             return "";
 
         let id = raw;
         while (id.toLowerCase().endsWith(".desktop"))
             id = id.substring(0, id.length - ".desktop".length);
-        id = id.replace(/[^A-Za-z0-9_.-]+/g, "-")
-            .replace(/^[.-]+|[.-]+$/g, "");
+        id = id.replace(/[^A-Za-z0-9_.-]+/g, "-").replace(/^[.-]+|[.-]+$/g, "");
         return id === "" ? "" : id + ".desktop";
     }
 
     function safeField(value, field, required) {
         const text = String(value || "");
-        if (text.indexOf("\u0000") >= 0 || text.indexOf("\n") >= 0
-                || text.indexOf("\r") >= 0)
-            throw new Error(qsTr("%1 包含无效换行字符").arg(field));
+        if (text.indexOf("\u0000") >= 0 || text.indexOf("\n") >= 0 || text.indexOf("\r") >= 0)
+            throw new Error(qsTr("%1 contains invalid newline characters").arg(field));
         if (required && text.trim() === "")
-            throw new Error(qsTr("%1 不能为空").arg(field));
+            throw new Error(qsTr("%1 cannot be empty").arg(field));
         return text;
     }
 
@@ -152,28 +144,21 @@ Singleton {
     }
 
     function renderApplication(application) {
-        const name = root.safeField(
-            application ? application.name || application.id : "",
-            qsTr("应用名称"), true);
-        const command = root.safeField(root.applicationCommand(application),
-            "Exec", true);
-        const icon = root.safeField(root.applicationIcon(application),
-            "Icon", false);
-        return "[Desktop Entry]\n"
-            + "Type=Application\n"
-            + "Name=" + name + "\n"
-            + "Exec=" + command + "\n"
-            + "Icon=" + icon + "\n"
-            + "Hidden=false\n";
+        const name = root.safeField(application ? application.name || application.id : "", qsTr(
+                                        "Application name"), true);
+        const command = root.safeField(root.applicationCommand(application), "Exec", true);
+        const icon = root.safeField(root.applicationIcon(application), "Icon", false);
+        return "[Desktop Entry]\n" + "Type=Application\n" + "Name=" + name + "\n" + "Exec=" + command + "\n"
+                + "Icon=" + icon + "\n" + "Hidden=false\n";
     }
 
     function beginWrite(operationName, path, content, context) {
         if (!root.isUserEntryPath(path)) {
-            root.lastError = qsTr("拒绝操作用户 autostart 目录之外的文件");
+            root.lastError = qsTr("Refusing to modify files outside the user autostart directory");
             return false;
         }
         if (root.operationBusy || !root.initialized) {
-            root.lastError = qsTr("用户自启目录尚未准备好");
+            root.lastError = qsTr("The user autostart directory is not ready");
             return false;
         }
 
@@ -200,20 +185,19 @@ Singleton {
         if (success) {
             if (operationName === "add") {
                 if (context && context.content)
-                    root.addOrUpdateEntry(root.parseDesktopFile(
-                        context.content, operationPath));
-                root.lastMessage = qsTr("应用已添加到开机启动");
+                    root.addOrUpdateEntry(root.parseDesktopFile(context.content, operationPath));
+                root.lastMessage = qsTr("Application added to autostart");
             } else if (operationName === "toggle") {
-                root.lastMessage = qsTr("自启状态已更新");
+                root.lastMessage = qsTr("Autostart status updated");
             }
             root.lastError = "";
         } else {
             if (operationName === "toggle" && context)
                 root.updateEntry(operationPath, {
-                    "hidden": context.previousHidden,
-                    "content": context.previousContent
-                });
-            root.lastError = errorMessage || qsTr("自启文件写入失败");
+                                     "hidden": context.previousHidden,
+                                     "content": context.previousContent
+                                 });
+            root.lastError = errorMessage || qsTr("Failed to write the autostart file");
         }
 
         root.operationFinished(success, operationName);
@@ -224,18 +208,18 @@ Singleton {
 
     function addApplication(application) {
         if (!root.ready) {
-            root.lastError = qsTr("用户自启目录正在加载，请稍候");
+            root.lastError = qsTr("The user autostart directory is loading; please wait");
             return false;
         }
 
         const fileName = root.desktopId(application);
         if (fileName === "") {
-            root.lastError = qsTr("所选应用没有有效的 Desktop Entry ID");
+            root.lastError = qsTr("The selected application has no valid Desktop Entry ID");
             return false;
         }
         const path = root.autostartDir + "/" + fileName;
         if (root.entryExists(path)) {
-            root.lastError = qsTr("该应用已经添加到开机启动");
+            root.lastError = qsTr("This application is already added to autostart");
             return false;
         }
 
@@ -247,8 +231,8 @@ Singleton {
             return false;
         }
         return root.beginWrite("add", path, content, {
-            "content": content
-        });
+                                   "content": content
+                               });
     }
 
     function hiddenValue(text) {
@@ -264,9 +248,8 @@ Singleton {
         let sectionIndex = -1;
 
         for (let index = 0; index < lines.length; ++index) {
-            const line = lines[index].endsWith("\r")
-                ? lines[index].substring(0, lines[index].length - 1)
-                : lines[index];
+            const line = lines[index].endsWith("\r") ? lines[index].substring(0, lines[index].length - 1) :
+                                                       lines[index];
             if (line.trim() === "[Desktop Entry]") {
                 inDesktopEntry = true;
                 sectionFound = true;
@@ -286,20 +269,18 @@ Singleton {
         }
 
         if (!sectionFound)
-            throw new Error(qsTr("文件缺少 [Desktop Entry] 节"));
+            throw new Error(qsTr("File is missing the [Desktop Entry] section"));
         if (!hiddenFound) {
             const usesCarriageReturn = lines.some(line => line.endsWith("\r"));
-            lines.splice(sectionIndex + 1, 0,
-                value + (usesCarriageReturn ? "\r" : ""));
+            lines.splice(sectionIndex + 1, 0, value + (usesCarriageReturn ? "\r" : ""));
         }
         return lines.join("\n");
     }
 
     function setEnabled(entry, enabled) {
         const path = String(entry ? entry.filePath || "" : "");
-        if (!root.ready || !root.isUserEntryPath(path) || !entry
-                || !entry.content) {
-            root.lastError = qsTr("无法修改该用户自启条目");
+        if (!root.ready || !root.isUserEntryPath(path) || !entry || !entry.content) {
+            root.lastError = qsTr("This user autostart entry cannot be modified");
             return false;
         }
 
@@ -311,19 +292,19 @@ Singleton {
             return false;
         }
         root.updateEntry(path, {
-            "hidden": !enabled,
-            "content": content
-        });
+                             "hidden": !enabled,
+                             "content": content
+                         });
         return root.beginWrite("toggle", path, content, {
-            "previousHidden": entry.hidden,
-            "previousContent": entry.content
-        });
+                                   "previousHidden": entry.hidden,
+                                   "previousContent": entry.content
+                               });
     }
 
     function remove(entry) {
         const path = root.normalizeFolderPath(entry ? entry.filePath || "" : "");
         if (!root.ready || !root.isUserEntryPath(path)) {
-            root.lastError = qsTr("拒绝删除用户 autostart 目录之外的文件");
+            root.lastError = qsTr("Refusing to delete files outside the user autostart directory");
             return false;
         }
         if (root.operationBusy)
@@ -335,11 +316,11 @@ Singleton {
         root.operationContext = null;
         root.operationBusy = true;
         const process = removeFileComponent.createObject(root, {
-            "targetPath": path,
-            "running": true
-        });
+                                                             "targetPath": path,
+                                                             "running": true
+                                                         });
         if (!process) {
-            root.finishDelete(false, qsTr("无法启动删除操作"));
+            root.finishDelete(false, qsTr("Could not start the delete operation"));
             return false;
         }
         return true;
@@ -350,10 +331,10 @@ Singleton {
         root.operationBusy = false;
         if (success) {
             root.removeEntryByPath(path);
-            root.lastMessage = qsTr("自启条目已删除");
+            root.lastMessage = qsTr("Autostart entry deleted");
             root.lastError = "";
         } else {
-            root.lastError = errorMessage || qsTr("自启条目删除失败");
+            root.lastError = errorMessage || qsTr("Failed to delete the autostart entry");
         }
         root.operationFinished(success, "delete");
         root.operationName = "";
@@ -375,10 +356,8 @@ Singleton {
         if (commandName) {
             const applications = ApplicationService.applications || [];
             for (const candidate of applications) {
-                const candidateCommand = root.applicationCommand(candidate)
-                    .split(/\s+/)[0];
-                if (candidateCommand.substring(candidateCommand.lastIndexOf("/") + 1)
-                        === commandName)
+                const candidateCommand = root.applicationCommand(candidate).split(/\s+/)[0];
+                if (candidateCommand.substring(candidateCommand.lastIndexOf("/") + 1) === commandName)
                     return candidate.icon || "";
             }
         }
@@ -390,7 +369,7 @@ Singleton {
         const fileName = path.substring(path.lastIndexOf("/") + 1);
         return {
             "id": fileName,
-            "name": fileName.replace(/\.desktop$/, "") || qsTr("无效启动项"),
+            "name": fileName.replace(/\.desktop$/, "") || qsTr("Invalid startup entry"),
             "exec": "",
             "icon": "",
             "hidden": false,
@@ -398,22 +377,21 @@ Singleton {
             "filePath": path,
             "content": "",
             "valid": false,
-            "error": String(error || qsTr("无法读取 Desktop Entry"))
+            "error": String(error || qsTr("Could not read Desktop Entry"))
         };
     }
 
     function parseDesktopFile(content, filePath) {
         const path = root.normalizeFolderPath(filePath);
         const fileName = path.substring(path.lastIndexOf("/") + 1);
-        const values = ({ });
+        const values = ({});
         let inDesktopEntry = false;
         let sectionFound = false;
         const lines = String(content || "").split("\n");
 
         for (let index = 0; index < lines.length; ++index) {
-            const line = lines[index].endsWith("\r")
-                ? lines[index].substring(0, lines[index].length - 1)
-                : lines[index];
+            const line = lines[index].endsWith("\r") ? lines[index].substring(0, lines[index].length - 1) :
+                                                       lines[index];
             const trimmed = line.trim();
             if (trimmed === "[Desktop Entry]") {
                 inDesktopEntry = true;
@@ -434,32 +412,29 @@ Singleton {
         }
 
         if (!sectionFound)
-            return root.invalidEntry(path, qsTr("文件缺少 [Desktop Entry] 节"));
+            return root.invalidEntry(path, qsTr("File is missing the [Desktop Entry] section"));
 
-        const name = String(values.Name || "").trim()
-            || fileName.replace(/\.desktop$/, "");
+        const name = String(values.Name || "").trim() || fileName.replace(/\.desktop$/, "");
         const command = String(values.Exec || "");
         const valid = command.trim() !== "";
         return {
             "id": fileName,
-            "name": name || qsTr("无效启动项"),
+            "name": name || qsTr("Invalid startup entry"),
             "exec": command,
-            "icon": String(values.Icon || "").trim()
-                || root.lookupDesktopIcon(fileName, command),
+            "icon": String(values.Icon || "").trim() || root.lookupDesktopIcon(fileName, command),
             "hidden": root.hiddenValue(values.Hidden),
             "fileName": fileName,
             "filePath": path,
             "content": String(content || ""),
             "valid": valid,
-            "error": valid ? "" : qsTr("Desktop Entry 缺少 Exec 字段")
+            "error": valid ? "" : qsTr("Desktop Entry is missing the Exec field")
         };
     }
 
     function updateEntry(path, changes) {
         const normalized = root.normalizeFolderPath(path);
         const next = root.entries.slice();
-        const index = next.findIndex(entry =>
-            root.normalizeFolderPath(entry.filePath) === normalized);
+        const index = next.findIndex(entry => root.normalizeFolderPath(entry.filePath) === normalized);
         if (index < 0)
             return;
         next[index] = Object.assign({}, next[index], changes);
@@ -470,44 +445,44 @@ Singleton {
         if (!entry || !root.isUserEntryPath(entry.filePath))
             return;
         const next = root.entries.slice();
-        const index = next.findIndex(item =>
-            root.normalizeFolderPath(item.filePath)
-                === root.normalizeFolderPath(entry.filePath));
+        const index = next.findIndex(item => root.normalizeFolderPath(item.filePath) === root.normalizeFolderPath(
+                                                 entry.filePath));
         if (index >= 0)
             next[index] = entry;
         else
             next.push(entry);
-        next.sort((left, right) => String(left.name).localeCompare(
-            String(right.name), undefined, { sensitivity: "base" }));
+        next.sort((left, right) => String(left.name).localeCompare(String(right.name), undefined, {
+                                                                       sensitivity: "base"
+                                                                   }));
         root.entries = next;
     }
 
     function removeEntryByPath(path) {
         const normalized = root.normalizeFolderPath(path);
-        root.entries = root.entries.filter(entry =>
-            root.normalizeFolderPath(entry.filePath) !== normalized);
+        root.entries = root.entries.filter(entry => root.normalizeFolderPath(entry.filePath) !== normalized);
     }
 
     function syncEntriesToFolder() {
         const validPaths = new Set();
         for (let index = 0; index < folderModel.count; ++index)
             validPaths.add(root.pathForModel(index));
-        root.entries = root.entries.filter(entry =>
-            validPaths.has(root.normalizeFolderPath(entry.filePath)));
+        root.entries = root.entries.filter(entry => validPaths.has(root.normalizeFolderPath(entry.filePath)));
     }
 
     Process {
         id: initProcess
 
         command: ["mkdir", "-p", root.autostartDir]
-        stderr: StdioCollector { id: initError }
+        stderr: StdioCollector {
+            id: initError
+        }
 
         onExited: exitCode => {
             if (exitCode !== 0) {
                 root.initialized = false;
                 root.initializationFailed = true;
-                root.lastError = initError.text.trim()
-                    || qsTr("无法创建用户 autostart 目录");
+                root.lastError = initError.text.trim() || qsTr(
+                            "Could not create the user autostart directory");
                 folderModel.folder = "";
                 return;
             }
@@ -529,8 +504,7 @@ Singleton {
         printErrors: false
 
         onSaved: root.finishWrite(true, "")
-        onSaveFailed: error => root.finishWrite(false,
-            FileViewError.toString(error))
+        onSaveFailed: error => root.finishWrite(false, FileViewError.toString(error))
     }
 
     FolderListModel {
@@ -572,11 +546,10 @@ Singleton {
                 watchChanges: true
                 printErrors: false
 
-                onLoaded: root.addOrUpdateEntry(
-                    root.parseDesktopFile(fileView.text(), filePath))
+                onLoaded: root.addOrUpdateEntry(root.parseDesktopFile(fileView.text(), filePath))
                 onFileChanged: reload()
-                onLoadFailed: error => root.addOrUpdateEntry(
-                    root.invalidEntry(filePath, FileViewError.toString(error)))
+                onLoadFailed: error => root.addOrUpdateEntry(root.invalidEntry(filePath,
+                                                                               FileViewError.toString(error)))
             }
         }
     }
@@ -588,11 +561,13 @@ Singleton {
             property string targetPath: ""
 
             command: ["rm", "--", targetPath]
-            stderr: StdioCollector { id: deleteError }
+            stderr: StdioCollector {
+                id: deleteError
+            }
 
             onExited: exitCode => {
-                root.finishDelete(exitCode === 0,
-                    deleteError.text.trim() || qsTr("无法删除用户自启条目"));
+                root.finishDelete(exitCode === 0, deleteError.text.trim() || qsTr(
+                                      "Could not delete the user autostart entry"));
                 destroy();
             }
         }

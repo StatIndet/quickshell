@@ -9,13 +9,16 @@ BarCircularButton {
     property var screen: null
     readonly property bool active: WidgetState.qsOpen && WidgetState.qsView === "bluetooth"
 
-    iconName: BluetoothService.connected ? "bluetooth_connected" : BluetoothService.enabled ? "bluetooth" : "bluetooth_disabled"
+    iconName: BluetoothService.connected ? "bluetooth_connected" : BluetoothService.enabled ? "bluetooth" :
+                                                                                              "bluetooth_disabled"
     selected: root.active
     enabled: BluetoothService.available
     containerColor: Appearance.colors.colSecondaryContainer
     rippleColor: Appearance.colors.colOnSecondaryContainer
     iconColor: Appearance.colors.colOnSecondaryContainer
-    tooltipText: BluetoothService.connected ? (BluetoothService.connectedName || qsTr("蓝牙已连接")) : BluetoothService.enabled ? qsTr("蓝牙已开启") : qsTr("蓝牙已关闭")
+    tooltipText: BluetoothService.connected ? (BluetoothService.connectedName || qsTr("Bluetooth connected")) :
+                                              BluetoothService.enabled ? qsTr("Bluetooth on") : qsTr(
+                                                                             "Bluetooth off")
     onClicked: {
         if (root.screen && root.screen.name)
             WidgetState.qsScreenName = root.screen.name;

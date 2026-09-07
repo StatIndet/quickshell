@@ -19,38 +19,38 @@ FloatingWindow {
     property bool navExpanded: width > 900
     property string pendingPageSection: ""
     readonly property var pages: [({
-        "id": "account",
-        "title": qsTr("账户"),
-        "icon": "account_circle",
-        "source": "AccountPage.qml"
-    }), ({
-        "id": "general",
-        "title": qsTr("通用"),
-        "icon": "settings",
-        "source": "GeneralPage.qml"
-    }), ({
-        "id": "wallpaper",
-        "title": qsTr("壁纸"),
-        "icon": "wallpaper",
-        "source": "WallpaperPage.qml"
-    }), ({
-        "id": "theme",
-        "title": qsTr("主题"),
-        "icon": "palette",
-        "source": "ThemePage.qml"
-    }), ({
-        "id": "keystone",
-        "title": qsTr("钥石"),
-        "icon": "toggle_off",
-        "source": "KeystonePage.qml"
-    }), ({
-        "id": "advanced",
-        "title": qsTr("高级"),
-        "icon": "tune",
-        "source": "AdvancedPage.qml"
-    })]
+                                       "id": "account",
+                                       "title": qsTr("Account"),
+                                       "icon": "account_circle",
+                                       "source": "AccountPage.qml"
+                                   }), ({
+                                            "id": "general",
+                                            "title": qsTr("General"),
+                                            "icon": "settings",
+                                            "source": "GeneralPage.qml"
+                                        }), ({
+                                                 "id": "wallpaper",
+                                                 "title": qsTr("Wallpaper"),
+                                                 "icon": "wallpaper",
+                                                 "source": "WallpaperPage.qml"
+                                             }), ({
+                                                      "id": "theme",
+                                                      "title": qsTr("Theme"),
+                                                      "icon": "palette",
+                                                      "source": "ThemePage.qml"
+                                                  }), ({
+                                                           "id": "keystone",
+                                                           "title": qsTr("Keystone"),
+                                                           "icon": "toggle_off",
+                                                           "source": "KeystonePage.qml"
+                                                       }), ({
+                                                                "id": "advanced",
+                                                                "title": qsTr("Advanced"),
+                                                                "icon": "tune",
+                                                                "source": "AdvancedPage.qml"
+                                                            })]
 
-    signal popoutClosed()
+    signal popoutClosed
 
     function showWindow() {
         root._wasShown = true;
@@ -103,10 +103,12 @@ FloatingWindow {
 
     function applyPendingPageSection() {
         if (!root.pendingPageSection || !pageLoader.item)
-            return ;
+            return;
 
-        if (root.pages[root.currentPage].id !== "general" || typeof pageLoader.item.openSection !== "function")
-            return ;
+        if (root.pages[root.currentPage].id !== "general" || typeof pageLoader.item.openSection
+                !== "function")
+
+            return;
 
         const section = root.pendingPageSection;
         root.pendingPageSection = "";
@@ -117,7 +119,6 @@ FloatingWindow {
         const page = pageLoader.item;
         if (page && typeof page.closeChildWindows === "function")
             page.closeChildWindows();
-
     }
 
     function openConfig() {
@@ -184,7 +185,7 @@ FloatingWindow {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
-                text: qsTr("设置")
+                text: qsTr("Settings")
                 color: Appearance.colors.colOnLayer0
                 font.family: Fonts.ui
                 font.pixelSize: 24
@@ -199,7 +200,8 @@ FloatingWindow {
                 implicitWidth: 35
                 implicitHeight: 35
                 radius: Appearance.rounding.full
-                color: closeMouse.pressed ? Appearance.colors.colLayer1Active : closeMouse.containsMouse ? Appearance.colors.colLayer1Hover : "transparent"
+                color: closeMouse.pressed ? Appearance.colors.colLayer1Active : closeMouse.containsMouse
+                                            ? Appearance.colors.colLayer1Hover : "transparent"
 
                 MaterialSymbol {
                     anchors.centerIn: parent
@@ -223,9 +225,7 @@ FloatingWindow {
                         easing.type: Appearance.animation.expressiveEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                     }
-
                 }
-
             }
 
             DragHandler {
@@ -234,10 +234,8 @@ FloatingWindow {
                 onActiveChanged: {
                     if (active)
                         root.startSystemMove();
-
                 }
             }
-
         }
 
         RowLayout {
@@ -271,7 +269,7 @@ FloatingWindow {
                         property bool justCopied: copiedTimer.running
 
                         iconText: justCopied ? "check" : "edit"
-                        buttonText: justCopied ? qsTr("路径已复制") : qsTr("配置文件")
+                        buttonText: justCopied ? qsTr("Path copied") : qsTr("config file")
                         expanded: root.navExpanded
                         onClicked: root.openConfig()
                         onAltClicked: root.copyConfigPath()
@@ -295,15 +293,12 @@ FloatingWindow {
                                 showToggledHighlight: false
                                 onPressed: root.currentPage = index
                             }
-
                         }
-
                     }
 
                     Item {
                         Layout.fillHeight: true
                     }
-
                 }
 
                 Behavior on implicitWidth {
@@ -312,9 +307,7 @@ FloatingWindow {
                         easing.type: Appearance.animation.elementMoveFast.type
                         easing.bezierCurve: Appearance.animation.elementMoveFast.bezierCurve
                     }
-
                 }
-
             }
 
             Rectangle {
@@ -338,9 +331,9 @@ FloatingWindow {
                             item.parentModal = parentModal;
 
                         if (item && "presentationActive" in item)
-                            item.presentationActive = Qt.binding(function() {
-                            return root.visible;
-                        });
+                            item.presentationActive = Qt.binding(function () {
+                                return root.visible;
+                            });
 
                         root.applyPendingPageSection();
                     }
@@ -350,7 +343,7 @@ FloatingWindow {
                     function onNavigateRequested(pageId) {
                         if (pageId === "connected-devices" || pageId === "network") {
                             root.openPageSection("general", pageId);
-                            return ;
+                            return;
                         }
                         root.openPage(pageId);
                     }
@@ -358,11 +351,7 @@ FloatingWindow {
                     target: pageLoader.item
                     ignoreUnknownSignals: true
                 }
-
             }
-
         }
-
     }
-
 }

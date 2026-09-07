@@ -11,6 +11,7 @@ class I18nManager : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(QString language READ language NOTIFY languageChanged)
+    Q_PROPERTY(QString systemLanguage READ systemLanguage CONSTANT)
     Q_PROPERTY(QString lastError READ lastError NOTIFY lastErrorChanged)
 
   public:
@@ -20,6 +21,10 @@ class I18nManager : public QObject {
     QString language() const;
     QString lastError() const;
 
+    QString systemLanguage() const;
+    Q_INVOKABLE QString normalizeLanguage(const QString &language) const;
+    Q_INVOKABLE QString preferredLanguage(const QStringList &languages) const;
+
     Q_INVOKABLE bool setLanguage(const QString &language);
 
   signals:
@@ -27,7 +32,6 @@ class I18nManager : public QObject {
     void lastErrorChanged();
 
   private:
-    static QString normalizeLanguage(const QString &language);
     void setLastError(const QString &message);
 
     QTranslator m_translator;

@@ -19,7 +19,7 @@ Rectangle {
     property string networkIconName: "wifi_off"
     property string networkStatusText: ""
     property string networkStatusDetail: ""
-    property string avatarActionLabel: qsTr("更改头像")
+    property string avatarActionLabel: qsTr("Change avatar")
     property real coverHeight: Math.max(150, Math.min(220, width * 0.23))
     property real profileAreaHeight: 120
     property real avatarSize: 104
@@ -293,7 +293,7 @@ Rectangle {
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("已运行 %1").arg(root.uptimeText)
+                    text: qsTr("Up for %1").arg(root.uptimeText)
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
                     font.pixelSize: Typography.bodyMedium.pixelSize

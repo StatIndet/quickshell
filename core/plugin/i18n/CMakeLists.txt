@@ -29,13 +29,21 @@ list(APPEND CLAVIS_TRANSLATION_SOURCES
     "${CLAVIS_SOURCE_ROOT}/shell.qml"
 )
 
+# Qt 6.7+ otherwise scans every target, including tests and dependency headers.
+# Earlier Qt versions already use the first target for source extraction.
+set(CLAVIS_TRANSLATION_TARGET_OPTIONS)
+if(Qt6_VERSION VERSION_GREATER_EQUAL 6.7)
+    list(APPEND CLAVIS_TRANSLATION_TARGET_OPTIONS SOURCE_TARGETS ClavisI18n)
+endif()
+
 qt_add_translations(ClavisI18n
+    ${CLAVIS_TRANSLATION_TARGET_OPTIONS}
     SOURCES ${CLAVIS_TRANSLATION_SOURCES}
     TS_FILES
         ${CLAVIS_SOURCE_ROOT}/i18n/clavis_en_US.ts
         ${CLAVIS_SOURCE_ROOT}/i18n/clavis_zh_CN.ts
         ${CLAVIS_SOURCE_ROOT}/i18n/clavis_zh_TW.ts
-    LUPDATE_OPTIONS -no-obsolete
+    LUPDATE_OPTIONS -no-obsolete -source-language en_US
     RESOURCE_PREFIX "/i18n"
 )
 

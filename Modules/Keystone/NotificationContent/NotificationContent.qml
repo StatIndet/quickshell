@@ -25,8 +25,10 @@ Item {
 
             required property var modelData
             readonly property var normalActions: root.manager.normalActions(delegateRoot.modelData)
-            readonly property bool hasDefaultAction: root.manager.defaultAction(delegateRoot.modelData) !== null
-            readonly property bool hasExpiry: delegateRoot.modelData && delegateRoot.modelData.popupExpiresAt > 0
+            readonly property bool hasDefaultAction: root.manager.defaultAction(delegateRoot.modelData)
+                                                     !== null
+            readonly property bool hasExpiry: delegateRoot.modelData && delegateRoot.modelData.popupExpiresAt
+                                              > 0
             property real expiryProgress: 0
 
             function sanitizedBody() {
@@ -37,9 +39,10 @@ Item {
                 progressAnimation.stop();
                 if (!delegateRoot.hasExpiry) {
                     delegateRoot.expiryProgress = 0;
-                    return ;
+                    return;
                 }
-                const total = Math.max(1, delegateRoot.modelData.popupExpiresAt - delegateRoot.modelData.popupStartedAt);
+                const total = Math.max(1, delegateRoot.modelData.popupExpiresAt
+                                       - delegateRoot.modelData.popupStartedAt);
                 const remaining = Math.max(0, delegateRoot.modelData.popupExpiresAt - Date.now());
                 delegateRoot.expiryProgress = Math.min(1, remaining / total);
                 progressAnimation.duration = remaining;
@@ -111,7 +114,7 @@ Item {
                         Layout.fillWidth: true
                         elide: Text.ElideRight
                         maximumLineCount: delegateRoot.normalActions.length > 0 ? 1 : 2
-                        onLinkActivated: (link) => {
+                        onLinkActivated: link => {
                             return Qt.openUrlExternally(link);
                         }
                     }
@@ -163,15 +166,10 @@ Item {
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
                                     }
-
                                 }
-
                             }
-
                         }
-
                     }
-
                 }
 
                 RippleButton {
@@ -185,7 +183,7 @@ Item {
                     focusStateLayerOpacity: 0.1
                     pressedStateLayerOpacity: 0.12
                     rippleColor: Appearance.colors.colOnSurfaceVariant
-                    Accessible.name: qsTr("关闭")
+                    Accessible.name: qsTr("Close")
                     onClicked: root.manager.dismissPopup(delegateRoot.modelData.notificationId)
 
                     contentItem: Text {
@@ -196,9 +194,7 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                 }
-
             }
 
             Rectangle {
@@ -218,11 +214,7 @@ Item {
                     radius: parent.radius
                     color: Appearance.colors.colPrimary
                 }
-
             }
-
         }
-
     }
-
 }

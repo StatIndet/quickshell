@@ -23,27 +23,27 @@ WidgetPanel {
             return BluetoothService.lastError;
 
         if (!BluetoothService.available)
-            return qsTr("未检测到蓝牙适配器或 BlueZ 不可用");
+            return qsTr("No Bluetooth adapter detected or BlueZ is unavailable");
 
         if (!BluetoothService.enabled)
-            return qsTr("蓝牙已关闭");
+            return qsTr("Bluetooth is off");
 
         if (!root.initialLoading && !root.refreshLoading && BluetoothService.devices.length === 0)
-            return qsTr("尚未发现蓝牙设备");
+            return qsTr("No Bluetooth devices discovered yet");
 
         return "";
     }
 
     function beginInitialLoad() {
-        if (!root.isActive || !BluetoothService.available || !BluetoothService.enabled || root.initialLoadAttempted)
-            return ;
+        if (!root.isActive || !BluetoothService.available || !BluetoothService.enabled
+                || root.initialLoadAttempted)
+            return;
 
         initialLoadTimer.stop();
         root.initialLoadAttempted = true;
         root.initialLoading = BluetoothService.availableDevices.length === 0;
         if (root.initialLoading)
             initialLoadTimer.restart();
-
     }
 
     function finishInitialLoad() {
@@ -71,7 +71,7 @@ WidgetPanel {
 
     function restartDiscoveryLease() {
         if (!root.discoveryLeaseAcquired || !BluetoothService.enabled || root.refreshLoading)
-            return ;
+            return;
 
         finishInitialLoad();
         BluetoothService.releaseDiscovery("right-sidebar-bluetooth");
@@ -83,25 +83,25 @@ WidgetPanel {
     function deviceSupportingText(device) {
         const states = [];
         if (device.blocked)
-            states.push(qsTr("已阻止"));
+            states.push(qsTr("Blocked"));
         else if (device.pairing)
-            states.push(qsTr("正在配对"));
+            states.push(qsTr("Pairing"));
         else if (device.connected)
-            states.push(qsTr("已连接"));
+            states.push(qsTr("Connected"));
         else if (device.paired || device.bonded)
-            states.push(qsTr("已配对"));
+            states.push(qsTr("Paired"));
         else
-            states.push(qsTr("可用设备"));
+            states.push(qsTr("Available devices"));
         if (device.trusted)
-            states.push(qsTr("受信任"));
+            states.push(qsTr("Trusted"));
 
         if (device.batteryAvailable)
-            states.push(qsTr("电量 ") + device.batteryLevel + "%");
+            states.push(qsTr("Battery ") + device.batteryLevel + "%");
 
         return states.join(" · ");
     }
 
-    title: qsTr("蓝牙")
+    title: qsTr("Bluetooth")
     icon: "bluetooth"
     showBackButton: true
     backAction: () => {
@@ -112,14 +112,12 @@ WidgetPanel {
     Component.onDestruction: {
         if (discoveryLeaseAcquired)
             BluetoothService.releaseDiscovery("right-sidebar-bluetooth");
-
     }
 
     Connections {
         function onAvailableDevicesChanged() {
             if (BluetoothService.availableDevices.length > 0)
                 root.finishInitialLoad();
-
         }
 
         function onEnabledChanged() {
@@ -168,17 +166,12 @@ WidgetPanel {
             Material.accent: Appearance.colors.colPrimary
 
             Behavior on Layout.preferredHeight {
-                ElementMoveAnimation {
-                }
-
+                ElementMoveAnimation {}
             }
 
             Behavior on opacity {
-                ElementMoveAnimation {
-                }
-
+                ElementMoveAnimation {}
             }
-
         }
 
         InlineStatusBanner {
@@ -203,7 +196,7 @@ WidgetPanel {
                 DeviceSection {
                     Layout.fillWidth: true
                     visible: BluetoothService.enabled && BluetoothService.connectedDevices.length > 0
-                    sectionTitle: qsTr("已连接")
+                    sectionTitle: qsTr("Connected")
                     devicesModel: BluetoothService.connectedDevices
                     category: "connected"
                 }
@@ -211,7 +204,7 @@ WidgetPanel {
                 DeviceSection {
                     Layout.fillWidth: true
                     visible: BluetoothService.enabled && BluetoothService.pairedDevices.length > 0
-                    sectionTitle: qsTr("已配对")
+                    sectionTitle: qsTr("Paired")
                     devicesModel: BluetoothService.pairedDevices
                     category: "paired"
                 }
@@ -219,11 +212,12 @@ WidgetPanel {
                 SettingsSection {
                     Layout.fillWidth: true
                     visible: BluetoothService.enabled
-                    title: qsTr("可用设备")
+                    title: qsTr("Available devices")
 
                     Item {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.initialLoading && BluetoothService.availableDevices.length === 0 ? 116 : 0
+                        Layout.preferredHeight: root.initialLoading
+                                                && BluetoothService.availableDevices.length === 0 ? 116 : 0
                         opacity: root.initialLoading ? 1 : 0
                         clip: true
 
@@ -234,40 +228,36 @@ WidgetPanel {
                             MaterialLoadingIndicator {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 running: root.initialLoading
-                                accessibleName: qsTr("正在查找可用蓝牙设备")
+                                accessibleName: qsTr("Searching for available Bluetooth devices")
                             }
 
                             Text {
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                text: qsTr("正在查找附近设备")
+                                text: qsTr("Searching for nearby devices")
                                 color: Appearance.colors.colOnLayer1
                                 font.family: Fonts.ui
                                 font.pixelSize: 12
                             }
-
                         }
 
                         Behavior on Layout.preferredHeight {
-                            ElementMoveAnimation {
-                            }
-
+                            ElementMoveAnimation {}
                         }
 
                         Behavior on opacity {
-                            ElementMoveAnimation {
-                            }
-
+                            ElementMoveAnimation {}
                         }
-
                     }
 
                     StyledListView {
                         id: availableDeviceList
 
-                        readonly property real baseContentHeight: count * 56 + Math.max(0, count - 1) * spacing
+                        readonly property real baseContentHeight: count * 56 + Math.max(0, count - 1)
+                                                                  * spacing
 
                         Layout.fillWidth: true
-                        Layout.preferredHeight: Math.min(Sizes.sidebarScrollableListMaxHeight, Math.max(baseContentHeight, contentHeight))
+                        Layout.preferredHeight: Math.min(Sizes.sidebarScrollableListMaxHeight, Math.max(
+                                                             baseContentHeight, contentHeight))
                         visible: count > 0
                         spacing: Appearance.spacing.xSmall
                         clip: true
@@ -284,26 +274,26 @@ WidgetPanel {
                         }
 
                         Behavior on Layout.preferredHeight {
-                            ElementMoveAnimation {
-                            }
-
+                            ElementMoveAnimation {}
                         }
-
                     }
 
                     SettingsRow {
                         Layout.fillWidth: true
-                        visible: !root.initialLoading && !root.refreshLoading && BluetoothService.availableDevices.length === 0
+                        visible: !root.initialLoading && !root.refreshLoading
+                                 && BluetoothService.availableDevices.length === 0
                         iconName: "search_off"
-                        title: qsTr("未发现可用设备")
+                        title: qsTr("No available devices found")
                     }
-
                 }
 
                 SettingsSection {
                     Layout.fillWidth: true
-                    title: qsTr("适配器")
-                    supportingText: BluetoothService.discovering ? qsTr("正在查找附近设备") : BluetoothService.enabled ? qsTr("设备发现已暂停") : qsTr("打开蓝牙后可开始发现")
+                    title: qsTr("Adapters")
+                    supportingText: BluetoothService.discovering ? qsTr("Searching for nearby devices") :
+                                                                   BluetoothService.enabled ? qsTr(
+                                                                                                  "Device discovery is paused") :
+                                                                                              qsTr("Turn on Bluetooth to start discovery")
 
                     Repeater {
                         model: BluetoothService.adapters
@@ -313,69 +303,62 @@ WidgetPanel {
 
                             Layout.fillWidth: true
                             iconName: modelData.blocked ? "bluetooth_disabled" : "settings_bluetooth"
-                            title: modelData.name || modelData.id || qsTr("蓝牙适配器")
-                            supportingText: modelData.blocked ? qsTr("已被 rfkill 阻止") : modelData.enabled ? modelData.state : qsTr("已关闭")
+                            title: modelData.name || modelData.id || qsTr("Bluetooth adapter")
+                            supportingText: modelData.blocked ? qsTr("Blocked by rfkill") : modelData.enabled
+                                                                ? modelData.state : qsTr("Off")
                             highlighted: modelData.enabled
 
                             trailing: StyledSwitch {
                                 scale: 0.72
                                 checked: modelData.enabled
                                 enabled: !modelData.blocked && !BluetoothService.busy
-                                Accessible.name: qsTr("切换适配器 ") + (modelData.name || modelData.id)
+                                Accessible.name: qsTr("Toggle adapter ") + (modelData.name || modelData.id)
                                 onToggled: BluetoothService.setAdapterEnabled(modelData, checked)
                             }
-
                         }
-
                     }
 
                     SettingsRow {
                         Layout.fillWidth: true
                         visible: BluetoothService.available
                         iconName: "visibility"
-                        title: qsTr("允许被发现")
-                        supportingText: qsTr("让附近设备可以找到这台电脑")
+                        title: qsTr("Allow discovery")
+                        supportingText: qsTr("Let nearby devices find this computer")
                         enabled: BluetoothService.enabled
 
                         trailing: StyledSwitch {
                             scale: 0.72
                             checked: BluetoothService.discoverable
                             enabled: BluetoothService.enabled && !BluetoothService.busy
-                            Accessible.name: qsTr("蓝牙可发现")
+                            Accessible.name: qsTr("Bluetooth discoverability")
                             onToggled: BluetoothService.setDiscoverable(checked)
                         }
-
                     }
 
                     SettingsRow {
                         Layout.fillWidth: true
                         visible: BluetoothService.available
                         iconName: "handshake"
-                        title: qsTr("允许配对")
-                        supportingText: qsTr("接受官方模块支持的配对请求")
+                        title: qsTr("Allow pairing")
+                        supportingText: qsTr("Accept pairing requests supported by the official module")
                         enabled: BluetoothService.enabled
 
                         trailing: StyledSwitch {
                             scale: 0.72
                             checked: BluetoothService.pairable
                             enabled: BluetoothService.enabled && !BluetoothService.busy
-                            Accessible.name: qsTr("蓝牙可配对")
+                            Accessible.name: qsTr("Bluetooth pairing")
                             onToggled: BluetoothService.setPairable(checked)
                         }
-
                     }
-
                 }
 
                 Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: Appearance.spacing.small
                 }
-
             }
-
         }
-
     }
 
     MaterialDialog {
@@ -384,8 +367,9 @@ WidgetPanel {
         width: Math.min(320, root.width - 48)
         x: Math.round((root.width - width) / 2)
         y: Math.round((root.height - height) / 2)
-        dialogTitle: qsTr("遗忘蓝牙设备")
-        messageText: root.pendingForgetDevice ? qsTr("将删除“") + root.pendingForgetDevice.name + qsTr("”的配对信息。") : ""
+        dialogTitle: qsTr("Forget Bluetooth device")
+        messageText: root.pendingForgetDevice ? qsTr("This will delete the pairing information for “%1”.").arg(
+                                                    root.pendingForgetDevice.name) : ""
 
         actionsComponent: Component {
             RowLayout {
@@ -396,7 +380,7 @@ WidgetPanel {
                 }
 
                 ActionButton {
-                    text: qsTr("取消")
+                    text: qsTr("Cancel")
                     onClicked: {
                         forgetDialog.close();
                         root.pendingForgetDevice = null;
@@ -404,32 +388,29 @@ WidgetPanel {
                 }
 
                 ActionButton {
-                    text: qsTr("遗忘")
+                    text: qsTr("Forget")
                     onClicked: {
                         const target = root.pendingForgetDevice;
                         forgetDialog.close();
                         root.pendingForgetDevice = null;
                         if (target)
                             BluetoothService.forgetDevice(target);
-
                     }
                 }
-
             }
-
         }
-
     }
 
     headerTools: RowLayout {
         spacing: Appearance.spacing.xSmall
 
         IconButton {
-            enabled: BluetoothService.available && BluetoothService.enabled && !BluetoothService.busy && !root.refreshLoading
+            enabled: BluetoothService.available && BluetoothService.enabled && !BluetoothService.busy &&
+                     !root.refreshLoading
             iconName: "refresh"
             iconSize: 21
             iconColor: Appearance.colors.colOnLayer2
-            accessibleName: qsTr("重新扫描蓝牙设备")
+            accessibleName: qsTr("Scan for Bluetooth devices again")
             hoverStateLayerColor: Appearance.colors.colLayer2Hover
             pressedStateLayerColor: Appearance.colors.colLayer2Active
             onClicked: root.restartDiscoveryLease()
@@ -441,17 +422,15 @@ WidgetPanel {
                 loops: Animation.Infinite
                 running: root.refreshLoading
             }
-
         }
 
         StyledSwitch {
             scale: 0.8
             checked: BluetoothService.enabled
             enabled: BluetoothService.available && !BluetoothService.busy
-            Accessible.name: qsTr("蓝牙开关")
+            Accessible.name: qsTr("Bluetooth switch")
             onToggled: BluetoothService.setBluetoothEnabled(checked)
         }
-
     }
 
     component DeviceSection: SettingsSection {
@@ -473,9 +452,7 @@ WidgetPanel {
                 deviceData: modelData
                 deviceCategory: deviceSection.category
             }
-
         }
-
     }
 
     component BluetoothDeviceRow: SettingsRow {
@@ -495,7 +472,9 @@ WidgetPanel {
 
             MaterialSymbol {
                 visible: deviceRow.deviceData.batteryAvailable
-                text: deviceRow.deviceData.batteryLevel > 80 ? "battery_full" : deviceRow.deviceData.batteryLevel > 30 ? "battery_4_bar" : "battery_1_bar"
+                text: deviceRow.deviceData.batteryLevel > 80 ? "battery_full" :
+                                                               deviceRow.deviceData.batteryLevel > 30
+                                                               ? "battery_4_bar" : "battery_1_bar"
                 iconSize: 18
                 color: Appearance.colors.colOnLayer1
             }
@@ -503,7 +482,10 @@ WidgetPanel {
             ActionButton {
                 visible: !deviceRow.deviceData.blocked
                 enabled: !BluetoothService.busy
-                text: deviceRow.deviceCategory === "connected" ? qsTr("断开") : deviceRow.deviceCategory === "paired" ? qsTr("连接") : qsTr("配对")
+                text: deviceRow.deviceCategory === "connected" ? qsTr("Disconnect") :
+                                                                 deviceRow.deviceCategory === "paired" ? qsTr(
+                                                                                                             "Connect") :
+                                                                                                         qsTr("Pair")
                 filled: false
                 onClicked: {
                     if (deviceRow.deviceCategory === "connected")
@@ -516,13 +498,14 @@ WidgetPanel {
             }
 
             IconButton {
-                visible: deviceRow.deviceData.paired || deviceRow.deviceData.bonded || deviceRow.deviceData.trusted
+                visible: deviceRow.deviceData.paired || deviceRow.deviceData.bonded
+                         || deviceRow.deviceData.trusted
                 controlSize: 34
                 enabled: !BluetoothService.busy
                 iconName: "more_vert"
                 iconSize: 18
                 iconColor: Appearance.colors.colOnLayer2
-                accessibleName: qsTr("蓝牙设备操作")
+                accessibleName: qsTr("Bluetooth device action")
                 hoverStateLayerColor: Appearance.colors.colLayer3Hover
                 pressedStateLayerColor: Appearance.colors.colLayer3Active
                 onClicked: deviceMenu.open()
@@ -534,19 +517,14 @@ WidgetPanel {
                     Material.accent: Appearance.colors.colPrimary
 
                     MenuItem {
-                        text: qsTr("遗忘设备")
+                        text: qsTr("Forget device")
                         onTriggered: {
                             root.pendingForgetDevice = deviceRow.deviceData;
                             forgetDialog.open();
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

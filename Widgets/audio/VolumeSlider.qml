@@ -20,7 +20,7 @@ Item {
     readonly property string mutedIconName: root.iconName === "mic" ? "mic_off" : "volume_off"
 
     signal volumeMoved(real volume)
-    signal muteRequested()
+    signal muteRequested
 
     implicitHeight: contentLayout.implicitHeight
     opacity: root.available ? 1 : 0.45
@@ -40,9 +40,8 @@ Item {
                 Layout.preferredWidth: 40
                 Layout.preferredHeight: 40
                 radius: Appearance.rounding.full
-                color: root.muted
-                    ? Appearance.colors.colSecondaryContainer
-                    : Appearance.colors.colPrimaryContainer
+                color: root.muted ? Appearance.colors.colSecondaryContainer :
+                                    Appearance.colors.colPrimaryContainer
 
                 Behavior on color {
                     ColorAnimation {
@@ -71,9 +70,8 @@ Item {
                     text: root.muted ? root.mutedIconName : root.iconName
                     iconSize: 21
                     fill: root.muted ? 1 : 0
-                    color: root.muted
-                        ? Appearance.colors.colOnSecondaryContainer
-                        : Appearance.colors.colOnPrimaryContainer
+                    color: root.muted ? Appearance.colors.colOnSecondaryContainer :
+                                        Appearance.colors.colOnPrimaryContainer
                 }
             }
 
@@ -113,8 +111,9 @@ Item {
                 iconColor: Appearance.colors.colOnLayer2
                 selectedIconColor: Appearance.colors.colPrimary
                 selectedContainerColor: Appearance.colors.colLayer2Hover
-                accessibleName: root.muted ? qsTr("取消静音 ") + root.title : qsTr("静音 ") + root.title
-                tooltipText: root.muted ? qsTr("取消静音") : qsTr("静音")
+                accessibleName: root.muted ? qsTr("Unmute %1").arg(root.title) : qsTr("Mute %1").arg(
+                                                 root.title)
+                tooltipText: root.muted ? qsTr("Unmute") : qsTr("Mute")
                 hoverStateLayerColor: Appearance.colors.colLayer2Hover
                 pressedStateLayerColor: Appearance.colors.colLayer2Active
                 onClicked: root.muteRequested()
@@ -127,9 +126,9 @@ Item {
             Layout.fillWidth: true
             enabled: root.available
             materialSymbol: root.muted ? root.mutedIconName : root.iconName
-            percentText: root.muted ? qsTr("静音") : Math.round(value * 100) + "%"
+            percentText: root.muted ? qsTr("Mute") : Math.round(value * 100) + "%"
             tooltipContent: Math.round(value * 100) + "%"
-            Accessible.name: root.title + qsTr("音量")
+            Accessible.name: qsTr("%1 volume").arg(root.title)
 
             Binding {
                 target: volumeControl

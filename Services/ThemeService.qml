@@ -20,21 +20,26 @@ Singleton {
     property bool cursorIntegrationReady: false
     property bool cursorWritePending: false
     property string cursorLastError: ""
-    readonly property bool cursorSyncBusy:
-        cursorWritePending || writeNiriCursorProcess.running
-    property var availableIconThemes: [({ "label": qsTr("系统默认"), "value": "" })]
-    property var availableCursorThemes: [({ "label": qsTr("系统默认"), "value": "" })]
+    readonly property bool cursorSyncBusy: cursorWritePending || writeNiriCursorProcess.running
+    property var availableIconThemes: [({
+                                            "label": qsTr("System default"),
+                                            "value": ""
+                                        })]
+    property var availableCursorThemes: [({
+                                              "label": qsTr("System default"),
+                                              "value": ""
+                                          })]
     property string systemDefaultIconTheme: ""
     property string systemDefaultCursorTheme: ""
 
-    readonly property string sessionDesktop: (Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env("XDG_SESSION_DESKTOP") || "").toLowerCase()
-    readonly property bool isNiriSession: sessionDesktop.indexOf("niri") !== -1 || (Quickshell.env("NIRI_SOCKET") || "") !== ""
-    readonly property string niriConfigPath:
-        Paths.xdgConfigHome + "/niri/config.kdl"
-    readonly property string cursorConfigPath:
-        Paths.xdgConfigHome + "/niri/clavis/cursor.kdl"
-    readonly property string cursorConfigScript:
-        Paths.scriptPath("theme", "write_niri_cursor_config.sh")
+    readonly property string sessionDesktop: (Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env(
+                                                  "XDG_SESSION_DESKTOP") || "").toLowerCase()
+    readonly property bool isNiriSession: sessionDesktop.indexOf("niri") !== -1 || (Quickshell.env(
+                                                                                        "NIRI_SOCKET") || "")
+                                          !== ""
+    readonly property string niriConfigPath: Paths.xdgConfigHome + "/niri/config.kdl"
+    readonly property string cursorConfigPath: Paths.xdgConfigHome + "/niri/clavis/cursor.kdl"
+    readonly property string cursorConfigScript: Paths.scriptPath("theme", "write_niri_cursor_config.sh")
     function applyConfigToAppearance() {
         Appearance.matugenScheme = PersonalizationConfig.matugenScheme;
         Appearance.matugenMode = PersonalizationConfig.themeMode;
@@ -57,8 +62,7 @@ Singleton {
     }
 
     function setMatugenTemplateEnabled(id, enabled) {
-        let changed =
-            PersonalizationConfig.setMatugenTemplateEnabled(id, enabled);
+        let changed = PersonalizationConfig.setMatugenTemplateEnabled(id, enabled);
         if (changed && enabled)
             root.regenerateFromCurrentWallpaper(id);
     }
@@ -91,11 +95,13 @@ Singleton {
     }
 
     function effectiveIconTheme() {
-        return PersonalizationConfig.iconTheme !== "" ? PersonalizationConfig.iconTheme : root.systemDefaultIconTheme;
+        return PersonalizationConfig.iconTheme !== "" ? PersonalizationConfig.iconTheme :
+                                                        root.systemDefaultIconTheme;
     }
 
     function effectiveCursorTheme() {
-        return PersonalizationConfig.cursorTheme !== "" ? PersonalizationConfig.cursorTheme : root.systemDefaultCursorTheme;
+        return PersonalizationConfig.cursorTheme !== "" ? PersonalizationConfig.cursorTheme :
+                                                          root.systemDefaultCursorTheme;
     }
 
     function unique(values) {
@@ -155,17 +161,22 @@ Singleton {
         const options = [root.defaultOption(defaultLabel, systemDefault)];
         const sorted = root.unique(names).sort((a, b) => a.localeCompare(b));
         for (let j = 0; j < sorted.length; j += 1)
-            options.push({ "label": sorted[j], "value": sorted[j] });
+            options.push({
+                             "label": sorted[j],
+                             "value": sorted[j]
+                         });
 
         if (currentValue !== "" && !root.hasOption(options, currentValue))
-            options.splice(1, 0, { "label": currentValue, "value": currentValue });
+            options.splice(1, 0, {
+                               "label": currentValue,
+                               "value": currentValue
+                           });
 
         return options;
     }
 
     function detectAvailableThemes() {
-        const paths = root.dataDirs().map(dir => dir + "/icons")
-            .concat([Paths.homeDir + "/.icons"]);
+        const paths = root.dataDirs().map(dir => dir + "/icons").concat([Paths.homeDir + "/.icons"]);
         const script = Paths.scriptPath("theme", "list_cursor_icon_themes.sh");
         detectIconThemesProcess.command = ["bash", script, "icon", ...paths];
         detectCursorThemesProcess.command = ["bash", script, "cursor", ...paths];
@@ -191,17 +202,11 @@ Singleton {
 
         root.cursorWritePending = false;
         root.cursorLastError = "";
-        writeNiriCursorProcess.command = [
-            "bash",
-            root.cursorConfigScript,
-            root.cursorConfigPath,
-            root.niriConfigPath,
-            root.effectiveCursorTheme(),
-            String(PersonalizationConfig.cursorSize),
-            PersonalizationConfig.cursorHideWhenTyping ? "true" : "false",
-            String(PersonalizationConfig.cursorHideAfterInactiveMs),
-            "niri"
-        ];
+        writeNiriCursorProcess.command = ["bash", root.cursorConfigScript, root.cursorConfigPath,
+                                          root.niriConfigPath, root.effectiveCursorTheme(), String(
+                                              PersonalizationConfig.cursorSize),
+                                          PersonalizationConfig.cursorHideWhenTyping ? "true" : "false",
+                                          String(PersonalizationConfig.cursorHideAfterInactiveMs), "niri"];
         writeNiriCursorProcess.running = true;
     }
 
@@ -211,13 +216,9 @@ Singleton {
 
         root.applyConfigToAppearance();
         root.lastSource = path;
-        const command = [
-            "bash", Paths.scriptPath("theme", "generate_matugen_colors.sh"),
-            "--image", path,
-            "--scheme", PersonalizationConfig.matugenScheme,
-            "--mode", PersonalizationConfig.themeMode,
-            "--templates", root.enabledMatugenTemplates().join(",")
-        ];
+        const command = ["bash", Paths.scriptPath("theme", "generate_matugen_colors.sh"), "--image", path, "--scheme",
+                         PersonalizationConfig.matugenScheme, "--mode", PersonalizationConfig.themeMode,
+                         "--templates", root.enabledMatugenTemplates().join(",")];
         root.startGeneration(command, templateId);
     }
 
@@ -270,19 +271,15 @@ Singleton {
         const sourceColor = root.opaqueHexFromColor(value);
         root.applyConfigToAppearance();
         root.lastSource = value;
-        const command = [
-            "bash", Paths.scriptPath("theme", "generate_matugen_colors.sh"),
-            "--color", sourceColor,
-            "--scheme", PersonalizationConfig.matugenScheme,
-            "--mode", PersonalizationConfig.themeMode,
-            "--templates", root.enabledMatugenTemplates().join(",")
-        ];
+        const command = ["bash", Paths.scriptPath("theme", "generate_matugen_colors.sh"), "--color",
+                         sourceColor, "--scheme", PersonalizationConfig.matugenScheme, "--mode",
+                         PersonalizationConfig.themeMode, "--templates", root.enabledMatugenTemplates().join(
+                             ",")];
         root.startGeneration(command, templateId);
     }
 
     function regenerateFromCurrentWallpaper(templateId) {
-        const path = WallpaperService.currentWallpaper
-            || PersonalizationConfig.wallpaperPath;
+        const path = WallpaperService.currentWallpaper || PersonalizationConfig.wallpaperPath;
         if (path && path !== "" && WallpaperService.isImagePath(path))
             root.generateFromWallpaper(path, templateId);
         else if (path && path !== "" && WallpaperService.isColorSource(path))
@@ -337,7 +334,8 @@ Singleton {
         id: detectIconThemesProcess
         stdout: StdioCollector {
             onStreamFinished: {
-                root.availableIconThemes = root.parseDetectedThemes(this.text, qsTr("系统默认"), PersonalizationConfig.iconTheme, false);
+                root.availableIconThemes = root.parseDetectedThemes(this.text, qsTr("System default"),
+                                                                    PersonalizationConfig.iconTheme, false);
             }
         }
     }
@@ -346,7 +344,9 @@ Singleton {
         id: detectCursorThemesProcess
         stdout: StdioCollector {
             onStreamFinished: {
-                root.availableCursorThemes = root.parseDetectedThemes(this.text, qsTr("系统默认"), PersonalizationConfig.cursorTheme, true);
+                root.availableCursorThemes = root.parseDetectedThemes(this.text, qsTr("System default"),
+                                                                      PersonalizationConfig.cursorTheme,
+                                                                      true);
             }
         }
     }
@@ -364,8 +364,8 @@ Singleton {
                 root.cursorLastError = "";
                 root.refreshCursorIntegrationState();
             } else {
-                root.cursorLastError = writeNiriCursorError.text.trim()
-                    || qsTr("无法写入 Niri 光标配置");
+                root.cursorLastError = writeNiriCursorError.text.trim() || qsTr(
+                            "Could not write the Niri cursor configuration");
             }
 
             if (root.cursorWritePending)
@@ -374,8 +374,8 @@ Singleton {
     }
 
     function includesCursorConfig(text) {
-        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/cursor\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/
-            .test(String(text || ""));
+        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/cursor\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/.test(
+                    String(text || ""));
     }
 
     function refreshCursorIntegrationState() {
@@ -390,8 +390,7 @@ Singleton {
         blockLoading: true
         watchChanges: true
 
-        onLoaded: root.cursorIntegrationReady =
-            root.includesCursorConfig(niriConfigFile.text())
+        onLoaded: root.cursorIntegrationReady = root.includesCursorConfig(niriConfigFile.text())
         onLoadFailed: root.cursorIntegrationReady = false
         onFileChanged: Qt.callLater(root.refreshCursorIntegrationState)
     }
@@ -430,9 +429,10 @@ Singleton {
                 Appearance.reloadColors();
             if (exitCode !== 0 && exitCode !== 3)
                 root.generationError = root.generationError || generationStderr.text.trim() || qsTr(
-                            "Matugen 配色生成失败");
+                            "Failed to generate Matugen colors");
             if (exitCode === 3 && !root.externalGenerationError)
-                root.externalGenerationError = generationStderr.text.trim() || qsTr("部分 Matugen 模板生成失败");
+                root.externalGenerationError = generationStderr.text.trim() || qsTr(
+                            "Some Matugen templates failed to generate");
             if (root.pendingGeneration)
                 Qt.callLater(root.resumeGeneration);
         }

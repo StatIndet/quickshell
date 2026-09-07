@@ -62,23 +62,28 @@ WidgetPanel {
     }
 
     function hasAltActionForType(type) {
-        return type === "network"
-            || type === "bluetooth"
-            || type === "caffeine"
-            || type === "audio"
-            || type === "mic";
+        return type === "network" || type === "bluetooth" || type === "caffeine" || type === "audio" || type
+                === "mic";
     }
 
     function titleForType(type) {
         switch (type) {
-        case "network": return qsTr("网络");
-        case "bluetooth": return qsTr("蓝牙");
-        case "caffeine": return qsTr("咖啡因");
-        case "mic": return qsTr("麦克风");
-        case "audio": return qsTr("声音");
-        case "theme": return qsTr("外观");
-        case "dnd": return qsTr("免打扰");
-        default: return type;
+        case "network":
+            return qsTr("Network");
+        case "bluetooth":
+            return qsTr("Bluetooth");
+        case "caffeine":
+            return qsTr("Caffeine");
+        case "mic":
+            return qsTr("Microphone");
+        case "audio":
+            return qsTr("Sound");
+        case "theme":
+            return qsTr("Appearance");
+        case "dnd":
+            return qsTr("Do not disturb");
+        default:
+            return type;
         }
     }
 
@@ -86,26 +91,27 @@ WidgetPanel {
         switch (type) {
         case "network":
             if (!NetworkService.available)
-                return qsTr("不可用");
+                return qsTr("Unavailable");
             if (!NetworkService.wifiAvailable)
-                return qsTr("无 Wi-Fi 设备");
-            return NetworkService.wifiEnabled ? NetworkService.activeConnection : qsTr("已关闭");
+                return qsTr("No Wi-Fi device");
+            return NetworkService.wifiEnabled ? NetworkService.activeConnection : qsTr("Off");
         case "bluetooth":
             if (!BluetoothService.available)
-                return qsTr("不可用");
+                return qsTr("Unavailable");
             if (!BluetoothService.enabled)
-                return qsTr("已关闭");
-            return BluetoothService.connected ? (BluetoothService.connectedName || qsTr("已连接")) : qsTr("已开启");
+                return qsTr("Off");
+            return BluetoothService.connected ? (BluetoothService.connectedName || qsTr("Connected")) : qsTr(
+                                                    "On");
         case "caffeine":
-            return IdleService.inhibited ? qsTr("保持唤醒") : qsTr("正常休眠");
+            return IdleService.inhibited ? qsTr("Keep awake") : qsTr("Normal sleep");
         case "mic":
-            return Volume.sourceMuted ? qsTr("已静音") : qsTr("已开启");
+            return Volume.sourceMuted ? qsTr("Muted") : qsTr("On");
         case "audio":
-            return Volume.sinkMuted ? qsTr("已静音") : Math.round(Volume.sinkVolume * 100) + "%";
+            return Volume.sinkMuted ? qsTr("Muted") : Math.round(Volume.sinkVolume * 100) + "%";
         case "theme":
-            return PersonalizationConfig.themeMode === "dark" ? qsTr("深色") : qsTr("浅色");
+            return PersonalizationConfig.themeMode === "dark" ? qsTr("Dark") : qsTr("Light");
         case "dnd":
-            return UiPreferences.dndEnabled ? qsTr("已开启") : qsTr("已关闭");
+            return UiPreferences.dndEnabled ? qsTr("On") : qsTr("Off");
         default:
             return "";
         }
@@ -116,7 +122,8 @@ WidgetPanel {
         case "network":
             return NetworkService.wifiEnabled ? "wifi" : "wifi_off";
         case "bluetooth":
-            return BluetoothService.connected ? "bluetooth_connected" : BluetoothService.enabled ? "bluetooth" : "bluetooth_disabled";
+            return BluetoothService.connected ? "bluetooth_connected" : BluetoothService.enabled
+                                                ? "bluetooth" : "bluetooth_disabled";
         case "caffeine":
             return "coffee";
         case "mic":
@@ -134,22 +141,33 @@ WidgetPanel {
 
     function toggledForType(type) {
         switch (type) {
-        case "network": return NetworkService.wifiEnabled;
-        case "bluetooth": return BluetoothService.enabled;
-        case "caffeine": return IdleService.inhibited;
-        case "mic": return !Volume.sourceMuted;
-        case "audio": return !Volume.sinkMuted && Volume.sinkVolume > 0;
-        case "theme": return PersonalizationConfig.themeMode === "dark";
-        case "dnd": return UiPreferences.dndEnabled;
-        default: return false;
+        case "network":
+            return NetworkService.wifiEnabled;
+        case "bluetooth":
+            return BluetoothService.enabled;
+        case "caffeine":
+            return IdleService.inhibited;
+        case "mic":
+            return !Volume.sourceMuted;
+        case "audio":
+            return !Volume.sinkMuted && Volume.sinkVolume > 0;
+        case "theme":
+            return PersonalizationConfig.themeMode === "dark";
+        case "dnd":
+            return UiPreferences.dndEnabled;
+        default:
+            return false;
         }
     }
 
     function availableForType(type) {
         switch (type) {
-        case "network": return NetworkService.available && NetworkService.wifiAvailable;
-        case "bluetooth": return BluetoothService.available;
-        default: return true;
+        case "network":
+            return NetworkService.available && NetworkService.wifiAvailable;
+        case "bluetooth":
+            return BluetoothService.available;
+        default:
+            return true;
         }
     }
 
@@ -201,9 +219,9 @@ WidgetPanel {
     function tooltipForType(type) {
         const base = titleForType(type) + " | " + subtitleForType(type);
         if (root.editMode)
-            return base + qsTr("\n右键切换形状，滚轮调整顺序");
+            return base + qsTr("\nRight-click to change shape; scroll to reorder");
         if (root.hasAltActionForType(type))
-            return base + qsTr("\n右键打开详情面板");
+            return base + qsTr("\nRight-click to open the details panel");
         return base;
     }
 
@@ -212,8 +230,7 @@ WidgetPanel {
             return false;
 
         const point = togglePanel.mapFromItem(root, x, y);
-        return point.x >= 0 && point.x <= togglePanel.width
-            && point.y >= 0 && point.y <= togglePanel.height;
+        return point.x >= 0 && point.x <= togglePanel.width && point.y >= 0 && point.y <= togglePanel.height;
     }
 
     headerTools: QuickToggleGroup {
@@ -225,7 +242,9 @@ WidgetPanel {
             padding: root.headerButtonPadding
             iconName: "edit"
             toggled: root.editMode
-            tooltipText: root.editMode ? qsTr("编辑快捷按钮\n右键切换形状，滚轮调整顺序") : qsTr("编辑快捷按钮")
+            tooltipText: root.editMode ? qsTr(
+                                             "Edit quick actions\nRight-click to change shape; scroll to reorder") :
+                                         qsTr("Edit quick actions")
             onTriggered: root.editMode = !root.editMode
         }
 
@@ -234,7 +253,7 @@ WidgetPanel {
             cellSpacing: root.headerButtonSpacing
             padding: root.headerButtonPadding
             iconName: "restart_alt"
-            tooltipText: qsTr("重启 Quickshell")
+            tooltipText: qsTr("Restart Quickshell")
             onTriggered: Quickshell.reload(true)
         }
 
@@ -243,7 +262,7 @@ WidgetPanel {
             cellSpacing: root.headerButtonSpacing
             padding: root.headerButtonPadding
             iconName: "settings"
-            tooltipText: qsTr("设置")
+            tooltipText: qsTr("Settings")
             onTriggered: root.openControlCenter()
         }
 
@@ -252,7 +271,7 @@ WidgetPanel {
             cellSpacing: root.headerButtonSpacing
             padding: root.headerButtonPadding
             iconName: "power_settings_new"
-            tooltipText: qsTr("电源菜单")
+            tooltipText: qsTr("Power menu")
             onTriggered: PowerMenuService.open(root.screen)
         }
     }
@@ -276,7 +295,8 @@ WidgetPanel {
             color: Appearance.colors.colLayer1
 
             readonly property real baseCellWidth: {
-                const availableWidth = width - root.togglePadding * 2 - root.toggleSpacing * root.toggleColumns;
+                const availableWidth = width - root.togglePadding * 2 - root.toggleSpacing
+                      * root.toggleColumns;
                 return Math.max(root.baseCellHeight, availableWidth / root.toggleColumns);
             }
 
@@ -355,7 +375,7 @@ WidgetPanel {
                                             root.altType(toggleType);
                                     }
 
-                                    onWheelMoved: (delta) => {
+                                    onWheelMoved: delta => {
                                         if (!root.editMode)
                                             return;
                                         QuickToggleConfig.move(toggleType, delta < 0 ? 1 : -1);

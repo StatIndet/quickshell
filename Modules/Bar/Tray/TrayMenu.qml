@@ -287,7 +287,7 @@ PopupWindow {
                     }
 
                     Text {
-                        text: qsTr("返回")
+                        text: qsTr("Back")
                         color: backButton.pointerHovered ? Appearance.colors.colOnSecondaryContainer :
                                                            Appearance.colors.colOnLayer0
                         font.family: Fonts.ui

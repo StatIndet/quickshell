@@ -18,13 +18,15 @@ Item {
 
     function acceptsOutput(outputName) {
         if (root.screenName === "")
-            return true
+            return true;
         if (!root.hasMultipleOutputs && outputName === "")
-            return true
-        return outputName === root.screenName
+            return true;
+        return outputName === root.screenName;
     }
 
-    TopBarPillBackground { anchors.fill: parent }
+    TopBarPillBackground {
+        anchors.fill: parent
+    }
 
     GridLayout {
         id: layout
@@ -45,16 +47,20 @@ Item {
                 property bool isHovered: mouseArea.containsMouse
 
                 visible: belongsToScreen
-                implicitWidth: !belongsToScreen ? 0
-                    : root.vertical ? 12 : ((active || isHovered) ? 32 : 12)
-                implicitHeight: !belongsToScreen ? 0
-                    : root.vertical ? ((active || isHovered) ? 32 : 12) : 12
+                implicitWidth: !belongsToScreen ? 0 : root.vertical ? 12 : ((active || isHovered) ? 32 : 12)
+                implicitHeight: !belongsToScreen ? 0 : root.vertical ? ((active || isHovered) ? 32 : 12) : 12
 
                 Behavior on implicitWidth {
-                    NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
                 }
                 Behavior on implicitHeight {
-                    NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
+                    NumberAnimation {
+                        duration: 300
+                        easing.type: Easing.OutCubic
+                    }
                 }
 
                 Rectangle {
@@ -63,12 +69,16 @@ Item {
                     height: parent.implicitHeight
                     radius: height / 2
 
-                    color: delegateRoot.active ? Appearance.colors.colPrimary
-                         : delegateRoot.hasWindows ? Appearance.colors.colOnSurface
-                         : delegateRoot.isHovered ? Appearance.colors.colLayer2Hover
-                         : Appearance.colors.colLayer4
+                    color: delegateRoot.active ? Appearance.colors.colPrimary : delegateRoot.hasWindows
+                                                 ? Appearance.colors.colOnSurface : delegateRoot.isHovered
+                                                   ? Appearance.colors.colLayer2Hover :
+                                                     Appearance.colors.colLayer4
 
-                    Behavior on color { ColorAnimation { duration: 200 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 200
+                        }
+                    }
                 }
 
                 MouseArea {
@@ -81,7 +91,8 @@ Item {
 
                 PopupToolTip {
                     extraVisibleCondition: mouseArea.containsMouse
-                    text: qsTr("工作区 ") + model.id + (delegateRoot.hasWindows ? qsTr("\n窗口: ") + model.windowCount : "")
+                    text: qsTr("Workspace ") + model.id + (delegateRoot.hasWindows ? qsTr("\nWindows: ")
+                                                                                     + model.windowCount : "")
                 }
             }
         }

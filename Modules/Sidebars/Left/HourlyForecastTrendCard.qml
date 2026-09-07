@@ -24,13 +24,13 @@ Rectangle {
         if (!sourceModel)
             return 0;
 
-        const count = typeof sourceModel.count === "function" ? sourceModel.count() : Number(sourceModel.count || 0);
+        const count = typeof sourceModel.count === "function" ? sourceModel.count() : Number(sourceModel.count
+                                                                                             || 0);
         return Math.min(maxItems, count);
     }
 
     function itemAt(index) {
-        return sourceModel && sourceModel.get ? sourceModel.get(index) : ({
-        });
+        return sourceModel && sourceModel.get ? sourceModel.get(index) : ({});
     }
 
     function valueAt(map, key, fallback) {
@@ -39,7 +39,9 @@ Rectangle {
     }
 
     function fmtTemp(value) {
-        return value !== undefined && value !== null && !isNaN(value) ? Math.round(UiPreferences.weatherTemperature(value)) + "°" : "--";
+        return value !== undefined && value !== null && !isNaN(value) ? Math.round(
+                                                                            UiPreferences.weatherTemperature(
+                                                                                value)) + "°" : "--";
     }
 
     function fmtRain(value) {
@@ -54,10 +56,11 @@ Rectangle {
         if (!source || !source.normalsAvailable)
             return NaN;
 
-        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) : source.normalNighttimeTemperatureC(root.normalMonth);
+        const value = daytime ? source.normalDaytimeTemperatureC(root.normalMonth) :
+                                source.normalNighttimeTemperatureC(root.normalMonth);
         return root.valueAt({
-            "value": value
-        }, "value", NaN);
+                                "value": value
+                            }, "value", NaN);
     }
 
     function forecastTemperatures() {
@@ -67,13 +70,14 @@ Rectangle {
             const temperature = root.valueAt(root.itemAt(i), "temperatureC", NaN);
             if (!isNaN(temperature))
                 values.push(temperature);
-
         }
         return values;
     }
 
     function updateTemperatureDomain() {
-        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(), root.normalDaytimeC, root.normalNighttimeC);
+        root.displayTemperatureDomain = WeatherChartMath.temperatureDomain(root.forecastTemperatures(),
+                                                                           root.normalDaytimeC,
+                                                                           root.normalNighttimeC);
         trendCanvas.requestPaint();
     }
 
@@ -82,25 +86,26 @@ Rectangle {
     }
 
     function extraTabLabel() {
-        const labels = [qsTr("紫外线指数"), qsTr("降水量"), qsTr("体感温度"), qsTr("相对湿度 / 露点"), qsTr("气压"), qsTr("云量"), qsTr("能见度")];
+        const labels = [qsTr("UV index"), qsTr("Precipitation"), qsTr("Feels like"), qsTr(
+                            "Relative humidity / Dew point"), qsTr("Pressure"), qsTr("Cloud cover"), qsTr(
+                            "Visibility")];
         return currentTab >= 3 && currentTab < 10 ? labels[currentTab - 3] : "";
     }
 
     radius: 26
     color: Appearance.colors.colWeatherCardSurface
     border.width: 1
-    border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.42)
+    border.color: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g,
+                          Appearance.colors.colOutlineVariant.b, 0.42)
     clip: true
     onSourceModelChanged: updateTemperatureDomain()
     onCurrentTabChanged: {
         if (root.currentTab === 0)
             trendCanvas.requestPaint();
-
     }
     onForegroundChanged: {
         if (root.foreground)
             trendCanvas.requestPaint();
-
     }
     onWidthChanged: trendCanvas.requestPaint()
     onHeightChanged: trendCanvas.requestPaint()
@@ -149,7 +154,7 @@ Rectangle {
                 }
 
                 Text {
-                    text: qsTr("逐小时预报")
+                    text: qsTr("Hourly forecast")
                     color: Appearance.colors.colOnSurface
                     font.family: Fonts.ui
                     font.bold: true
@@ -160,7 +165,6 @@ Rectangle {
                 Item {
                     Layout.fillWidth: true
                 }
-
             }
 
             RowLayout {
@@ -170,16 +174,16 @@ Rectangle {
                 StyledButtonGroup {
                     currentValue: root.currentTab
                     model: [({
-                        "value": 0,
-                        "label": qsTr("天气情况")
-                    }), ({
-                        "value": 1,
-                        "label": qsTr("空气质量")
-                    }), ({
-                        "value": 2,
-                        "label": qsTr("风况")
-                    })]
-                    onValueSelected: (value) => {
+                                 "value": 0,
+                                 "label": qsTr("Conditions")
+                             }), ({
+                                      "value": 1,
+                                      "label": qsTr("Air quality")
+                                  }), ({
+                                           "value": 2,
+                                           "label": qsTr("Wind")
+                                       })]
+                    onValueSelected: value => {
                         return root.currentTab = value;
                     }
                 }
@@ -208,7 +212,7 @@ Rectangle {
                     iconColor: Appearance.colors.colOnSurfaceVariant
                     selected: root.currentTab >= 3 || extraMenu.opened
                     selectedIconColor: Appearance.colors.colOnPrimaryContainer
-                    accessibleName: qsTr("逐小时预报更多选项")
+                    accessibleName: qsTr("More hourly forecast options")
                     normalContainerColor: Appearance.colors.colLayer2
                     selectedContainerColor: Appearance.colors.colPrimaryContainer
                     hoverStateLayerColor: Appearance.colors.colLayer4
@@ -221,44 +225,49 @@ Rectangle {
                         anchorItem: moreButton
                         selectedValue: root.currentTab
                         openAbove: true
-                        options: [{
-                            "value": 3,
-                            "label": qsTr("紫外线指数"),
-                            "icon": "sunny"
-                        }, {
-                            "value": 4,
-                            "label": qsTr("降水量"),
-                            "icon": "water_drop"
-                        }, {
-                            "value": 5,
-                            "label": qsTr("体感温度"),
-                            "icon": "thermostat"
-                        }, {
-                            "value": 6,
-                            "label": qsTr("相对湿度 / 露点"),
-                            "icon": "humidity_percentage"
-                        }, {
-                            "value": 7,
-                            "label": qsTr("气压"),
-                            "icon": "speed"
-                        }, {
-                            "value": 8,
-                            "label": qsTr("云量"),
-                            "icon": "cloud"
-                        }, {
-                            "value": 9,
-                            "label": qsTr("能见度"),
-                            "icon": "visibility"
-                        }]
-                        onValueSelected: (value) => {
+                        options: [
+                            {
+                                "value": 3,
+                                "label": qsTr("UV index"),
+                                "icon": "sunny"
+                            },
+                            {
+                                "value": 4,
+                                "label": qsTr("Precipitation"),
+                                "icon": "water_drop"
+                            },
+                            {
+                                "value": 5,
+                                "label": qsTr("Feels like"),
+                                "icon": "thermostat"
+                            },
+                            {
+                                "value": 6,
+                                "label": qsTr("Relative humidity / Dew point"),
+                                "icon": "humidity_percentage"
+                            },
+                            {
+                                "value": 7,
+                                "label": qsTr("Pressure"),
+                                "icon": "speed"
+                            },
+                            {
+                                "value": 8,
+                                "label": qsTr("Cloud cover"),
+                                "icon": "cloud"
+                            },
+                            {
+                                "value": 9,
+                                "label": qsTr("Visibility"),
+                                "icon": "visibility"
+                            }
+                        ]
+                        onValueSelected: value => {
                             return root.currentTab = value;
                         }
                     }
-
                 }
-
             }
-
         }
 
         Item {
@@ -307,7 +316,8 @@ Rectangle {
                         }
 
                         function yAt(value, minValue, maxValue) {
-                            return chartBottom - (value - minValue) / (maxValue - minValue) * (chartBottom - chartTop);
+                            return chartBottom - (value - minValue) / (maxValue - minValue) * (chartBottom
+                                                                                               - chartTop);
                         }
 
                         anchors.fill: parent
@@ -320,7 +330,7 @@ Rectangle {
                             ctx.clearRect(0, 0, width, height);
                             const count = root.modelCount();
                             if (count < 2)
-                                return ;
+                                return;
 
                             let values = [];
                             let rainValues = [];
@@ -331,18 +341,20 @@ Rectangle {
                                 rainValues.push(Math.max(0, root.valueAt(item, "rainMm", 0)));
                             }
                             if (root.forecastTemperatures().length === 0)
-                                return ;
+                                return;
 
                             const domain = root.displayTemperatureDomain;
                             const minTemp = domain[0];
                             const maxTemp = domain[1];
                             const maxRain = WeatherChartMath.rainMaximum(rainValues);
-                            const rainBandHeight = Math.max(0, trendContent.rainBottomInset - trendContent.rainTopInset - 16);
+                            const rainBandHeight = Math.max(0, trendContent.rainBottomInset
+                                                            - trendContent.rainTopInset - 16);
                             if (maxRain > 0) {
                                 const barWidth = Math.max(7, Math.min(12, root.itemWidth * 0.16));
                                 for (let r = 0; r < count; ++r) {
                                     const rain = rainValues[r];
-                                    const barHeight = WeatherChartMath.rainBarHeight(rain, maxRain, rainBandHeight);
+                                    const barHeight = WeatherChartMath.rainBarHeight(rain, maxRain,
+                                                                                     rainBandHeight);
                                     if (barHeight <= 0)
                                         continue;
 
@@ -350,7 +362,8 @@ Rectangle {
                                     const rainY = trendContent.rainBottomInset - barHeight;
                                     ctx.fillStyle = Qt.rgba(rainColor.r, rainColor.g, rainColor.b, 0.62);
                                     ctx.beginPath();
-                                    ctx.roundedRect(rainX - barWidth / 2, rainY, barWidth, barHeight, barWidth / 2, barWidth / 2);
+                                    ctx.roundedRect(rainX - barWidth / 2, rainY, barWidth, barHeight, barWidth
+                                                    / 2, barWidth / 2);
                                     ctx.fill();
                                     ctx.fillStyle = rainColor;
                                     ctx.font = "bold 10px " + Fonts.cssFamily(Fonts.numeric);
@@ -359,12 +372,15 @@ Rectangle {
                                 }
                             }
                             const areaGradient = ctx.createLinearGradient(0, chartTop, 0, chartBottom);
-                            areaGradient.addColorStop(0, Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.2));
-                            areaGradient.addColorStop(1, Qt.rgba(primaryColor.r, primaryColor.g, primaryColor.b, 0.02));
+                            areaGradient.addColorStop(0, Qt.rgba(primaryColor.r, primaryColor.g,
+                                                                 primaryColor.b, 0.2));
+                            areaGradient.addColorStop(1, Qt.rgba(primaryColor.r, primaryColor.g,
+                                                                 primaryColor.b, 0.02));
                             ctx.fillStyle = areaGradient;
                             ctx.beginPath();
                             ctx.moveTo(pointX(0), chartBottom);
-                            for (let a = 0; a < count; ++a) ctx.lineTo(pointX(a), yAt(values[a], minTemp, maxTemp))
+                            for (let a = 0; a < count; ++a)
+                                ctx.lineTo(pointX(a), yAt(values[a], minTemp, maxTemp));
                             ctx.lineTo(pointX(count - 1), chartBottom);
                             ctx.closePath();
                             ctx.fill();
@@ -398,7 +414,8 @@ Rectangle {
                             ctx.font = "bold 13px " + Fonts.cssFamily(Fonts.numeric);
                             ctx.textAlign = "center";
                             for (let n = 0; n < count; ++n) {
-                                ctx.fillText(root.fmtTemp(values[n]), pointX(n), yAt(values[n], minTemp, maxTemp) - 10);
+                                ctx.fillText(root.fmtTemp(values[n]), pointX(n), yAt(values[n], minTemp,
+                                                                                     maxTemp) - 10);
                             }
                         }
                     }
@@ -434,9 +451,7 @@ Rectangle {
                                 style: "fill"
                                 animated: false
                             }
-
                         }
-
                     }
 
                     MouseArea {
@@ -452,12 +467,12 @@ Rectangle {
                         acceptedButtons: Qt.LeftButton
                         preventStealing: true
                         cursorShape: pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-                        onPressed: function(mouse) {
+                        onPressed: function (mouse) {
                             lastMouseX = mouse.x;
                         }
-                        onPositionChanged: function(mouse) {
+                        onPositionChanged: function (mouse) {
                             if (!pressed)
-                                return ;
+                                return;
 
                             const dx = mouse.x - lastMouseX;
                             const maxX = Math.max(0, trendFlick.contentWidth - trendFlick.width);
@@ -465,9 +480,7 @@ Rectangle {
                             lastMouseX = mouse.x;
                         }
                     }
-
                 }
-
             }
 
             WeatherTemperatureNormalLine {
@@ -482,7 +495,9 @@ Rectangle {
                 temperatureText: root.fmtTemp(root.normalDaytimeC)
                 numericFontFamily: Fonts.numeric
                 uiFontFamily: Fonts.ui
-                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r,
+                                   Appearance.colors.colOutlineVariant.g,
+                                   Appearance.colors.colOutlineVariant.b, 0.58)
                 labelColor: Appearance.colors.colOnSurfaceVariant
             }
 
@@ -498,7 +513,9 @@ Rectangle {
                 temperatureText: root.fmtTemp(root.normalNighttimeC)
                 numericFontFamily: Fonts.numeric
                 uiFontFamily: Fonts.ui
-                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r, Appearance.colors.colOutlineVariant.g, Appearance.colors.colOutlineVariant.b, 0.58)
+                lineColor: Qt.rgba(Appearance.colors.colOutlineVariant.r,
+                                   Appearance.colors.colOutlineVariant.g,
+                                   Appearance.colors.colOutlineVariant.b, 0.58)
                 labelColor: Appearance.colors.colOnSurfaceVariant
             }
 
@@ -510,7 +527,6 @@ Rectangle {
                     anchors.fill: parent
                     sourceModel: root.sourceModel
                 }
-
             }
 
             Item {
@@ -521,7 +537,6 @@ Rectangle {
                     anchors.fill: parent
                     sourceModel: root.sourceModel
                 }
-
             }
 
             WeatherMetricTrendPane {
@@ -572,9 +587,7 @@ Rectangle {
                 sourceModel: root.sourceModel
                 metric: "visibility"
             }
-
         }
-
     }
 
     Connections {
@@ -605,5 +618,4 @@ Rectangle {
 
         target: Fonts
     }
-
 }

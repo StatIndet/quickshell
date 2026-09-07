@@ -8,11 +8,12 @@ AccountProfileHeader {
 
     property string screenName: ""
     readonly property int wallpaperRevision: WallpaperService.revision
-    readonly property string resolvedWallpaperPath: wallpaperRevision >= 0
-        ? (WallpaperService.wallpaperForScreen(screenName)
-            || WallpaperService.currentWallpaper
-            || PersonalizationConfig.wallpaperPath)
-        : ""
+    readonly property string resolvedWallpaperPath: wallpaperRevision >= 0 ? (
+                                                                                 WallpaperService.wallpaperForScreen(
+                                                                                     screenName)
+                                                                                 || WallpaperService.currentWallpaper
+                                                                                 || PersonalizationConfig.wallpaperPath) :
+                                                                             ""
 
     coverHeight: Math.round(width / 2.5)
     profileAreaHeight: 112
@@ -26,9 +27,8 @@ AccountProfileHeader {
     distroName: SystemIdentityService.distroName
     uptimeText: SystemIdentityService.uptimeText
     showNetworkStatus: false
-    surfaceColor: BlurService.opaqueBackgroundColor(
-        Appearance.m3colors.m3surfaceContainerHigh)
-    avatarActionLabel: qsTr("打开设置中心")
+    surfaceColor: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
+    avatarActionLabel: qsTr("Open Settings")
 
     onAvatarActivated: {
         WidgetState.leftSidebarOpen = false;

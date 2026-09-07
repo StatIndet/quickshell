@@ -8,40 +8,40 @@ import qs.Widgets.common
 
 Item {
     id: root
-    
+
     readonly property bool isActive: root.visible && MediaManager.active
     property bool isPlaying: isActive && MediaManager.active && MediaManager.active.isPlaying
 
-    property string artUrl: (isActive && MediaManager.active.trackArtUrl) 
-        ? MediaManager.active.trackArtUrl 
-        : ""
-        
-    property string title: (isActive && MediaManager.active.trackTitle) 
-        ? MediaManager.active.trackTitle 
-        : qsTr("没有媒体")
-        
-    property string artist: (isActive && MediaManager.active.trackArtist) 
-        ? MediaManager.active.trackArtist 
-        : qsTr("未知艺术家")
-    
+    property string artUrl: (isActive && MediaManager.active.trackArtUrl) ? MediaManager.active.trackArtUrl :
+                                                                            ""
+
+    property string title: (isActive && MediaManager.active.trackTitle) ? MediaManager.active.trackTitle :
+                                                                          qsTr("No media")
+
+    property string artist: (isActive && MediaManager.active.trackArtist) ? MediaManager.active.trackArtist :
+                                                                            qsTr("Unknown artist")
+
     readonly property double currentPos: root.isActive ? MediaManager.currentPosition : 0
-    
-    property double progress: (isActive && MediaManager.active.length > 0) 
-        ? (root.currentPos / MediaManager.active.length) 
-        : 0
+
+    property double progress: (isActive && MediaManager.active.length > 0) ? (root.currentPos
+                                                                              / MediaManager.active.length) :
+                                                                             0
 
     // 对播放器列表进行重排序，让当前播放器排在第一位
     property var sortedPlayerList: {
         let activeP = MediaManager.active;
         let allP = MediaManager.list;
-        
-        if (!activeP || allP.length <= 1) return allP;
-        
+
+        if (!activeP || allP.length <= 1)
+            return allP;
+
         // 创建副本并排序：将 active 移到最前
         let sorted = allP.slice();
         sorted.sort((a, b) => {
-            if (a === activeP) return -1;
-            if (b === activeP) return 1;
+            if (a === activeP)
+                return -1;
+            if (b === activeP)
+                return 1;
             return 0;
         });
         return sorted;
@@ -181,7 +181,9 @@ Item {
                 }
             }
 
-            Item { Layout.fillHeight: true }
+            Item {
+                Layout.fillHeight: true
+            }
 
             // 波浪进度条（填满右侧列宽度，与标题行对齐）
             WaveProgressBar {
@@ -197,7 +199,7 @@ Item {
                 waveFrequency: 0.05
                 progressGap: 10
 
-                onSeekRequested: (position) => {
+                onSeekRequested: position => {
                     if (MediaManager.active && MediaManager.active.length > 0) {
                         let targetPos = position * MediaManager.active.length;
                         MediaManager.active.position = targetPos;
@@ -217,9 +219,10 @@ Item {
                 playPauseEnabled: MediaManager.active
                 nextEnabled: MediaManager.active
                 loopEnabled: MediaManager.active && MediaManager.active.loopSupported
-                loopMode: !MediaManager.active || MediaManager.active.loopState === MprisLoopState.None
-                    ? 0
-                    : (MediaManager.active.loopState === MprisLoopState.Track ? 2 : 1)
+                loopMode: !MediaManager.active || MediaManager.active.loopState === MprisLoopState.None ? 0 : (
+                                                                                                              MediaManager.active.loopState
+                                                                                                              === MprisLoopState.Track
+                                                                                                              ? 2 : 1)
                 activeColor: Appearance.colors.colPrimary
                 inactiveColor: Appearance.colors.colOnSurface
                 playingBg: Appearance.colors.colPrimary
@@ -228,10 +231,14 @@ Item {
                 pausedFg: Appearance.colors.colOnSecondaryContainer
                 morphEnabled: true
 
-                onShuffleClicked: if (MediaManager.active && MediaManager.active.shuffleSupported) MediaManager.active.shuffle = !MediaManager.active.shuffle
-                onPreviousClicked: if (MediaManager.active) MediaManager.active.previous()
-                onPlayPauseClicked: if (MediaManager.active) MediaManager.active.togglePlaying()
-                onNextClicked: if (MediaManager.active) MediaManager.active.next()
+                onShuffleClicked: if (MediaManager.active && MediaManager.active.shuffleSupported)
+                                      MediaManager.active.shuffle = !MediaManager.active.shuffle
+                onPreviousClicked: if (MediaManager.active)
+                                       MediaManager.active.previous()
+                onPlayPauseClicked: if (MediaManager.active)
+                                        MediaManager.active.togglePlaying()
+                onNextClicked: if (MediaManager.active)
+                                   MediaManager.active.next()
                 onLoopClicked: {
                     if (!MediaManager.active || !MediaManager.active.loopSupported)
                         return;
@@ -265,16 +272,28 @@ Item {
         scale: (!menuExpanded && pillMa.pressed) ? 0.94 : (!menuExpanded && pillMa.containsMouse ? 1.08 : 1.0)
 
         Behavior on width {
-            NumberAnimation { duration: 300; easing.type: Easing.OutQuint }
+            NumberAnimation {
+                duration: 300
+                easing.type: Easing.OutQuint
+            }
         }
         Behavior on height {
-            NumberAnimation { duration: 300; easing.type: Easing.OutQuint }
+            NumberAnimation {
+                duration: 300
+                easing.type: Easing.OutQuint
+            }
         }
         Behavior on radius {
-            NumberAnimation { duration: 300; easing.type: Easing.OutQuint }
+            NumberAnimation {
+                duration: 300
+                easing.type: Easing.OutQuint
+            }
         }
         Behavior on scale {
-            NumberAnimation { duration: 150; easing.type: Easing.OutCubic }
+            NumberAnimation {
+                duration: 150
+                easing.type: Easing.OutCubic
+            }
         }
 
         Text {
@@ -285,7 +304,11 @@ Item {
             font.pixelSize: 11
             font.weight: Font.DemiBold
             opacity: pillRect.menuExpanded ? 0.0 : 1.0
-            Behavior on opacity { NumberAnimation { duration: 150 } }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 150
+                }
+            }
         }
 
         MouseArea {
@@ -308,7 +331,10 @@ Item {
             opacity: pillRect.menuExpanded ? 1.0 : 0.0
 
             Behavior on opacity {
-                NumberAnimation { duration: 250; easing.type: Easing.InQuad }
+                NumberAnimation {
+                    duration: 250
+                    easing.type: Easing.InQuad
+                }
             }
 
             Repeater {
@@ -320,7 +346,11 @@ Item {
                     radius: 8
                     color: itemMa.containsMouse ? Qt.rgba(0, 0, 0, 0.08) : "transparent"
 
-                    Behavior on color { ColorAnimation { duration: 100 } }
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 100
+                        }
+                    }
 
                     RowLayout {
                         anchors.fill: parent

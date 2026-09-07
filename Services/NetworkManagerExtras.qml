@@ -7,7 +7,8 @@ Singleton {
     id: root
 
     readonly property bool runtimeBusy: runtimeProcess.running || frequencyProcess.running
-    readonly property bool mutationBusy: addProcess.running || activateProcess.running || cleanupProcess.running
+    readonly property bool mutationBusy: addProcess.running || activateProcess.running
+                                         || cleanupProcess.running
     readonly property bool busy: runtimeBusy || mutationBusy
     property string lastError: ""
     property string _runtimeInterface: ""
@@ -36,8 +37,7 @@ Singleton {
     function queryRuntimeDetails(interfaceName, isWifi, callback) {
         if (root.busy || String(interfaceName || "").length === 0) {
             if (callback)
-                callback(false, {
-            }, qsTr("网络详情查询当前不可用"));
+                callback(false, {}, qsTr("Network details are currently unavailable"));
 
             return false;
         }
@@ -47,7 +47,9 @@ Singleton {
         root._runtimeCallback = callback;
         root._runtimeDetails = null;
         root._runtimeStarted = false;
-        runtimeProcess.command = ["nmcli", "-t", "-e", "yes", "-f", "GENERAL.CONNECTION,GENERAL.CON-UUID,IP4.ADDRESS,IP4.GATEWAY,IP4.DNS", "device", "show", root._runtimeInterface];
+        runtimeProcess.command = ["nmcli", "-t", "-e", "yes", "-f",
+                                  "GENERAL.CONNECTION,GENERAL.CON-UUID,IP4.ADDRESS,IP4.GATEWAY,IP4.DNS",
+                                  "device", "show", root._runtimeInterface];
         runtimeProcess.running = true;
         return true;
     }
@@ -66,7 +68,7 @@ Singleton {
     function createHiddenWifi(ssid, hidden, secure, password, callback) {
         if (root.busy) {
             if (callback)
-                callback(false, null, qsTr("另一项补充网络操作仍在进行"));
+                callback(false, null, qsTr("Another supplementary network operation is already in progress"));
 
             return false;
         }
@@ -77,7 +79,9 @@ Singleton {
         root._password = root._secure ? String(password || "") : "";
         root._addCallback = callback;
         root._addStarted = false;
-        const args = ["nmcli", "--wait", "30", "connection", "add", "type", "wifi", "con-name", root._connectionName, "ifname", "*", "ssid", root._ssid, "--", "802-11-wireless.hidden", hidden ? "yes" : "no"];
+        const args = ["nmcli", "--wait", "30", "connection", "add", "type", "wifi", "con-name", root._connectionName,
+                      "ifname", "*", "ssid", root._ssid, "--", "802-11-wireless.hidden", hidden ? "yes" :
+                                                                                                  "no"];
         if (root._secure)
             args.push("802-11-wireless-security.key-mgmt", "wpa-psk");
 
@@ -89,10 +93,10 @@ Singleton {
     function _finishAdd(success, errorMessage) {
         const callback = root._addCallback;
         const result = success ? ({
-            "id": root._connectionName,
-            "ssid": root._ssid
-        }) : null;
-        root.lastError = success ? "" : String(errorMessage || qsTr("无法创建 Wi-Fi 配置"));
+                                      "id": root._connectionName,
+                                      "ssid": root._ssid
+                                  }) : null;
+        root.lastError = success ? "" : String(errorMessage || qsTr("Unable to create Wi-Fi profile"));
         root._addCallback = null;
         root._password = "";
         root._secure = false;
@@ -100,11 +104,11 @@ Singleton {
         activateProcess.command = [];
         if (callback)
             callback(success, result, root.lastError);
-
     }
 
     function _cleanupAdd(errorMessage) {
-        cleanupProcess.command = ["nmcli", "--wait", "15", "connection", "delete", "id", root._connectionName];
+        cleanupProcess.command = ["nmcli", "--wait", "15", "connection", "delete", "id",
+                                  root._connectionName];
         cleanupProcess.running = true;
         root._finishAdd(false, errorMessage);
     }
@@ -117,31 +121,30 @@ Singleton {
             if (!running && !root._runtimeStarted && root._runtimeCallback) {
                 const callback = root._runtimeCallback;
                 root._runtimeCallback = null;
-                root.lastError = qsTr("nmcli 不可用，无法读取活动 IPv4 信息");
-                callback(false, {
-                }, root.lastError);
+                root.lastError = qsTr("nmcli is unavailable; active IPv4 information cannot be read");
+                callback(false, {}, root.lastError);
             }
         }
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             const callback = root._runtimeCallback;
             if (!callback)
-                return ;
+                return;
 
             if (exitCode !== 0) {
                 root._runtimeCallback = null;
-                root.lastError = root._error(runtimeError.text, qsTr("无法读取活动 IPv4 信息"));
-                callback(false, {
-                }, root.lastError);
-                return ;
+                root.lastError = root._error(runtimeError.text, qsTr(
+                                                 "Unable to read active IPv4 information"));
+                callback(false, {}, root.lastError);
+                return;
             }
             const details = ({
-                "interfaceName": root._runtimeInterface,
-                "connectionName": "",
-                "connectionUuid": "",
-                "addresses": [],
-                "gateway": "",
-                "dns": []
-            });
+                                 "interfaceName": root._runtimeInterface,
+                                 "connectionName": "",
+                                 "connectionUuid": "",
+                                 "addresses": [],
+                                 "gateway": "",
+                                 "dns": []
+                             });
             for (const rawLine of String(runtimeOutput.text || "").trim().split("\n")) {
                 const separator = rawLine.indexOf(":");
                 if (separator < 0)
@@ -163,7 +166,8 @@ Singleton {
             if (root._runtimeIsWifi) {
                 root._runtimeDetails = details;
                 root._frequencyStarted = false;
-                frequencyProcess.command = ["nmcli", "-t", "-e", "yes", "-f", "IN-USE,FREQ", "device", "wifi", "list", "ifname", root._runtimeInterface];
+                frequencyProcess.command = ["nmcli", "-t", "-e", "yes", "-f", "IN-USE,FREQ", "device", "wifi",
+                                            "list", "ifname", root._runtimeInterface];
                 frequencyProcess.running = true;
             } else {
                 root._runtimeCallback = null;
@@ -179,7 +183,6 @@ Singleton {
         stderr: StdioCollector {
             id: runtimeError
         }
-
     }
 
     Process {
@@ -189,18 +192,16 @@ Singleton {
         onRunningChanged: {
             if (!running && !root._frequencyStarted && root._runtimeCallback) {
                 const callback = root._runtimeCallback;
-                const details = root._runtimeDetails || {
-                };
+                const details = root._runtimeDetails || {};
                 root._runtimeCallback = null;
                 root._runtimeDetails = null;
                 callback(true, details, "");
             }
         }
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             const callback = root._runtimeCallback;
             root._runtimeCallback = null;
-            const details = root._runtimeDetails || {
-            };
+            const details = root._runtimeDetails || {};
             root._runtimeDetails = null;
             if (exitCode === 0) {
                 for (const line of String(frequencyOutput.text || "").trim().split("\n")) {
@@ -215,13 +216,11 @@ Singleton {
             root.lastError = "";
             if (callback)
                 callback(true, details, "");
-
         }
 
         stdout: StdioCollector {
             id: frequencyOutput
         }
-
     }
 
     Process {
@@ -230,23 +229,25 @@ Singleton {
         onStarted: root._addStarted = true
         onRunningChanged: {
             if (!running && !root._addStarted && root._addCallback)
-                root._finishAdd(false, qsTr("nmcli 不可用，无法创建隐藏网络配置"));
-
+                root._finishAdd(false, qsTr(
+                                    "nmcli is unavailable; a hidden network profile cannot be created"));
         }
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             if (exitCode !== 0) {
-                root._finishAdd(false, root._error(addError.text, qsTr("无法创建 Wi-Fi 配置")));
-                return ;
+                root._finishAdd(false, root._error(addError.text, qsTr("Unable to create Wi-Fi profile")));
+                return;
             }
             root._activateStarted = false;
-            activateProcess.command = root._secure ? ["nmcli", "--ask", "--wait", "60", "connection", "up", "id", root._connectionName] : ["nmcli", "--wait", "60", "connection", "up", "id", root._connectionName];
+            activateProcess.command = root._secure ? ["nmcli", "--ask", "--wait", "60", "connection", "up", "id",
+                                                      root._connectionName] : ["nmcli", "--wait", "60",
+                                                                               "connection", "up", "id",
+                                                                               root._connectionName];
             activateProcess.running = true;
         }
 
         stderr: StdioCollector {
             id: addError
         }
-
     }
 
     Process {
@@ -263,28 +264,26 @@ Singleton {
         }
         onRunningChanged: {
             if (!running && !root._activateStarted && root._addCallback)
-                root._cleanupAdd(qsTr("nmcli 不可用，无法激活隐藏网络配置"));
-
+                root._cleanupAdd(qsTr(
+                                     "nmcli is unavailable; the hidden network profile cannot be activated"));
         }
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root._password = "";
             if (exitCode === 0)
                 root._finishAdd(true, "");
             else
-                root._cleanupAdd(root._error(activateError.text, qsTr("Wi-Fi 配置已创建，但无法激活")));
+                root._cleanupAdd(root._error(activateError.text, qsTr(
+                                                 "The Wi-Fi profile was created but could not be activated")));
         }
 
-        stdout: StdioCollector {
-        }
+        stdout: StdioCollector {}
 
         stderr: StdioCollector {
             id: activateError
         }
-
     }
 
     Process {
         id: cleanupProcess
     }
-
 }

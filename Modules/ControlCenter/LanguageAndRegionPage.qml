@@ -32,35 +32,33 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("语言")
+            title: qsTr("Language")
             iconName: "translate"
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "language"
-                title: qsTr("界面语言")
+                title: qsTr("Interface language")
 
                 trailing: SearchSelectMenuField {
                     Layout.preferredWidth: 190
                     options: I18nService.supportedLanguages
                     value: UiPreferences.language
-                    placeholder: qsTr("选择语言")
+                    placeholder: qsTr("Select language")
                     textRole: "label"
                     valueRole: "code"
                     closeOnAccept: true
-                    onAccepted: (value) => {
+                    onAccepted: value => {
                         return UiPreferences.setLanguage(value);
                     }
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("地区与天气位置")
+            title: qsTr("Region & weather location")
             iconName: "map"
 
             LocationPicker {
@@ -70,40 +68,42 @@ StyledFlickable {
                 parentModal: root.parentModal
                 active: root.presentationActive && root.visible
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("天气地图")
+            title: qsTr("Weather map")
             iconName: "layers"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("底图服务")
+                title: qsTr("Base map service")
 
                 trailing: StyledButtonGroup {
-                    model: [{
-                        "value": "openfreemap",
-                        "label": "OpenFreeMap"
-                    }, {
-                        "value": "maptiler",
-                        "label": "MapTiler"
-                    }]
+                    model: [
+                        {
+                            "value": "openfreemap",
+                            "label": "OpenFreeMap"
+                        },
+                        {
+                            "value": "maptiler",
+                            "label": "MapTiler"
+                        }
+                    ]
                     currentValue: UiPreferences.weatherMapBaseProvider
                     buttonMinWidth: 104
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setWeatherMapBaseProvider(value);
                     }
                 }
-
             }
 
             SettingsActionRow {
                 Layout.fillWidth: true
-                visible: UiPreferences.weatherMapBaseProvider === "maptiler" && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.mapTilerConfigured
-                text: qsTr("MapTiler 未配置，当前使用 OpenFreeMap")
+                visible: UiPreferences.weatherMapBaseProvider === "maptiler"
+                         && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.mapTilerConfigured
+                text: qsTr("MapTiler is not configured; using OpenFreeMap")
                 iconName: "key_off"
                 trailingIconName: "arrow_forward"
                 onClicked: root.navigateRequested("advanced")
@@ -111,115 +111,110 @@ StyledFlickable {
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("天气图层服务")
+                title: qsTr("Weather layer service")
 
                 trailing: StyledButtonGroup {
-                    model: [{
-                        "value": "rainviewer",
-                        "label": "RainViewer"
-                    }, {
-                        "value": "openweather",
-                        "label": "OpenWeather"
-                    }]
+                    model: [
+                        {
+                            "value": "rainviewer",
+                            "label": "RainViewer"
+                        },
+                        {
+                            "value": "openweather",
+                            "label": "OpenWeather"
+                        }
+                    ]
                     currentValue: UiPreferences.weatherMapOverlayProvider
                     buttonMinWidth: 104
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setWeatherMapOverlayProvider(value);
                     }
                 }
-
             }
 
             SettingsActionRow {
                 Layout.fillWidth: true
-                visible: UiPreferences.weatherMapOverlayProvider === "openweather" && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.apiConfigured
-                text: qsTr("OpenWeather 未配置，当前使用 RainViewer")
+                visible: UiPreferences.weatherMapOverlayProvider === "openweather"
+                         && WeatherMapPlugin.credentialsReady && !WeatherMapPlugin.apiConfigured
+                text: qsTr("OpenWeather is not configured; using RainViewer")
                 iconName: "key_off"
                 trailingIconName: "arrow_forward"
                 onClicked: root.navigateRequested("advanced")
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("单位")
+            title: qsTr("Units")
             iconName: "thermostat"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("天气温度")
+                title: qsTr("Weather temperature")
 
                 trailing: StyledButtonGroup {
                     model: [({
-                        "value": "celsius",
-                        "label": "°C"
-                    }), ({
-                        "value": "fahrenheit",
-                        "label": "°F"
-                    })]
+                                 "value": "celsius",
+                                 "label": "°C"
+                             }), ({
+                                      "value": "fahrenheit",
+                                      "label": "°F"
+                                  })]
                     currentValue: UiPreferences.weatherTemperatureUnit
                     buttonMinWidth: 56
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setWeatherTemperatureUnit(value);
                     }
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("硬件温度")
+                title: qsTr("Hardware temperature")
 
                 trailing: StyledButtonGroup {
                     model: [({
-                        "value": "celsius",
-                        "label": "°C"
-                    }), ({
-                        "value": "fahrenheit",
-                        "label": "°F"
-                    })]
+                                 "value": "celsius",
+                                 "label": "°C"
+                             }), ({
+                                      "value": "fahrenheit",
+                                      "label": "°F"
+                                  })]
                     currentValue: UiPreferences.systemTemperatureUnit
                     buttonMinWidth: 56
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSystemTemperatureUnit(value);
                     }
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("时间与日期")
+            title: qsTr("Time & date")
             iconName: "schedule"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("时钟格式")
+                title: qsTr("Clock format")
 
                 trailing: StyledButtonGroup {
                     model: [({
-                        "value": "24",
-                        "label": qsTr("24 小时")
-                    }), ({
-                        "value": "12",
-                        "label": qsTr("12 小时")
-                    })]
+                                 "value": "24",
+                                 "label": qsTr("24-hour")
+                             }), ({
+                                      "value": "12",
+                                      "label": qsTr("12-hour")
+                                  })]
                     currentValue: UiPreferences.useTwelveHourClock ? "12" : "24"
                     buttonMinWidth: 78
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setUseTwelveHourClock(value === "12");
                     }
                 }
-
             }
-
         }
-
     }
-
 }

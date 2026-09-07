@@ -31,29 +31,28 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("背景")
+            title: qsTr("Background")
             iconName: "wallpaper"
 
             GeneralSliderSetting {
-                title: qsTr("背景不透明度")
+                title: qsTr("Background opacity")
                 from: 0
                 to: 100
                 stepSize: 1
                 suffix: "%"
                 value: PersonalizationConfig.shellBackgroundOpacity * 100
-                onMoved: value => PersonalizationConfig
-                    .setShellBackgroundOpacity(value / 100)
+                onMoved: value => PersonalizationConfig.setShellBackgroundOpacity(value / 100)
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "blur_on"
-                title: qsTr("背景模糊")
+                title: qsTr("Background blur")
 
                 trailing: StyledSwitch {
                     enabled: BlurService.available
                     checked: PersonalizationConfig.shellBlurEnabled
-                    Accessible.name: qsTr("背景模糊")
+                    Accessible.name: qsTr("Background blur")
                     onToggled: PersonalizationConfig.setShellBlurEnabled(checked)
                 }
             }
@@ -61,27 +60,25 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "filter_center_focus"
-                title: qsTr("仅模糊壁纸")
-                supportingText: BlurService.niriIntegrationReady
-                    ? qsTr("关闭后会模糊窗口，开销更高")
-                    : qsTr("需要先配置 Niri 模糊集成")
+                title: qsTr("Blur wallpaper only")
+                supportingText: BlurService.niriIntegrationReady ? qsTr(
+                                                                       "Turning this off also blurs windows and uses more resources") :
+                                                                   qsTr("Configure Niri blur integration first")
 
                 trailing: StyledSwitch {
-                    enabled: BlurService.available
-                        && BlurService.niriIntegrationReady
+                    enabled: BlurService.available && BlurService.niriIntegrationReady
                     checked: PersonalizationConfig.shellBlurXray
-                    Accessible.name: qsTr("仅模糊壁纸")
+                    Accessible.name: qsTr("Blur wallpaper only")
                     onToggled: PersonalizationConfig.setShellBlurXray(checked)
                 }
             }
 
             SettingsActionRow {
                 Layout.fillWidth: true
-                visible: BlurService.available
-                    && !BlurService.niriIntegrationReady
+                visible: BlurService.available && !BlurService.niriIntegrationReady
                 iconName: "settings"
-                text: BlurService.integrationBusy
-                    ? qsTr("正在配置 Niri 集成…") : qsTr("配置 Niri 集成")
+                text: BlurService.integrationBusy ? qsTr("Configuring Niri integration…") : qsTr(
+                                                        "Configure Niri integration")
                 trailingIconName: "chevron_right"
                 enabled: !BlurService.integrationBusy
                 onClicked: BlurService.configureNiriIntegration()

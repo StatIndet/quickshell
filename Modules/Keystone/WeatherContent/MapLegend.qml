@@ -46,66 +46,66 @@ Rectangle {
 
     function titleText() {
         if (mode === "radar")
-            return qsTr("雷达");
+            return qsTr("Radar");
 
         if (mode === "temperature")
-            return qsTr("温度");
+            return qsTr("Temperature");
 
         if (mode === "precipitation")
-            return qsTr("降水");
+            return qsTr("Precipitation");
 
         if (mode === "clouds")
-            return qsTr("云量");
+            return qsTr("Cloud cover");
 
         if (mode === "wind")
-            return qsTr("风速");
+            return qsTr("Wind speed");
 
         if (mode === "pressure")
-            return qsTr("气压");
+            return qsTr("Pressure");
 
-        return qsTr("天气");
+        return qsTr("Weather");
     }
 
     function minimumLabel() {
         if (mode === "radar")
-            return qsTr("小雨");
+            return qsTr("Light rain");
 
         if (mode === "temperature")
-            return qsTr("低温");
+            return qsTr("Cold");
 
         if (mode === "precipitation")
-            return qsTr("少量");
+            return qsTr("Light");
 
         if (mode === "clouds")
-            return qsTr("晴朗");
+            return qsTr("Clear");
 
         if (mode === "wind")
-            return qsTr("平静");
+            return qsTr("Calm");
 
         if (mode === "pressure")
-            return qsTr("低");
+            return qsTr("Low");
 
         return "";
     }
 
     function maximumLabel() {
         if (mode === "radar")
-            return qsTr("强降水");
+            return qsTr("Heavy precipitation");
 
         if (mode === "temperature")
-            return qsTr("高温");
+            return qsTr("Hot");
 
         if (mode === "precipitation")
-            return qsTr("大量");
+            return qsTr("Heavy");
 
         if (mode === "clouds")
-            return qsTr("阴天");
+            return qsTr("Overcast");
 
         if (mode === "wind")
-            return qsTr("强劲");
+            return qsTr("Strong");
 
         if (mode === "pressure")
-            return qsTr("高");
+            return qsTr("High");
 
         return "";
     }
@@ -116,7 +116,7 @@ Rectangle {
             value = UiPreferences.shortTime(updatedAt);
 
         if (stale)
-            value = value === "" ? qsTr("缓存") : value + qsTr(" · 缓存");
+            value = value === "" ? qsTr("Cached") : value + qsTr(" · Cached");
 
         return value;
     }
@@ -169,7 +169,6 @@ Rectangle {
                 font.pixelSize: 10
                 textFormat: Text.PlainText
             }
-
         }
 
         Rectangle {
@@ -204,9 +203,7 @@ Rectangle {
                     position: 1
                     color: root.colorsForMode()[4]
                 }
-
             }
-
         }
 
         RowLayout {
@@ -233,9 +230,6 @@ Rectangle {
                 font.weight: Font.Medium
                 textFormat: Text.PlainText
             }
-
         }
-
     }
-
 }

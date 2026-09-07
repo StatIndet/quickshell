@@ -9,7 +9,7 @@ import qs.Services
 Rectangle {
     id: root
 
-    signal avatarEditRequested()
+    signal avatarEditRequested
 
     readonly property string systemUser: SystemIdentityService.accountName
     readonly property string hostName: SystemIdentityService.hostName
@@ -160,9 +160,9 @@ Rectangle {
             anchors.fill: parent
             containmentMask: QtObject {
                 function contains(pt: point): bool {
-                    return avatarShape.contains(pt)
-                        && !distroBadge.contains(avatarMouse.mapToItem(distroBadge, pt))
-                        && !uptimeShape.contains(avatarMouse.mapToItem(uptimeShape, pt));
+                    return avatarShape.contains(pt) && !distroBadge.contains(avatarMouse.mapToItem(distroBadge,
+                                                                                                   pt)) && !uptimeShape.contains(
+                                avatarMouse.mapToItem(uptimeShape, pt));
                 }
             }
             hoverEnabled: true
@@ -313,7 +313,7 @@ Rectangle {
         anchors.verticalCenter: uptimeShape.verticalCenter
         anchors.leftMargin: 5
         anchors.rightMargin: 16
-        text: qsTr("已运行 ") + root.uptime
+        text: qsTr("Up for ") + root.uptime
         color: Appearance.colors.colOnSurfaceVariant
         font.family: Fonts.numeric
         font.pixelSize: 12

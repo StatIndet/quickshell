@@ -7,12 +7,12 @@ import qs.Components
 
 Item {
     id: root
-    
+
     implicitHeight: layout.implicitHeight
     implicitWidth: 300
 
     property real moonPhaseAngle: 0
-    property string moonPhaseName: qsTr("新月")
+    property string moonPhaseName: qsTr("New moon")
     property int illumination: 0
     property int currentPhaseIndex: 0
 
@@ -22,27 +22,35 @@ Item {
             angle = WeatherPlugin.dailyForecast.get(0).moonPhaseAngle || 0;
         }
         root.moonPhaseAngle = angle;
-        
+
         let lit = (1 - Math.cos(angle * Math.PI / 180)) / 2 * 100;
         root.illumination = Math.round(lit);
-        
+
         let index;
-        if (angle < 22.5) index = 0;
-        else if (angle < 67.5) index = 1;
-        else if (angle < 112.5) index = 2;
-        else if (angle < 157.5) index = 3;
-        else if (angle < 202.5) index = 4;
-        else if (angle < 247.5) index = 5;
-        else if (angle < 292.5) index = 6;
-        else if (angle < 337.5) index = 7;
-        else index = 0;
-        
+        if (angle < 22.5)
+            index = 0;
+        else if (angle < 67.5)
+            index = 1;
+        else if (angle < 112.5)
+            index = 2;
+        else if (angle < 157.5)
+            index = 3;
+        else if (angle < 202.5)
+            index = 4;
+        else if (angle < 247.5)
+            index = 5;
+        else if (angle < 292.5)
+            index = 6;
+        else if (angle < 337.5)
+            index = 7;
+        else
+            index = 0;
+
         root.currentPhaseIndex = index;
-        
-        const phases = [
-            qsTr("新月"), qsTr("蛾眉月"), qsTr("上弦月"), qsTr("盈凸月"),
-            qsTr("满月"), qsTr("亏凸月"), qsTr("下弦月"), qsTr("残月")
-        ];
+
+        const phases = [qsTr("New moon"), qsTr("Waxing crescent"), qsTr("First quarter"), qsTr(
+                            "Waxing gibbous"), qsTr("Full moon"), qsTr("Waning gibbous"), qsTr("Last quarter"),
+                        qsTr("Waning crescent")];
         root.moonPhaseName = phases[index];
     }
 
@@ -56,15 +64,16 @@ Item {
     Component.onCompleted: updateMoonPhase()
 
     function moonPhaseSymbolForIndex(index) {
-        const symbols = ["radio_button_unchecked", "brightness_2", "contrast", "tonality", "circle", "tonality", "contrast", "brightness_2"]
-        return symbols[Math.max(0, Math.min(7, index))]
+        const symbols = ["radio_button_unchecked", "brightness_2", "contrast", "tonality", "circle",
+                         "tonality", "contrast", "brightness_2"];
+        return symbols[Math.max(0, Math.min(7, index))];
     }
 
     RowLayout {
         id: layout
         anchors.fill: parent
         spacing: 8
-        
+
         MaterialSymbol {
             Layout.preferredWidth: 56
             Layout.preferredHeight: 56
@@ -79,11 +88,11 @@ Item {
             Layout.fillWidth: true
             spacing: -4
             Layout.alignment: Qt.AlignVCenter
-            
+
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 4
-                
+
                 Text {
                     Layout.fillWidth: true
                     text: root.moonPhaseName
@@ -95,13 +104,13 @@ Item {
                 }
 
                 Text {
-                    text: root.illumination + "% " + qsTr("照亮")
+                    text: root.illumination + "% " + qsTr("Illumination")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.numeric
                     font.pixelSize: 16
                 }
             }
-            
+
             Item {
                 Layout.fillWidth: true
                 implicitHeight: 28
@@ -115,17 +124,22 @@ Item {
                         delegate: Item {
                             Layout.fillWidth: true
                             implicitHeight: parent.height
-                            
+
                             MaterialSymbol {
                                 anchors.centerIn: parent
                                 text: root.moonPhaseSymbolForIndex(index)
                                 iconSize: index === root.currentPhaseIndex ? 30 : 22
                                 fill: index === root.currentPhaseIndex ? 1 : 0
-                                color: index === root.currentPhaseIndex ? Appearance.colors.colPrimary : Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.5)
-                                
+                                color: index === root.currentPhaseIndex ? Appearance.colors.colPrimary :
+                                                                          Appearance.applyAlpha(
+                                                                              Appearance.colors.colOnSurfaceVariant,
+                                                                              0.5)
+
                                 Behavior on iconSize {
                                     enabled: Appearance.animationsEnabled
-                                    NumberAnimation { duration: 200 }
+                                    NumberAnimation {
+                                        duration: 200
+                                    }
                                 }
                             }
                         }

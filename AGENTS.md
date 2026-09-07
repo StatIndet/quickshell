@@ -75,6 +75,17 @@ format-check、lint 和完整 check。需要格式化时先运行 `scripts/dev/f
 未跟踪且未忽略的 QML。只有明确迁移格式时用 `format-qml.sh --all`，全树 lint 用
 `lint-qml.sh --all`。不借格式化重排无关文件。
 
+## Internationalization
+
+面向用户的可翻译源文案统一使用英文，沿用 `qsTr()` / `qsTranslate()` 的 context 与
+消歧机制；新增或修改文案时同步维护 `i18n/clavis_en_US.ts`、`clavis_zh_CN.ts` 和
+`clavis_zh_TW.ts`。动态值使用占位符，数量使用 Qt numerus，避免拼接翻译片段。
+
+语言选择由 `I18nManager` 统一解析：已保存的用户选择优先，否则匹配系统 UI language
+偏好，无匹配时回退英文。切换界面语言不得更改全局地区 locale、单位或天气位置。
+语言选项保留自称；中文注释、文档、协议值与用户数据不属于源文案迁移范围。
+维护流程与术语见 `docs/internationalization.md`；不得以汉字扫描代替国际化审查。
+
 ## UI copy and information density
 
 - 设置页面默认不写 supporting text。只有标题、图标、控件状态无法表达的新信息才可

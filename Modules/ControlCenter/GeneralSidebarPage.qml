@@ -23,14 +23,15 @@ StyledFlickable {
     }
 
     function buildGpuOptions() {
-        const options = [{
-            "value": "auto",
-            "label": qsTr("自动")
-        }];
-        const names = ({
-        });
+        const options = [
+                  {
+                      "value": "auto",
+                      "label": qsTr("Auto")
+                  }
+              ];
+        const names = ({});
         for (let index = 0; index < SystemMonitorService.gpus.length; index += 1) {
-            const name = String(SystemMonitorService.gpus[index].name || qsTr("图形设备"));
+            const name = String(SystemMonitorService.gpus[index].name || qsTr("Graphics device"));
             names[name] = Number(names[name] || 0) + 1;
         }
         for (let index = 0; index < SystemMonitorService.gpus.length; index += 1) {
@@ -39,11 +40,11 @@ StyledFlickable {
             if (id === "")
                 continue;
 
-            const name = String(gpu.name || qsTr("图形设备"));
+            const name = String(gpu.name || qsTr("Graphics device"));
             options.push({
-                "value": id,
-                "label": names[name] > 1 ? name + " · " + root.gpuPciLabel(gpu) : name
-            });
+                             "value": id,
+                             "label": names[name] > 1 ? name + " · " + root.gpuPciLabel(gpu) : name
+                         });
         }
         const preferred = UiPreferences.systemMonitorGpuId;
         if (preferred !== "auto") {
@@ -56,28 +57,28 @@ StyledFlickable {
             }
             if (!found)
                 options.push({
-                "value": preferred,
-                "label": preferred + " · " + qsTr("当前不可用")
-            });
-
+                                 "value": preferred,
+                                 "label": preferred + " · " + qsTr("Currently unavailable")
+                             });
         }
         return options;
     }
 
     function buildCapacityDiskOptions() {
         const language = I18nService.language;
-        const options = [{
-            "value": "follow-io",
-            "label": qsTr("跟随磁盘 I/O 卡片")
-        }];
+        const options = [
+                  {
+                      "value": "follow-io",
+                      "label": qsTr("Follow Disk I/O card")
+                  }
+              ];
         for (let index = 0; index < SystemMonitorService.disks.length; index += 1) {
             const device = String(SystemMonitorService.disks[index].device || "");
             if (device !== "")
                 options.push({
-                "value": device,
-                "label": device
-            });
-
+                                 "value": device,
+                                 "label": device
+                             });
         }
         const preferred = UiPreferences.storageCapacityDiskDevice;
         if (preferred !== "follow-io") {
@@ -90,16 +91,19 @@ StyledFlickable {
             }
             if (!found)
                 options.push({
-                "value": preferred,
-                "label": preferred + " · " + qsTr("当前不可用")
-            });
-
+                                 "value": preferred,
+                                 "label": preferred + " · " + qsTr("Currently unavailable")
+                             });
         }
         return options;
     }
 
-    onPresentationActiveChanged: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu", "disk"] : [])
-    Component.onCompleted: SystemMonitorService.setConsumerModules("general-sidebar-settings", root.presentationActive ? ["gpu", "disk"] : [])
+    onPresentationActiveChanged: SystemMonitorService.setConsumerModules("general-sidebar-settings",
+                                                                         root.presentationActive ? ["gpu",
+                                                                                                    "disk"] : [])
+    Component.onCompleted: SystemMonitorService.setConsumerModules("general-sidebar-settings",
+                                                                   root.presentationActive ? ["gpu", "disk"] :
+                                                                                             [])
     Component.onDestruction: SystemMonitorService.clearConsumer("general-sidebar-settings")
     clip: true
     contentWidth: width
@@ -116,70 +120,78 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("桌面卡片")
+            title: qsTr("Desktop cards")
             iconName: "dashboard_customize"
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "side_navigation"
-                title: qsTr("保持侧边栏已加载")
-                supportingText: qsTr("再次打开更快，但会增加内存占用")
+                title: qsTr("Keep sidebar loaded")
+                supportingText: qsTr("Opens faster next time, but uses more memory")
 
                 trailing: StyledSwitch {
                     checked: PersonalizationConfig.keepSidebarsLoaded
-                    Accessible.name: qsTr("保持侧边栏已加载")
+                    Accessible.name: qsTr("Keep sidebar loaded")
                     onToggled: PersonalizationConfig.setKeepSidebarsLoaded(checked)
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("桌面卡片布局")
+            title: qsTr("Desktop card layout")
             iconName: "dashboard_customize"
 
             StyledButtonGroup {
                 Layout.fillWidth: true
-                model: [{
-                    "value": "free",
-                    "label": qsTr("自由拖拽")
-                }, {
-                    "value": "leastBusy",
-                    "label": qsTr("最空旷处")
-                }, {
-                    "value": "mostBusy",
-                    "label": qsTr("最密集处")
-                }]
+                model: [
+                    {
+                        "value": "free",
+                        "label": qsTr("Free drag")
+                    },
+                    {
+                        "value": "leastBusy",
+                        "label": qsTr("Least busy")
+                    },
+                    {
+                        "value": "mostBusy",
+                        "label": qsTr("Most busy")
+                    }
+                ]
                 currentValue: SystemCardService.globalDesktopLayoutMode
-                onValueSelected: (value) => {
+                onValueSelected: value => {
                     return SystemCardService.setGlobalDesktopLayoutMode(value);
                 }
             }
 
             StyledButtonGroup {
                 Layout.fillWidth: true
-                model: [{
-                    "value": "screenTopLeft",
-                    "label": qsTr("左上")
-                }, {
-                    "value": "screenTopRight",
-                    "label": qsTr("右上")
-                }, {
-                    "value": "screenBottomLeft",
-                    "label": qsTr("左下")
-                }, {
-                    "value": "screenBottomRight",
-                    "label": qsTr("右下")
-                }, {
-                    "value": "screenCenter",
-                    "label": qsTr("居中")
-                }]
+                model: [
+                    {
+                        "value": "screenTopLeft",
+                        "label": qsTr("Top left")
+                    },
+                    {
+                        "value": "screenTopRight",
+                        "label": qsTr("Top right")
+                    },
+                    {
+                        "value": "screenBottomLeft",
+                        "label": qsTr("Bottom left")
+                    },
+                    {
+                        "value": "screenBottomRight",
+                        "label": qsTr("Bottom right")
+                    },
+                    {
+                        "value": "screenCenter",
+                        "label": qsTr("Center")
+                    }
+                ]
                 currentValue: SystemCardService.globalDesktopLayoutMode
                 buttonMinWidth: 0
-                onValueSelected: (value) => {
+                onValueSelected: value => {
                     return SystemCardService.setGlobalDesktopLayoutMode(value);
                 }
             }
@@ -187,53 +199,51 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "grid_4x4"
-                title: qsTr("桌面卡片吸附到网格")
-                supportingText: qsTr("自由拖动时将卡片和避让位置对齐到桌面网格")
+                title: qsTr("Snap desktop cards to grid")
 
                 trailing: StyledSwitch {
                     checked: PersonalizationConfig.desktopCardGridSnapEnabled
-                    Accessible.name: qsTr("桌面卡片吸附到网格")
+                    Accessible.name: qsTr("Snap desktop cards to grid")
                     onToggled: PersonalizationConfig.setDesktopCardGridSnapEnabled(checked)
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "grid_on"
-                title: qsTr("拖动时显示桌面网格")
-                supportingText: qsTr("拖动卡片时显示网格和当前占用区域")
+                title: qsTr("Show desktop grid while dragging")
 
                 trailing: StyledSwitch {
                     checked: PersonalizationConfig.desktopCardGridVisibleWhileDragging
-                    Accessible.name: qsTr("拖动时显示桌面网格")
+                    Accessible.name: qsTr("Show desktop grid while dragging")
                     onToggled: PersonalizationConfig.setDesktopCardGridVisibleWhileDragging(checked)
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("时钟样式")
+            title: qsTr("Clock style")
             iconName: "schedule"
 
             StyledButtonGroup {
                 Layout.fillWidth: true
-                model: [{
-                    "value": "digital",
-                    "label": qsTr("数字"),
-                    "icon": "timer_10"
-                }, {
-                    "value": "cookie",
-                    "label": qsTr("曲奇"),
-                    "icon": "cookie"
-                }]
+                model: [
+                    {
+                        "value": "digital",
+                        "label": qsTr("Digital"),
+                        "icon": "timer_10"
+                    },
+                    {
+                        "value": "cookie",
+                        "label": qsTr("Cookie"),
+                        "icon": "cookie"
+                    }
+                ]
                 currentValue: UiPreferences.sidebarClockStyle
                 buttonMinWidth: 120
-                onValueSelected: (value) => {
+                onValueSelected: value => {
                     return UiPreferences.setSidebarClockStyle(value);
                 }
             }
@@ -251,8 +261,8 @@ StyledFlickable {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
                     iconName: "add_triangle"
-                    title: qsTr("边数")
-                    supportingText: qsTr("0 或 1 为圆形，最多 40 边")
+                    title: qsTr("Sides")
+                    supportingText: qsTr("0 or 1 produces a circle; up to 40 sides")
 
                     trailing: MaterialStepper {
                         enabled: root.cookieClockActive
@@ -260,63 +270,59 @@ StyledFlickable {
                         from: 0
                         to: 40
                         stepSize: 1
-                        onValueModified: (value) => {
+                        onValueModified: value => {
                             return UiPreferences.setSidebarCookieSides(value);
                         }
                     }
-
                 }
 
                 SettingsRow {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
                     iconName: "autoplay"
-                    title: qsTr("持续旋转")
-                    supportingText: qsTr("让曲奇轮廓匀速旋转")
+                    title: qsTr("Constantly rotate")
 
                     trailing: StyledSwitch {
                         enabled: root.cookieClockActive
                         checked: UiPreferences.sidebarCookieConstantlyRotate
-                        Accessible.name: qsTr("持续旋转")
+                        Accessible.name: qsTr("Constantly rotate")
                         onToggled: UiPreferences.setSidebarCookieConstantlyRotate(checked)
                     }
-
                 }
 
                 SettingsRow {
                     Layout.fillWidth: true
-                    enabled: root.cookieClockActive && (UiPreferences.sidebarCookieDialStyle === "dots" || UiPreferences.sidebarCookieDialStyle === "full")
+                    enabled: root.cookieClockActive && (UiPreferences.sidebarCookieDialStyle === "dots"
+                                                        || UiPreferences.sidebarCookieDialStyle === "full")
                     iconName: "brightness_7"
-                    title: qsTr("时标")
-                    supportingText: qsTr("仅适用于圆点或完整表盘")
+                    title: qsTr("Hour marks")
+                    supportingText: qsTr("Available with Dots or Full dials")
 
                     trailing: StyledSwitch {
                         checked: UiPreferences.sidebarCookieHourMarks
-                        Accessible.name: qsTr("时标")
+                        Accessible.name: qsTr("Hour marks")
                         onToggled: UiPreferences.setSidebarCookieHourMarks(checked)
                     }
-
                 }
 
                 SettingsRow {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive && UiPreferences.sidebarCookieDialStyle !== "numbers"
                     iconName: "timer_10"
-                    title: qsTr("在中心显示数字")
-                    supportingText: qsTr("数字表盘下不可用")
+                    title: qsTr("Digits in the middle")
+                    supportingText: qsTr("Unavailable with the Numbers dial")
 
                     trailing: StyledSwitch {
                         checked: UiPreferences.sidebarCookieTimeIndicators
-                        Accessible.name: qsTr("在中心显示数字")
+                        Accessible.name: qsTr("Digits in the middle")
                         onToggled: UiPreferences.setSidebarCookieTimeIndicators(checked)
                     }
-
                 }
 
                 Text {
                     Layout.fillWidth: true
                     Layout.topMargin: Metrics.spacingXS
-                    text: qsTr("表盘样式")
+                    text: qsTr("Dial style")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -326,26 +332,31 @@ StyledFlickable {
                 StyledButtonGroup {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
-                    model: [{
-                        "value": "none",
-                        "label": qsTr("无"),
-                        "icon": "block"
-                    }, {
-                        "value": "dots",
-                        "label": qsTr("圆点"),
-                        "icon": "graph_6"
-                    }, {
-                        "value": "full",
-                        "label": qsTr("完整"),
-                        "icon": "history_toggle_off"
-                    }, {
-                        "value": "numbers",
-                        "label": qsTr("数字"),
-                        "icon": "counter_1"
-                    }]
+                    model: [
+                        {
+                            "value": "none",
+                            "label": qsTr("None"),
+                            "icon": "block"
+                        },
+                        {
+                            "value": "dots",
+                            "label": qsTr("Dots"),
+                            "icon": "graph_6"
+                        },
+                        {
+                            "value": "full",
+                            "label": qsTr("Full"),
+                            "icon": "history_toggle_off"
+                        },
+                        {
+                            "value": "numbers",
+                            "label": qsTr("Digital"),
+                            "icon": "counter_1"
+                        }
+                    ]
                     currentValue: UiPreferences.sidebarCookieDialStyle
                     horizontalPadding: Metrics.spacingXL
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSidebarCookieDialStyle(value);
                     }
                 }
@@ -353,7 +364,7 @@ StyledFlickable {
                 Text {
                     Layout.fillWidth: true
                     Layout.topMargin: Metrics.spacingXS
-                    text: qsTr("时针")
+                    text: qsTr("Hour hand")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -363,26 +374,31 @@ StyledFlickable {
                 StyledButtonGroup {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
-                    model: [{
-                        "value": "hide",
-                        "label": qsTr("无"),
-                        "icon": "block"
-                    }, {
-                        "value": "classic",
-                        "label": qsTr("经典"),
-                        "icon": "radio"
-                    }, {
-                        "value": "hollow",
-                        "label": qsTr("镂空"),
-                        "icon": "circle"
-                    }, {
-                        "value": "fill",
-                        "label": qsTr("填充"),
-                        "icon": "eraser_size_5"
-                    }]
+                    model: [
+                        {
+                            "value": "hide",
+                            "label": qsTr("None"),
+                            "icon": "block"
+                        },
+                        {
+                            "value": "classic",
+                            "label": qsTr("Classic"),
+                            "icon": "radio"
+                        },
+                        {
+                            "value": "hollow",
+                            "label": qsTr("Hollow"),
+                            "icon": "circle"
+                        },
+                        {
+                            "value": "fill",
+                            "label": qsTr("Fill"),
+                            "icon": "eraser_size_5"
+                        }
+                    ]
                     currentValue: UiPreferences.sidebarCookieHourHandStyle
                     horizontalPadding: Metrics.spacingXL
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSidebarCookieHourHandStyle(value);
                     }
                 }
@@ -390,7 +406,7 @@ StyledFlickable {
                 Text {
                     Layout.fillWidth: true
                     Layout.topMargin: Metrics.spacingXS
-                    text: qsTr("分针")
+                    text: qsTr("Minute hand")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -400,31 +416,37 @@ StyledFlickable {
                 StyledButtonGroup {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
-                    model: [{
-                        "value": "hide",
-                        "label": qsTr("无"),
-                        "icon": "block"
-                    }, {
-                        "value": "classic",
-                        "label": qsTr("经典"),
-                        "icon": "radio"
-                    }, {
-                        "value": "thin",
-                        "label": qsTr("细"),
-                        "icon": "line_end"
-                    }, {
-                        "value": "medium",
-                        "label": qsTr("中等"),
-                        "icon": "eraser_size_2"
-                    }, {
-                        "value": "bold",
-                        "label": qsTr("粗"),
-                        "icon": "eraser_size_4"
-                    }]
+                    model: [
+                        {
+                            "value": "hide",
+                            "label": qsTr("None"),
+                            "icon": "block"
+                        },
+                        {
+                            "value": "classic",
+                            "label": qsTr("Classic"),
+                            "icon": "radio"
+                        },
+                        {
+                            "value": "thin",
+                            "label": qsTr("Thin"),
+                            "icon": "line_end"
+                        },
+                        {
+                            "value": "medium",
+                            "label": qsTr("Medium"),
+                            "icon": "eraser_size_2"
+                        },
+                        {
+                            "value": "bold",
+                            "label": qsTr("Bold"),
+                            "icon": "eraser_size_4"
+                        }
+                    ]
                     currentValue: UiPreferences.sidebarCookieMinuteHandStyle
                     horizontalPadding: Metrics.spacingM * 2
                     contentSpacing: Metrics.spacingXS
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSidebarCookieMinuteHandStyle(value);
                     }
                 }
@@ -432,7 +454,7 @@ StyledFlickable {
                 Text {
                     Layout.fillWidth: true
                     Layout.topMargin: Metrics.spacingXS
-                    text: qsTr("秒针")
+                    text: qsTr("Second hand")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -442,26 +464,31 @@ StyledFlickable {
                 StyledButtonGroup {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
-                    model: [{
-                        "value": "hide",
-                        "label": qsTr("无"),
-                        "icon": "block"
-                    }, {
-                        "value": "classic",
-                        "label": qsTr("经典"),
-                        "icon": "radio"
-                    }, {
-                        "value": "line",
-                        "label": qsTr("线条"),
-                        "icon": "line_end"
-                    }, {
-                        "value": "dot",
-                        "label": qsTr("圆点"),
-                        "icon": "adjust"
-                    }]
+                    model: [
+                        {
+                            "value": "hide",
+                            "label": qsTr("None"),
+                            "icon": "block"
+                        },
+                        {
+                            "value": "classic",
+                            "label": qsTr("Classic"),
+                            "icon": "radio"
+                        },
+                        {
+                            "value": "line",
+                            "label": qsTr("Line"),
+                            "icon": "line_end"
+                        },
+                        {
+                            "value": "dot",
+                            "label": qsTr("Dots"),
+                            "icon": "adjust"
+                        }
+                    ]
                     currentValue: UiPreferences.sidebarCookieSecondHandStyle
                     horizontalPadding: Metrics.spacingXL
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSidebarCookieSecondHandStyle(value);
                     }
                 }
@@ -469,7 +496,7 @@ StyledFlickable {
                 Text {
                     Layout.fillWidth: true
                     Layout.topMargin: Metrics.spacingXS
-                    text: qsTr("日期样式")
+                    text: qsTr("Date style")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -479,38 +506,41 @@ StyledFlickable {
                 StyledButtonGroup {
                     Layout.fillWidth: true
                     enabled: root.cookieClockActive
-                    model: [{
-                        "value": "hide",
-                        "label": qsTr("无"),
-                        "icon": "block"
-                    }, {
-                        "value": "bubble",
-                        "label": qsTr("气泡"),
-                        "icon": "bubble_chart"
-                    }, {
-                        "value": "border",
-                        "label": qsTr("边缘"),
-                        "icon": "rotate_right"
-                    }, {
-                        "value": "rect",
-                        "label": qsTr("矩形"),
-                        "icon": "rectangle"
-                    }]
+                    model: [
+                        {
+                            "value": "hide",
+                            "label": qsTr("None"),
+                            "icon": "block"
+                        },
+                        {
+                            "value": "bubble",
+                            "label": qsTr("Bubble"),
+                            "icon": "bubble_chart"
+                        },
+                        {
+                            "value": "border",
+                            "label": qsTr("Border"),
+                            "icon": "rotate_right"
+                        },
+                        {
+                            "value": "rect",
+                            "label": qsTr("Rect"),
+                            "icon": "rectangle"
+                        }
+                    ]
                     currentValue: UiPreferences.sidebarCookieDateStyle
                     horizontalPadding: Metrics.spacingXL
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return UiPreferences.setSidebarCookieDateStyle(value);
                     }
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("系统卡片")
+            title: qsTr("System cards")
             iconName: "widgets"
 
             GridLayout {
@@ -532,7 +562,7 @@ StyledFlickable {
                         supportingText: {
                             const cards = SystemCardService.cards;
                             const state = cards ? cards[modelData] : null;
-                            return state && state.container === "desktop" ? qsTr("桌面") : qsTr("侧边栏");
+                            return state && state.container === "desktop" ? qsTr("Desktop") : qsTr("Sidebar");
                         }
 
                         trailing: StyledSwitch {
@@ -544,42 +574,38 @@ StyledFlickable {
                             Accessible.name: SystemCardService.cardName(modelData)
                             onToggled: SystemCardService.setCardEnabled(modelData, checked)
                         }
-
                     }
-
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "developer_board"
                 title: qsTr("GPU")
-                supportingText: qsTr("选择 GPU 卡片显示的图形设备")
+                supportingText: qsTr("Select the graphics device shown by the GPU card")
 
                 trailing: SearchSelectMenuField {
                     Layout.preferredWidth: 220
                     options: root.gpuOptions
                     value: UiPreferences.systemMonitorGpuId
-                    placeholder: qsTr("自动")
+                    placeholder: qsTr("Auto")
                     closeOnAccept: true
-                    onAccepted: (value) => {
+                    onAccepted: value => {
                         return UiPreferences.setSystemMonitorGpuId(value);
                     }
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "speed"
-                title: qsTr("系统监测快照间隔")
+                title: qsTr("System monitor snapshot interval")
 
                 trailing: MaterialFilledTextField {
                     id: intervalField
 
                     Layout.preferredWidth: 150
-                    labelText: qsTr("间隔")
+                    labelText: qsTr("Interval")
                     text: String(UiPreferences.systemMonitorIntervalMs)
                     error: text.length === 0 || !acceptableInput
                     inputMethodHints: Qt.ImhDigitsOnly
@@ -604,34 +630,27 @@ StyledFlickable {
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignHCenter
                         }
-
                     }
-
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "data_usage"
-                title: qsTr("磁盘容量")
-                supportingText: qsTr("选择容量卡片显示的物理磁盘")
+                title: qsTr("Disk capacity")
+                supportingText: qsTr("Select the physical disk shown by the capacity card")
 
                 trailing: SearchSelectMenuField {
                     Layout.preferredWidth: 260
                     options: root.capacityDiskOptions
                     value: UiPreferences.storageCapacityDiskDevice
-                    placeholder: qsTr("跟随磁盘 I/O 卡片")
+                    placeholder: qsTr("Follow Disk I/O card")
                     closeOnAccept: true
-                    onAccepted: (value) => {
+                    onAccepted: value => {
                         return UiPreferences.setStorageCapacityDiskDevice(value);
                     }
                 }
-
             }
-
         }
-
     }
-
 }

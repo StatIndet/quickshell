@@ -12,10 +12,11 @@ StyledFlickable {
     property bool discoveryLeaseAcquired: false
     property string pendingAddress: ""
 
-    signal returnRequested()
+    signal returnRequested
 
     function updateDiscoveryLease() {
-        const requested = root.pageReady && root.presentationActive && BluetoothService.available && BluetoothService.enabled;
+        const requested = root.pageReady && root.presentationActive && BluetoothService.available
+              && BluetoothService.enabled;
         if (requested && !root.discoveryLeaseAcquired) {
             BluetoothService.acquireDiscovery("control-center-bluetooth-pairing");
             root.discoveryLeaseAcquired = true;
@@ -47,14 +48,12 @@ StyledFlickable {
             root.updateDiscoveryLease();
             if (!BluetoothService.available)
                 root.returnRequested();
-
         }
 
         function onEnabledChanged() {
             root.updateDiscoveryLease();
             if (!BluetoothService.enabled)
                 root.returnRequested();
-
         }
 
         function onOperationSucceeded(operation) {
@@ -67,7 +66,6 @@ StyledFlickable {
         function onOperationFailed(operation, message) {
             if (operation === "pair")
                 root.pendingAddress = "";
-
         }
 
         target: BluetoothService
@@ -90,13 +88,14 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("附近设备")
+            title: qsTr("Nearby devices")
             iconName: "bluetooth_searching"
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: BluetoothService.discovering ? "radar" : "search_off"
-                title: BluetoothService.discovering ? qsTr("正在搜索附近设备") : qsTr("等待蓝牙扫描")
+                title: BluetoothService.discovering ? qsTr("Searching for nearby devices") : qsTr(
+                                                          "Waiting for Bluetooth scan")
 
                 trailing: MaterialLoadingIndicator {
                     visible: BluetoothService.discovering
@@ -104,9 +103,8 @@ StyledFlickable {
                     Layout.preferredHeight: Metrics.controlHeightM
                     running: visible
                     contained: false
-                    accessibleName: qsTr("正在搜索附近蓝牙设备")
+                    accessibleName: qsTr("Searching for nearby Bluetooth devices")
                 }
-
             }
 
             Repeater {
@@ -120,7 +118,8 @@ StyledFlickable {
                     Layout.fillWidth: true
                     iconName: BluetoothDeviceIcon.iconName(availableDeviceRow.modelData)
                     title: availableDeviceRow.modelData.name
-                    supportingText: availableDeviceRow.modelData.pairing ? qsTr("正在配对…") : availableDeviceRow.modelData.address
+                    supportingText: availableDeviceRow.modelData.pairing ? qsTr("Pairing…") :
+                                                                           availableDeviceRow.modelData.address
                     interactive: enabled
                     enabled: !BluetoothService.busy && !availableDeviceRow.modelData.blocked
                     onClicked: {
@@ -134,22 +133,17 @@ StyledFlickable {
                         Layout.preferredHeight: Metrics.controlHeightM
                         running: visible
                         contained: false
-                        accessibleName: qsTr("正在配对 %1").arg(availableDeviceRow.modelData.name)
+                        accessibleName: qsTr("Pairing %1").arg(availableDeviceRow.modelData.name)
                     }
-
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 visible: BluetoothService.availableDevices.length === 0
                 iconName: "devices_other"
-                title: qsTr("尚未发现附近设备")
+                title: qsTr("No nearby devices found yet")
             }
-
         }
-
     }
-
 }

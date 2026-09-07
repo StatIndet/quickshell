@@ -14,7 +14,10 @@ Item {
     readonly property bool hasSsid: NetworkService.activeConnection.length > 0
     readonly property real expandedWidth: Math.max(root.baseSize, 18 + 6 + ssidMetrics.width + 20)
     property real expansionProgress: !root.vertical && root.hasSsid && horizontalButton.pointerHovered ? 1 : 0
-    readonly property string tooltipText: NetworkService.connected ? ((NetworkService.activeConnection || qsTr("网络已连接")) + qsTr("\n点击打开网络设置")) : qsTr("网络未连接\n点击打开网络设置")
+    readonly property string tooltipText: NetworkService.connected ? ((NetworkService.activeConnection || qsTr(
+                                                                           "Network connected")) + qsTr(
+                                                                          "\nClick to open network settings")) :
+                                                                     qsTr("Network disconnected\nClick to open network settings")
     readonly property string networkIcon: {
         if (NetworkService.activeConnectionType === "ETHERNET")
             return "settings_ethernet";
@@ -50,7 +53,8 @@ Item {
         }
     }
 
-    implicitWidth: root.vertical ? root.baseSize : root.baseSize + (root.expandedWidth - root.baseSize) * root.expansionProgress
+    implicitWidth: root.vertical ? root.baseSize : root.baseSize + (root.expandedWidth - root.baseSize)
+                                   * root.expansionProgress
     implicitHeight: root.baseSize
 
     TextMetrics {
@@ -125,13 +129,9 @@ Item {
                         font.bold: true
                         color: Appearance.colors.colOnPrimaryContainer
                     }
-
                 }
-
             }
-
         }
-
     }
 
     PopupToolTip {
@@ -145,7 +145,5 @@ Item {
             easing.type: Appearance.animation.standard.type
             easing.bezierCurve: Appearance.animation.standard.bezierCurve
         }
-
     }
-
 }

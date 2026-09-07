@@ -14,13 +14,14 @@ Singleton {
     readonly property string notificationsDir: Paths.stateHome + "/notifications"
     readonly property string filePath: notificationsDir + "/notifications.json"
     readonly property bool silent: UiPreferences.dndEnabled
-    readonly property bool popupInhibited: silent || (WidgetState.leftSidebarOpen && WidgetState.leftSidebarView === "info")
+    readonly property bool popupInhibited: silent || (WidgetState.leftSidebarOpen
+                                                      && WidgetState.leftSidebarView === "info")
     readonly property bool hasNotifs: popupList.length > 0
 
     property int unread: 0
     property int idOffset: 0
     property list<Notif> list: []
-    property var popupList: list.filter((notif) => notif.popup).sort((a, b) => b.receivedAt - a.receivedAt)
+    property var popupList: list.filter(notif => notif.popup).sort((a, b) => b.receivedAt - a.receivedAt)
     property var latestTimeForApp: ({})
     property var groupsByAppName: groupsForList(root.list)
     property var popupGroupsByAppName: groupsForList(root.popupList)
@@ -29,9 +30,9 @@ Singleton {
 
     signal notify(notification: var)
     signal discard(id: int)
-    signal discardAll()
+    signal discardAll
     signal timeout(id: var)
-    signal initDone()
+    signal initDone
 
     component Notif: QtObject {
         id: wrapper
@@ -80,14 +81,20 @@ Singleton {
         }
     }
 
-    Component { id: notifComponent; Notif {} }
-    Component { id: notifTimerComponent; NotifTimer {} }
+    Component {
+        id: notifComponent
+        Notif {}
+    }
+    Component {
+        id: notifTimerComponent
+        NotifTimer {}
+    }
 
     Component.onCompleted: ensureStoreDir.running = true
 
     onListChanged: {
         const nextLatest = {};
-        root.list.forEach((notif) => {
+        root.list.forEach(notif => {
             if (!nextLatest[notif.appName] || notif.receivedAt > nextLatest[notif.appName])
                 nextLatest[notif.appName] = notif.receivedAt;
         });
@@ -115,37 +122,43 @@ Singleton {
         keepOnReload: false
         persistenceSupported: true
 
-        onNotification: (notification) => {
+        onNotification: notification => {
             notification.tracked = true;
 
-            const replaced = root.list.filter((notif) => notif.serverNotificationId === notification.id);
-            replaced.forEach((notif) => root.stopPopupTimer(notif));
+            const replaced = root.list.filter(notif => notif.serverNotificationId === notification.id);
+            replaced.forEach(notif => root.stopPopupTimer(notif));
 
             const now = Date.now();
             const timeoutMs = root.popupTimeoutMs(notification.expireTimeout);
             root.idOffset++;
             const newNotifObject = notifComponent.createObject(root, {
-                "notificationId": root.idOffset,
-                "serverNotificationId": notification.id,
-                "notification": notification,
-                "appIcon": notification.appIcon || "",
-                "appName": notification.appName || notification.desktopEntry || qsTr("系统"),
-                "body": notification.body || "",
-                "desktopEntry": notification.desktopEntry || "",
-                "image": notification.image || "",
-                "isTransient": notification.transient,
-                "summary": notification.summary || notification.appName || qsTr("通知"),
-                "receivedAt": now,
-                "urgency": notification.urgency,
-            });
+                                                                   "notificationId": root.idOffset,
+                                                                   "serverNotificationId": notification.id,
+                                                                   "notification": notification,
+                                                                   "appIcon": notification.appIcon || "",
+                                                                   "appName": notification.appName
+                                                                              || notification.desktopEntry
+                                                                              || qsTr("System"),
+                                                                   "body": notification.body || "",
+                                                                   "desktopEntry": notification.desktopEntry
+                                                                                   || "",
+                                                                   "image": notification.image || "",
+                                                                   "isTransient": notification.transient,
+                                                                   "summary": notification.summary
+                                                                              || notification.appName || qsTr(
+                                                                                  "Notification"),
+                                                                   "receivedAt": now,
+                                                                   "urgency": notification.urgency
+                                                               });
 
             if (timeoutMs > 0) {
                 newNotifObject.popupStartedAt = now;
                 newNotifObject.popupExpiresAt = now + timeoutMs;
                 newNotifObject.timer = notifTimerComponent.createObject(root, {
-                    "notificationId": newNotifObject.notificationId,
-                    "interval": timeoutMs,
-                });
+                                                                            "notificationId":
+                                                                            newNotifObject.notificationId,
+                                                                            "interval": timeoutMs
+                                                                        });
             }
 
             if (!root.popupInhibited) {
@@ -153,11 +166,9 @@ Singleton {
                 root.unread++;
             }
 
-            root.list = [
-                ...root.list.filter((notif) => notif.serverNotificationId !== notification.id),
-                newNotifObject,
-            ];
-            replaced.forEach((notif) => Qt.callLater(() => notif.destroy()));
+            root.list = [...root.list.filter(notif => notif.serverNotificationId !== notification.id),
+                         newNotifObject,];
+            replaced.forEach(notif => Qt.callLater(() => notif.destroy()));
             root.trimPopupList(3);
             root.saveNotifications();
             root.notify(newNotifObject);
@@ -179,20 +190,23 @@ Singleton {
                 }
 
                 let maxId = 0;
-                root.list = loaded.map((notif) => {
+                root.list = loaded.map(notif => {
                     const notificationId = Number(notif.notificationId || notif.id || 0);
                     maxId = Math.max(maxId, notificationId);
                     return notifComponent.createObject(root, {
-                        "notificationId": notificationId,
-                        "appIcon": root.durableHistorySource(notif.appIcon),
-                        "appName": notif.appName || qsTr("系统"),
-                        "body": notif.body || "",
-                        "desktopEntry": notif.desktopEntry || "",
-                        "image": root.durableHistorySource(notif.image),
-                        "summary": notif.summary || notif.appName || qsTr("通知"),
-                        "receivedAt": Number(notif.receivedAt || notif.time) || Date.now(),
-                        "urgency": notif.urgency ?? NotificationUrgency.Normal,
-                    });
+                                                           "notificationId": notificationId,
+                                                           "appIcon": root.durableHistorySource(notif.appIcon),
+                                                           "appName": notif.appName || qsTr("System"),
+                                                           "body": notif.body || "",
+                                                           "desktopEntry": notif.desktopEntry || "",
+                                                           "image": root.durableHistorySource(notif.image),
+                                                           "summary": notif.summary || notif.appName || qsTr(
+                                                                          "Notification"),
+                                                           "receivedAt": Number(notif.receivedAt
+                                                                                || notif.time) || Date.now(),
+                                                           "urgency": notif.urgency
+                                                                      ?? NotificationUrgency.Normal
+                                                       });
                 });
                 root.idOffset = maxId;
                 root.saveNotifications();
@@ -205,7 +219,7 @@ Singleton {
             }
         }
 
-        onLoadFailed: (error) => {
+        onLoadFailed: error => {
             if (error === FileViewError.FileNotFound) {
                 root.list = [];
                 root.saveNotifications();
@@ -218,7 +232,7 @@ Singleton {
     }
 
     function notificationById(id) {
-        return root.list.find((notif) => notif.notificationId === id) || null;
+        return root.list.find(notif => notif.notificationId === id) || null;
     }
 
     function popupTimeoutMs(expireTimeoutSeconds) {
@@ -231,16 +245,15 @@ Singleton {
 
     function nativeActions(notifObject) {
         return notifObject && notifObject.notification && notifObject.notification.actions
-            ? notifObject.notification.actions
-            : [];
+                ? notifObject.notification.actions : [];
     }
 
     function defaultAction(notifObject) {
-        return root.nativeActions(notifObject).find((action) => action.identifier === "default") || null;
+        return root.nativeActions(notifObject).find(action => action.identifier === "default") || null;
     }
 
     function normalActions(notifObject) {
-        return root.nativeActions(notifObject).filter((action) => action.identifier !== "default");
+        return root.nativeActions(notifObject).filter(action => action.identifier !== "default");
     }
 
     function durableHistorySource(source) {
@@ -258,12 +271,14 @@ Singleton {
             "image": root.durableHistorySource(notif.image),
             "receivedAt": notif.receivedAt,
             "summary": notif.summary,
-            "urgency": notif.urgency,
+            "urgency": notif.urgency
         };
     }
 
     function stringifyList(notifications) {
-        return JSON.stringify(notifications.filter((notif) => !notif.isTransient).map((notif) => root.notifToJSON(notif)), null, 2);
+        return JSON.stringify(notifications.filter(notif => !notif.isTransient).map(notif => root.notifToJSON(
+                                                                                                 notif)), null,
+                              2);
     }
 
     function refresh() {
@@ -280,14 +295,14 @@ Singleton {
 
     function groupsForList(notifications) {
         const groups = {};
-        notifications.forEach((notif) => {
-            const appName = notif.appName || qsTr("系统");
+        notifications.forEach(notif => {
+            const appName = notif.appName || qsTr("System");
             if (!groups[appName]) {
                 groups[appName] = {
                     appName,
                     appIcon: notif.appIcon,
                     notifications: [],
-                    receivedAt: 0,
+                    receivedAt: 0
                 };
             }
             groups[appName].notifications.push(notif);
@@ -325,7 +340,7 @@ Singleton {
     }
 
     function trimPopupList(maxCount) {
-        const popups = root.list.filter((notif) => notif.popup).sort((a, b) => b.receivedAt - a.receivedAt);
+        const popups = root.list.filter(notif => notif.popup).sort((a, b) => b.receivedAt - a.receivedAt);
         for (let i = maxCount; i < popups.length; i++)
             root.hidePopup(popups[i]);
         if (popups.length > maxCount)
@@ -366,7 +381,7 @@ Singleton {
         if (!notifObject)
             return;
         root.stopPopupTimer(notifObject);
-        root.list = root.list.filter((candidate) => candidate.notificationId !== id);
+        root.list = root.list.filter(candidate => candidate.notificationId !== id);
         root.saveNotifications();
         Qt.callLater(() => notifObject.destroy());
     }
@@ -404,13 +419,13 @@ Singleton {
 
     function discardNotifications(ids) {
         const targetIds = new Set(ids || []);
-        const removed = root.list.filter((notif) => targetIds.has(notif.notificationId));
+        const removed = root.list.filter(notif => targetIds.has(notif.notificationId));
         if (removed.length === 0)
             return;
-        removed.forEach((notif) => root.stopPopupTimer(notif));
-        root.list = root.list.filter((candidate) => !targetIds.has(candidate.notificationId));
+        removed.forEach(notif => root.stopPopupTimer(notif));
+        root.list = root.list.filter(candidate => !targetIds.has(candidate.notificationId));
         root.saveNotifications();
-        removed.forEach((notif) => {
+        removed.forEach(notif => {
             if (notif.notification)
                 notif.notification.dismiss();
             root.discard(notif.notificationId);
@@ -420,10 +435,10 @@ Singleton {
 
     function discardAllNotifications() {
         const removed = root.list.slice();
-        removed.forEach((notif) => root.stopPopupTimer(notif));
+        removed.forEach(notif => root.stopPopupTimer(notif));
         root.list = [];
         root.saveNotifications();
-        removed.forEach((notif) => {
+        removed.forEach(notif => {
             if (notif.notification)
                 notif.notification.dismiss();
             Qt.callLater(() => notif.destroy());
@@ -432,7 +447,7 @@ Singleton {
     }
 
     function hideAllPopups() {
-        root.popupList.forEach((notif) => root.hidePopup(notif));
+        root.popupList.forEach(notif => root.hidePopup(notif));
         root.triggerListChange();
     }
 

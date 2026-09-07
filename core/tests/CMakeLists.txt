@@ -149,3 +149,13 @@ target_include_directories(weather_climate_normals_tests PRIVATE
 )
 
 add_test(NAME weather_climate_normals_tests COMMAND weather_climate_normals_tests)
+
+qt_add_executable(i18n_manager_tests
+    i18n_manager_test.cpp
+)
+target_link_libraries(i18n_manager_tests PRIVATE
+    ClavisI18n
+    Qt6::Core
+    Qt6::Test
+)
+add_test(NAME i18n_manager_tests COMMAND i18n_manager_tests)

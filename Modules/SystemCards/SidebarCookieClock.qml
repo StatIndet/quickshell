@@ -9,20 +9,25 @@ Item {
     property bool active: true
     property date currentTime: new Date()
     readonly property real referenceSize: 230
-    readonly property real compositionScale: Math.max(0.01, Math.min(width, height) * 0.9 / root.referenceSize)
+    readonly property real compositionScale: Math.max(0.01, Math.min(width, height) * 0.9
+                                                      / root.referenceSize)
     readonly property int hour24: root.currentTime.getHours()
     readonly property int hour12: ((root.hour24 + 11) % 12) + 1
     readonly property int minute: root.currentTime.getMinutes()
     readonly property int second: root.currentTime.getSeconds()
-    readonly property color faceColor: BlurService.solidBackgroundColor(
-        Appearance.colors.colPrimaryContainer)
-    readonly property color dialColor: Appearance.mix(Appearance.colors.colSecondary, Appearance.colors.colPrimaryContainer, 0.15)
-    readonly property color infoColor: Appearance.mix(Appearance.colors.colPrimary, Appearance.colors.colPrimaryContainer, 0.55)
+    readonly property color faceColor: BlurService.solidBackgroundColor(Appearance.colors.colPrimaryContainer)
+    readonly property color dialColor: Appearance.mix(Appearance.colors.colSecondary,
+                                                      Appearance.colors.colPrimaryContainer, 0.15)
+    readonly property color infoColor: Appearance.mix(Appearance.colors.colPrimary,
+                                                      Appearance.colors.colPrimaryContainer, 0.55)
     readonly property string periodText: root.hour24 >= 12 ? "PM" : "AM"
-    readonly property string centerHourText: String(UiPreferences.useTwelveHourClock ? root.hour12 : root.hour24).padStart(2, "0")
+    readonly property string centerHourText: String(UiPreferences.useTwelveHourClock ? root.hour12 :
+                                                                                       root.hour24).padStart(2,
+                                                                                                             "0")
     readonly property string centerMinuteText: String(root.minute).padStart(2, "0")
 
-    Accessible.name: qsTr("曲奇时钟 ") + root.centerHourText + ":" + root.centerMinuteText + (UiPreferences.useTwelveHourClock ? " " + root.periodText : "")
+    Accessible.name: qsTr("Cookie clock ") + root.centerHourText + ":" + root.centerMinuteText + (
+                         UiPreferences.useTwelveHourClock ? " " + root.periodText : "")
 
     Timer {
         interval: 1000
@@ -66,7 +71,6 @@ Item {
                 color: root.dialColor
                 markColor: Appearance.mix(root.infoColor, root.dialColor, 0.5)
             }
-
         }
 
         Loader {
@@ -82,7 +86,6 @@ Item {
                 hourMarksEnabled: UiPreferences.sidebarCookieHourMarks
                 color: root.infoColor
             }
-
         }
 
         Loader {
@@ -95,7 +98,6 @@ Item {
                 minute: root.minute
                 style: UiPreferences.sidebarCookieMinuteHandStyle
             }
-
         }
 
         Loader {
@@ -109,7 +111,6 @@ Item {
                 minute: root.minute
                 style: UiPreferences.sidebarCookieHourHandStyle
             }
-
         }
 
         Loader {
@@ -123,7 +124,6 @@ Item {
                 constantlyRotate: UiPreferences.sidebarCookieConstantlyRotate
                 style: UiPreferences.sidebarCookieSecondHandStyle
             }
-
         }
 
         Loader {
@@ -136,9 +136,9 @@ Item {
                 width: 6
                 height: width
                 radius: width / 2
-                color: UiPreferences.sidebarCookieMinuteHandStyle === "medium" ? root.faceColor : Appearance.colors.colTertiary
+                color: UiPreferences.sidebarCookieMinuteHandStyle === "medium" ? root.faceColor :
+                                                                                 Appearance.colors.colTertiary
             }
-
         }
 
         Loader {
@@ -154,9 +154,6 @@ Item {
                 active: root.active
                 infoColor: root.infoColor
             }
-
         }
-
     }
-
 }

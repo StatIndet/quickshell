@@ -8,22 +8,31 @@ Rectangle {
 
     property real availableHeight: height
     readonly property string temp: fmtTemp(WeatherPlugin.currentTemperatureC, "--")
-    readonly property string cond: WeatherPlugin.loading ? qsTr("正在加载…") : (WeatherPlugin.currentWeatherText || qsTr("未知"))
-    readonly property string loc: WeatherPlugin.locationName || qsTr("位置")
+    readonly property string cond: WeatherPlugin.loading ? qsTr("Loading…") : (
+                                                               WeatherPlugin.currentWeatherText || qsTr(
+                                                                   "Unknown"))
+    readonly property string loc: WeatherPlugin.locationName || qsTr("Location")
     readonly property string iconName: WeatherPlugin.currentIconName || "cloud"
-    readonly property string feelsLike: qsTr("体感温度：") + fmtTemp(WeatherPlugin.currentFeelsLikeC, "--")
-    readonly property string humidity: qsTr("湿度：") + fmtPercent(WeatherPlugin.currentRelativeHumidity)
+    readonly property string feelsLike: qsTr("Feels like: %1").arg(fmtTemp(WeatherPlugin.currentFeelsLikeC,
+                                                                           "--"))
+    readonly property string humidity: qsTr("Humidity: %1").arg(fmtPercent(
+                                                                    WeatherPlugin.currentRelativeHumidity))
     readonly property bool loadingState: WeatherPlugin.loading || !WeatherPlugin.hasValidData
     readonly property bool veryCompact: root.availableHeight < Metrics.lockVeryCompactBreakpoint
     readonly property bool showTitle: root.availableHeight >= Metrics.lockCompactBreakpoint
     readonly property bool allowForecast: root.availableHeight >= Metrics.lockForecastBreakpoint
     readonly property bool showSkeletonForecast: root.loadingState && root.allowForecast
-    readonly property bool showForecast: WeatherPlugin.hasValidData && root.allowForecast && WeatherPlugin.hourlyForecast.count() > 0
-    readonly property int forecastCount: root.availableHeight < Metrics.lockFetchExpandedBreakpoint ? 3 : root.width < 360 ? 4 : 5
+    readonly property bool showForecast: WeatherPlugin.hasValidData && root.allowForecast
+                                         && WeatherPlugin.hourlyForecast.count() > 0
+    readonly property int forecastCount: root.availableHeight < Metrics.lockFetchExpandedBreakpoint ? 3 :
+                                                                                                      root.width
+                                                                                                      < 360 ? 4 :
+                                                                                                              5
     readonly property int forecastSpacing: root.width < 400 ? Metrics.spacingM : Metrics.spacingXL
     readonly property int forecastFontSize: root.width < 400 ? 18 : 20
     readonly property int forecastIconSize: root.width < 400 ? 50 : 56
-    readonly property int contentMargin: root.veryCompact ? Metrics.lockOuterPadding : Metrics.lockOuterPadding * 2
+    readonly property int contentMargin: root.veryCompact ? Metrics.lockOuterPadding :
+                                                            Metrics.lockOuterPadding * 2
     property real skeletonPulse: 0
 
     function validNumber(value) {
@@ -66,19 +75,21 @@ Rectangle {
     function forecastModel() {
         const count = Math.min(root.forecastCount, WeatherPlugin.hourlyForecast.count());
         const items = [];
-        for (let i = 0; i < count; i += 1) items.push(WeatherPlugin.hourlyForecast.get(i))
+        for (let i = 0; i < count; i += 1)
+            items.push(WeatherPlugin.hourlyForecast.get(i));
         return items;
     }
 
     Layout.fillWidth: true
-    implicitHeight: Math.max(contentLayout.implicitHeight + contentLayout.anchors.topMargin + contentLayout.anchors.bottomMargin, skeletonLayout.implicitHeight + skeletonLayout.anchors.topMargin + skeletonLayout.anchors.bottomMargin)
+    implicitHeight: Math.max(contentLayout.implicitHeight + contentLayout.anchors.topMargin
+                             + contentLayout.anchors.bottomMargin, skeletonLayout.implicitHeight
+                             + skeletonLayout.anchors.topMargin + skeletonLayout.anchors.bottomMargin)
     color: Appearance.colors.colLayer2
     radius: Metrics.lockCardRadius
     clip: true
     Component.onCompleted: {
         if (!WeatherPlugin.hasValidData)
             WeatherPlugin.refresh();
-
     }
 
     ColumnLayout {
@@ -95,7 +106,7 @@ Rectangle {
 
         Text {
             visible: root.showTitle
-            text: qsTr("天气")
+            text: qsTr("Weather")
             color: Appearance.colors.colPrimary
             font.family: Fonts.ui
             font.pixelSize: 36
@@ -139,7 +150,6 @@ Rectangle {
                     font.pixelSize: 17
                     elide: Text.ElideRight
                 }
-
             }
 
             ColumnLayout {
@@ -169,9 +179,7 @@ Rectangle {
                     horizontalAlignment: Text.AlignRight
                     elide: Text.ElideLeft
                 }
-
             }
-
         }
 
         RowLayout {
@@ -217,11 +225,8 @@ Rectangle {
                         font.family: Fonts.ui
                         font.pixelSize: root.forecastFontSize
                     }
-
                 }
-
             }
-
         }
 
         Behavior on opacity {
@@ -230,7 +235,6 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
             }
-
         }
 
         Behavior on scale {
@@ -239,9 +243,7 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveDefaultSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
             }
-
         }
-
     }
 
     Item {
@@ -260,7 +262,8 @@ Rectangle {
             anchors.leftMargin: root.contentMargin
             anchors.rightMargin: root.contentMargin
             anchors.topMargin: root.showTitle ? Metrics.lockOuterPadding * 2 : Metrics.lockOuterPadding
-            anchors.bottomMargin: root.showSkeletonForecast ? Metrics.lockOuterPadding * 2 : Metrics.lockOuterPadding
+            anchors.bottomMargin: root.showSkeletonForecast ? Metrics.lockOuterPadding * 2 :
+                                                              Metrics.lockOuterPadding
             spacing: 7
 
             SkeletonBlock {
@@ -300,7 +303,6 @@ Rectangle {
                         Layout.preferredHeight: 18
                         pulse: root.skeletonPulse
                     }
-
                 }
 
                 ColumnLayout {
@@ -320,9 +322,7 @@ Rectangle {
                         Layout.preferredHeight: 18
                         pulse: root.skeletonPulse
                     }
-
                 }
-
             }
 
             RowLayout {
@@ -358,13 +358,9 @@ Rectangle {
                             Layout.alignment: Qt.AlignHCenter
                             pulse: root.skeletonPulse
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         Behavior on opacity {
@@ -373,7 +369,6 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
             }
-
         }
 
         Behavior on scale {
@@ -382,9 +377,7 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveDefaultSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
             }
-
         }
-
     }
 
     Timer {
@@ -411,7 +404,6 @@ Rectangle {
             easing.type: Appearance.animation.standard.type
             easing.bezierCurve: Appearance.animation.standard.bezierCurve
         }
-
     }
 
     component SkeletonBlock: Rectangle {
@@ -421,5 +413,4 @@ Rectangle {
         opacity: 0.14 + pulse * 0.12
         radius: 8
     }
-
 }

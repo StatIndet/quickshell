@@ -17,8 +17,8 @@ Singleton {
     // keytop is an independent CLI.  CLAVIS_KEYTOP is useful for local
     // fixtures; production resolves the executable through PATH.
     property string commandName: {
-        const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim()
-        return configured !== "" ? configured : "keytop"
+        const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim();
+        return configured !== "" ? configured : "keytop";
     }
     property int configuredIntervalMs: UiPreferences.systemMonitorIntervalMs
     property double sourceIntervalMs: 0
@@ -94,17 +94,17 @@ Singleton {
     readonly property string statusText: {
         switch (state) {
         case "loading":
-            return qsTr("正在连接");
+            return qsTr("Connecting");
         case "ready":
-            return partial ? qsTr("部分传感器不可读取") : qsTr("实时");
+            return partial ? qsTr("Some sensors cannot be read") : qsTr("Live");
         case "stale":
-            return qsTr("数据已过期");
+            return qsTr("Data is stale");
         case "reconnecting":
-            return qsTr("正在重新连接");
+            return qsTr("Reconnecting");
         case "error":
-            return qsTr("服务不可用");
+            return qsTr("Service unavailable");
         default:
-            return qsTr("已暂停");
+            return qsTr("Paused");
         }
     }
 
@@ -114,7 +114,7 @@ Singleton {
             return;
         const allowed = ["cpu", "disk", "gpu", "memory", "network"];
         const unique = [];
-        (Array.isArray(modules) ? modules : []).forEach(function(module) {
+        (Array.isArray(modules) ? modules : []).forEach(function (module) {
             const name = String(module || "").trim();
             if (allowed.indexOf(name) >= 0 && unique.indexOf(name) < 0)
                 unique.push(name);
@@ -143,8 +143,8 @@ Singleton {
     function _reconcileModules() {
         root._reconcilePending = false;
         const union = [];
-        Object.keys(root._consumerModules).sort().forEach(function(owner) {
-            root._consumerModules[owner].forEach(function(module) {
+        Object.keys(root._consumerModules).sort().forEach(function (owner) {
+            root._consumerModules[owner].forEach(function (module) {
                 if (union.indexOf(module) < 0)
                     union.push(module);
             });
@@ -154,8 +154,9 @@ Singleton {
             return;
 
         const previous = root.effectiveModules.slice();
-        const changed = previous.filter(module => union.indexOf(module) < 0)
-            .concat(union.filter(module => previous.indexOf(module) < 0));
+        const changed = previous.filter(module => union.indexOf(module) < 0).concat(union.filter(module
+                                                                                                 => previous.indexOf(
+                                                                                                        module) < 0));
         changed.forEach(root._clearModuleHistory);
         root.effectiveModules = union;
         root.sourceIntervalMs = 0;
@@ -179,17 +180,8 @@ Singleton {
     }
 
     function _streamCommand() {
-        return [
-            root.commandName,
-            "value",
-            "stream",
-            "--format",
-            "jsonl",
-            "--interval",
-            String(root.configuredIntervalMs),
-            "--modules",
-            root._streamModules.join(",")
-        ];
+        return [root.commandName, "value", "stream", "--format", "jsonl", "--interval", String(
+                    root.configuredIntervalMs), "--modules", root._streamModules.join(",")];
     }
 
     function _startStream() {
@@ -208,17 +200,14 @@ Singleton {
         root._consecutiveMalformedLines = 0;
         root._streamStartedAtMs = Date.now();
         root._streamModules = root.effectiveModules.slice();
-        root.state = root.hasData || root.reconnectAttempt > 0
-            ? "reconnecting"
-            : "loading";
+        root.state = root.hasData || root.reconnectAttempt > 0 ? "reconnecting" : "loading";
         streamProcess.command = root._streamCommand();
         streamProcess.running = true;
 
         const generation = root._streamGeneration;
-        Qt.callLater(function() {
-            if (generation === root._streamGeneration
-                    && !streamProcess.running
-                    && root._startedGeneration !== generation) {
+        Qt.callLater(function () {
+            if (generation === root._streamGeneration && !streamProcess.running && root._startedGeneration
+                    !== generation) {
                 root._handleStreamStopped(generation, "failed_to_start", -1);
             }
         });
@@ -232,9 +221,7 @@ Singleton {
         else {
             forceStopTimer.stop();
             root._terminationPending = false;
-            root.state = root._fatalError
-                ? "error"
-                : (root.hasData ? "stale" : "idle");
+            root.state = root._fatalError ? "error" : (root.hasData ? "stale" : "idle");
         }
     }
 
@@ -259,30 +246,26 @@ Singleton {
         if (root.reconnectAttempt >= root.maximumReconnectAttempts) {
             root.state = "error";
             if (!root.errorMessage)
-                root.errorMessage = qsTr("系统监测服务不可用");
-            root.errorDetails = root.errorDetails
-                || qsTr("已达到自动重连次数上限，可检查 keytop 后端后重试。");
+                root.errorMessage = qsTr("System monitor service unavailable");
+            root.errorDetails = root.errorDetails || qsTr(
+                        "The automatic reconnect limit was reached. Check the keytop backend and try again.");
             return;
         }
 
         root.reconnectAttempt += 1;
-        root._retryDelayMs = Math.min(
-            16000,
-            1000 * Math.pow(2, root.reconnectAttempt - 1)
-        );
+        root._retryDelayMs = Math.min(16000, 1000 * Math.pow(2, root.reconnectAttempt - 1));
         root.state = "reconnecting";
         if (!root.errorMessage) {
-            root.errorMessage = reason === "failed_to_start"
-                ? qsTr("无法启动 keytop 系统监测服务")
-                : qsTr("系统监测数据流已中断");
+            root.errorMessage = reason === "failed_to_start" ? qsTr(
+                                                                   "Could not start the keytop system monitoring service") :
+                                                               qsTr("The system monitor data stream was interrupted");
         }
         reconnectTimer.interval = root._retryDelayMs;
         reconnectTimer.restart();
     }
 
     function _handleStreamStopped(generation, reason, exitCode) {
-        if (generation !== root._streamGeneration
-                || root._handledGeneration === generation)
+        if (generation !== root._streamGeneration || root._handledGeneration === generation)
             return;
 
         root._handledGeneration = generation;
@@ -294,9 +277,7 @@ Singleton {
         root._stopRequested = false;
 
         if (intentionallyStopped) {
-            root.state = root._fatalError
-                ? "error"
-                : (root.hasData ? "stale" : "idle");
+            root.state = root._fatalError ? "error" : (root.hasData ? "stale" : "idle");
             if (root.active && requestedStop)
                 Qt.callLater(root._startStream);
             return;
@@ -308,31 +289,30 @@ Singleton {
         }
 
         if (reason === "failed_to_start") {
-            root.errorMessage = qsTr("找不到或无法启动 keytop");
-            root.errorDetails = qsTr("请安装独立 keytop 后重试。");
+            root.errorMessage = qsTr("keytop was not found or could not be started");
+            root.errorDetails = qsTr("Install the standalone keytop package and try again.");
         } else if (reason === "data_timeout") {
-            root.errorMessage = qsTr("系统监测数据长时间未更新");
-            root.errorDetails = qsTr("数据流没有按预期间隔产生新快照。");
+            root.errorMessage = qsTr("System monitor data has not updated for a long time");
+            root.errorDetails = qsTr(
+                        "The data stream is not producing new snapshots at the expected interval.");
         } else if (reason === "first_snapshot_timeout") {
-            root.errorMessage = qsTr("系统监测服务未返回首个快照");
-            root.errorDetails = qsTr("keytop 已启动，但没有按时输出 JSONL 数据。");
+            root.errorMessage = qsTr("The system monitor service did not return its first snapshot");
+            root.errorDetails = qsTr("keytop started but did not produce JSONL data in time.");
         } else if (reason === "invalid_json") {
-            root.errorMessage = qsTr("keytop 持续输出无效的 JSONL");
-            root.errorDetails = qsTr("连续多行数据无法通过 JSON v1 校验。");
+            root.errorMessage = qsTr("keytop keeps producing invalid JSONL");
+            root.errorDetails = qsTr("Several consecutive lines failed JSON v1 validation.");
         } else {
-            root.errorMessage = qsTr("系统监测数据流意外退出");
-            root.errorDetails = exitCode >= 0
-                ? qsTr("keytop 退出码：") + exitCode
-                : qsTr("keytop 未报告退出码");
+            root.errorMessage = qsTr("The system monitor data stream exited unexpectedly");
+            root.errorDetails = exitCode >= 0 ? qsTr("keytop exit code: ") + exitCode : qsTr(
+                                                    "keytop did not report an exit code");
+
         }
 
         root._scheduleReconnect(reason);
     }
 
     function _isObject(value) {
-        return value !== null
-            && typeof value === "object"
-            && !Array.isArray(value);
+        return value !== null && typeof value === "object" && !Array.isArray(value);
     }
 
     function _isFiniteNumber(value) {
@@ -341,35 +321,31 @@ Singleton {
 
     function _validateSnapshot(snapshot) {
         if (!root._isObject(snapshot))
-            return qsTr("JSON 顶层必须是对象");
+            return qsTr("The top-level JSON value must be an object");
         if (snapshot.schemaVersion !== root.supportedSchemaVersion)
             return "schemaVersion";
-        if (!root._isFiniteNumber(snapshot.timestampMs)
-                || !root._isFiniteNumber(snapshot.sequence)
-                || !root._isFiniteNumber(snapshot.intervalMs)
-                || snapshot.intervalMs < 0)
-            return qsTr("时间戳、序列号或采样间隔无效");
+        if (!root._isFiniteNumber(snapshot.timestampMs) || !root._isFiniteNumber(snapshot.sequence) || !root._isFiniteNumber(
+                    snapshot.intervalMs) || snapshot.intervalMs < 0)
+            return qsTr("The timestamp, sequence number, or sampling interval is invalid");
         if (root._streamModules.indexOf("cpu") >= 0 && !root._isObject(snapshot.cpu))
-            return qsTr("CPU 模块字段缺失或类型无效");
+            return qsTr("Missing or invalid CPU data fields");
         if (root._streamModules.indexOf("memory") >= 0 && !root._isObject(snapshot.memory))
-            return qsTr("内存模块字段缺失或类型无效");
+            return qsTr("Missing or invalid memory data fields");
         if (root._streamModules.indexOf("network") >= 0 && !root._isObject(snapshot.network))
-            return qsTr("网络模块字段缺失或类型无效");
+            return qsTr("Missing or invalid network data fields");
         if (root._streamModules.indexOf("gpu") >= 0 && !Array.isArray(snapshot.gpus))
-            return qsTr("GPU 模块字段缺失或类型无效");
+            return qsTr("Missing or invalid GPU data fields");
         if (root._streamModules.indexOf("disk") >= 0 && !Array.isArray(snapshot.disks))
-            return qsTr("磁盘模块字段缺失或类型无效");
+            return qsTr("Missing or invalid disk data fields");
         if (!Array.isArray(snapshot.errors))
-            return qsTr("设备或错误字段必须是数组");
+            return qsTr("The devices and errors fields must be arrays");
         return "";
     }
 
     function _appendHistory(values, value) {
         if (!root._isFiniteNumber(value))
             return values;
-        const next = values.slice(
-            Math.max(0, values.length - root.historyLimit + 1)
-        );
+        const next = values.slice(Math.max(0, values.length - root.historyLimit + 1));
         next.push(value);
         return next;
     }
@@ -382,14 +358,8 @@ Singleton {
             const id = String(disk.device || "");
             if (id === "")
                 continue;
-            nextReads[id] = root._appendHistory(
-                root.diskReadHistories[id] || [],
-                disk.readBytesPerSecond
-            );
-            nextWrites[id] = root._appendHistory(
-                root.diskWriteHistories[id] || [],
-                disk.writeBytesPerSecond
-            );
+            nextReads[id] = root._appendHistory(root.diskReadHistories[id] || [], disk.readBytesPerSecond);
+            nextWrites[id] = root._appendHistory(root.diskWriteHistories[id] || [], disk.writeBytesPerSecond);
         }
         root.diskReadHistories = nextReads;
         root.diskWriteHistories = nextWrites;
@@ -495,29 +465,20 @@ Singleton {
             root.network = snapshot.network;
         root.errors = snapshot.errors.slice(0, 32);
 
-        root.cpuHistory = root._appendHistory(
-            root.cpuHistory,
-            snapshot.cpu ? snapshot.cpu.usagePercent : undefined
-        );
-        root.memoryHistory = root._appendHistory(
-            root.memoryHistory,
-            snapshot.memory ? snapshot.memory.usagePercent : undefined
-        );
+        const cpuUsage = snapshot.cpu ? snapshot.cpu.usagePercent : undefined;
+        root.cpuHistory = root._appendHistory(root.cpuHistory, cpuUsage);
+
+        root.memoryHistory = root._appendHistory(root.memoryHistory, snapshot.memory
+                                                 ? snapshot.memory.usagePercent : undefined);
         const effectiveGpu = root._gpuById(snapshot.gpus || [], nextSelectedGpuId);
         if (root._gpuId(effectiveGpu) !== "") {
-            root.gpuHistory = root._appendHistory(
-                root.gpuHistory,
-                effectiveGpu.utilizationPercent
-            );
+            root.gpuHistory = root._appendHistory(root.gpuHistory, effectiveGpu.utilizationPercent);
         }
-        root.networkDownloadHistory = root._appendHistory(
-            root.networkDownloadHistory,
-            snapshot.network ? snapshot.network.downloadBytesPerSecond : undefined
-        );
-        root.networkUploadHistory = root._appendHistory(
-            root.networkUploadHistory,
-            snapshot.network ? snapshot.network.uploadBytesPerSecond : undefined
-        );
+        root.networkDownloadHistory = root._appendHistory(root.networkDownloadHistory, snapshot.network
+                                                          ? snapshot.network.downloadBytesPerSecond :
+                                                            undefined);
+        root.networkUploadHistory = root._appendHistory(root.networkUploadHistory, snapshot.network
+                                                        ? snapshot.network.uploadBytesPerSecond : undefined);
 
         root.sourceTimestampMs = snapshot.timestampMs;
         root.lastUpdatedMs = Date.now();
@@ -539,9 +500,8 @@ Singleton {
         const text = String(line || "").trim();
         if (text.length === 0)
             return;
-        if (text.indexOf("Unknown command") >= 0
-                || text.indexOf("Unknown subcommand") >= 0) {
-            root.errorMessage = qsTr("keytop 不支持当前系统监测接口");
+        if (text.indexOf("Unknown command") >= 0 || text.indexOf("Unknown subcommand") >= 0) {
+            root.errorMessage = qsTr("keytop does not support the current system monitoring interface");
             root.errorDetails = text;
             root._terminateStream("invalid_json");
             return;
@@ -553,11 +513,11 @@ Singleton {
         } catch (exception) {
             root.malformedLineCount += 1;
             root._consecutiveMalformedLines += 1;
-            root.errorDetails = qsTr("收到损坏的 JSONL 数据行");
+            root.errorDetails = qsTr("Received a corrupt JSONL line");
             if (!root.hasData)
-                root.errorMessage = qsTr("无法解析 keytop 系统监测数据");
+                root.errorMessage = qsTr("Could not parse keytop system monitor data");
             if (root._consecutiveMalformedLines >= 3 && streamProcess.running) {
-                root.errorMessage = qsTr("keytop 持续输出无效的 JSONL");
+                root.errorMessage = qsTr("keytop keeps producing invalid JSONL");
                 root._terminateStream("invalid_json");
             }
             return;
@@ -567,9 +527,8 @@ Singleton {
         if (validationError === "schemaVersion") {
             root.schemaMismatchCount += 1;
             root._fatalError = true;
-            root.errorMessage = qsTr("系统监测数据 schema 不兼容");
-            root.errorDetails = qsTr("需要重新构建 keytop（需要 schema v")
-                + root.supportedSchemaVersion + "）。";
+            root.errorMessage = qsTr("System monitoring data schema is incompatible");
+            root.errorDetails = qsTr("Rebuild keytop (schema v") + root.supportedSchemaVersion + "）。";
             root.state = "error";
             root._terminateStream("schema_mismatch");
             return;
@@ -577,12 +536,10 @@ Singleton {
         if (validationError !== "") {
             root.malformedLineCount += 1;
             root._consecutiveMalformedLines += 1;
-            root.errorMessage = root.hasData
-                ? root.errorMessage
-                : qsTr("keytop 返回的系统监测数据不完整");
+            root.errorMessage = root.hasData ? root.errorMessage : qsTr(
+                                                   "System monitor data returned by keytop is incomplete");
             root.errorDetails = validationError;
-            if (root._consecutiveMalformedLines >= 3
-                    && streamProcess.running) {
+            if (root._consecutiveMalformedLines >= 3 && streamProcess.running) {
                 root._terminateStream("invalid_json");
             }
             return;
@@ -595,23 +552,18 @@ Singleton {
         const text = String(line || "").trim();
         if (text.length === 0)
             return;
-        if (text.indexOf("Unknown command") >= 0
-                || text.indexOf("Unknown subcommand") >= 0) {
-            root.errorMessage = qsTr("keytop 不支持当前系统监测接口");
+        if (text.indexOf("Unknown command") >= 0 || text.indexOf("Unknown subcommand") >= 0) {
+            root.errorMessage = qsTr("keytop does not support the current system monitoring interface");
             root.errorDetails = text;
             root._terminateStream("invalid_json");
             return;
         }
 
-        const next = root.diagnostics.slice(
-            Math.max(0, root.diagnostics.length
-                - root.maximumDiagnosticLines + 1)
-        );
+        const next = root.diagnostics.slice(Math.max(0, root.diagnostics.length - root.maximumDiagnosticLines
+                                                     + 1));
         next.push(text.slice(0, 256));
         root.diagnostics = next;
-        root.errorDetails = next.join("\n").slice(
-            -root.maximumDiagnosticCharacters
-        );
+        root.errorDetails = next.join("\n").slice(-root.maximumDiagnosticCharacters);
     }
 
     function _safeTerminalEnvironmentValue() {
@@ -625,21 +577,15 @@ Singleton {
         const candidates = [];
         const seen = ({});
         const configured = root._safeTerminalEnvironmentValue();
-        const programs = [
-            configured,
-            "kitty",
-            "foot",
-            "alacritty",
-            "wezterm",
-            "konsole",
-            "gnome-terminal"
-        ];
+        const programs = [configured, "kitty", "foot", "alacritty", "wezterm", "konsole", "gnome-terminal"];
         for (let index = 0; index < programs.length; index += 1) {
             const program = programs[index];
             if (!program || seen[program])
                 continue;
             seen[program] = true;
-            candidates.push({ "program": program });
+            candidates.push({
+                                "program": program
+                            });
         }
         return candidates;
     }
@@ -655,24 +601,21 @@ Singleton {
         keyTopProbe.command = [root.commandName, "--help"];
         keyTopProbe.running = true;
 
-        Qt.callLater(function() {
-            if (generation === root._keyTopProbeGeneration
-                    && !keyTopProbe.running) {
+        Qt.callLater(function () {
+            if (generation === root._keyTopProbeGeneration && !keyTopProbe.running) {
                 root._handleKeyTopProbe(generation, 127);
             }
         });
     }
 
     function _handleKeyTopProbe(generation, exitCode) {
-        if (generation !== root._keyTopProbeGeneration
-                || root._keyTopProbeHandledGeneration === generation)
+        if (generation !== root._keyTopProbeGeneration || root._keyTopProbeHandledGeneration === generation)
             return;
         root._keyTopProbeHandledGeneration = generation;
 
         if (exitCode !== 0) {
             root.actionBusy = false;
-            root.actionError =
-                qsTr("keytop 不可用，请安装独立 keytop");
+            root.actionError = qsTr("keytop is unavailable; install the independent keytop command");
             return;
         }
 
@@ -685,24 +628,20 @@ Singleton {
         root._terminalCandidateIndex += 1;
         if (root._terminalCandidateIndex >= root._terminalCandidates.length) {
             root.actionBusy = false;
-            root.actionError = qsTr("未找到可用终端，无法打开 keytop");
+            root.actionError = qsTr("No usable terminal was found, so keytop could not be opened");
             return;
         }
 
-        root._terminalCandidate =
-            root._terminalCandidates[root._terminalCandidateIndex];
+        root._terminalCandidate = root._terminalCandidates[root._terminalCandidateIndex];
         const program = root._terminalCandidate.program;
         root._terminalProbeGeneration += 1;
         root._terminalProbeHandledGeneration = -1;
         const generation = root._terminalProbeGeneration;
-        terminalProbe.command = program.indexOf("/") >= 0
-            ? ["test", "-x", program]
-            : ["which", program];
+        terminalProbe.command = program.indexOf("/") >= 0 ? ["test", "-x", program] : ["which", program];
         terminalProbe.running = true;
 
-        Qt.callLater(function() {
-            if (generation === root._terminalProbeGeneration
-                    && !terminalProbe.running) {
+        Qt.callLater(function () {
+            if (generation === root._terminalProbeGeneration && !terminalProbe.running) {
                 root._handleTerminalProbe(generation, 127);
             }
         });
@@ -727,21 +666,19 @@ Singleton {
     }
 
     function _handleTerminalProbe(generation, exitCode) {
-        if (generation !== root._terminalProbeGeneration
-                || root._terminalProbeHandledGeneration === generation)
+        if (generation !== root._terminalProbeGeneration || root._terminalProbeHandledGeneration
+                === generation)
             return;
         root._terminalProbeHandledGeneration = generation;
 
         if (exitCode === 0 && root._terminalCandidate) {
             try {
-                Quickshell.execDetached(
-                    root._terminalCommand(root._terminalCandidate.program)
-                );
+                Quickshell.execDetached(root._terminalCommand(root._terminalCandidate.program));
                 root.actionBusy = false;
                 root.actionError = "";
             } catch (exception) {
                 root.actionBusy = false;
-                root.actionError = qsTr("启动终端失败：") + exception;
+                root.actionError = qsTr("Could not start terminal:") + exception;
             }
             return;
         }
@@ -780,36 +717,24 @@ Singleton {
 
             const now = Date.now();
             if (!root.hasData) {
-                const firstSnapshotAfter = Math.max(
-                    6000,
-                    root.configuredIntervalMs * 6
-                );
-                if (now - root._streamStartedAtMs > firstSnapshotAfter
-                        && !root._terminationPending) {
-                    root.errorMessage =
-                        qsTr("系统监测服务未返回首个快照");
-                    root.errorDetails = qsTr("正在重新启动 keytop 数据流。");
+                const firstSnapshotAfter = Math.max(6000, root.configuredIntervalMs * 6);
+                if (now - root._streamStartedAtMs > firstSnapshotAfter && !root._terminationPending) {
+                    root.errorMessage = qsTr("The system monitor service did not return its first snapshot");
+                    root.errorDetails = qsTr("Restarting the keytop data stream.");
                     root._terminateStream("first_snapshot_timeout");
                 }
                 return;
             }
 
             const age = now - root.lastUpdatedMs;
-            const staleAfter = Math.max(
-                4000,
-                root.configuredIntervalMs * 3.5
-            );
-            const restartAfter = Math.max(
-                10000,
-                root.configuredIntervalMs * 8
-            );
+            const staleAfter = Math.max(4000, root.configuredIntervalMs * 3.5);
+            const restartAfter = Math.max(10000, root.configuredIntervalMs * 8);
             if (age > staleAfter && root.state === "ready")
                 root.state = "stale";
-            if (age > restartAfter && streamProcess.running
-                    && !root._timeoutRestartIssued) {
+            if (age > restartAfter && streamProcess.running && !root._timeoutRestartIssued) {
                 root._timeoutRestartIssued = true;
-                root.errorMessage = qsTr("系统监测数据长时间未更新");
-                    root.errorDetails = qsTr("正在重新连接 keytop 数据流。");
+                root.errorMessage = qsTr("System monitor data has not updated for a long time");
+                root.errorDetails = qsTr("Reconnecting to the keytop data stream.");
                 root._terminateStream("data_timeout");
             }
         }
@@ -822,16 +747,12 @@ Singleton {
         repeat: false
         onTriggered: {
             const processId = Number(streamProcess.processId);
-            if (streamProcess.running
-                    && root._startedGeneration === root._streamGeneration
-                    && isFinite(processId)
-                    && processId > 0) {
+            if (streamProcess.running && root._startedGeneration === root._streamGeneration && isFinite(
+                        processId) && processId > 0) {
                 streamProcess.signal(9);
                 return;
             }
-            if (streamProcess.running
-                    && root._terminationPending
-                    && root._forceStopProbeCount < 8) {
+            if (streamProcess.running && root._terminationPending && root._forceStopProbeCount < 8) {
                 root._forceStopProbeCount += 1;
                 forceStopTimer.interval = 250;
                 forceStopTimer.restart();
@@ -863,29 +784,22 @@ Singleton {
             }
         }
         onExited: (exitCode, exitStatus) => {
-            const reason = root._timeoutRestartIssued
-                ? "data_timeout"
-                : (root._forcedRestartReason || "unexpected_exit");
-            root._handleStreamStopped(
-                root._streamGeneration,
-                reason,
-                exitCode
-            );
+            const reason = root._timeoutRestartIssued ? "data_timeout" : (root._forcedRestartReason
+                                                                          || "unexpected_exit");
+            root._handleStreamStopped(root._streamGeneration, reason, exitCode);
         }
         onRunningChanged: {
             if (running)
                 return;
             const generation = root._streamGeneration;
-            Qt.callLater(function() {
-                if (generation !== root._streamGeneration
-                        || streamProcess.running)
+            Qt.callLater(function () {
+                if (generation !== root._streamGeneration || streamProcess.running)
                     return;
-                const reason = root._startedGeneration === generation
-                    ? (root._timeoutRestartIssued
-                        ? "data_timeout"
-                        : (root._forcedRestartReason
-                            || "unexpected_exit"))
-                    : "failed_to_start";
+                const reason = root._startedGeneration === generation ? (root._timeoutRestartIssued
+                                                                         ? "data_timeout" : (
+                                                                               root._forcedRestartReason
+                                                                               || "unexpected_exit")) :
+                                                                        "failed_to_start";
                 root._handleStreamStopped(generation, reason, -1);
             });
         }
@@ -895,18 +809,14 @@ Singleton {
         id: keyTopProbe
 
         onExited: (exitCode, exitStatus) => {
-            root._handleKeyTopProbe(
-                root._keyTopProbeGeneration,
-                exitCode
-            );
+            root._handleKeyTopProbe(root._keyTopProbeGeneration, exitCode);
         }
         onRunningChanged: {
             if (running)
                 return;
             const generation = root._keyTopProbeGeneration;
-            Qt.callLater(function() {
-                if (generation === root._keyTopProbeGeneration
-                        && !keyTopProbe.running) {
+            Qt.callLater(function () {
+                if (generation === root._keyTopProbeGeneration && !keyTopProbe.running) {
                     root._handleKeyTopProbe(generation, 127);
                 }
             });
@@ -917,18 +827,14 @@ Singleton {
         id: terminalProbe
 
         onExited: (exitCode, exitStatus) => {
-            root._handleTerminalProbe(
-                root._terminalProbeGeneration,
-                exitCode
-            );
+            root._handleTerminalProbe(root._terminalProbeGeneration, exitCode);
         }
         onRunningChanged: {
             if (running)
                 return;
             const generation = root._terminalProbeGeneration;
-            Qt.callLater(function() {
-                if (generation === root._terminalProbeGeneration
-                        && !terminalProbe.running) {
+            Qt.callLater(function () {
+                if (generation === root._terminalProbeGeneration && !terminalProbe.running) {
                     root._handleTerminalProbe(generation, 127);
                 }
             });

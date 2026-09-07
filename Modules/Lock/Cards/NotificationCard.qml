@@ -45,7 +45,8 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            text: root.notificationCount > 0 ? qsTr("%1 条通知").arg(root.notificationCount) : qsTr("通知")
+            text: root.notificationCount > 0 ? qsTr("%1 notifications").arg(root.notificationCount) : qsTr(
+                                                   "Notifications")
             color: Appearance.colors.colOutline
             font.family: Fonts.numeric
             font.pixelSize: 17
@@ -89,12 +90,11 @@ Rectangle {
                         source: dinoImage
                         color: Appearance.colors.colOutlineVariant
                     }
-
                 }
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: qsTr("没有通知")
+                    text: qsTr("No notifications")
                     color: Appearance.colors.colOutlineVariant
                     font.family: Fonts.numeric
                     font.pixelSize: 24
@@ -107,7 +107,6 @@ Rectangle {
                         easing.type: Appearance.animation.standardExtraLarge.type
                         easing.bezierCurve: Appearance.animation.standardExtraLarge.bezierCurve
                     }
-
                 }
 
                 Behavior on scale {
@@ -116,9 +115,7 @@ Rectangle {
                         easing.type: Appearance.animation.expressiveDefaultSpatial.type
                         easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                     }
-
                 }
-
             }
 
             StyledListView {
@@ -179,13 +176,13 @@ Rectangle {
 
                                 Text {
                                     Layout.alignment: Qt.AlignVCenter
-                                    text: delegateRoot.modelData ? root.formatTime(delegateRoot.modelData.receivedAt) : ""
+                                    text: delegateRoot.modelData ? root.formatTime(
+                                                                       delegateRoot.modelData.receivedAt) : ""
                                     color: Appearance.colors.colOnSurfaceVariant
                                     font.family: Fonts.numeric
                                     font.pixelSize: 13
                                     opacity: 0.7
                                 }
-
                             }
 
                             Text {
@@ -199,7 +196,8 @@ Rectangle {
                             }
 
                             Text {
-                                text: delegateRoot.modelData ? root.sanitizedBody(delegateRoot.modelData.body) : ""
+                                text: delegateRoot.modelData ? root.sanitizedBody(
+                                                                   delegateRoot.modelData.body) : ""
                                 textFormat: Text.StyledText
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Fonts.ui
@@ -210,11 +208,8 @@ Rectangle {
                                 visible: !root.compact
                                 opacity: 0.8
                             }
-
                         }
-
                     }
-
                 }
 
                 add: Transition {
@@ -236,9 +231,7 @@ Rectangle {
                             easing.type: Appearance.animation.expressiveDefaultSpatial.type
                             easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                         }
-
                     }
-
                 }
 
                 remove: Transition {
@@ -258,9 +251,7 @@ Rectangle {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
-
                 }
 
                 displaced: Transition {
@@ -270,25 +261,21 @@ Rectangle {
                         easing.type: Appearance.animation.expressiveDefaultSpatial.type
                         easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                     }
-
                 }
-
             }
-
         }
 
         Text {
             Layout.fillWidth: true
             Layout.fillHeight: true
             visible: root.veryCompact
-            text: root.notificationCount > 0 ? qsTr("%1 条通知").arg(root.notificationCount) : qsTr("没有通知")
+            text: root.notificationCount > 0 ? qsTr("%1 notifications").arg(root.notificationCount) : qsTr(
+                                                   "No notifications")
             color: Appearance.colors.colOnSurfaceVariant
             font.family: Fonts.numeric
             font.pixelSize: 20
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
-
     }
-
 }

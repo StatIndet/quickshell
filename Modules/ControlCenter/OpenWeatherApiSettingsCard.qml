@@ -7,15 +7,15 @@ WeatherServiceApiKeyCard {
     serviceName: "OpenWeather Weather Maps"
     iconName: "rainy"
     fieldLabel: "OpenWeather API key"
-    placeholderText: qsTr("输入 OpenWeather API key")
-    invalidKeyText: qsTr("请输入有效的 OpenWeather API key")
-    clearDescription: qsTr("从系统密钥环移除 OpenWeather API key")
+    placeholderText: qsTr("Enter OpenWeather API key")
+    invalidKeyText: qsTr("Enter a valid OpenWeather API key")
+    clearDescription: qsTr("Remove the OpenWeather API key from the system keyring")
     configured: WeatherMapPlugin.apiConfigured
     credentialsReady: WeatherMapPlugin.credentialsReady
     busy: WeatherMapPlugin.credentialBusy
     checking: !WeatherMapPlugin.credentialsReady || WeatherMapPlugin.status === "loading_credentials"
     statusError: WeatherMapPlugin.status === "keychain_error"
-    storeAction: (value) => {
+    storeAction: value => {
         return WeatherMapPlugin.storeApiKey(value);
     }
     clearAction: () => {
@@ -26,10 +26,8 @@ WeatherServiceApiKeyCard {
         function onCredentialOperationFinished(operation, success, message) {
             if (operation === "openweather_store" || operation === "openweather_clear")
                 root.completeOperation(success, message);
-
         }
 
         target: WeatherMapPlugin
     }
-
 }

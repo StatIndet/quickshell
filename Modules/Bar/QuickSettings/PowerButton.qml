@@ -12,6 +12,6 @@ BarCircularButton {
     containerColor: Appearance.colors.colError
     rippleColor: Appearance.colors.colOnError
     iconColor: Appearance.colors.colOnError
-    tooltipText: qsTr("电源菜单")
+    tooltipText: qsTr("Power menu")
     onClicked: PowerMenuService.open(root.screen)
 }

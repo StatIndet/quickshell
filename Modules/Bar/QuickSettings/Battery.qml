@@ -11,8 +11,12 @@ Item {
 
     property bool vertical: false
     readonly property bool valueAvailable: PowerService.present && Format.isNumber(PowerService.percentage)
-    readonly property real percentage: root.valueAvailable ? Math.max(0, Math.min(100, PowerService.percentage * 100)) : NaN
-    readonly property bool lowBattery: root.valueAvailable && root.percentage <= 15 && PowerService.discharging
+    readonly property real percentage: root.valueAvailable ? Math.max(0, Math.min(100,
+                                                                                  PowerService.percentage
+                                                                                  * 100)) : NaN
+    readonly property bool lowBattery: root.valueAvailable && root.percentage <= 15
+                                       && PowerService.discharging
+
     readonly property string displayText: root.valueAvailable ? String(Math.round(root.percentage)) : "—"
     readonly property color containerColor: {
         if (!PowerService.ready || !PowerService.present)
@@ -42,39 +46,59 @@ Item {
 
     function stateAndTimeText() {
         if (PowerService.full)
-            return qsTr("状态：已充满");
+            return qsTr("Status: Fully charged");
 
         if (PowerService.charging)
-            return Format.isNumber(PowerService.timeToFull) ? qsTr("状态：充电中 · 充满还需 ") + Format.duration(PowerService.timeToFull) : qsTr("状态：充电中 · 充满时间未知");
+            return Format.isNumber(PowerService.timeToFull) ? qsTr("Status: Charging · Full in ")
+                                                              + Format.duration(PowerService.timeToFull) :
+                                                              qsTr("Status: Charging · Time to full unknown");
 
         if (PowerService.discharging)
-            return Format.isNumber(PowerService.timeToEmpty) ? qsTr("状态：放电中 · 剩余 ") + Format.duration(PowerService.timeToEmpty) : qsTr("状态：放电中 · 剩余时间未知");
+            return Format.isNumber(PowerService.timeToEmpty) ? qsTr("Status: Discharging · ")
+                                                               + Format.duration(PowerService.timeToEmpty) :
+                                                               qsTr("Status: Discharging · Remaining time unknown");
 
         if (PowerService.state === UPowerDeviceState.Empty)
-            return qsTr("状态：电量已耗尽");
+            return qsTr("Status: Empty");
 
         if (PowerService.state === UPowerDeviceState.PendingCharge)
-            return qsTr("状态：等待充电");
+            return qsTr("Status: Pending charge");
 
         if (PowerService.state === UPowerDeviceState.PendingDischarge)
-            return qsTr("状态：等待放电");
+            return qsTr("Status: Pending discharge");
 
-        return PowerService.powerConnected ? qsTr("状态：已插电，未在充电") : qsTr("状态：未知");
+        return PowerService.powerConnected ? qsTr("Status: Plugged in, not charging") : qsTr(
+                                                 "Status: Unknown");
     }
 
     function powerText() {
-        const label = PowerService.charging ? qsTr("实时充电功率：") : PowerService.discharging ? qsTr("实时放电功率：") : qsTr("实时功率：");
-        return label + (Format.isNumber(PowerService.changeRate) ? Format.watts(Math.abs(PowerService.changeRate)) : qsTr("未知"));
+        const label = PowerService.charging ? qsTr("Live charging power: ") : PowerService.discharging ? qsTr(
+                                                                                                             "Live discharging power: ") :
+                                                                                                         qsTr("Live power: ");
+        return label + (Format.isNumber(PowerService.changeRate) ? Format.watts(Math.abs(
+                                                                                    PowerService.changeRate)) :
+                                                                   qsTr("Unknown"));
     }
 
     function buildTooltip() {
         if (!PowerService.ready)
-            return [qsTr("正在检测电池"), qsTr("UPower 尚未提供电池数据"), qsTr("插电状态、功率与健康度暂不可用")].join("\n");
+            return [qsTr("Detecting battery"), qsTr("UPower has not provided battery data yet"), qsTr(
+                        "Plug status, power, and health are temporarily unavailable")].join("\n");
 
         if (!PowerService.present)
-            return [qsTr("未检测到电池"), qsTr("此设备可能没有内置电池"), qsTr("插电：") + (PowerService.powerConnected ? qsTr("是") : qsTr("否")), qsTr("充放电状态、功率与健康度不可用")].join("\n");
+            return [qsTr("No battery detected"), qsTr("This device may not have a built-in battery"), qsTr(
+                        "Plugged in: ") + (PowerService.powerConnected ? qsTr("Yes") : qsTr("No")), qsTr(
+                        "Charge state, power, and health are unavailable")].join("\n");
 
-        return [qsTr("电池电量：") + Format.percent(root.percentage, 0), qsTr("插电：") + (PowerService.powerConnected ? qsTr("是") : qsTr("否")), root.stateAndTimeText(), root.powerText(), qsTr("健康度：") + (Format.isNumber(PowerService.healthPercentage) ? Format.percent(PowerService.healthPercentage, 0) : qsTr("未知"))].join("\n");
+        return [qsTr("Battery level: ") + Format.percent(root.percentage, 0), qsTr("Plugged in: ") + (PowerService.powerConnected
+                                                                                                      ? qsTr("Yes") :
+                                                                                                        qsTr("No")),
+                root.stateAndTimeText(), root.powerText(), qsTr("Health: ") + (Format.isNumber(
+                                                                                   PowerService.healthPercentage)
+                                                                               ? Format.percent(
+                                                                                     PowerService.healthPercentage,
+                                                                                     0) : qsTr(
+                                                                                     "Unknown"))].join("\n");
     }
 
     implicitWidth: root.vertical ? Sizes.barControlCircleSize : 56
@@ -91,9 +115,7 @@ Item {
             ColorAnimation {
                 duration: Appearance.animation.expressiveEffects.duration
             }
-
         }
-
     }
 
     Row {
@@ -112,7 +134,6 @@ Item {
                 showValue: true
                 embeddedCharging: false
             }
-
         }
 
         MaterialSymbol {
@@ -125,7 +146,6 @@ Item {
             fill: 1
             color: root.foregroundColor
         }
-
     }
 
     Column {
@@ -144,9 +164,7 @@ Item {
                 showValue: false
                 embeddedCharging: true
             }
-
         }
-
     }
 
     MouseArea {
@@ -207,7 +225,6 @@ Item {
                 fill: 1
                 color: root.valueAvailable ? root.containerColor : root.foregroundColor
             }
-
         }
 
         Rectangle {
@@ -222,9 +239,6 @@ Item {
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
-
         }
-
     }
-
 }

@@ -24,110 +24,139 @@ Item {
     clip: true
 
     function dayLabel(index, epoch) {
-        if (index === 0) return qsTr("昨天")
-        if (index === 1) return qsTr("今天")
-        if (index === 2) return qsTr("明天")
-        if (!epoch) return "--"
-        const week = [qsTr("周日"), qsTr("周一"), qsTr("周二"), qsTr("周三"), qsTr("周四"), qsTr("周五"), qsTr("周六")]
-        return week[new Date(epoch * 1000).getDay()]
+        if (index === 0)
+            return qsTr("Yesterday");
+        if (index === 1)
+            return qsTr("Today");
+        if (index === 2)
+            return qsTr("Tomorrow");
+        if (!epoch)
+            return "--";
+        const week = [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr(
+                          "Sat")];
+        return week[new Date(epoch * 1000).getDay()];
     }
 
     function dateLabel(epoch) {
-        return epoch ? Qt.formatDateTime(new Date(epoch * 1000), "M/d") : "--"
+        return epoch ? Qt.formatDateTime(new Date(epoch * 1000), "M/d") : "--";
     }
 
     function validNumber(value) {
-        return value !== undefined && value !== null && !isNaN(value)
+        return value !== undefined && value !== null && !isNaN(value);
     }
 
     function formatSpeedValue(value) {
-        if (!root.validNumber(value)) return "--"
-        const rounded = Math.round(value * 10) / 10
-        if (Math.abs(rounded - Math.round(rounded)) < 0.05) return Math.round(rounded).toString()
-        return rounded.toFixed(1)
+        if (!root.validNumber(value))
+            return "--";
+        const rounded = Math.round(value * 10) / 10;
+        if (Math.abs(rounded - Math.round(rounded)) < 0.05)
+            return Math.round(rounded).toString();
+        return rounded.toFixed(1);
     }
 
     function beaufortLevel(speedMs) {
-        if (!root.validNumber(speedMs) || speedMs < 0.3) return 0
-        if (speedMs < 1.6) return 1
-        if (speedMs < 3.4) return 2
-        if (speedMs < 5.5) return 3
-        if (speedMs < 8.0) return 4
-        if (speedMs < 10.8) return 5
-        if (speedMs < 13.9) return 6
-        if (speedMs < 17.2) return 7
-        if (speedMs < 20.8) return 8
-        if (speedMs < 24.5) return 9
-        if (speedMs < 28.5) return 10
-        if (speedMs < 32.7) return 11
-        return 12
+        if (!root.validNumber(speedMs) || speedMs < 0.3)
+            return 0;
+        if (speedMs < 1.6)
+            return 1;
+        if (speedMs < 3.4)
+            return 2;
+        if (speedMs < 5.5)
+            return 3;
+        if (speedMs < 8.0)
+            return 4;
+        if (speedMs < 10.8)
+            return 5;
+        if (speedMs < 13.9)
+            return 6;
+        if (speedMs < 17.2)
+            return 7;
+        if (speedMs < 20.8)
+            return 8;
+        if (speedMs < 24.5)
+            return 9;
+        if (speedMs < 28.5)
+            return 10;
+        if (speedMs < 32.7)
+            return 11;
+        return 12;
     }
 
     function windColor(speedMs) {
-        const bf = root.beaufortLevel(speedMs)
-        if (bf < 4) return "#72d572"
-        if (bf < 6) return "#ffca28"
-        if (bf < 8) return "#ffa726"
-        if (bf < 10) return "#e52f35"
-        if (bf < 12) return "#99004c"
-        return "#7e0023"
+        const bf = root.beaufortLevel(speedMs);
+        if (bf < 4)
+            return "#72d572";
+        if (bf < 6)
+            return "#ffca28";
+        if (bf < 8)
+            return "#ffa726";
+        if (bf < 10)
+            return "#e52f35";
+        if (bf < 12)
+            return "#99004c";
+        return "#7e0023";
     }
 
     function chartUpperBound(highest) {
-        if (!root.validNumber(highest) || highest <= 0) return 5
-        if (highest <= 5) return 5
-        if (highest <= 8) return 8
-        if (highest <= 12) return 12
-        if (highest <= 15) return 15
-        return Math.ceil(highest / 5) * 5
+        if (!root.validNumber(highest) || highest <= 0)
+            return 5;
+        if (highest <= 5)
+            return 5;
+        if (highest <= 8)
+            return 8;
+        if (highest <= 12)
+            return 12;
+        if (highest <= 15)
+            return 15;
+        return Math.ceil(highest / 5) * 5;
     }
 
     function rebuild() {
-        const list = []
-        let highest = 0
-        let validCount = 0
-        const modelCount = root.sourceModel
-            ? (typeof root.sourceModel.count === "function"
-                ? root.sourceModel.count()
-                : Number(root.sourceModel.count || 0)) : 0
-        const count = Math.min(root.maxItems, modelCount)
+        const list = [];
+        let highest = 0;
+        let validCount = 0;
+        const modelCount = root.sourceModel ? (typeof root.sourceModel.count === "function"
+                                               ? root.sourceModel.count() : Number(root.sourceModel.count
+                                                                                   || 0)) : 0;
+        const count = Math.min(root.maxItems, modelCount);
         for (let i = 0; i < count; ++i) {
-            const dayItem = root.sourceModel.get(i) || ({})
-            const dayPart = dayItem.day || ({})
-            const nightPart = dayItem.night || ({})
-            const daySpeed = Number(dayPart.windSpeedMs)
-            const nightSpeed = Number(nightPart.windSpeedMs)
+            const dayItem = root.sourceModel.get(i) || ({});
+            const dayPart = dayItem.day || ({});
+            const nightPart = dayItem.night || ({});
+            const daySpeed = Number(dayPart.windSpeedMs);
+            const nightSpeed = Number(nightPart.windSpeedMs);
             if (root.validNumber(daySpeed)) {
-                highest = Math.max(highest, daySpeed)
-                validCount += 1
+                highest = Math.max(highest, daySpeed);
+                validCount += 1;
             }
             if (root.validNumber(nightSpeed)) {
-                highest = Math.max(highest, nightSpeed)
-                validCount += 1
+                highest = Math.max(highest, nightSpeed);
+                validCount += 1;
             }
             list.push({
-                time: dayItem.time || 0,
-                dayText: root.dayLabel(i, dayItem.time || 0),
-                dateText: root.dateLabel(dayItem.time || 0),
-                daySpeed: daySpeed,
-                nightSpeed: nightSpeed,
-                dayTextValue: root.formatSpeedValue(daySpeed),
-                nightTextValue: root.formatSpeedValue(nightSpeed),
-                dayDirection: Number(dayPart.windDirection),
-                nightDirection: Number(nightPart.windDirection),
-                dayColor: root.windColor(daySpeed),
-                nightColor: root.windColor(nightSpeed),
-                emphasized: i !== 0
-            })
+                          time: dayItem.time || 0,
+                          dayText: root.dayLabel(i, dayItem.time || 0),
+                          dateText: root.dateLabel(dayItem.time || 0),
+                          daySpeed: daySpeed,
+                          nightSpeed: nightSpeed,
+                          dayTextValue: root.formatSpeedValue(daySpeed),
+                          nightTextValue: root.formatSpeedValue(nightSpeed),
+                          dayDirection: Number(dayPart.windDirection),
+                          nightDirection: Number(nightPart.windDirection),
+                          dayColor: root.windColor(daySpeed),
+                          nightColor: root.windColor(nightSpeed),
+                          emphasized: i !== 0
+                      });
         }
-        items = list
-        chartMax = root.chartUpperBound(highest)
-        hasData = validCount > 0
+        items = list;
+        chartMax = root.chartUpperBound(highest);
+        hasData = validCount > 0;
     }
 
     function barHeight(speed) {
-        if (!root.validNumber(speed) || speed <= 0 || chartMax <= 0) return 0
-        return Math.max(10, Math.min(barHalfRange, barHalfRange * speed / chartMax))
+        if (!root.validNumber(speed) || speed <= 0 || chartMax <= 0)
+            return 0;
+        return Math.max(10, Math.min(barHalfRange, barHalfRange * speed / chartMax));
     }
 
     Timer {
@@ -146,10 +175,18 @@ Item {
         target: root.sourceModel
         ignoreUnknownSignals: true
 
-        function onModelReset() { root.rebuild() }
-        function onRowsInserted() { root.rebuild() }
-        function onRowsRemoved() { root.rebuild() }
-        function onDataChanged() { root.rebuild() }
+        function onModelReset() {
+            root.rebuild();
+        }
+        function onRowsInserted() {
+            root.rebuild();
+        }
+        function onRowsRemoved() {
+            root.rebuild();
+        }
+        function onDataChanged() {
+            root.rebuild();
+        }
     }
 
     StyledFlickable {
@@ -180,12 +217,16 @@ Item {
                     width: root.itemWidth
                     height: root.height
 
-                    readonly property color weekColor: modelData.emphasized
-                                                       ? Appearance.colors.colOnSurface
-                                                       : Qt.rgba(Appearance.colors.colOnSurfaceVariant.r, Appearance.colors.colOnSurfaceVariant.g, Appearance.colors.colOnSurfaceVariant.b, 0.78)
+                    readonly property color weekColor: modelData.emphasized ? Appearance.colors.colOnSurface :
+                                                                              Qt.rgba(Appearance.colors.colOnSurfaceVariant.r,
+                                                                                      Appearance.colors.colOnSurfaceVariant.g,
+                                                                                      Appearance.colors.colOnSurfaceVariant.b,
+                                                                                      0.78)
                     readonly property color dateColor: modelData.emphasized
-                                                       ? Appearance.colors.colOnSurfaceVariant
-                                                       : Qt.rgba(Appearance.colors.colOnSurfaceVariant.r, Appearance.colors.colOnSurfaceVariant.g, Appearance.colors.colOnSurfaceVariant.b, 0.62)
+                                                       ? Appearance.colors.colOnSurfaceVariant : Qt.rgba(
+                                                             Appearance.colors.colOnSurfaceVariant.r,
+                                                             Appearance.colors.colOnSurfaceVariant.g,
+                                                             Appearance.colors.colOnSurfaceVariant.b, 0.62)
                     readonly property real dayBarHeight: root.barHeight(modelData.daySpeed)
                     readonly property real nightBarHeight: root.barHeight(modelData.nightSpeed)
 
@@ -196,7 +237,7 @@ Item {
                         color: parent.weekColor
                         font.family: Fonts.ui
                         font.pixelSize: 14
-                        font.bold: modelData.dayText === qsTr("今天")
+                        font.bold: modelData.dayText === qsTr("Today")
                     }
 
                     Text {
@@ -235,7 +276,8 @@ Item {
                         x: (parent.width - width) / 2
                         y: root.topBarBaseY - height
                         radius: width / 2
-                        color: Qt.rgba(Qt.color(modelData.dayColor).r, Qt.color(modelData.dayColor).g, Qt.color(modelData.dayColor).b, 0.96)
+                        color: Qt.rgba(Qt.color(modelData.dayColor).r, Qt.color(modelData.dayColor).g,
+                                       Qt.color(modelData.dayColor).b, 0.96)
                     }
 
                     Rectangle {
@@ -245,7 +287,8 @@ Item {
                         x: (parent.width - width) / 2
                         y: root.bottomBarBaseY
                         radius: width / 2
-                        color: Qt.rgba(Qt.color(modelData.nightColor).r, Qt.color(modelData.nightColor).g, Qt.color(modelData.nightColor).b, 0.58)
+                        color: Qt.rgba(Qt.color(modelData.nightColor).r, Qt.color(modelData.nightColor).g,
+                                       Qt.color(modelData.nightColor).b, 0.58)
                     }
 
                     Text {
@@ -283,16 +326,17 @@ Item {
 
                 property real lastMouseX: 0
 
-                onPressed: function(mouse) {
-                    lastMouseX = mouse.x
+                onPressed: function (mouse) {
+                    lastMouseX = mouse.x;
                 }
 
-                onPositionChanged: function(mouse) {
-                    if (!pressed) return
-                    const dx = mouse.x - lastMouseX
-                    const maxX = Math.max(0, trendFlick.contentWidth - trendFlick.width)
-                    trendFlick.contentX = Math.max(0, Math.min(maxX, trendFlick.contentX - dx))
-                    lastMouseX = mouse.x
+                onPositionChanged: function (mouse) {
+                    if (!pressed)
+                        return;
+                    const dx = mouse.x - lastMouseX;
+                    const maxX = Math.max(0, trendFlick.contentWidth - trendFlick.width);
+                    trendFlick.contentX = Math.max(0, Math.min(maxX, trendFlick.contentX - dx));
+                    lastMouseX = mouse.x;
                 }
             }
         }
@@ -301,7 +345,7 @@ Item {
     Text {
         anchors.centerIn: parent
         visible: !root.hasData
-        text: qsTr("风况数据暂不可用")
+        text: qsTr("Wind data is unavailable")
         color: Appearance.colors.colOnSurfaceVariant
         font.family: Fonts.ui
         font.pixelSize: 16

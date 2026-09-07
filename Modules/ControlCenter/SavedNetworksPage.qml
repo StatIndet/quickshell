@@ -22,7 +22,7 @@ Item {
         anchors.margins: Metrics.cardPadding
         radius: Metrics.cornerM
         visible: NetworkService.savedWifiProfiles.length === 0
-        message: qsTr("没有已保存的网络")
+        message: qsTr("No saved networks")
     }
 
     StyledListView {
@@ -50,7 +50,7 @@ Item {
                     details.push(savedRow.profileName);
 
                 if (savedRow.modelData.autoconnect)
-                    details.push(qsTr("自动连接"));
+                    details.push(qsTr("Connect automatically"));
 
                 return details.join(" · ");
             }
@@ -68,9 +68,6 @@ Item {
                 iconSize: Metrics.iconS
                 color: Appearance.colors.colOnSurfaceVariant
             }
-
         }
-
     }
-
 }

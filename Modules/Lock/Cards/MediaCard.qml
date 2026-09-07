@@ -13,8 +13,8 @@ Rectangle {
     property bool hasMedia: player !== null
     property bool isPlaying: player && player.isPlaying
     property string artUrl: (player && player.trackArtUrl) ? player.trackArtUrl : ""
-    property string title: (player && player.trackTitle) ? player.trackTitle : qsTr("没有媒体")
-    property string artist: (player && player.trackArtist) ? player.trackArtist : qsTr("未在播放")
+    property string title: (player && player.trackTitle) ? player.trackTitle : qsTr("No media")
+    property string artist: (player && player.trackArtist) ? player.trackArtist : qsTr("Not playing")
 
     Layout.fillWidth: true
     implicitHeight: contentLayout.implicitHeight + Metrics.lockOuterPadding * 2
@@ -60,9 +60,7 @@ Rectangle {
                 position: 0.8
                 color: Appearance.applyAlpha(Appearance.colors.colScrim, 0)
             }
-
         }
-
     }
 
     OpacityMask {
@@ -78,9 +76,7 @@ Rectangle {
                 easing.type: Appearance.animation.standardExtraLarge.type
                 easing.bezierCurve: Appearance.animation.standardExtraLarge.bezierCurve
             }
-
         }
-
     }
 
     Item {
@@ -95,7 +91,6 @@ Rectangle {
             font.pixelSize: 48
             opacity: 0.2
         }
-
     }
 
     ColumnLayout {
@@ -111,7 +106,7 @@ Rectangle {
             Layout.topMargin: root.compact ? 0 : Metrics.spacingM
             Layout.bottomMargin: root.compact ? Metrics.spacingS : Metrics.spacingM
             visible: !root.compact
-            text: qsTr("正在播放")
+            text: qsTr("Now playing")
             color: Appearance.colors.colOnSurfaceVariant
             font.family: Fonts.numeric
             font.pixelSize: 17
@@ -151,7 +146,6 @@ Rectangle {
                 onClicked: {
                     if (root.player)
                         root.player.previous();
-
                 }
             }
 
@@ -185,7 +179,6 @@ Rectangle {
                 onClicked: {
                     if (root.player)
                         root.player.togglePlaying();
-
                 }
             }
 
@@ -195,12 +188,9 @@ Rectangle {
                 onClicked: {
                     if (root.player)
                         root.player.next();
-
                 }
             }
-
         }
-
     }
 
     layer.effect: OpacityMask {
@@ -214,7 +204,6 @@ Rectangle {
             bottomLeftRadius: root.bottomLeftRadius
             bottomRightRadius: root.bottomRightRadius
         }
-
     }
 
     component PlayerControl: Rectangle {
@@ -228,19 +217,21 @@ Rectangle {
         readonly property int baseHeight: 59
         readonly property int iconBoxSize: Metrics.controlHeightM
 
-        signal clicked()
+        signal clicked
 
         Layout.preferredWidth: baseWidth + (active ? Metrics.lockOuterPadding : 0)
         implicitWidth: baseWidth
         implicitHeight: baseHeight
         color: active ? Appearance.colors[`col${colour}`] : Appearance.colors[`col${colour}Container`]
-        radius: active || controlState.pressed ? Appearance.rounding.normal : Math.min(implicitWidth, implicitHeight) / 2
+        radius: active || controlState.pressed ? Appearance.rounding.normal : Math.min(implicitWidth,
+                                                                                       implicitHeight) / 2
         opacity: canUse ? 1 : 0.45
 
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            color: control.active ? Appearance.colors[`colOn${control.colour}`] : Appearance.colors[`colOn${control.colour}Container`]
+            color: control.active ? Appearance.colors[`colOn${control.colour}`] : Appearance.colors[`colOn${control.colour
+                                                                                                    }Container`]
             opacity: controlState.pressed ? 0.2 : controlState.containsMouse ? 0.12 : 0
 
             Behavior on opacity {
@@ -249,9 +240,7 @@ Rectangle {
                     easing.type: Appearance.animation.expressiveEffects.type
                     easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                 }
-
             }
-
         }
 
         Text {
@@ -261,7 +250,8 @@ Rectangle {
             height: control.iconBoxSize
             anchors.centerIn: parent
             text: control.icon
-            color: control.active ? Appearance.colors[`colOn${control.colour}`] : Appearance.colors[`colOn${control.colour}Container`]
+            color: control.active ? Appearance.colors[`colOn${control.colour}`] : Appearance.colors[`colOn${control.colour
+                                                                                                    }Container`]
             font.family: Fonts.materialSymbolsRounded
             font.pixelSize: 29
             font.weight: 500
@@ -285,7 +275,6 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveFastSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
             }
-
         }
 
         Behavior on radius {
@@ -294,7 +283,6 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveFastSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
             }
-
         }
 
         Behavior on color {
@@ -303,9 +291,6 @@ Rectangle {
                 easing.type: Appearance.animation.standard.type
                 easing.bezierCurve: Appearance.animation.standard.bezierCurve
             }
-
         }
-
     }
-
 }

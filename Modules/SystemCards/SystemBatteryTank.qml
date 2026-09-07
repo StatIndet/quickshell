@@ -15,14 +15,18 @@ Item {
     readonly property bool present: PowerService.present
     readonly property bool valueAvailable: root.present && Format.isNumber(PowerService.percentage)
     readonly property real chargePercent: root.valueAvailable ? PowerService.percentage * 100 : NaN
-    readonly property real targetLevel: root.valueAvailable ? Math.max(0, Math.min(1, PowerService.percentage)) : 0
+    readonly property real targetLevel: root.valueAvailable ? Math.max(0, Math.min(1,
+                                                                                   PowerService.percentage)) :
+                                                              0
     property real animatedLevel: targetLevel
     readonly property bool charging: PowerService.charging
-    readonly property bool full: PowerService.full || (root.valueAvailable && root.chargePercent >= 100 && !root.charging)
+    readonly property bool full: PowerService.full || (root.valueAvailable && root.chargePercent >= 100 &&
+                                                       !root.charging)
     readonly property bool powerConnected: PowerService.powerConnected
     readonly property bool lowBattery: root.valueAvailable && root.chargePercent <= 15 && !root.powerConnected
     readonly property real batteryIconCenterY: Appearance.spacing.medium + 18
-    readonly property bool batteryIconCovered: root.animatedLevel >= 1 - root.batteryIconCenterY / Math.max(1, batteryBody.height)
+    readonly property bool batteryIconCovered: root.animatedLevel >= 1 - root.batteryIconCenterY / Math.max(1,
+                                                                                                            batteryBody.height)
     readonly property real bodyRadius: Math.min(Appearance.rounding.extraLarge, batteryBody.width * 0.16)
 
     function batteryIconName() {
@@ -80,31 +84,39 @@ Item {
             return "—";
 
         if (root.charging)
-            return Format.isNumber(PowerService.timeToFull) ? qsTr("充满还需 ") + Format.duration(PowerService.timeToFull) : qsTr("充满时长未知");
+            return Format.isNumber(PowerService.timeToFull) ? qsTr("Fully charged in ") + Format.duration(
+                                                                  PowerService.timeToFull) : qsTr(
+                                                                  "Time to full is unknown");
 
         if (PowerService.discharging || !root.powerConnected)
-            return Format.isNumber(PowerService.timeToEmpty) ? qsTr("耗电时长 ") + Format.duration(PowerService.timeToEmpty) : qsTr("耗电时长未知");
+            return Format.isNumber(PowerService.timeToEmpty) ? qsTr("Time remaining ") + Format.duration(
+                                                                   PowerService.timeToEmpty) : qsTr(
+                                                                   "Remaining time is unknown");
 
-        return qsTr("已接通电源，未在充电");
+        return qsTr("Plugged in, not charging");
     }
 
     function statusText() {
         if (!root.present)
-            return qsTr("不可用");
+            return qsTr("Unavailable");
 
         if (root.full)
-            return qsTr("已充满");
+            return qsTr("Fully charged");
 
         if (root.charging)
-            return qsTr("充电中");
+            return qsTr("Charging");
 
         if (PowerService.discharging)
-            return qsTr("放电中");
+            return qsTr("Discharging");
 
-        return root.powerConnected ? qsTr("已接通电源") : qsTr("状态未知");
+        return root.powerConnected ? qsTr("Plugged in") : qsTr("Status unknown");
     }
 
-    Accessible.name: qsTr("电池，") + (root.present ? Format.percent(root.chargePercent, 0) + "，" + root.statusText() + "，" + (root.powerConnected ? qsTr("已接通电源") : qsTr("未接通电源")) : qsTr("未检测到电池"))
+    Accessible.name: qsTr("Battery,") + (root.present ? Format.percent(root.chargePercent, 0) + "，"
+                                                        + root.statusText() + "，" + (root.powerConnected
+                                                                                     ? qsTr("Plugged in") :
+                                                                                       qsTr("On battery")) :
+                                                        qsTr("No battery detected"))
 
     Rectangle {
         id: bodyShadow
@@ -121,7 +133,6 @@ Item {
             shadowVerticalOffset: 4
             autoPaddingEnabled: true
         }
-
     }
 
     Rectangle {
@@ -146,9 +157,7 @@ Item {
                 margins: 2
                 bottomMargin: 0
             }
-
         }
-
     }
 
     Rectangle {
@@ -169,7 +178,6 @@ Item {
             topMargin: 8
             bottomMargin: 2
         }
-
     }
 
     Rectangle {
@@ -184,7 +192,6 @@ Item {
             fill: parent
             margins: 5
         }
-
     }
 
     BatteryContents {
@@ -238,15 +245,12 @@ Item {
                     foregroundColor: Appearance.colors.colOnSecondary
                     Accessible.ignored: true
                 }
-
             }
-
         }
 
         layer.effect: OpacityMask {
             maskSource: roundedMask
         }
-
     }
 
     MaterialSymbol {
@@ -281,9 +285,7 @@ Item {
             ColorAnimation {
                 duration: Appearance.animation.expressiveEffects.duration
             }
-
         }
-
     }
 
     Behavior on animatedLevel {
@@ -292,7 +294,6 @@ Item {
             easing.type: Appearance.animation.expressiveSlowSpatial.type
             easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
         }
-
     }
 
     component BatteryContents: Item {
@@ -301,7 +302,7 @@ Item {
         required property color foregroundColor
 
         Text {
-            text: qsTr("电池")
+            text: qsTr("Battery")
             color: contents.foregroundColor
             font.family: Fonts.ui
             font.pixelSize: Typography.titleSmall.pixelSize
@@ -311,7 +312,6 @@ Item {
                 left: parent.left
                 top: parent.top
             }
-
         }
 
         ColumnLayout {
@@ -344,7 +344,6 @@ Item {
                     font.pixelSize: Typography.labelSmall.pixelSize
                     elide: Text.ElideRight
                 }
-
             }
 
             RowLayout {
@@ -359,14 +358,19 @@ Item {
 
                 Text {
                     Layout.fillWidth: true
-                    text: Format.isNumber(PowerService.changeRate) ? (root.powerConnected ? (root.charging ? qsTr("充电 ") : qsTr("功率 ")) : qsTr("放电 ")) + Format.watts(Math.abs(PowerService.changeRate)) : qsTr("功率未知")
+                    text: Format.isNumber(PowerService.changeRate) ? (root.powerConnected ? (root.charging ? qsTr(
+                                                                                                                 "Charging ") :
+                                                                                                             qsTr("Power ")) :
+                                                                                            qsTr("Discharging "))
+                                                                     + Format.watts(Math.abs(
+                                                                                        PowerService.changeRate)) :
+                                                                     qsTr("Power unknown")
                     color: contents.foregroundColor
                     opacity: 0.78
                     font.family: Fonts.numeric
                     font.pixelSize: Typography.labelSmall.pixelSize
                     elide: Text.ElideRight
                 }
-
             }
 
             RowLayout {
@@ -382,22 +386,20 @@ Item {
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("健康 ") + Format.percent(PowerService.healthPercentage, 0)
+                    text: qsTr("Health ") + Format.percent(PowerService.healthPercentage, 0)
                     color: contents.foregroundColor
                     opacity: 0.78
                     font.family: Fonts.ui
                     font.pixelSize: Typography.labelSmall.pixelSize
                     elide: Text.ElideRight
                 }
-
             }
-
         }
 
         Text {
             anchors.centerIn: parent
             visible: !root.present
-            text: qsTr("未检测到\n电池")
+            text: qsTr("No battery\ndetected")
             color: contents.foregroundColor
             opacity: 0.76
             font.family: Fonts.ui
@@ -417,7 +419,7 @@ Item {
 
             Text {
                 Layout.alignment: Qt.AlignRight
-                text: root.present ? root.statusText() : qsTr("不可用")
+                text: root.present ? root.statusText() : qsTr("Unavailable")
                 color: contents.foregroundColor
                 opacity: 0.74
                 font.family: Fonts.ui
@@ -447,11 +449,7 @@ Item {
                     font.pixelSize: Typography.headlineSmall.pixelSize
                     font.weight: Font.Bold
                 }
-
             }
-
         }
-
     }
-
 }

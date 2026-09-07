@@ -18,11 +18,16 @@ Singleton {
     property bool filterPassive: true
     property var pinnedItemIds: ["Fcitx"]
 
-    readonly property var visibleItems: (SystemTray.items.values || []).filter(item => !root.filterPassive || item.status !== Status.Passive)
-    readonly property var itemsInUserList: visibleItems.filter(item => root.pinnedItemIds.indexOf(item.id) !== -1)
-    readonly property var itemsNotInUserList: visibleItems.filter(item => root.pinnedItemIds.indexOf(item.id) === -1)
+    readonly property var visibleItems: (SystemTray.items.values || []).filter(item => !root.filterPassive
+                                                                                       || item.status
+                                                                                       !== Status.Passive)
+    readonly property var itemsInUserList: visibleItems.filter(item => root.pinnedItemIds.indexOf(item.id)
+                                                                       !== -1)
+    readonly property var itemsNotInUserList: visibleItems.filter(item => root.pinnedItemIds.indexOf(item.id)
+                                                                          === -1)
     readonly property var pinnedItems: root.invertPinnedItems ? root.itemsNotInUserList : root.itemsInUserList
-    readonly property var unpinnedItems: root.invertPinnedItems ? root.itemsInUserList : root.itemsNotInUserList
+    readonly property var unpinnedItems: root.invertPinnedItems ? root.itemsInUserList :
+                                                                  root.itemsNotInUserList
 
     function defaultConfig() {
         return {
@@ -42,8 +47,10 @@ Singleton {
     function loadFromObject(parsed) {
         const defaults = root.defaultConfig();
         root.showItemId = typeof parsed.showItemId === "boolean" ? parsed.showItemId : defaults.showItemId;
-        root.invertPinnedItems = typeof parsed.invertPinnedItems === "boolean" ? parsed.invertPinnedItems : defaults.invertPinnedItems;
-        root.filterPassive = typeof parsed.filterPassive === "boolean" ? parsed.filterPassive : defaults.filterPassive;
+        root.invertPinnedItems = typeof parsed.invertPinnedItems === "boolean" ? parsed.invertPinnedItems :
+                                                                                 defaults.invertPinnedItems;
+        root.filterPassive = typeof parsed.filterPassive === "boolean" ? parsed.filterPassive :
+                                                                         defaults.filterPassive;
         root.pinnedItemIds = root.normalizeStringList(parsed.pinnedItems);
     }
 
@@ -52,20 +59,21 @@ Singleton {
             return;
 
         configFile.setText(JSON.stringify({
-            "showItemId": root.showItemId,
-            "invertPinnedItems": root.invertPinnedItems,
-            "pinnedItems": root.pinnedItemIds,
-            "filterPassive": root.filterPassive
-        }, null, 2));
+                                              "showItemId": root.showItemId,
+                                              "invertPinnedItems": root.invertPinnedItems,
+                                              "pinnedItems": root.pinnedItemIds,
+                                              "filterPassive": root.filterPassive
+                                          }, null, 2));
     }
 
     function getTooltipForItem(item) {
         if (!item)
-            return qsTr("托盘");
+            return qsTr("Tray");
 
-        let result = item.tooltipTitle && item.tooltipTitle.length > 0
-            ? item.tooltipTitle
-            : (item.title && item.title.length > 0 ? item.title : item.id);
+        let result = item.tooltipTitle && item.tooltipTitle.length > 0 ? item.tooltipTitle : (item.title
+                                                                                              && item.title.length
+                                                                                              > 0 ? item.title :
+                                                                                                    item.id);
 
         if (item.tooltipDescription && item.tooltipDescription.length > 0)
             result += " • " + item.tooltipDescription;

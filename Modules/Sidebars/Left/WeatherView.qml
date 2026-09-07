@@ -76,27 +76,27 @@ Item {
 
     function updatedText() {
         if (root.weatherSource.loading)
-            return qsTr("正在刷新");
+            return qsTr("Refreshing");
 
         if (root.weatherSource.status === "fresh" || root.weatherSource.status === "partial") {
             const date = new Date(root.weatherSource.lastUpdated);
-            return qsTr("更新于 ") + UiPreferences.shortTime(date);
+            return qsTr("Updated ") + UiPreferences.shortTime(date);
         }
         if (root.weatherSource.status === "stale")
-            return qsTr("数据较旧");
+            return qsTr("Data is old");
 
         if (root.weatherSource.status === "error")
-            return qsTr("更新失败");
+            return qsTr("Update failed");
 
-        return qsTr("待更新");
+        return qsTr("Update pending");
     }
 
     function dayLabel(index, epoch) {
         if (index === 0)
-            return qsTr("今天");
+            return qsTr("Today");
 
         if (index === 1)
-            return qsTr("明天");
+            return qsTr("Tomorrow");
 
         return epoch ? Qt.formatDateTime(new Date(epoch * 1000), "ddd") : "--";
     }
@@ -106,18 +106,18 @@ Item {
             return "--";
 
         if (value < 3)
-            return qsTr("低");
+            return qsTr("Low");
 
         if (value < 6)
-            return qsTr("中");
+            return qsTr("Moderate");
 
         if (value < 8)
-            return qsTr("高");
+            return qsTr("High");
 
         if (value < 11)
-            return qsTr("很高");
+            return qsTr("Very high");
 
-        return qsTr("极高");
+        return qsTr("Extreme");
     }
 
     function uvIndexBucket(value) {
@@ -220,15 +220,15 @@ Item {
         const hour = currentHour();
         const isDay = hour >= 5 && hour < 17;
         if (snow > 0 && rain <= 0)
-            return isDay ? qsTr("白天降雪总量") : qsTr("夜间降雪总量");
+            return isDay ? qsTr("Total daytime snowfall") : qsTr("Total nighttime snowfall");
 
         if (rain > 0 && snow <= 0)
-            return isDay ? qsTr("白天降雨总量") : qsTr("夜间降雨总量");
+            return isDay ? qsTr("Total daytime rainfall") : qsTr("Total nighttime rainfall");
 
         if (snow > 0 && rain > 0)
-            return isDay ? qsTr("白天总降水") : qsTr("夜间总降水");
+            return isDay ? qsTr("Total daytime precipitation") : qsTr("Total nighttime precipitation");
 
-        return isDay ? qsTr("白天总降水") : qsTr("夜间总降水");
+        return isDay ? qsTr("Total daytime precipitation") : qsTr("Total nighttime precipitation");
     }
 
     function humidityWaveAccent() {
@@ -241,21 +241,21 @@ Item {
 
         const km = meters / 1000;
         if (km >= 16)
-            return qsTr("极清晰");
+            return qsTr("Crystal clear");
 
         if (km >= 10)
-            return qsTr("清晰");
+            return qsTr("Clear");
 
         if (km >= 6)
-            return qsTr("良好");
+            return qsTr("Good visibility");
 
         if (km >= 3)
-            return qsTr("朦胧");
+            return qsTr("Hazy");
 
         if (km >= 1)
-            return qsTr("较低");
+            return qsTr("Low visibility");
 
-        return qsTr("浓雾");
+        return qsTr("Dense fog");
     }
 
     function aqiThresholds() {
@@ -304,7 +304,8 @@ Item {
     }
 
     function aqiLevelName(level) {
-        const names = [qsTr("优"), qsTr("良"), qsTr("差"), qsTr("不健康"), qsTr("很不健康"), qsTr("危险")];
+        const names = [qsTr("Excellent"), qsTr("Good"), qsTr("Poor"), qsTr("Unhealthy"), qsTr(
+                           "Very unhealthy"), qsTr("Hazardous")];
         if (level < 0 || level >= names.length)
             return "--";
 
@@ -462,7 +463,7 @@ Item {
                         }
 
                         Text {
-                            text: root.weatherSource.locationName || qsTr("天气")
+                            text: root.weatherSource.locationName || qsTr("Weather")
                             color: root.headerInk
                             font.family: Fonts.ui
                             font.pixelSize: 19
@@ -478,7 +479,7 @@ Item {
                         iconName: "edit"
                         iconSize: 22
                         iconColor: root.headerInk
-                        accessibleName: qsTr("编辑天气位置")
+                        accessibleName: qsTr("Edit weather location")
                         hoverStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g,
                                                       root.headerInkMuted.b, 0.1)
                         pressedStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g,
@@ -493,7 +494,7 @@ Item {
                         iconName: "refresh"
                         iconSize: 22
                         iconColor: root.headerInk
-                        accessibleName: qsTr("刷新天气")
+                        accessibleName: qsTr("Refresh weather")
                         hoverStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g,
                                                       root.headerInkMuted.b, 0.1)
                         pressedStateLayerColor: Qt.rgba(root.headerInkMuted.r, root.headerInkMuted.g,
@@ -567,7 +568,7 @@ Item {
 
                         Text {
                             width: parent.width
-                            text: root.weatherSource.currentWeatherText || qsTr("未知")
+                            text: root.weatherSource.currentWeatherText || qsTr("Unknown")
                             color: Appearance.colors.colOnImage
                             font.family: Fonts.ui
                             font.pixelSize: 26
@@ -614,7 +615,7 @@ Item {
 
                         Text {
                             width: parent.width
-                            text: qsTr("体感温度: ") + fmtTemp(root.weatherSource.currentFeelsLikeC)
+                            text: qsTr("Feels like: ") + fmtTemp(root.weatherSource.currentFeelsLikeC)
                             color: Appearance.colors.colOnImage
                             font.family: Fonts.ui
                             font.pixelSize: 18
@@ -624,7 +625,7 @@ Item {
 
                         Text {
                             width: parent.width
-                            text: qsTr("最高 ") + fmtTemp(today().temperatureMaxC) + qsTr(" · 最低 ") + fmtTemp(
+                            text: qsTr("High ") + fmtTemp(today().temperatureMaxC) + qsTr(" · Low ") + fmtTemp(
                                       today().temperatureMinC)
                             color: Appearance.colors.colOnImage
                             font.family: Fonts.ui
@@ -698,8 +699,8 @@ Item {
                             anchors.fill: parent
                             directionDegrees: root.weatherSource.currentWindDirection
                             valueText: fmtSpeed(root.weatherSource.currentWindSpeedMs)
-                            detailText: qsTr("阵风 ") + fmtSpeed(root.weatherSource.currentWindGustsMs) + " · "
-                                        + directionLabel(root.weatherSource.currentWindDirection)
+                            detailText: qsTr("Gusts ") + fmtSpeed(root.weatherSource.currentWindGustsMs)
+                                        + " · " + directionLabel(root.weatherSource.currentWindDirection)
                             accent: windAccent(root.weatherSource.currentWindSpeedMs)
                             animationEnabled: true
                             animationActive: windReveal.contentAnimationActive

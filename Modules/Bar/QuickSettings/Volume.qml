@@ -16,16 +16,21 @@ Item {
         anchors.fill: parent
 
         value: Volume.sinkVolume
-        progressColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError : Appearance.colors.colPrimary
+        progressColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError :
+                                                                      Appearance.colors.colPrimary
         trackColor: Appearance.colors.colLayer2Hover
         handleColor: Appearance.colors.colOnSurface
-        iconColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError : Appearance.colors.colOnSurface
+        iconColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError :
+                                                                  Appearance.colors.colOnSurface
 
         icon: {
-            if (Volume.isHeadphone) return "headphones"
-            if (Volume.sinkMuted || Volume.sinkVolume <= 0) return "volume_off"
-            if (Volume.sinkVolume < 0.5) return "volume_down"
-            return "volume_up"
+            if (Volume.isHeadphone)
+                return "headphones";
+            if (Volume.sinkMuted || Volume.sinkVolume <= 0)
+                return "volume_off";
+            if (Volume.sinkVolume < 0.5)
+                return "volume_down";
+            return "volume_up";
         }
     }
 
@@ -35,12 +40,14 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
 
-        onWheel: (wheel) => {
-            const step = 0.05
-            let newVol = Volume.sinkVolume
-            if (wheel.angleDelta.y > 0) newVol += step
-            else newVol -= step
-            Volume.setSinkVolume(newVol)
+        onWheel: wheel => {
+            const step = 0.05;
+            let newVol = Volume.sinkVolume;
+            if (wheel.angleDelta.y > 0)
+                newVol += step;
+            else
+                newVol -= step;
+            Volume.setSinkVolume(newVol);
         }
         onClicked: {
             if (root.screen && root.screen.name)
@@ -56,7 +63,8 @@ Item {
 
     PopupToolTip {
         extraVisibleCondition: mouseArea.containsMouse
-        text: (Volume.sinkMuted ? qsTr("音量: 静音") : qsTr("音量: ") + Math.round(Volume.sinkVolume * 100) + "%")
-              + qsTr("\n滚轮调节，点击打开声音")
+        text: (Volume.sinkMuted ? qsTr("Volume: muted") : qsTr("Volume: ") + Math.round(Volume.sinkVolume
+                                                                                        * 100) + "%") + qsTr(
+                  "\nScroll to adjust; click to open sound")
     }
 }

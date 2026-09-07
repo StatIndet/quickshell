@@ -14,8 +14,10 @@ Item {
     signal navigateRequested(string pageId)
 
     function selectedBluetoothDevice() {
-        return BluetoothService.devices.find((device) => {
-            return device.address === root.selectedBluetoothAddress && (root.selectedBluetoothAdapterId.length === 0 || device.adapterId === root.selectedBluetoothAdapterId);
+        return BluetoothService.devices.find(device => {
+            return device.address === root.selectedBluetoothAddress && (
+                        root.selectedBluetoothAdapterId.length === 0 || device.adapterId
+                        === root.selectedBluetoothAdapterId);
         }) || null;
     }
 
@@ -51,7 +53,6 @@ Item {
     function closeChildWindows() {
         if (pageLoader.item && typeof pageLoader.item.closeChildWindows === "function")
             pageLoader.item.closeChildWindows();
-
     }
 
     GeneralSubpageHeader {
@@ -64,32 +65,32 @@ Item {
         title: {
             switch (root.currentSection) {
             case "bar":
-                return qsTr("条栏");
+                return qsTr("Bar");
             case "sidebar":
-                return qsTr("侧边栏");
+                return qsTr("Sidebars");
             case "spotlight":
                 return "Spotlight";
             case "effects":
-                return qsTr("透明与模糊");
+                return qsTr("Transparency and blur");
             case "language-region":
-                return qsTr("语言与地区");
+                return qsTr("Language & region");
             case "autostart":
-                return qsTr("开机启动");
+                return qsTr("Autostart");
             case "default-apps":
-                return qsTr("默认应用");
+                return qsTr("Default applications");
             case "network":
-                return qsTr("网络");
+                return qsTr("Network");
             case "connected-devices":
-                return qsTr("连接的设备");
+                return qsTr("Connected devices");
             case "bluetooth-pairing":
-                return qsTr("配对新设备");
+                return qsTr("Pair new device");
             case "bluetooth-device":
-                {
-                    const device = root.selectedBluetoothDevice();
-                    return device ? device.name : qsTr("蓝牙设备");
-                };
+            {
+                const device = root.selectedBluetoothDevice();
+                return device ? device.name : qsTr("Bluetooth device");
+            }
             default:
-                return qsTr("通用");
+                return qsTr("General");
             }
         }
         iconName: {
@@ -114,10 +115,10 @@ Item {
             case "bluetooth-pairing":
                 return "devices_other";
             case "bluetooth-device":
-                {
-                    const device = root.selectedBluetoothDevice();
-                    return BluetoothDeviceIcon.iconName(device);
-                };
+            {
+                const device = root.selectedBluetoothDevice();
+                return BluetoothDeviceIcon.iconName(device);
+            }
             default:
                 return "settings";
             }
@@ -162,22 +163,21 @@ Item {
         }
         onLoaded: {
             if (!item)
-                return ;
+                return;
 
             if ("parentModal" in item)
                 item.parentModal = root.parentModal;
 
             if ("presentationActive" in item)
-                item.presentationActive = Qt.binding(function() {
-                return root.presentationActive;
-            });
+                item.presentationActive = Qt.binding(function () {
+                    return root.presentationActive;
+                });
 
             if ("deviceAddress" in item)
                 item.deviceAddress = root.selectedBluetoothAddress;
 
             if ("deviceAdapterId" in item)
                 item.deviceAdapterId = root.selectedBluetoothAdapterId;
-
         }
     }
 
@@ -205,5 +205,4 @@ Item {
         target: pageLoader.item
         ignoreUnknownSignals: true
     }
-
 }

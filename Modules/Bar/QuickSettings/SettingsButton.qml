@@ -14,7 +14,7 @@ BarCircularButton {
     containerColor: Appearance.colors.colPrimaryContainer
     rippleColor: Appearance.colors.colOnPrimaryContainer
     iconColor: Appearance.colors.colOnPrimaryContainer
-    tooltipText: qsTr("左键：快捷设置\n右键：控制中心")
+    tooltipText: qsTr("Left click: Quick Settings\nRight click: Control Center")
     onClicked: {
         if (root.screen && root.screen.name)
             WidgetState.qsScreenName = root.screen.name;

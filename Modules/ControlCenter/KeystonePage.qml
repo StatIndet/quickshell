@@ -22,7 +22,6 @@ Item {
         UiPreferences.setRecordingDirectory(key, value);
         if (field)
             field.text = root.directoryValue(key);
-
     }
 
     function openDirectoryPicker(key, field) {
@@ -52,8 +51,8 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         visible: root.currentSection !== "overview"
-        title: qsTr("横向时钟样式")
-        backAccessibleName: qsTr("返回钥石设置")
+        title: qsTr("Horizontal clock style")
+        backAccessibleName: qsTr("Back to Keystone settings")
         z: 2
         onBackRequested: root.showOverview()
     }
@@ -75,36 +74,34 @@ Item {
             spacing: 30
 
             KeystoneSection {
-                title: qsTr("钥石样式")
+                title: qsTr("Keystone style")
                 iconName: "toggle_off"
 
                 SearchSelectSettingRow {
-                    title: qsTr("样式")
+                    title: qsTr("Style")
                     options: PersonalizationConfig.keystoneStyles
                     value: PersonalizationConfig.keystoneStyle
-                    placeholder: qsTr("选择钥石样式")
-                    onAccepted: (value) => {
+                    placeholder: qsTr("Choose Keystone style")
+                    onAccepted: value => {
                         return PersonalizationConfig.setKeystoneStyle(value);
                     }
                 }
 
                 SettingsRow {
                     Layout.fillWidth: true
-                    title: qsTr("屏幕边缘")
+                    title: qsTr("Screen edge")
 
                     trailing: EdgePositionSelector {
                         position: PersonalizationConfig.keystonePosition
-                        onPositionSelected: (position) => {
+                        onPositionSelected: position => {
                             return PersonalizationConfig.setKeystonePosition(position);
                         }
                     }
-
                 }
-
             }
 
             KeystoneSection {
-                title: qsTr("钥匙孔")
+                title: qsTr("Keyhole")
                 iconName: "view_carousel"
 
                 SortableMultiSelectField {
@@ -117,18 +114,17 @@ Item {
                     options: PersonalizationConfig.keystoneKeyholeCardOptions
                     zone: "keyhole"
                     dragCoordinator: keyholeDragCoordinator
-                    onToggled: (cardId) => {
+                    onToggled: cardId => {
                         return PersonalizationConfig.toggleKeystoneKeyholeCard(cardId);
                     }
-                    onRemoved: (cardId) => {
+                    onRemoved: cardId => {
                         return PersonalizationConfig.removeKeystoneKeyholeCard(cardId);
                     }
                 }
-
             }
 
             KeystoneSection {
-                title: qsTr("横向时钟")
+                title: qsTr("Horizontal clock")
                 iconName: "schedule"
 
                 Item {
@@ -145,69 +141,63 @@ Item {
                         anchors.topMargin: 6
                         anchors.bottomMargin: 6
                     }
-
                 }
 
                 SettingsRow {
                     Layout.fillWidth: true
-                    title: qsTr("隐藏日期")
+                    title: qsTr("Hide date")
 
                     trailing: StyledSwitch {
                         checked: PersonalizationConfig.keystoneHideDate
-                        Accessible.name: qsTr("隐藏日期")
+                        Accessible.name: qsTr("Hide date")
                         onToggled: PersonalizationConfig.setKeystoneHideDate(checked)
                     }
-
                 }
 
                 SettingsActionRow {
                     Layout.fillWidth: true
                     iconName: "tune"
-                    text: qsTr("横向时钟样式")
-                    description: qsTr("字体、数字位置和颜色")
+                    text: qsTr("Horizontal clock style")
+                    description: qsTr("Font, digit positions, and colors")
                     trailingIconName: "chevron_right"
                     onClicked: root.openSection("horizontal-clock")
                 }
-
             }
 
             KeystoneSection {
-                title: qsTr("录制")
+                title: qsTr("Recording")
                 iconName: "video_camera_front"
 
                 RecordingDirectoryField {
-                    settingTitle: qsTr("视频录制")
+                    settingTitle: qsTr("Video recording")
                     settingKey: "recordingVideoDirectory"
                     value: UiPreferences.recordingVideoDirectory
                 }
 
                 RecordingDirectoryField {
-                    settingTitle: qsTr("GIF 录制")
+                    settingTitle: qsTr("GIF recording")
                     settingKey: "recordingGifDirectory"
                     value: UiPreferences.recordingGifDirectory
                 }
 
                 RecordingDirectoryField {
-                    settingTitle: qsTr("麦克风录音")
+                    settingTitle: qsTr("Microphone recording")
                     settingKey: "recordingMicrophoneDirectory"
                     value: UiPreferences.recordingMicrophoneDirectory
                 }
 
                 RecordingDirectoryField {
-                    settingTitle: qsTr("系统音频录音")
+                    settingTitle: qsTr("System audio recording")
                     settingKey: "recordingSystemAudioDirectory"
                     value: UiPreferences.recordingSystemAudioDirectory
                 }
-
             }
 
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
             }
-
         }
-
     }
 
     Loader {
@@ -230,7 +220,6 @@ Item {
         onDropped: (cardId, targetZone, targetIndex) => {
             if (targetZone === "keyhole")
                 PersonalizationConfig.moveKeystoneKeyholeCard(cardId, targetIndex);
-
         }
     }
 
@@ -241,15 +230,15 @@ Item {
         requiresParentWindow: true
         selectionMode: FilePickerWindow.Folders
         allowCurrentFolderSelection: true
-        dialogTitle: qsTr("保存位置")
+        dialogTitle: qsTr("Save location")
         description: root.editingDirectoryField ? root.editingDirectoryField.settingTitle : ""
         nameFilters: []
         windowIconName: "folder_open"
-        emptyStateText: qsTr("当前文件夹为空")
-        selectionPrompt: qsTr("选择文件夹")
-        acceptLabel: qsTr("选择")
-        formatSummary: qsTr("可选择当前文件夹或选中的子文件夹")
-        onAccepted: function(path, isDirectory) {
+        emptyStateText: qsTr("This folder is empty")
+        selectionPrompt: qsTr("Choose folder")
+        acceptLabel: qsTr("Choose")
+        formatSummary: qsTr("Choose the current folder or a selected subfolder")
+        onAccepted: function (path, isDirectory) {
             if (isDirectory && root.editingDirectoryKey !== "")
                 root.saveDirectory(root.editingDirectoryKey, path, root.editingDirectoryField);
 
@@ -288,7 +277,7 @@ Item {
             id: directoryField
 
             Layout.fillWidth: true
-            labelText: qsTr("保存位置")
+            labelText: qsTr("Save location")
             text: directorySetting.value
             trailingContentWidth: Metrics.touchTarget
             onAccepted: root.saveDirectory(directorySetting.settingKey, text, directoryField)
@@ -298,16 +287,13 @@ Item {
                 IconButton {
                     anchors.centerIn: parent
                     iconName: "folder_open"
-                    accessibleName: qsTr("选择文件夹")
-                    tooltipText: qsTr("选择文件夹")
+                    accessibleName: qsTr("Choose folder")
+                    tooltipText: qsTr("Choose folder")
                     controlSize: Metrics.touchTarget
                     onClicked: root.openDirectoryPicker(directorySetting.settingKey, directoryField)
                 }
-
             }
-
         }
-
     }
 
     component SearchSelectSettingRow: Item {
@@ -354,7 +340,6 @@ Item {
                     font.pixelSize: 12
                     wrapMode: Text.WordWrap
                 }
-
             }
 
             SearchSelectMenuField {
@@ -366,13 +351,10 @@ Item {
                 placeholder: selectRow.placeholder
                 textRole: "label"
                 valueRole: "value"
-                onAccepted: (value) => {
+                onAccepted: value => {
                     return selectRow.accepted(value);
                 }
             }
-
         }
-
     }
-
 }

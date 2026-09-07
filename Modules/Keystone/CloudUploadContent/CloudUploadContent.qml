@@ -14,7 +14,7 @@ Item {
     property bool showQueue: false
     property bool clearingCompletedJobs: false
     readonly property bool hasJobs: CloudUploadService.uploadJobCount > 0
-    readonly property bool hasCompletedJobs: CloudUploadService.uploadJobs.some((job) => {
+    readonly property bool hasCompletedJobs: CloudUploadService.uploadJobs.some(job => {
         return job.state === "success";
     })
 
@@ -37,21 +37,21 @@ Item {
 
     function stateText(job) {
         if (CloudUploadService.uploadsPaused && ["queued", "preparing", "uploading"].indexOf(job.state) >= 0)
-            return qsTr("已暂停");
+            return qsTr("Paused");
 
         switch (job.state) {
         case "success":
-            return qsTr("上传完成");
+            return qsTr("Upload complete");
         case "error":
-            return qsTr("上传失败");
+            return qsTr("Upload failed");
         case "cancelled":
-            return qsTr("已取消");
+            return qsTr("Cancelled");
         case "uploading":
-            return qsTr("正在上传");
+            return qsTr("Uploading");
         case "preparing":
-            return qsTr("正在准备");
+            return qsTr("Preparing");
         default:
-            return qsTr("等待上传");
+            return qsTr("Waiting to upload");
         }
     }
 
@@ -65,7 +65,7 @@ Item {
             parts.push(Format.bytesPerSecond(job.speed));
 
         if (job.eta >= 0 && job.state === "uploading")
-            parts.push(qsTr("剩余 %1").arg(Format.duration(job.eta)));
+            parts.push(qsTr("%1 remaining").arg(Format.duration(job.eta)));
 
         return parts.join(" · ");
     }
@@ -73,12 +73,13 @@ Item {
     function finishDrop(addedCount) {
         if (addedCount > 0)
             showQueue = true;
-
     }
 
     Loader {
         anchors.fill: parent
-        sourceComponent: root.showQueue && root.hasJobs ? queueComponent : CloudUploadService.hasWritableRemote ? landingComponent : noRemoteComponent
+        sourceComponent: root.showQueue && root.hasJobs ? queueComponent :
+                                                          CloudUploadService.hasWritableRemote
+                                                          ? landingComponent : noRemoteComponent
     }
 
     UploadDropSurface {
@@ -95,9 +96,7 @@ Item {
                 easing.type: Appearance.animation.expressiveFastEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
             }
-
         }
-
     }
 
     Component {
@@ -109,9 +108,7 @@ Item {
                 anchors.margins: Metrics.spacingL
                 dropPrompt: false
             }
-
         }
-
     }
 
     Component {
@@ -131,7 +128,7 @@ Item {
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("没有可用的默认云存储")
+                text: qsTr("No default cloud storage is available")
                 color: Appearance.colors.colOnSurface
                 font.family: Typography.headlineSmall.family
                 font.pixelSize: Typography.headlineSmall.pixelSize
@@ -141,7 +138,7 @@ Item {
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("请先在设置中心选择一个可写入的默认云存储")
+                text: qsTr("Choose a writable default cloud storage in Settings first")
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Typography.bodyLarge.family
                 font.pixelSize: Typography.bodyLarge.pixelSize
@@ -151,14 +148,12 @@ Item {
 
             ActionButton {
                 Layout.alignment: Qt.AlignHCenter
-                text: qsTr("打开云存储设置")
+                text: qsTr("Open cloud storage settings")
                 iconName: "settings"
                 filled: true
                 onClicked: ControlCenterService.open("advanced")
             }
-
         }
-
     }
 
     Component {
@@ -169,14 +164,13 @@ Item {
 
             function clearCompletedWithAnimation() {
                 if (!root.hasCompletedJobs || root.clearingCompletedJobs)
-                    return ;
+                    return;
 
                 root.clearingCompletedJobs = true;
                 for (let index = 0; index < CloudUploadService.uploadJobCount; ++index) {
                     const item = uploadList.itemAtIndex(index);
                     if (item && item.completed)
                         item.dismissWithAnimation(index % 2 === 0 ? 1 : -1, false);
-
                 }
                 clearCompletedTimer.restart();
             }
@@ -202,7 +196,7 @@ Item {
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("上传队列")
+                    text: qsTr("Upload queue")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.headlineSmall.family
                     font.pixelSize: Typography.headlineSmall.pixelSize
@@ -210,27 +204,26 @@ Item {
                 }
 
                 ActionButton {
-                    text: CloudUploadService.uploadsPaused ? qsTr("全部继续") : qsTr("全部暂停")
+                    text: CloudUploadService.uploadsPaused ? qsTr("Resume all") : qsTr("Pause all")
                     iconName: CloudUploadService.uploadsPaused ? "play_arrow" : "pause"
                     enabled: CloudUploadService.hasPendingUploads || CloudUploadService.uploadsPaused
                     onClicked: CloudUploadService.toggleUploadsPaused()
                 }
 
                 ActionButton {
-                    text: qsTr("清除已完成")
+                    text: qsTr("Clear completed")
                     iconName: "done_all"
                     enabled: root.hasCompletedJobs && !root.clearingCompletedJobs
                     onClicked: queueLayout.clearCompletedWithAnimation()
                 }
 
                 ActionButton {
-                    text: qsTr("返回上传")
+                    text: qsTr("Back to upload")
                     iconName: "add"
                     filled: true
                     enabled: !root.clearingCompletedJobs
                     onClicked: root.showQueue = false
                 }
-
             }
 
             ListView {
@@ -254,16 +247,22 @@ Item {
                     id: jobRow
 
                     required property int index
-                    readonly property var job: CloudUploadService.uploadJobs[index] || ({
-                    })
+                    readonly property var job: CloudUploadService.uploadJobs[index] || ({})
                     readonly property bool completed: job.state === "success"
                     readonly property real dragConfirmThreshold: Math.max(128, Math.min(220, width * 0.22))
                     readonly property int dragIndexDiff: Math.abs(uploadList.dragIndex - index)
-                    readonly property real xOffset: dragIndexDiff === 0 ? uploadList.dragDistance : Math.abs(uploadList.dragDistance) > dragConfirmThreshold ? 0 : dragIndexDiff === 1 ? uploadList.dragDistance * 0.3 : dragIndexDiff === 2 ? uploadList.dragDistance * 0.1 : 0
+                    readonly property real xOffset: dragIndexDiff === 0 ? uploadList.dragDistance : Math.abs(
+                                                                              uploadList.dragDistance)
+                                                                          > dragConfirmThreshold ? 0 :
+                                                                                                   dragIndexDiff
+                                                                                                   === 1 ? uploadList.dragDistance
+                                                                                                           * 0.3 : dragIndexDiff
+                                                                                                           === 2 ? uploadList.dragDistance
+                                                                                                                   * 0.1 : 0
 
                     function dismissWithAnimation(direction, removeAfterAnimation = true) {
                         if (!completed)
-                            return ;
+                            return;
 
                         const currentX = jobSurface.x;
                         uploadList.resetDrag();
@@ -288,7 +287,6 @@ Item {
                         onFinished: {
                             if (removeAfterAnimation)
                                 CloudUploadService.removeCompletedUpload(jobId);
-
                         }
 
                         NumberAnimation {
@@ -299,7 +297,6 @@ Item {
                             easing.type: Appearance.animation.expressiveDefaultSpatial.type
                             easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
                         }
-
                     }
 
                     NotificationComponents.DragManager {
@@ -311,10 +308,9 @@ Item {
                         onDraggingChanged: {
                             if (dragging)
                                 uploadList.dragIndex = jobRow.index;
-
                         }
                         onDragDiffXChanged: uploadList.dragDistance = dragDiffX
-                        onDragReleased: (diffX) => {
+                        onDragReleased: diffX => {
                             if (jobRow.completed && Math.abs(diffX) > jobRow.dragConfirmThreshold) {
                                 jobRow.dismissWithAnimation(diffX);
                             } else {
@@ -331,7 +327,8 @@ Item {
                         width: parent.width
                         height: parent.height
                         radius: Appearance.rounding.large
-                        color: jobRow.job.state === "error" ? Appearance.colors.colErrorContainer : Appearance.colors.colSurfaceContainerHigh
+                        color: jobRow.job.state === "error" ? Appearance.colors.colErrorContainer :
+                                                              Appearance.colors.colSurfaceContainerHigh
 
                         RowLayout {
                             id: jobContent
@@ -345,7 +342,12 @@ Item {
 
                                 Layout.preferredWidth: 36
                                 Layout.preferredHeight: 36
-                                visible: !CloudUploadService.uploadsPaused && (jobRow.job.state === "preparing" || (jobRow.job.state === "uploading" && jobRow.job.progress < 0))
+                                visible: !CloudUploadService.uploadsPaused && (jobRow.job.state
+                                                                               === "preparing" || (
+                                                                                   jobRow.job.state
+                                                                                   === "uploading"
+                                                                                   && jobRow.job.progress
+                                                                                   < 0))
                                 running: visible
                                 contained: false
                                 indicatorColor: Appearance.colors.colPrimary
@@ -354,10 +356,15 @@ Item {
 
                             MaterialSymbol {
                                 visible: !jobSpinner.visible
-                                text: CloudUploadService.uploadsPaused && ["queued", "preparing", "uploading"].indexOf(jobRow.job.state) >= 0 ? "pause" : root.stateIcon(jobRow.job.state)
+                                text: CloudUploadService.uploadsPaused && ["queued", "preparing",
+                                                                           "uploading"].indexOf(
+                                          jobRow.job.state) >= 0 ? "pause" : root.stateIcon(jobRow.job.state)
                                 iconSize: Metrics.iconL
                                 fill: jobRow.job.state === "success" ? 1 : 0
-                                color: jobRow.job.state === "error" ? Appearance.colors.colOnErrorContainer : jobRow.job.state === "success" ? Appearance.colors.colPrimary : Appearance.colors.colOnSurfaceVariant
+                                color: jobRow.job.state === "error" ? Appearance.colors.colOnErrorContainer :
+                                                                      jobRow.job.state === "success"
+                                                                      ? Appearance.colors.colPrimary :
+                                                                        Appearance.colors.colOnSurfaceVariant
                             }
 
                             ColumnLayout {
@@ -371,7 +378,9 @@ Item {
                                     Text {
                                         Layout.fillWidth: true
                                         text: jobRow.job.displayName
-                                        color: jobRow.job.state === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSurface
+                                        color: jobRow.job.state === "error"
+                                               ? Appearance.colors.colOnErrorContainer :
+                                                 Appearance.colors.colOnSurface
                                         font.family: Typography.titleMedium.family
                                         font.pixelSize: Typography.titleMedium.pixelSize
                                         font.weight: Font.DemiBold
@@ -380,11 +389,12 @@ Item {
 
                                     Text {
                                         text: root.stateText(jobRow.job)
-                                        color: jobRow.job.state === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSurfaceVariant
+                                        color: jobRow.job.state === "error"
+                                               ? Appearance.colors.colOnErrorContainer :
+                                                 Appearance.colors.colOnSurfaceVariant
                                         font.family: Typography.labelLarge.family
                                         font.pixelSize: Typography.labelLarge.pixelSize
                                     }
-
                                 }
 
                                 Rectangle {
@@ -404,30 +414,30 @@ Item {
                                             NumberAnimation {
                                                 duration: Appearance.animation.expressiveEffects.duration
                                                 easing.type: Appearance.animation.expressiveEffects.type
-                                                easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                                                easing.bezierCurve:
+                                                    Appearance.animation.expressiveEffects.bezierCurve
                                             }
-
                                         }
-
                                     }
-
                                 }
 
                                 Text {
                                     Layout.fillWidth: true
-                                    text: jobRow.job.state === "error" ? jobRow.job.errorMessage : root.progressDetail(jobRow.job)
+                                    text: jobRow.job.state === "error" ? jobRow.job.errorMessage : root.progressDetail(
+                                                                             jobRow.job)
                                     visible: text.length > 0
-                                    color: jobRow.job.state === "error" ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSurfaceVariant
+                                    color: jobRow.job.state === "error"
+                                           ? Appearance.colors.colOnErrorContainer :
+                                             Appearance.colors.colOnSurfaceVariant
                                     font.family: Typography.bodySmall.family
                                     font.pixelSize: Typography.bodySmall.pixelSize
                                     elide: Text.ElideRight
                                 }
-
                             }
 
                             ActionButton {
                                 visible: jobRow.job.state === "error"
-                                text: qsTr("重试")
+                                text: qsTr("Retry")
                                 iconName: "refresh"
                                 onClicked: CloudUploadService.retryUpload(jobRow.job.id)
                             }
@@ -435,10 +445,9 @@ Item {
                             IconButton {
                                 visible: ["queued", "preparing", "uploading"].indexOf(jobRow.job.state) >= 0
                                 iconName: "close"
-                                accessibleName: qsTr("取消上传")
+                                accessibleName: qsTr("Cancel upload")
                                 onClicked: CloudUploadService.cancelUpload(jobRow.job.id)
                             }
-
                         }
 
                         Behavior on x {
@@ -449,17 +458,11 @@ Item {
                                 easing.type: Appearance.animation.expressiveFastSpatial.type
                                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
         }
-
     }
 
     component UploadDropSurface: Rectangle {
@@ -473,7 +476,8 @@ Item {
         Canvas {
             id: dashedOutline
 
-            property color lineColor: dropSurface.dropPrompt ? Appearance.colors.colPrimary : Appearance.colors.colOutline
+            property color lineColor: dropSurface.dropPrompt ? Appearance.colors.colPrimary :
+                                                               Appearance.colors.colOutline
 
             function roundedPath(context, x, y, width, height, radius) {
                 context.beginPath();
@@ -502,7 +506,8 @@ Item {
                 if (context.setLineDash)
                     context.setLineDash([10, 8]);
 
-                roundedPath(context, 1, 1, width - 2, height - 2, Math.max(0, Appearance.rounding.extraLarge - Metrics.spacingS));
+                roundedPath(context, 1, 1, width - 2, height - 2, Math.max(0, Appearance.rounding.extraLarge
+                                                                           - Metrics.spacingS));
                 context.stroke();
             }
         }
@@ -517,14 +522,16 @@ Item {
                 text: dropSurface.dropPrompt ? "move_to_inbox" : "cloud_upload"
                 iconSize: 72
                 fill: dropSurface.dropPrompt ? 1 : 0
-                color: dropSurface.dropPrompt ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colPrimary
+                color: dropSurface.dropPrompt ? Appearance.colors.colOnPrimaryContainer :
+                                                Appearance.colors.colPrimary
                 scale: dropSurface.dropPrompt ? 1.12 : 1
             }
 
             Text {
                 Layout.fillWidth: true
-                text: dropSurface.dropPrompt ? qsTr("释放以上传") : qsTr("将文件或文件夹拖到这里")
-                color: dropSurface.dropPrompt ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
+                text: dropSurface.dropPrompt ? qsTr("Drop to upload") : qsTr("Drag files or folders here")
+                color: dropSurface.dropPrompt ? Appearance.colors.colOnPrimaryContainer :
+                                                Appearance.colors.colOnSurface
                 font.family: Typography.headlineMedium.family
                 font.pixelSize: Typography.headlineMedium.pixelSize
                 font.weight: Font.DemiBold
@@ -534,7 +541,7 @@ Item {
             ActionButton {
                 Layout.alignment: Qt.AlignHCenter
                 visible: !dropSurface.dropPrompt && root.hasJobs
-                text: qsTr("已加入 %1 个上传任务").arg(CloudUploadService.uploadJobCount)
+                text: qsTr("Uploads in queue: %1").arg(CloudUploadService.uploadJobCount)
                 iconName: "format_list_bulleted"
                 onClicked: root.showQueue = true
             }
@@ -543,14 +550,12 @@ Item {
                 Layout.fillWidth: true
                 visible: !dropSurface.dropPrompt && CloudUploadService.lastMessage.length > 0
                 text: CloudUploadService.lastMessage
-                color: CloudUploadService.lastMessageTone === "error" ? Appearance.colors.colError : Appearance.colors.colPrimary
+                color: CloudUploadService.lastMessageTone === "error" ? Appearance.colors.colError :
+                                                                        Appearance.colors.colPrimary
                 font.family: Typography.labelLarge.family
                 font.pixelSize: Typography.labelLarge.pixelSize
                 horizontalAlignment: Text.AlignHCenter
             }
-
         }
-
     }
-
 }

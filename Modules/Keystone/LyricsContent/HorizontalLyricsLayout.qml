@@ -55,8 +55,8 @@ Item {
             height: 42
             onIsCurrentChanged: {
                 if (isCurrent)
-                    root.currentTextWidth = Math.max(root.defaultTextWidth, Math.min(lyricText.implicitWidth, 800));
-
+                    root.currentTextWidth = Math.max(root.defaultTextWidth, Math.min(lyricText.implicitWidth,
+                                                                                     800));
             }
 
             Text {
@@ -77,13 +77,9 @@ Item {
                         easing.type: Appearance.animation.expressiveFastEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                     }
-
                 }
-
             }
-
         }
-
     }
 
     Text {
@@ -95,7 +91,9 @@ Item {
         font.family: Fonts.ui
         font.pixelSize: 13
         visible: root.status !== "ready"
-        text: root.status === "loading" ? qsTr("正在加载歌词…") : root.status === "error" ? root.errorText || qsTr("歌词加载失败") : qsTr("暂无歌词")
+        text: root.status === "loading" ? qsTr("Loading lyrics…") : root.status === "error" ? root.errorText
+                                                                                              || qsTr("Failed to load lyrics") :
+                                                                                              qsTr("No lyrics available")
     }
 
     Item {
@@ -116,16 +114,19 @@ Item {
             onTriggered: {
                 const values = AudioSpectrum.values;
                 if (!values || values.length < 6)
-                    return ;
+                    return;
 
-                const ranges = [[0.55, 0.78, 1.5], [0.18, 0.33, 1.2], [0, 0.08, 1], [0.08, 0.18, 1], [0.33, 0.55, 1.2], [0.78, 0.98, 1.5]];
+                const ranges = [[0.55, 0.78, 1.5], [0.18, 0.33, 1.2], [0, 0.08, 1], [0.08, 0.18, 1], [0.33, 0.55,
+                                                                                                      1.2], [0.78,
+                                                                                                             0.98, 1.5]];
                 const next = spectrum.smoothValues.slice();
                 for (let index = 0; index < ranges.length; ++index) {
                     const range = ranges[index];
                     const start = Math.floor(values.length * range[0]);
                     const end = Math.min(values.length - 1, Math.floor(values.length * range[1]));
                     let maximum = 0;
-                    for (let sample = start; sample <= end; ++sample) maximum = Math.max(maximum, values[sample])
+                    for (let sample = start; sample <= end; ++sample)
+                        maximum = Math.max(maximum, values[sample]);
                     const target = Math.min(100, maximum * 100 * range[2]);
                     const difference = target - next[index];
                     next[index] += (difference > 0 ? 0.85 : 0.08) * difference;
@@ -156,7 +157,5 @@ Item {
                 context.stroke();
             }
         }
-
     }
-
 }

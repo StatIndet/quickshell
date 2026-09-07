@@ -18,27 +18,27 @@ Item {
         {
             "action": "color-picker",
             "icon": "colorize",
-            "tip": qsTr("取色器")
+            "tip": qsTr("Color picker")
         },
         {
             "action": "record-video",
             "icon": "videocam",
-            "tip": qsTr("录屏")
+            "tip": qsTr("Screen recording")
         },
         {
             "action": "record-gif",
             "icon": "gif",
-            "tip": qsTr("录制 GIF")
+            "tip": qsTr("Record GIF")
         },
         {
             "action": "audio-mic",
             "icon": "mic",
-            "tip": qsTr("录麦克风")
+            "tip": qsTr("Record microphone")
         },
         {
             "action": "audio-system",
             "icon": "speaker",
-            "tip": qsTr("录电脑声音")
+            "tip": qsTr("Record system audio")
         }
     ]
     property int selectedIndex: 0

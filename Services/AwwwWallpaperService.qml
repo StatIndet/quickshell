@@ -9,11 +9,8 @@ Singleton {
     id: root
 
     readonly property string namespaceName: "clavis-desktop"
-    readonly property string awwwCommand:
-        Quickshell.env("CLAVIS_AWWW_COMMAND") || "awww"
-    readonly property string daemonCommand:
-        Quickshell.env("CLAVIS_AWWW_DAEMON_COMMAND")
-            || "awww-daemon"
+    readonly property string awwwCommand: Quickshell.env("CLAVIS_AWWW_COMMAND") || "awww"
+    readonly property string daemonCommand: Quickshell.env("CLAVIS_AWWW_DAEMON_COMMAND") || "awww-daemon"
 
     property bool available: false
     property bool probeComplete: false
@@ -36,11 +33,8 @@ Singleton {
     property string lastAppliedKey: ""
     property var activeTransitionOptions: ({})
 
-    readonly property bool busy:
-        state === "starting"
-        || state === "waiting-socket"
-        || state === "applying"
-        || state === "stopping"
+    readonly property bool busy: state === "starting" || state === "waiting-socket" || state === "applying" || state
+                                 === "stopping"
 
     function backendIsAwww() {
         return PersonalizationConfig.desktopWallpaperBackend === "awww";
@@ -48,8 +42,7 @@ Singleton {
 
     function screenNames() {
         const names = [];
-        for (let index = 0; index < Quickshell.screens.length;
-                index += 1) {
+        for (let index = 0; index < Quickshell.screens.length; index += 1) {
             names.push(String(Quickshell.screens[index].name));
         }
         return names;
@@ -61,13 +54,10 @@ Singleton {
             fps: PersonalizationConfig.awwwTransitionFps,
             step: PersonalizationConfig.awwwTransitionStep,
             durationMs: PersonalizationConfig.transitionDurationMs,
-            easingMode:
-                PersonalizationConfig.transitionEasingMode,
-            bezierCurve:
-                PersonalizationConfig.transitionBezierCurve,
+            easingMode: PersonalizationConfig.transitionEasingMode,
+            bezierCurve: PersonalizationConfig.transitionBezierCurve,
             angle: PersonalizationConfig.awwwTransitionAngle,
-            position:
-                PersonalizationConfig.awwwTransitionPosition,
+            position: PersonalizationConfig.awwwTransitionPosition,
             wave: PersonalizationConfig.awwwTransitionWave
         };
     }
@@ -82,17 +72,16 @@ Singleton {
                 continue;
             seenOutputs[output] = true;
             targets.push({
-                output: output,
-                source: WallpaperService.wallpaperForScreen(output),
-                fillMode: WallpaperService.fillModeForScreen(output)
-            });
+                             output: output,
+                             source: WallpaperService.wallpaperForScreen(output),
+                             fillMode: WallpaperService.fillModeForScreen(output)
+                         });
         }
         return targets;
     }
 
     function applyRequestKey(targets) {
-        return AwwwCommand.applyRequestKey(
-            targets || root.applyTargets());
+        return AwwwCommand.applyRequestKey(targets || root.applyTargets());
     }
 
     function supportsDuration(transitionType) {
@@ -123,14 +112,12 @@ Singleton {
         }
 
         if (!root.available) {
-            root.lastError =
-                qsTr("未找到 awww 或 awww-daemon，已回退到 Quickshell");
+            root.lastError = qsTr("awww or awww-daemon was not found; fell back to Quickshell");
             root.quickshellContentVisible = true;
             root.effectiveBackend = "quickshell";
             root.state = "error";
             if (root.backendIsAwww())
-                PersonalizationConfig
-                    .setDesktopWallpaperBackend("quickshell");
+                PersonalizationConfig.setDesktopWallpaperBackend("quickshell");
             return;
         }
 
@@ -142,9 +129,7 @@ Singleton {
 
         root.lastError = "";
         root.quickshellContentVisible = true;
-        if (root.effectiveBackend === "awww"
-                && root.daemonRunning
-                && root.state === "ready") {
+        if (root.effectiveBackend === "awww" && root.daemonRunning && root.state === "ready") {
             root.scheduleApplyAll();
             return;
         }
@@ -178,7 +163,7 @@ Singleton {
     }
 
     function failAwwwActivation(message) {
-        root.lastError = message || qsTr("awww 桌面后端启动失败");
+        root.lastError = message || qsTr("Failed to start the awww desktop backend");
         root.quickshellContentVisible = true;
         root.effectiveBackend = "quickshell";
         root.state = "error";
@@ -198,8 +183,7 @@ Singleton {
         if (queryProcess.running || !root.backendIsAwww())
             return;
         root.state = "waiting-socket";
-        queryProcess.command = AwwwCommand.query(
-            root.awwwCommand, root.namespaceName);
+        queryProcess.command = AwwwCommand.query(root.awwwCommand, root.namespaceName);
         queryProcess.running = true;
     }
 
@@ -212,20 +196,17 @@ Singleton {
             return;
         }
         root.state = "starting";
-        daemonProcess.command = AwwwCommand.daemon(
-            root.daemonCommand, root.namespaceName);
+        daemonProcess.command = AwwwCommand.daemon(root.daemonCommand, root.namespaceName);
         daemonProcess.running = true;
     }
 
     function scheduleApplyAll() {
-        if (!root.backendIsAwww()
-                || !root.available || !root.daemonRunning)
+        if (!root.backendIsAwww() || !root.available || !root.daemonRunning)
             return;
         const targets = root.applyTargets();
         const requestKey = root.applyRequestKey(targets);
         if (applyProcess.running || root.state === "applying") {
-            if (requestKey === root.activeApplyKey
-                    || requestKey === root.pendingApplyKey)
+            if (requestKey === root.activeApplyKey || requestKey === root.pendingApplyKey)
                 return;
             root.reapplyPending = true;
             root.pendingApplyKey = requestKey;
@@ -239,9 +220,8 @@ Singleton {
         root.applyIndex = 0;
         root.activeApplyKey = requestKey;
         root.pendingApplyKey = "";
-        root.activeTransitionOptions =
-            AwwwCommand.resolvedTransitionOptions(
-                root.transitionOptions(), Math.random(), Math.random());
+        root.activeTransitionOptions = AwwwCommand.resolvedTransitionOptions(root.transitionOptions(),
+                                                                             Math.random(), Math.random());
         root.state = "applying";
         root.applyNext();
     }
@@ -282,19 +262,13 @@ Singleton {
         const output = target.output;
         const source = target.source;
         if (!source) {
-            root.failAwwwActivation(
-                qsTr("没有可应用到 %1 的桌面壁纸").arg(output));
+            root.failAwwwActivation(qsTr("No desktop wallpaper is available for %1").arg(output));
             return;
         }
 
         applyProcess.outputName = output;
-        applyProcess.command = AwwwCommand.apply(
-            root.awwwCommand,
-            root.namespaceName,
-            output,
-            source,
-            target.fillMode,
-            root.activeTransitionOptions);
+        applyProcess.command = AwwwCommand.apply(root.awwwCommand, root.namespaceName, output, source, target.fillMode,
+                                                 root.activeTransitionOptions);
         applyProcess.running = true;
     }
 
@@ -302,8 +276,7 @@ Singleton {
         root.daemonStopRequested = true;
         if (stopProcess.running)
             return;
-        stopProcess.command = AwwwCommand.stop(
-            root.awwwCommand, root.namespaceName);
+        stopProcess.command = AwwwCommand.stop(root.awwwCommand, root.namespaceName);
         stopProcess.running = true;
     }
 
@@ -313,8 +286,7 @@ Singleton {
         target: PersonalizationConfig
 
         function onDesktopWallpaperBackendChanged() {
-            root.setRequestedBackend(
-                PersonalizationConfig.desktopWallpaperBackend);
+            root.setRequestedBackend(PersonalizationConfig.desktopWallpaperBackend);
         }
     }
 
@@ -322,8 +294,7 @@ Singleton {
         target: WallpaperService
 
         function onRevisionChanged() {
-            if (root.backendIsAwww()
-                    && root.effectiveBackend === "awww")
+            if (root.backendIsAwww() && root.effectiveBackend === "awww")
                 root.scheduleApplyAll();
         }
     }
@@ -332,8 +303,7 @@ Singleton {
         target: Quickshell
 
         function onScreensChanged() {
-            if (root.backendIsAwww()
-                    && root.effectiveBackend === "awww")
+            if (root.backendIsAwww() && root.effectiveBackend === "awww")
                 root.scheduleApplyAll();
         }
     }
@@ -345,8 +315,7 @@ Singleton {
             if (exitCode !== 0) {
                 root.available = false;
                 root.probeComplete = true;
-                root.setRequestedBackend(
-                    PersonalizationConfig.desktopWallpaperBackend);
+                root.setRequestedBackend(PersonalizationConfig.desktopWallpaperBackend);
                 return;
             }
             probeDaemon.running = true;
@@ -359,8 +328,7 @@ Singleton {
         onExited: exitCode => {
             root.available = exitCode === 0;
             root.probeComplete = true;
-            root.setRequestedBackend(
-                PersonalizationConfig.desktopWallpaperBackend);
+            root.setRequestedBackend(PersonalizationConfig.desktopWallpaperBackend);
         }
     }
 
@@ -384,8 +352,7 @@ Singleton {
             root.daemonRunning = false;
             if (expectedStop) {
                 root.daemonStopRequested = false;
-                if (root.backendIsAwww()
-                        && root.state !== "error")
+                if (root.backendIsAwww() && root.state !== "error")
                     root.beginAwwwActivation();
                 else if (!root.backendIsAwww())
                     root.state = "ready";
@@ -395,14 +362,10 @@ Singleton {
                 root.state = "ready";
                 return;
             }
-            if (root.state === "starting"
-                    || root.state === "waiting-socket"
-                    || root.state === "error") {
+            if (root.state === "starting" || root.state === "waiting-socket" || root.state === "error") {
                 return;
             }
-            root.failAwwwActivation(
-                qsTr("awww-daemon 意外退出，退出码 %1")
-                    .arg(exitCode));
+            root.failAwwwActivation(qsTr("awww-daemon exited unexpectedly with code %1").arg(exitCode));
         }
     }
 
@@ -440,8 +403,8 @@ Singleton {
 
             root.queryAttempts += 1;
             if (root.queryAttempts >= 20) {
-                root.failAwwwActivation(
-                    qsTr("awww namespace clavis-desktop 未在超时前就绪"));
+                root.failAwwwActivation(qsTr(
+                                            "The clavis-desktop awww namespace did not become ready before timeout"));
                 return;
             }
             queryRetry.restart();
@@ -473,11 +436,9 @@ Singleton {
             }
 
             if (exitCode !== 0) {
-                const message =
-                    qsTr("awww 无法为 %1 应用桌面壁纸，退出码 %2")
-                        .arg(outputName).arg(exitCode);
-                WallpaperService.reportDesktopError(
-                    outputName, message);
+                const message = qsTr("awww could not apply the desktop wallpaper to %1; exit code %2").arg(
+                          outputName).arg(exitCode);
+                WallpaperService.reportDesktopError(outputName, message);
                 root.failAwwwActivation(message);
                 return;
             }
@@ -494,9 +455,8 @@ Singleton {
         onExited: exitCode => {
             if (exitCode !== 0) {
                 root.daemonStopRequested = false;
-                root.lastError =
-                    qsTr("停止 clavis-desktop awww namespace 失败，退出码 %1")
-                        .arg(exitCode);
+                root.lastError = qsTr("Failed to stop the clavis-desktop awww namespace; exit code %1").arg(
+                            exitCode);
                 root.state = "error";
                 return;
             }

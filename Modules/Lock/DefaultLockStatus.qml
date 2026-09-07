@@ -10,7 +10,7 @@ Item {
     id: root
 
     readonly property var player: MediaManager.active
-    readonly property string title: player && player.trackTitle ? player.trackTitle : qsTr("没有媒体")
+    readonly property string title: player && player.trackTitle ? player.trackTitle : qsTr("No media")
     readonly property bool spectrumActive: visible && player !== null && player.isPlaying
     readonly property string spectrumToken: "default-lock-" + String(root)
     readonly property real batteryPercent: Math.max(0, Math.min(100, PowerService.percentage * 100))
@@ -76,19 +76,19 @@ Item {
             spacing: 2
             MediaButton {
                 iconName: "skip_previous"
-                accessibleName: qsTr("上一首")
+                accessibleName: qsTr("Previous track")
                 enabled: root.player !== null && root.player.canGoPrevious
                 onClicked: root.player.previous()
             }
             MediaButton {
                 iconName: root.player && root.player.isPlaying ? "pause" : "play_arrow"
-                accessibleName: root.player && root.player.isPlaying ? qsTr("暂停") : qsTr("播放")
+                accessibleName: root.player && root.player.isPlaying ? qsTr("Pause") : qsTr("Play")
                 enabled: root.player !== null && root.player.canTogglePlaying
                 onClicked: root.player.togglePlaying()
             }
             MediaButton {
                 iconName: "skip_next"
-                accessibleName: qsTr("下一首")
+                accessibleName: qsTr("Next track")
                 enabled: root.player !== null && root.player.canGoNext
                 onClicked: root.player.next()
             }
@@ -154,7 +154,8 @@ Item {
             spacing: 4
             StatusIcon {
                 symbol: WeatherPlugin.hasValidData ? WeatherPlugin.currentIconName || "cloud" : "cloud_off"
-                description: WeatherPlugin.hasValidData ? WeatherPlugin.currentWeatherText : qsTr("天气不可用")
+                description: WeatherPlugin.hasValidData ? WeatherPlugin.currentWeatherText : qsTr(
+                                                              "Weather unavailable")
             }
             Text {
                 height: 40
@@ -171,19 +172,19 @@ Item {
         StatusIcon {
             symbol: root.networkIcon
             active: NetworkService.connected
-            description: !NetworkService.available ? qsTr("网络不可用") : NetworkService.connected
-                                                     ? NetworkService.activeConnection || qsTr("网络已连接") : qsTr(
-                                                           "网络未连接")
+            description: !NetworkService.available ? qsTr("Network unavailable") : NetworkService.connected
+                                                     ? NetworkService.activeConnection || qsTr("Connected") :
+                                                       qsTr("Disconnected")
         }
         StatusIcon {
             symbol: "keyboard_capslock"
             active: KeyboardLockState.capsLock
-            description: active ? qsTr("大写锁定已开启") : qsTr("大写锁定已关闭")
+            description: active ? qsTr("Caps Lock on") : qsTr("Caps Lock off")
         }
         StatusIcon {
             symbol: "pin"
             active: KeyboardLockState.numLock
-            description: active ? qsTr("数字锁定已开启") : qsTr("数字锁定已关闭")
+            description: active ? qsTr("Num Lock on") : qsTr("Num Lock off")
         }
         Row {
             visible: PowerService.present
@@ -196,10 +197,11 @@ Item {
                                                                                                                     Math.floor(
                                                                                                                         root.batteryPercent
                                                                                                                         / 15)))
-                description: PowerService.full ? qsTr("已充满") : PowerService.charging ? qsTr("充电中") :
-                                                                                       PowerService.powerConnected
-                                                                                       ? qsTr("已接通电源") : qsTr(
-                                                                                             "使用电池")
+                description: PowerService.full ? qsTr("Fully charged") : PowerService.charging ? qsTr(
+                                                                                                     "Charging") :
+                                                                                                 PowerService.powerConnected
+                                                                                                 ? qsTr("Plugged in") :
+                                                                                                   qsTr("On battery")
             }
             Text {
                 height: 40

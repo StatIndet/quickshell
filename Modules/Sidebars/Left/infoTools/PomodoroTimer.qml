@@ -15,9 +15,8 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             implicitSize: 200
             lineWidth: 8
-            value: TimerService.pomodoroLapDuration > 0
-                ? TimerService.pomodoroSecondsLeft / TimerService.pomodoroLapDuration
-                : 0
+            value: TimerService.pomodoroLapDuration > 0 ? TimerService.pomodoroSecondsLeft
+                                                          / TimerService.pomodoroLapDuration : 0
             enableAnimation: true
 
             ColumnLayout {
@@ -27,8 +26,10 @@ Item {
                 Text {
                     Layout.alignment: Qt.AlignHCenter
                     text: {
-                        const minutes = Math.floor(TimerService.pomodoroSecondsLeft / 60).toString().padStart(2, "0");
-                        const seconds = Math.floor(TimerService.pomodoroSecondsLeft % 60).toString().padStart(2, "0");
+                        const minutes = Math.floor(TimerService.pomodoroSecondsLeft / 60).toString().padStart(
+                                  2, "0");
+                        const seconds = Math.floor(TimerService.pomodoroSecondsLeft % 60).toString().padStart(
+                                  2, "0");
                         return `${minutes}:${seconds}`;
                     }
                     color: Appearance.colors.colOnSurface
@@ -38,11 +39,8 @@ Item {
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
-                    text: TimerService.pomodoroLongBreak
-                        ? qsTr("长休息")
-                        : TimerService.pomodoroBreak
-                            ? qsTr("休息")
-                            : qsTr("专注")
+                    text: TimerService.pomodoroLongBreak ? qsTr("Long break") : TimerService.pomodoroBreak
+                                                           ? qsTr("Break") : qsTr("Focus")
                     color: Appearance.colors.colSubtext
                     font.family: Fonts.ui
                     font.pixelSize: 14
@@ -55,8 +53,7 @@ Item {
                 implicitWidth: 36
                 implicitHeight: 36
                 radius: Appearance.rounding.full
-                color: BlurService.opaqueBackgroundColor(
-                    Appearance.m3colors.m3surfaceContainer)
+                color: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainer)
 
                 Text {
                     anchors.centerIn: parent
@@ -76,31 +73,25 @@ Item {
                 implicitWidth: 90
                 implicitHeight: 35
                 buttonRadius: Appearance.rounding.full
-                containerColor: TimerService.pomodoroRunning
-                    ? Appearance.colors.colSecondaryContainer
-                    : Appearance.colors.colPrimary
-                stateLayerColor: TimerService.pomodoroRunning
-                    ? Appearance.colors.colSecondaryContainerHover
-                    : Appearance.colors.colPrimaryHover
+                containerColor: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainer :
+                                                               Appearance.colors.colPrimary
+                stateLayerColor: TimerService.pomodoroRunning ? Appearance.colors.colSecondaryContainerHover :
+                                                                Appearance.colors.colPrimaryHover
                 pressedStateLayerColor: TimerService.pomodoroRunning
-                    ? Appearance.colors.colSecondaryContainerActive
-                    : Appearance.colors.colPrimaryActive
-                rippleColor: TimerService.pomodoroRunning
-                    ? Appearance.colors.colOnSecondaryContainer
-                    : Appearance.colors.colOnPrimary
-                Accessible.name: TimerService.pomodoroRunning
-                    ? qsTr("暂停番茄钟") : qsTr("开始番茄钟")
+                                        ? Appearance.colors.colSecondaryContainerActive :
+                                          Appearance.colors.colPrimaryActive
+                rippleColor: TimerService.pomodoroRunning ? Appearance.colors.colOnSecondaryContainer :
+                                                            Appearance.colors.colOnPrimary
+                Accessible.name: TimerService.pomodoroRunning ? qsTr("Pause Pomodoro") : qsTr(
+                                                                    "Start Pomodoro")
                 onClicked: TimerService.togglePomodoro()
 
                 contentItem: Text {
-                    text: TimerService.pomodoroRunning
-                        ? qsTr("暂停")
-                        : TimerService.pomodoroSecondsLeft === TimerService.pomodoroLapDuration
-                            ? qsTr("开始")
-                            : qsTr("继续")
-                    color: TimerService.pomodoroRunning
-                        ? Appearance.colors.colOnSecondaryContainer
-                        : Appearance.colors.colOnPrimary
+                    text: TimerService.pomodoroRunning ? qsTr("Pause") : TimerService.pomodoroSecondsLeft
+                                                         === TimerService.pomodoroLapDuration ? qsTr("Start") :
+                                                                                                qsTr("Resume")
+                    color: TimerService.pomodoroRunning ? Appearance.colors.colOnSecondaryContainer :
+                                                          Appearance.colors.colOnPrimary
                     font.family: Fonts.ui
                     font.pixelSize: 14
                     font.weight: Font.Medium
@@ -114,17 +105,16 @@ Item {
                 implicitHeight: 35
                 buttonRadius: Appearance.rounding.full
                 enabled: TimerService.pomodoroSecondsLeft < TimerService.pomodoroLapDuration
-                    || TimerService.pomodoroCycle > 0
-                    || TimerService.pomodoroBreak
+                         || TimerService.pomodoroCycle > 0 || TimerService.pomodoroBreak
                 containerColor: Appearance.colors.colErrorContainer
                 stateLayerColor: Appearance.colors.colErrorContainerHover
                 pressedStateLayerColor: Appearance.colors.colErrorContainerActive
                 rippleColor: Appearance.colors.colOnErrorContainer
-                Accessible.name: qsTr("重置番茄钟")
+                Accessible.name: qsTr("Reset Pomodoro")
                 onClicked: TimerService.resetPomodoro()
 
                 contentItem: Text {
-                    text: qsTr("重置")
+                    text: qsTr("Reset")
                     color: Appearance.colors.colOnErrorContainer
                     font.family: Fonts.ui
                     font.pixelSize: 14

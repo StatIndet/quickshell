@@ -15,7 +15,7 @@ Rectangle {
     function setValue(nextValue) {
         const normalized = Math.max(root.from, Math.min(root.to, Math.round(nextValue)));
         if (normalized === root.value)
-            return ;
+            return;
 
         root.valueModified(normalized);
     }
@@ -56,10 +56,13 @@ Rectangle {
         bottomLeftRadius: !button.increase ? root.radius : 0
         topRightRadius: button.increase ? root.radius : 0
         bottomRightRadius: button.increase ? root.radius : 0
-        color: !canChange ? "transparent" : pointer.pressed ? Appearance.colors.colLayer2Active : pointer.containsMouse ? Appearance.colors.colLayer2Hover : "transparent"
+        color: !canChange ? "transparent" : pointer.pressed ? Appearance.colors.colLayer2Active :
+                                                              pointer.containsMouse
+                                                              ? Appearance.colors.colLayer2Hover :
+                                                                "transparent"
         opacity: canChange ? 1 : 0.38
         Accessible.role: Accessible.Button
-        Accessible.name: increase ? qsTr("增加") : qsTr("减少")
+        Accessible.name: increase ? qsTr("Increase") : qsTr("Decrease")
         Accessible.onPressAction: root.setValue(root.value + (increase ? root.stepSize : -root.stepSize))
 
         MaterialSymbol {
@@ -86,9 +89,6 @@ Rectangle {
                 easing.type: Appearance.animation.expressiveFastEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
             }
-
         }
-
     }
-
 }

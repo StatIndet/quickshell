@@ -10,133 +10,122 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property string configHome:
-        root.localPath(StandardPaths.writableLocation(StandardPaths.ConfigLocation))
+    readonly property string configHome: root.localPath(StandardPaths.writableLocation(
+                                                            StandardPaths.ConfigLocation))
     readonly property string terminalFilePath: root.configHome + "/xdg-terminals.list"
 
-    readonly property var roleDefinitions: [
-        ({
-            "id": "browser",
-            "title": qsTr("网络浏览器"),
-            "description": qsTr("打开网页和 HTTP 链接"),
-            "icon": "language",
-            "group": "internet",
-            "category": "WebBrowser",
-            "primaryMime": "x-scheme-handler/https",
-            "mimes": [
-                "x-scheme-handler/https",
-                "x-scheme-handler/http",
-                "text/html",
-                "application/xhtml+xml"
-            ]
-        }),
-        ({
-            "id": "mail",
-            "title": qsTr("邮件"),
-            "description": qsTr("处理邮件链接"),
-            "icon": "mail",
-            "group": "internet",
-            "category": "",
-            "primaryMime": "x-scheme-handler/mailto",
-            "mimes": ["x-scheme-handler/mailto"]
-        }),
-        ({
-            "id": "file-manager",
-            "title": qsTr("文件管理器"),
-            "description": qsTr("打开文件夹和目录"),
-            "icon": "folder",
-            "group": "utilities",
-            "category": "FileManager",
-            "primaryMime": "inode/directory",
-            "mimes": ["inode/directory", "x-scheme-handler/file"]
-        }),
-        ({
-            "id": "terminal",
-            "title": qsTr("终端"),
-            "description": qsTr("系统默认终端模拟器"),
-            "icon": "terminal",
-            "group": "utilities",
-            "category": "TerminalEmulator",
-            "primaryMime": "",
-            "mimes": []
-        }),
-        ({
-            "id": "text-editor",
-            "title": qsTr("文本编辑器"),
-            "description": qsTr("打开普通文本文件"),
-            "icon": "edit_note",
-            "group": "documents",
-            "category": "",
-            "primaryMime": "text/plain",
-            "mimes": ["text/plain", "text/markdown", "application/json"]
-        }),
-        ({
-            "id": "pdf-reader",
-            "title": qsTr("PDF 阅读器"),
-            "description": qsTr("打开 PDF 文档"),
-            "icon": "picture_as_pdf",
-            "group": "documents",
-            "category": "",
-            "primaryMime": "application/pdf",
-            "mimes": ["application/pdf"]
-        }),
-        ({
-            "id": "image-viewer",
-            "title": qsTr("图像查看器"),
-            "description": qsTr("打开常见图片文件"),
-            "icon": "image",
-            "group": "multimedia",
-            "category": "",
-            "primaryMime": "image/png",
-            "mimes": [
-                "image/png",
-                "image/jpeg",
-                "image/webp",
-                "image/gif",
-                "image/avif",
-                "image/bmp",
-                "image/tiff",
-                "image/svg+xml"
-            ]
-        }),
-        ({
-            "id": "video-player",
-            "title": qsTr("视频播放器"),
-            "description": qsTr("播放视频文件"),
-            "icon": "smart_display",
-            "group": "multimedia",
-            "category": "",
-            "primaryMime": "video/mp4",
-            "mimes": [
-                "video/mp4",
-                "video/x-matroska",
-                "video/webm",
-                "video/mpeg",
-                "video/quicktime",
-                "video/x-msvideo"
-            ]
-        }),
-        ({
-            "id": "music-player",
-            "title": qsTr("音乐播放器"),
-            "description": qsTr("播放音频文件"),
-            "icon": "music_note",
-            "group": "multimedia",
-            "category": "",
-            "primaryMime": "audio/mpeg",
-            "mimes": [
-                "audio/mpeg",
-                "audio/flac",
-                "audio/x-flac",
-                "audio/ogg",
-                "audio/wav",
-                "audio/x-wav",
-                "audio/aac",
-                "audio/mp4",
-                "audio/webm"
-            ]
-        })
-    ]
+    readonly property var roleDefinitions: [({
+                                                 "id": "browser",
+                                                 "title": qsTr("Web browser"),
+                                                 "description": qsTr("Opens web pages and HTTP links"),
+                                                 "icon": "language",
+                                                 "group": "internet",
+                                                 "category": "WebBrowser",
+                                                 "primaryMime": "x-scheme-handler/https",
+                                                 "mimes": ["x-scheme-handler/https", "x-scheme-handler/http",
+                                                     "text/html", "application/xhtml+xml"]
+                                             }), ({
+                                                      "id": "mail",
+                                                      "title": qsTr("Email"),
+                                                      "description": qsTr("Handles email links"),
+                                                      "icon": "mail",
+                                                      "group": "internet",
+                                                      "category": "",
+                                                      "primaryMime": "x-scheme-handler/mailto",
+                                                      "mimes": ["x-scheme-handler/mailto"]
+                                                  }), ({
+                                                           "id": "file-manager",
+                                                           "title": qsTr("File manager"),
+                                                           "description": qsTr(
+                                                                              "Opens folders and directories"),
+                                                           "icon": "folder",
+                                                           "group": "utilities",
+                                                           "category": "FileManager",
+                                                           "primaryMime": "inode/directory",
+                                                           "mimes": ["inode/directory",
+                                                               "x-scheme-handler/file"]
+                                                       }), ({
+                                                                "id": "terminal",
+                                                                "title": qsTr("Terminal"),
+                                                                "description": qsTr(
+                                                                                   "System default terminal emulator"),
+                                                                "icon": "terminal",
+                                                                "group": "utilities",
+                                                                "category": "TerminalEmulator",
+                                                                "primaryMime": "",
+                                                                "mimes": []
+                                                            }), ({
+                                                                     "id": "text-editor",
+                                                                     "title": qsTr("Text editor"),
+                                                                     "description": qsTr(
+                                                                                        "Opens plain-text files"),
+                                                                     "icon": "edit_note",
+                                                                     "group": "documents",
+                                                                     "category": "",
+                                                                     "primaryMime": "text/plain",
+                                                                     "mimes": ["text/plain", "text/markdown",
+                                                                         "application/json"]
+                                                                 }), ({
+                                                                          "id": "pdf-reader",
+                                                                          "title": qsTr("PDF reader"),
+                                                                          "description": qsTr(
+                                                                                             "Opens PDF documents"),
+                                                                          "icon": "picture_as_pdf",
+                                                                          "group": "documents",
+                                                                          "category": "",
+                                                                          "primaryMime": "application/pdf",
+                                                                          "mimes": ["application/pdf"]
+                                                                      }), ({
+                                                                               "id": "image-viewer",
+                                                                               "title": qsTr("Image viewer"),
+                                                                               "description": qsTr(
+                                                                                                  "Opens common image files"),
+                                                                               "icon": "image",
+                                                                               "group": "multimedia",
+                                                                               "category": "",
+                                                                               "primaryMime": "image/png",
+                                                                               "mimes": ["image/png",
+                                                                                   "image/jpeg", "image/webp",
+                                                                                   "image/gif", "image/avif",
+                                                                                   "image/bmp", "image/tiff",
+                                                                                   "image/svg+xml"]
+                                                                           }), ({
+                                                                                    "id": "video-player",
+                                                                                    "title": qsTr(
+                                                                                                 "Video player"),
+                                                                                    "description": qsTr(
+                                                                                                       "Plays video files"),
+                                                                                    "icon": "smart_display",
+                                                                                    "group": "multimedia",
+                                                                                    "category": "",
+                                                                                    "primaryMime": "video/mp4",
+                                                                                    "mimes": ["video/mp4",
+                                                                                        "video/x-matroska",
+                                                                                        "video/webm",
+                                                                                        "video/mpeg",
+                                                                                        "video/quicktime",
+                                                                                        "video/x-msvideo"]
+                                                                                }), ({
+                                                                                         "id": "music-player",
+                                                                                         "title": qsTr(
+                                                                                                      "Music player"),
+                                                                                         "description": qsTr(
+                                                                                                            "Plays audio files"),
+                                                                                         "icon": "music_note",
+                                                                                         "group": "multimedia",
+                                                                                         "category": "",
+                                                                                         "primaryMime":
+                                                                                         "audio/mpeg",
+                                                                                         "mimes": ["audio/mpeg",
+                                                                                             "audio/flac",
+                                                                                             "audio/x-flac",
+                                                                                             "audio/ogg",
+                                                                                             "audio/wav",
+                                                                                             "audio/x-wav",
+                                                                                             "audio/aac",
+                                                                                             "audio/mp4",
+                                                                                             "audio/webm"]
+                                                                                     })]
 
     property bool loading: false
     property bool operationBusy: false
@@ -211,9 +200,8 @@ Singleton {
 
     function normalizeDesktopId(identifier) {
         let value = String(identifier || "").trim();
-        if (value === "" || value.indexOf("/") >= 0 || value.indexOf("\\") >= 0
-                || value.indexOf("..") >= 0
-                || /[\u0000-\u001f\u007f\s]/.test(value))
+        if (value === "" || value.indexOf("/") >= 0 || value.indexOf("\\") >= 0 || value.indexOf("..") >= 0 ||
+                /[\u0000-\u001f\u007f\s]/.test(value))
             return "";
 
         while (value.toLowerCase().endsWith(".desktop"))
@@ -232,17 +220,15 @@ Singleton {
         if (application)
             return application;
 
-        const withoutSuffix = normalized.substring(0,
-            normalized.length - ".desktop".length);
-        return DesktopEntries.heuristicLookup(normalized)
-            || DesktopEntries.heuristicLookup(withoutSuffix);
+        const withoutSuffix = normalized.substring(0, normalized.length - ".desktop".length);
+        return DesktopEntries.heuristicLookup(normalized) || DesktopEntries.heuristicLookup(withoutSuffix);
     }
 
     function applicationId(application) {
         if (!application)
             return "";
-        return root.normalizeDesktopId(application.id
-            || application.desktopId || application.desktopFileId || "");
+        return root.normalizeDesktopId(application.id || application.desktopId || application.desktopFileId
+                                       || "");
     }
 
     function applicationOption(desktopId) {
@@ -251,12 +237,10 @@ Singleton {
             return null;
 
         const application = root.applicationForId(normalized);
-        const label = application && String(application.name || "").trim() !== ""
-            ? String(application.name) : normalized;
-        const icon = application && application.icon
-            ? ApplicationService.iconSource(application.icon) : "";
-        const description = application
-            ? String(application.comment || application.genericName || "") : "";
+        const label = application && String(application.name || "").trim() !== "" ? String(application.name) :
+                                                                                    normalized;
+        const icon = application && application.icon ? ApplicationService.iconSource(application.icon) : "";
+        const description = application ? String(application.comment || application.genericName || "") : "";
         return {
             "label": label,
             "value": normalized,
@@ -278,8 +262,9 @@ Singleton {
             if (option)
                 result.push(option);
         }
-        result.sort((left, right) => String(left.label).localeCompare(
-            String(right.label), undefined, { sensitivity: "base" }));
+        result.sort((left, right) => String(left.label).localeCompare(String(right.label), undefined, {
+                                                                          sensitivity: "base"
+                                                                      }));
         return result;
     }
 
@@ -290,16 +275,16 @@ Singleton {
         const current = (options || []).some(option => option.value === normalized);
         if (current)
             return options;
-        return root.uniqueOptions((options || []).map(option => option.value)
-            .concat([normalized]));
+        return root.uniqueOptions((options || []).map(option => option.value).concat([normalized]));
     }
 
     function applicationsForCategory(category) {
         const result = [];
         const seen = new Set();
         for (const application of ApplicationService.getVisibleApplications() || []) {
-            const categories = String(application && application.categories || "")
-                .split(/[;,]/).map(value => value.trim());
+            const categories = String(application && application.categories || "").split(/[;,]/).map(value
+                                                                                                     => value.trim(
+                                                                                                            ));
             if (!categories.includes(category))
                 continue;
             const id = root.applicationId(application);
@@ -324,8 +309,7 @@ Singleton {
     function terminalDefault(content) {
         for (const rawLine of String(content || "").split("\n")) {
             const line = rawLine.replace(/\r$/, "").trim();
-            if (line === "" || line.startsWith("#")
-                    || line.startsWith("+") || line.startsWith("-"))
+            if (line === "" || line.startsWith("#") || line.startsWith("+") || line.startsWith("-"))
                 continue;
             const baseId = line.split(":", 1)[0];
             const normalized = root.normalizeDesktopId(baseId);
@@ -340,10 +324,10 @@ Singleton {
         let options = root.applicationsForCategory("TerminalEmulator");
         options = root.withCurrentOption(options, currentId);
         root.setRoleState("terminal", {
-            "currentId": currentId,
-            "candidates": options,
-            "loading": false
-        });
+                              "currentId": currentId,
+                              "candidates": options,
+                              "loading": false
+                          });
     }
 
     function syncCategoryCandidates() {
@@ -355,15 +339,14 @@ Singleton {
             if (options.length === 0)
                 continue;
             root.setRoleState(definition.id, {
-                "candidates": root.withCurrentOption(options, state.currentId)
-            });
+                                  "candidates": root.withCurrentOption(options, state.currentId)
+                              });
         }
     }
 
     function terminalLineId(rawLine) {
         const line = String(rawLine || "").replace(/\r$/, "").trim();
-        if (line === "" || line.startsWith("#")
-                || line.startsWith("+") || line.startsWith("-"))
+        if (line === "" || line.startsWith("#") || line.startsWith("+") || line.startsWith("-"))
             return "";
         return root.normalizeDesktopId(line.split(":", 1)[0]);
     }
@@ -371,7 +354,7 @@ Singleton {
     function rewriteTerminalList(content, selectedId) {
         const normalizedSelected = root.normalizeDesktopId(selectedId);
         if (normalizedSelected === "")
-            throw new Error(qsTr("无效的终端 Desktop Entry ID"));
+            throw new Error(qsTr("Invalid terminal Desktop Entry ID"));
 
         const lines = String(content || "").split("\n");
         const result = [];
@@ -415,10 +398,11 @@ Singleton {
         counts[roleId] = Math.max(0, Number(counts[roleId] || 0) - 1);
         root._refreshRoleTasks = counts;
         if (counts[roleId] === 0)
-            root.setRoleState(roleId, { "loading": false });
+            root.setRoleState(roleId, {
+                                  "loading": false
+                              });
         root.startNextRefreshTask();
-        if (root._refreshPending === 0 && root._refreshQueue.length === 0
-                && !root._activeCommand) {
+        if (root._refreshPending === 0 && root._refreshQueue.length === 0 && !root._activeCommand) {
             root.loading = false;
         }
     }
@@ -463,20 +447,19 @@ Singleton {
                 continue;
 
             root.addRefreshTask({
-                "kind": "refresh-query",
-                "roleId": definition.id,
-                "generation": root._refreshGeneration,
-                "argv": ["xdg-mime", "query", "default", definition.primaryMime]
-            });
+                                    "kind": "refresh-query",
+                                    "roleId": definition.id,
+                                    "generation": root._refreshGeneration,
+                                    "argv": ["xdg-mime", "query", "default", definition.primaryMime]
+                                });
 
-            if (definition.category === ""
-                    || root.stateFor(definition.id).candidates.length === 0) {
+            if (definition.category === "" || root.stateFor(definition.id).candidates.length === 0) {
                 root.addRefreshTask({
-                    "kind": "refresh-gio",
-                    "roleId": definition.id,
-                    "generation": root._refreshGeneration,
-                    "argv": ["env", "LC_ALL=C", "gio", "mime", definition.primaryMime]
-                });
+                                        "kind": "refresh-gio",
+                                        "roleId": definition.id,
+                                        "generation": root._refreshGeneration,
+                                        "argv": ["env", "LC_ALL=C", "gio", "mime", definition.primaryMime]
+                                    });
             }
         }
 
@@ -493,11 +476,11 @@ Singleton {
             return false;
         root._activeCommand = request;
         const process = commandProcessComponent.createObject(root, {
-            "request": request
-        });
+                                                                 "request": request
+                                                             });
         if (!process) {
             root._activeCommand = null;
-            root.handleProcessExit(request, 1, "", qsTr("无法启动系统命令"));
+            root.handleProcessExit(request, 1, "", qsTr("Could not start the system command"));
             return false;
         }
         process.command = request.argv;
@@ -510,19 +493,21 @@ Singleton {
             const currentId = root.normalizeDesktopId(String(stdout || "").trim());
             const state = root.stateFor(request.roleId);
             root.setRoleState(request.roleId, {
-                "currentId": currentId,
-                "candidates": root.withCurrentOption(state.candidates, currentId)
-            });
+                                  "currentId": currentId,
+                                  "candidates": root.withCurrentOption(state.candidates, currentId)
+                              });
         } else {
-            const message = String(stderr || "").trim()
-                || qsTr("无法查询系统默认应用");
+            const message = String(stderr || "").trim() || qsTr(
+                      "Could not query system default applications");
             if (exitCode === 127) {
                 root.xdgMimeAvailable = false;
-                root.reportError(qsTr("缺少 xdg-utils，无法管理默认应用"));
+                root.reportError(qsTr("xdg-utils is missing; default applications cannot be managed"));
             } else {
                 root.reportError(message);
             }
-            root.setRoleState(request.roleId, { "error": message });
+            root.setRoleState(request.roleId, {
+                                  "error": message
+                              });
         }
         root.finishRefreshTask(request.roleId);
     }
@@ -534,10 +519,9 @@ Singleton {
             const categoryOptions = root.applicationsForCategory(definition.category);
             if (categoryOptions.length > 0) {
                 root.setRoleState(request.roleId, {
-                    "candidates": root.withCurrentOption(
-                        categoryOptions, state.currentId),
-                    "error": ""
-                });
+                                      "candidates": root.withCurrentOption(categoryOptions, state.currentId),
+                                      "error": ""
+                                  });
                 root.finishRefreshTask(request.roleId);
                 return;
             }
@@ -546,17 +530,17 @@ Singleton {
             let options = root.uniqueOptions(root.parseGioApplications(stdout));
             options = root.withCurrentOption(options, state.currentId);
             root.setRoleState(request.roleId, {
-                "candidates": options,
-                "error": ""
-            });
+                                  "candidates": options,
+                                  "error": ""
+                              });
         } else {
             root.gioAvailable = false;
-            const message = qsTr("无法读取应用候选列表");
+            const message = qsTr("Could not read the application candidate list");
             root.reportError(message);
             root.setRoleState(request.roleId, {
-                "candidates": root.withCurrentOption([], state.currentId),
-                "error": String(stderr || "").trim() || message
-            });
+                                  "candidates": root.withCurrentOption([], state.currentId),
+                                  "error": String(stderr || "").trim() || message
+                              });
         }
         root.finishRefreshTask(request.roleId);
     }
@@ -566,38 +550,35 @@ Singleton {
         if (!definition)
             return;
         if (exitCode !== 0)
-            root._operationFailures = root._operationFailures.concat([
-                definition.mimes[root._operationMimeIndex]
-            ]);
+            root._operationFailures = root._operationFailures.concat(
+                        [definition.mimes[root._operationMimeIndex]]);
         root._operationMimeIndex += 1;
         if (root._operationMimeIndex < definition.mimes.length) {
             root.runCommand({
-                "kind": "set-mime",
-                "roleId": definition.id,
-                "mime": definition.mimes[root._operationMimeIndex],
-                "argv": [
-                    "xdg-mime",
-                    "default",
-                    root._operationDesktopId,
-                    definition.mimes[root._operationMimeIndex]
-                ]
-            });
+                                "kind": "set-mime",
+                                "roleId": definition.id,
+                                "mime": definition.mimes[root._operationMimeIndex],
+                                "argv": ["xdg-mime", "default", root._operationDesktopId,
+                                    definition.mimes[root._operationMimeIndex]]
+                            });
             return;
         }
 
         root.runCommand({
-            "kind": "verify-mime",
-            "roleId": definition.id,
-            "argv": ["xdg-mime", "query", "default", definition.primaryMime]
-        });
+                            "kind": "verify-mime",
+                            "roleId": definition.id,
+                            "argv": ["xdg-mime", "query", "default", definition.primaryMime]
+                        });
     }
 
     function finishMimeOperation(success, message) {
         const roleId = root._operationRoleId;
         root.operationBusy = false;
-        root.setRoleState(roleId, { "busy": false });
-        root.lastError = success ? "" : String(message || qsTr("默认应用设置失败"));
-        root.lastMessage = success ? qsTr("默认应用已更新") : "";
+        root.setRoleState(roleId, {
+                              "busy": false
+                          });
+        root.lastError = success ? "" : String(message || qsTr("Failed to set default applications"));
+        root.lastMessage = success ? qsTr("Default applications updated") : "";
         root._operationRoleId = "";
         root._operationDesktopId = "";
         root._operationMimeIndex = 0;
@@ -611,19 +592,21 @@ Singleton {
         const definition = root.definitionFor(roleId);
         const normalized = root.normalizeDesktopId(desktopId);
         if (!definition || normalized === "") {
-            root.lastError = qsTr("无法设置未知的默认应用");
+            root.lastError = qsTr("Cannot set an unknown default application");
             return false;
         }
         const state = root.stateFor(roleId);
         if (!(state.candidates || []).some(option => option.value === normalized)) {
-            root.lastError = qsTr("所选应用不是系统提供的候选项");
+            root.lastError = qsTr("The selected application is not a system-provided candidate");
             return false;
         }
 
         root.lastError = "";
         root.lastMessage = "";
         root.operationBusy = true;
-        root.setRoleState(roleId, { "busy": true });
+        root.setRoleState(roleId, {
+                              "busy": true
+                          });
 
         if (definition.id === "terminal") {
             root._operationRoleId = definition.id;
@@ -637,20 +620,20 @@ Singleton {
         root._operationMimeIndex = 0;
         root._operationFailures = [];
         root.runCommand({
-            "kind": "set-mime",
-            "roleId": definition.id,
-            "mime": definition.mimes[0],
-            "argv": ["xdg-mime", "default", normalized, definition.mimes[0]]
-        });
+                            "kind": "set-mime",
+                            "roleId": definition.id,
+                            "mime": definition.mimes[0],
+                            "argv": ["xdg-mime", "default", normalized, definition.mimes[0]]
+                        });
         return true;
     }
 
     function ensureTerminalConfigDirectory() {
         root.runCommand({
-            "kind": "mkdir-terminal",
-            "roleId": "terminal",
-            "argv": ["mkdir", "-p", root.configHome]
-        });
+                            "kind": "mkdir-terminal",
+                            "roleId": "terminal",
+                            "argv": ["mkdir", "-p", root.configHome]
+                        });
     }
 
     function beginTerminalWrite() {
@@ -669,9 +652,11 @@ Singleton {
     function finishTerminalOperation(success, message) {
         const roleId = "terminal";
         root.operationBusy = false;
-        root.setRoleState(roleId, { "busy": false });
-        root.lastError = success ? "" : String(message || qsTr("终端默认应用设置失败"));
-        root.lastMessage = success ? qsTr("默认终端已更新") : "";
+        root.setRoleState(roleId, {
+                              "busy": false
+                          });
+        root.lastError = success ? "" : String(message || qsTr("Failed to set the default terminal"));
+        root.lastMessage = success ? qsTr("Default terminal updated") : "";
         root._operationRoleId = "";
         root._operationDesktopId = "";
         root._pendingTerminalId = "";
@@ -698,26 +683,25 @@ Singleton {
                 failures.push(root.definitionFor(request.roleId).primaryMime);
             root._operationFailures = failures;
             root.setRoleState(request.roleId, {
-                "currentId": actualId,
-                "candidates": root.withCurrentOption(
-                    root.stateFor(request.roleId).candidates, actualId)
-            });
+                                  "currentId": actualId,
+                                  "candidates": root.withCurrentOption(root.stateFor(
+                                                                           request.roleId).candidates,
+                                                                       actualId)
+                              });
             if (failures.length > 0) {
                 const uniqueFailures = [];
                 for (const failure of failures) {
                     if (uniqueFailures.indexOf(failure) < 0)
                         uniqueFailures.push(failure);
                 }
-                root.finishMimeOperation(false,
-                    qsTr("无法设置：%1").arg(uniqueFailures.join(", ")));
+                root.finishMimeOperation(false, qsTr("Could not set: %1").arg(uniqueFailures.join(", ")));
             } else {
                 root.finishMimeOperation(true, "");
             }
         } else if (request.kind === "mkdir-terminal") {
             if (exitCode !== 0) {
-                root.finishTerminalOperation(false,
-                    String(stderr || "").trim()
-                    || qsTr("无法创建 XDG 配置目录"));
+                root.finishTerminalOperation(false, String(stderr || "").trim() || qsTr(
+                                                 "Could not create the XDG configuration directory"));
             } else if (root._terminalFileReady) {
                 root.beginTerminalWrite();
             } else {
@@ -745,8 +729,8 @@ Singleton {
             if (actualId === root._operationDesktopId)
                 root.finishTerminalOperation(true, "");
             else
-                root.finishTerminalOperation(false,
-                    qsTr("系统未接受新的默认终端"));
+                root.finishTerminalOperation(false, qsTr(
+                                                 "The system did not accept the new default terminal"));
         }
     }
 
@@ -821,16 +805,19 @@ Singleton {
         Process {
             required property var request
 
-            stdout: StdioCollector { id: output }
-            stderr: StdioCollector { id: errorOutput }
+            stdout: StdioCollector {
+                id: output
+            }
+            stderr: StdioCollector {
+                id: errorOutput
+            }
 
             onExited: exitCode => {
                 const currentRequest = request;
                 const stdoutText = output.text;
                 const stderrText = errorOutput.text;
                 root._activeCommand = null;
-                root.handleProcessExit(currentRequest, exitCode,
-                    stdoutText, stderrText);
+                root.handleProcessExit(currentRequest, exitCode, stdoutText, stderrText);
                 destroy();
             }
         }

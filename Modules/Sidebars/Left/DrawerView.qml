@@ -385,15 +385,17 @@ Item {
             active: root.isForeground && !SystemMonitorService.error
             visible: !SystemMonitorService.hasData && !SystemMonitorService.error &&
                      !SystemMonitorService.reconnecting
-            message: qsTr("正在连接 keytop")
+            message: qsTr("Connecting to keytop")
         }
 
         SystemUnavailableState {
             visible: !SystemMonitorService.hasData && (SystemMonitorService.error
                                                        || SystemMonitorService.reconnecting)
-            title: SystemMonitorService.reconnecting ? qsTr("正在重新连接") : qsTr("系统监测暂不可用")
-            message: SystemMonitorService.error ? qsTr("数据暂时缺失，页面将在后台退避重试。") : qsTr(
-                                                      "连接中断后会自动恢复；已有数据不会被伪装成正常值。")
+            title: SystemMonitorService.reconnecting ? qsTr("Reconnecting") : qsTr(
+                                                           "System monitoring is temporarily unavailable")
+            message: SystemMonitorService.error ? qsTr(
+                                                      "Data is temporarily unavailable; the page will retry in the background with backoff.") :
+                                                  qsTr("The connection recovers automatically; existing data is never presented as current.")
             reconnecting: SystemMonitorService.reconnecting
             onRetryRequested: SystemMonitorService.retry()
 
@@ -424,7 +426,9 @@ Item {
             fasterTouchpadScroll: true
             showVerticalScrollBar: contentHeight > height + 1
             activeFocusOnTab: contentHeight > height + 1
-            Accessible.name: contentHeight > height + 1 ? qsTr("抽屉网格，可滚动并可拖动卡片") : qsTr("抽屉网格，可拖动卡片")
+            Accessible.name: contentHeight > height + 1 ? qsTr(
+                                                              "Drawer grid; scrollable with draggable cards") :
+                                                          qsTr("Drawer grid with draggable cards")
             Keys.onPressed: event => {
                 if (root.draggingTileId.length > 0 && event.key === Qt.Key_Escape) {
                     root.cancelDrag();

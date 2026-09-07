@@ -29,65 +29,77 @@ FloatingWindow {
     }
 
     function systemFolderDefinitions() {
-        return [{
-            "kind": "desktop",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.DesktopLocation)),
-            "label": qsTr("桌面"),
-            "icon": "desktop_windows"
-        }, {
-            "kind": "documents",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.DocumentsLocation)),
-            "label": qsTr("文档"),
-            "icon": "description"
-        }, {
-            "kind": "downloads",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.DownloadLocation)),
-            "label": qsTr("下载"),
-            "icon": "download"
-        }, {
-            "kind": "music",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.MusicLocation)),
-            "label": qsTr("音乐"),
-            "icon": "music_note"
-        }, {
-            "kind": "pictures",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.PicturesLocation)),
-            "label": qsTr("图片"),
-            "icon": "image"
-        }, {
-            "kind": "videos",
-            "path": normalizeLocalPath(StandardPaths.writableLocation(StandardPaths.MoviesLocation)),
-            "label": qsTr("视频"),
-            "icon": "movie"
-        }];
+        return [
+                    {
+                        "kind": "desktop",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.DesktopLocation)),
+                        "label": qsTr("Desktop"),
+                        "icon": "desktop_windows"
+                    },
+                    {
+                        "kind": "documents",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.DocumentsLocation)),
+                        "label": qsTr("Documents"),
+                        "icon": "description"
+                    },
+                    {
+                        "kind": "downloads",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.DownloadLocation)),
+                        "label": qsTr("Downloads"),
+                        "icon": "download"
+                    },
+                    {
+                        "kind": "music",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.MusicLocation)),
+                        "label": qsTr("Music"),
+                        "icon": "music_note"
+                    },
+                    {
+                        "kind": "pictures",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.PicturesLocation)),
+                        "label": qsTr("Pictures"),
+                        "icon": "image"
+                    },
+                    {
+                        "kind": "videos",
+                        "path": normalizeLocalPath(StandardPaths.writableLocation(
+                                                       StandardPaths.MoviesLocation)),
+                        "label": qsTr("Videos"),
+                        "icon": "movie"
+                    }
+                ];
     }
 
     function defaultBackupFolders() {
         const result = [];
-        const seen = {
-        };
+        const seen = {};
         for (const folder of systemFolderDefinitions()) {
             if (folder.path === "" || seen[folder.path])
                 continue;
 
             seen[folder.path] = true;
             result.push({
-                "path": folder.path,
-                "enabled": true,
-                "kind": folder.kind
-            });
+                            "path": folder.path,
+                            "enabled": true,
+                            "kind": folder.kind
+                        });
         }
         return result;
     }
 
     function ensureDefaults() {
         if (!UiPreferences.preferencesReady || UiPreferences.cloudBackupFoldersVersion >= 3)
-            return ;
+            return;
 
         const merged = defaultBackupFolders();
-        const seen = {
-        };
-        for (const folder of merged) seen[folder.path] = true
+        const seen = {};
+        for (const folder of merged)
+            seen[folder.path] = true;
         for (const folder of UiPreferences.cloudBackupFolders || []) {
             const path = normalizeLocalPath(folder && folder.path);
             if (path === "" || seen[path])
@@ -95,10 +107,10 @@ FloatingWindow {
 
             seen[path] = true;
             merged.push({
-                "path": path,
-                "enabled": folder.enabled === undefined ? true : !!folder.enabled,
-                "kind": String(folder && folder.kind || "custom")
-            });
+                            "path": path,
+                            "enabled": folder.enabled === undefined ? true : !!folder.enabled,
+                            "kind": String(folder && folder.kind || "custom")
+                        });
         }
         UiPreferences.setCloudBackupFolders(merged);
     }
@@ -109,9 +121,8 @@ FloatingWindow {
         for (const folder of systemFolderDefinitions()) {
             if (folder.kind === kind || folder.path === normalized)
                 return folder;
-
         }
-        const parts = normalized.split("/").filter((part) => {
+        const parts = normalized.split("/").filter(part => {
             return part !== "";
         });
         return {
@@ -122,15 +133,15 @@ FloatingWindow {
     }
 
     function updateFolder(index, enabled) {
-        const folders = UiPreferences.cloudBackupFolders.map((folder) => {
+        const folders = UiPreferences.cloudBackupFolders.map(folder => {
             return ({
-                "path": folder.path,
-                "enabled": folder.enabled,
-                "kind": folder.kind
-            });
+                        "path": folder.path,
+                        "enabled": folder.enabled,
+                        "kind": folder.kind
+                    });
         });
         if (index < 0 || index >= folders.length || RcloneService.backupActive)
-            return ;
+            return;
 
         folders[index].enabled = enabled;
         UiPreferences.setCloudBackupFolders(folders);
@@ -138,20 +149,21 @@ FloatingWindow {
 
     function removeFolder(index) {
         if (RcloneService.backupActive)
-            return ;
+            return;
 
-        UiPreferences.setCloudBackupFolders(UiPreferences.cloudBackupFolders.filter(function(folder, folderIndex) {
+        UiPreferences.setCloudBackupFolders(UiPreferences.cloudBackupFolders.filter(function (folder,
+                                                                                              folderIndex) {
             return folderIndex !== index;
         }));
     }
 
     function addFolder(path) {
         if (RcloneService.backupActive)
-            return ;
+            return;
 
         const normalized = normalizeLocalPath(path);
         if (normalized === "")
-            return ;
+            return;
 
         let kind = "custom";
         for (const folder of systemFolderDefinitions()) {
@@ -160,33 +172,33 @@ FloatingWindow {
                 break;
             }
         }
-        const folders = UiPreferences.cloudBackupFolders.map((folder) => {
+        const folders = UiPreferences.cloudBackupFolders.map(folder => {
             return ({
-                "path": folder.path,
-                "enabled": folder.enabled,
-                "kind": folder.kind
-            });
+                        "path": folder.path,
+                        "enabled": folder.enabled,
+                        "kind": folder.kind
+                    });
         });
         for (let index = 0; index < folders.length; ++index) {
             if (folders[index].path === normalized) {
                 folders[index].enabled = true;
                 folders[index].kind = kind;
                 UiPreferences.setCloudBackupFolders(folders);
-                return ;
+                return;
             }
         }
         folders.push({
-            "path": normalized,
-            "enabled": true,
-            "kind": kind
-        });
+                         "path": normalized,
+                         "enabled": true,
+                         "kind": kind
+                     });
         UiPreferences.setCloudBackupFolders(folders);
     }
 
     function selectedFolders() {
-        return UiPreferences.cloudBackupFolders.filter((folder) => {
+        return UiPreferences.cloudBackupFolders.filter(folder => {
             return folder.enabled;
-        }).map((folder) => {
+        }).map(folder => {
             return folder.path;
         });
     }
@@ -194,7 +206,7 @@ FloatingWindow {
     function showWindow() {
         if (!root.parentModal) {
             console.warn("ComputerBackupWindow cannot open without parentModal");
-            return ;
+            return;
         }
         ensureDefaults();
         clearBackupStatusTimer.stop();
@@ -213,7 +225,7 @@ FloatingWindow {
 
     function chooseFolder() {
         if (RcloneService.backupActive)
-            return ;
+            return;
 
         _restoreAfterPicker = true;
         root.visible = false;
@@ -224,29 +236,26 @@ FloatingWindow {
     function startBackup() {
         const folders = selectedFolders();
         if (folders.length === 0)
-            return ;
+            return;
 
         if (RcloneService.backupFolders(folders))
             currentPage = "task";
-
     }
 
     function returnToSetup() {
         currentPage = "setup";
         if (!RcloneService.backupActive)
             clearBackupStatusTimer.restart();
-
     }
 
     function restartBackup() {
         if (RcloneService.restartBackup())
             currentPage = "task";
-
     }
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("电脑备份")
+    title: qsTr("Back up computer")
     implicitWidth: 600
     implicitHeight: 640
     minimumSize: Qt.size(480, 520)
@@ -257,7 +266,6 @@ FloatingWindow {
         function onPreferencesReadyChanged() {
             if (root.visible)
                 root.ensureDefaults();
-
         }
 
         target: UiPreferences
@@ -267,7 +275,6 @@ FloatingWindow {
         function onBackupStateChanged() {
             if (root.visible && RcloneService.backupActive)
                 root.currentPage = "task";
-
         }
 
         target: RcloneService
@@ -280,7 +287,6 @@ FloatingWindow {
         onTriggered: {
             if (root.currentPage === "setup" && !RcloneService.backupActive)
                 RcloneService.clearCompletedBackupStatus();
-
         }
     }
 
@@ -303,7 +309,7 @@ FloatingWindow {
 
         anchors.fill: parent
         focus: root.visible
-        Keys.onEscapePressed: (event) => {
+        Keys.onEscapePressed: event => {
             root.dismiss();
             event.accepted = true;
         }
@@ -317,7 +323,7 @@ FloatingWindow {
             BackupSetupPage {
                 anchors.fill: parent
                 folderModel: UiPreferences.cloudBackupFolders
-                folderInfo: (entry) => {
+                folderInfo: entry => {
                     return root.folderInfo(entry);
                 }
                 taskActive: RcloneService.backupActive
@@ -327,13 +333,12 @@ FloatingWindow {
                 onUpdateFolderRequested: (index, enabled) => {
                     return root.updateFolder(index, enabled);
                 }
-                onRemoveFolderRequested: (index) => {
+                onRemoveFolderRequested: index => {
                     return root.removeFolder(index);
                 }
                 onStartRequested: root.startBackup()
                 onViewTaskRequested: root.currentPage = "task"
             }
-
         }
 
         PageTransitionLayer {
@@ -348,9 +353,7 @@ FloatingWindow {
                 onStopRequested: RcloneService.stopBackup()
                 onRestartRequested: root.restartBackup()
             }
-
         }
-
     }
 
     FilePickerWindow {
@@ -359,16 +362,16 @@ FloatingWindow {
         requiresParentWindow: false
         selectionMode: FilePickerWindow.Folders
         allowCurrentFolderSelection: true
-        dialogTitle: qsTr("添加备份文件夹")
-        description: qsTr("选择一个要包含在电脑备份中的文件夹")
+        dialogTitle: qsTr("Add backup folder")
+        description: qsTr("Choose a folder to include in the computer backup")
         startPath: homeDir
         nameFilters: []
         windowIconName: "create_new_folder"
-        emptyStateText: qsTr("当前文件夹为空")
-        selectionPrompt: qsTr("选择文件夹")
-        acceptLabel: qsTr("添加文件夹")
-        formatSummary: qsTr("可添加当前文件夹或选中的子文件夹")
-        onAccepted: function(path, isDirectory) {
+        emptyStateText: qsTr("This folder is empty")
+        selectionPrompt: qsTr("Choose folder")
+        acceptLabel: qsTr("Add folder")
+        formatSummary: qsTr("Add the current folder or a selected subfolder")
+        onAccepted: function (path, isDirectory) {
             if (isDirectory)
                 root.addFolder(path);
 
@@ -384,5 +387,4 @@ FloatingWindow {
             }
         }
     }
-
 }

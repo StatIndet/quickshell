@@ -100,9 +100,9 @@ Item {
         const physical = SystemIdentityService.physicalCoreCount;
         const logical = SystemIdentityService.logicalCpuCount;
         if (physical > 0 && logical > 0)
-            return physical + qsTr(" 核 · ") + logical + qsTr(" 线程");
+            return physical + qsTr(" cores · ") + logical + qsTr(" threads");
 
-        return qsTr("总体利用率");
+        return qsTr("Overall utilization");
     }
 
     function cpuSupporting() {
@@ -115,7 +115,7 @@ Item {
 
     function gpuSupporting() {
         if (SystemMonitorService.selectedGpuId === "")
-            return qsTr("未检测到可用图形设备");
+            return qsTr("No graphics device detected");
 
         const gpu = root.primaryGpu;
         if (Format.isNumber(gpu.vramUsedBytes) && Format.isNumber(gpu.vramTotalBytes))
@@ -249,7 +249,7 @@ Item {
         ExpressiveMetricTile {
             label: qsTr("GPU")
             iconName: "developer_board"
-            detailText: root.primaryGpu.name || qsTr("图形设备")
+            detailText: root.primaryGpu.name || qsTr("Graphics device")
             valueText: SystemMonitorService.selectedGpuId !== "" ? Format.percent(
                                                                        root.primaryGpu.utilizationPercent, 0) :
                                                                    "—"
@@ -281,9 +281,10 @@ Item {
                                 SystemMonitorService.memory.totalBytes)
             level: root.normalizedPercent(SystemMonitorService.memory.usagePercent)
             valueAvailable: Format.isNumber(SystemMonitorService.memory.usagePercent)
-            accessibilityName: qsTr("内存已使用 ") + Format.percent(SystemMonitorService.memory.usagePercent, 0)
-                               + "，" + Format.bytes(SystemMonitorService.memory.usedBytes) + " / "
-                               + Format.bytes(SystemMonitorService.memory.totalBytes)
+            accessibilityName: qsTr("Memory used ") + Format.percent(SystemMonitorService.memory.usagePercent,
+                                                                     0) + "，" + Format.bytes(
+                                   SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(
+                                   SystemMonitorService.memory.totalBytes)
             shapeId: MaterialShape.Slanted
             shapeColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer,
                                           Appearance.colors.colPrimaryContainer)
@@ -298,12 +299,12 @@ Item {
         SystemLiquidMetricCard {
             iconName: NetworkService.wifiConnected ? "wifi" : "wifi_off"
             valueText: NetworkService.wifiConnected ? Format.percent(NetworkService.signalStrength, 0) : "—"
-            supportingText: qsTr("Wi-Fi 信号强度")
+            supportingText: qsTr("Wi-Fi signal strength")
             level: root.normalizedPercent(NetworkService.signalStrength)
             valueAvailable: NetworkService.wifiConnected
-            accessibilityName: NetworkService.wifiConnected ? qsTr("Wi-Fi 信号强度 ") + Format.percent(
+            accessibilityName: NetworkService.wifiConnected ? qsTr("Wi-Fi signal strength ") + Format.percent(
                                                                   NetworkService.signalStrength, 0) : qsTr(
-                                                                  "Wi-Fi 未连接")
+                                                                  "Wi-Fi is not connected")
             shapeId: MaterialShape.Pentagon
             shapeColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer,
                                           Appearance.colors.colTertiaryContainer)
@@ -363,15 +364,15 @@ Item {
             iconName: "data_usage"
             valueText: capacityAvailable ? Format.percent(root.capacityDisk.usagePercent, 0) : "—"
             supportingText: diskAvailable ? Format.bytes(root.capacityDisk.usedBytes) + " / " + Format.bytes(
-                                                root.capacityDisk.totalBytes) : qsTr("未检测到磁盘")
+                                                root.capacityDisk.totalBytes) : qsTr("No disk detected")
             level: root.normalizedPercent(root.capacityDisk.usagePercent)
             valueAvailable: capacityAvailable
-            accessibilityName: diskAvailable ? qsTr("磁盘 %1，已使用 %2，共 %3，占用 %4").arg(String(
-                                                                                       root.capacityDisk.device)).arg(
+            accessibilityName: diskAvailable ? qsTr("Disk %1, %2 of %3 used, %4 occupied").arg(String(
+                                                                                                   root.capacityDisk.device)).arg(
                                                    Format.bytes(root.capacityDisk.usedBytes)).arg(Format.bytes(
                                                                                                       root.capacityDisk.totalBytes)).arg(
                                                    Format.percent(root.capacityDisk.usagePercent, 0)) : qsTr(
-                                                   "未检测到磁盘")
+                                                   "No disk detected")
             shapeId: MaterialShape.Cookie9Sided
             shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
                                           Appearance.colors.colSecondaryContainer)

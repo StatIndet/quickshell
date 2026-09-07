@@ -15,7 +15,7 @@ Item {
     property bool available: true
 
     signal volumeMoved(real volume)
-    signal muteRequested()
+    signal muteRequested
 
     implicitHeight: 48
     opacity: root.available ? 1 : 0.45
@@ -84,7 +84,7 @@ Item {
             stopIndicatorValues: []
             showTooltipOnHover: true
             tooltipContent: Math.round(value * 100) + "%"
-            Accessible.name: root.title + qsTr("音量")
+            Accessible.name: qsTr("%1 volume").arg(root.title)
 
             Binding {
                 target: volumeControl
@@ -108,8 +108,8 @@ Item {
             selectedContainerColor: Appearance.colors.colSecondaryContainer
             selectedHoverStateLayerColor: Appearance.colors.colSecondaryContainerHover
             selectedPressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
-            accessibleName: root.muted ? qsTr("取消静音 ") + root.title : qsTr("静音 ") + root.title
-            tooltipText: root.muted ? qsTr("取消静音") : qsTr("静音")
+            accessibleName: root.muted ? qsTr("Unmute %1").arg(root.title) : qsTr("Mute %1").arg(root.title)
+            tooltipText: root.muted ? qsTr("Unmute") : qsTr("Mute")
             hoverStateLayerColor: Appearance.colors.colLayer2Hover
             pressedStateLayerColor: Appearance.colors.colLayer2Active
             onClicked: root.muteRequested()

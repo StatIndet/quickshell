@@ -10,7 +10,7 @@ RoundButton {
 
     property bool stopping: false
     property bool canStop: true
-    signal stopRequested()
+    signal stopRequested
 
     width: 44
     height: 44
@@ -36,11 +36,8 @@ RoundButton {
             width: 36
             height: 36
             radius: Appearance.rounding.full
-            color: root.down
-                ? Appearance.colors.colErrorContainerActive
-                : (root.hovered
-                    ? Appearance.colors.colErrorContainerHover
-                    : Appearance.colors.colErrorContainer)
+            color: root.down ? Appearance.colors.colErrorContainerActive : (root.hovered ? Appearance.colors.colErrorContainerHover :
+                                                                                           Appearance.colors.colErrorContainer)
             opacity: root.stopping ? 0.55 : (root.enabled ? 1 : 0.38)
 
             Behavior on color {
@@ -74,6 +71,6 @@ RoundButton {
 
     StyledToolTip {
         extraVisibleCondition: root.hovered
-        text: root.stopping ? qsTr("正在完成录音") : qsTr("停止录音")
+        text: root.stopping ? qsTr("Finishing recording") : qsTr("Stop recording")
     }
 }

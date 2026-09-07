@@ -524,8 +524,9 @@ Item {
                     anchors.left: parent.left
                     anchors.leftMargin: 8
                     anchors.verticalCenter: parent.verticalCenter
-                    text: root.providerAvailable && !root.canRestore ? qsTr("缺少 wl-copy：恢复功能不可用") : qsTr(
-                                                                           "剪贴板历史")
+                    text: root.providerAvailable && !root.canRestore ? qsTr(
+                                                                           "wl-copy is missing: restore is unavailable") :
+                                                                       qsTr("Clipboard history")
                     color: root.providerAvailable && !root.canRestore ? Appearance.colors.colError :
                                                                         Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
@@ -540,7 +541,7 @@ Item {
                              && root.results.length > 0
                     filled: false
                     iconName: "delete_sweep"
-                    text: qsTr("清空")
+                    text: qsTr("Clear")
                     onClicked: clearDialog.open()
                 }
             }
@@ -733,7 +734,7 @@ Item {
                                 iconName: "delete"
                                 iconSize: 20
                                 iconColor: Appearance.colors.colOnSurfaceVariant
-                                accessibleName: qsTr("删除剪贴板条目")
+                                accessibleName: qsTr("Delete clipboard entry")
                                 onClicked: root.deleteRequested(clipboardDelegate.index)
                             }
 
@@ -766,7 +767,8 @@ Item {
 
                                 Text {
                                     anchors.verticalCenter: parent.verticalCenter
-                                    text: root.clipboardActionState === "copied" ? qsTr("已复制") : qsTr("复制失败")
+                                    text: root.clipboardActionState === "copied" ? qsTr("Copied") : qsTr(
+                                                                                       "Copy failed")
                                     color: root.clipboardActionState === "copied"
                                            ? Appearance.colors.colPrimary : Appearance.colors.colError
                                     font.family: Fonts.ui
@@ -825,10 +827,10 @@ Item {
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: Math.min(520, root.width - 48)
-                text: root.loading ? qsTr("正在读取…") : (!root.providerAvailable ? (root.providerError
-                                                                                 ? root.providerError.message :
-                                                                                   qsTr("当前 Provider 不可用")) :
-                                                                                qsTr("没有匹配结果"))
+                text: root.loading ? qsTr("Reading…") : (!root.providerAvailable ? (root.providerError
+                                                                                    ? root.providerError.message :
+                                                                                      qsTr("Current provider is unavailable")) :
+                                                                                   qsTr("No matching results"))
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Fonts.ui
                 font.pixelSize: 15
@@ -843,8 +845,8 @@ Item {
 
         anchors.centerIn: Overlay.overlay
         width: 380
-        dialogTitle: qsTr("清空剪贴板历史？")
-        messageText: qsTr("此操作会清除 cliphist 中的全部历史记录，无法撤销。")
+        dialogTitle: qsTr("Clear clipboard history?")
+        messageText: qsTr("This clears all clipboard history in cliphist and cannot be undone.")
 
         actionsComponent: Component {
             RowLayout {
@@ -857,13 +859,13 @@ Item {
                 ActionButton {
                     id: cancelButton
 
-                    text: qsTr("取消")
+                    text: qsTr("Cancel")
                     Component.onCompleted: clearDialog.initialFocusItem = cancelButton
                     onClicked: clearDialog.close()
                 }
 
                 ActionButton {
-                    text: qsTr("清空")
+                    text: qsTr("Clear")
                     onClicked: {
                         root.clearRequested();
                         clearDialog.close();

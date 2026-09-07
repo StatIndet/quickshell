@@ -36,17 +36,15 @@ Rectangle {
             root.feedbackError = true;
             root.feedbackText = root.invalidKeyText;
             apiKeyField.forceActiveFocus();
-            return ;
+            return;
         }
         if (root.storeAction)
-            root.showResult(root.storeAction(value), qsTr("无法保存 API key"));
-
+            root.showResult(root.storeAction(value), qsTr("Could not save the API key"));
     }
 
     function clearApiKey() {
         if (root.clearAction)
-            root.showResult(root.clearAction(), qsTr("无法清除 API key"));
-
+            root.showResult(root.clearAction(), qsTr("Could not clear the API key"));
     }
 
     function completeOperation(success, message) {
@@ -86,7 +84,6 @@ Rectangle {
                     fill: 1
                     color: Appearance.colors.colOnPrimaryContainer
                 }
-
             }
 
             Text {
@@ -103,7 +100,9 @@ Rectangle {
                 implicitWidth: statusContent.implicitWidth + Metrics.spacingL * 2
                 implicitHeight: 34
                 radius: Appearance.rounding.full
-                color: root.statusError ? Appearance.colors.colErrorContainer : root.configured ? Appearance.colors.colSecondaryContainer : Appearance.colors.colSurfaceContainerHighest
+                color: root.statusError ? Appearance.colors.colErrorContainer : root.configured
+                                          ? Appearance.colors.colSecondaryContainer :
+                                            Appearance.colors.colSurfaceContainerHighest
 
                 RowLayout {
                     id: statusContent
@@ -112,25 +111,31 @@ Rectangle {
                     spacing: Metrics.spacingXS
 
                     MaterialSymbol {
-                        text: root.checking || root.busy ? "sync" : root.statusError ? "error" : root.configured ? "key" : "key_off"
+                        text: root.checking || root.busy ? "sync" : root.statusError ? "error" : root.configured
+                                                                                       ? "key" : "key_off"
                         iconSize: 17
                         fill: root.configured ? 1 : 0
-                        color: root.statusError ? Appearance.colors.colOnErrorContainer : root.configured ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurfaceVariant
+                        color: root.statusError ? Appearance.colors.colOnErrorContainer : root.configured
+                                                  ? Appearance.colors.colOnSecondaryContainer :
+                                                    Appearance.colors.colOnSurfaceVariant
                     }
 
                     Text {
-                        text: root.checking ? qsTr("正在检查") : root.busy ? qsTr("处理中") : root.statusError ? qsTr("读取失败") : root.configured ? qsTr("密钥已保存") : qsTr("未保存密钥")
-                        color: root.statusError ? Appearance.colors.colOnErrorContainer : root.configured ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnSurfaceVariant
+                        text: root.checking ? qsTr("Checking") : root.busy ? qsTr("Processing") : root.statusError
+                                                                             ? qsTr("Could not read key") :
+                                                                               root.configured ? qsTr(
+                                                                                                     "Key saved") :
+                                                                                                 qsTr("No key saved")
+                        color: root.statusError ? Appearance.colors.colOnErrorContainer : root.configured
+                                                  ? Appearance.colors.colOnSecondaryContainer :
+                                                    Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.labelMedium.family
                         font.pixelSize: Typography.labelMedium.pixelSize
                         font.weight: Font.DemiBold
                         textFormat: Text.PlainText
                     }
-
                 }
-
             }
-
         }
 
         Rectangle {
@@ -160,7 +165,7 @@ Rectangle {
             maximumLength: 128
             enabled: root.credentialsReady && !root.busy
             Accessible.name: root.fieldLabel
-            Accessible.description: qsTr("安全保存到系统密钥环")
+            Accessible.description: qsTr("Save securely in the system keyring")
             onTextChanged: {
                 if (root.feedbackError) {
                     root.feedbackError = false;
@@ -175,19 +180,17 @@ Rectangle {
                     iconName: root.revealApiKey ? "visibility_off" : "visibility"
                     iconSize: Metrics.iconM
                     iconColor: Appearance.colors.colOnSurfaceVariant
-                    accessibleName: root.revealApiKey ? qsTr("隐藏 API key") : qsTr("显示 API key")
+                    accessibleName: root.revealApiKey ? qsTr("Hide API key") : qsTr("Show API key")
                     hoverStateLayerColor: Appearance.colors.colLayer3Hover
                     pressedStateLayerColor: Appearance.colors.colLayer3Active
                     onClicked: root.revealApiKey = !root.revealApiKey
                 }
-
             }
-
         }
 
         Text {
             Layout.fillWidth: true
-            text: qsTr("密钥保存在系统密钥环中，保存后立即生效。")
+            text: qsTr("The key is stored in the system keyring and takes effect immediately after saving.")
             color: Appearance.colors.colOnSurfaceVariant
             font.family: Typography.bodySmall.family
             font.pixelSize: Typography.bodySmall.pixelSize
@@ -202,7 +205,8 @@ Rectangle {
             Layout.preferredHeight: feedbackRow.implicitHeight + Metrics.spacingM * 2
             radius: Appearance.rounding.small
             visible: root.feedbackText !== ""
-            color: root.feedbackError ? Appearance.colors.colErrorContainer : Appearance.colors.colSecondaryContainer
+            color: root.feedbackError ? Appearance.colors.colErrorContainer :
+                                        Appearance.colors.colSecondaryContainer
 
             RowLayout {
                 id: feedbackRow
@@ -215,22 +219,22 @@ Rectangle {
                     text: root.busy ? "sync" : root.feedbackError ? "error" : "check_circle"
                     iconSize: Metrics.iconS
                     fill: root.busy ? 0 : 1
-                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSecondaryContainer
+                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer :
+                                                Appearance.colors.colOnSecondaryContainer
                 }
 
                 Text {
                     Layout.fillWidth: true
                     text: root.feedbackText
-                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer : Appearance.colors.colOnSecondaryContainer
+                    color: root.feedbackError ? Appearance.colors.colOnErrorContainer :
+                                                Appearance.colors.colOnSecondaryContainer
                     font.family: Typography.bodySmall.family
                     font.pixelSize: Typography.bodySmall.pixelSize
                     font.weight: Typography.bodySmall.weight
                     wrapMode: Text.WordWrap
                     textFormat: Text.PlainText
                 }
-
             }
-
         }
 
         RowLayout {
@@ -242,7 +246,7 @@ Rectangle {
             }
 
             ActionButton {
-                text: qsTr("清除密钥")
+                text: qsTr("Clear key")
                 iconName: "delete"
                 enabled: root.configured && !root.busy
                 contentColor: Appearance.colors.colPrimary
@@ -251,16 +255,13 @@ Rectangle {
             }
 
             ActionButton {
-                text: qsTr("保存密钥")
+                text: qsTr("Save key")
                 iconName: "save"
                 enabled: root.credentialsReady && !root.busy && apiKeyField.text.trim().length >= 16
                 contentColor: Appearance.colors.colPrimary
-                Accessible.description: qsTr("安全保存并立即应用，无需重启")
+                Accessible.description: qsTr("Save securely and apply immediately without restarting")
                 onClicked: root.applyApiKey()
             }
-
         }
-
     }
-
 }

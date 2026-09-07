@@ -22,7 +22,7 @@ Item {
         Text {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
-            text: qsTr("光标主题")
+            text: qsTr("Cursor theme")
             color: Appearance.colors.colOnSurface
             font.family: Fonts.ui
             font.pixelSize: 15
@@ -36,7 +36,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             options: root.cursorThemes
             value: root.currentCursorTheme
-            placeholder: qsTr("选择光标主题")
+            placeholder: qsTr("Choose cursor theme")
             textRole: "label"
             valueRole: "value"
             onAccepted: value => root.accepted(value)

@@ -22,29 +22,30 @@ WeatherInsightCard {
     shapeColor: Appearance.colors.colWeatherCardSurface
 
     function humidityIconPath() {
-        return "M580,720Q605,720 622.5,702.5Q640,685 640,660Q640,635 622.5,617.5Q605,600 580,600Q555,600 537.5,617.5Q520,635 520,660Q520,685 537.5,702.5Q555,720 580,720ZM378,718L638,458L582,402L322,662L378,718ZM380,520Q405,520 422.5,502.5Q440,485 440,460Q440,435 422.5,417.5Q405,400 380,400Q355,400 337.5,417.5Q320,435 320,460Q320,485 337.5,502.5Q355,520 380,520ZM480,880Q343,880 251.5,786Q160,692 160,552Q160,452 239.5,334.5Q319,217 480,80Q641,217 720.5,334.5Q800,452 800,552Q800,692 708.5,786Q617,880 480,880ZM480,800Q584,800 652,729.5Q720,659 720,552Q720,479 659.5,387Q599,295 480,186Q361,295 300.5,387Q240,479 240,552Q240,659 308,729.5Q376,800 480,800ZM480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Z"
+        return "M580,720Q605,720 622.5,702.5Q640,685 640,660Q640,635 622.5,617.5Q605,600 580,600Q555,600 537.5,617.5Q520,635 520,660Q520,685 537.5,702.5Q555,720 580,720ZM378,718L638,458L582,402L322,662L378,718ZM380,520Q405,520 422.5,502.5Q440,485 440,460Q440,435 422.5,417.5Q405,400 380,400Q355,400 337.5,417.5Q320,435 320,460Q320,485 337.5,502.5Q355,520 380,520ZM480,880Q343,880 251.5,786Q160,692 160,552Q160,452 239.5,334.5Q319,217 480,80Q641,217 720.5,334.5Q800,452 800,552Q800,692 708.5,786Q617,880 480,880ZM480,800Q584,800 652,729.5Q720,659 720,552Q720,479 659.5,387Q599,295 480,186Q361,295 300.5,387Q240,479 240,552Q240,659 308,729.5Q376,800 480,800ZM480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Z";
     }
 
     function humidityPercentValue() {
-        if (isNaN(root.humidityValue)) return NaN
-        return root.humidityValue <= 1.0 ? root.humidityValue * 100.0 : root.humidityValue
+        if (isNaN(root.humidityValue))
+            return NaN;
+        return root.humidityValue <= 1.0 ? root.humidityValue * 100.0 : root.humidityValue;
     }
 
     function numericTextValue(text) {
-        const match = (text || "").match(/[-+]?\d+(?:\.\d+)?/)
-        return match ? Number(match[0]) : NaN
+        const match = (text || "").match(/[-+]?\d+(?:\.\d+)?/);
+        return match ? Number(match[0]) : NaN;
     }
 
     function animatedHumidityText() {
-        return isNaN(humidityAnimation.currentValue)
-                ? "--"
-                : Math.round(humidityAnimation.currentValue) + "%"
+        return isNaN(humidityAnimation.currentValue) ? "--" : Math.round(humidityAnimation.currentValue)
+                                                       + "%";
+
     }
 
     function animatedDewPointText() {
-        return isNaN(dewPointAnimation.currentValue)
-                ? "--"
-                : Math.round(dewPointAnimation.currentValue) + "°"
+        return isNaN(dewPointAnimation.currentValue) ? "--" : Math.round(dewPointAnimation.currentValue)
+                                                       + "°";
+
     }
 
     WeatherAnimatedValue {
@@ -62,17 +63,22 @@ WeatherInsightCard {
     }
 
     function waveBucket() {
-        const value = humidityPercentValue()
-        if (isNaN(value)) return 50
-        if (value <= 20) return 7
-        if (value <= 40) return 30
-        if (value <= 60) return 50
-        if (value <= 80) return 75
-        return 90
+        const value = humidityPercentValue();
+        if (isNaN(value))
+            return 50;
+        if (value <= 20)
+            return 7;
+        if (value <= 40)
+            return 30;
+        if (value <= 60)
+            return 50;
+        if (value <= 80)
+            return 75;
+        return 90;
     }
 
     function waveSource() {
-        return Paths.icon("humidity_percent_" + waveBucket() + ".svg")
+        return Paths.icon("humidity_percent_" + waveBucket() + ".svg");
     }
 
     Row {
@@ -107,7 +113,7 @@ WeatherInsightCard {
         }
 
         Text {
-            text: qsTr("相对湿度")
+            text: qsTr("Relative humidity")
             color: Appearance.colors.colOnWeatherCardSurfaceVariant
             font.family: Fonts.expressive
             font.pixelSize: 18
@@ -182,7 +188,7 @@ WeatherInsightCard {
         }
 
         Text {
-            text: qsTr("露点")
+            text: qsTr("Dew point")
             color: Appearance.colors.colOnWeatherCardSurface
             font.family: Fonts.expressive
             font.pixelSize: 18

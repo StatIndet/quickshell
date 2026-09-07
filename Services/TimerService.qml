@@ -11,20 +11,15 @@ Singleton {
     readonly property int breakTime: 5 * 60
     readonly property int longBreakTime: 15 * 60
     readonly property int cyclesBeforeLongBreak: 4
-    readonly property int pomodoroSequenceDuration: focusTime * cyclesBeforeLongBreak
-        + breakTime * (cyclesBeforeLongBreak - 1)
-        + longBreakTime
+    readonly property int pomodoroSequenceDuration: focusTime * cyclesBeforeLongBreak + breakTime * (
+                                                        cyclesBeforeLongBreak - 1) + longBreakTime
 
     readonly property bool pomodoroRunning: InfoDrawerState.pomodoroRunning
     readonly property bool pomodoroBreak: InfoDrawerState.pomodoroBreak
     readonly property int pomodoroCycle: InfoDrawerState.pomodoroCycle
-    readonly property bool pomodoroLongBreak: pomodoroBreak
-        && pomodoroCycle + 1 === cyclesBeforeLongBreak
-    readonly property int pomodoroLapDuration: pomodoroLongBreak
-        ? longBreakTime
-        : pomodoroBreak
-            ? breakTime
-            : focusTime
+    readonly property bool pomodoroLongBreak: pomodoroBreak && pomodoroCycle + 1 === cyclesBeforeLongBreak
+    readonly property int pomodoroLapDuration: pomodoroLongBreak ? longBreakTime : pomodoroBreak ? breakTime :
+                                                                                                   focusTime
     property int pomodoroSecondsLeft: focusTime
 
     readonly property bool stopwatchRunning: InfoDrawerState.stopwatchRunning
@@ -49,9 +44,8 @@ Singleton {
     function pomodoroDurationFor(isBreak, cycle) {
         if (!isBreak)
             return root.focusTime;
-        return root.normalizedPomodoroCycle(cycle) + 1 === root.cyclesBeforeLongBreak
-            ? root.longBreakTime
-            : root.breakTime;
+        return root.normalizedPomodoroCycle(cycle) + 1 === root.cyclesBeforeLongBreak ? root.longBreakTime :
+                                                                                        root.breakTime;
     }
 
     function syncFromStore() {
@@ -62,15 +56,9 @@ Singleton {
         const cycleCorrected = normalizedCycle !== InfoDrawerState.pomodoroCycle;
         const storedSecondsLeft = Number(InfoDrawerState.pomodoroSecondsLeft);
         InfoDrawerState.pomodoroCycle = normalizedCycle;
-        root.pomodoroSecondsLeft = Math.max(
-            0,
-            Math.min(
-                root.pomodoroLapDuration,
-                Number.isFinite(storedSecondsLeft)
-                    ? storedSecondsLeft
-                    : root.pomodoroLapDuration
-            )
-        );
+        root.pomodoroSecondsLeft = Math.max(0, Math.min(root.pomodoroLapDuration, Number.isFinite(
+                                                            storedSecondsLeft) ? storedSecondsLeft :
+                                                                                 root.pomodoroLapDuration));
 
         if (root.pomodoroRunning)
             root.refreshPomodoro();
@@ -90,16 +78,13 @@ Singleton {
     function notifyPomodoroStage() {
         let message = "";
         if (root.pomodoroLongBreak)
-            message = qsTr("🌿 长休息：%1 分钟")
-                .arg(Math.floor(root.longBreakTime / 60));
+            message = qsTr("🌿 Long break: %1 minutes").arg(Math.floor(root.longBreakTime / 60));
         else if (root.pomodoroBreak)
-            message = qsTr("☕ 休息：%1 分钟")
-                .arg(Math.floor(root.breakTime / 60));
+            message = qsTr("☕ Break: %1 minutes").arg(Math.floor(root.breakTime / 60));
         else
-            message = qsTr("🔴 专注：%1 分钟")
-                .arg(Math.floor(root.focusTime / 60));
+            message = qsTr("🔴 Focus: %1 minutes").arg(Math.floor(root.focusTime / 60));
 
-        Quickshell.execDetached(["notify-send", qsTr("番茄钟"), message, "-a", "Clavis"]);
+        Quickshell.execDetached(["notify-send", qsTr("Pomodoro"), message, "-a", "Clavis"]);
     }
 
     function refreshPomodoro() {

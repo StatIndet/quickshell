@@ -11,34 +11,23 @@ Item {
     property var includedTransitions: []
     property int transitionDurationMs: 1000
     property string transitionEasingMode: "customBezier"
-    property var transitionBezierCurve:
-        [0.43, 1.19, 1.0, 0.4, 1.0, 1.0]
+    property var transitionBezierCurve: [0.43, 1.19, 1.0, 0.4, 1.0, 1.0]
     property bool transitionsEnabled: true
     property bool panoramaEnabled: false
     property real horizontalProgress: 0.5
     property var sharedTransform: null
-    property int textureWidth:
-        Math.min(Math.max(1, Math.round(width)), 8192)
-    property int textureHeight:
-        Math.min(Math.max(1, Math.round(height)), 8192)
+    property int textureWidth: Math.min(Math.max(1, Math.round(width)), 8192)
+    property int textureHeight: Math.min(Math.max(1, Math.round(height)), 8192)
 
     property int currentViewportIndex: 0
-    readonly property Item currentViewport:
-        currentViewportIndex === 0 ? viewportA : viewportB
-    readonly property Item nextViewport:
-        currentViewportIndex === 0 ? viewportB : viewportA
-    readonly property string currentSource:
-        currentViewport ? currentViewport.sourcePath : ""
-    readonly property string nextSource:
-        nextViewport ? nextViewport.sourcePath : ""
-    readonly property var currentViewportGeometry:
-        currentViewport ? currentViewport.panoramaGeometry : ({})
-    readonly property var nextViewportGeometry:
-        nextViewport ? nextViewport.panoramaGeometry : ({})
-    readonly property real currentViewportX:
-        currentViewport ? currentViewport.wallpaperX : 0
-    readonly property real nextViewportX:
-        nextViewport ? nextViewport.wallpaperX : 0
+    readonly property Item currentViewport: currentViewportIndex === 0 ? viewportA : viewportB
+    readonly property Item nextViewport: currentViewportIndex === 0 ? viewportB : viewportA
+    readonly property string currentSource: currentViewport ? currentViewport.sourcePath : ""
+    readonly property string nextSource: nextViewport ? nextViewport.sourcePath : ""
+    readonly property var currentViewportGeometry: currentViewport ? currentViewport.panoramaGeometry : ({})
+    readonly property var nextViewportGeometry: nextViewport ? nextViewport.panoramaGeometry : ({})
+    readonly property real currentViewportX: currentViewport ? currentViewport.wallpaperX : 0
+    readonly property real nextViewportX: nextViewport ? nextViewport.wallpaperX : 0
     property string activeTransition: "none"
     property real transitionProgress: 0
     property bool effectActive: false
@@ -53,12 +42,10 @@ Item {
     property real stripesAngle: 0
     property int activeTransitionDurationMs: 1000
     property int activeTransitionEasingType: Easing.BezierSpline
-    property var activeTransitionBezierCurve:
-        [0.43, 1.19, 1.0, 0.4, 1.0, 1.0]
+    property var activeTransitionBezierCurve: [0.43, 1.19, 1.0, 0.4, 1.0, 1.0]
     property string lastError: ""
 
-    readonly property bool sourceIsColor:
-        root.isColorSource(root.sourcePath)
+    readonly property bool sourceIsColor: root.isColorSource(root.sourcePath)
     readonly property bool ready: {
         if (root.sourcePath === "")
             return true;
@@ -69,14 +56,12 @@ Item {
         return root.currentViewport.ready;
     }
     readonly property real imagePixelWidth: {
-        if (root.nextViewport.ready
-                && root.nextSource !== "")
+        if (root.nextViewport.ready && root.nextSource !== "")
             return root.nextViewport.imagePixelWidth;
         return root.currentViewport.imagePixelWidth;
     }
     readonly property real imagePixelHeight: {
-        if (root.nextViewport.ready
-                && root.nextSource !== "")
+        if (root.nextViewport.ready && root.nextSource !== "")
             return root.nextViewport.imagePixelHeight;
         return root.currentViewport.imagePixelHeight;
     }
@@ -84,8 +69,7 @@ Item {
     signal loadFailed(string source, string message)
 
     function isColorSource(path) {
-        return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/
-            .test(String(path || ""));
+        return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(String(path || ""));
     }
 
     function chooseTransition() {
@@ -126,11 +110,8 @@ Item {
     function setImmediate(path) {
         transitionAnimation.stop();
         const requested = path || "";
-        if (requested !== ""
-                && requested === root.nextSource
-                && root.nextViewport.ready) {
-            root.currentViewportIndex =
-                root.currentViewportIndex === 0 ? 1 : 0;
+        if (requested !== "" && requested === root.nextSource && root.nextViewport.ready) {
+            root.currentViewportIndex = root.currentViewportIndex === 0 ? 1 : 0;
             root.nextViewport.sourcePath = "";
         } else {
             root.currentViewport.sourcePath = requested;
@@ -167,19 +148,15 @@ Item {
             return;
         }
         root.activeTransitionDurationMs = root.transitionDurationMs;
-        root.activeTransitionEasingType =
-            root.easingType(root.transitionEasingMode);
-        root.activeTransitionBezierCurve =
-            root.transitionEasingMode === "customBezier"
-                ? root.transitionBezierCurve
-                : [0, 0, 1, 1, 1, 1];
+        root.activeTransitionEasingType = root.easingType(root.transitionEasingMode);
+        root.activeTransitionBezierCurve = root.transitionEasingMode === "customBezier"
+                ? root.transitionBezierCurve : [0, 0, 1, 1, 1, 1];
         root.effectActive = true;
         transitionDelayTimer.restart();
     }
 
     function acceptPreparedImage() {
-        if (root.nextSource === ""
-                || !root.nextViewport.ready)
+        if (root.nextSource === "" || !root.nextViewport.ready)
             return;
         root.lastError = "";
         if (root.nextIsImmediate) {
@@ -218,14 +195,10 @@ Item {
             return;
         }
 
-        root.nextIsImmediate = root.currentSource === ""
-            || root.isColorSource(root.currentSource)
-            || immediate
-            || !root.transitionsEnabled
-            || root.transitionType === "none"
-            || root.transitionDurationMs <= 0;
-        root.activeTransition = root.nextIsImmediate
-            ? "none" : root.chooseTransition();
+        root.nextIsImmediate = root.currentSource === "" || root.isColorSource(root.currentSource) || immediate
+                || !root.transitionsEnabled || root.transitionType === "none" || root.transitionDurationMs
+                <= 0;
+        root.activeTransition = root.nextIsImmediate ? "none" : root.chooseTransition();
         if (root.activeTransition === "none")
             root.nextIsImmediate = true;
         else
@@ -237,16 +210,15 @@ Item {
     }
 
     function handleViewportReady(viewport) {
-        if (viewport !== root.nextViewport
-                || root.nextSource === ""
-                || transitionAnimation.running
+        if (viewport !== root.nextViewport || root.nextSource === "" || transitionAnimation.running
                 || root.effectActive)
+
             return;
         root.acceptPreparedImage();
     }
 
     function handleViewportFailure(viewport, source) {
-        const message = qsTr("无法解码壁纸：") + source;
+        const message = qsTr("Could not decode wallpaper: ") + source;
         root.lastError = message;
         if (viewport === root.nextViewport) {
             root.nextViewport.sourcePath = "";
@@ -258,10 +230,9 @@ Item {
     onSourcePathChanged: requestWallpaper(sourcePath, false)
     onTransitionsEnabledChanged: {
         if (!root.transitionsEnabled && root.effectActive) {
-            const target = root.nextSource !== ""
-                ? root.nextSource
-                : (root.pendingSource !== ""
-                    ? root.pendingSource : root.currentSource);
+            const target = root.nextSource !== "" ? root.nextSource : (root.pendingSource !== ""
+                                                                       ? root.pendingSource :
+                                                                         root.currentSource);
             root.setImmediate(target);
         }
     }
@@ -278,13 +249,10 @@ Item {
         sharedTransform: root.sharedTransform
         textureWidth: root.textureWidth
         textureHeight: root.textureHeight
-        visible: root.currentViewport === viewportA
-            || (root.effectActive
-                && root.nextViewport === viewportA)
+        visible: root.currentViewport === viewportA || (root.effectActive && root.nextViewport === viewportA)
 
         onReadyChanged: root.handleViewportReady(viewportA)
-        onLoadFailed: source =>
-            root.handleViewportFailure(viewportA, source)
+        onLoadFailed: source => root.handleViewportFailure(viewportA, source)
     }
 
     WallpaperImageViewport {
@@ -298,13 +266,10 @@ Item {
         sharedTransform: root.sharedTransform
         textureWidth: root.textureWidth
         textureHeight: root.textureHeight
-        visible: root.currentViewport === viewportB
-            || (root.effectActive
-                && root.nextViewport === viewportB)
+        visible: root.currentViewport === viewportB || (root.effectActive && root.nextViewport === viewportB)
 
         onReadyChanged: root.handleViewportReady(viewportB)
-        onLoadFailed: source =>
-            root.handleViewportFailure(viewportB, source)
+        onLoadFailed: source => root.handleViewportFailure(viewportB, source)
     }
 
     ShaderEffectSource {
@@ -374,8 +339,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir + "/shaders/wallpaper/qsb/wp_fade.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_fade.frag.qsb")
         }
     }
 
@@ -397,8 +361,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir + "/shaders/wallpaper/qsb/wp_wipe.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_wipe.frag.qsb")
         }
     }
 
@@ -411,8 +374,7 @@ Item {
             property variant source2: srcNext
             property real progress: root.transitionProgress
             property real smoothness: root.edgeSmoothness
-            property real aspectRatio:
-                root.width / Math.max(1, root.height)
+            property real aspectRatio: root.width / Math.max(1, root.height)
             property real centerX: root.discCenterX
             property real centerY: root.discCenterY
             property real fillMode: root.shaderFillMode
@@ -423,8 +385,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir + "/shaders/wallpaper/qsb/wp_disc.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_disc.frag.qsb")
         }
     }
 
@@ -437,8 +398,7 @@ Item {
             property variant source2: srcNext
             property real progress: root.transitionProgress
             property real smoothness: root.edgeSmoothness
-            property real aspectRatio:
-                root.width / Math.max(1, root.height)
+            property real aspectRatio: root.width / Math.max(1, root.height)
             property real stripeCount: root.stripesCount
             property real angle: root.stripesAngle
             property real fillMode: root.shaderFillMode
@@ -449,8 +409,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir + "/shaders/wallpaper/qsb/wp_stripes.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_stripes.frag.qsb")
         }
     }
 
@@ -465,8 +424,7 @@ Item {
             property real smoothness: root.edgeSmoothness
             property real centerX: 0.5
             property real centerY: 0.5
-            property real aspectRatio:
-                root.width / Math.max(1, root.height)
+            property real aspectRatio: root.width / Math.max(1, root.height)
             property real fillMode: root.shaderFillMode
             property vector4d fillColor: root.fillColor
             property real imageWidth1: root.width
@@ -475,9 +433,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir
-                    + "/shaders/wallpaper/qsb/wp_iris_bloom.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_iris_bloom.frag.qsb")
         }
     }
 
@@ -500,11 +456,8 @@ Item {
             property real screenHeight: root.height
             property real centerX: root.discCenterX
             property real centerY: root.discCenterY
-            property real aspectRatio:
-                root.width / Math.max(1, root.height)
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir
-                    + "/shaders/wallpaper/qsb/wp_pixelate.frag.qsb")
+            property real aspectRatio: root.width / Math.max(1, root.height)
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_pixelate.frag.qsb")
         }
     }
 
@@ -517,8 +470,7 @@ Item {
             property variant source2: srcNext
             property real progress: root.transitionProgress
             property real smoothness: root.edgeSmoothness
-            property real aspectRatio:
-                root.width / Math.max(1, root.height)
+            property real aspectRatio: root.width / Math.max(1, root.height)
             property real centerX: root.discCenterX
             property real centerY: root.discCenterY
             property real fillMode: root.shaderFillMode
@@ -529,8 +481,7 @@ Item {
             property real imageHeight2: root.height
             property real screenWidth: root.width
             property real screenHeight: root.height
-            fragmentShader: Paths.fileUrl(
-                Paths.assetsDir + "/shaders/wallpaper/qsb/wp_portal.frag.qsb")
+            fragmentShader: Paths.fileUrl(Paths.assetsDir + "/shaders/wallpaper/qsb/wp_portal.frag.qsb")
         }
     }
 
@@ -553,8 +504,7 @@ Item {
         easing.type: root.activeTransitionEasingType
         easing.bezierCurve: root.activeTransitionBezierCurve
         onFinished: {
-            root.currentViewportIndex =
-                root.currentViewportIndex === 0 ? 1 : 0;
+            root.currentViewportIndex = root.currentViewportIndex === 0 ? 1 : 0;
             root.nextViewport.sourcePath = "";
             root.transitionProgress = 0;
             root.effectActive = false;
@@ -562,8 +512,7 @@ Item {
             if (root.pendingSource !== "") {
                 const pending = root.pendingSource;
                 root.pendingSource = "";
-                Qt.callLater(
-                    () => root.requestWallpaper(pending, false));
+                Qt.callLater(() => root.requestWallpaper(pending, false));
             }
         }
     }

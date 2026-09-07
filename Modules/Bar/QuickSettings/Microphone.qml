@@ -16,10 +16,12 @@ Item {
         anchors.fill: parent
 
         value: Volume.sourceMuted ? 0 : Volume.sourceVolume
-        progressColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? Appearance.colors.colError : Appearance.colors.colPrimary
+        progressColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? Appearance.colors.colError :
+                                                                          Appearance.colors.colPrimary
         trackColor: Appearance.colors.colLayer2Hover
         handleColor: Appearance.colors.colOnSurface
-        iconColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? Appearance.colors.colError : Appearance.colors.colOnSurface
+        iconColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? Appearance.colors.colError :
+                                                                      Appearance.colors.colOnSurface
         icon: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? "mic_off" : "mic"
     }
 
@@ -29,7 +31,7 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
 
-        onWheel: (wheel) => {
+        onWheel: wheel => {
             const step = 0.05;
             let newVol = Volume.sourceVolume;
             if (wheel.angleDelta.y > 0)
@@ -53,7 +55,8 @@ Item {
 
     PopupToolTip {
         extraVisibleCondition: mouseArea.containsMouse
-        text: (Volume.sourceMuted ? qsTr("麦克风: 静音") : qsTr("麦克风: ") + Math.round(Volume.sourceVolume * 100) + "%")
-              + qsTr("\n滚轮调节，点击打开麦克风")
+        text: (Volume.sourceMuted ? qsTr("Microphone: muted") : qsTr("Microphone: ") + Math.round(
+                                        Volume.sourceVolume * 100) + "%") + qsTr(
+                  "\nScroll to adjust; click to open microphone controls")
     }
 }

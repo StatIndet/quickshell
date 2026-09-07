@@ -8,14 +8,11 @@ import "../../Common/functions/SystemFormat.js" as Format
 Item {
     id: root
 
-    property var network: ({
-    })
+    property var network: ({})
     property var aggregateDownloadHistory: []
     property var aggregateUploadHistory: []
-    property var downloadHistories: ({
-    })
-    property var uploadHistories: ({
-    })
+    property var downloadHistories: ({})
+    property var uploadHistories: ({})
     property string preferredInterface: ""
     property color surfaceColor: Appearance.colors.colPrimary
     property color panelColor: Appearance.colors.colPrimaryContainer
@@ -26,12 +23,15 @@ Item {
     readonly property color rightColor: root.panelColor
     readonly property color rightForeground: Appearance.colors.colOnPrimaryContainer
     readonly property color downloadIconColor: Appearance.colors.colTertiary
-    readonly property color uploadIconColor: Appearance.mix(Appearance.colors.colPrimary, Appearance.colors.colOnPrimary, 0.76)
-    readonly property color downloadChartColor: Appearance.mix(root.downloadIconColor, root.leftForeground, 0.64)
+    readonly property color uploadIconColor: Appearance.mix(Appearance.colors.colPrimary,
+                                                            Appearance.colors.colOnPrimary, 0.76)
+    readonly property color downloadChartColor: Appearance.mix(root.downloadIconColor, root.leftForeground,
+                                                               0.64)
     readonly property color uploadChartColor: Appearance.mix(root.uploadIconColor, root.leftForeground, 0.58)
     readonly property var interfaces: Array.isArray(root.network.interfaces) ? root.network.interfaces : []
     readonly property string defaultInterface: String(root.network.defaultInterface || "")
-    readonly property string selectedInterfaceName: root.preferredInterface === "" ? root.defaultInterface : root.preferredInterface
+    readonly property string selectedInterfaceName: root.preferredInterface === "" ? root.defaultInterface :
+                                                                                     root.preferredInterface
     readonly property var selectedInterface: {
         if (root.preferredInterface === "all")
             return root.network;
@@ -39,38 +39,43 @@ Item {
         for (let index = 0; index < root.interfaces.length; index += 1) {
             if (String(root.interfaces[index].name || "") === root.selectedInterfaceName)
                 return root.interfaces[index];
-
         }
-        return ({
-        });
+        return ({});
     }
     readonly property var interfaceOptions: {
-        const options = [{
-            "value": "",
-            "label": root.defaultInterface !== "" ? qsTr("默认 · %1").arg(root.defaultInterface) : qsTr("默认")
-        }, {
-            "value": "all",
-            "label": qsTr("总量")
-        }];
+        const options = [
+                  {
+                      "value": "",
+                      "label": root.defaultInterface !== "" ? qsTr("Default · %1").arg(root.defaultInterface) :
+                                                              qsTr("Default")
+                  },
+                  {
+                      "value": "all",
+                      "label": qsTr("Total")
+                  }
+              ];
         const names = [];
         for (let index = 0; index < root.interfaces.length; index += 1) {
             const networkInterface = root.interfaces[index];
             const name = String(networkInterface.name || "");
             if (name !== "" && networkInterface.loopback !== true)
                 names.push(name);
-
         }
         names.sort();
         for (let index = 0; index < names.length; index += 1) {
             options.push({
-                "value": names[index],
-                "label": names[index]
-            });
+                             "value": names[index],
+                             "label": names[index]
+                         });
         }
         return options;
     }
-    readonly property var downloadHistory: root.preferredInterface === "all" ? root.aggregateDownloadHistory : root.downloadHistories[root.selectedInterfaceName] || []
-    readonly property var uploadHistory: root.preferredInterface === "all" ? root.aggregateUploadHistory : root.uploadHistories[root.selectedInterfaceName] || []
+    readonly property var downloadHistory: root.preferredInterface === "all" ? root.aggregateDownloadHistory :
+                                                                               root.downloadHistories[root.selectedInterfaceName]
+                                                                               || []
+    readonly property var uploadHistory: root.preferredInterface === "all" ? root.aggregateUploadHistory :
+                                                                             root.uploadHistories[root.selectedInterfaceName]
+                                                                             || []
     readonly property real rightPanelX: Math.round(width * 0.53)
     readonly property int chartHistoryLength: 18
     readonly property real chartMaximum: {
@@ -83,23 +88,24 @@ Item {
                 const value = points[index];
                 if (typeof value === "number" && isFinite(value))
                     maximum = Math.max(maximum, value);
-
             }
         }
         return Math.max(1, maximum * 1.2);
     }
-    readonly property var expressiveBoldAxes: Fonts.familyAvailable(Fonts.bundledFamilyName) && Fonts.expressive === Fonts.bundledFamilyName ? ({
-        "GRAD": 100,
-        "ROND": 35,
-        "wdth": 85
-    }) : ({
-    })
+    readonly property var expressiveBoldAxes: Fonts.familyAvailable(Fonts.bundledFamilyName)
+                                              && Fonts.expressive === Fonts.bundledFamilyName ? ({
+                                                                                                     "GRAD": 100,
+                                                                                                     "ROND": 35,
+                                                                                                     "wdth": 85
+                                                                                                 }) : ({})
 
     signal interfaceSelected(string networkInterface)
 
     clip: true
     layer.enabled: true
-    Accessible.name: qsTr("网络，下载 ") + Format.bytesPerSecond(root.selectedInterface.downloadBytesPerSecond) + qsTr("，上传 ") + Format.bytesPerSecond(root.selectedInterface.uploadBytesPerSecond)
+    Accessible.name: qsTr("Network, download ") + Format.bytesPerSecond(
+                         root.selectedInterface.downloadBytesPerSecond) + qsTr(", upload ")
+                     + Format.bytesPerSecond(root.selectedInterface.uploadBytesPerSecond)
 
     Rectangle {
         anchors.fill: parent
@@ -108,7 +114,7 @@ Item {
     }
 
     Text {
-        text: qsTr("网络")
+        text: qsTr("Network")
         color: root.leftForeground
         renderType: Text.NativeRendering
         font.family: Fonts.expressive
@@ -122,7 +128,6 @@ Item {
             leftMargin: Appearance.spacing.medium
             topMargin: 16
         }
-
     }
 
     SystemSparkline {
@@ -149,7 +154,6 @@ Item {
             topMargin: 46
             bottomMargin: Appearance.spacing.small
         }
-
     }
 
     SystemSparkline {
@@ -162,8 +166,10 @@ Item {
         showGuideLines: false
         fillArea: true
         fillOpacity: 0.26
-        accessibilityName: qsTr("网络近期趋势")
-        accessibilityDescription: qsTr("下载 ") + Format.bytesPerSecond(root.selectedInterface.downloadBytesPerSecond) + qsTr("，上传 ") + Format.bytesPerSecond(root.selectedInterface.uploadBytesPerSecond)
+        accessibilityName: qsTr("Recent network activity")
+        accessibilityDescription: qsTr("Download ") + Format.bytesPerSecond(
+                                      root.selectedInterface.downloadBytesPerSecond) + qsTr(", upload ")
+                                  + Format.bytesPerSecond(root.selectedInterface.uploadBytesPerSecond)
         lineColor: root.downloadChartColor
         secondaryLineColor: root.uploadChartColor
         baselineColor: "transparent"
@@ -179,7 +185,6 @@ Item {
             topMargin: 46
             bottomMargin: Appearance.spacing.small
         }
-
     }
 
     Rectangle {
@@ -223,8 +228,8 @@ Item {
                 buttonHoverColor: Appearance.mix(root.leftColor, root.leftForeground, 0.88)
                 buttonPressedColor: Appearance.mix(root.leftColor, root.leftForeground, 0.76)
                 buttonTextColor: root.leftForeground
-                Accessible.name: qsTr("选择网络接口")
-                onValueSelected: (value) => {
+                Accessible.name: qsTr("Select network interface")
+                onValueSelected: value => {
                     return root.interfaceSelected(value);
                 }
             }
@@ -244,9 +249,7 @@ Item {
                 value: Format.bytesPerSecond(root.selectedInterface.uploadBytesPerSecond)
                 accentColor: root.uploadIconColor
             }
-
         }
-
     }
 
     layer.effect: OpacityMask {
@@ -256,7 +259,6 @@ Item {
             height: root.height
             radius: Appearance.rounding.extraLarge
         }
-
     }
 
     component NetworkRate: Item {
@@ -278,7 +280,6 @@ Item {
                 left: parent.left
                 verticalCenter: parent.verticalCenter
             }
-
         }
 
         Text {
@@ -297,9 +298,6 @@ Item {
                 verticalCenter: parent.verticalCenter
                 leftMargin: Appearance.spacing.small
             }
-
         }
-
     }
-
 }

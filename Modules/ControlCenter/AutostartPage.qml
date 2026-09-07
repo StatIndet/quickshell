@@ -19,7 +19,6 @@ StyledFlickable {
         appBrowserLoader.active = true;
         if (appBrowserLoader.item)
             appBrowserLoader.item.show();
-
     }
 
     function requestRemove(entry) {
@@ -33,13 +32,11 @@ StyledFlickable {
         root.pendingRemoveEntry = null;
         if (entry)
             AutostartService.remove(entry);
-
     }
 
     function closeChildWindows() {
         if (appBrowserLoader.item)
             appBrowserLoader.item.hide();
-
     }
 
     clip: true
@@ -100,14 +97,14 @@ StyledFlickable {
             Layout.fillWidth: true
             visible: AutostartService.initializing
             iconName: "progress_activity"
-            message: qsTr("正在初始化用户 autostart 目录…")
+            message: qsTr("Initializing the user autostart directory…")
         }
 
         InlineStatusBanner {
             Layout.fillWidth: true
             visible: AutostartService.initialized && AutostartService.listing
             iconName: "progress_activity"
-            message: qsTr("正在加载用户自启条目…")
+            message: qsTr("Loading user autostart entries…")
         }
 
         RowLayout {
@@ -122,11 +119,10 @@ StyledFlickable {
             }
 
             ActionButton {
-                text: qsTr("重试")
+                text: qsTr("Retry")
                 filled: true
                 onClicked: AutostartService.initialize()
             }
-
         }
 
         ColumnLayout {
@@ -138,40 +134,37 @@ StyledFlickable {
                 Layout.fillWidth: true
                 flat: true
                 iconName: "rocket_launch"
-                title: qsTr("添加应用到开机启动")
+                title: qsTr("Add application to autostart")
 
                 SettingsRow {
                     Layout.fillWidth: true
                     iconName: "apps"
-                    title: qsTr("浏览应用")
-                    supportingText: qsTr("选择一个已安装应用加入用户级开机启动")
+                    title: qsTr("Browse applications")
+                    supportingText: qsTr("Select an installed app to add to user-level startup")
 
                     trailing: ActionButton {
-                        text: qsTr("浏览应用")
+                        text: qsTr("Browse applications")
                         enabled: !AutostartService.busy
                         onClicked: root.openApplicationBrowser()
                     }
-
                 }
-
             }
 
             SettingsSection {
                 Layout.fillWidth: true
                 flat: true
                 iconName: "list_alt"
-                title: qsTr("用户自启应用")
+                title: qsTr("User autostart applications")
 
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: Metrics.spacingS
 
                     ActionButton {
-                        text: qsTr("刷新")
+                        text: qsTr("Refresh")
                         enabled: AutostartService.ready
                         onClicked: AutostartService.refresh()
                     }
-
                 }
 
                 ColumnLayout {
@@ -185,7 +178,8 @@ StyledFlickable {
                             required property var modelData
 
                             Layout.fillWidth: true
-                            implicitHeight: Math.max(Metrics.controlHeightXL, entryContent.implicitHeight + Metrics.spacingS * 2)
+                            implicitHeight: Math.max(Metrics.controlHeightXL, entryContent.implicitHeight
+                                                     + Metrics.spacingS * 2)
 
                             RowLayout {
                                 id: entryContent
@@ -211,8 +205,10 @@ StyledFlickable {
 
                                     Text {
                                         Layout.fillWidth: true
-                                        text: modelData.valid ? modelData.name : qsTr("无效条目：%1").arg(modelData.name)
-                                        color: modelData.valid ? Appearance.colors.colOnSurface : Appearance.colors.colError
+                                        text: modelData.valid ? modelData.name : qsTr("Invalid entry: %1").arg(
+                                                                    modelData.name)
+                                        color: modelData.valid ? Appearance.colors.colOnSurface :
+                                                                 Appearance.colors.colError
                                         font.family: Fonts.ui
                                         font.pixelSize: Typography.bodyMedium.pixelSize
                                         font.weight: Font.Medium
@@ -222,12 +218,12 @@ StyledFlickable {
                                     Text {
                                         Layout.fillWidth: true
                                         text: modelData.valid ? modelData.exec : modelData.error
-                                        color: modelData.valid ? Appearance.colors.colOnSurfaceVariant : Appearance.colors.colError
+                                        color: modelData.valid ? Appearance.colors.colOnSurfaceVariant :
+                                                                 Appearance.colors.colError
                                         font.family: Fonts.mono
                                         font.pixelSize: Typography.bodySmall.pixelSize
                                         elide: Text.ElideMiddle
                                     }
-
                                 }
 
                                 StyledSwitch {
@@ -238,15 +234,12 @@ StyledFlickable {
                                 }
 
                                 ActionButton {
-                                    text: qsTr("删除")
+                                    text: qsTr("Delete")
                                     enabled: !AutostartService.busy
                                     onClicked: root.requestRemove(modelData)
                                 }
-
                             }
-
                         }
-
                     }
 
                     ColumnLayout {
@@ -263,22 +256,17 @@ StyledFlickable {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("暂无自启应用")
+                            text: qsTr("No autostart applications")
                             horizontalAlignment: Text.AlignHCenter
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodyMedium.pixelSize
                             font.weight: Font.Medium
                         }
-
                     }
-
                 }
-
             }
-
         }
-
     }
 
     MaterialDialog {
@@ -286,8 +274,9 @@ StyledFlickable {
 
         anchors.centerIn: Overlay.overlay
         width: Math.min(420, root.width - Metrics.spacingL * 2)
-        dialogTitle: qsTr("删除自启条目？")
-        messageText: root.pendingRemoveEntry ? qsTr("将删除“%1”自启条目。").arg(root.pendingRemoveEntry.name) : ""
+        dialogTitle: qsTr("Delete autostart entry?")
+        messageText: root.pendingRemoveEntry ? qsTr("The autostart entry “%1” will be deleted.").arg(
+                                                   root.pendingRemoveEntry.name) : ""
 
         actionsComponent: Component {
             RowLayout {
@@ -298,19 +287,15 @@ StyledFlickable {
                 }
 
                 ActionButton {
-                    text: qsTr("取消")
+                    text: qsTr("Cancel")
                     onClicked: removeDialog.close()
                 }
 
                 ActionButton {
-                    text: qsTr("删除")
+                    text: qsTr("Delete")
                     onClicked: root.removePendingEntry()
                 }
-
             }
-
         }
-
     }
-
 }

@@ -23,13 +23,13 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("界面")
+            title: qsTr("Interface")
             iconName: "dashboard"
 
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "dock_to_bottom"
-                text: qsTr("条栏")
+                text: qsTr("Bar")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("bar")
             }
@@ -37,7 +37,7 @@ StyledFlickable {
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "side_navigation"
-                text: qsTr("侧边栏")
+                text: qsTr("Sidebar")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("sidebar")
             }
@@ -53,22 +53,21 @@ StyledFlickable {
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "blur_on"
-                text: qsTr("透明与模糊")
+                text: qsTr("Transparency and blur")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("effects")
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("系统")
+            title: qsTr("System")
             iconName: "settings_suggest"
 
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "language"
-                text: qsTr("语言与地区")
+                text: qsTr("Language & region")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("language-region")
             }
@@ -76,8 +75,9 @@ StyledFlickable {
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "wifi"
-                text: qsTr("网络")
-                description: NetworkService.available ? NetworkService.activeConnection : qsTr("NetworkManager 不可用")
+                text: qsTr("Network")
+                description: NetworkService.available ? NetworkService.activeConnection : qsTr(
+                                                            "Network unavailable")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("network")
             }
@@ -85,37 +85,36 @@ StyledFlickable {
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "devices_other"
-                text: qsTr("连接的设备")
+                text: qsTr("Connected devices")
                 description: {
                     if (!BluetoothService.available)
-                        return qsTr("蓝牙不可用");
+                        return qsTr("Bluetooth unavailable");
 
                     if (!BluetoothService.enabled)
-                        return qsTr("蓝牙已关闭");
+                        return qsTr("Bluetooth is off");
 
                     if (BluetoothService.connectedDevices.length === 1)
                         return BluetoothService.connectedDevices[0].name;
 
                     if (BluetoothService.connectedDevices.length > 1)
-                        return qsTr("%1 台设备已连接").arg(BluetoothService.connectedDevices.length);
+                        return qsTr("%1 devices connected").arg(BluetoothService.connectedDevices.length);
 
                     return "";
                 }
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("connected-devices")
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("应用")
+            title: qsTr("Applications")
             iconName: "apps"
 
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "rocket_launch"
-                text: qsTr("开机启动")
+                text: qsTr("Autostart")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("autostart")
             }
@@ -123,13 +122,10 @@ StyledFlickable {
             SettingsActionRow {
                 Layout.fillWidth: true
                 iconName: "apps"
-                text: qsTr("默认应用")
+                text: qsTr("Default applications")
                 trailingIconName: "chevron_right"
                 onClicked: root.sectionRequested("default-apps")
             }
-
         }
-
     }
-
 }

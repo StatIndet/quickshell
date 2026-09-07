@@ -20,15 +20,23 @@ Rectangle {
     property date currentDate: new Date()
 
     readonly property var tabs: [
-        { "name": qsTr("日历"), "icon": "calendar_month" },
-        { "name": qsTr("待办"), "icon": "done_outline" },
-        { "name": qsTr("计时器"), "icon": "schedule" }
+        {
+            "name": qsTr("Calendar"),
+            "icon": "calendar_month"
+        },
+        {
+            "name": qsTr("To-do"),
+            "icon": "done_outline"
+        },
+        {
+            "name": qsTr("Timer"),
+            "icon": "schedule"
+        }
     ]
 
     implicitHeight: collapsed ? collapsedRow.implicitHeight : 350
     radius: Appearance.rounding.normal
-    color: BlurService.opaqueBackgroundColor(
-        Appearance.m3colors.m3surfaceContainerLow)
+    color: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainerLow)
     clip: true
     focus: active
 
@@ -49,8 +57,7 @@ Rectangle {
     }
 
     function formattedDate(date) {
-        return DateFormat.compactDate(
-            date, I18nService.language, Qt.locale(), "ddd, dd/MM");
+        return DateFormat.compactDate(date, I18nService.language, Qt.locale(), "ddd, dd/MM");
     }
 
     function focusCurrentPage() {
@@ -156,7 +163,7 @@ Rectangle {
             stateLayerColor: Appearance.colors.colLayer2Hover
             pressedStateLayerColor: Appearance.colors.colLayer2Active
             rippleColor: Appearance.colors.colOnLayer2
-            Accessible.name: qsTr("展开工具")
+            Accessible.name: qsTr("Expand tools")
             onClicked: root.setCollapsed(false)
 
             contentItem: MaterialSymbol {
@@ -166,7 +173,7 @@ Rectangle {
             }
 
             StyledToolTip {
-                text: qsTr("展开工具")
+                text: qsTr("Expand tools")
                 alternativeVisibleCondition: expandButton.activeFocus
             }
         }
@@ -179,8 +186,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignVCenter
-            text: root.formattedDate(root.currentDate)
-                + qsTr("   •   %1 项任务").arg(remainingTasks)
+            text: root.formattedDate(root.currentDate) + qsTr("   •   %1 tasks").arg(remainingTasks)
             color: Appearance.colors.colOnLayer1
             font.family: Fonts.ui
             font.pixelSize: 15
@@ -213,7 +219,7 @@ Rectangle {
                 stateLayerColor: Appearance.colors.colLayer2Hover
                 pressedStateLayerColor: Appearance.colors.colLayer2Active
                 rippleColor: Appearance.colors.colOnLayer2
-            Accessible.name: qsTr("收起工具")
+                Accessible.name: qsTr("Collapse tools")
                 onClicked: root.setCollapsed(true)
 
                 contentItem: MaterialSymbol {
@@ -223,7 +229,7 @@ Rectangle {
                 }
 
                 StyledToolTip {
-                text: qsTr("收起工具")
+                    text: qsTr("Collapse tools")
                     alternativeVisibleCondition: collapseButton.activeFocus
                 }
             }
@@ -287,15 +293,15 @@ Rectangle {
                                     text: tabButton.modelData.icon
                                     iconSize: 24
                                     fill: tabButton.toggled ? 1 : 0
-                                    color: tabButton.toggled
-                                        ? Appearance.colors.colOnSecondaryContainer
-                                        : Appearance.colors.colOnLayer1
+                                    color: tabButton.toggled ? Appearance.colors.colOnSecondaryContainer :
+                                                               Appearance.colors.colOnLayer1
 
                                     Behavior on color {
                                         ColorAnimation {
                                             duration: Appearance.animation.expressiveDefaultEffects.duration
                                             easing.type: Appearance.animation.expressiveDefaultEffects.type
-                                            easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+                                            easing.bezierCurve:
+                                                Appearance.animation.expressiveDefaultEffects.bezierCurve
                                         }
                                     }
                                 }
@@ -305,9 +311,8 @@ Rectangle {
                                     anchors.topMargin: 1
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     text: tabButton.modelData.name
-                                    color: tabButton.toggled
-                                        ? Appearance.colors.colOnSecondaryContainer
-                                        : Appearance.colors.colOnLayer1
+                                    color: tabButton.toggled ? Appearance.colors.colOnSecondaryContainer :
+                                                               Appearance.colors.colOnLayer1
                                     font.family: Fonts.ui
                                     font.pixelSize: 12
                                 }
@@ -466,10 +471,8 @@ Rectangle {
     Component {
         id: timerComponent
         TimerWidget {
-            shortcutsEnabled: root.active
-                && !root.collapsed
-                && root.selectedTab === 2
-                && root.displayedTab === 2
+            shortcutsEnabled: root.active && !root.collapsed && root.selectedTab === 2 && root.displayedTab
+                              === 2
         }
     }
 }

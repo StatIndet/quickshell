@@ -28,45 +28,51 @@ WeatherInsightCard {
     shapeColor: Appearance.colors.colWeatherCardSurface
 
     function parseValueText(text) {
-        const source = (text || "").trim()
+        const source = (text || "").trim();
         if (source.length === 0 || source === "--")
-            return { number: "--", unit: "" }
+            return {
+                number: "--",
+                unit: ""
+            };
 
-        const match = source.match(/^([-+]?\d+(?:\.\d+)?)\s*([A-Za-z\u4e00-\u9fa5%°/]+)?$/)
+        const match = source.match(/^([-+]?\d+(?:\.\d+)?)\s*([A-Za-z\u4e00-\u9fa5%°/]+)?$/);
         if (!match)
-            return { number: source, unit: "" }
+            return {
+                number: source,
+                unit: ""
+            };
 
         return {
             number: match[1],
             unit: match[2] || ""
-        }
+        };
     }
 
     function localizedUnit(unit) {
         if (unit === "mm")
-            return qsTr("毫米")
+            return qsTr("millimeters");
         if (unit === "cm")
-            return qsTr("厘米")
-        return unit
+            return qsTr("centimeters");
+        return unit;
     }
 
     function normalizedDescription(text) {
-        let label = (text || "").trim()
+        let label = (text || "").trim();
         if (label.length === 0)
-            return ""
-        label = label.replace(qsTr("降雨总量"), qsTr("降水"))
-        label = label.replace(qsTr("总降水"), qsTr("降水"))
-        label = label.replace(qsTr("总量"), "")
-        return label
+            return "";
+        label = label.replace(qsTr("Total rainfall"), qsTr("Precipitation"));
+        label = label.replace(qsTr("Total precipitation"), qsTr("Precipitation"));
+        label = label.replace(qsTr("Total"), "");
+        return label;
     }
 
     function animatedValueText() {
         if (isNaN(amountAnimation.currentValue))
-            return "--"
+            return "--";
 
-        const decimalIndex = root.displayValue.indexOf(".")
-        const decimals = decimalIndex >= 0 ? root.displayValue.length - decimalIndex - 1 : 0
-        return Number(amountAnimation.currentValue).toFixed(decimals)
+        const decimalIndex = root.displayValue.indexOf(".");
+        const decimals = decimalIndex >= 0 ? root.displayValue.length - decimalIndex - 1 : 0;
+        return Number(amountAnimation.currentValue).toFixed(decimals);
     }
 
     WeatherAnimatedValue {
@@ -104,7 +110,7 @@ WeatherInsightCard {
         }
 
         Text {
-            text: qsTr("降水量")
+            text: qsTr("Precipitation amount")
             color: root.mutedInk
             font.family: Fonts.expressive
             font.pixelSize: 18

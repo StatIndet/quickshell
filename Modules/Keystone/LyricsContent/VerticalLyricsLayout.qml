@@ -41,29 +41,30 @@ Item {
             }
             if (isCjk(character)) {
                 result.push({
-                    "text": character,
-                    "latin": false
-                });
+                                "text": character,
+                                "latin": false
+                            });
                 ++index;
                 continue;
             }
             if (isLatinCore(character)) {
                 let token = character;
                 ++index;
-                while (index < source.length && (isLatinCore(source[index]) || isLatinPunctuation(source[index]))) {
+                while (index < source.length && (isLatinCore(source[index]) || isLatinPunctuation(
+                                                     source[index]))) {
                     token += source[index];
                     ++index;
                 }
                 result.push({
-                    "text": token,
-                    "latin": true
-                });
+                                "text": token,
+                                "latin": true
+                            });
                 continue;
             }
             result.push({
-                "text": character,
-                "latin": false
-            });
+                            "text": character,
+                            "latin": false
+                        });
             ++index;
         }
         return result;
@@ -102,14 +103,14 @@ Item {
             anchors.centerIn: parent
             width: root.lyricWidth
             visible: root.status !== "ready"
-            text: root.status === "loading" ? qsTr("加载中") : root.status === "error" ? qsTr("失败") : qsTr("暂无")
+            text: root.status === "loading" ? qsTr("Loading") : root.status === "error" ? qsTr("Failed") :
+                                                                                          qsTr("Unavailable")
             color: Appearance.applyAlpha(Appearance.colors.colOnLayer0, 0.65)
             font.family: Fonts.ui
             font.pixelSize: 13
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WrapAnywhere
         }
-
     }
 
     Item {
@@ -130,16 +131,19 @@ Item {
             onTriggered: {
                 const values = AudioSpectrum.values;
                 if (!values || values.length < 6)
-                    return ;
+                    return;
 
-                const ranges = [[0.55, 0.78, 1.5], [0.18, 0.33, 1.2], [0, 0.08, 1], [0.08, 0.18, 1], [0.33, 0.55, 1.2], [0.78, 0.98, 1.5]];
+                const ranges = [[0.55, 0.78, 1.5], [0.18, 0.33, 1.2], [0, 0.08, 1], [0.08, 0.18, 1], [0.33, 0.55,
+                                                                                                      1.2], [0.78,
+                                                                                                             0.98, 1.5]];
                 const next = spectrum.smoothValues.slice();
                 for (let index = 0; index < ranges.length; ++index) {
                     const range = ranges[index];
                     const start = Math.floor(values.length * range[0]);
                     const end = Math.min(values.length - 1, Math.floor(values.length * range[1]));
                     let maximum = 0;
-                    for (let sample = start; sample <= end; ++sample) maximum = Math.max(maximum, values[sample])
+                    for (let sample = start; sample <= end; ++sample)
+                        maximum = Math.max(maximum, values[sample]);
                     const target = Math.min(100, maximum * 100 * range[2]);
                     const difference = target - next[index];
                     next[index] += (difference > 0 ? 0.85 : 0.08) * difference;
@@ -171,7 +175,6 @@ Item {
                 context.stroke();
             }
         }
-
     }
 
     component TokenColumn: Column {
@@ -203,11 +206,7 @@ Item {
                     rotation: parent.latin ? (root.edge === "left" ? -90 : 90) : 0
                     horizontalAlignment: Text.AlignHCenter
                 }
-
             }
-
         }
-
     }
-
 }

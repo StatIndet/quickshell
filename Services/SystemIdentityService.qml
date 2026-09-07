@@ -11,13 +11,11 @@ Singleton {
         const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim();
         return configured !== "" ? configured : "keytop";
     }
-    property var system: ({
-    })
+    property var system: ({})
     property bool ready: false
     property bool _initializationStarted: false
     property string errorMessage: ""
-    property var _uptimeConsumers: ({
-    })
+    property var _uptimeConsumers: ({})
     property real _baseUptimeSeconds: 0
     property real uptimeSeconds: 0
     property bool _uptimeBaseReady: false
@@ -29,7 +27,7 @@ Singleton {
     readonly property string shellName: system.shellName || "unknown"
     readonly property string kernelRelease: system.kernel || "unknown"
     readonly property string architecture: system.architecture || "unknown"
-    readonly property string chassis: system.chassis || qsTr("电脑")
+    readonly property string chassis: system.chassis || qsTr("Computer")
     readonly property string vendor: system.vendor || ""
     readonly property string productName: system.productName || ""
     readonly property string boardName: system.boardName || ""
@@ -46,10 +44,9 @@ Singleton {
     function setUptimeConsumer(owner, active) {
         const key = String(owner || "").trim();
         if (key === "")
-            return ;
+            return;
 
-        const next = Object.assign({
-        }, root._uptimeConsumers);
+        const next = Object.assign({}, root._uptimeConsumers);
         if (active)
             next[key] = true;
         else
@@ -68,7 +65,7 @@ Singleton {
         const fields = String(uptimeFile.text() || "").trim().split(/\s+/);
         const value = Number(fields[0]);
         if (!isFinite(value) || value < 0)
-            return ;
+            return;
 
         root._baseUptimeSeconds = value;
         root.uptimeSeconds = value;
@@ -79,27 +76,27 @@ Singleton {
     function _updateUptime() {
         if (root._uptimeBaseReady)
             root.uptimeSeconds = root._baseUptimeSeconds + monotonicTimer.elapsedMs() / 1000;
-
     }
 
     function _consumeIdentity() {
         try {
             const payload = JSON.parse(identityOutput.text.trim());
-            if (payload.schemaVersion !== root.supportedSchemaVersion || !payload.system || typeof payload.system !== "object")
+            if (payload.schemaVersion !== root.supportedSchemaVersion || !payload.system
+                    || typeof payload.system !== "object")
                 throw new Error("schemaVersion or system field is invalid");
 
             root.system = payload.system;
             root.ready = true;
             root.errorMessage = "";
         } catch (error) {
-            root.errorMessage = qsTr("无法读取系统身份信息");
+            root.errorMessage = qsTr("Unable to read system identity");
             console.warn("SystemIdentityService:", error);
         }
     }
 
     function initialize() {
         if (root._initializationStarted)
-            return ;
+            return;
 
         root._initializationStarted = true;
         identityProcess.command = [root.commandName, "value", "system", "--format", "json"];
@@ -112,12 +109,12 @@ Singleton {
         const hours = Math.floor((total % 86400) / 3600);
         const minutes = Math.floor((total % 3600) / 60);
         if (days > 0)
-            return qsTr("%1 天 %2 小时").arg(days).arg(hours);
+            return qsTr("%1 days %2 hours").arg(days).arg(hours);
 
         if (hours > 0)
-            return qsTr("%1 小时 %2 分钟").arg(hours).arg(minutes);
+            return qsTr("%1 hours %2 minutes").arg(hours).arg(minutes);
 
-        return qsTr("%1 分钟").arg(minutes);
+        return qsTr("%1 minutes").arg(minutes);
     }
 
     onUptimeActiveChanged: {
@@ -148,7 +145,7 @@ Singleton {
         watchChanges: false
         blockLoading: true
         onLoaded: root._finishUptimeRead()
-        onLoadFailed: (error) => {
+        onLoadFailed: error => {
             return console.warn("SystemIdentityService /proc/uptime:", error);
         }
     }
@@ -160,16 +157,13 @@ Singleton {
             if (exitCode === 0)
                 root._consumeIdentity();
             else
-                root.errorMessage = qsTr("无法读取系统身份信息");
+                root.errorMessage = qsTr("Unable to read system identity");
         }
 
         stdout: StdioCollector {
             id: identityOutput
         }
 
-        stderr: StdioCollector {
-        }
-
+        stderr: StdioCollector {}
     }
-
 }

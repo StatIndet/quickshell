@@ -73,10 +73,10 @@ Item {
 
     clip: true
     layer.enabled: true
-    Accessible.name: root.disks.length > 0 ? qsTr("磁盘 %1，读取 %2，写入 %3").arg(root.selectedDevice).arg(
+    Accessible.name: root.disks.length > 0 ? qsTr("Disk %1, read %2, write %3").arg(root.selectedDevice).arg(
                                                  Format.bytesPerSecond(root.disk.readBytesPerSecond)).arg(
                                                  Format.bytesPerSecond(root.disk.writeBytesPerSecond)) : qsTr(
-                                                 "未检测到磁盘")
+                                                 "No disk detected")
 
     Rectangle {
         anchors.fill: parent
@@ -85,7 +85,7 @@ Item {
     }
 
     Text {
-        text: qsTr("磁盘 I/O")
+        text: qsTr("Disk I/O")
         color: root.leftForeground
         renderType: Text.NativeRendering
         font.family: Fonts.expressive
@@ -135,9 +135,9 @@ Item {
         showGuideLines: false
         fillArea: true
         fillOpacity: 0.26
-        accessibilityName: qsTr("磁盘近期吞吐趋势")
-        accessibilityDescription: qsTr("读取 %1，写入 %2").arg(Format.bytesPerSecond(
-                                                              root.disk.readBytesPerSecond)).arg(
+        accessibilityName: qsTr("Recent disk throughput trend")
+        accessibilityDescription: qsTr("Read %1, write %2").arg(Format.bytesPerSecond(
+                                                                    root.disk.readBytesPerSecond)).arg(
                                       Format.bytesPerSecond(root.disk.writeBytesPerSecond))
         lineColor: root.readDataColor
         secondaryLineColor: root.writeDataColor
@@ -197,7 +197,7 @@ Item {
                 buttonHoverColor: Appearance.mix(root.leftColor, root.leftForeground, 0.88)
                 buttonPressedColor: Appearance.mix(root.leftColor, root.leftForeground, 0.76)
                 buttonTextColor: root.leftForeground
-                Accessible.name: qsTr("选择磁盘")
+                Accessible.name: qsTr("Select disk")
                 onValueSelected: value => {
                     return root.diskSelected(value);
                 }
@@ -207,7 +207,7 @@ Item {
                 width: parent.width
                 height: 36
                 visible: root.diskOptions.length === 0
-                text: qsTr("未检测到磁盘")
+                text: qsTr("No disk detected")
                 color: root.rightForeground
                 verticalAlignment: Text.AlignVCenter
                 font.family: Fonts.expressive
@@ -220,7 +220,7 @@ Item {
                 width: parent.width
                 height: (parent.height - 36 - parent.spacing * 2) / 2
                 iconName: "input"
-                accessibilityLabel: qsTr("读取")
+                accessibilityLabel: qsTr("Read")
                 value: Format.bytesPerSecond(root.disk.readBytesPerSecond)
                 accentColor: root.readDataColor
             }
@@ -229,7 +229,7 @@ Item {
                 width: parent.width
                 height: (parent.height - 36 - parent.spacing * 2) / 2
                 iconName: "output"
-                accessibilityLabel: qsTr("写入")
+                accessibilityLabel: qsTr("Write")
                 value: Format.bytesPerSecond(root.disk.writeBytesPerSecond)
                 accentColor: root.writeDataColor
             }

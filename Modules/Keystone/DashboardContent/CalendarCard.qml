@@ -115,7 +115,7 @@ Rectangle {
                 iconName: "chevron_left"
                 iconSize: 21
                 iconColor: Appearance.colors.colOnSurface
-                accessibleName: qsTr("上个月")
+                accessibleName: qsTr("Previous month")
                 hoverStateLayerColor: Appearance.colors.colLayer4Hover
                 pressedStateLayerColor: Appearance.colors.colLayer4Active
                 onClicked: root.navigateMonth(-1)
@@ -128,17 +128,18 @@ Rectangle {
                 Rectangle {
                     anchors.fill: parent
                     radius: height / 2
-                    color: monthMouse.pressed
-                        ? Appearance.colors.colPrimaryContainerActive
-                        : monthMouse.containsMouse
-                          ? Appearance.colors.colPrimaryContainerHover
-                          : Appearance.colors.colPrimaryContainer
+                    color: monthMouse.pressed ? Appearance.colors.colPrimaryContainerActive :
+                                                monthMouse.containsMouse
+                                                ? Appearance.colors.colPrimaryContainerHover :
+                                                  Appearance.colors.colPrimaryContainer
                 }
 
                 Text {
                     anchors.centerIn: parent
                     opacity: root.monthOpacity
-                    transform: Translate { x: root.monthOffset }
+                    transform: Translate {
+                        x: root.monthOffset
+                    }
                     text: calendarGrid.title
                     color: Appearance.colors.colOnPrimaryContainer
                     font.family: Fonts.ui
@@ -161,7 +162,7 @@ Rectangle {
                 iconName: "chevron_right"
                 iconSize: 21
                 iconColor: Appearance.colors.colOnSurface
-                accessibleName: qsTr("下个月")
+                accessibleName: qsTr("Next month")
                 hoverStateLayerColor: Appearance.colors.colLayer4Hover
                 pressedStateLayerColor: Appearance.colors.colLayer4Active
                 onClicked: root.navigateMonth(1)
@@ -177,9 +178,9 @@ Rectangle {
 
                 horizontalAlignment: Text.AlignHCenter
                 text: model.shortName
-                color: model.day === 0 || model.day === 6
-                    ? Appearance.colors.colTertiary
-                    : Appearance.colors.colOnSurface
+                color: model.day === 0 || model.day === 6 ? Appearance.colors.colTertiary :
+                                                            Appearance.colors.colOnSurface
+
                 font.family: Fonts.ui
                 font.pixelSize: 12
                 font.weight: Font.Medium
@@ -190,7 +191,9 @@ Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             opacity: root.monthOpacity
-            transform: Translate { x: root.monthOffset }
+            transform: Translate {
+                x: root.monthOffset
+            }
 
             MonthGrid {
                 id: calendarGrid
@@ -214,9 +217,7 @@ Rectangle {
                         width: Math.min(parent.width, parent.height) - 3
                         height: width
                         radius: width / 2
-                        color: dayItem.model.today
-                            ? Appearance.colors.colPrimary
-                            : "transparent"
+                        color: dayItem.model.today ? Appearance.colors.colPrimary : "transparent"
                     }
 
                     Text {
@@ -226,9 +227,8 @@ Rectangle {
                             if (dayItem.model.today)
                                 return Appearance.colors.colOnPrimary;
                             const dayOfWeek = dayItem.model.date.getDay();
-                            return dayOfWeek === 0 || dayOfWeek === 6
-                                ? Appearance.colors.colTertiary
-                                : Appearance.colors.colOnSurfaceVariant;
+                            return dayOfWeek === 0 || dayOfWeek === 6 ? Appearance.colors.colTertiary :
+                                                                        Appearance.colors.colOnSurfaceVariant;
                         }
                         opacity: dayItem.model.today || dayItem.model.month === calendarGrid.month ? 1 : 0.38
                         font.family: Fonts.numeric

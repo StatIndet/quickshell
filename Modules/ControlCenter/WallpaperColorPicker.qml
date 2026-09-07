@@ -13,7 +13,7 @@ Item {
     id: root
 
     property var parentModal: null
-    property string pickerTitle: qsTr("选择壁纸颜色")
+    property string pickerTitle: qsTr("Choose wallpaper color")
     property color currentColor: Appearance.colors.colPrimary
     property real hue: 0
     property real saturation: 1
@@ -32,7 +32,12 @@ Item {
     readonly property real colorCellStride: Math.floor((dialogWidth - dialogMargin * 2) / 17)
     readonly property real colorCellSize: Math.max(28, Math.min(36, colorCellStride - 2))
     readonly property real colorGridHeight: (colorCellSize + 2) * 3
-    readonly property var standardColors: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#d32f2f", "#c2185b", "#7b1fa2", "#512da8", "#303f9f", "#1976d2", "#0288d1", "#0097a7", "#00796b", "#388e3c", "#689f38", "#afb42b", "#fbc02d", "#ffa000", "#f57c00", "#e64a19", "#c62828", "#ad1457", "#6a1b9a", "#4527a0", "#283593", "#1565c0", "#0277bd", "#00838f", "#00695c", "#2e7d32", "#558b2f", "#9e9d24", "#f9a825", "#ff8f00", "#ef6c00", "#d84315", "#ffffff", "#9e9e9e", "#212121"]
+    readonly property var standardColors: ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3",
+        "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722",
+        "#d32f2f", "#c2185b", "#7b1fa2", "#512da8", "#303f9f", "#1976d2", "#0288d1", "#0097a7", "#00796b", "#388e3c",
+        "#689f38", "#afb42b", "#fbc02d", "#ffa000", "#f57c00", "#e64a19", "#c62828", "#ad1457", "#6a1b9a", "#4527a0",
+        "#283593", "#1565c0", "#0277bd", "#00838f", "#00695c", "#2e7d32", "#558b2f", "#9e9d24", "#f9a825", "#ff8f00",
+        "#ef6c00", "#d84315", "#ffffff", "#9e9e9e", "#212121"]
 
     signal colorSelected(string color)
 
@@ -181,8 +186,7 @@ Item {
 
                 anchors.fill: parent
                 radius: Appearance.rounding.normal
-                color: BlurService.backgroundColor(
-                    Appearance.m3colors.m3surfaceContainerLow)
+                color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerLow)
                 border.width: 1
                 border.color: Appearance.m3colors.m3outlineVariant
             }
@@ -233,7 +237,7 @@ Item {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: qsTr("从调色板中选择颜色，或使用自定义滑块")
+                                text: qsTr("Choose a color from the palette or use the custom sliders")
                                 color: Appearance.colors.colSubtext
                                 font.family: Fonts.ui
                                 font.pixelSize: 13
@@ -243,13 +247,13 @@ Item {
 
                         PickerIconButton {
                             iconName: "colorize"
-                            tooltipText: qsTr("屏幕取色")
+                            tooltipText: qsTr("Pick from screen")
                             onClicked: root.pickColorFromScreen()
                         }
 
                         PickerIconButton {
                             iconName: "close"
-                            tooltipText: qsTr("关闭")
+                            tooltipText: qsTr("Close")
                             onClicked: root.close()
                         }
                     }
@@ -276,8 +280,14 @@ Item {
                                     anchors.fill: parent
                                     gradient: Gradient {
                                         orientation: Gradient.Horizontal
-                                        GradientStop { position: 0.0; color: "#ffffff" }
-                                        GradientStop { position: 1.0; color: "transparent" }
+                                        GradientStop {
+                                            position: 0.0
+                                            color: "#ffffff"
+                                        }
+                                        GradientStop {
+                                            position: 1.0
+                                            color: "transparent"
+                                        }
                                     }
                                 }
 
@@ -285,8 +295,14 @@ Item {
                                     anchors.fill: parent
                                     gradient: Gradient {
                                         orientation: Gradient.Vertical
-                                        GradientStop { position: 0.0; color: "transparent" }
-                                        GradientStop { position: 1.0; color: "#000000" }
+                                        GradientStop {
+                                            position: 0.0
+                                            color: "transparent"
+                                        }
+                                        GradientStop {
+                                            position: 1.0
+                                            color: "#000000"
+                                        }
                                     }
                                 }
                             }
@@ -345,13 +361,34 @@ Item {
 
                             gradient: Gradient {
                                 orientation: Gradient.Vertical
-                                GradientStop { position: 0.00; color: "#ff0000" }
-                                GradientStop { position: 0.17; color: "#ffff00" }
-                                GradientStop { position: 0.33; color: "#00ff00" }
-                                GradientStop { position: 0.50; color: "#00ffff" }
-                                GradientStop { position: 0.67; color: "#0000ff" }
-                                GradientStop { position: 0.83; color: "#ff00ff" }
-                                GradientStop { position: 1.00; color: "#ff0000" }
+                                GradientStop {
+                                    position: 0.00
+                                    color: "#ff0000"
+                                }
+                                GradientStop {
+                                    position: 0.17
+                                    color: "#ffff00"
+                                }
+                                GradientStop {
+                                    position: 0.33
+                                    color: "#00ff00"
+                                }
+                                GradientStop {
+                                    position: 0.50
+                                    color: "#00ffff"
+                                }
+                                GradientStop {
+                                    position: 0.67
+                                    color: "#0000ff"
+                                }
+                                GradientStop {
+                                    position: 0.83
+                                    color: "#ff00ff"
+                                }
+                                GradientStop {
+                                    position: 1.00
+                                    color: "#ff0000"
+                                }
                             }
 
                             Rectangle {
@@ -381,7 +418,7 @@ Item {
                     }
 
                     SectionLabel {
-                        text: qsTr("material 配色")
+                        text: qsTr("Material color scheme")
                     }
 
                     StyledGridView {
@@ -428,7 +465,7 @@ Item {
                             spacing: 8
 
                             SectionLabel {
-                                text: qsTr("最近拾取的颜色")
+                                text: qsTr("Recently picked colors")
                             }
 
                             RowLayout {
@@ -441,18 +478,23 @@ Item {
                                         width: 36
                                         height: 36
                                         radius: 4
-                                        color: index < PersonalizationConfig.recentWallpaperColors.length ? PersonalizationConfig.recentWallpaperColors[index] : Appearance.colors.colLayer3
-                                        opacity: index < PersonalizationConfig.recentWallpaperColors.length ? 1 : 0.35
+                                        color: index < PersonalizationConfig.recentWallpaperColors.length
+                                               ? PersonalizationConfig.recentWallpaperColors[index] :
+                                                 Appearance.colors.colLayer3
+                                        opacity: index < PersonalizationConfig.recentWallpaperColors.length
+                                                 ? 1 : 0.35
                                         border.color: Appearance.colors.colOutline
                                         border.width: 1
 
                                         MouseArea {
                                             anchors.fill: parent
-                                            enabled: index < PersonalizationConfig.recentWallpaperColors.length
+                                            enabled: index
+                                                     < PersonalizationConfig.recentWallpaperColors.length
                                             hoverEnabled: enabled
                                             cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                                             onClicked: {
-                                                root.currentColor = Qt.color(PersonalizationConfig.recentWallpaperColors[index]);
+                                                root.currentColor = Qt.color(
+                                                            PersonalizationConfig.recentWallpaperColors[index]);
                                                 root.updateFromColor(root.currentColor);
                                             }
                                         }
@@ -467,7 +509,7 @@ Item {
                             spacing: 8
 
                             SectionLabel {
-                                text: qsTr("透明度")
+                                text: qsTr("Opacity")
                             }
 
                             RowLayout {
@@ -543,7 +585,7 @@ Item {
 
                     Button {
                         Layout.alignment: Qt.AlignRight
-                        text: qsTr("保存")
+                        text: qsTr("Save")
                         Material.background: Appearance.colors.colPrimary
                         Material.foreground: Appearance.colors.colOnPrimary
                         onClicked: {
@@ -628,12 +670,9 @@ Item {
                 selectByMouse: true
                 leftPadding: 10
                 rightPadding: 10
-                error: formatField.validateHex && text.length > 0
-                    && !root.hexTextIsValid(text)
-                color: formatField.validateHex && text.length > 0
-                    && !root.hexTextIsValid(text)
-                    ? Appearance.colors.colError
-                    : Appearance.colors.colOnSurface
+                error: formatField.validateHex && text.length > 0 && !root.hexTextIsValid(text)
+                color: formatField.validateHex && text.length > 0 && !root.hexTextIsValid(text)
+                       ? Appearance.colors.colError : Appearance.colors.colOnSurface
                 font.family: Fonts.numeric
                 font.pixelSize: 13
                 onAccepted: formatField.accepted(text)
@@ -655,7 +694,7 @@ Item {
 
             PickerIconButton {
                 iconName: "content_copy"
-                tooltipText: qsTr("复制")
+                tooltipText: qsTr("Copy")
                 onClicked: formatField.copyRequested(input.text)
             }
         }

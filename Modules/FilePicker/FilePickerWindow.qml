@@ -25,14 +25,14 @@ FloatingWindow {
 
     property var targetScreen: null
     property int selectionMode: FilePickerWindow.Files
-    property string description: qsTr("选择一张图片作为用户头像")
-    property string dialogTitle: qsTr("选择图片")
+    property string description: qsTr("Choose an image for your user avatar")
+    property string dialogTitle: qsTr("Choose image")
     property string startPath: picturesDir
     property var nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
     property string windowIconName: "add_photo_alternate"
-    property string emptyStateText: qsTr("当前文件夹没有可选择的图片")
-    property string selectionPrompt: qsTr("选择一张图片")
-    property string acceptLabel: qsTr("选择")
+    property string emptyStateText: qsTr("No selectable images in this folder")
+    property string selectionPrompt: qsTr("Choose an image")
+    property string acceptLabel: qsTr("Choose")
     property string formatSummary: "JPG · PNG · WebP\nBMP · GIF"
     property var parentModal: null
     property bool requiresParentWindow: false
@@ -55,18 +55,21 @@ FloatingWindow {
     readonly property string videosDir: StandardPaths.writableLocation(StandardPaths.MoviesLocation)
     readonly property string downloadsDir: StandardPaths.writableLocation(StandardPaths.DownloadLocation)
     readonly property bool hasSelection: selectedPath !== ""
-    readonly property bool currentFolderIsSelection: allowCurrentFolderSelection
-        && selectionMode !== FilePickerWindow.Files && selectedPath === ""
-    readonly property bool selectionValid: currentFolderIsSelection
-        || (selectedPath !== ""
-            && ((selectedIsDir && selectionMode !== FilePickerWindow.Files)
-                || (!selectedIsDir && selectionMode !== FilePickerWindow.Folders)))
+    readonly property bool currentFolderIsSelection: allowCurrentFolderSelection && selectionMode
+                                                     !== FilePickerWindow.Files && selectedPath === ""
+    readonly property bool selectionValid: currentFolderIsSelection || (selectedPath !== "" && ((
+                                                                                                    selectedIsDir
+                                                                                                    && selectionMode
+                                                                                                    !== FilePickerWindow.Files)
+                                                                                                || (!selectedIsDir
+                                                                                                    && selectionMode
+                                                                                                    !== FilePickerWindow.Folders)))
     readonly property alias blurController: pickerBlurController
     readonly property alias blurBackground: outerBackground
     readonly property alias fileGridView: fileGrid
 
     signal accepted(string path, bool isDirectory)
-    signal rejected()
+    signal rejected
 
     visible: false
     parentWindow: root.parentModal
@@ -147,15 +150,27 @@ FloatingWindow {
         let remainder = normalized;
 
         if (insideHome) {
-            items.push({ label: qsTr("主文件夹"), path: normalizedHome, iconName: "home" });
+            items.push({
+                           label: qsTr("Home"),
+                           path: normalizedHome,
+                           iconName: "home"
+                       });
             remainder = normalized.substring(normalizedHome.length);
         } else {
-            items.push({ label: qsTr("文件系统"), path: "/", iconName: "hard_drive" });
+            items.push({
+                           label: qsTr("File system"),
+                           path: "/",
+                           iconName: "hard_drive"
+                       });
         }
 
         for (const part of remainder.split("/").filter(component => component !== "")) {
             cursor = cursor === "" ? "/" + part : cursor + "/" + part;
-            items.push({ label: part, path: cursor, iconName: "" });
+            items.push({
+                           label: part,
+                           path: cursor,
+                           iconName: ""
+                       });
         }
         return items;
     }
@@ -198,9 +213,8 @@ FloatingWindow {
             console.warn("FilePickerWindow cannot open without parentModal");
             return;
         }
-        currentPath = normalizePath(path && path !== "" ? path : picturesDir)
-            || normalizePath(picturesDir)
-            || "/";
+        currentPath = normalizePath(path && path !== "" ? path : picturesDir) || normalizePath(picturesDir)
+                || "/";
         pathEditing = false;
         pathDraft = currentPath;
         refreshBreadcrumbs();
@@ -298,8 +312,9 @@ FloatingWindow {
 
     function isImageName(name) {
         const lower = String(name || "").toLowerCase();
-        return [".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"]
-            .some(extension => lower.endsWith(extension));
+        return [".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"].some(extension => lower.endsWith(
+                                                                                        extension));
+
     }
 
     FolderListModel {
@@ -376,8 +391,7 @@ FloatingWindow {
             anchors.fill: parent
             z: -2
             radius: Appearance.rounding.veryLarge
-            color: BlurService.backgroundColor(
-                Appearance.m3colors.m3surface)
+            color: BlurService.backgroundColor(Appearance.m3colors.m3surface)
         }
 
         CompositorBlurRegion {
@@ -408,10 +422,8 @@ FloatingWindow {
 
                 const topLeft = pathEditor.mapToItem(dialogFocus, 0, 0);
                 const position = eventPoint.position;
-                const insideEditor = position.x >= topLeft.x
-                    && position.x <= topLeft.x + pathEditor.width
-                    && position.y >= topLeft.y
-                    && position.y <= topLeft.y + pathEditor.height;
+                const insideEditor = position.x >= topLeft.x && position.x <= topLeft.x + pathEditor.width
+                      && position.y >= topLeft.y && position.y <= topLeft.y + pathEditor.height;
                 if (!insideEditor)
                     root.cancelPathEditing();
             }
@@ -475,7 +487,7 @@ FloatingWindow {
 
                     PickerToolButton {
                         iconName: "close"
-                        tooltipText: qsTr("关闭")
+                        tooltipText: qsTr("Close")
                         onClicked: root.dismiss()
                     }
                 }
@@ -510,22 +522,58 @@ FloatingWindow {
                             Layout.leftMargin: 12
                             Layout.topMargin: 4
                             Layout.bottomMargin: 6
-                            text: qsTr("位置")
+                            text: qsTr("Location")
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: 15
                             font.weight: Font.DemiBold
                         }
 
-                        LocationButton { label: qsTr("主文件夹"); iconName: "home"; path: root.homeDir }
-                        LocationButton { label: qsTr("桌面"); iconName: "desktop_windows"; path: root.desktopDir; visible: path !== "" }
-                        LocationButton { label: qsTr("文档"); iconName: "description"; path: root.documentsDir; visible: path !== "" }
-                        LocationButton { label: qsTr("音乐"); iconName: "music_note"; path: root.musicDir; visible: path !== "" }
-                        LocationButton { label: qsTr("图片"); iconName: "image"; path: root.picturesDir; visible: path !== "" }
-                        LocationButton { label: qsTr("视频"); iconName: "movie"; path: root.videosDir; visible: path !== "" }
-                        LocationButton { label: qsTr("下载"); iconName: "download"; path: root.downloadsDir; visible: path !== "" }
+                        LocationButton {
+                            label: qsTr("Home")
+                            iconName: "home"
+                            path: root.homeDir
+                        }
+                        LocationButton {
+                            label: qsTr("Desktop")
+                            iconName: "desktop_windows"
+                            path: root.desktopDir
+                            visible: path !== ""
+                        }
+                        LocationButton {
+                            label: qsTr("Documents")
+                            iconName: "description"
+                            path: root.documentsDir
+                            visible: path !== ""
+                        }
+                        LocationButton {
+                            label: qsTr("Music")
+                            iconName: "music_note"
+                            path: root.musicDir
+                            visible: path !== ""
+                        }
+                        LocationButton {
+                            label: qsTr("Pictures")
+                            iconName: "image"
+                            path: root.picturesDir
+                            visible: path !== ""
+                        }
+                        LocationButton {
+                            label: qsTr("Videos")
+                            iconName: "movie"
+                            path: root.videosDir
+                            visible: path !== ""
+                        }
+                        LocationButton {
+                            label: qsTr("Downloads")
+                            iconName: "download"
+                            path: root.downloadsDir
+                            visible: path !== ""
+                        }
 
-                        Item { Layout.fillHeight: true }
+                        Item {
+                            Layout.fillHeight: true
+                        }
 
                         Rectangle {
                             Layout.fillWidth: true
@@ -570,7 +618,7 @@ FloatingWindow {
 
                             PickerToolButton {
                                 iconName: "arrow_upward"
-                                tooltipText: qsTr("上一级")
+                                tooltipText: qsTr("Up one level")
                                 enabled: root.currentPath !== "/"
                                 onClicked: root.navigateUp()
                             }
@@ -624,7 +672,9 @@ FloatingWindow {
                                                     required property string label
                                                     required property string path
                                                     required property string iconName
-                                                    readonly property bool current: index === breadcrumbModel.count - 1
+                                                    readonly property bool current: index
+                                                                                    === breadcrumbModel.count
+                                                                                    - 1
 
                                                     height: breadcrumbRow.height
                                                     spacing: 2
@@ -701,10 +751,10 @@ FloatingWindow {
 
                             PickerToolButton {
                                 iconName: root.showHiddenFiles ? "visibility_off" : "visibility"
-                                tooltipText: root.showHiddenFiles ? qsTr("隐藏隐藏文件") : qsTr("显示隐藏文件")
+                                tooltipText: root.showHiddenFiles ? qsTr("Hide hidden files") : qsTr(
+                                                                        "Show hidden files")
                                 active: root.showHiddenFiles
-                                onClicked: root.setHiddenFilesVisible(
-                                    !root.showHiddenFiles)
+                                onClicked: root.setHiddenFilesVisible(!root.showHiddenFiles)
                             }
                         }
                     }
@@ -740,8 +790,7 @@ FloatingWindow {
                             id: fileGrid
 
                             function refreshLayout() {
-                                if (!root.visible
-                                        || width <= 0 || height <= 0)
+                                if (!root.visible || width <= 0 || height <= 0)
                                     return;
                                 forceLayout();
                             }
@@ -754,12 +803,9 @@ FloatingWindow {
                             model: root._folderModelAttached ? folderModel : null
                             animateAppearance: false
                             animateMovement: false
-                            onWidthChanged:
-                                Qt.callLater(fileGrid.refreshLayout)
-                            onHeightChanged:
-                                Qt.callLater(fileGrid.refreshLayout)
-                            onCellWidthChanged:
-                                Qt.callLater(fileGrid.refreshLayout)
+                            onWidthChanged: Qt.callLater(fileGrid.refreshLayout)
+                            onHeightChanged: Qt.callLater(fileGrid.refreshLayout)
+                            onCellWidthChanged: Qt.callLater(fileGrid.refreshLayout)
 
                             delegate: RippleButton {
                                 id: fileItem
@@ -770,8 +816,8 @@ FloatingWindow {
                                 required property bool fileIsDir
 
                                 property bool appeared: false
-                                readonly property bool selected: root.selectedPath
-                                    === root.normalizePath(filePath)
+                                readonly property bool selected: root.selectedPath === root.normalizePath(
+                                                                     filePath)
                                 readonly property real initialX: ((index * 37) % 3 - 1) * 24
                                 readonly property real initialY: ((index * 53) % 5 - 2) * 10
 
@@ -783,43 +829,47 @@ FloatingWindow {
                                 rotation: appeared ? 0 : ((index % 3) - 1) * 3
                                 toggled: selected
                                 buttonRadius: Appearance.rounding.large
-                                containerColor: fileItem.selected
-                                    ? Appearance.colors.colSecondaryContainer : "transparent"
+                                containerColor: fileItem.selected ? Appearance.colors.colSecondaryContainer :
+                                                                    "transparent"
                                 stateLayerColor: fileItem.selected
-                                    ? Appearance.colors.colSecondaryContainerHover
-                                    : Appearance.colors.colLayer3Hover
-                                rippleColor: fileItem.selected
-                                    ? Appearance.colors.colOnSecondaryContainer
-                                    : Appearance.colors.colOnSurface
+                                                 ? Appearance.colors.colSecondaryContainerHover :
+                                                   Appearance.colors.colLayer3Hover
+                                rippleColor: fileItem.selected ? Appearance.colors.colOnSecondaryContainer :
+                                                                 Appearance.colors.colOnSurface
                                 releaseAction: () => {
-                                    root.selectEntry(
-                                        filePath, fileName, fileIsDir);
+                                    root.selectEntry(filePath, fileName, fileIsDir);
                                 }
-                                doubleClickAction: () => root.openEntry(
-                                    filePath, fileName, fileIsDir)
+                                doubleClickAction: () => root.openEntry(filePath, fileName, fileIsDir)
                                 transform: Translate {
                                     x: fileItem.appeared ? 0 : fileItem.initialX
                                     y: fileItem.appeared ? 0 : fileItem.initialY
                                 }
 
-                                Behavior on opacity { NumberAnimation { duration: 190 } }
+                                Behavior on opacity {
+                                    NumberAnimation {
+                                        duration: 190
+                                    }
+                                }
                                 Behavior on scale {
                                     NumberAnimation {
                                         duration: Appearance.animation.expressiveDefaultSpatial.duration
                                         easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
+                                        easing.bezierCurve:
+                                            Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
                                 }
                                 Behavior on rotation {
                                     NumberAnimation {
                                         duration: Appearance.animation.expressiveDefaultSpatial.duration
                                         easing.type: Appearance.animation.expressiveDefaultSpatial.type
-                                        easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
+                                        easing.bezierCurve:
+                                            Appearance.animation.expressiveDefaultSpatial.bezierCurve
                                     }
                                 }
 
                                 Timer {
-                                    interval: Math.min(260, fileItem.index * 18) + ((fileItem.index * 29) % 5) * 8
+                                    interval: Math.min(260, fileItem.index * 18) + ((fileItem.index * 29)
+                                                                                    % 5) * 8
                                     running: true
                                     onTriggered: fileItem.appeared = true
                                 }
@@ -836,8 +886,9 @@ FloatingWindow {
                                             id: previewImage
 
                                             anchors.fill: parent
-                                            source: !fileItem.fileIsDir && root.isImageName(fileItem.fileName)
-                                                ? root.encodeFileUrl(fileItem.filePath) : ""
+                                            source: !fileItem.fileIsDir && root.isImageName(
+                                                        fileItem.fileName) ? root.encodeFileUrl(
+                                                                                 fileItem.filePath) : ""
                                             fillMode: Image.PreserveAspectCrop
                                             asynchronous: true
                                             cache: true
@@ -859,7 +910,8 @@ FloatingWindow {
                                             source: previewImage
                                             maskEnabled: true
                                             maskSource: previewMask
-                                            visible: !fileItem.fileIsDir && previewImage.status === Image.Ready
+                                            visible: !fileItem.fileIsDir && previewImage.status
+                                                     === Image.Ready
                                             maskThresholdMin: 0.5
                                             maskSpreadAtMin: 1
                                         }
@@ -872,14 +924,13 @@ FloatingWindow {
 
                                             MaterialSymbol {
                                                 anchors.centerIn: parent
-                                                text: fileItem.fileIsDir
-                                                    ? "folder"
-                                                    : root.isImageName(fileItem.fileName) ? "image" : "draft"
+                                                text: fileItem.fileIsDir ? "folder" : root.isImageName(
+                                                                               fileItem.fileName) ? "image" :
+                                                                                                    "draft"
                                                 iconSize: 38
                                                 fill: fileItem.fileIsDir ? 1 : 0
-                                                color: fileItem.fileIsDir
-                                                    ? Appearance.colors.colPrimary
-                                                    : Appearance.colors.colOnSurfaceVariant
+                                                color: fileItem.fileIsDir ? Appearance.colors.colPrimary :
+                                                                            Appearance.colors.colOnSurfaceVariant
                                             }
                                         }
 
@@ -910,9 +961,8 @@ FloatingWindow {
                                         anchors.rightMargin: 8
                                         anchors.bottomMargin: 9
                                         text: fileItem.fileName
-                                        color: fileItem.selected
-                                            ? Appearance.colors.colOnSecondaryContainer
-                                            : Appearance.colors.colOnSurface
+                                        color: fileItem.selected ? Appearance.colors.colOnSecondaryContainer :
+                                                                   Appearance.colors.colOnSurface
                                         font.family: Fonts.ui
                                         font.pixelSize: 12
                                         font.weight: fileItem.selected ? Font.DemiBold : Font.Normal
@@ -950,22 +1000,23 @@ FloatingWindow {
                                     MaterialSymbol {
                                         Layout.preferredWidth: 22
                                         Layout.preferredHeight: 22
-                                        text: root.selectedIsDir ? "folder" : root.selectionValid ? "image" : "info"
+                                        text: root.selectedIsDir ? "folder" : root.selectionValid ? "image" :
+                                                                                                    "info"
                                         iconSize: 20
-                                        color: root.selectionValid
-                                            ? Appearance.colors.colPrimary
-                                            : Appearance.colors.colOnSurfaceVariant
+                                        color: root.selectionValid ? Appearance.colors.colPrimary :
+                                                                     Appearance.colors.colOnSurfaceVariant
                                     }
 
                                     Text {
                                         Layout.fillWidth: true
-                                        text: root.selectedPath === ""
-                                            ? root.currentFolderIsSelection
-                                              ? qsTr("当前文件夹：%1").arg(root.currentPath)
-                                              : root.selectionPrompt
-                                            : root.selectedIsDir
-                                              ? qsTr("双击进入 ") + root.selectedName
-                                              : root.selectedName
+                                        text: root.selectedPath === "" ? root.currentFolderIsSelection ? qsTr(
+                                                                                                             "Current folder: %1").arg(
+                                                                                                             root.currentPath) :
+                                                                                                         root.selectionPrompt :
+                                                                                                         root.selectedIsDir
+                                                                                                         ? qsTr("Double-click to open ")
+                                                                                                           + root.selectedName :
+                                                                                                           root.selectedName
                                         color: Appearance.colors.colOnSurfaceVariant
                                         font.family: Fonts.ui
                                         font.pixelSize: 13
@@ -975,7 +1026,7 @@ FloatingWindow {
                             }
 
                             PickerActionButton {
-                                label: qsTr("取消")
+                                label: qsTr("Cancel")
                                 iconName: "close"
                                 enabled: root.hasSelection
                                 onClicked: root.clearSelection()
@@ -1008,8 +1059,7 @@ FloatingWindow {
         padding: 0
         toggled: current
         buttonRadius: Appearance.rounding.small
-        containerColor: breadcrumbButton.current
-            ? Appearance.colors.colLayer3 : "transparent"
+        containerColor: breadcrumbButton.current ? Appearance.colors.colLayer3 : "transparent"
         stateLayerColor: Appearance.colors.colLayer3Hover
         rippleColor: Appearance.colors.colOnSurface
         releaseAction: () => {
@@ -1060,22 +1110,18 @@ FloatingWindow {
         padding: 0
         toggled: active
         buttonRadius: Appearance.rounding.full
-        containerColor: toolButton.active
-            ? Appearance.colors.colSecondaryContainer : "transparent"
-        stateLayerColor: toolButton.active
-            ? Appearance.colors.colSecondaryContainerHover
-            : Appearance.colors.colLayer3Hover
-        rippleColor: toolButton.active
-            ? Appearance.colors.colOnSecondaryContainer
-            : Appearance.colors.colOnSurface
+        containerColor: toolButton.active ? Appearance.colors.colSecondaryContainer : "transparent"
+        stateLayerColor: toolButton.active ? Appearance.colors.colSecondaryContainerHover :
+                                             Appearance.colors.colLayer3Hover
+        rippleColor: toolButton.active ? Appearance.colors.colOnSecondaryContainer :
+                                         Appearance.colors.colOnSurface
 
         contentItem: MaterialSymbol {
             text: toolButton.iconName
             iconSize: 20
             fill: toolButton.active ? 1 : 0
-            color: toolButton.active
-                ? Appearance.colors.colOnSecondaryContainer
-                : Appearance.colors.colOnSurface
+            color: toolButton.active ? Appearance.colors.colOnSecondaryContainer :
+                                       Appearance.colors.colOnSurface
         }
 
         StyledToolTip {
@@ -1098,20 +1144,19 @@ FloatingWindow {
         padding: 0
         toggled: active
         buttonRadius: Appearance.rounding.full
-        containerColor: locationButton.active
-            ? Appearance.colors.colSecondaryContainer : "transparent"
-        stateLayerColor: locationButton.active
-            ? Appearance.colors.colSecondaryContainerHover
-            : Appearance.colors.colLayer2Hover
-        rippleColor: locationButton.active
-            ? Appearance.colors.colOnSecondaryContainer
-            : Appearance.colors.colOnSurface
+        containerColor: locationButton.active ? Appearance.colors.colSecondaryContainer : "transparent"
+        stateLayerColor: locationButton.active ? Appearance.colors.colSecondaryContainerHover :
+                                                 Appearance.colors.colLayer2Hover
+        rippleColor: locationButton.active ? Appearance.colors.colOnSecondaryContainer :
+                                             Appearance.colors.colOnSurface
         releaseAction: () => root.navigateTo(locationButton.normalizedPath)
 
         contentItem: RowLayout {
             spacing: 10
 
-            Item { Layout.preferredWidth: 2 }
+            Item {
+                Layout.preferredWidth: 2
+            }
 
             MaterialSymbol {
                 Layout.preferredWidth: 22
@@ -1119,24 +1164,24 @@ FloatingWindow {
                 text: locationButton.iconName
                 iconSize: 20
                 fill: locationButton.active ? 1 : 0
-                color: locationButton.active
-                    ? Appearance.colors.colOnSecondaryContainer
-                    : Appearance.colors.colOnSurfaceVariant
+                color: locationButton.active ? Appearance.colors.colOnSecondaryContainer :
+                                               Appearance.colors.colOnSurfaceVariant
             }
 
             Text {
                 Layout.fillWidth: true
                 text: locationButton.label
-                color: locationButton.active
-                    ? Appearance.colors.colOnSecondaryContainer
-                    : Appearance.colors.colOnSurface
+                color: locationButton.active ? Appearance.colors.colOnSecondaryContainer :
+                                               Appearance.colors.colOnSurface
                 font.family: Fonts.ui
                 font.pixelSize: 13
                 font.weight: locationButton.active ? Font.DemiBold : Font.Normal
                 elide: Text.ElideRight
             }
 
-            Item { Layout.preferredWidth: 4 }
+            Item {
+                Layout.preferredWidth: 4
+            }
         }
     }
 
@@ -1152,7 +1197,8 @@ FloatingWindow {
         padding: 0
         buttonRadius: Appearance.rounding.full
         containerColor: primary ? Appearance.colors.colPrimary : Appearance.colors.colSurfaceContainerHighest
-        stateLayerColor: primary ? Appearance.colors.colPrimaryHover : Appearance.colors.colSurfaceContainerHighestHover
+        stateLayerColor: primary ? Appearance.colors.colPrimaryHover :
+                                   Appearance.colors.colSurfaceContainerHighestHover
         rippleColor: primary ? Appearance.colors.colOnPrimary : Appearance.colors.colOnSurface
 
         contentItem: Item {
@@ -1168,17 +1214,15 @@ FloatingWindow {
                     visible: actionButton.iconName !== ""
                     text: actionButton.iconName
                     iconSize: 18
-                    color: actionButton.primary
-                        ? Appearance.colors.colOnPrimary
-                        : Appearance.colors.colOnSurface
+                    color: actionButton.primary ? Appearance.colors.colOnPrimary :
+                                                  Appearance.colors.colOnSurface
                 }
 
                 Text {
                     Layout.alignment: Qt.AlignVCenter
                     text: actionButton.label
-                    color: actionButton.primary
-                        ? Appearance.colors.colOnPrimary
-                        : Appearance.colors.colOnSurface
+                    color: actionButton.primary ? Appearance.colors.colOnPrimary :
+                                                  Appearance.colors.colOnSurface
                     font.family: Fonts.ui
                     font.pixelSize: 13
                     font.weight: Font.DemiBold

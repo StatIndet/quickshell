@@ -29,14 +29,12 @@ Singleton {
     property bool niriTransparentBackgroundDetected: false
     property bool overviewBackdropRuleProbeComplete: false
 
-    readonly property bool busy: scanning || switching
-        || ThemeService.generating || AwwwWallpaperService.busy
+    readonly property bool busy: scanning || switching || ThemeService.generating || AwwwWallpaperService.busy
     readonly property var imageExtensions: ["jpg", "jpeg", "png", "webp", "bmp", "gif"]
     readonly property bool overviewReady: {
         if (!PersonalizationConfig.overviewEnabled)
             return true;
-        for (let index = 0; index < Quickshell.screens.length;
-                index += 1) {
+        for (let index = 0; index < Quickshell.screens.length; index += 1) {
             const name = String(Quickshell.screens[index].name);
             if (root.overviewReadyScreens[name] !== true)
                 return false;
@@ -49,7 +47,7 @@ Singleton {
             return "";
         const value = String(path);
         if (root.isColorSource(value))
-            return qsTr("纯色壁纸 ") + value;
+            return qsTr("Solid-color wallpaper ") + value;
         return value.substring(value.lastIndexOf("/") + 1);
     }
 
@@ -87,13 +85,14 @@ Singleton {
     }
 
     function fillModeForScreen(screenName) {
-        return PersonalizationConfig.perMonitorWallpaper ? PersonalizationConfig.monitorFillMode(screenName) : PersonalizationConfig.wallpaperFillMode;
+        return PersonalizationConfig.perMonitorWallpaper ? PersonalizationConfig.monitorFillMode(screenName) :
+                                                           PersonalizationConfig.wallpaperFillMode;
     }
 
     function overviewFillModeForScreen(screenName) {
         return PersonalizationConfig.overviewPerMonitorWallpaper
-            ? PersonalizationConfig.overviewMonitorFillMode(screenName)
-            : PersonalizationConfig.overviewWallpaperFillMode;
+                ? PersonalizationConfig.overviewMonitorFillMode(screenName) :
+                  PersonalizationConfig.overviewWallpaperFillMode;
     }
 
     function qtFillMode(modeName) {
@@ -150,7 +149,8 @@ Singleton {
             path = PersonalizationConfig.monitorWallpaper(screenName);
 
         if (!path && PersonalizationConfig.perModeWallpaper)
-            path = UiPreferences.darkMode ? PersonalizationConfig.wallpaperPathDark : PersonalizationConfig.wallpaperPathLight;
+            path = UiPreferences.darkMode ? PersonalizationConfig.wallpaperPathDark :
+                                            PersonalizationConfig.wallpaperPathLight;
 
         if (!path)
             path = PersonalizationConfig.wallpaperPath;
@@ -162,8 +162,7 @@ Singleton {
         let path = "";
         if (!PersonalizationConfig.overviewUseDesktopWallpaper) {
             if (PersonalizationConfig.overviewPerMonitorWallpaper)
-                path = PersonalizationConfig
-                    .overviewMonitorWallpaper(screenName);
+                path = PersonalizationConfig.overviewMonitorWallpaper(screenName);
             if (!path)
                 path = PersonalizationConfig.overviewWallpaperPath;
         }
@@ -177,7 +176,7 @@ Singleton {
         const next = {};
         for (let key in current)
             next[key] = current[key];
-        const name = String(screenName || qsTr("全局"));
+        const name = String(screenName || qsTr("Global"));
         if (message)
             next[name] = String(message);
         else
@@ -188,13 +187,11 @@ Singleton {
     }
 
     function reportDesktopError(screenName, message) {
-        root.lastDesktopError = root.updateErrorMap(
-            "desktopErrors", screenName, message);
+        root.lastDesktopError = root.updateErrorMap("desktopErrors", screenName, message);
     }
 
     function clearDesktopError(screenName) {
-        root.lastDesktopError = root.updateErrorMap(
-            "desktopErrors", screenName, "");
+        root.lastDesktopError = root.updateErrorMap("desktopErrors", screenName, "");
     }
 
     function reportOverviewSurface(screenName, ready, errorMessage) {
@@ -205,25 +202,22 @@ Singleton {
         root.overviewReadyScreens = next;
 
         if (errorMessage) {
-            root.lastOverviewError = root.updateErrorMap(
-                "overviewErrors", screenName, errorMessage);
+            root.lastOverviewError = root.updateErrorMap("overviewErrors", screenName, errorMessage);
         } else if (ready) {
-            root.lastOverviewError = root.updateErrorMap(
-                "overviewErrors", screenName, "");
+            root.lastOverviewError = root.updateErrorMap("overviewErrors", screenName, "");
         }
     }
 
     function pruneRuntimeScreenState() {
         const names = {};
-        for (let index = 0; index < Quickshell.screens.length;
-                index += 1) {
+        for (let index = 0; index < Quickshell.screens.length; index += 1) {
             names[String(Quickshell.screens[index].name)] = true;
         }
 
         function pruned(source, preserveGlobal) {
             const result = {};
             for (let key in source) {
-                if (names[key] || (preserveGlobal && key === qsTr("全局")))
+                if (names[key] || (preserveGlobal && key === qsTr("Global")))
                     result[key] = source[key];
             }
             return result;
@@ -231,17 +225,14 @@ Singleton {
 
         root.desktopErrors = pruned(root.desktopErrors, true);
         root.overviewErrors = pruned(root.overviewErrors, true);
-        root.overviewReadyScreens =
-            pruned(root.overviewReadyScreens, false);
+        root.overviewReadyScreens = pruned(root.overviewReadyScreens, false);
 
         const desktopKeys = Object.keys(root.desktopErrors);
-        root.lastDesktopError = desktopKeys.length > 0
-            ? root.desktopErrors[
-                desktopKeys[desktopKeys.length - 1]] : "";
+        root.lastDesktopError = desktopKeys.length > 0 ? root.desktopErrors[desktopKeys[desktopKeys.length
+                                                                                        - 1]] : "";
         const overviewKeys = Object.keys(root.overviewErrors);
         root.lastOverviewError = overviewKeys.length > 0
-            ? root.overviewErrors[
-                overviewKeys[overviewKeys.length - 1]] : "";
+                ? root.overviewErrors[overviewKeys[overviewKeys.length - 1]] : "";
     }
 
     function scan() {
@@ -252,12 +243,9 @@ Singleton {
 
         root.scanRequested = false;
         root.scanResults = [];
-        scanProcess.command = [
-            "find", PersonalizationConfig.wallpaperFolder,
-            "-type", "f",
-            "(", "-iname", "*.jpg", "-o", "-iname", "*.jpeg", "-o", "-iname", "*.png", "-o", "-iname", "*.webp", "-o", "-iname", "*.bmp", "-o", "-iname", "*.gif", ")",
-            "-print"
-        ];
+        scanProcess.command = ["find", PersonalizationConfig.wallpaperFolder, "-type", "f", "(", "-iname", "*.jpg",
+                               "-o", "-iname", "*.jpeg", "-o", "-iname", "*.png", "-o", "-iname", "*.webp",
+                               "-o", "-iname", "*.bmp", "-o", "-iname", "*.gif", ")", "-print"];
         scanProcess.running = false;
         scanProcess.running = true;
     }
@@ -312,8 +300,7 @@ Singleton {
     }
 
     function _setWallpaperFolder(path) {
-        PersonalizationConfig.setWallpaperFolder(
-            path || Paths.dataHome + "/wallpapers");
+        PersonalizationConfig.setWallpaperFolder(path || Paths.dataHome + "/wallpapers");
         root.scan();
         return true;
     }
@@ -347,8 +334,7 @@ Singleton {
 
     function setWallpaperFillModeForScreen(screenName, value) {
         if (screenName)
-            PersonalizationConfig
-                .setMonitorWallpaperFillMode(screenName, value);
+            PersonalizationConfig.setMonitorWallpaperFillMode(screenName, value);
         else
             PersonalizationConfig.setWallpaperFillMode(value);
         return true;
@@ -380,12 +366,10 @@ Singleton {
     }
 
     function setOverviewWallpaper(path, screenName) {
-        if (!path || (!root.isImagePath(path)
-                && !root.isColorSource(path)))
+        if (!path || (!root.isImagePath(path) && !root.isColorSource(path)))
             return false;
         if (screenName) {
-            PersonalizationConfig
-                .setOverviewMonitorWallpaper(screenName, path);
+            PersonalizationConfig.setOverviewMonitorWallpaper(screenName, path);
         } else {
             PersonalizationConfig.setOverviewWallpaperPath(path);
         }
@@ -394,8 +378,7 @@ Singleton {
 
     function clearOverviewWallpaper(screenName) {
         if (screenName)
-            PersonalizationConfig
-                .setOverviewMonitorWallpaper(screenName, "");
+            PersonalizationConfig.setOverviewMonitorWallpaper(screenName, "");
         else
             PersonalizationConfig.setOverviewWallpaperPath("");
         return true;
@@ -403,11 +386,9 @@ Singleton {
 
     function setOverviewFillModeForScreen(screenName, value) {
         if (screenName) {
-            PersonalizationConfig
-                .setOverviewMonitorFillMode(screenName, value);
+            PersonalizationConfig.setOverviewMonitorFillMode(screenName, value);
         } else {
-            PersonalizationConfig
-                .setOverviewWallpaperFillMode(value);
+            PersonalizationConfig.setOverviewWallpaperFillMode(value);
         }
         return true;
     }
@@ -431,14 +412,15 @@ Singleton {
         let nextIndex = 0;
 
         if (action === "previous") {
-            nextIndex = index >= 0 ? (index - 1 + root.wallpapers.length) % root.wallpapers.length : root.wallpapers.length - 1;
+            nextIndex = index >= 0 ? (index - 1 + root.wallpapers.length) % root.wallpapers.length :
+                                     root.wallpapers.length - 1;
         } else if (action === "random") {
             if (root.wallpapers.length === 1) {
                 nextIndex = 0;
             } else {
                 do {
                     nextIndex = Math.floor(Math.random() * root.wallpapers.length);
-                } while (nextIndex === index);
+                } while (nextIndex === index)
             }
         } else {
             nextIndex = index >= 0 ? (index + 1) % root.wallpapers.length : 0;
@@ -472,11 +454,8 @@ Singleton {
         if (overviewBackdropRuleProbe.running)
             return;
         root.overviewBackdropRuleProbeComplete = false;
-        overviewBackdropRuleProbe.command = [
-            "grep", "-R", "-F", "-q",
-            "clavis-overview-wallpaper",
-            Paths.xdgConfigHome + "/niri"
-        ];
+        overviewBackdropRuleProbe.command = ["grep", "-R", "-F", "-q", "clavis-overview-wallpaper",
+                                             Paths.xdgConfigHome + "/niri"];
         overviewBackdropRuleProbe.running = true;
     }
 
@@ -699,7 +678,8 @@ Singleton {
 
     Process {
         id: scanProcess
-        onRunningChanged: if (running) root.scanning = true
+        onRunningChanged: if (running)
+                              root.scanning = true
         stdout: SplitParser {
             splitMarker: "\n"
             onRead: file => {
@@ -743,11 +723,8 @@ Singleton {
 
         onExited: exitCode => {
             root.overviewBackdropRuleDetected = exitCode === 0;
-            niriTransparentBackgroundProbe.command = [
-                "grep", "-F", "-q",
-                "background-color \"transparent\"",
-                Paths.xdgConfigHome + "/niri/config.kdl"
-            ];
+            niriTransparentBackgroundProbe.command = ["grep", "-F", "-q", "background-color \"transparent\"",
+                                                      Paths.xdgConfigHome + "/niri/config.kdl"];
             niriTransparentBackgroundProbe.running = true;
         }
     }
@@ -756,10 +733,8 @@ Singleton {
         id: niriTransparentBackgroundProbe
 
         onExited: exitCode => {
-            root.niriTransparentBackgroundDetected =
-                exitCode === 0;
+            root.niriTransparentBackgroundDetected = exitCode === 0;
             root.overviewBackdropRuleProbeComplete = true;
         }
     }
-
 }

@@ -95,7 +95,8 @@ Item {
             }
 
             model: ScriptModel {
-                values: TimerService.stopwatchLaps.map((value, index, values) => values[values.length - 1 - index])
+                values: TimerService.stopwatchLaps.map((value, index, values) => values[values.length - 1
+                                                                                        - index])
             }
 
             delegate: Rectangle {
@@ -108,14 +109,12 @@ Item {
                 readonly property int verticalPadding: 6
                 readonly property int originalIndex: TimerService.stopwatchLaps.length - index - 1
                 readonly property real previousLap: originalIndex > 0
-                    ? TimerService.stopwatchLaps[originalIndex - 1]
-                    : 0
+                                                    ? TimerService.stopwatchLaps[originalIndex - 1] : 0
 
                 width: ListView.view.width
                 implicitHeight: lapRow.implicitHeight + verticalPadding * 2
                 radius: Appearance.rounding.small
-                color: BlurService.opaqueBackgroundColor(
-                    Appearance.m3colors.m3surfaceContainer)
+                color: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainer)
 
                 RowLayout {
                     id: lapRow
@@ -171,31 +170,25 @@ Item {
                 implicitWidth: 90
                 implicitHeight: 35
                 buttonRadius: Appearance.rounding.full
-                containerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colSecondaryContainer
-                    : Appearance.colors.colPrimary
-                stateLayerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colSecondaryContainerHover
-                    : Appearance.colors.colPrimaryHover
+                containerColor: TimerService.stopwatchRunning ? Appearance.colors.colSecondaryContainer :
+                                                                Appearance.colors.colPrimary
+                stateLayerColor: TimerService.stopwatchRunning ? Appearance.colors.colSecondaryContainerHover :
+                                                                 Appearance.colors.colPrimaryHover
                 pressedStateLayerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colSecondaryContainerActive
-                    : Appearance.colors.colPrimaryActive
-                rippleColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colOnSecondaryContainer
-                    : Appearance.colors.colOnPrimary
-                Accessible.name: TimerService.stopwatchRunning
-                    ? qsTr("暂停秒表") : qsTr("启动秒表")
+                                        ? Appearance.colors.colSecondaryContainerActive :
+                                          Appearance.colors.colPrimaryActive
+                rippleColor: TimerService.stopwatchRunning ? Appearance.colors.colOnSecondaryContainer :
+                                                             Appearance.colors.colOnPrimary
+                Accessible.name: TimerService.stopwatchRunning ? qsTr("Pause stopwatch") : qsTr(
+                                                                     "Start stopwatch")
                 onClicked: TimerService.toggleStopwatch()
 
                 contentItem: Text {
-                    text: TimerService.stopwatchRunning
-                        ? qsTr("暂停")
-                        : TimerService.stopwatchTime === 0
-                            ? qsTr("开始")
-                            : qsTr("继续")
-                    color: TimerService.stopwatchRunning
-                        ? Appearance.colors.colOnSecondaryContainer
-                        : Appearance.colors.colOnPrimary
+                    text: TimerService.stopwatchRunning ? qsTr("Pause") : TimerService.stopwatchTime === 0 ? qsTr(
+                                                                                                                 "Start") :
+                                                                                                             qsTr("Resume")
+                    color: TimerService.stopwatchRunning ? Appearance.colors.colOnSecondaryContainer :
+                                                           Appearance.colors.colOnPrimary
                     font.family: Fonts.ui
                     font.pixelSize: 14
                     font.weight: Font.Medium
@@ -209,20 +202,15 @@ Item {
                 implicitHeight: 35
                 buttonRadius: Appearance.rounding.full
                 enabled: TimerService.stopwatchTime > 0 || TimerService.stopwatchLaps.length > 0
-                containerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colLayer2
-                    : Appearance.colors.colErrorContainer
-                stateLayerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colLayer2Hover
-                    : Appearance.colors.colErrorContainerHover
-                pressedStateLayerColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colLayer2Active
-                    : Appearance.colors.colErrorContainerActive
-                rippleColor: TimerService.stopwatchRunning
-                    ? Appearance.colors.colOnLayer2
-                    : Appearance.colors.colOnErrorContainer
-                Accessible.name: TimerService.stopwatchRunning
-                    ? qsTr("记录单圈") : qsTr("重置秒表")
+                containerColor: TimerService.stopwatchRunning ? Appearance.colors.colLayer2 :
+                                                                Appearance.colors.colErrorContainer
+                stateLayerColor: TimerService.stopwatchRunning ? Appearance.colors.colLayer2Hover :
+                                                                 Appearance.colors.colErrorContainerHover
+                pressedStateLayerColor: TimerService.stopwatchRunning ? Appearance.colors.colLayer2Active :
+                                                                        Appearance.colors.colErrorContainerActive
+                rippleColor: TimerService.stopwatchRunning ? Appearance.colors.colOnLayer2 :
+                                                             Appearance.colors.colOnErrorContainer
+                Accessible.name: TimerService.stopwatchRunning ? qsTr("Record lap") : qsTr("Reset stopwatch")
                 onClicked: {
                     if (TimerService.stopwatchRunning)
                         TimerService.stopwatchRecordLap();
@@ -231,10 +219,9 @@ Item {
                 }
 
                 contentItem: Text {
-                    text: TimerService.stopwatchRunning ? qsTr("单圈") : qsTr("重置")
-                    color: TimerService.stopwatchRunning
-                        ? Appearance.colors.colOnLayer2
-                        : Appearance.colors.colOnErrorContainer
+                    text: TimerService.stopwatchRunning ? qsTr("Lap") : qsTr("Reset")
+                    color: TimerService.stopwatchRunning ? Appearance.colors.colOnLayer2 :
+                                                           Appearance.colors.colOnErrorContainer
                     font.family: Fonts.ui
                     font.pixelSize: 14
                     font.weight: Font.Medium

@@ -11,7 +11,7 @@ import qs.Widgets.common
 WidgetPanel {
     id: root
 
-    title: qsTr("声音")
+    title: qsTr("Sound")
     icon: "volume_up"
     showBackButton: true
     backAction: () => WidgetState.qsView = "settings"
@@ -24,9 +24,9 @@ WidgetPanel {
         if (Volume.lastError.length > 0)
             return Volume.lastError;
         if (!Volume.ready)
-            return qsTr("正在连接 PipeWire 音频服务");
+            return qsTr("Connecting to the PipeWire audio service");
         if (Volume.outputDevices.length === 0 && !Volume.outputAvailable)
-            return qsTr("未检测到可用的声音输出设备");
+            return qsTr("No audio output devices detected");
         return "";
     }
 
@@ -40,7 +40,7 @@ WidgetPanel {
         iconName: "open_in_new"
         iconSize: 20
         iconColor: Appearance.colors.colOnLayer2
-        accessibleName: qsTr("打开高级声音设置")
+        accessibleName: qsTr("Open advanced sound settings")
         hoverStateLayerColor: Appearance.colors.colLayer2Hover
         pressedStateLayerColor: Appearance.colors.colLayer2Active
         onClicked: Volume.openMixer()
@@ -58,17 +58,19 @@ WidgetPanel {
             indeterminate: true
             Material.accent: Appearance.colors.colPrimary
 
-            Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
-            Behavior on opacity { ElementMoveAnimation {} }
+            Behavior on Layout.preferredHeight {
+                ElementMoveAnimation {}
+            }
+            Behavior on opacity {
+                ElementMoveAnimation {}
+            }
         }
 
         InlineStatusBanner {
             Layout.fillWidth: true
             visible: root.stateMessage.length > 0
             tone: Volume.lastError.length > 0 ? "error" : "info"
-            iconName: !Volume.ready
-                ? "hourglass_top"
-                : Volume.lastError.length > 0 ? "error" : "info"
+            iconName: !Volume.ready ? "hourglass_top" : Volume.lastError.length > 0 ? "error" : "info"
             message: root.stateMessage
         }
 
@@ -87,12 +89,12 @@ WidgetPanel {
                 SettingsSection {
                     Layout.fillWidth: true
                     visible: Volume.ready && (Volume.outputDevices.length > 0 || Volume.outputAvailable)
-                    title: qsTr("输出")
+                    title: qsTr("Output")
 
                     VolumeSlider {
                         Layout.fillWidth: true
                         visible: Volume.outputAvailable
-                        title: Volume.sinkName || qsTr("默认输出")
+                        title: Volume.sinkName || qsTr("Default output")
                         iconName: Volume.nodeIconName(Volume.sink)
                         volume: Volume.sinkVolume
                         muted: Volume.sinkMuted
@@ -108,7 +110,7 @@ WidgetPanel {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("输出设备")
+                            text: qsTr("Output devices")
                             color: Appearance.colors.colOnLayer1
                             font.family: Fonts.ui
                             font.pixelSize: 12
@@ -125,34 +127,39 @@ WidgetPanel {
                             selectedHoverStateLayerColor: Appearance.colors.colSecondaryContainerHover
                             selectedPressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
                             iconRotation: root.outputDevicesExpanded ? 180 : 0
-                            accessibleName: root.outputDevicesExpanded ? qsTr("收起输出设备") : qsTr("展开输出设备")
+                            accessibleName: root.outputDevicesExpanded ? qsTr("Collapse output devices") :
+                                                                         qsTr("Expand output devices")
                             hoverStateLayerColor: Appearance.colors.colLayer2Hover
                             pressedStateLayerColor: Appearance.colors.colLayer2Active
                             onClicked: root.outputDevicesExpanded = !root.outputDevicesExpanded
 
-                            Behavior on iconRotation { ElementMoveAnimation {} }
+                            Behavior on iconRotation {
+                                ElementMoveAnimation {}
+                            }
                         }
                     }
 
                     Item {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.showOutputDevices
-                            ? outputDeviceList.targetHeight : 0
+                        Layout.preferredHeight: root.showOutputDevices ? outputDeviceList.targetHeight : 0
                         opacity: root.showOutputDevices ? 1 : 0
                         clip: true
 
-                        Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
-                        Behavior on opacity { ElementMoveAnimation {} }
+                        Behavior on Layout.preferredHeight {
+                            ElementMoveAnimation {}
+                        }
+                        Behavior on opacity {
+                            ElementMoveAnimation {}
+                        }
 
                         StyledListView {
                             id: outputDeviceList
 
-                            readonly property real baseContentHeight: count * 56
-                                + Math.max(0, count - 1) * spacing
-                            readonly property real targetHeight: Math.min(
-                                Sizes.sidebarScrollableListMaxHeight,
-                                Math.max(baseContentHeight, contentHeight)
-                            )
+                            readonly property real baseContentHeight: count * 56 + Math.max(0, count - 1)
+                                                                      * spacing
+                            readonly property real targetHeight: Math.min(Sizes.sidebarScrollableListMaxHeight,
+                                                                          Math.max(baseContentHeight,
+                                                                                   contentHeight))
 
                             anchors.fill: parent
                             spacing: Appearance.spacing.xSmall
@@ -178,19 +185,17 @@ WidgetPanel {
                 SettingsSection {
                     Layout.fillWidth: true
                     visible: Volume.ready && Volume.outputAvailable
-                    title: qsTr("应用音量")
+                    title: qsTr("Application volume")
 
                     StyledListView {
                         id: playbackStreamList
 
-                        readonly property real baseContentHeight: count * 48
-                            + Math.max(0, count - 1) * spacing
+                        readonly property real baseContentHeight: count * 48 + Math.max(0, count - 1)
+                                                                  * spacing
 
                         Layout.fillWidth: true
-                        Layout.preferredHeight: Math.min(
-                            Sizes.sidebarScrollableListMaxHeight,
-                            Math.max(baseContentHeight, contentHeight)
-                        )
+                        Layout.preferredHeight: Math.min(Sizes.sidebarScrollableListMaxHeight, Math.max(
+                                                             baseContentHeight, contentHeight))
                         visible: count > 0
                         spacing: Appearance.spacing.xSmall
                         clip: true
@@ -210,14 +215,16 @@ WidgetPanel {
                             onMuteRequested: Volume.toggleNodeMute(modelData)
                         }
 
-                        Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
+                        Behavior on Layout.preferredHeight {
+                            ElementMoveAnimation {}
+                        }
                     }
 
                     SettingsRow {
                         Layout.fillWidth: true
                         visible: Volume.playbackStreams.length === 0
                         iconName: "music_off"
-                        title: qsTr("没有活动的应用音频")
+                        title: qsTr("No active application audio")
                     }
                 }
 

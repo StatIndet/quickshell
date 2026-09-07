@@ -11,8 +11,7 @@ Rectangle {
 
     property bool active: false
     property real currentEpoch: Math.floor(Date.now() / 1000)
-    property var today: ({
-    })
+    property var today: ({})
     readonly property bool hasWeather: WeatherPlugin.hasValidData
     readonly property bool night: currentIsNight()
 
@@ -21,11 +20,13 @@ Rectangle {
     }
 
     function fmtTemp(value) {
-        return hasWeather && validNumber(value) ? Math.round(UiPreferences.weatherTemperature(value)) + "°" : "--";
+        return hasWeather && validNumber(value) ? Math.round(UiPreferences.weatherTemperature(value)) + "°" :
+                                                  "--";
     }
 
     function fmtTempPlain(value) {
-        return hasWeather && validNumber(value) ? Math.round(UiPreferences.weatherTemperature(value)).toString() : "--";
+        return hasWeather && validNumber(value) ? Math.round(UiPreferences.weatherTemperature(value)).toString(
+                                                      ) : "--";
     }
 
     function currentIsNight() {
@@ -38,8 +39,7 @@ Rectangle {
         if (current && current.isDaylight !== undefined)
             return !current.isDaylight;
 
-        const hourly = WeatherPlugin.hourlyForecast.count() > 0 ? WeatherPlugin.hourlyForecast.get(0) : ({
-        });
+        const hourly = WeatherPlugin.hourlyForecast.count() > 0 ? WeatherPlugin.hourlyForecast.get(0) : ({});
         if (hourly.isDaylight !== undefined)
             return !hourly.isDaylight;
 
@@ -49,34 +49,33 @@ Rectangle {
 
     function conditionText() {
         if (hasWeather)
-            return WeatherPlugin.currentWeatherText || qsTr("未知");
+            return WeatherPlugin.currentWeatherText || qsTr("Unknown");
 
         if (WeatherPlugin.loading)
-            return qsTr("正在获取天气");
+            return qsTr("Getting weather");
 
-        return qsTr("天气暂不可用");
+        return qsTr("Weather is unavailable");
     }
 
     function updatedText() {
         if (WeatherPlugin.loading)
-            return qsTr("正在刷新");
+            return qsTr("Refreshing");
 
         if (WeatherPlugin.status === "stale")
-            return qsTr("数据较旧");
+            return qsTr("Data is old");
 
         if (WeatherPlugin.status === "error")
-            return qsTr("更新失败");
+            return qsTr("Update failed");
 
         if (WeatherPlugin.lastUpdated) {
             const updated = new Date(WeatherPlugin.lastUpdated);
             return UiPreferences.shortTime(updated);
         }
-        return qsTr("待更新");
+        return qsTr("Update pending");
     }
 
     function syncWeatherData() {
-        today = WeatherPlugin.dailyForecast.count() > 0 ? WeatherPlugin.dailyForecast.get(0) : ({
-        });
+        today = WeatherPlugin.dailyForecast.count() > 0 ? WeatherPlugin.dailyForecast.get(0) : ({});
         currentEpoch = Math.floor(Date.now() / 1000);
     }
 
@@ -88,7 +87,6 @@ Rectangle {
         syncWeatherData();
         if (!WeatherPlugin.hasValidData && !WeatherPlugin.loading)
             WeatherPlugin.refresh();
-
     }
 
     Connections {
@@ -137,7 +135,7 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            text: WeatherPlugin.locationName || qsTr("天气")
+            text: WeatherPlugin.locationName || qsTr("Weather")
             color: root.night ? Qt.rgba(0.96, 0.98, 1, 0.96) : Qt.rgba(0.09, 0.14, 0.2, 0.9)
             font.family: Fonts.ui
             font.pixelSize: 15
@@ -152,7 +150,6 @@ Rectangle {
             font.family: Fonts.numeric
             font.pixelSize: 10
         }
-
     }
 
     Column {
@@ -205,12 +202,11 @@ Rectangle {
                 animated: true
                 playing: root.active
             }
-
         }
 
         Text {
             width: parent.width
-            text: qsTr("体感温度: ") + root.fmtTemp(WeatherPlugin.currentFeelsLikeC)
+            text: qsTr("Feels like: ") + root.fmtTemp(WeatherPlugin.currentFeelsLikeC)
             color: Appearance.colors.colOnImage
             font.family: Fonts.ui
             font.pixelSize: 16
@@ -220,14 +216,14 @@ Rectangle {
 
         Text {
             width: parent.width
-            text: qsTr("最高 ") + root.fmtTemp(root.today.temperatureMaxC) + qsTr(" · 最低 ") + root.fmtTemp(root.today.temperatureMinC)
+            text: qsTr("High ") + root.fmtTemp(root.today.temperatureMaxC) + qsTr(" · Low ") + root.fmtTemp(
+                      root.today.temperatureMinC)
             color: Appearance.colors.colOnImage
             font.family: Fonts.ui
             font.pixelSize: 16
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
         }
-
     }
 
     layer.effect: OpacityMask {
@@ -237,7 +233,5 @@ Rectangle {
             height: root.height
             radius: root.radius
         }
-
     }
-
 }

@@ -73,7 +73,7 @@ Item {
     function formatBytes(value) {
         const bytes = Number(value);
         if (!isFinite(bytes) || bytes < 0)
-            return qsTr("未知");
+            return qsTr("Unknown");
         const units = [qsTr("B"), qsTr("KB"), qsTr("MB"), qsTr("GB"), qsTr("TB"), qsTr("PB")];
         let amount = bytes;
         let unit = 0;
@@ -87,7 +87,7 @@ Item {
 
     function providerName(remote) {
         if (!remote)
-            return qsTr("未连接云存储");
+            return qsTr("Not connected to cloud storage");
         const type = String(remote.type || "").toLowerCase();
         const name = String(remote.name || "").toLowerCase();
         switch (type) {
@@ -110,7 +110,7 @@ Item {
         case "webdav":
             return "WebDAV";
         default:
-            return remote.type || qsTr("其他云存储");
+            return remote.type || qsTr("Other cloud storage");
         }
     }
 
@@ -129,8 +129,8 @@ Item {
 
     function bluetoothState(device) {
         if (device.connected)
-            return qsTr("已连接");
-        return qsTr("已配对");
+            return qsTr("Connected");
+        return qsTr("Paired");
     }
 
     function bluetoothAction(device) {
@@ -142,8 +142,8 @@ Item {
 
     function bluetoothActionText(device) {
         if (device.connected)
-            return qsTr("断开");
-        return qsTr("连接");
+            return qsTr("Disconnect");
+        return qsTr("Connect");
     }
 
     function networkStatusIcon() {
@@ -162,23 +162,23 @@ Item {
 
     function networkStatusText() {
         if (!NetworkService.available)
-            return qsTr("网络不可用");
+            return qsTr("Network unavailable");
         if (NetworkService.wifiConnecting)
-            return NetworkService.connectTargetSsid || qsTr("正在连接");
+            return NetworkService.connectTargetSsid || qsTr("Connecting");
         if (NetworkService.connected)
             return NetworkService.activeConnection;
-        return qsTr("未连接");
+        return qsTr("Not connected");
     }
 
     function networkStatusDetail() {
         if (NetworkService.wifiConnecting)
-            return NetworkService.connectTargetSsid ? qsTr("正在连接") : "";
+            return NetworkService.connectTargetSsid ? qsTr("Connecting") : "";
         if (!NetworkService.connected)
             return "";
         if (NetworkService.activeNetwork && NetworkService.activeNetwork.type === "wired")
-            return qsTr("已连接，有线");
-        return NetworkService.activeWifi && NetworkService.activeWifi.isSecure ? qsTr("已连接，安全") : qsTr(
-                                                                                     "已连接，开放");
+            return qsTr("Connected, wired");
+        return NetworkService.activeWifi && NetworkService.activeWifi.isSecure ? qsTr("Connected, secure") :
+                                                                                 qsTr("Connected, open");
     }
 
     Component.onCompleted: {
@@ -232,7 +232,7 @@ Item {
                     id: languageCard
 
                     width: root.columnWidth
-                    title: qsTr("语言")
+                    title: qsTr("Language")
                     iconName: "translate"
                     containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
@@ -242,7 +242,7 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("显示语言")
+                            text: qsTr("Display language")
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodyMedium.pixelSize
@@ -253,7 +253,7 @@ Item {
                             Layout.preferredWidth: 190
                             options: I18nService.supportedLanguages
                             value: UiPreferences.language
-                            placeholder: qsTr("选择语言")
+                            placeholder: qsTr("Choose language")
                             textRole: "label"
                             valueRole: "code"
                             closeOnAccept: true
@@ -268,7 +268,7 @@ Item {
                     x: 0
                     y: languageCard.y + languageCard.height + root.cardGap
                     width: root.columnWidth
-                    title: qsTr("蓝牙设备")
+                    title: qsTr("Bluetooth devices")
                     iconName: BluetoothService.enabled ? "bluetooth" : "bluetooth_disabled"
                     containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
@@ -277,7 +277,8 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: BluetoothService.enabled ? qsTr("蓝牙") : qsTr("开启蓝牙以连接设备")
+                            text: BluetoothService.enabled ? qsTr("Bluetooth") : qsTr(
+                                                                 "Turn on Bluetooth to connect devices")
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodyMedium.pixelSize
@@ -286,7 +287,7 @@ Item {
                         StyledSwitch {
                             checked: BluetoothService.enabled
                             enabled: BluetoothService.available && !BluetoothService.busy
-                            Accessible.name: qsTr("蓝牙开关")
+                            Accessible.name: qsTr("Bluetooth switch")
                             onToggled: BluetoothService.setBluetoothEnabled(checked)
                         }
                     }
@@ -340,7 +341,7 @@ Item {
 
                                             Text {
                                                 Layout.fillWidth: true
-                                                text: deviceRow.modelData.name || qsTr("未命名设备")
+                                                text: deviceRow.modelData.name || qsTr("Unnamed device")
                                                 color: Appearance.colors.colOnSurface
                                                 font.family: Fonts.ui
                                                 font.pixelSize: Typography.bodyMedium.pixelSize
@@ -374,8 +375,9 @@ Item {
                                                 iconName: "more_horiz"
                                                 iconSize: 22
                                                 iconColor: Appearance.colors.colOnSurfaceVariant
-                                                accessibleName: qsTr("%1 的更多选项").arg(deviceRow.modelData.name
-                                                                                     || qsTr("未命名设备"))
+                                                accessibleName: qsTr("More options for %1").arg(
+                                                                    deviceRow.modelData.name || qsTr(
+                                                                        "Unnamed device"))
                                                 onClicked: forgetMenu.open()
                                             }
 
@@ -385,7 +387,7 @@ Item {
                                                 y: moreButton.height
 
                                                 MenuItem {
-                                                    text: qsTr("遗忘设备")
+                                                    text: qsTr("Forget device")
                                                     onTriggered: BluetoothService.forgetDevice(
                                                                      deviceRow.modelData)
                                                 }
@@ -400,7 +402,7 @@ Item {
                     Text {
                         Layout.fillWidth: true
                         visible: BluetoothService.enabled && root.pairedBluetoothDevices.length === 0
-                        text: qsTr("暂无已配对设备")
+                        text: qsTr("No paired devices")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
                         font.pixelSize: Typography.bodyMedium.pixelSize
@@ -409,7 +411,7 @@ Item {
 
                     SettingsActionRow {
                         Layout.fillWidth: true
-                        text: qsTr("更多蓝牙设置")
+                        text: qsTr("More Bluetooth settings")
                         trailingIconName: "chevron_right"
                         onClicked: root.navigateRequested("connected-devices")
                     }
@@ -421,7 +423,7 @@ Item {
                     x: root.wideLayout ? root.columnWidth + root.cardGap : 0
                     y: root.wideLayout ? 0 : bluetoothCard.y + bluetoothCard.height + root.cardGap
                     width: root.columnWidth
-                    title: qsTr("云存储")
+                    title: qsTr("Cloud storage")
                     iconName: "cloud"
                     containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
@@ -450,7 +452,7 @@ Item {
                             iconName: "refresh"
                             iconSize: 22
                             iconColor: Appearance.colors.colOnSurfaceVariant
-                            accessibleName: qsTr("刷新云存储信息")
+                            accessibleName: qsTr("Refresh cloud storage information")
                             enabled: RcloneService.selectedRemote !== null && RcloneService.quotaState
                                      !== "loading"
                             onClicked: RcloneService.refreshCard()
@@ -463,14 +465,14 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: RcloneService.quotaAvailable ? qsTr("容量：已使用 %1，共 %2（%3%）").arg(
+                            text: RcloneService.quotaAvailable ? qsTr("Storage: Used %1 of %2 (%3%)").arg(
                                                                      root.formatBytes(
                                                                          RcloneService.usedBytes)).arg(
                                                                      root.formatBytes(
                                                                          RcloneService.totalBytes)).arg(
                                                                      Math.round(RcloneService.usageRatio
                                                                                 * 100)) : RcloneService.quotaState
-                                                                 === "loading" ? qsTr("正在读取容量…") :
+                                                                 === "loading" ? qsTr("Reading capacity…") :
                                                                                  RcloneService.quotaMessage
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
@@ -481,7 +483,7 @@ Item {
                         ThinReadOnlySlider {
                             Layout.fillWidth: true
                             value: RcloneService.usageRatio
-                            Accessible.name: qsTr("云存储已使用容量")
+                            Accessible.name: qsTr("Cloud storage used capacity")
                         }
                     }
 
@@ -509,17 +511,17 @@ Item {
                                 Layout.preferredWidth: 36
                                 Layout.preferredHeight: 36
                                 contained: false
-                                accessibleName: qsTr("正在备份")
+                                accessibleName: qsTr("Backing up")
                             }
 
                             Text {
                                 Layout.fillWidth: true
-                                text: RcloneService.backupState === "stopping" ? qsTr("正在停止备份…") :
+                                text: RcloneService.backupState === "stopping" ? qsTr("Stopping backup…") :
                                                                                  RcloneService.backupPhase
                                                                                  === "transferring"
                                                                                  && RcloneService.backupProgress
                                                                                  >= 0 ? qsTr(
-                                                                                            "%1：当前文件夹 %2%").arg(
+                                                                                            "%1: current folder %2%").arg(
                                                                                             RcloneService.backupCurrentFolderName).arg(
                                                                                             Math.round(
                                                                                                 RcloneService.backupProgress
@@ -527,13 +529,13 @@ Item {
                                                                                         === "checking"
                                                                                         ? RcloneService.backupChecks
                                                                                           > 0 ? qsTr(
-                                                                                                    "正在检查文件…") :
+                                                                                                    "Checking files…") :
                                                                                                 RcloneService.backupListed
                                                                                                 > 0 ? qsTr(
-                                                                                                          "已扫描 %1 个项目").arg(
+                                                                                                          "%1 items scanned").arg(
                                                                                                           RcloneService.backupListed) :
-                                                                                                      qsTr("正在扫描文件…") :
-                                                                                                      qsTr("正在准备备份")
+                                                                                                      qsTr("Scanning files…") :
+                                                                                                      qsTr("Preparing backup")
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Typography.labelMedium.family
                                 font.pixelSize: Typography.labelMedium.pixelSize
@@ -548,7 +550,7 @@ Item {
 
                         SettingsActionRow {
                             Layout.fillWidth: true
-                            text: qsTr("电脑备份")
+                            text: qsTr("Computer backup")
                             iconName: "backup"
                             enabled: RcloneService.selectedRemote !== null && !RcloneService.isReadOnly(
                                          RcloneService.selectedRemote)
@@ -557,7 +559,7 @@ Item {
 
                         SettingsActionRow {
                             Layout.fillWidth: true
-                            text: qsTr("管理云存储")
+                            text: qsTr("Manage cloud storage")
                             iconName: "settings"
                             trailingIconName: "chevron_right"
                             onClicked: root.navigateRequested("advanced")
@@ -571,7 +573,7 @@ Item {
                     x: cloudCard.x
                     y: cloudCard.y + cloudCard.height + root.cardGap
                     width: root.columnWidth
-                    title: qsTr("个性化")
+                    title: qsTr("Personalization")
                     iconName: "palette"
                     containerColor: Appearance.m3colors.m3surfaceContainerHigh
 
@@ -600,7 +602,8 @@ Item {
                                 hoverStateLayerOpacity: 0
                                 pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
                                 rippleColor: Appearance.colors.colOnSurface
-                                Accessible.name: qsTr("使用壁纸 %1").arg(WallpaperService.basename(modelData))
+                                Accessible.name: qsTr("Use wallpaper %1").arg(WallpaperService.basename(
+                                                                                  modelData))
                                 onClicked: WallpaperService.setWallpaper(modelData)
 
                                 backgroundContent: Rectangle {
@@ -678,7 +681,7 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("色彩模式")
+                            text: qsTr("Color mode")
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodyMedium.pixelSize
@@ -688,14 +691,14 @@ Item {
                         SearchSelectMenuField {
                             Layout.preferredWidth: 142
                             options: [({
-                                           "label": qsTr("浅色"),
+                                           "label": qsTr("Light"),
                                            "value": "light"
                                        }), ({
-                                                "label": qsTr("深色"),
+                                                "label": qsTr("Dark"),
                                                 "value": "dark"
                                             })]
                             value: PersonalizationConfig.themeMode
-                            placeholder: qsTr("选择色彩模式")
+                            placeholder: qsTr("Choose color mode")
                             closeOnAccept: true
                             onAccepted: value => ThemeService.setThemeMode(value)
                         }
@@ -707,7 +710,7 @@ Item {
 
                         SettingsActionRow {
                             Layout.fillWidth: true
-                            text: qsTr("壁纸")
+                            text: qsTr("Wallpaper")
                             iconName: "wallpaper"
                             trailingIconName: "chevron_right"
                             onClicked: root.navigateRequested("wallpaper")
@@ -715,7 +718,7 @@ Item {
 
                         SettingsActionRow {
                             Layout.fillWidth: true
-                            text: qsTr("主题")
+                            text: qsTr("Theme")
                             iconName: "palette"
                             trailingIconName: "chevron_right"
                             onClicked: root.navigateRequested("theme")
@@ -731,7 +734,7 @@ Item {
 
         parentModal: root.parentModal
         requiresParentWindow: true
-        dialogTitle: qsTr("选择头像")
+        dialogTitle: qsTr("Choose avatar")
         onAccepted: (path, isDirectory) => {
             if (!isDirectory)
                 AvatarService.setAvatar(path);

@@ -8,7 +8,7 @@ Item {
     property bool contained: true
     property color containerColor: Appearance.colors.colPrimaryContainer
     property color indicatorColor: Appearance.colors.colOnPrimaryContainer
-    property string accessibleName: qsTr("正在加载")
+    property string accessibleName: qsTr("Loading")
     property real animationProgress: 0
 
     readonly property var phaseStops: [0, 0.14, 0.27, 0.4, 0.54, 0.65, 0.78, 0.89, 1]
@@ -41,15 +41,11 @@ Item {
         case 0:
             return 1 - Math.pow(1 - value, 3);
         case 1:
-            return value < 0.5
-                ? 4 * value * value * value
-                : 1 - Math.pow(-2 * value + 2, 3) / 2;
+            return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
         case 2:
             return value * value * (3 - 2 * value);
         default:
-            return value < 0.5
-                ? 16 * Math.pow(value, 5)
-                : 1 - Math.pow(-2 * value + 2, 5) / 2;
+            return value < 0.5 ? 16 * Math.pow(value, 5) : 1 - Math.pow(-2 * value + 2, 5) / 2;
         }
     }
 
@@ -91,8 +87,7 @@ Item {
 
             function burstPoint(angle, lobes, innerRadius, outerRadius, angularOffset) {
                 const wave = 0.5 + 0.5 * Math.cos(lobes * angle);
-                const radius = innerRadius
-                    + (outerRadius - innerRadius) * Math.pow(wave, 1.7);
+                const radius = innerRadius + (outerRadius - innerRadius) * Math.pow(wave, 1.7);
                 return polarPoint(angle, radius, 1, 1, angularOffset);
             }
 

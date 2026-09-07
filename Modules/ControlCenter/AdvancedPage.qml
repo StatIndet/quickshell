@@ -15,15 +15,17 @@ StyledFlickable {
     property bool refreshRequested: false
     property bool refreshConfirmed: false
     readonly property real pageContentWidth: 600
-    readonly property var remoteOptions: RcloneService.remotes.map((remote) => {
+    readonly property var remoteOptions: RcloneService.remotes.map(remote => {
         return ({
-            "label": remote.name,
-            "value": remote.name,
-            "remoteName": remote.name,
-            "remoteType": remote.type,
-            "enabled": !RcloneService.isReadOnly(remote),
-            "tooltip": RcloneService.isReadOnly(remote) ? qsTr("此云存储不支持写入，不能设为默认") : ""
-        });
+                    "label": remote.name,
+                    "value": remote.name,
+                    "remoteName": remote.name,
+                    "remoteType": remote.type,
+                    "enabled": !RcloneService.isReadOnly(remote),
+                    "tooltip": RcloneService.isReadOnly(remote) ? qsTr(
+                                                                      "This cloud storage is read-only and cannot be set as default") :
+                                                                  ""
+                });
     })
     property var pendingDeleteTemplate: null
 
@@ -42,11 +44,12 @@ StyledFlickable {
     function cloudRootError(value) {
         const raw = String(value || "").trim();
         if (raw.indexOf(":") >= 0)
-            return qsTr("请输入 remote 内的相对目录，不要包含 remote 名称或冒号");
+            return qsTr(
+                        "Enter a relative directory inside the remote; do not include a remote name or colon");
 
         const relative = raw.replace(/^\/+|\/+$/g, "");
         if (relative === "." || relative === "..")
-            return qsTr("请输入有效的远程目录");
+            return qsTr("Enter a valid remote directory");
 
         return "";
     }
@@ -54,7 +57,7 @@ StyledFlickable {
     function saveBackupRoot() {
         const error = root.cloudRootError(backupRootField.text);
         if (error !== "")
-            return ;
+            return;
 
         UiPreferences.setCloudBackupRoot(backupRootField.text);
         backupRootField.text = "/" + UiPreferences.cloudBackupRoot;
@@ -63,7 +66,7 @@ StyledFlickable {
     function saveUploadRoot() {
         const error = root.cloudRootError(uploadRootField.text);
         if (error !== "")
-            return ;
+            return;
 
         UiPreferences.setCloudUploadRoot(uploadRootField.text);
         uploadRootField.text = "/" + UiPreferences.cloudUploadRoot;
@@ -71,7 +74,7 @@ StyledFlickable {
 
     function refreshConfiguration() {
         if (RcloneService.remotesLoading)
-            return ;
+            return;
 
         refreshConfirmationTimer.stop();
         root.refreshRequested = true;
@@ -85,13 +88,12 @@ StyledFlickable {
     Component.onCompleted: {
         if (RcloneService.providers.length === 0)
             RcloneService.loadProviders();
-
     }
 
     Connections {
         function onRemotesLoadingChanged() {
             if (RcloneService.remotesLoading || !root.refreshRequested)
-                return ;
+                return;
 
             root.refreshRequested = false;
             if (RcloneService.remotesError === "") {
@@ -120,7 +122,7 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("地图与天气服务")
+            title: qsTr("Map and weather services")
             iconName: "map"
 
             MapTilerApiSettingsCard {
@@ -130,12 +132,11 @@ StyledFlickable {
             OpenWeatherApiSettingsCard {
                 Layout.fillWidth: true
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("云存储")
+            title: qsTr("Cloud storage")
             iconName: "cloud"
 
             RowLayout {
@@ -146,14 +147,14 @@ StyledFlickable {
                     Layout.fillWidth: true
                     options: root.remoteOptions
                     value: RcloneService.selectedRemoteName
-                    placeholder: qsTr("尚未选择云存储")
+                    placeholder: qsTr("No cloud storage selected")
                     closeOnAccept: true
                     showCheckmark: false
                     fieldHeight: Metrics.controlHeightXL
                     itemHeight: Metrics.controlHeightXL
                     leadingWidth: Metrics.iconM
                     enabled: options.length > 0
-                    onAccepted: (value) => {
+                    onAccepted: value => {
                         return RcloneService.setDefaultRemote(value);
                     }
 
@@ -165,9 +166,7 @@ StyledFlickable {
                             remoteType: optionData ? optionData.remoteType : ""
                             iconSize: Metrics.iconM
                         }
-
                     }
-
                 }
 
                 IconButton {
@@ -175,20 +174,27 @@ StyledFlickable {
 
                     Layout.preferredWidth: Metrics.controlHeightXL
                     Layout.preferredHeight: Metrics.controlHeightXL
-                    iconName: RcloneService.remotesError !== "" && !RcloneService.remotesLoading ? "sync_problem" : root.refreshConfirmed ? "check" : "refresh"
+                    iconName: RcloneService.remotesError !== "" && !RcloneService.remotesLoading
+                              ? "sync_problem" : root.refreshConfirmed ? "check" : "refresh"
                     iconFill: root.refreshConfirmed ? 1 : 0
-                    iconColor: RcloneService.remotesError !== "" && !RcloneService.remotesLoading ? Appearance.colors.colError : root.refreshConfirmed ? Appearance.colors.colPrimary : Appearance.colors.colOnSurfaceVariant
-                    tooltipText: RcloneService.remotesLoading ? qsTr("正在刷新配置") : RcloneService.remotesError !== "" ? RcloneService.remotesError : root.refreshConfirmed ? qsTr("配置已刷新") : qsTr("刷新配置")
+                    iconColor: RcloneService.remotesError !== "" && !RcloneService.remotesLoading
+                               ? Appearance.colors.colError : root.refreshConfirmed
+                                 ? Appearance.colors.colPrimary : Appearance.colors.colOnSurfaceVariant
+                    tooltipText: RcloneService.remotesLoading ? qsTr("Refreshing configuration") :
+                                                                RcloneService.remotesError !== ""
+                                                                ? RcloneService.remotesError :
+                                                                  root.refreshConfirmed ? qsTr(
+                                                                                              "Configuration refreshed") :
+                                                                                          qsTr("Refresh configuration")
                     accessibleName: tooltipText
                     enabled: !RcloneService.remotesLoading && !RcloneService.configBusy
                     onClicked: root.refreshConfiguration()
                 }
-
             }
 
             SettingsActionRow {
                 Layout.fillWidth: true
-                text: qsTr("查看云存储")
+                text: qsTr("View cloud storage")
                 iconName: "cloud_queue"
                 trailingIconName: "chevron_right"
                 onClicked: cloudManager.showWindow()
@@ -196,7 +202,7 @@ StyledFlickable {
 
             SettingsActionRow {
                 Layout.fillWidth: true
-                text: qsTr("添加云存储")
+                text: qsTr("Add cloud storage")
                 iconName: "add"
                 trailingIconName: "chevron_right"
                 enabled: !RcloneService.configBusy
@@ -207,7 +213,7 @@ StyledFlickable {
                 id: uploadRootField
 
                 Layout.fillWidth: true
-                labelText: qsTr("文件上传位置")
+                labelText: qsTr("File upload location")
                 text: "/" + UiPreferences.cloudUploadRoot
                 error: root.cloudRootError(text) !== ""
                 onAccepted: root.saveUploadRoot()
@@ -218,18 +224,17 @@ StyledFlickable {
                 id: backupRootField
 
                 Layout.fillWidth: true
-                labelText: qsTr("电脑备份位置")
+                labelText: qsTr("Computer backup location")
                 text: "/" + UiPreferences.cloudBackupRoot
                 error: root.cloudRootError(text) !== ""
                 onAccepted: root.saveBackupRoot()
                 onEditingFinished: root.saveBackupRoot()
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("Matugen 模板生成")
+            title: qsTr("Matugen template generation")
 
             Item {
                 Layout.fillWidth: true
@@ -252,11 +257,11 @@ StyledFlickable {
 
                     IconButton {
                         iconName: "refresh"
-                        tooltipText: qsTr("刷新模板")
+                        tooltipText: qsTr("Refresh templates")
                         onClicked: MatugenTemplateService.refresh()
                     }
                     ActionButton {
-                        text: qsTr("添加")
+                        text: qsTr("Add")
                         iconName: "add"
                         enabled: !MatugenTemplateService.busy && PersonalizationConfig.ready
                         onClicked: templateAddWindow.showWindow()
@@ -280,8 +285,8 @@ StyledFlickable {
                 Layout.fillWidth: true
                 visible: ThemeService.generationError !== "" || ThemeService.externalGenerationError !== ""
                 tone: "error"
-                message: ThemeService.generationError !== "" ? qsTr("Matugen 配色生成失败") : qsTr(
-                                                                   "部分 Matugen 模板生成失败")
+                message: ThemeService.generationError !== "" ? qsTr("Failed to generate Matugen colors") :
+                                                               qsTr("Some Matugen templates failed to generate")
                 StyledToolTip {
                     extraVisibleCondition: errorHover.hovered
                     text: ThemeService.generationError || ThemeService.externalGenerationError
@@ -302,7 +307,8 @@ StyledFlickable {
                     iconName: modelData.valid ? modelData.icon : "error"
                     title: modelData.title
                     supportingText: !modelData.valid ? modelData.error : modelData.origin === "user" ? qsTr(
-                                                                                                           "用户模板") : ""
+                                                                                                           "User templates") :
+                                                                                                       ""
 
                     trailing: Item {
                         implicitWidth: templateRowActions.implicitWidth
@@ -329,7 +335,8 @@ StyledFlickable {
                                 implicitWidth: Metrics.controlHeightM
                                 implicitHeight: Metrics.controlHeightM
                                 Accessible.role: Accessible.StaticText
-                                Accessible.name: qsTr("每次生成后执行：%1").arg(templateRow.modelData.postHook)
+                                Accessible.name: qsTr("Run after each generation: %1").arg(
+                                                     templateRow.modelData.postHook)
 
                                 MaterialSymbol {
                                     anchors.centerIn: parent
@@ -342,20 +349,22 @@ StyledFlickable {
                                 }
                                 StyledToolTip {
                                     extraVisibleCondition: hookHover.hovered
-                                    text: qsTr("每次生成后执行：\n%1").arg(templateRow.modelData.postHook)
+                                    text: qsTr("Run after each generation:\n%1").arg(
+                                              templateRow.modelData.postHook)
                                 }
                             }
                             IconButton {
                                 visible: templateRow.modelData.origin === "user"
                                 iconName: "folder_open"
-                                tooltipText: qsTr("打开模板位置") + "\n" + templateRow.modelData.inputPath + "\n" + qsTr(
-                                                 "输出：%1").arg(templateRow.modelData.outputPath)
+                                tooltipText: qsTr("Open template location") + "\n"
+                                             + templateRow.modelData.inputPath + "\n" + qsTr("Output: %1").arg(
+                                                 templateRow.modelData.outputPath)
                                 onClicked: MatugenTemplateService.openLocation(templateRow.modelData)
                             }
                             IconButton {
                                 visible: templateRow.modelData.origin === "user"
                                 iconName: "delete"
-                                tooltipText: qsTr("删除模板")
+                                tooltipText: qsTr("Delete template")
                                 enabled: !MatugenTemplateService.busy && !ThemeService.generating
                                          && PersonalizationConfig.ready
                                 onClicked: root.requestTemplateDeletion(templateRow.modelData)
@@ -366,8 +375,10 @@ StyledFlickable {
                                 checked: templateRow.modelData.valid
                                          && PersonalizationConfig.isMatugenTemplateEnabled(
                                              templateRow.modelData.id)
-                                Accessible.name: qsTr("启用 %1 Matugen 模板").arg(templateRow.modelData.title)
-                                onToggled: ThemeService.setMatugenTemplateEnabled(templateRow.modelData.id, checked)
+                                Accessible.name: qsTr("Enable the %1 Matugen template").arg(
+                                                     templateRow.modelData.title)
+                                onToggled: ThemeService.setMatugenTemplateEnabled(templateRow.modelData.id,
+                                                                                  checked)
                             }
                         }
                     }
@@ -379,7 +390,6 @@ StyledFlickable {
             Layout.fillWidth: true
             Layout.preferredHeight: 24
         }
-
     }
 
     MatugenTemplateAddWindow {
@@ -391,8 +401,9 @@ StyledFlickable {
         id: templateDialog
         anchors.centerIn: Overlay.overlay
         width: Math.min(480, root.width - 32)
-        dialogTitle: root.pendingDeleteTemplate ? qsTr("删除“%1”？").arg(root.pendingDeleteTemplate.title) : ""
-        messageText: qsTr("删除模板及其注册信息，保留已生成的输出文件。")
+        dialogTitle: root.pendingDeleteTemplate ? qsTr("Delete “%1”?").arg(root.pendingDeleteTemplate.title) :
+                                                  ""
+        messageText: qsTr("Delete the template and its registration. Keep generated output files.")
         onClosed: root.pendingDeleteTemplate = null
         actionsComponent: Component {
             RowLayout {
@@ -400,11 +411,11 @@ StyledFlickable {
                     Layout.fillWidth: true
                 }
                 ActionButton {
-                    text: qsTr("取消")
+                    text: qsTr("Cancel")
                     onClicked: templateDialog.close()
                 }
                 ActionButton {
-                    text: qsTr("删除")
+                    text: qsTr("Delete")
                     enabled: !MatugenTemplateService.busy && !ThemeService.generating
                              && PersonalizationConfig.ready
                     onClicked: {
@@ -428,5 +439,4 @@ StyledFlickable {
 
         parentModal: root.parentModal
     }
-
 }

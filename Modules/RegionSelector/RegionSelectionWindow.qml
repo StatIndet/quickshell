@@ -23,9 +23,7 @@ PanelWindow {
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.namespace: "clavis-region-selector"
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: visible
-        ? WlrKeyboardFocus.Exclusive
-        : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     property real pointerX: width / 2
     property real pointerY: height / 2
@@ -53,12 +51,8 @@ PanelWindow {
     }
 
     function finishSelection() {
-        if (!RegionSelectionService.accept(
-                    root.targetScreen,
-                    root.selectionX,
-                    root.selectionY,
-                    root.selectionWidth,
-                    root.selectionHeight)) {
+        if (!RegionSelectionService.accept(root.targetScreen, root.selectionX, root.selectionY,
+                                           root.selectionWidth, root.selectionHeight)) {
             root.resetSelection();
         }
     }
@@ -161,11 +155,10 @@ PanelWindow {
 
     Rectangle {
         id: dimensionLabel
-        readonly property real preferredX: root.selectionX
-            + root.selectionWidth - width
-        readonly property real preferredY: root.selectionY > height + 20
-            ? root.selectionY - height - 8
-            : root.selectionY + root.selectionHeight + 8
+        readonly property real preferredX: root.selectionX + root.selectionWidth - width
+        readonly property real preferredY: root.selectionY > height + 20 ? root.selectionY - height - 8 :
+                                                                           root.selectionY
+                                                                           + root.selectionHeight + 8
 
         x: Math.max(12, Math.min(preferredX, root.width - width - 12))
         y: Math.max(12, Math.min(preferredY, root.height - height - 12))
@@ -188,8 +181,7 @@ PanelWindow {
             }
 
             Text {
-                text: Math.round(root.selectionWidth)
-                    + " × " + Math.round(root.selectionHeight)
+                text: Math.round(root.selectionWidth) + " × " + Math.round(root.selectionHeight)
                 font.family: Fonts.numeric
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
@@ -223,7 +215,7 @@ PanelWindow {
             }
 
             Text {
-                text: qsTr("拖拽选择区域  ·  Esc 取消")
+                text: qsTr("Drag to select a region  ·  Esc to cancel")
                 font.family: Fonts.ui
                 font.pixelSize: 13
                 color: Appearance.colors.colOnPrimaryContainer

@@ -32,7 +32,7 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("添加 Matugen 模板")
+    title: qsTr("Add Matugen template")
     implicitWidth: 580
     implicitHeight: 640
     minimumSize: Qt.size(460, 480)
@@ -70,7 +70,7 @@ FloatingWindow {
 
             WizardHeader {
                 Layout.fillWidth: true
-                title: qsTr("添加 Matugen 模板")
+                title: qsTr("Add Matugen template")
                 onCloseRequested: root.dismiss()
             }
             StyledFlickable {
@@ -88,7 +88,7 @@ FloatingWindow {
 
                     SettingsActionRow {
                         Layout.fillWidth: true
-                        text: qsTr("模板文件")
+                        text: qsTr("Template file")
                         description: root.sourcePath
                         iconName: "description"
                         trailingIconName: "folder_open"
@@ -97,17 +97,17 @@ FloatingWindow {
                     MaterialFilledTextField {
                         id: idField
                         Layout.fillWidth: true
-                        labelText: qsTr("模板 ID")
+                        labelText: qsTr("Template ID")
                         error: text !== "" && !/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(text)
                     }
                     MaterialFilledTextField {
                         id: outputField
                         Layout.fillWidth: true
-                        labelText: qsTr("输出路径")
+                        labelText: qsTr("Output path")
                     }
                     SettingsActionRow {
                         Layout.fillWidth: true
-                        text: qsTr("高级选项")
+                        text: qsTr("Advanced options")
                         trailingIconName: root.advanced ? "expand_less" : "expand_more"
                         onClicked: root.advanced = !root.advanced
                     }
@@ -115,12 +115,13 @@ FloatingWindow {
                         id: hookField
                         Layout.fillWidth: true
                         visible: root.advanced
-                        labelText: qsTr("生成后执行命令")
+                        labelText: qsTr("Run command after generation")
                     }
                     Text {
                         Layout.fillWidth: true
                         visible: root.advanced
-                        text: qsTr("该命令会在每次 Matugen 重新生成主题后执行。仅启用可信模板。")
+                        text: qsTr(
+                                  "This command runs every time Matugen regenerates the theme. Only enable trusted templates.")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
                         font.pixelSize: 12
@@ -154,12 +155,12 @@ FloatingWindow {
                     anchors.verticalCenter: parent.verticalCenter
 
                     ActionButton {
-                        text: qsTr("取消")
+                        text: qsTr("Cancel")
                         enabled: !MatugenTemplateService.adding
                         onClicked: root.dismiss()
                     }
                     ActionButton {
-                        text: qsTr("添加")
+                        text: qsTr("Add")
                         filled: true
                         enabled: !MatugenTemplateService.busy && root.sourcePath !== "" && idField.text !== ""
                                  && !idField.error && outputField.text.trim() !== ""
@@ -176,11 +177,11 @@ FloatingWindow {
         requiresParentWindow: true
         selectionMode: FilePickerWindow.Files
         nameFilters: ["*"]
-        dialogTitle: qsTr("选择模板文件")
+        dialogTitle: qsTr("Choose template file")
         description: ""
         windowIconName: "description"
-        emptyStateText: qsTr("没有可选择的文件")
-        selectionPrompt: qsTr("选择模板文件")
+        emptyStateText: qsTr("No files available")
+        selectionPrompt: qsTr("Choose template file")
         formatSummary: ""
         onAccepted: (path, isDirectory) => {
             if (!isDirectory)

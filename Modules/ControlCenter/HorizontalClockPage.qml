@@ -32,12 +32,12 @@ StyledFlickable {
         root.customColorDraft = root.selectedDigitCustomColor();
         if (customColorField && !customColorField.activeFocus)
             customColorField.text = root.customColorDraft;
-
     }
 
     function selectedDigitThemeColor() {
         const data = root.selectedDigitData();
-        return data && data.colorRole === "inversePrimary" ? Appearance.colors.colInversePrimary.toString() : Appearance.colors.colPrimary.toString();
+        return data && data.colorRole === "inversePrimary" ? Appearance.colors.colInversePrimary.toString() :
+                                                             Appearance.colors.colPrimary.toString();
     }
 
     clip: true
@@ -55,7 +55,7 @@ StyledFlickable {
         spacing: 30
 
         KeystoneSection {
-            title: qsTr("横向时钟样式")
+            title: qsTr("Horizontal clock style")
             iconName: "tune"
 
             Item {
@@ -74,77 +74,75 @@ StyledFlickable {
                     anchors.topMargin: 6
                     anchors.bottomMargin: 6
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("隐藏日期")
+                title: qsTr("Hide date")
 
                 trailing: StyledSwitch {
                     checked: PersonalizationConfig.keystoneHideDate
-                    Accessible.name: qsTr("隐藏日期")
+                    Accessible.name: qsTr("Hide date")
                     onToggled: PersonalizationConfig.setKeystoneHideDate(checked)
                 }
-
             }
 
             ClockSliderSetting {
-                title: qsTr("字号")
+                title: qsTr("Font size")
                 axisTag: "px"
                 from: 16
                 to: 28
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockFontSize
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockFontSize(value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockFontSize(value, true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("字重")
+                title: qsTr("Weight")
                 axisTag: "wght"
                 from: 1
                 to: 1000
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.wght
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("wght", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("wght", value, true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("字宽")
+                title: qsTr("Width")
                 axisTag: "wdth"
                 from: 25
                 to: 151
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.wdth
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("wdth", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("wdth", value, true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("光学尺寸")
+                title: qsTr("Optical size")
                 axisTag: "opsz"
                 from: 6
                 to: 144
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.opsz
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("opsz", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("opsz", value, true);
                 }
             }
@@ -156,47 +154,47 @@ StyledFlickable {
                 to: 100
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.GRAD
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("GRAD", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("GRAD", value, true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("圆润度")
+                title: qsTr("Roundness")
                 axisTag: "ROND"
                 from: 0
                 to: 100
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.ROND
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("ROND", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("ROND", value, true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("倾斜")
+                title: qsTr("Slant")
                 axisTag: "slnt"
                 from: -10
                 to: 0
                 stepSize: 1
                 value: PersonalizationConfig.horizontalClockAxes.slnt
-                onMoved: (value) => {
+                onMoved: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("slnt", value, false);
                 }
-                onCommitted: (value) => {
+                onCommitted: value => {
                     return PersonalizationConfig.setHorizontalClockAxis("slnt", value, true);
                 }
             }
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("当前数字")
+                text: qsTr("Current digit")
                 color: Appearance.colors.colOnSecondaryContainer
                 font.family: Fonts.ui
                 font.pixelSize: 14
@@ -208,32 +206,32 @@ StyledFlickable {
 
                 Layout.fillWidth: true
                 model: [({
-                    "value": "h0",
-                    "label": String(root.currentHourTens)
-                }), ({
-                    "value": "h1",
-                    "label": String(root.currentHourOnes)
-                }), ({
-                    "value": "separator",
-                    "label": ":",
-                    "enabled": false,
-                    "width": 24
-                }), ({
-                    "value": "m0",
-                    "label": String(root.currentMinuteTens)
-                }), ({
-                    "value": "m1",
-                    "label": String(root.currentMinuteOnes)
-                }), ({
-                    "value": "ap",
-                    "label": root.currentPeriodLead
-                }), ({
-                    "value": "periodM",
-                    "label": "M"
-                })]
+                             "value": "h0",
+                             "label": String(root.currentHourTens)
+                         }), ({
+                                  "value": "h1",
+                                  "label": String(root.currentHourOnes)
+                              }), ({
+                                       "value": "separator",
+                                       "label": ":",
+                                       "enabled": false,
+                                       "width": 24
+                                   }), ({
+                                            "value": "m0",
+                                            "label": String(root.currentMinuteTens)
+                                        }), ({
+                                                 "value": "m1",
+                                                 "label": String(root.currentMinuteOnes)
+                                             }), ({
+                                                      "value": "ap",
+                                                      "label": root.currentPeriodLead
+                                                  }), ({
+                                                           "value": "periodM",
+                                                           "label": "M"
+                                                       })]
                 currentValue: root.selectedDigit
                 buttonMinWidth: 52
-                onValueSelected: (value) => {
+                onValueSelected: value => {
                     root.selectedDigit = String(value);
                     root.updateCustomColorDraft();
                 }
@@ -241,29 +239,31 @@ StyledFlickable {
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("颜色")
-                supportingText: qsTr("默认主题色会随 Matugen 主题变化")
+                title: qsTr("Color")
+                supportingText: qsTr("Default theme colors follow the Matugen theme")
 
                 trailing: StyledButtonGroup {
                     model: [({
-                        "value": "primary",
-                        "label": qsTr("主色")
-                    }), ({
-                        "value": "inversePrimary",
-                        "label": qsTr("反色")
-                    }), ({
-                        "value": "custom",
-                        "label": qsTr("自定义")
-                    })]
+                                 "value": "primary",
+                                 "label": qsTr("Primary")
+                             }), ({
+                                      "value": "inversePrimary",
+                                      "label": qsTr("Inverse")
+                                  }), ({
+                                           "value": "custom",
+                                           "label": qsTr("Custom")
+                                       })]
                     currentValue: root.selectedDigitData().colorRole
                     buttonMinWidth: 64
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         const role = String(value);
-                        const color = role === "custom" ? root.selectedDigitCustomColor() || root.selectedDigitThemeColor() : root.selectedDigitCustomColor();
-                        PersonalizationConfig.setHorizontalClockDigitColor(root.selectedDigit, role, color, true);
+                        const color = role === "custom" ? root.selectedDigitCustomColor()
+                                                          || root.selectedDigitThemeColor() :
+                                                          root.selectedDigitCustomColor();
+                        PersonalizationConfig.setHorizontalClockDigitColor(root.selectedDigit, role, color,
+                                                                           true);
                     }
                 }
-
             }
 
             MaterialTextField {
@@ -272,19 +272,19 @@ StyledFlickable {
                 Layout.fillWidth: true
                 visible: root.selectedDigitData().colorRole === "custom"
                 text: root.customColorDraft
-                placeholderText: qsTr("#RRGGBB 或 #RRGGBBAA")
-                Accessible.name: qsTr("自定义颜色")
+                placeholderText: qsTr("#RRGGBB or #RRGGBBAA")
+                Accessible.name: qsTr("Custom color")
                 onTextChanged: {
                     if (activeFocus)
                         root.customColorDraft = text;
-
                 }
-                onEditingFinished: PersonalizationConfig.setHorizontalClockDigitColor(root.selectedDigit, "custom", text, true)
+                onEditingFinished: PersonalizationConfig.setHorizontalClockDigitColor(root.selectedDigit,
+                                                                                      "custom", text, true)
             }
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("位置：%1").arg(root.selectedDigit.toUpperCase())
+                text: qsTr("Position: %1").arg(root.selectedDigit.toUpperCase())
                 color: Appearance.colors.colOnSecondaryContainer
                 font.family: Fonts.ui
                 font.pixelSize: 14
@@ -292,48 +292,54 @@ StyledFlickable {
             }
 
             ClockSliderSetting {
-                title: qsTr("X 偏移")
+                title: qsTr("X offset")
                 axisTag: "x"
                 from: -8
                 to: 8
                 stepSize: 1
                 value: root.selectedDigitData().x
-                onMoved: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "x", value, false);
+                onMoved: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "x", value,
+                                                                              false);
                 }
-                onCommitted: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "x", value, true);
+                onCommitted: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "x", value,
+                                                                              true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("Y 偏移")
+                title: qsTr("Y offset")
                 axisTag: "y"
                 from: -6
                 to: 6
                 stepSize: 1
                 value: root.selectedDigitData().y
-                onMoved: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "y", value, false);
+                onMoved: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "y", value,
+                                                                              false);
                 }
-                onCommitted: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "y", value, true);
+                onCommitted: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "y", value,
+                                                                              true);
                 }
             }
 
             ClockSliderSetting {
-                title: qsTr("旋转")
+                title: qsTr("Rotation")
                 axisTag: "°"
                 from: -12
                 to: 12
                 stepSize: 1
                 value: root.selectedDigitData().rotation
                 suffix: "°"
-                onMoved: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "rotation", value, false);
+                onMoved: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "rotation",
+                                                                              value, false);
                 }
-                onCommitted: (value) => {
-                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "rotation", value, true);
+                onCommitted: value => {
+                    return PersonalizationConfig.setHorizontalClockDigitValue(root.selectedDigit, "rotation",
+                                                                              value, true);
                 }
             }
 
@@ -346,7 +352,7 @@ StyledFlickable {
                 stateLayerColor: Appearance.colors.colSecondaryContainerHover
                 pressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
                 rippleColor: Appearance.colors.colOnSecondaryContainer
-                Accessible.name: qsTr("重置横向时钟样式")
+                Accessible.name: qsTr("Reset horizontal clock style")
                 releaseAction: () => {
                     return PersonalizationConfig.resetHorizontalClock(true);
                 }
@@ -363,7 +369,7 @@ StyledFlickable {
 
                     Text {
                         Layout.fillWidth: true
-                        text: qsTr("重置")
+                        text: qsTr("Reset")
                         color: Appearance.colors.colOnSecondaryContainer
                         font.family: Fonts.ui
                         font.pixelSize: 13
@@ -371,28 +377,22 @@ StyledFlickable {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                 }
-
             }
-
         }
 
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 24
         }
-
     }
 
     Connections {
         function onHorizontalClockDigitsChanged() {
             if (!customColorField.activeFocus)
                 root.updateCustomColorDraft();
-
         }
 
         target: PersonalizationConfig
     }
-
 }

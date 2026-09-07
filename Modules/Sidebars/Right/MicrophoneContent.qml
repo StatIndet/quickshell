@@ -11,7 +11,7 @@ import qs.Widgets.common
 WidgetPanel {
     id: root
 
-    title: qsTr("麦克风")
+    title: qsTr("Microphone")
     icon: "mic"
     showBackButton: true
     backAction: () => WidgetState.qsView = "settings"
@@ -24,9 +24,9 @@ WidgetPanel {
         if (Volume.lastError.length > 0)
             return Volume.lastError;
         if (!Volume.ready)
-            return qsTr("正在连接 PipeWire 音频服务");
+            return qsTr("Connecting to the PipeWire audio service");
         if (Volume.inputDevices.length === 0 && !Volume.inputAvailable)
-            return qsTr("未检测到可用的麦克风设备");
+            return qsTr("No microphone devices detected");
         return "";
     }
 
@@ -40,7 +40,7 @@ WidgetPanel {
         iconName: "open_in_new"
         iconSize: 20
         iconColor: Appearance.colors.colOnLayer2
-        accessibleName: qsTr("打开高级声音设置")
+        accessibleName: qsTr("Open advanced sound settings")
         hoverStateLayerColor: Appearance.colors.colLayer2Hover
         pressedStateLayerColor: Appearance.colors.colLayer2Active
         onClicked: Volume.openMixer()
@@ -58,17 +58,19 @@ WidgetPanel {
             indeterminate: true
             Material.accent: Appearance.colors.colPrimary
 
-            Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
-            Behavior on opacity { ElementMoveAnimation {} }
+            Behavior on Layout.preferredHeight {
+                ElementMoveAnimation {}
+            }
+            Behavior on opacity {
+                ElementMoveAnimation {}
+            }
         }
 
         InlineStatusBanner {
             Layout.fillWidth: true
             visible: root.stateMessage.length > 0
             tone: Volume.lastError.length > 0 ? "error" : "info"
-            iconName: !Volume.ready
-                ? "hourglass_top"
-                : Volume.lastError.length > 0 ? "error" : "info"
+            iconName: !Volume.ready ? "hourglass_top" : Volume.lastError.length > 0 ? "error" : "info"
             message: root.stateMessage
         }
 
@@ -87,12 +89,12 @@ WidgetPanel {
                 SettingsSection {
                     Layout.fillWidth: true
                     visible: Volume.ready && (Volume.inputDevices.length > 0 || Volume.inputAvailable)
-                    title: qsTr("输入")
+                    title: qsTr("Input")
 
                     VolumeSlider {
                         Layout.fillWidth: true
                         visible: Volume.inputAvailable
-                        title: Volume.sourceName || qsTr("默认输入")
+                        title: Volume.sourceName || qsTr("Default input")
                         iconName: "mic"
                         volume: Volume.sourceVolume
                         muted: Volume.sourceMuted
@@ -108,7 +110,7 @@ WidgetPanel {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("输入设备")
+                            text: qsTr("Input devices")
                             color: Appearance.colors.colOnLayer1
                             font.family: Fonts.ui
                             font.pixelSize: 12
@@ -125,34 +127,39 @@ WidgetPanel {
                             selectedHoverStateLayerColor: Appearance.colors.colSecondaryContainerHover
                             selectedPressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
                             iconRotation: root.inputDevicesExpanded ? 180 : 0
-                            accessibleName: root.inputDevicesExpanded ? qsTr("收起输入设备") : qsTr("展开输入设备")
+                            accessibleName: root.inputDevicesExpanded ? qsTr("Collapse input devices") : qsTr(
+                                                                            "Expand input devices")
                             hoverStateLayerColor: Appearance.colors.colLayer2Hover
                             pressedStateLayerColor: Appearance.colors.colLayer2Active
                             onClicked: root.inputDevicesExpanded = !root.inputDevicesExpanded
 
-                            Behavior on iconRotation { ElementMoveAnimation {} }
+                            Behavior on iconRotation {
+                                ElementMoveAnimation {}
+                            }
                         }
                     }
 
                     Item {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: root.showInputDevices
-                            ? inputDeviceList.targetHeight : 0
+                        Layout.preferredHeight: root.showInputDevices ? inputDeviceList.targetHeight : 0
                         opacity: root.showInputDevices ? 1 : 0
                         clip: true
 
-                        Behavior on Layout.preferredHeight { ElementMoveAnimation {} }
-                        Behavior on opacity { ElementMoveAnimation {} }
+                        Behavior on Layout.preferredHeight {
+                            ElementMoveAnimation {}
+                        }
+                        Behavior on opacity {
+                            ElementMoveAnimation {}
+                        }
 
                         StyledListView {
                             id: inputDeviceList
 
-                            readonly property real baseContentHeight: count * 56
-                                + Math.max(0, count - 1) * spacing
-                            readonly property real targetHeight: Math.min(
-                                Sizes.sidebarScrollableListMaxHeight,
-                                Math.max(baseContentHeight, contentHeight)
-                            )
+                            readonly property real baseContentHeight: count * 56 + Math.max(0, count - 1)
+                                                                      * spacing
+                            readonly property real targetHeight: Math.min(Sizes.sidebarScrollableListMaxHeight,
+                                                                          Math.max(baseContentHeight,
+                                                                                   contentHeight))
 
                             anchors.fill: parent
                             spacing: Appearance.spacing.xSmall

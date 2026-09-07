@@ -53,9 +53,15 @@ Singleton {
     property int backupCompletedTransfers: 0
     property string backupErrorMessage: ""
     readonly property bool backupActive: backupState === "running" || backupState === "stopping"
-    readonly property real backupProgress: backupPhase === "transferring" && backupTotalBytes > 0 ? Math.max(0, Math.min(1, backupBytes / backupTotalBytes)) : -1
+    readonly property real backupProgress: backupPhase === "transferring" && backupTotalBytes > 0 ? Math.max(0,
+                                                                                                             Math.min(1,
+                                                                                                                      backupBytes
+                                                                                                                      / backupTotalBytes)) :
+                                                                                                    -1
     readonly property string backupCurrentFolderName: basename(backupSource)
-    readonly property string backupCurrentFileName: backupTransferring.length > 0 ? String(backupTransferring[0].name || "") : ""
+    readonly property string backupCurrentFileName: backupTransferring.length > 0 ? String(
+                                                                                        backupTransferring[0].name
+                                                                                        || "") : ""
     property string _remotesOutput: ""
     property string _quotaOutput: ""
     property string _quotaRemoteName: ""
@@ -77,12 +83,12 @@ Singleton {
     property string _pendingConfigFailure: ""
     property bool _remotesRefreshPending: false
 
-    signal providersLoaded()
+    signal providersLoaded
     signal providersLoadFailed(string message)
-    signal configQuestionReady()
+    signal configQuestionReady
     signal configSucceeded(string remoteName, string remoteType)
     signal configFailed(string message)
-    signal configCancelled()
+    signal configCancelled
     signal remoteDeleted(string remoteName)
     signal remoteDeleteFailed(string message)
 
@@ -90,7 +96,6 @@ Singleton {
         for (let index = 0; index < root.remotes.length; ++index) {
             if (root.remotes[index].name === name)
                 return root.remotes[index];
-
         }
         return null;
     }
@@ -103,7 +108,7 @@ Singleton {
     }
 
     function writableRemotes() {
-        return root.remotes.filter((remote) => {
+        return root.remotes.filter(remote => {
             return !root.isReadOnly(remote);
         });
     }
@@ -122,19 +127,25 @@ Singleton {
         const normalizedName = String(remoteName || "").toLowerCase();
         if (normalizedType === "s3")
             return normalizedName.indexOf("r2") >= 0 || normalizedName.indexOf("cloudflare") >= 0
-                ? "Cloudflare R2" : "Amazon S3";
+                    ? "Cloudflare R2" : "Amazon S3";
 
         const provider = providerByName(type);
         if (provider && provider.Description)
             return String(provider.Description);
 
         switch (normalizedType) {
-        case "drive": return "Google Drive";
-        case "onedrive": return "Microsoft OneDrive";
-        case "dropbox": return "Dropbox";
-        case "webdav": return "WebDAV";
-        case "sftp": return "SFTP";
-        default: return String(type || qsTr("其他云存储"));
+        case "drive":
+            return "Google Drive";
+        case "onedrive":
+            return "Microsoft OneDrive";
+        case "dropbox":
+            return "Dropbox";
+        case "webdav":
+            return "WebDAV";
+        case "sftp":
+            return "SFTP";
+        default:
+            return String(type || qsTr("Other cloud storage"));
         }
     }
 
@@ -150,7 +161,7 @@ Singleton {
 
     function safePathSegment(value) {
         const normalized = String(value || "").replace(/[\\/:*?"<>|]/g, "_").replace(/^\.+$/, "_").trim();
-        return normalized || qsTr("备份");
+        return normalized || qsTr("Backup");
     }
 
     function stablePathHash(path) {
@@ -165,8 +176,7 @@ Singleton {
 
     function normalizedFolderPaths(paths) {
         const result = [];
-        const seen = {
-        };
+        const seen = {};
         for (const path of paths || []) {
             const normalized = String(path || "").trim().replace(/\/+$/, "");
             if (!normalized.startsWith("/") || normalized === "" || normalized === "/" || seen[normalized])
@@ -180,7 +190,7 @@ Singleton {
 
     function reconcileDefaultRemote() {
         if (!UiPreferences.preferencesReady)
-            return ;
+            return;
 
         const preferredName = normalizeRemoteName(UiPreferences.cloudDefaultRemoteName);
         const preferred = remoteByName(preferredName);
@@ -197,7 +207,7 @@ Singleton {
         }
         if (nextName === "") {
             quotaState = "unavailable";
-            quotaMessage = qsTr("尚未配置可写云存储");
+            quotaMessage = qsTr("No writable cloud storage configured");
         }
     }
 
@@ -222,7 +232,7 @@ Singleton {
     function refreshRemotes() {
         if (remoteListProcess.running) {
             _remotesRefreshPending = true;
-            return ;
+            return;
         }
 
         remotesLoading = true;
@@ -236,7 +246,7 @@ Singleton {
 
     function loadProviders() {
         if (providersProcess.running)
-            return ;
+            return;
 
         providersLoading = true;
         providersError = "";
@@ -248,14 +258,15 @@ Singleton {
 
     function validRemoteName(name) {
         const normalized = normalizeRemoteName(name).trim();
-        return normalized !== "" && normalized.indexOf(":") < 0
-            && normalized.indexOf("/") < 0 && normalized.indexOf("\\") < 0;
+        return normalized !== "" && normalized.indexOf(":") < 0 && normalized.indexOf("/") < 0 && normalized.indexOf(
+                    "\\") < 0;
     }
 
     function startRemoteConfiguration(name, type) {
         const normalizedName = normalizeRemoteName(name).trim();
         const normalizedType = String(type || "").trim();
-        if (configBusy || !validRemoteName(normalizedName) || remoteByName(normalizedName) || !providerByName(normalizedType))
+        if (configBusy || !validRemoteName(normalizedName) || remoteByName(normalizedName) || !providerByName(
+                    normalizedType))
             return false;
 
         configBusy = true;
@@ -270,13 +281,16 @@ Singleton {
         _pendingConfigFailure = "";
         _configOutput = "";
         _configErrorOutput = "";
-        configProcess.command = [commandName, "config", "create", normalizedName, normalizedType, "--all", "--non-interactive"];
+        configProcess.command = [commandName, "config", "create", normalizedName, normalizedType, "--all",
+                                 "--non-interactive"];
         configProcess.running = true;
         return true;
     }
 
     function answerConfigQuestion(stateToken, answer) {
-        if (!configBusy || configProcess.running || configRemoteName === "" || String(stateToken || "") === "")
+        if (!configBusy || configProcess.running || configRemoteName === "" || String(stateToken || "")
+                === "")
+
             return false;
 
         configState = "processing";
@@ -284,7 +298,8 @@ Singleton {
         _configOperation = "continue";
         _configOutput = "";
         _configErrorOutput = "";
-        configProcess.command = [commandName, "config", "update", configRemoteName, "--continue", "--state", String(stateToken), "--result", String(answer), "--non-interactive"];
+        configProcess.command = [commandName, "config", "update", configRemoteName, "--continue", "--state",
+                                 String(stateToken), "--result", String(answer), "--non-interactive"];
         configProcess.running = true;
         return true;
     }
@@ -326,7 +341,7 @@ Singleton {
     function cleanupPartialRemote() {
         if (!_configCreatedRemote || configRemoteName === "") {
             finishConfigCancelled();
-            return ;
+            return;
         }
         _configOperation = "cleanup";
         _configOutput = "";
@@ -355,7 +370,7 @@ Singleton {
     }
 
     function failConfiguration(message) {
-        const useful = usefulError(message) || qsTr("rclone 配置失败");
+        const useful = usefulError(message) || qsTr("rclone setup failed");
         configBusy = false;
         configState = "error";
         configError = useful;
@@ -371,8 +386,8 @@ Singleton {
         try {
             parsed = JSON.parse(_configOutput || "{}");
         } catch (error) {
-            failConfiguration(qsTr("rclone 返回了无效的配置问题"));
-            return ;
+            failConfiguration(qsTr("rclone returned an invalid configuration question"));
+            return;
         }
         const protocolError = usefulError(parsed.Error || "");
         if (protocolError !== "") {
@@ -384,7 +399,7 @@ Singleton {
                 _pendingConfigFailure = protocolError;
                 _configCancelRequested = true;
                 cleanupPartialRemote();
-                return ;
+                return;
             }
             const completedName = configRemoteName;
             const completedType = configRemoteType;
@@ -395,11 +410,12 @@ Singleton {
             _configCreatedRemote = false;
             configSucceeded(completedName, completedType);
             refreshRemotes();
-            return ;
+            return;
         }
         if (!parsed.Option || typeof parsed.Option !== "object") {
-            failConfiguration(protocolError || qsTr("rclone 配置问题缺少选项信息"));
-            return ;
+            failConfiguration(protocolError || qsTr(
+                                  "The rclone configuration question is missing option details"));
+            return;
         }
         configQuestion = {
             "state": stateToken,
@@ -412,7 +428,7 @@ Singleton {
 
     function refreshQuota() {
         if (!selectedRemote || quotaProcess.running)
-            return ;
+            return;
 
         quotaState = "loading";
         quotaMessage = "";
@@ -428,7 +444,7 @@ Singleton {
 
     function clearCompletedBackupStatus() {
         if (backupActive)
-            return ;
+            return;
 
         backupState = "idle";
         backupPhase = "";
@@ -469,7 +485,7 @@ Singleton {
         if (isReadOnly(remote)) {
             backupState = "error";
             backupPhase = "";
-            backupMessage = qsTr("所选云存储为只读服务");
+            backupMessage = qsTr("The selected cloud storage is read-only");
             backupErrorMessage = backupMessage;
             return false;
         }
@@ -489,7 +505,7 @@ Singleton {
         backupErrorMessage = "";
         backupState = "running";
         backupPhase = "preparing";
-        backupMessage = qsTr("正在准备备份");
+        backupMessage = qsTr("Preparing backup");
         resetCurrentFolderStats();
         startNextBackupFolder();
         return true;
@@ -498,7 +514,7 @@ Singleton {
     function backup(path, isDirectory) {
         if (!isDirectory) {
             backupState = "error";
-            backupMessage = qsTr("电脑备份仅支持文件夹");
+            backupMessage = qsTr("Computer backup supports folders only");
             return false;
         }
         return backupFolders([path]);
@@ -517,7 +533,7 @@ Singleton {
 
         _cancelRequested = true;
         backupState = "stopping";
-        backupMessage = qsTr("正在停止备份…");
+        backupMessage = qsTr("Stopping backup…");
         if (backupProcess.running)
             backupProcess.signal(2);
         else
@@ -540,53 +556,59 @@ Singleton {
     }
 
     function updateElapsedTime() {
-        backupElapsedSeconds = _backupStartedAtMs > 0 ? Math.max(0, (Date.now() - _backupStartedAtMs) / 1000) : 0;
+        backupElapsedSeconds = _backupStartedAtMs > 0 ? Math.max(0, (Date.now() - _backupStartedAtMs) / 1000) :
+                                                        0;
     }
 
     function finishCancelled() {
         updateElapsedTime();
         backupState = "cancelled";
-        backupMessage = qsTr("备份已停止");
+        backupMessage = qsTr("Backup stopped");
         backupTransferring = [];
     }
 
     function finishError() {
         updateElapsedTime();
         backupState = "error";
-        backupErrorMessage = _backupLastError !== "" ? _backupLastError : qsTr("请检查网络和远程权限");
-        backupMessage = qsTr("备份 %1 失败：%2").arg(basename(backupSource)).arg(backupErrorMessage);
+        backupErrorMessage = _backupLastError !== "" ? _backupLastError : qsTr(
+                                                           "Check the network and remote permissions");
+        backupMessage = qsTr("Failed to back up %1: %2").arg(basename(backupSource)).arg(backupErrorMessage);
         backupTransferring = [];
     }
 
     function finishSuccess() {
         updateElapsedTime();
         backupState = "success";
-        backupMessage = qsTr("备份已完成，共备份 %1 个文件夹").arg(backupTotalCount);
+        backupMessage = qsTr("Backup complete. %1 folders backed up").arg(backupTotalCount);
         backupTransferring = [];
         refreshQuota();
     }
 
     function startNextBackupFolder() {
         if (backupState !== "running")
-            return ;
+            return;
 
         if (_backupQueueIndex >= _backupQueue.length) {
             finishSuccess();
-            return ;
+            return;
         }
         const source = _backupQueue[_backupQueueIndex];
         const sourceName = safePathSegment(basename(source));
         const destinationName = sourceName + "-" + stablePathHash(source);
         const hostName = safePathSegment(SystemIdentityService.hostName);
-        const destinationRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/current/" + destinationName;
-        const historyRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/versions/" + _backupVersionStamp + "/" + destinationName;
+        const destinationRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/current/"
+              + destinationName;
+        const historyRoot = _backupRemoteName + ":" + _backupRoot + "/" + hostName + "/versions/"
+              + _backupVersionStamp + "/" + destinationName;
         const command = [commandName, "sync", source, destinationRoot];
-        command.push("--backup-dir", historyRoot, "--create-empty-src-dirs", "--check-first", "--stats=1s", "--stats-log-level=NOTICE", "--use-json-log");
+        command.push("--backup-dir", historyRoot, "--create-empty-src-dirs", "--check-first", "--stats=1s",
+                     "--stats-log-level=NOTICE", "--use-json-log");
         backupSource = source;
         backupDestination = destinationRoot;
         backupCurrentIndex = _backupQueueIndex + 1;
         backupPhase = "preparing";
-        backupMessage = qsTr("正在准备 %1（%2/%3）").arg(sourceName).arg(backupCurrentIndex).arg(backupTotalCount);
+        backupMessage = qsTr("Preparing %1 (%2/%3)").arg(sourceName).arg(backupCurrentIndex).arg(
+                    backupTotalCount);
         _backupLastError = "";
         resetCurrentFolderStats();
         backupProcess.command = command;
@@ -618,20 +640,23 @@ Singleton {
         backupErrors = Math.max(0, Math.round(numberOr(stats.errors, 0)));
         backupListed = Math.max(0, Math.round(numberOr(stats.listed, 0)));
         const transferring = Array.isArray(stats.transferring) ? stats.transferring : [];
-        backupTransferring = transferring.map((item) => {
+        backupTransferring = transferring.map(item => {
             return ({
-                "name": String(item && item.name || ""),
-                "bytes": numberOr(item && item.bytes, -1),
-                "size": numberOr(item && item.size, -1),
-                "percentage": numberOr(item && item.percentage, -1),
-                "speed": numberOr(item && item.speed, -1),
-                "eta": numberOr(item && item.eta, -1)
-            });
+                        "name": String(item && item.name || ""),
+                        "bytes": numberOr(item && item.bytes, -1),
+                        "size": numberOr(item && item.size, -1),
+                        "percentage": numberOr(item && item.percentage, -1),
+                        "speed": numberOr(item && item.speed, -1),
+                        "eta": numberOr(item && item.eta, -1)
+                    });
         });
         if (backupState === "running") {
             const transferStarted = backupTransferring.length > 0 || backupBytes > 0 || backupTransfers > 0;
             backupPhase = transferStarted ? "transferring" : "checking";
-            backupMessage = transferStarted ? qsTr("正在备份 %1（%2/%3）").arg(backupCurrentFolderName).arg(backupCurrentIndex).arg(backupTotalCount) : qsTr("正在检查 %1（%2/%3）").arg(backupCurrentFolderName).arg(backupCurrentIndex).arg(backupTotalCount);
+            backupMessage = transferStarted ? qsTr("Backing up %1 (%2/%3)").arg(backupCurrentFolderName).arg(
+                                                  backupCurrentIndex).arg(backupTotalCount) : qsTr(
+                                                  "Checking %1 (%2/%3)").arg(backupCurrentFolderName).arg(
+                                                  backupCurrentIndex).arg(backupTotalCount);
         }
         updateElapsedTime();
     }
@@ -639,11 +664,11 @@ Singleton {
     function consumeBackupLine(line) {
         const value = String(line || "").trim();
         if (value === "")
-            return ;
+            return;
 
         if (value.charAt(0) !== "{") {
             _backupLastError = usefulError(value);
-            return ;
+            return;
         }
         try {
             const parsed = JSON.parse(value);
@@ -653,9 +678,7 @@ Singleton {
             const level = String(parsed.level || "").toLowerCase();
             if (level === "error" || level === "critical")
                 _backupLastError = usefulError(parsed.error || parsed.msg);
-
-        } catch (error) {
-        }
+        } catch (error) {}
     }
 
     Component.onCompleted: {
@@ -680,49 +703,49 @@ Singleton {
     Process {
         id: remoteListProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             remoteTimeout.stop();
             root.remotesLoading = false;
             root.available = exitCode === 0;
             if (exitCode !== 0) {
-                root.remotesError = qsTr("无法读取 rclone 配置");
+                root.remotesError = qsTr("Could not read the rclone configuration");
                 if (root.remotes.length === 0) {
                     root.quotaState = "error";
                     root.quotaMessage = root.remotesError;
                 }
                 if (root._remotesRefreshPending)
                     Qt.callLater(root.refreshRemotes);
-                return ;
+                return;
             }
             try {
                 const parsed = JSON.parse(root._remotesOutput || "[]");
-                root.remotes = Array.isArray(parsed) ? parsed.map((item) => {
+                root.remotes = Array.isArray(parsed) ? parsed.map(item => {
                     return ({
-                        "name": root.normalizeRemoteName(item.name),
-                        "type": String(item.type || ""),
-                        "description": String(item.description || "")
-                    });
+                                "name": root.normalizeRemoteName(item.name),
+                                "type": String(item.type || ""),
+                                "description": String(item.description || "")
+                            });
                 }) : [];
                 root.remotesRevision += 1;
             } catch (error) {
-                root.remotesError = qsTr("rclone 返回了无效的 remote 列表");
+                root.remotesError = qsTr("rclone returned an invalid remote list");
                 if (root.remotes.length === 0) {
                     root.quotaState = "error";
                     root.quotaMessage = root.remotesError;
                 }
                 if (root._remotesRefreshPending)
                     Qt.callLater(root.refreshRemotes);
-                return ;
+                return;
             }
             if (root.remotes.length === 0) {
                 root.selectedRemoteName = "";
                 if (UiPreferences.cloudDefaultRemoteName !== "")
                     UiPreferences.setCloudDefaultRemoteName("");
                 root.quotaState = "unavailable";
-                root.quotaMessage = qsTr("尚未配置云存储");
+                root.quotaMessage = qsTr("No cloud storage configured");
                 if (root._remotesRefreshPending)
                     Qt.callLater(root.refreshRemotes);
-                return ;
+                return;
             }
             root.reconcileDefaultRemote();
             if (root._remotesRefreshPending)
@@ -732,18 +755,18 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: root._remotesOutput = this.text
         }
-
     }
 
     Process {
         id: providersProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.providersLoading = false;
             if (exitCode !== 0) {
-                root.providersError = root.usefulError(root._providersErrorOutput) || qsTr("无法读取 rclone 服务列表");
+                root.providersError = root.usefulError(root._providersErrorOutput) || qsTr(
+                            "Could not load the rclone service list");
                 root.providersLoadFailed(root.providersError);
-                return ;
+                return;
             }
             try {
                 const parsed = JSON.parse(root._providersOutput || "[]");
@@ -753,7 +776,7 @@ Singleton {
                 root.providersError = "";
                 root.providersLoaded();
             } catch (error) {
-                root.providersError = qsTr("rclone 返回了无效的服务列表");
+                root.providersError = qsTr("rclone returned an invalid service list");
                 root.providersLoadFailed(root.providersError);
             }
         }
@@ -770,14 +793,14 @@ Singleton {
     Process {
         id: configProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             // In particular, do not retain a --result password in the Process
             // command property after rclone has consumed it.
             configProcess.command = [];
             const operation = root._configOperation;
             if (operation === "cleanup") {
                 root.finishConfigCancelled();
-                return ;
+                return;
             }
             if (operation === "delete") {
                 const deletedName = root.configRemoteName;
@@ -788,17 +811,19 @@ Singleton {
                     root.remoteDeleted(deletedName);
                     root.refreshRemotes();
                 } else {
-                    root.configError = root.usefulError(root._configErrorOutput) || qsTr("无法删除云存储配置");
+                    root.configError = root.usefulError(root._configErrorOutput) || qsTr(
+                                "Could not remove the cloud storage configuration");
                     root.remoteDeleteFailed(root.configError);
                 }
-                return ;
+                return;
             }
             if (root._configCancelRequested) {
                 root.cleanupPartialRemote();
-                return ;
+                return;
             }
             if (exitCode !== 0) {
-                const failure = root.usefulError(root._configErrorOutput) || qsTr("rclone 配置命令失败");
+                const failure = root.usefulError(root._configErrorOutput) || qsTr(
+                          "The rclone configuration command failed");
                 root._pendingConfigFailure = failure;
                 if (root._configCreatedRemote) {
                     root._configCancelRequested = true;
@@ -806,7 +831,7 @@ Singleton {
                 } else {
                     root.failConfiguration(failure);
                 }
-                return ;
+                return;
             }
             root.consumeConfigResult();
         }
@@ -823,16 +848,17 @@ Singleton {
     Process {
         id: quotaProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             quotaTimeout.stop();
             if (root._quotaRemoteName !== root.selectedRemoteName) {
                 Qt.callLater(root.refreshQuota);
-                return ;
+                return;
             }
             if (exitCode !== 0) {
                 root.quotaState = "unavailable";
-                root.quotaMessage = qsTr("此云存储暂不提供容量信息");
-                return ;
+                root.quotaMessage = qsTr(
+                            "This cloud storage does not currently provide capacity information");
+                return;
             }
             try {
                 const parsed = JSON.parse(root._quotaOutput || "{}");
@@ -847,31 +873,30 @@ Singleton {
                     root.quotaMessage = "";
                 } else {
                     root.quotaState = "unavailable";
-                    root.quotaMessage = qsTr("此云存储未报告总容量");
+                    root.quotaMessage = qsTr("This cloud storage did not report a total capacity");
                 }
             } catch (error) {
                 root.quotaState = "error";
-                root.quotaMessage = qsTr("无法解析云存储容量");
+                root.quotaMessage = qsTr("Could not parse cloud storage capacity");
             }
         }
 
         stdout: StdioCollector {
             onStreamFinished: root._quotaOutput = this.text
         }
-
     }
 
     Process {
         id: backupProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             if (root._cancelRequested) {
                 root.finishCancelled();
-                return ;
+                return;
             }
             if (exitCode !== 0) {
                 root.finishError();
-                return ;
+                return;
             }
             root.backupCompletedBytes += Math.max(0, root.backupBytes);
             root.backupCompletedTransfers += Math.max(0, root.backupTransfers);
@@ -881,18 +906,17 @@ Singleton {
 
         stdout: SplitParser {
             splitMarker: "\n"
-            onRead: (line) => {
+            onRead: line => {
                 return root.consumeBackupLine(line);
             }
         }
 
         stderr: SplitParser {
             splitMarker: "\n"
-            onRead: (line) => {
+            onRead: line => {
                 return root.consumeBackupLine(line);
             }
         }
-
     }
 
     Timer {
@@ -902,7 +926,6 @@ Singleton {
         onTriggered: {
             if (remoteListProcess.running)
                 remoteListProcess.signal(15);
-
         }
     }
 
@@ -913,7 +936,6 @@ Singleton {
         onTriggered: {
             if (quotaProcess.running)
                 quotaProcess.signal(15);
-
         }
     }
 
@@ -923,5 +945,4 @@ Singleton {
         running: root.selectedRemoteName !== ""
         onTriggered: root.refreshQuota()
     }
-
 }

@@ -8,21 +8,21 @@ Item {
     id: root
 
     property var folderModel: []
-    property var folderInfo: function(entry) {
+    property var folderInfo: function (entry) {
         return ({
-            "label": String(entry && entry.path || ""),
-            "icon": "folder"
-        });
+                    "label": String(entry && entry.path || ""),
+                    "icon": "folder"
+                });
     }
     property bool taskActive: false
     property bool canStart: false
 
-    signal closeRequested()
-    signal chooseFolderRequested()
+    signal closeRequested
+    signal chooseFolderRequested
     signal updateFolderRequested(int index, bool enabled)
     signal removeFolderRequested(int index)
-    signal startRequested()
-    signal viewTaskRequested()
+    signal startRequested
+    signal viewTaskRequested
 
     ColumnLayout {
         anchors.fill: parent
@@ -46,12 +46,11 @@ Item {
                     fill: 1
                     color: Appearance.colors.colOnPrimaryContainer
                 }
-
             }
 
             Text {
                 Layout.fillWidth: true
-                text: qsTr("电脑备份")
+                text: qsTr("Computer backup")
                 color: Appearance.colors.colOnSurface
                 font.family: Typography.headlineSmall.family
                 font.pixelSize: Typography.headlineSmall.pixelSize
@@ -60,15 +59,15 @@ Item {
 
             IconButton {
                 iconName: "close"
-                accessibleName: qsTr("关闭")
+                accessibleName: qsTr("Close")
                 onClicked: root.closeRequested()
             }
-
         }
 
         Text {
             Layout.fillWidth: true
-            text: qsTr("所选文件夹会同步到云端；被替换或删除的文件将保留在带时间戳的历史版本中。")
+            text: qsTr(
+                      "Selected folders are synchronized to the cloud. Replaced or deleted files are retained in timestamped history versions.")
             color: Appearance.colors.colOnSurfaceVariant
             font.family: Typography.bodyMedium.family
             font.pixelSize: Typography.bodyMedium.pixelSize
@@ -94,12 +93,12 @@ Item {
                     Layout.preferredHeight: 36
                     contained: false
                     indicatorColor: Appearance.colors.colOnSecondaryContainer
-                    accessibleName: qsTr("备份正在进行")
+                    accessibleName: qsTr("Backup in progress")
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("备份正在进行，文件夹设置暂时不可修改。")
+                    text: qsTr("A backup is in progress. Folder settings cannot be changed temporarily.")
                     color: Appearance.colors.colOnSecondaryContainer
                     font.family: Typography.bodyMedium.family
                     font.pixelSize: Typography.bodyMedium.pixelSize
@@ -108,13 +107,11 @@ Item {
                 }
 
                 ActionButton {
-                    text: qsTr("查看详情")
+                    text: qsTr("View details")
                     iconName: "arrow_forward"
                     onClicked: root.viewTaskRequested()
                 }
-
             }
-
         }
 
         ListView {
@@ -146,12 +143,11 @@ Item {
                         fill: 1
                         color: Appearance.colors.colOnSecondaryContainer
                     }
-
                 }
 
                 Text {
                     Layout.fillWidth: true
-                    text: qsTr("尚未添加备份文件夹")
+                    text: qsTr("No backup folders added")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Typography.titleMedium.family
                     font.pixelSize: Typography.titleMedium.pixelSize
@@ -159,7 +155,6 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
                 }
-
             }
 
             delegate: Rectangle {
@@ -208,7 +203,6 @@ Item {
                             font.pixelSize: Typography.bodySmall.pixelSize
                             elide: Text.ElideMiddle
                         }
-
                     }
 
                     StyledSwitch {
@@ -216,7 +210,7 @@ Item {
 
                         checked: folderRow.modelData.enabled
                         enabled: !root.taskActive
-                        Accessible.name: qsTr("备份 %1").arg(folderRow.info.label)
+                        Accessible.name: qsTr("Back up %1").arg(folderRow.info.label)
                         onToggled: root.updateFolderRequested(folderRow.index, folderSwitch.checked)
                     }
 
@@ -224,14 +218,11 @@ Item {
                         iconName: "close"
                         iconSize: Metrics.iconS
                         enabled: !root.taskActive
-                        accessibleName: qsTr("移除 %1").arg(folderRow.info.label)
+                        accessibleName: qsTr("Remove %1").arg(folderRow.info.label)
                         onClicked: root.removeFolderRequested(folderRow.index)
                     }
-
                 }
-
             }
-
         }
 
         RowLayout {
@@ -239,7 +230,7 @@ Item {
             spacing: Metrics.spacingS
 
             ActionButton {
-                text: qsTr("添加其他路径")
+                text: qsTr("Add another path")
                 iconName: "create_new_folder"
                 enabled: !root.taskActive
                 onClicked: root.chooseFolderRequested()
@@ -250,20 +241,17 @@ Item {
             }
 
             ActionButton {
-                text: qsTr("关闭")
+                text: qsTr("Close")
                 onClicked: root.closeRequested()
             }
 
             ActionButton {
-                text: qsTr("开始备份")
+                text: qsTr("Start backup")
                 iconName: "backup"
                 filled: true
                 enabled: root.canStart && !root.taskActive
                 onClicked: root.startRequested()
             }
-
         }
-
     }
-
 }

@@ -16,11 +16,11 @@ StyledFlickable {
 
         if (target.nativeSettings) {
             const profiles = isWired ? NetworkService.wiredProfiles : NetworkService.savedWifiProfiles;
-            return profiles.find((item) => {
+            return profiles.find(item => {
                 return item.uuid === target.uuid;
             }) || null;
         }
-        const currentNetwork = !isWired ? NetworkService.allWifiNetworks.find((item) => {
+        const currentNetwork = !isWired ? NetworkService.allWifiNetworks.find(item => {
             return item.deviceName === target.deviceName && item.ssid === target.ssid;
         }) : null;
         const currentProfiles = currentNetwork ? currentNetwork.profiles : target.profiles;
@@ -32,14 +32,14 @@ StyledFlickable {
             for (const wiredProfile of NetworkService.wiredProfiles) {
                 if (wiredProfile.deviceName === interfaceName)
                     return wiredProfile;
-
             }
         }
         return null;
     }
-    readonly property var nativeNetwork: target && target.nativeNetwork ? target.nativeNetwork : profile ? profile.nativeNetwork : null
+    readonly property var nativeNetwork: target && target.nativeNetwork ? target.nativeNetwork : profile
+                                                                          ? profile.nativeNetwork : null
     readonly property bool connectionIsActive: !!(nativeNetwork && nativeNetwork.connected)
-    readonly property var wiredDevice: isWired && profile ? NetworkService.wiredDevices.find((device) => {
+    readonly property var wiredDevice: isWired && profile ? NetworkService.wiredDevices.find(device => {
         return device.deviceName === profile.deviceName;
     }) || null : null
     property var original: null
@@ -55,33 +55,41 @@ StyledFlickable {
     property bool saving: false
     property string errorMessage: ""
     property string successMessage: ""
-    readonly property bool dirty: original && (mode !== original.method || address.trim() !== original.address || gateway.trim() !== original.gateway || normalizeDns(dns) !== normalizeDns(original.dns) || autoconnect !== original.autoconnect)
+    readonly property bool dirty: original && (mode !== original.method || address.trim()
+                                               !== original.address || gateway.trim() !== original.gateway
+                                               || normalizeDns(dns) !== normalizeDns(original.dns)
+                                               || autoconnect !== original.autoconnect)
     readonly property bool addressValid: mode !== "manual" || validCidr(address)
-    readonly property bool gatewayValid: mode !== "manual" || gateway.trim() === "" || validIpv4(gateway.trim())
-    readonly property bool dnsValid: mode === "auto" || (mode === "manual" && normalizeDns(dns).length === 0) || (normalizeDns(dns).length > 0 && normalizeDns(dns).split(",").every((value) => {
-        return validIpv4(value);
-    }))
+    readonly property bool gatewayValid: mode !== "manual" || gateway.trim() === "" || validIpv4(gateway.trim(
+                                                                                                     ))
+
+    readonly property bool dnsValid: mode === "auto" || (mode === "manual" && normalizeDns(dns).length === 0)
+                                     || (normalizeDns(dns).length > 0 && normalizeDns(dns).split(",").every(
+                                             value => {
+                                                 return validIpv4(value);
+                                             }))
     readonly property bool formValid: addressValid && gatewayValid && dnsValid
 
-    signal profileForgotten()
+    signal profileForgotten
 
     function validIpv4(value) {
         const parts = String(value || "").split(".");
         if (parts.length !== 4)
             return false;
 
-        return parts.every((part) => {
+        return parts.every(part => {
             return /^\d{1,3}$/.test(part) && Number(part) >= 0 && Number(part) <= 255;
         });
     }
 
     function validCidr(value) {
         const pieces = String(value || "").trim().split("/");
-        return pieces.length === 2 && validIpv4(pieces[0]) && /^\d{1,2}$/.test(pieces[1]) && Number(pieces[1]) >= 0 && Number(pieces[1]) <= 32;
+        return pieces.length === 2 && validIpv4(pieces[0]) && /^\d{1,2}$/.test(pieces[1]) && Number(pieces[1])
+                >= 0 && Number(pieces[1]) <= 32;
     }
 
     function normalizeDns(value) {
-        return String(value || "").trim().split(/[\s,]+/).filter((item) => {
+        return String(value || "").trim().split(/[\s,]+/).filter(item => {
             return item.length > 0;
         }).join(",");
     }
@@ -94,7 +102,7 @@ StyledFlickable {
         if (!snapshot) {
             root.original = null;
             root.loadedProfileUuid = "";
-            return ;
+            return;
         }
         root.loadedProfileUuid = String(root.profile.uuid || "");
         root.original = snapshot;
@@ -121,36 +129,38 @@ StyledFlickable {
     onProfileChanged: {
         const uuid = String(root.profile ? root.profile.uuid || "" : "");
         if (uuid === root.loadedProfileUuid)
-            return ;
+            return;
 
-        if (root.target && root.target.nativeSettings && uuid.length === 0 && root.loadedProfileUuid.length > 0) {
+        if (root.target && root.target.nativeSettings && uuid.length === 0 && root.loadedProfileUuid.length
+                > 0) {
             root.profileRemoved = true;
             root.original = null;
             root.loadedProfileUuid = "";
             root.profileForgotten();
-            return ;
+            return;
         }
         const discardedChanges = root.dirty;
         root.loadProfile();
         if (discardedChanges)
-            root.errorMessage = qsTr("活动网络配置已变化，未应用的修改已丢弃");
-
+            root.errorMessage = qsTr("The active network profile changed; unapplied changes were discarded");
     }
 
     Connections {
         function onProfileWriteSucceeded(uuid) {
             if (!root.profile || uuid !== root.profile.uuid)
-                return ;
+                return;
 
             root.saving = false;
             root.errorMessage = "";
-            root.successMessage = root.nativeNetwork && root.nativeNetwork.connected ? qsTr("配置已保存；重新连接后将完整应用新的 IPv4 设置") : qsTr("配置已保存");
+            root.successMessage = root.nativeNetwork && root.nativeNetwork.connected ? qsTr(
+                                                                                           "Profile saved; reconnect to fully apply the new IPv4 settings") :
+                                                                                       qsTr("Profile saved");
             root.loadProfile();
         }
 
         function onProfileWriteFailed(uuid, message) {
             if (!root.profile || uuid !== root.profile.uuid)
-                return ;
+                return;
 
             root.saving = false;
             root.successMessage = "";
@@ -159,7 +169,7 @@ StyledFlickable {
 
         function onProfileForgetSucceeded(uuid) {
             if (!root.target || uuid !== String(root.target.uuid || ""))
-                return ;
+                return;
 
             root.profileRemoved = true;
             root.profileForgotten();
@@ -167,7 +177,7 @@ StyledFlickable {
 
         function onProfileForgetFailed(uuid, message) {
             if (!root.target || uuid !== String(root.target.uuid || ""))
-                return ;
+                return;
 
             root.errorMessage = message;
         }
@@ -189,7 +199,7 @@ StyledFlickable {
 
             ActionButton {
                 visible: root.connectionIsActive
-                text: qsTr("断开")
+                text: qsTr("Disconnect")
                 iconName: "link_off"
                 enabled: !NetworkService.busy
                 onClicked: NetworkService.disconnectNetwork(root.target)
@@ -197,9 +207,10 @@ StyledFlickable {
 
             ActionButton {
                 visible: root.nativeNetwork && !root.connectionIsActive
-                text: qsTr("连接")
+                text: qsTr("Connect")
                 iconName: "link"
-                enabled: !NetworkService.busy && (!root.isWired || root.wiredDevice && root.wiredDevice.hasLink)
+                enabled: !NetworkService.busy && (!root.isWired || root.wiredDevice
+                                                  && root.wiredDevice.hasLink)
                 onClicked: {
                     if (root.profile)
                         NetworkService.connectProfile(root.profile);
@@ -210,7 +221,7 @@ StyledFlickable {
 
             ActionButton {
                 visible: root.profile !== null && !root.isWired
-                text: qsTr("忘记")
+                text: qsTr("Forget")
                 iconName: "delete"
                 enabled: !NetworkService.busy && !root.saving
                 onClicked: {
@@ -222,7 +233,6 @@ StyledFlickable {
             Item {
                 Layout.fillWidth: true
             }
-
         }
 
         InlineStatusBanner {
@@ -244,13 +254,13 @@ StyledFlickable {
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("基本信息")
+            title: qsTr("Basic information")
             iconName: "info"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("配置名称")
-                supportingText: root.profile ? root.profile.name : qsTr("无可编辑配置")
+                title: qsTr("Profile name")
+                supportingText: root.profile ? root.profile.name : qsTr("No editable profile")
             }
 
             SettingsRow {
@@ -262,10 +272,11 @@ StyledFlickable {
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("接口")
-                supportingText: root.profile ? root.profile.deviceName : root.target ? root.target.deviceName || root.target.name : "—"
+                title: qsTr("Interface")
+                supportingText: root.profile ? root.profile.deviceName : root.target ? root.target.deviceName
+                                                                                       || root.target.name :
+                                                                                       "—"
             }
-
         }
 
         SettingsSection {
@@ -277,13 +288,12 @@ StyledFlickable {
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("自动连接")
+                title: qsTr("Connect automatically")
 
                 trailing: StyledSwitch {
                     checked: root.autoconnect
                     onToggled: root.autoconnect = checked
                 }
-
             }
 
             ColumnLayout {
@@ -291,7 +301,7 @@ StyledFlickable {
                 spacing: Metrics.spacingXS
 
                 Text {
-                    text: qsTr("IP 分配")
+                    text: qsTr("IP assignment")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Typography.labelLarge.family
                     font.pixelSize: Typography.labelLarge.pixelSize
@@ -300,22 +310,25 @@ StyledFlickable {
 
                 StyledButtonGroup {
                     Layout.fillWidth: true
-                    model: [{
-                        "value": "auto",
-                        "label": qsTr("自动 DHCP")
-                    }, {
-                        "value": "auto-dns",
-                        "label": qsTr("DHCP + 自定义 DNS")
-                    }, {
-                        "value": "manual",
-                        "label": qsTr("手动")
-                    }]
+                    model: [
+                        {
+                            "value": "auto",
+                            "label": qsTr("Automatic (DHCP)")
+                        },
+                        {
+                            "value": "auto-dns",
+                            "label": qsTr("DHCP + custom DNS")
+                        },
+                        {
+                            "value": "manual",
+                            "label": qsTr("Manual")
+                        }
+                    ]
                     currentValue: root.mode
-                    onValueSelected: (value) => {
+                    onValueSelected: value => {
                         return root.mode = value;
                     }
                 }
-
             }
 
             ColumnLayout {
@@ -325,9 +338,11 @@ StyledFlickable {
 
                 OutlinedTextField {
                     Layout.fillWidth: true
-                    labelText: qsTr("IPv4 地址 / CIDR")
+                    labelText: qsTr("IPv4 address / CIDR")
                     text: root.address
-                    errorText: root.addressTouched && !root.addressValid ? qsTr("请输入合法 IPv4 CIDR，例如 192.168.1.50/24") : ""
+                    errorText: root.addressTouched && !root.addressValid ? qsTr(
+                                                                               "Enter a valid IPv4 CIDR, such as 192.168.1.50/24") :
+                                                                           ""
                     onTextChanged: root.address = text
                     onEditingFinished: root.addressTouched = true
                 }
@@ -336,11 +351,11 @@ StyledFlickable {
                     Layout.fillWidth: true
                     labelText: qsTr("Gateway")
                     text: root.gateway
-                    errorText: root.gatewayTouched && !root.gatewayValid ? qsTr("请输入合法 IPv4 gateway") : ""
+                    errorText: root.gatewayTouched && !root.gatewayValid ? qsTr("Enter a valid IPv4 gateway") :
+                                                                           ""
                     onTextChanged: root.gateway = text
                     onEditingFinished: root.gatewayTouched = true
                 }
-
             }
 
             ColumnLayout {
@@ -352,13 +367,13 @@ StyledFlickable {
                     Layout.fillWidth: true
                     labelText: qsTr("DNS")
                     text: root.dns
-                    errorText: root.dnsTouched && !root.dnsValid ? qsTr("请输入至少一个合法 IPv4 DNS 地址") : ""
+                    errorText: root.dnsTouched && !root.dnsValid ? qsTr(
+                                                                       "Enter at least one valid IPv4 DNS address") :
+                                                                   ""
                     onTextChanged: root.dns = text
                     onEditingFinished: root.dnsTouched = true
                 }
-
             }
-
         }
 
         RowLayout {
@@ -377,7 +392,7 @@ StyledFlickable {
             }
 
             ActionButton {
-                text: qsTr("应用")
+                text: qsTr("Apply")
                 iconName: "save"
                 filled: true
                 enabled: root.dirty && root.formValid && !root.saving
@@ -385,17 +400,14 @@ StyledFlickable {
                     root.errorMessage = "";
                     root.successMessage = "";
                     root.saving = NetworkService.writeProfile(root.profile, {
-                        "method": root.mode,
-                        "address": root.address.trim(),
-                        "gateway": root.gateway.trim(),
-                        "dns": root.normalizeDns(root.dns),
-                        "autoconnect": root.autoconnect
-                    });
+                                                                  "method": root.mode,
+                                                                  "address": root.address.trim(),
+                                                                  "gateway": root.gateway.trim(),
+                                                                  "dns": root.normalizeDns(root.dns),
+                                                                  "autoconnect": root.autoconnect
+                                                              });
                 }
             }
-
         }
-
     }
-
 }

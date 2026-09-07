@@ -10,36 +10,26 @@ Singleton {
 
     readonly property bool runningOnNiri: ThemeService.isNiriSession
     property bool compositorSupported: false
-    readonly property bool available:
-        root.runningOnNiri && root.compositorSupported
-    readonly property bool enabled:
-        root.available && PersonalizationConfig.shellBlurEnabled
-    readonly property bool xray:
-        PersonalizationConfig.shellBlurXray
-    readonly property bool integrationBusy:
-        integrationProcess.running
+    readonly property bool available: root.runningOnNiri && root.compositorSupported
+    readonly property bool enabled: root.available && PersonalizationConfig.shellBlurEnabled
+    readonly property bool xray: PersonalizationConfig.shellBlurXray
+    readonly property bool integrationBusy: integrationProcess.running
 
     property bool niriIntegrationReady: false
     property string lastError: ""
     property string niriVersion: ""
     property bool effectsWritePending: false
 
-    readonly property string niriConfigPath:
-        Paths.xdgConfigHome + "/niri/config.kdl"
-    readonly property string niriConfigDir:
-        Paths.xdgConfigHome + "/niri/clavis"
-    readonly property string effectsConfigPath:
-        root.niriConfigDir + "/effects.kdl"
-    readonly property string configScript:
-        Paths.systemScriptsDir + "/manage-niri-effects.sh"
+    readonly property string niriConfigPath: Paths.xdgConfigHome + "/niri/config.kdl"
+    readonly property string niriConfigDir: Paths.xdgConfigHome + "/niri/clavis"
+    readonly property string effectsConfigPath: root.niriConfigDir + "/effects.kdl"
+    readonly property string configScript: Paths.systemScriptsDir + "/manage-niri-effects.sh"
 
-    signal integrationConfigured()
+    signal integrationConfigured
     signal integrationFailed(string message)
 
     function backgroundColor(baseColor) {
-        return Appearance.applyAlpha(
-            baseColor,
-            PersonalizationConfig.shellBackgroundOpacity);
+        return Appearance.applyAlpha(baseColor, PersonalizationConfig.shellBackgroundOpacity);
     }
 
     // A shell-managed Material surface. It starts from an opaque base but
@@ -55,8 +45,7 @@ Singleton {
     }
 
     function supportsVersion(versionText) {
-        const match = String(versionText || "")
-            .match(/(?:^|\s)(\d+)\.(\d+)(?:\D|$)/);
+        const match = String(versionText || "").match(/(?:^|\s)(\d+)\.(\d+)(?:\D|$)/);
         if (!match)
             return false;
         const major = Number(match[1]);
@@ -65,8 +54,8 @@ Singleton {
     }
 
     function includesEffectsConfig(text) {
-        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/effects\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/
-            .test(String(text || ""));
+        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/effects\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/.test(
+                    String(text || ""));
     }
 
     function refreshIntegrationState() {
@@ -83,14 +72,8 @@ Singleton {
 
         root.effectsWritePending = false;
         root.lastError = "";
-        effectsWriteProcess.command = [
-            root.configScript,
-            "write",
-            root.niriConfigPath,
-            root.effectsConfigPath,
-            root.xray ? "true" : "false",
-            "niri"
-        ];
+        effectsWriteProcess.command = [root.configScript, "write", root.niriConfigPath, root.effectsConfigPath,
+                                       root.xray ? "true" : "false", "niri"];
         effectsWriteProcess.running = true;
     }
 
@@ -99,14 +82,8 @@ Singleton {
             return;
 
         root.lastError = "";
-        integrationProcess.command = [
-            root.configScript,
-            "configure",
-            root.niriConfigPath,
-            root.effectsConfigPath,
-            root.xray ? "true" : "false",
-            "niri"
-        ];
+        integrationProcess.command = [root.configScript, "configure", root.niriConfigPath,
+                                      root.effectsConfigPath, root.xray ? "true" : "false", "niri"];
         integrationProcess.running = true;
     }
 
@@ -138,13 +115,12 @@ Singleton {
 
         onExited: exitCode => {
             root.niriVersion = versionOutput.text.trim();
-            root.compositorSupported = exitCode === 0
-                && root.supportsVersion(root.niriVersion);
+            root.compositorSupported = exitCode === 0 && root.supportsVersion(root.niriVersion);
             if (!root.compositorSupported) {
-                root.lastError = exitCode === 0
-                    ? qsTr("当前 Niri 版本不支持背景模糊")
-                    : (versionError.text.trim()
-                        || qsTr("无法检测 Niri 版本"));
+                root.lastError = exitCode === 0 ? qsTr(
+                                                      "The current Niri version does not support background blur") :
+                                                  (versionError.text.trim() || qsTr(
+                                                       "Unable to detect the Niri version"));
                 return;
             }
 
@@ -166,8 +142,8 @@ Singleton {
             if (exitCode === 0) {
                 root.lastError = "";
             } else {
-                root.lastError = effectsWriteError.text.trim()
-                    || qsTr("无法写入 Niri 效果配置");
+                root.lastError = effectsWriteError.text.trim() || qsTr(
+                            "Unable to write the Niri effects configuration");
             }
             if (root.effectsWritePending)
                 Qt.callLater(root.writeEffectsConfig);
@@ -189,8 +165,7 @@ Singleton {
                 return;
             }
 
-            root.lastError = integrationError.text.trim()
-                || qsTr("无法配置 Niri 集成");
+            root.lastError = integrationError.text.trim() || qsTr("Unable to configure Niri integration");
             root.integrationFailed(root.lastError);
         }
     }
@@ -203,8 +178,7 @@ Singleton {
         watchChanges: true
 
         onLoaded: {
-            root.niriIntegrationReady =
-                root.includesEffectsConfig(niriConfigFile.text());
+            root.niriIntegrationReady = root.includesEffectsConfig(niriConfigFile.text());
             if (root.niriIntegrationReady && root.available)
                 root.writeEffectsConfig();
         }

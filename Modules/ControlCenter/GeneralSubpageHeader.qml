@@ -9,8 +9,8 @@ Item {
 
     property string title: ""
     property string iconName: "settings"
-    property string backAccessibleName: qsTr("返回通用设置")
-    signal backRequested()
+    property string backAccessibleName: qsTr("Back to General settings")
+    signal backRequested
 
     implicitHeight: 56
 

@@ -20,7 +20,7 @@ Singleton {
         const source = String(path || "");
         if (source === "" || busy) {
             if (source === "")
-                updateFinished(false, qsTr("未选择有效的头像文件"));
+                updateFinished(false, qsTr("No valid avatar file selected"));
             return;
         }
 
@@ -37,23 +37,13 @@ Singleton {
             root.busy = false;
             if (exitCode === 0) {
                 root.revision += 1;
-                root.updateFinished(true, qsTr("头像已更新"));
-                Quickshell.execDetached([
-                    "notify-send",
-                    "-a", "quickshell",
-                    "-u", "low",
-                    qsTr("头像已更新"),
-                    root.pendingSource
-                ]);
+                root.updateFinished(true, qsTr("Avatar updated"));
+                Quickshell.execDetached(["notify-send", "-a", "quickshell", "-u", "low", qsTr(
+                                             "Avatar updated"), root.pendingSource]);
             } else {
-                root.updateFinished(false, qsTr("无法更新头像"));
-                Quickshell.execDetached([
-                    "notify-send",
-                    "-a", "quickshell",
-                    "-u", "critical",
-                    qsTr("头像更新失败"),
-                    root.pendingSource
-                ]);
+                root.updateFinished(false, qsTr("Could not update avatar"));
+                Quickshell.execDetached(["notify-send", "-a", "quickshell", "-u", "critical", qsTr(
+                                             "Avatar update failed"), root.pendingSource]);
             }
             root.pendingSource = "";
         }

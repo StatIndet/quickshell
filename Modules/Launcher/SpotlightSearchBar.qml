@@ -172,7 +172,7 @@ Item {
 
             Text {
                 anchors.fill: parent
-                text: qsTr("搜索应用")
+                text: qsTr("Search apps")
                 color: Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.72)
                 font.family: Fonts.ui
                 font.pixelSize: 20
@@ -183,7 +183,7 @@ Item {
 
             Text {
                 anchors.fill: parent
-                text: qsTr("搜索网页")
+                text: qsTr("Search the web")
                 color: Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.72)
                 font.family: Fonts.ui
                 font.pixelSize: 20
@@ -207,7 +207,7 @@ Item {
                 focus: true
                 activeFocusOnTab: false
 
-                Accessible.name: root.mode === "web" ? qsTr("网页搜索") : qsTr("聚焦搜索")
+                Accessible.name: root.mode === "web" ? qsTr("Web search") : qsTr("Spotlight search")
                 Accessible.role: Accessible.EditableText
 
                 Keys.priority: Keys.BeforeItem
@@ -230,15 +230,15 @@ Item {
         model: [
             {
                 icon: "apps",
-                label: qsTr("应用")
+                label: qsTr("Apply")
             },
             {
                 icon: "wallpaper",
-                label: qsTr("壁纸")
+                label: qsTr("Wallpaper")
             },
             {
                 icon: "content_paste",
-                label: qsTr("剪贴板")
+                label: qsTr("Clipboard")
             }
         ]
 

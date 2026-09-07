@@ -11,24 +11,37 @@ Item {
     property date currentTime: new Date()
     readonly property int hour24: currentTime.getHours()
     readonly property int hour12: ((hour24 + 11) % 12) + 1
-    readonly property string hourText: String(UiPreferences.useTwelveHourClock ? hour12 : hour24).padStart(2, "0")
+    readonly property string hourText: String(UiPreferences.useTwelveHourClock ? hour12 : hour24).padStart(2,
+                                                                                                           "0")
     readonly property string minuteText: String(currentTime.getMinutes()).padStart(2, "0")
     readonly property string periodText: hour24 >= 12 ? "PM" : "AM"
     readonly property string clockFamily: Fonts.systemClock
     readonly property var clockAxes: Fonts.familyAvailable(Fonts.systemClock) ? ({
-        "ROND": 25,
-        "wdth": 30
-    }) : ({
-    })
-    readonly property var dayNames: [qsTr("星期日"), qsTr("星期一"), qsTr("星期二"), qsTr("星期三"), qsTr("星期四"), qsTr("星期五"), qsTr("星期六")]
-    readonly property var monthNames: [qsTr("一月"), qsTr("二月"), qsTr("三月"), qsTr("四月"), qsTr("五月"), qsTr("六月"), qsTr("七月"), qsTr("八月"), qsTr("九月"), qsTr("十月"), qsTr("十一月"), qsTr("十二月")]
-    readonly property string dateText: I18nService.language.startsWith("zh") ? DateFormat.compactDate(currentTime, I18nService.language, Qt.locale(), "") : dayNames[currentTime.getDay()] + " · " + String(currentTime.getDate()).padStart(2, "0") + " " + monthNames[currentTime.getMonth()]
+                                                                                     "ROND": 25,
+                                                                                     "wdth": 30
+                                                                                 }) : ({})
+    readonly property var dayNames: [qsTr("Sunday"), qsTr("Monday"), qsTr("Tuesday"), qsTr("Wednesday"), qsTr("Thursday"),
+        qsTr("Friday"), qsTr("Saturday")]
+    readonly property var monthNames: [qsTr("January"), qsTr("February"), qsTr("March"), qsTr("April"), qsTr(
+            "May"), qsTr("June"), qsTr("July"), qsTr("August"), qsTr("September"), qsTr("October"), qsTr(
+            "November"), qsTr("December")]
+    readonly property string dateText: I18nService.language.startsWith("zh") ? DateFormat.compactDate(
+                                                                                   currentTime,
+                                                                                   I18nService.language,
+                                                                                   Qt.locale(), "") :
+                                                                               dayNames[currentTime.getDay()]
+                                                                               + " · " + String(
+                                                                                   currentTime.getDate(
+                                                                                       )).padStart(2, "0")
+                                                                               + " " + monthNames[currentTime.getMonth(
+                                                                                                      )]
 
     function topOffset(metrics) {
         return metrics.tightBoundingRect.y - metrics.boundingRect.y;
     }
 
-    Accessible.name: hourText + ":" + minuteText + (UiPreferences.useTwelveHourClock ? " " + periodText : "") + "，" + dateText
+    Accessible.name: hourText + ":" + minuteText + (UiPreferences.useTwelveHourClock ? " " + periodText : "")
+                     + "，" + dateText
 
     Timer {
         interval: 1000
@@ -48,7 +61,9 @@ Item {
         id: clockFace
 
         readonly property real hourSize: Math.min(284, height * 1.06, width * 0.88)
-        readonly property real minuteSize: UiPreferences.useTwelveHourClock ? Math.min(164, hourSize * 0.61) : hourSize
+        readonly property real minuteSize: UiPreferences.useTwelveHourClock ? Math.min(164, hourSize * 0.61) :
+                                                                              hourSize
+
         readonly property real periodSize: Math.min(26, Math.max(22, height * 0.085))
         readonly property real dateSize: Math.min(32, Math.max(25, height * 0.115))
 
@@ -70,10 +85,16 @@ Item {
             Item {
                 id: glyphGroup
 
-                readonly property real equalColumnWidth: Math.max(hourMetrics.tightBoundingRect.width, minuteMetrics.tightBoundingRect.width)
+                readonly property real equalColumnWidth: Math.max(hourMetrics.tightBoundingRect.width,
+                                                                  minuteMetrics.tightBoundingRect.width)
 
-                width: UiPreferences.useTwelveHourClock ? hourMetrics.tightBoundingRect.width + Appearance.spacing.medium + Math.max(minuteMetrics.tightBoundingRect.width, periodPill.width) : glyphGroup.equalColumnWidth * 2 + Appearance.spacing.medium
-                height: Math.max(hourMetrics.tightBoundingRect.height, minuteMetrics.tightBoundingRect.height + periodPill.height + Appearance.spacing.small)
+                width: UiPreferences.useTwelveHourClock ? hourMetrics.tightBoundingRect.width
+                                                          + Appearance.spacing.medium + Math.max(
+                                                              minuteMetrics.tightBoundingRect.width,
+                                                              periodPill.width) : glyphGroup.equalColumnWidth
+                                                          * 2 + Appearance.spacing.medium
+                height: Math.max(hourMetrics.tightBoundingRect.height, minuteMetrics.tightBoundingRect.height
+                                 + periodPill.height + Appearance.spacing.small)
 
                 anchors {
                     top: parent.top
@@ -97,7 +118,6 @@ Item {
                         weight: Font.Medium
                         variableAxes: root.clockAxes
                     }
-
                 }
 
                 TextMetrics {
@@ -110,8 +130,12 @@ Item {
                 Item {
                     id: minuteColumn
 
-                    width: Math.max(UiPreferences.useTwelveHourClock ? minuteMetrics.tightBoundingRect.width : glyphGroup.equalColumnWidth, UiPreferences.useTwelveHourClock ? periodPill.width : 0)
-                    height: minuteMetrics.tightBoundingRect.height + (UiPreferences.useTwelveHourClock ? periodPill.height + Appearance.spacing.small : 0)
+                    width: Math.max(UiPreferences.useTwelveHourClock ? minuteMetrics.tightBoundingRect.width :
+                                                                       glyphGroup.equalColumnWidth,
+                                    UiPreferences.useTwelveHourClock ? periodPill.width : 0)
+                    height: minuteMetrics.tightBoundingRect.height + (UiPreferences.useTwelveHourClock
+                                                                      ? periodPill.height
+                                                                        + Appearance.spacing.small : 0)
 
                     anchors {
                         right: parent.right
@@ -135,7 +159,6 @@ Item {
                             weight: Font.Medium
                             variableAxes: root.clockAxes
                         }
-
                     }
 
                     TextMetrics {
@@ -173,13 +196,9 @@ Item {
                                 weight: Font.DemiBold
                                 variableAxes: root.clockAxes
                             }
-
                         }
-
                     }
-
                 }
-
             }
 
             Text {
@@ -205,7 +224,6 @@ Item {
                     letterSpacing: 2.4
                     variableAxes: root.clockAxes
                 }
-
             }
 
             TextMetrics {
@@ -223,9 +241,6 @@ Item {
                 shadowHorizontalOffset: 0
                 autoPaddingEnabled: true
             }
-
         }
-
     }
-
 }

@@ -31,18 +31,20 @@ Item {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
 
-        onWheel: (wheel) => {
-            const step = 0.05
-            let newBri = root.brightnessValue
-            if (wheel.angleDelta.y > 0) newBri += step
-            else newBri -= step
-            Brightness.setBrightnessForScreen(root.screen, newBri)
-            wheel.accepted = true
+        onWheel: wheel => {
+            const step = 0.05;
+            let newBri = root.brightnessValue;
+            if (wheel.angleDelta.y > 0)
+                newBri += step;
+            else
+                newBri -= step;
+            Brightness.setBrightnessForScreen(root.screen, newBri);
+            wheel.accepted = true;
         }
     }
 
     PopupToolTip {
         extraVisibleCondition: mouseArea.containsMouse
-        text: qsTr("亮度: ") + Math.round(root.brightnessValue * 100) + qsTr("%\n滚轮调节")
+        text: qsTr("Brightness: ") + Math.round(root.brightnessValue * 100) + qsTr("%\nScroll to adjust")
     }
 }

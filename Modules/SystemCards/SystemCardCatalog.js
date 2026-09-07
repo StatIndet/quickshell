@@ -7,7 +7,7 @@ var cardDefinitions = [
     {
         id: "time",
         nameKey: "时钟",
-        name: qsTr("时钟"),
+        name: qsTr("Clock"),
         icon: "schedule",
         columnSpan: 2,
         rowSpan: 2,
@@ -18,7 +18,7 @@ var cardDefinitions = [
     {
         id: "battery",
         nameKey: "电池",
-        name: qsTr("电池"),
+        name: qsTr("Battery"),
         icon: "battery_full",
         columnSpan: 1,
         rowSpan: 2,
@@ -48,7 +48,7 @@ var cardDefinitions = [
     {
         id: "memoryUsed",
         nameKey: "内存",
-        name: qsTr("内存"),
+        name: qsTr("Memory"),
         icon: "memory_alt",
         columnSpan: 1,
         rowSpan: 1,
@@ -70,7 +70,7 @@ var cardDefinitions = [
     {
         id: "network",
         nameKey: "网络",
-        name: qsTr("网络"),
+        name: qsTr("Network"),
         icon: "swap_vert",
         columnSpan: 3,
         rowSpan: 1,
@@ -79,7 +79,7 @@ var cardDefinitions = [
     {
         id: "storage",
         nameKey: "磁盘 I/O",
-        name: qsTr("磁盘 I/O"),
+        name: qsTr("Disk I/O"),
         icon: "hard_drive",
         columnSpan: 3,
         rowSpan: 1,
@@ -88,7 +88,7 @@ var cardDefinitions = [
     {
         id: "storageCapacity",
         nameKey: "磁盘容量",
-        name: qsTr("磁盘容量"),
+        name: qsTr("Disk capacity"),
         icon: "data_usage",
         columnSpan: 1,
         rowSpan: 1,
@@ -99,7 +99,7 @@ var cardDefinitions = [
     {
         id: "calendar",
         nameKey: "日历",
-        name: qsTr("日历"),
+        name: qsTr("Calendar"),
         icon: "calendar_month",
         columnSpan: 1,
         rowSpan: 1,
@@ -108,7 +108,7 @@ var cardDefinitions = [
     {
         id: "weather",
         nameKey: "天气",
-        name: qsTr("天气"),
+        name: qsTr("Weather"),
         icon: "cloud",
         columnSpan: 2,
         rowSpan: 2,
@@ -162,27 +162,27 @@ function definitionFor(id) {
 function nameFor(id) {
     switch (String(id)) {
     case "time":
-        return qsTr("时钟");
+        return qsTr("Clock");
     case "battery":
-        return qsTr("电池");
+        return qsTr("Battery");
     case "cpu":
         return qsTr("CPU");
     case "gpu":
         return qsTr("GPU");
     case "memoryUsed":
-        return qsTr("内存");
+        return qsTr("Memory");
     case "wifi":
         return qsTr("Wi-Fi");
     case "network":
-        return qsTr("网络");
+        return qsTr("Network");
     case "storage":
-        return qsTr("磁盘 I/O");
+        return qsTr("Disk I/O");
     case "storageCapacity":
-        return qsTr("磁盘容量");
+        return qsTr("Disk capacity");
     case "calendar":
-        return qsTr("日历");
+        return qsTr("Calendar");
     case "weather":
-        return qsTr("天气");
+        return qsTr("Weather");
     default:
         return String(id);
     }

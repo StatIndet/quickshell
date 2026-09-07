@@ -15,12 +15,12 @@ Item {
     implicitHeight: 48
     activeFocusOnTab: root.draggable
     Accessible.ignored: !root.draggable
-    Accessible.name: qsTr("已选坐标")
-    Accessible.description: root.draggable ? qsTr("拖动或使用方向键调整坐标") : ""
+    Accessible.name: qsTr("Selected coordinate")
+    Accessible.description: root.draggable ? qsTr("Drag or use the arrow keys to adjust the coordinate") : ""
     Accessible.role: Accessible.Button
-    Keys.onPressed: (event) => {
+    Keys.onPressed: event => {
         if (!root.draggable)
-            return ;
+            return;
 
         const step = (event.modifiers & Qt.ShiftModifier) !== 0 ? 20 : 4;
         if (event.key === Qt.Key_Left)
@@ -32,7 +32,7 @@ Item {
         else if (event.key === Qt.Key_Down)
             root.nudgeRequested(0, step);
         else
-            return ;
+            return;
         event.accepted = true;
     }
 
@@ -41,7 +41,9 @@ Item {
         width: root.dragging ? 44 : root.hovered || root.activeFocus ? 40 : 36
         height: width
         radius: Appearance.rounding.full
-        color: Appearance.applyAlpha(Appearance.colors.colPrimary, root.dragging ? 0.28 : root.hovered || root.activeFocus ? 0.2 : 0.12)
+        color: Appearance.applyAlpha(Appearance.colors.colPrimary, root.dragging ? 0.28 : root.hovered
+                                                                                   || root.activeFocus ? 0.2 :
+                                                                                                         0.12)
 
         Behavior on width {
             NumberAnimation {
@@ -49,9 +51,7 @@ Item {
                 easing.type: Appearance.animation.expressiveFastSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
             }
-
         }
-
     }
 
     Rectangle {
@@ -70,7 +70,6 @@ Item {
             radius: Appearance.rounding.full
             color: Appearance.colors.colPrimary
         }
-
     }
 
     MouseArea {
@@ -85,19 +84,17 @@ Item {
         hoverEnabled: true
         preventStealing: true
         cursorShape: dragging ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-        onPressed: (mouse) => {
+        onPressed: mouse => {
             root.forceActiveFocus();
             dragging = true;
             pressOffsetX = mouse.x - width / 2;
             pressOffsetY = mouse.y - height / 2;
         }
-        onPositionChanged: (mouse) => {
+        onPositionChanged: mouse => {
             if (pressed)
                 root.dragPositionChanged(mouse.x - pressOffsetX, mouse.y - pressOffsetY);
-
         }
         onReleased: dragging = false
         onCanceled: dragging = false
     }
-
 }

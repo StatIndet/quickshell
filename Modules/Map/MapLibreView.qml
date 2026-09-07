@@ -29,26 +29,26 @@ Item {
     function reload() {
         root.unload();
         if (!root.active)
-            return ;
+            return;
 
         root.mapState = "loading";
         root.errorMessage = "";
         const request = new XMLHttpRequest();
         root.styleRequest = request;
-        request.onreadystatechange = function() {
+        request.onreadystatechange = function () {
             if (request.readyState !== XMLHttpRequest.DONE || root.styleRequest !== request)
-                return ;
+                return;
 
             root.styleRequest = null;
             if (request.status < 200 || request.status >= 300) {
-                root.fail(qsTr("地图样式暂时不可用"));
-                return ;
+                root.fail(qsTr("Map style temporarily unavailable"));
+                return;
             }
             try {
                 JSON.parse(request.responseText);
             } catch (error) {
-                root.fail(qsTr("地图样式无效"));
-                return ;
+                root.fail(qsTr("Invalid map style"));
+                return;
             }
             const properties = {
                 "styleUrl": root.styleUrl,
@@ -89,7 +89,7 @@ Item {
     function fail(message) {
         mapLoader.active = false;
         root.mapState = "error";
-        root.errorMessage = message || qsTr("地图暂时不可用");
+        root.errorMessage = message || qsTr("Map temporarily unavailable");
     }
 
     function recenter(latitudeValue, longitudeValue, zoomValue) {
@@ -100,24 +100,20 @@ Item {
 
         if (mapLoader.item)
             mapLoader.item.recenter(latitudeValue, longitudeValue, zoomValue);
-
     }
 
     onActiveChanged: active ? reload() : unload()
     onStyleUrlChanged: {
         if (active)
             reload();
-
     }
     onOverlayTileUrlChanged: {
         if (active)
             reload();
-
     }
     Component.onCompleted: {
         if (active)
             reload();
-
     }
     Component.onDestruction: unload()
 
@@ -129,9 +125,9 @@ Item {
         asynchronous: true
         onStatusChanged: {
             if (status === Loader.Error) {
-                root.fail(qsTr("无法创建地图"));
+                root.fail(qsTr("Unable to create map"));
             } else if (status === Loader.Ready && item) {
-                item.mapReady.connect(function() {
+                item.mapReady.connect(function () {
                     root.mapState = "ready";
                 });
                 item.mapFailed.connect(root.fail);
@@ -213,8 +209,7 @@ Item {
         anchors.fill: parent
         visible: root.mapState !== "ready"
         loading: root.mapState === "loading"
-        message: root.errorMessage.length > 0 ? root.errorMessage : qsTr("地图暂时不可用")
+        message: root.errorMessage.length > 0 ? root.errorMessage : qsTr("Map temporarily unavailable")
         onRetryRequested: root.reload()
     }
-
 }

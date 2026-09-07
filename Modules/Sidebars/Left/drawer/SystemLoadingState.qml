@@ -8,7 +8,7 @@ Item {
     id: root
 
     property bool active: true
-    property string message: qsTr("正在连接系统监测服务")
+    property string message: qsTr("Connecting to the system monitor service")
 
     implicitHeight: 240
 
@@ -32,7 +32,7 @@ Item {
         }
 
         Text {
-            text: qsTr("首个有效快照到达后显示实时指标")
+            text: qsTr("Live metrics appear after the first valid snapshot arrives")
             color: Appearance.colors.colOnSurfaceVariant
             font.family: Fonts.ui
             font.pixelSize: Typography.bodySmall.pixelSize

@@ -19,7 +19,8 @@ Item {
     readonly property real centerScale: Math.min(1, root.screenHeight / 1440)
     readonly property real centerWidth: Metrics.lockCenterWidth * centerScale
     readonly property int clockHour24: clockTimer.now.getHours()
-    readonly property int clockHour: UiPreferences.useTwelveHourClock ? ((clockHour24 + 11) % 12) + 1 : clockHour24
+    readonly property int clockHour: UiPreferences.useTwelveHourClock ? ((clockHour24 + 11) % 12) + 1 :
+                                                                        clockHour24
 
     function forceAuthFocus() {
         authCard.forceActiveFocus();
@@ -54,7 +55,6 @@ Item {
                 radius: Metrics.lockCardRadiusSmall
                 bottomLeftRadius: Metrics.lockCardRadius
             }
-
         }
 
         ColumnLayout {
@@ -104,7 +104,6 @@ Item {
                     font.pixelSize: Math.floor(Metrics.lockTimeSuffixFontSize * root.centerScale)
                     font.bold: true
                 }
-
             }
 
             Text {
@@ -174,7 +173,6 @@ Item {
                     font.family: Fonts.materialSymbolsRounded
                     font.pixelSize: parent.width * 0.45
                 }
-
             }
 
             AuthCard {
@@ -187,7 +185,6 @@ Item {
                 onRequestUnlock: {
                     if (root.context)
                         root.context.tryUnlock();
-
                 }
             }
 
@@ -199,7 +196,9 @@ Item {
                 Text {
                     id: errorMessage
 
-                    property string msg: root.context && root.context.showFailure ? qsTr("密码错误，请重试。") : ""
+                    property string msg: root.context && root.context.showFailure ? qsTr(
+                                                                                        "Incorrect password. Try again.") :
+                                                                                    ""
                     property string pendingText: ""
 
                     function showText(newText) {
@@ -209,14 +208,14 @@ Item {
                                 errorAppearAnim.restart();
                             else
                                 errorFlashAnim.restart();
-                            return ;
+                            return;
                         }
                         errorExitAnim.stop();
                         errorFlashAnim.stop();
                         if (opacity > 0 && text.length > 0) {
                             pendingText = newText;
                             errorSwapAnim.restart();
-                            return ;
+                            return;
                         }
                         text = newText;
                         errorAppearAnim.restart();
@@ -270,7 +269,6 @@ Item {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
 
                     SequentialAnimation {
@@ -296,7 +294,6 @@ Item {
                                 easing.type: Appearance.animation.standard.type
                                 easing.bezierCurve: Appearance.animation.standard.bezierCurve
                             }
-
                         }
 
                         ScriptAction {
@@ -324,9 +321,7 @@ Item {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     SequentialAnimation {
@@ -336,7 +331,6 @@ Item {
                         onFinished: {
                             if (root.context && root.context.showFailure)
                                 root.context.showFailure = false;
-
                         }
 
                         NumberAnimation {
@@ -354,7 +348,6 @@ Item {
                             duration: Animations.durations.small
                             easing.type: Easing.Linear
                         }
-
                     }
 
                     ParallelAnimation {
@@ -377,9 +370,7 @@ Item {
                             easing.type: Appearance.animation.standardLarge.type
                             easing.bezierCurve: Appearance.animation.standardLarge.bezierCurve
                         }
-
                     }
-
                 }
 
                 Text {
@@ -387,13 +378,13 @@ Item {
 
                     property string msg: {
                         if (KeyboardLockState.capsLock && KeyboardLockState.numLock)
-                            return qsTr("大写锁定和数字锁定已开启。");
+                            return qsTr("Caps Lock and Num Lock are on.");
 
                         if (KeyboardLockState.capsLock)
-                            return qsTr("大写锁定已开启。");
+                            return qsTr("Caps Lock is on.");
 
                         if (KeyboardLockState.numLock)
-                            return qsTr("数字锁定已开启。");
+                            return qsTr("Num Lock is on.");
 
                         return "";
                     }
@@ -404,7 +395,7 @@ Item {
                     function refresh() {
                         if (blocked || msg.length === 0) {
                             hideText();
-                            return ;
+                            return;
                         }
                         showText(msg);
                     }
@@ -413,12 +404,12 @@ Item {
                         shouldBeVisible = true;
                         stateExitAnim.stop();
                         if (newText === text && opacity > 0)
-                            return ;
+                            return;
 
                         if (opacity > 0 && text.length > 0) {
                             pendingText = newText;
                             stateSwapAnim.restart();
-                            return ;
+                            return;
                         }
                         text = newText;
                         stateEnterAnim.restart();
@@ -468,7 +459,6 @@ Item {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
 
                     SequentialAnimation {
@@ -492,7 +482,6 @@ Item {
                                 easing.type: Appearance.animation.standard.type
                                 easing.bezierCurve: Appearance.animation.standard.bezierCurve
                             }
-
                         }
 
                         ScriptAction {
@@ -520,9 +509,7 @@ Item {
                                 easing.type: Appearance.animation.expressiveEffects.type
                                 easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                             }
-
                         }
-
                     }
 
                     ParallelAnimation {
@@ -531,7 +518,6 @@ Item {
                         onFinished: {
                             if (!stateMessage.shouldBeVisible)
                                 stateMessage.text = "";
-
                         }
 
                         NumberAnimation {
@@ -551,9 +537,7 @@ Item {
                             easing.type: Appearance.animation.standardLarge.type
                             easing.bezierCurve: Appearance.animation.standardLarge.bezierCurve
                         }
-
                     }
-
                 }
 
                 Behavior on implicitHeight {
@@ -562,11 +546,8 @@ Item {
                         easing.type: Appearance.animation.standard.type
                         easing.bezierCurve: Appearance.animation.standard.bezierCurve
                     }
-
                 }
-
             }
-
         }
 
         ColumnLayout {
@@ -588,9 +569,7 @@ Item {
                 radius: Metrics.lockCardRadiusSmall
                 bottomRightRadius: Metrics.lockCardRadius
             }
-
         }
-
     }
 
     Timer {
@@ -603,5 +582,4 @@ Item {
         repeat: true
         onTriggered: now = new Date()
     }
-
 }

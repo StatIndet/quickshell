@@ -9,19 +9,16 @@ import qs.Services
 Rectangle {
     id: root
 
-    property string title: qsTr("系统监测服务不可用")
-    property string message: qsTr("请确认 key 已构建并可从当前环境运行。")
+    property string title: qsTr("System monitor service unavailable")
+    property string message: qsTr("Confirm that key is built and can run in the current environment.")
     property bool reconnecting: false
     signal retryRequested
 
-    implicitHeight: unavailableLayout.implicitHeight
-        + Appearance.spacing.large * 2
+    implicitHeight: unavailableLayout.implicitHeight + Appearance.spacing.large * 2
     radius: Appearance.rounding.small
-    color: BlurService.solidBackgroundColor(
-        Appearance.m3colors.m3surfaceContainer)
-    readonly property color foregroundColor: reconnecting
-        ? Appearance.colors.colOnSurface
-        : Appearance.colors.colOnSurface
+    color: BlurService.solidBackgroundColor(Appearance.m3colors.m3surfaceContainer)
+    readonly property color foregroundColor: reconnecting ? Appearance.colors.colOnSurface :
+                                                            Appearance.colors.colOnSurface
 
     ColumnLayout {
         id: unavailableLayout
@@ -65,17 +62,17 @@ Rectangle {
             visible: root.reconnecting
             indeterminate: true
             Material.accent: root.foregroundColor
-            Accessible.name: qsTr("正在重新连接系统监测服务")
+            Accessible.name: qsTr("Reconnecting to the system monitor service")
         }
 
         Button {
             Layout.alignment: Qt.AlignHCenter
             Layout.minimumHeight: 48
             visible: !root.reconnecting
-            text: qsTr("重试")
+            text: qsTr("Retry")
             highlighted: true
             Material.accent: Appearance.colors.colPrimary
-            Accessible.name: qsTr("重试系统监测连接")
+            Accessible.name: qsTr("Retry the system monitor connection")
             onClicked: root.retryRequested()
         }
     }

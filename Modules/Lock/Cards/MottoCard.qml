@@ -29,7 +29,7 @@ Rectangle {
 
         // 中间正文
         Text {
-            text: qsTr("休息一下，\n马上回来。")
+            text: qsTr("Take a break,\nwe’ll be right back.")
             color: Appearance.colors.colOnSurface
             font.family: Fonts.ui
             font.pixelSize: 26
@@ -51,7 +51,5 @@ Rectangle {
             Layout.alignment: Qt.AlignRight | Qt.AlignBottom
             Layout.preferredHeight: 40
         }
-
     }
-
 }

@@ -13,7 +13,8 @@ Item {
     property int aqi: 0
 
     function calculateAQI(pm25) {
-        if (pm25 === undefined || pm25 === null) return 0;
+        if (pm25 === undefined || pm25 === null)
+            return 0;
         const c = pm25;
         let index;
         if (c <= 12.0) {
@@ -35,12 +36,17 @@ Item {
     }
 
     function getAqiDescription(aqiValue) {
-        if (aqiValue <= 50) return qsTr("优");
-        if (aqiValue <= 100) return qsTr("良");
-        if (aqiValue <= 150) return qsTr("轻度污染");
-        if (aqiValue <= 200) return qsTr("中度污染");
-        if (aqiValue <= 300) return qsTr("重度污染");
-        return qsTr("严重污染");
+        if (aqiValue <= 50)
+            return qsTr("Excellent");
+        if (aqiValue <= 100)
+            return qsTr("Good");
+        if (aqiValue <= 150)
+            return qsTr("Unhealthy for sensitive groups");
+        if (aqiValue <= 200)
+            return qsTr("Unhealthy");
+        if (aqiValue <= 300)
+            return qsTr("Very unhealthy");
+        return qsTr("Hazardous");
     }
 
     Connections {
@@ -66,17 +72,19 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            
+
             Text {
-                text: qsTr("空气质量")
+                text: qsTr("Air quality")
                 color: Appearance.colors.colOnSurfaceVariant
                 font.family: Fonts.ui
                 font.pixelSize: 14
                 font.weight: Font.Medium
             }
 
-            Item { Layout.fillWidth: true }
-            
+            Item {
+                Layout.fillWidth: true
+            }
+
             Text {
                 text: getAqiDescription(root.aqi) + " " + root.aqi
                 color: Appearance.colors.colOnSurfaceVariant
@@ -91,7 +99,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 12
             Layout.alignment: Qt.AlignBottom
-            
+
             onWidthChanged: requestPaint()
 
             onPaint: {
@@ -101,12 +109,12 @@ Item {
                 const barHeight = 8;
                 const yPos = (height - barHeight) / 2;
                 const radius = barHeight / 2;
-                
+
                 // Map AQI to 0-1 for position (assume max is 300 for normal display, cap at 0.95)
                 const ratio = Math.max(0.02, Math.min(0.98, root.aqi / 300.0));
                 // The gap center
                 const indicatorX = Math.max(radius, Math.min(width - radius, width * ratio));
-                
+
                 const gapWidth = 14;
                 const gapLeft = indicatorX - gapWidth / 2;
                 const gapRight = indicatorX + gapWidth / 2;
@@ -125,9 +133,9 @@ Item {
                     ctx.beginPath();
                     ctx.moveTo(radius, yPos);
                     ctx.lineTo(gapLeft - radius, yPos);
-                    ctx.arc(gapLeft - radius, yPos + radius, radius, -Math.PI/2, Math.PI/2);
+                    ctx.arc(gapLeft - radius, yPos + radius, radius, -Math.PI / 2, Math.PI / 2);
                     ctx.lineTo(radius, yPos + barHeight);
-                    ctx.arc(radius, yPos + radius, radius, Math.PI/2, Math.PI*1.5);
+                    ctx.arc(radius, yPos + radius, radius, Math.PI / 2, Math.PI * 1.5);
                     ctx.fillStyle = grad;
                     ctx.fill();
                 }
@@ -137,9 +145,9 @@ Item {
                     ctx.beginPath();
                     ctx.moveTo(gapRight + radius, yPos);
                     ctx.lineTo(width - radius, yPos);
-                    ctx.arc(width - radius, yPos + radius, radius, -Math.PI/2, Math.PI/2);
+                    ctx.arc(width - radius, yPos + radius, radius, -Math.PI / 2, Math.PI / 2);
                     ctx.lineTo(gapRight + radius, yPos + barHeight);
-                    ctx.arc(gapRight + radius, yPos + radius, radius, Math.PI/2, Math.PI*1.5);
+                    ctx.arc(gapRight + radius, yPos + radius, radius, Math.PI / 2, Math.PI * 1.5);
                     ctx.fillStyle = grad;
                     ctx.fill();
                 }

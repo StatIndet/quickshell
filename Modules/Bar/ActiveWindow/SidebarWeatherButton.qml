@@ -9,20 +9,24 @@ Item {
     id: root
 
     property bool vertical: false
-    readonly property string temperatureText: WeatherPlugin.hasValidData ? Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC)) + "°" : "--°"
+    readonly property string temperatureText: WeatherPlugin.hasValidData ? Math.round(
+                                                                               UiPreferences.weatherTemperature(
+                                                                                   WeatherPlugin.currentTemperatureC))
+                                                                           + "°" : "--°"
     readonly property int iconSize: 20
     readonly property int temperatureSize: 12
     readonly property int contentSpacing: 6
     readonly property int iconSlotWidth: 24
     readonly property real temperatureSlotWidth: Math.ceil(temperatureMetrics.width)
-    readonly property real buttonWidth: root.iconSlotWidth + root.contentSpacing + root.temperatureSlotWidth + 20
+    readonly property real buttonWidth: root.iconSlotWidth + root.contentSpacing + root.temperatureSlotWidth
+                                        + 20
     readonly property int buttonHeight: Sizes.barControlCircleSize
     readonly property bool active: WidgetState.leftSidebarOpen && WidgetState.leftSidebarView === "weather"
 
     function toggleView() {
         if (root.active) {
             WidgetState.leftSidebarOpen = false;
-            return ;
+            return;
         }
         WidgetState.leftSidebarView = "weather";
         WidgetState.leftSidebarOpen = true;
@@ -83,16 +87,12 @@ Item {
                     font.bold: true
                     color: Appearance.colors.colOnTertiaryContainer
                 }
-
             }
-
         }
-
     }
 
     PopupToolTip {
         extraVisibleCondition: button.pointerHovered
-        text: qsTr("天气")
+        text: qsTr("Weather")
     }
-
 }

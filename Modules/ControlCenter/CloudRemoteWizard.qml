@@ -30,21 +30,20 @@ FloatingWindow {
 
     readonly property var filteredProviders: {
         const query = root.searchText.trim().toLowerCase();
-        return RcloneService.providers.filter((provider) => {
+        return RcloneService.providers.filter(provider => {
             if (!provider || provider.Hide === true)
                 return false;
             if (query === "")
                 return true;
-            return String(provider.Name || "").toLowerCase().indexOf(query) >= 0
-                || String(provider.Description || "").toLowerCase().indexOf(query) >= 0;
+            return String(provider.Name || "").toLowerCase().indexOf(query) >= 0 || String(
+                        provider.Description || "").toLowerCase().indexOf(query) >= 0;
         });
     }
-    readonly property bool processing: root.wizardState === "processing"
-        || root.wizardState === "cancelling"
+    readonly property bool processing: root.wizardState === "processing" || root.wizardState === "cancelling"
 
     function showWindow() {
         if (!root.parentModal || RcloneService.configBusy)
-            return ;
+            return;
         root.resetWizard();
         root.visible = true;
         if (RcloneService.providers.length === 0)
@@ -53,8 +52,7 @@ FloatingWindow {
     }
 
     function resetWizard() {
-        root.wizardState = RcloneService.providers.length > 0
-            ? "providerSelection" : "providersLoading";
+        root.wizardState = RcloneService.providers.length > 0 ? "providerSelection" : "providersLoading";
         root.currentPage = 0;
         root.selectedProvider = null;
         root.remoteName = "";
@@ -77,12 +75,11 @@ FloatingWindow {
     function dismiss() {
         root.questionAnswer = "";
         root.acceptedAnswers = {};
-        if (RcloneService.configBusy
-                && (RcloneService.configState === "processing"
-                    || RcloneService.configState === "question")) {
+        if (RcloneService.configBusy && (RcloneService.configState === "processing"
+                                         || RcloneService.configState === "question")) {
             root.wizardState = "cancelling";
             RcloneService.cancelRemoteConfiguration();
-            return ;
+            return;
         }
         root.visible = false;
         root.clearQuestion();
@@ -99,11 +96,11 @@ FloatingWindow {
     function remoteNameError() {
         const value = RcloneService.normalizeRemoteName(root.remoteName).trim();
         if (value === "")
-            return qsTr("名称不能为空");
+            return qsTr("Name cannot be empty");
         if (!RcloneService.validRemoteName(value))
-            return qsTr("名称不能包含冒号或路径分隔符");
+            return qsTr("Names cannot contain a colon or path separator");
         if (RcloneService.remoteByName(value))
-            return qsTr("已存在同名云存储");
+            return qsTr("Cloud storage with this name already exists");
         return "";
     }
 
@@ -111,17 +108,17 @@ FloatingWindow {
         const error = root.remoteNameError();
         if (error !== "") {
             remoteNameField.errorText = error;
-            return ;
+            return;
         }
         remoteNameField.errorText = "";
         root.remoteName = RcloneService.normalizeRemoteName(root.remoteName).trim();
         root.wizardState = "processing";
         root.currentPage = 2;
         root.wizardCreatedRemote = true;
-        if (!RcloneService.startRemoteConfiguration(
-                root.remoteName, String(root.selectedProvider.Name || ""))) {
+        if (!RcloneService.startRemoteConfiguration(root.remoteName, String(root.selectedProvider.Name
+                                                                            || ""))) {
             root.wizardState = "error";
-            root.questionError = qsTr("无法开始配置云存储");
+            root.questionError = qsTr("Could not start cloud storage setup");
         }
     }
 
@@ -140,18 +137,17 @@ FloatingWindow {
     function receiveQuestion() {
         const question = RcloneService.configQuestion;
         if (!question || !question.option)
-            return ;
+            return;
         const option = question.option;
         const defaultValue = root.defaultAnswer(option);
         if (String(option.Name || "") === "config_fs_advanced") {
-            RcloneService.answerConfigQuestion(question.state,
-                root.showAdvancedOptions ? "true" : "false");
-            return ;
+            RcloneService.answerConfigQuestion(question.state, root.showAdvancedOptions ? "true" : "false");
+            return;
         }
-        if (option.Advanced === true && !root.showAdvancedOptions
-                && (defaultValue !== "" || option.Required !== true)) {
+        if (option.Advanced === true && !root.showAdvancedOptions && (defaultValue !== "" || option.Required
+                                                                      !== true)) {
             RcloneService.answerConfigQuestion(question.state, defaultValue);
-            return ;
+            return;
         }
         root.currentOption = option;
         root.currentStateToken = String(question.state || "");
@@ -163,20 +159,18 @@ FloatingWindow {
     }
 
     function isNumericType(type) {
-        return ["int", "int8", "int16", "int32", "int64", "uint",
-            "uint8", "uint16", "uint32", "uint64", "float",
-            "float32", "float64"].indexOf(String(type || "").toLowerCase()) >= 0;
+        return ["int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64",
+                "float", "float32", "float64"].indexOf(String(type || "").toLowerCase()) >= 0;
     }
 
     function answerError() {
         if (!root.currentOption)
-            return qsTr("配置问题不可用");
+            return qsTr("The configuration question is unavailable");
         const answer = String(root.questionAnswer || "");
         if (root.currentOption.Required === true && answer.trim() === "")
-            return qsTr("此项为必填项");
-        if (root.isNumericType(root.currentOption.Type)
-                && answer.trim() !== "" && !isFinite(Number(answer)))
-            return qsTr("请输入有效数字");
+            return qsTr("This field is required");
+        if (root.isNumericType(root.currentOption.Type) && answer.trim() !== "" && !isFinite(Number(answer)))
+            return qsTr("Enter a valid number");
         return "";
     }
 
@@ -184,12 +178,11 @@ FloatingWindow {
         const error = root.answerError();
         if (error !== "") {
             root.questionError = error;
-            return ;
+            return;
         }
         const optionName = String(root.currentOption.Name || "");
         const answer = String(root.questionAnswer || "");
-        if (root.currentOption.IsPassword !== true
-                && root.currentOption.Sensitive !== true) {
+        if (root.currentOption.IsPassword !== true && root.currentOption.Sensitive !== true) {
             const answers = Object.assign({}, root.acceptedAnswers);
             answers[optionName] = answer;
             root.acceptedAnswers = answers;
@@ -211,7 +204,7 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("添加云存储")
+    title: qsTr("Add cloud storage")
     implicitWidth: 720
     implicitHeight: 680
     minimumSize: Qt.size(560, 520)
@@ -240,7 +233,7 @@ FloatingWindow {
 
         function onConfigSucceeded(remoteName, remoteType) {
             if (!root.visible || remoteName !== root.remoteName)
-                return ;
+                return;
             root.wizardState = "success";
             root.currentPage = 3;
             root.clearQuestion();
@@ -261,9 +254,8 @@ FloatingWindow {
         }
 
         function onRemotesRevisionChanged() {
-            if (root.visible && root.wizardState === "success"
-                    && root.autoSelectDefault
-                    && RcloneService.remoteByName(root.remoteName)) {
+            if (root.visible && root.wizardState === "success" && root.autoSelectDefault && RcloneService.remoteByName(
+                        root.remoteName)) {
                 RcloneService.setDefaultRemote(root.remoteName);
                 root.autoSelectDefault = false;
             }
@@ -275,8 +267,7 @@ FloatingWindow {
 
         anchors.fill: parent
         radius: Appearance.rounding.extraLarge
-        color: BlurService.backgroundColor(
-            Appearance.m3colors.m3surfaceContainerHigh)
+        color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
     }
 
     CompositorBlurRegion {
@@ -288,7 +279,7 @@ FloatingWindow {
     FocusScope {
         anchors.fill: parent
         focus: root.visible
-        Keys.onEscapePressed: (event) => {
+        Keys.onEscapePressed: event => {
             root.dismiss();
             event.accepted = true;
         }
@@ -306,8 +297,8 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("添加云存储")
-                    subtitle: qsTr("选择服务")
+                    title: qsTr("Add cloud storage")
+                    subtitle: qsTr("Choose a service")
                     closeEnabled: !root.processing
                     onCloseRequested: root.dismiss()
                 }
@@ -316,7 +307,7 @@ FloatingWindow {
                     id: providerSearch
 
                     Layout.fillWidth: true
-                    labelText: qsTr("搜索云存储服务")
+                    labelText: qsTr("Search cloud storage services")
                     text: root.searchText
                     leadingContent: Component {
                         MaterialSymbol {
@@ -330,8 +321,7 @@ FloatingWindow {
 
                 InlineStatusBanner {
                     Layout.fillWidth: true
-                    visible: root.wizardState === "error"
-                        || RcloneService.providersError !== ""
+                    visible: root.wizardState === "error" || RcloneService.providersError !== ""
                     tone: "error"
                     message: root.questionError || RcloneService.providersError
                 }
@@ -343,7 +333,7 @@ FloatingWindow {
                     MaterialLoadingIndicator {
                         anchors.centerIn: parent
                         visible: RcloneService.providersLoading
-                        accessibleName: qsTr("正在读取云存储服务")
+                        accessibleName: qsTr("Loading cloud storage services")
                     }
 
                     ListView {
@@ -359,8 +349,7 @@ FloatingWindow {
                             required property var modelData
 
                             width: ListView.view.width
-                            title: RcloneService.providerDisplayName(
-                                String(modelData.Name || ""))
+                            title: RcloneService.providerDisplayName(String(modelData.Name || ""))
                             interactive: true
                             onClicked: root.chooseProvider(modelData)
                             leading: Component {
@@ -392,10 +381,10 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("添加云存储")
-                    subtitle: root.selectedProvider
-                        ? RcloneService.providerDisplayName(
-                            String(root.selectedProvider.Name || "")) : ""
+                    title: qsTr("Add cloud storage")
+                    subtitle: root.selectedProvider ? RcloneService.providerDisplayName(String(
+                                                                                            root.selectedProvider.Name
+                                                                                            || "")) : ""
                     showBack: true
                     onBackRequested: {
                         root.currentPage = 0;
@@ -408,9 +397,9 @@ FloatingWindow {
                     id: remoteNameField
 
                     Layout.fillWidth: true
-                    labelText: qsTr("名称")
+                    labelText: qsTr("Name")
                     text: root.remoteName
-                    supportingText: qsTr("用于在 Clavis 和 rclone 中识别此云存储。")
+                    supportingText: qsTr("Used to identify this cloud storage in Clavis and rclone.")
                     onTextChanged: {
                         root.remoteName = text;
                         errorText = "";
@@ -420,26 +409,30 @@ FloatingWindow {
 
                 SettingsRow {
                     Layout.fillWidth: true
-                    title: qsTr("显示高级选项")
-                    supportingText: qsTr("仅在需要自定义后端参数时启用")
+                    title: qsTr("Show advanced options")
+                    supportingText: qsTr("Enable only when custom backend settings are needed")
                     trailing: StyledSwitch {
                         checked: root.showAdvancedOptions
                         onToggled: root.showAdvancedOptions = checked
                     }
                 }
 
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: Metrics.spacingS
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
                     ActionButton {
-                        text: qsTr("取消")
+                        text: qsTr("Cancel")
                         onClicked: root.dismiss()
                     }
                     ActionButton {
-                        text: qsTr("继续")
+                        text: qsTr("Continue")
                         filled: true
                         onClicked: root.beginConfiguration()
                     }
@@ -459,8 +452,7 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: root.wizardState === "error"
-                        ? qsTr("配置失败") : qsTr("正在配置")
+                    title: root.wizardState === "error" ? qsTr("Setup failed") : qsTr("Setting up")
                     subtitle: root.remoteName
                     closeEnabled: root.wizardState !== "cancelling"
                     onCloseRequested: root.dismiss()
@@ -481,8 +473,7 @@ FloatingWindow {
 
                     Text {
                         Layout.fillWidth: true
-                        text: root.currentOption
-                            ? String(root.currentOption.Name || "") : ""
+                        text: root.currentOption ? String(root.currentOption.Name || "") : ""
                         color: Appearance.colors.colOnSurface
                         font.family: Typography.titleLarge.family
                         font.pixelSize: Typography.titleLarge.pixelSize
@@ -492,8 +483,7 @@ FloatingWindow {
 
                     Text {
                         Layout.fillWidth: true
-                        text: root.currentOption
-                            ? String(root.currentOption.Help || "") : ""
+                        text: root.currentOption ? String(root.currentOption.Help || "") : ""
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.bodyMedium.family
                         font.pixelSize: Typography.bodyMedium.pixelSize
@@ -503,30 +493,27 @@ FloatingWindow {
 
                     SearchSelectMenuField {
                         Layout.fillWidth: true
-                        visible: root.currentOption
-                            && Array.isArray(root.currentOption.Examples)
-                            && root.currentOption.Examples.length > 0
-                            && root.currentOption.Exclusive === true
-                        options: root.currentOption
-                            && Array.isArray(root.currentOption.Examples)
-                            ? root.currentOption.Examples.map((example) => ({
-                                "label": String(example.Help || example.Value || ""),
-                                "value": String(example.Value || "")
-                            })) : []
+                        visible: root.currentOption && Array.isArray(root.currentOption.Examples)
+                                 && root.currentOption.Examples.length > 0 && root.currentOption.Exclusive
+                                 === true
+                        options: root.currentOption && Array.isArray(root.currentOption.Examples)
+                                 ? root.currentOption.Examples.map(example => ({
+                                     "label": String(example.Help || example.Value || ""),
+                                     "value": String(example.Value || "")
+                                 })) : []
                         value: root.questionAnswer
-                        placeholder: qsTr("选择一个选项")
+                        placeholder: qsTr("Choose an option")
                         closeOnAccept: true
-                        onAccepted: (value) => root.questionAnswer = value
+                        onAccepted: value => root.questionAnswer = value
                     }
 
                     SettingsRow {
                         Layout.fillWidth: true
-                        visible: root.currentOption
-                            && String(root.currentOption.Type || "").toLowerCase() === "bool"
-                            && !(Array.isArray(root.currentOption.Examples)
-                                && root.currentOption.Examples.length > 0
-                                && root.currentOption.Exclusive === true)
-                        title: root.questionAnswer === "true" ? qsTr("是") : qsTr("否")
+                        visible: root.currentOption && String(root.currentOption.Type || "").toLowerCase()
+                                 === "bool" && !(Array.isArray(root.currentOption.Examples)
+                                                 && root.currentOption.Examples.length > 0
+                                                 && root.currentOption.Exclusive === true)
+                        title: root.questionAnswer === "true" ? qsTr("Yes") : qsTr("No")
                         trailing: StyledSwitch {
                             checked: root.questionAnswer === "true"
                             onToggled: root.questionAnswer = checked ? "true" : "false"
@@ -537,29 +524,26 @@ FloatingWindow {
                         id: answerField
 
                         Layout.fillWidth: true
-                        visible: root.currentOption
-                            && !(Array.isArray(root.currentOption.Examples)
-                                && root.currentOption.Examples.length > 0
-                                && root.currentOption.Exclusive === true)
-                            && String(root.currentOption.Type || "").toLowerCase() !== "bool"
-                        labelText: root.currentOption
-                            ? String(root.currentOption.Name || qsTr("值")) : qsTr("值")
+                        visible: root.currentOption && !(Array.isArray(root.currentOption.Examples)
+                                                         && root.currentOption.Examples.length > 0
+                                                         && root.currentOption.Exclusive === true) && String(
+                                     root.currentOption.Type || "").toLowerCase() !== "bool"
+                        labelText: root.currentOption ? String(root.currentOption.Name || qsTr("Value")) : qsTr(
+                                                            "Value")
                         text: root.questionAnswer
-                        passwordToggle: root.currentOption
-                            ? root.currentOption.IsPassword === true
-                                || root.currentOption.Sensitive === true : false
-                        inputMethodHints: root.currentOption
-                            && root.isNumericType(root.currentOption.Type)
-                            ? Qt.ImhFormattedNumbersOnly : Qt.ImhNone
-                        supportingText: root.currentOption
-                            && Array.isArray(root.currentOption.Examples)
-                            && root.currentOption.Examples.length > 0
-                            ? qsTr("也可以输入自定义值") : ""
+                        passwordToggle: root.currentOption ? root.currentOption.IsPassword === true
+                                                             || root.currentOption.Sensitive === true : false
+                        inputMethodHints: root.currentOption && root.isNumericType(root.currentOption.Type)
+                                          ? Qt.ImhFormattedNumbersOnly : Qt.ImhNone
+                        supportingText: root.currentOption && Array.isArray(root.currentOption.Examples)
+                                        && root.currentOption.Examples.length > 0 ? qsTr(
+                                                                                        "You can also enter a custom value") :
+                                                                                    ""
                         errorText: root.questionError
                         onTextChanged: {
                             root.questionAnswer = text;
                             if (root.questionError !== String(RcloneService.configQuestion
-                                    && RcloneService.configQuestion.error || ""))
+                                                              && RcloneService.configQuestion.error || ""))
                                 root.questionError = "";
                         }
                         onAccepted: root.submitAnswer()
@@ -567,34 +551,36 @@ FloatingWindow {
 
                     SearchSelectMenuField {
                         Layout.fillWidth: true
-                        visible: root.currentOption
-                            && Array.isArray(root.currentOption.Examples)
-                            && root.currentOption.Examples.length > 0
-                            && root.currentOption.Exclusive !== true
-                        options: root.currentOption
-                            && Array.isArray(root.currentOption.Examples)
-                            ? root.currentOption.Examples.map((example) => ({
-                                "label": String(example.Help || example.Value || ""),
-                                "value": String(example.Value || "")
-                            })) : []
+                        visible: root.currentOption && Array.isArray(root.currentOption.Examples)
+                                 && root.currentOption.Examples.length > 0 && root.currentOption.Exclusive
+                                 !== true
+                        options: root.currentOption && Array.isArray(root.currentOption.Examples)
+                                 ? root.currentOption.Examples.map(example => ({
+                                     "label": String(example.Help || example.Value || ""),
+                                     "value": String(example.Value || "")
+                                 })) : []
                         value: ""
-                        placeholder: qsTr("使用建议值")
+                        placeholder: qsTr("Use a suggested value")
                         closeOnAccept: true
-                        onAccepted: (value) => root.questionAnswer = value
+                        onAccepted: value => root.questionAnswer = value
                     }
 
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
 
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: Metrics.spacingS
-                        Item { Layout.fillWidth: true }
+                        Item {
+                            Layout.fillWidth: true
+                        }
                         ActionButton {
-                            text: qsTr("取消")
+                            text: qsTr("Cancel")
                             onClicked: root.dismiss()
                         }
                         ActionButton {
-                            text: qsTr("继续")
+                            text: qsTr("Continue")
                             filled: true
                             onClicked: root.submitAnswer()
                         }
@@ -604,22 +590,23 @@ FloatingWindow {
                 ColumnLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: root.wizardState === "processing"
-                        || root.wizardState === "cancelling"
+                    visible: root.wizardState === "processing" || root.wizardState === "cancelling"
                     spacing: Metrics.spacingM
 
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                     MaterialLoadingIndicator {
                         Layout.alignment: Qt.AlignHCenter
-                        accessibleName: root.oauthLikely
-                            ? qsTr("正在完成授权") : qsTr("正在配置")
+                        accessibleName: root.oauthLikely ? qsTr("Completing authorization") : qsTr(
+                                                               "Setting up")
                     }
                     Text {
                         Layout.fillWidth: true
-                        text: root.wizardState === "cancelling"
-                            ? qsTr("正在取消配置…")
-                            : root.oauthLikely
-                                ? qsTr("正在完成授权") : qsTr("正在应用配置…")
+                        text: root.wizardState === "cancelling" ? qsTr("Cancelling setup…") :
+                                                                  root.oauthLikely ? qsTr(
+                                                                                         "Completing authorization") :
+                                                                                     qsTr("Applying configuration…")
                         color: Appearance.colors.colOnSurface
                         font.family: Typography.titleMedium.family
                         font.pixelSize: Typography.titleMedium.pixelSize
@@ -628,20 +615,22 @@ FloatingWindow {
                     }
                     Text {
                         Layout.fillWidth: true
-                        visible: root.oauthLikely
-                            && root.wizardState !== "cancelling"
-                        text: qsTr("如果浏览器已打开，请在浏览器中完成登录和授权。完成后 Clavis 将继续配置。")
+                        visible: root.oauthLikely && root.wizardState !== "cancelling"
+                        text: qsTr(
+                                  "If a browser opened, complete sign-in and authorization there. Clavis will continue automatically afterward.")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Typography.bodyMedium.family
                         font.pixelSize: Typography.bodyMedium.pixelSize
                         wrapMode: Text.Wrap
                         horizontalAlignment: Text.AlignHCenter
                     }
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                     ActionButton {
                         Layout.alignment: Qt.AlignHCenter
                         visible: root.wizardState !== "cancelling"
-                        text: qsTr("取消")
+                        text: qsTr("Cancel")
                         onClicked: root.dismiss()
                     }
                 }
@@ -651,7 +640,9 @@ FloatingWindow {
                     Layout.fillHeight: true
                     visible: root.wizardState === "error"
                     spacing: Metrics.spacingM
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                     MaterialSymbol {
                         Layout.alignment: Qt.AlignHCenter
                         text: "cloud_off"
@@ -660,11 +651,13 @@ FloatingWindow {
                     }
                     ActionButton {
                         Layout.alignment: Qt.AlignHCenter
-                        text: qsTr("完成")
+                        text: qsTr("Done")
                         filled: true
                         onClicked: root.finishWizard()
                     }
-                    Item { Layout.fillHeight: true }
+                    Item {
+                        Layout.fillHeight: true
+                    }
                 }
             }
         }
@@ -681,11 +674,13 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("云存储已连接")
+                    title: qsTr("Cloud storage connected")
                     onCloseRequested: root.finishWizard()
                 }
 
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                }
                 MaterialSymbol {
                     Layout.alignment: Qt.AlignHCenter
                     text: "cloud_done"
@@ -695,11 +690,11 @@ FloatingWindow {
                 }
                 Text {
                     Layout.fillWidth: true
-                    text: root.selectedProvider
-                        ? qsTr("%1 已连接").arg(
-                            RcloneService.providerDisplayName(
-                                String(root.selectedProvider.Name || "")))
-                        : qsTr("云存储已连接")
+                    text: root.selectedProvider ? qsTr("%1 is connected").arg(
+                                                      RcloneService.providerDisplayName(String(
+                                                                                            root.selectedProvider.Name
+                                                                                            || ""))) : qsTr(
+                                                      "Cloud storage connected")
                     color: Appearance.colors.colOnSurface
                     font.family: Typography.headlineSmall.family
                     font.pixelSize: Typography.headlineSmall.pixelSize
@@ -708,30 +703,34 @@ FloatingWindow {
                 }
                 Text {
                     Layout.fillWidth: true
-                    text: root.remoteName + "\n" + (root.selectedProvider
-                        ? String(root.selectedProvider.Name || "") : "")
+                    text: root.remoteName + "\n" + (root.selectedProvider ? String(root.selectedProvider.Name
+                                                                                   || "") : "")
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Typography.bodyLarge.family
                     font.pixelSize: Typography.bodyLarge.pixelSize
                     horizontalAlignment: Text.AlignHCenter
                 }
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                }
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: Metrics.spacingS
-                    Item { Layout.fillWidth: true }
+                    Item {
+                        Layout.fillWidth: true
+                    }
                     ActionButton {
-                        visible: !root.autoSelectDefault
-                            && RcloneService.selectedRemoteName !== root.remoteName
+                        visible: !root.autoSelectDefault && RcloneService.selectedRemoteName
+                                 !== root.remoteName
                         enabled: RcloneService.remoteByName(root.remoteName) !== null
-                        text: qsTr("设为默认云存储")
+                        text: qsTr("Set as default cloud storage")
                         onClicked: {
                             RcloneService.setDefaultRemote(root.remoteName);
                             root.finishWizard();
                         }
                     }
                     ActionButton {
-                        text: qsTr("完成")
+                        text: qsTr("Done")
                         filled: true
                         onClicked: root.finishWizard()
                     }

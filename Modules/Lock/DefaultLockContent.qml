@@ -227,8 +227,8 @@ Item {
                     activeFocusOnPress: true
                     cursorVisible: false
                     maximumLength: 4096
-                    Accessible.name: qsTr("密码")
-                    Accessible.description: root.context.showFailure ? qsTr("密码错误") : ""
+                    Accessible.name: qsTr("Password")
+                    Accessible.description: root.context.showFailure ? qsTr("Incorrect password") : ""
                     onCursorVisibleChanged: {
                         if (cursorVisible)
                             cursorVisible = false;
@@ -262,7 +262,7 @@ Item {
                 Text {
                     anchors.centerIn: parent
                     visible: input.text.length === 0 && !root.busy
-                    text: qsTr("密码")
+                    text: qsTr("Password")
                     font.family: Fonts.ui
                     font.pixelSize: 20 * root.uiScale
                     color: "#4D5861"

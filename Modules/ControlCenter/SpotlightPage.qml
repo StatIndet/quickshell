@@ -25,12 +25,12 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("网页搜索")
+            title: qsTr("Web search")
             iconName: "language"
 
             SettingsRow {
                 Layout.fillWidth: true
-                title: qsTr("搜索引擎")
+                title: qsTr("Search engine")
                 iconName: "search"
 
                 trailing: SearchSelectMenuField {
@@ -43,8 +43,8 @@ StyledFlickable {
                     valueRole: "id"
                     closeOnAccept: true
                     leadingWidth: Metrics.iconM
-                    Accessible.name: qsTr("搜索引擎")
-                    onAccepted: (value) => {
+                    Accessible.name: qsTr("Search engine")
+                    onAccepted: value => {
                         return UiPreferences.setSpotlightSearchEngine(value);
                     }
 
@@ -52,21 +52,16 @@ StyledFlickable {
                         Image {
                             property var optionData: null
 
-                            source: optionData ? Qt.resolvedUrl("../../assets/icons/search-engines/" + optionData.icon) : ""
+                            source: optionData ? Qt.resolvedUrl("../../assets/icons/search-engines/"
+                                                                + optionData.icon) : ""
                             sourceSize.width: Metrics.iconM * 2
                             sourceSize.height: Metrics.iconM * 2
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                         }
-
                     }
-
                 }
-
             }
-
         }
-
     }
-
 }

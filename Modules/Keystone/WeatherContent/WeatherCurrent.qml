@@ -9,35 +9,39 @@ import qs.Widgets.common
 Item {
     id: root
 
-    property string locationName: qsTr("天气")
+    property string locationName: qsTr("Weather")
     property string currentTemp: "--"
     property string currentIcon: "cloud"
     property string currentDesc: "--"
     property string highTemp: "--"
     property string lowTemp: "--"
 
-    signal refreshRequested()
+    signal refreshRequested
 
     function syncData() {
         if (!WeatherPlugin.hasValidData) {
-            root.locationName = WeatherPlugin.locationName || qsTr("天气");
+            root.locationName = WeatherPlugin.locationName || qsTr("Weather");
             root.currentTemp = "--";
             root.currentIcon = "cloud";
             root.currentDesc = "--";
             root.highTemp = "--";
             root.lowTemp = "--";
-            return ;
+            return;
         }
-        root.locationName = WeatherPlugin.locationName || qsTr("未知");
-        root.currentTemp = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC || 0)) + "°";
+        root.locationName = WeatherPlugin.locationName || qsTr("Unknown");
+        root.currentTemp = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC
+                                                                       || 0)) + "°";
         root.currentIcon = WeatherPlugin.currentIconName || "cloud";
-        root.currentDesc = WeatherPlugin.currentWeatherText || qsTr("未知");
+        root.currentDesc = WeatherPlugin.currentWeatherText || qsTr("Unknown");
         if (WeatherPlugin.dailyForecast.count() > 0) {
             const today = WeatherPlugin.dailyForecast.get(0);
-            const dayPart = today.day || {
-            };
-            root.highTemp = Math.round(UiPreferences.weatherTemperature(Number(today.temperatureMaxC || dayPart.temperatureC || 0))) + "°";
-            root.lowTemp = Math.round(UiPreferences.weatherTemperature(Number(today.temperatureMinC || 0))) + "°";
+            const dayPart = today.day || {};
+            root.highTemp = Math.round(UiPreferences.weatherTemperature(Number(today.temperatureMaxC
+                                                                               || dayPart.temperatureC
+                                                                               || 0))) + "°";
+            root.lowTemp = Math.round(UiPreferences.weatherTemperature(Number(today.temperatureMinC || 0)))
+                    + "°";
+
         } else {
             root.highTemp = "--";
             root.lowTemp = "--";
@@ -107,7 +111,6 @@ Item {
                 font.family: Fonts.numeric
                 font.pixelSize: 12
             }
-
         }
 
         Item {
@@ -122,7 +125,7 @@ Item {
             iconSize: 26
             iconColor: Appearance.colors.colOnSurface
             iconRotation: WeatherPlugin.loading ? 360 : 0
-            accessibleName: qsTr("刷新天气")
+            accessibleName: qsTr("Refresh weather")
             onClicked: root.refreshRequested()
 
             RotationAnimation on iconRotation {
@@ -133,7 +136,5 @@ Item {
                 running: WeatherPlugin.loading
             }
         }
-
     }
-
 }

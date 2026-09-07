@@ -26,12 +26,8 @@ Rectangle {
     property color accentColor: Appearance.colors.colPrimary
     property color accentForegroundColor: Appearance.colors.colOnPrimary
 
-    readonly property real normalizedUsage: Math.max(
-        0,
-        Math.min(1, root.usage)
-    )
-    readonly property bool dense:
-        root.width < 210 || root.height < 190
+    readonly property real normalizedUsage: Math.max(0, Math.min(1, root.usage))
+    readonly property bool dense: root.width < 210 || root.height < 190
     readonly property int resolvedShape: {
         if (root.shapeOverride !== -999)
             return root.shapeOverride;
@@ -55,22 +51,16 @@ Rectangle {
             radius: root.radius
         }
     }
-    Accessible.name: [
-        root.label,
-        root.valueText,
-        root.detailText,
-        root.supportingText,
-        root.temperatureText
-    ].filter(function(value) {
-        return String(value || "").length > 0;
-    }).join("，")
+    Accessible.name: [root.label, root.valueText, root.detailText, root.supportingText,
+        root.temperatureText].filter(function (value) {
+            return String(value || "").length > 0;
+        }).join("，")
 
     Behavior on color {
         ColorAnimation {
             duration: Appearance.animation.expressiveEffects.duration
             easing.type: Appearance.animation.expressiveEffects.type
-            easing.bezierCurve:
-                Appearance.animation.expressiveEffects.bezierCurve
+            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
         }
     }
 
@@ -83,29 +73,22 @@ Rectangle {
             rightMargin: -implicitSize * 0.18
             bottomMargin: -implicitSize * 0.2
         }
-        implicitSize: Math.min(
-            root.width * 0.38,
-            root.height * 0.42,
-            root.decorationSize
-                * (1.08 + root.normalizedUsage * 0.14)
-        )
+        implicitSize: Math.min(root.width * 0.38, root.height * 0.42, root.decorationSize * (1.08
+                                                                                             + root.normalizedUsage
+                                                                                             * 0.14))
         rotation: 18
         shape: root.resolvedShape
         color: root.accentColor
-        animationDuration:
-            Appearance.animation.expressiveSlowSpatial.duration
+        animationDuration: Appearance.animation.expressiveSlowSpatial.duration
         animationEasing: Easing.OutBack
         z: 4
-        Accessible.name: root.label + qsTr(" 图标")
+        Accessible.name: root.label + qsTr(" icon")
 
         Behavior on implicitSize {
             NumberAnimation {
-                duration:
-                    Appearance.animation.expressiveSlowSpatial.duration
-                easing.type:
-                    Appearance.animation.expressiveSlowSpatial.type
-                easing.bezierCurve:
-                    Appearance.animation.expressiveSlowSpatial.bezierCurve
+                duration: Appearance.animation.expressiveSlowSpatial.duration
+                easing.type: Appearance.animation.expressiveSlowSpatial.type
+                easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
             }
         }
 
@@ -128,21 +111,15 @@ Rectangle {
         anchors {
             top: parent.top
             right: parent.right
-            topMargin: root.dense
-                ? Appearance.spacing.small
-                : Appearance.spacing.medium
-            rightMargin: root.dense
-                ? Appearance.spacing.small
-                : Appearance.spacing.medium
+            topMargin: root.dense ? Appearance.spacing.small : Appearance.spacing.medium
+            rightMargin: root.dense ? Appearance.spacing.small : Appearance.spacing.medium
         }
 
         MaterialSymbol {
             anchors.verticalCenter: parent.verticalCenter
             text: "thermostat"
             color: root.foregroundColor
-            iconSize: root.dense
-                ? Typography.titleSmall.pixelSize
-                : Typography.titleMedium.pixelSize
+            iconSize: root.dense ? Typography.titleSmall.pixelSize : Typography.titleMedium.pixelSize
             fill: 1
             opacity: 0.78
         }
@@ -152,9 +129,7 @@ Rectangle {
             text: root.temperatureText
             color: root.foregroundColor
             font.family: Fonts.numeric
-            font.pixelSize: root.dense
-                ? Typography.titleSmall.pixelSize
-                : Typography.titleMedium.pixelSize
+            font.pixelSize: root.dense ? Typography.titleSmall.pixelSize : Typography.titleMedium.pixelSize
             font.weight: Font.DemiBold
             opacity: 0.84
         }
@@ -163,34 +138,24 @@ Rectangle {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: root.dense
-                ? Appearance.spacing.small
-                : Appearance.spacing.medium
+            margins: root.dense ? Appearance.spacing.small : Appearance.spacing.medium
         }
         spacing: root.dense ? 2 : Appearance.spacing.xSmall
 
         Text {
-            Layout.maximumWidth: Math.max(
-                48,
-                root.width - temperatureBadge.width
-                    - Appearance.spacing.large * 1.5
-            )
+            Layout.maximumWidth: Math.max(48, root.width - temperatureBadge.width - Appearance.spacing.large
+                                          * 1.5)
             text: root.label
             color: root.foregroundColor
             font.family: Fonts.ui
-            font.pixelSize: root.dense
-                ? Typography.titleMedium.pixelSize + 2
-                : Typography.titleLarge.pixelSize
+            font.pixelSize: root.dense ? Typography.titleMedium.pixelSize + 2 :
+                                         Typography.titleLarge.pixelSize
             font.weight: Font.Bold
             elide: Text.ElideRight
         }
 
         Text {
-            Layout.maximumWidth: Math.max(
-                48,
-                root.width - root.decorationSize
-                    - Appearance.spacing.large
-            )
+            Layout.maximumWidth: Math.max(48, root.width - root.decorationSize - Appearance.spacing.large)
             visible: !root.dense && text.length > 0
             text: root.detailText
             color: root.foregroundColor
@@ -203,14 +168,9 @@ Rectangle {
         SystemSparkline {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: root.dense
-                ? Appearance.spacing.xSmall
-                : 0
-            Layout.minimumHeight: visible
-                ? (root.dense ? 42 : 46)
-                : 0
-            visible: root.trendValues.length > 1
-                && root.height >= 112
+            Layout.topMargin: root.dense ? Appearance.spacing.xSmall : 0
+            Layout.minimumHeight: visible ? (root.dense ? 42 : 46) : 0
+            visible: root.trendValues.length > 1 && root.height >= 112
             values: root.trendValues
             historyLength: 60
             updateInterval: root.updateInterval
@@ -218,14 +178,10 @@ Rectangle {
             scaleHeadroom: 1.2
             showGuideLines: false
             active: root.chartActive
-            accessibilityName: root.label + qsTr(" 最近一分钟趋势")
-            accessibilityDescription:
-                qsTr("当前值 ") + root.valueText
+            accessibilityName: root.label + qsTr(" trend over the last minute")
+            accessibilityDescription: qsTr("Current value ") + root.valueText
             lineColor: root.accentColor
-            baselineColor: Appearance.applyAlpha(
-                root.foregroundColor,
-                0.2
-            )
+            baselineColor: Appearance.applyAlpha(root.foregroundColor, 0.2)
             lineWidth: 2.2
             fillOpacity: 0.12
         }
@@ -251,12 +207,10 @@ Rectangle {
 
                 Behavior on color {
                     ColorAnimation {
-                        duration:
-                            Appearance.animation.expressiveEffects.duration
+                        duration: Appearance.animation.expressiveEffects.duration
                     }
                 }
             }
-
         }
 
         Text {
@@ -271,5 +225,4 @@ Rectangle {
             elide: Text.ElideRight
         }
     }
-
 }

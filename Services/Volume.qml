@@ -11,10 +11,13 @@ Singleton {
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property var source: Pipewire.defaultAudioSource
     readonly property var audioNodes: Pipewire.nodes.values.filter(node => node && node.audio)
-    readonly property var outputDevices: root.sortedNodes(root.audioNodes.filter(node => !node.isStream && node.isSink))
-    readonly property var inputDevices: root.sortedNodes(root.audioNodes.filter(node => !node.isStream && !node.isSink))
+    readonly property var outputDevices: root.sortedNodes(root.audioNodes.filter(node => !node.isStream
+                                                                                         && node.isSink))
+    readonly property var inputDevices: root.sortedNodes(root.audioNodes.filter(node => !node.isStream &&
+                                                                                        !node.isSink))
     readonly property var playbackStreams: root.playbackNodes(playbackTracker.linkGroups)
-    readonly property bool available: root.ready && (root.outputDevices.length > 0 || root.inputDevices.length > 0)
+    readonly property bool available: root.ready && (root.outputDevices.length > 0
+                                                     || root.inputDevices.length > 0)
     readonly property bool outputAvailable: root.sink !== null && root.sink !== undefined
     readonly property bool inputAvailable: root.source !== null && root.source !== undefined
     readonly property bool busy: false
@@ -52,7 +55,8 @@ Singleton {
     }
 
     function sortedNodes(nodes) {
-        return nodes.slice().sort((left, right) => root.nodeDisplayName(left).localeCompare(root.nodeDisplayName(right)));
+        return nodes.slice().sort((left, right) => root.nodeDisplayName(left).localeCompare(
+                                                       root.nodeDisplayName(right)));
     }
 
     function playbackNodes(groups) {
@@ -92,23 +96,17 @@ Singleton {
             return "";
 
         const properties = root.nodeProperties(node);
-        return properties["application.name"]
-            || node.description
-            || node.nickname
-            || node.name
-            || qsTr("未知音频设备");
+        return properties["application.name"] || node.description || node.nickname || node.name || qsTr(
+                    "Unknown audio device");
     }
 
     function applicationDisplayName(node) {
         if (!node)
-            return qsTr("未知应用");
+            return qsTr("Unknown application");
 
         const properties = root.nodeProperties(node);
-        return properties["application.name"]
-            || properties["application.process.binary"]
-            || node.nickname
-            || node.name
-            || qsTr("未知应用");
+        return properties["application.name"] || properties["application.process.binary"] || node.nickname
+                || node.name || qsTr("Unknown application");
     }
 
     function nodeSupportingText(node) {
@@ -117,7 +115,8 @@ Singleton {
 
         const properties = root.nodeProperties(node);
         if (node.isStream) {
-            const binary = properties["application.process.binary"] || properties["application.process.id"] || "";
+            const binary = properties["application.process.binary"] || properties["application.process.id"]
+                  || "";
             const mediaName = properties["media.name"] || "";
             return binary && binary !== root.nodeDisplayName(node) ? binary : mediaName;
         }
@@ -127,7 +126,7 @@ Singleton {
             return profile;
         if (node.name && node.name !== root.nodeDisplayName(node))
             return node.name;
-        return node.isSink ? qsTr("音频输出设备") : qsTr("音频输入设备");
+        return node.isSink ? qsTr("Audio output device") : qsTr("Audio input device");
     }
 
     function nodeIconName(node) {
@@ -135,22 +134,20 @@ Singleton {
             return "volume_off";
 
         const properties = root.nodeProperties(node);
-        const descriptor = [
-            properties["device.icon-name"] || "",
-            properties["media.icon-name"] || "",
-            node.description || "",
-            node.name || ""
-        ].join(" ").toLowerCase();
+        const descriptor = [properties["device.icon-name"] || "", properties["media.icon-name"] || "",
+                            node.description || "", node.name || ""].join(" ").toLowerCase();
 
         if (node.isStream)
             return "music_note";
-        if (descriptor.indexOf("headphone") >= 0 || descriptor.indexOf("headset") >= 0 || descriptor.indexOf(qsTr("耳机")) >= 0)
+        if (descriptor.indexOf("headphone") >= 0 || descriptor.indexOf("headset") >= 0 || descriptor.indexOf(qsTr(
+                                                                                                                 "Headphones"))
+                >= 0)
             return "headphones";
         if (descriptor.indexOf("bluetooth") >= 0 || descriptor.indexOf("bluez") >= 0)
             return node.isSink ? "headphones" : "mic";
         if (descriptor.indexOf("hdmi") >= 0 || descriptor.indexOf("displayport") >= 0)
             return "tv";
-        if (descriptor.indexOf("speaker") >= 0 || descriptor.indexOf(qsTr("扬声器")) >= 0)
+        if (descriptor.indexOf("speaker") >= 0 || descriptor.indexOf(qsTr("Speakers")) >= 0)
             return "speaker";
         return node.isSink ? "volume_up" : "mic";
     }
@@ -204,7 +201,7 @@ Singleton {
     function setDefaultOutput(node) {
         const currentNode = root.resolveNode(node, root.outputDevices);
         if (!currentNode)
-            return root.fail("set-default-output", qsTr("所选输出设备已不可用"));
+            return root.fail("set-default-output", qsTr("The selected output device is no longer available"));
 
         root.clearError();
         Pipewire.preferredDefaultAudioSink = currentNode;
@@ -214,7 +211,7 @@ Singleton {
     function setDefaultInput(node) {
         const currentNode = root.resolveNode(node, root.inputDevices);
         if (!currentNode)
-            return root.fail("set-default-input", qsTr("所选输入设备已不可用"));
+            return root.fail("set-default-input", qsTr("The selected input device is no longer available"));
 
         root.clearError();
         Pipewire.preferredDefaultAudioSource = currentNode;
@@ -223,11 +220,11 @@ Singleton {
 
     function setNodeVolume(node, volume) {
         if (!node || !node.audio)
-            return root.fail("set-volume", qsTr("音频对象已不可用"));
+            return root.fail("set-volume", qsTr("The audio object is no longer available"));
 
         const safeVolume = Math.max(0, Math.min(1, Number(volume)));
         if (isNaN(safeVolume))
-            return root.fail("set-volume", qsTr("音量数值无效"));
+            return root.fail("set-volume", qsTr("Invalid volume value"));
 
         root.clearError();
         node.audio.volume = safeVolume;
@@ -238,7 +235,7 @@ Singleton {
 
     function toggleNodeMute(node) {
         if (!node || !node.audio)
-            return root.fail("toggle-mute", qsTr("音频对象已不可用"));
+            return root.fail("toggle-mute", qsTr("The audio object is no longer available"));
 
         root.clearError();
         node.audio.muted = !node.audio.muted;

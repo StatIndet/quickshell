@@ -80,7 +80,7 @@ Singleton {
     signal operationStarted(string operation)
     signal operationSucceeded(string operation)
     signal operationFailed(string operation, string message)
-    signal lockRequested()
+    signal lockRequested
 
     function setInhibited(value) {
         const requested = !!value;
@@ -127,7 +127,7 @@ Singleton {
     function configureStage(stage, enabled, timeout, respectInhibitors = true) {
         const name = String(stage || "");
         if (["dim", "lock", "displayOff", "suspend"].indexOf(name) === -1) {
-            root.lastError = qsTr("未知 Idle 阶段: ") + name;
+            root.lastError = qsTr("Unknown idle stage: ") + name;
             root.operationFailed("configure-stage", root.lastError);
             return;
         }
@@ -174,30 +174,35 @@ Singleton {
     }
 
     function needsPolicyMigration(data) {
-        return !data || typeof data !== "object" || Array.isArray(data)
-            || typeof data.inhibited !== "boolean";
+        return !data || typeof data !== "object" || Array.isArray(data) || typeof data.inhibited
+                !== "boolean";
+
     }
 
     function loadPolicy(data) {
         const values = data && typeof data === "object" ? data : {};
         const defaults = root._policyDefaults();
         root.policyLoading = true;
-        root.inhibited = root._policyBool(
-            values, "inhibited", defaults.inhibited);
+        root.inhibited = root._policyBool(values, "inhibited", defaults.inhibited);
         root.policyEnabled = root._policyBool(values, "policyEnabled", defaults.policyEnabled);
         root.dimEnabled = root._policyBool(values, "dimEnabled", defaults.dimEnabled);
         root.dimTimeout = root._policyNumber(values, "dimTimeout", defaults.dimTimeout, 0, 86400);
-        root.dimRespectInhibitors = root._policyBool(values, "dimRespectInhibitors", defaults.dimRespectInhibitors);
+        root.dimRespectInhibitors = root._policyBool(values, "dimRespectInhibitors",
+                                                     defaults.dimRespectInhibitors);
         root.dimFraction = root._policyNumber(values, "dimFraction", defaults.dimFraction, 0.05, 1);
         root.lockEnabled = root._policyBool(values, "lockEnabled", defaults.lockEnabled);
         root.lockTimeout = root._policyNumber(values, "lockTimeout", defaults.lockTimeout, 0, 86400);
-        root.lockRespectInhibitors = root._policyBool(values, "lockRespectInhibitors", defaults.lockRespectInhibitors);
+        root.lockRespectInhibitors = root._policyBool(values, "lockRespectInhibitors",
+                                                      defaults.lockRespectInhibitors);
         root.displayOffEnabled = root._policyBool(values, "displayOffEnabled", defaults.displayOffEnabled);
-        root.displayOffTimeout = root._policyNumber(values, "displayOffTimeout", defaults.displayOffTimeout, 0, 86400);
-        root.displayOffRespectInhibitors = root._policyBool(values, "displayOffRespectInhibitors", defaults.displayOffRespectInhibitors);
+        root.displayOffTimeout = root._policyNumber(values, "displayOffTimeout", defaults.displayOffTimeout, 0,
+                                                    86400);
+        root.displayOffRespectInhibitors = root._policyBool(values, "displayOffRespectInhibitors",
+                                                            defaults.displayOffRespectInhibitors);
         root.suspendEnabled = root._policyBool(values, "suspendEnabled", defaults.suspendEnabled);
         root.suspendTimeout = root._policyNumber(values, "suspendTimeout", defaults.suspendTimeout, 0, 86400);
-        root.suspendRespectInhibitors = root._policyBool(values, "suspendRespectInhibitors", defaults.suspendRespectInhibitors);
+        root.suspendRespectInhibitors = root._policyBool(values, "suspendRespectInhibitors",
+                                                         defaults.suspendRespectInhibitors);
         root.policyLoading = false;
     }
 
@@ -228,10 +233,7 @@ Singleton {
     }
 
     function _monitorEnabled(stageEnabled, timeout, respectInhibitors) {
-        return root.policyEnabled
-            && stageEnabled
-            && timeout > 0
-            && !(respectInhibitors && root.inhibited);
+        return root.policyEnabled && stageEnabled && timeout > 0 && !(respectInhibitors && root.inhibited);
     }
 
     function _setDimmed(value) {
@@ -245,10 +247,8 @@ Singleton {
                 if (!monitor || !monitor.screen)
                     continue;
                 saved[monitor.screenName] = Number(monitor.brightness);
-                Brightness.setBrightnessForScreen(
-                    monitor.screen,
-                    Math.max(0.05, Number(monitor.brightness) * root.dimFraction)
-                );
+                Brightness.setBrightnessForScreen(monitor.screen, Math.max(0.05, Number(monitor.brightness)
+                                                                           * root.dimFraction));
             }
             root._savedBrightness = saved;
             root.dimmed = true;
@@ -282,7 +282,7 @@ Singleton {
             root.operationSucceeded("lock");
             return;
         }
-        root.lastError = qsTr("锁屏请求失败: ") + String(result || "unknown");
+        root.lastError = qsTr("Lock-screen request failed: ") + String(result || "unknown");
         root.operationFailed("lock", root.lastError);
     }
 
@@ -296,12 +296,8 @@ Singleton {
         root._displayCommandTargetOff = root._desiredDisplaysOff;
         root.lastError = "";
         root.operationStarted(root._displayCommandTargetOff ? "display-off" : "display-on");
-        displayPowerProcess.exec([
-            "niri",
-            "msg",
-            "action",
-            root._displayCommandTargetOff ? "power-off-monitors" : "power-on-monitors"
-        ]);
+        displayPowerProcess.exec(["niri", "msg", "action", root._displayCommandTargetOff
+                                  ? "power-off-monitors" : "power-on-monitors"]);
     }
 
     function _requestSuspend() {
@@ -346,11 +342,8 @@ Singleton {
         id: displayOffMonitor
         timeout: Math.max(1, root.displayOffTimeout)
         respectInhibitors: root.displayOffRespectInhibitors
-        enabled: root._monitorEnabled(
-            root.displayOffEnabled,
-            root.displayOffTimeout,
-            root.displayOffRespectInhibitors
-        )
+        enabled: root._monitorEnabled(root.displayOffEnabled, root.displayOffTimeout,
+                                      root.displayOffRespectInhibitors)
 
         onIsIdleChanged: root._setDisplaysOff(isIdle)
     }
@@ -359,11 +352,7 @@ Singleton {
         id: suspendMonitor
         timeout: Math.max(1, root.suspendTimeout)
         respectInhibitors: root.suspendRespectInhibitors
-        enabled: root._monitorEnabled(
-            root.suspendEnabled,
-            root.suspendTimeout,
-            root.suspendRespectInhibitors
-        )
+        enabled: root._monitorEnabled(root.suspendEnabled, root.suspendTimeout, root.suspendRespectInhibitors)
 
         onIsIdleChanged: {
             if (isIdle)
@@ -420,7 +409,7 @@ Singleton {
                 root.displaysOff = root._displayCommandTargetOff;
                 root.operationSucceeded(operation);
             } else {
-                root.lastError = qsTr("niri 显示器电源动作失败，退出码 ") + exitCode;
+                root.lastError = qsTr("niri display power action failed, exit code ") + exitCode;
                 root.operationFailed(operation, root.lastError);
             }
 
@@ -437,7 +426,7 @@ Singleton {
                 root.operationSucceeded("suspend");
                 return;
             }
-            root.lastError = qsTr("systemd-logind 挂起动作失败，退出码 ") + exitCode;
+            root.lastError = qsTr("systemd-logind suspend action failed, exit code ") + exitCode;
             root.operationFailed("suspend", root.lastError);
         }
     }

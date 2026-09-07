@@ -13,7 +13,7 @@ Item {
     function syncForecast() {
         if (!WeatherPlugin.hasValidData) {
             root.dailyData = [];
-            return ;
+            return;
         }
         const nextDaily = [];
         const count = Math.min(5, WeatherPlugin.dailyForecast.count());
@@ -21,8 +21,7 @@ Item {
         let globalMax = -1000;
         for (let i = 0; i < count; ++i) {
             const item = WeatherPlugin.dailyForecast.get(i);
-            const dayPart = item.day || {
-            };
+            const dayPart = item.day || {};
             const minTemp = Number(item.temperatureMinC || 0);
             const maxTemp = Number(item.temperatureMaxC || dayPart.temperatureC || 0);
             if (minTemp < globalMin)
@@ -31,15 +30,16 @@ Item {
             if (maxTemp > globalMax)
                 globalMax = maxTemp;
 
-            const dateObject = item.date ? new Date(item.date + "T00:00:00") : new Date(Number(item.time || 0) * 1000);
+            const dateObject = item.date ? new Date(item.date + "T00:00:00") : new Date(Number(item.time
+                                                                                               || 0) * 1000);
             nextDaily.push({
-                "dayIndex": dateObject.getDay(),
-                "icon": dayPart.iconName || item.iconName || "cloud",
-                "minTemp": Math.round(UiPreferences.weatherTemperature(minTemp)),
-                "maxTemp": Math.round(UiPreferences.weatherTemperature(maxTemp)),
-                "rawMin": minTemp,
-                "rawMax": maxTemp
-            });
+                               "dayIndex": dateObject.getDay(),
+                               "icon": dayPart.iconName || item.iconName || "cloud",
+                               "minTemp": Math.round(UiPreferences.weatherTemperature(minTemp)),
+                               "maxTemp": Math.round(UiPreferences.weatherTemperature(maxTemp)),
+                               "rawMin": minTemp,
+                               "rawMax": maxTemp
+                           });
         }
         // Calculate offsets
         if (globalMax - globalMin < 1) {
@@ -84,15 +84,17 @@ Item {
             model: root.dailyData
 
             delegate: RowLayout {
-                property var week: [qsTr("周日"), qsTr("周一"), qsTr("周二"), qsTr("周三"), qsTr("周四"), qsTr("周五"), qsTr("周六")]
+                property var week: [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr(
+                        "Fri"), qsTr("Sat")]
 
                 Layout.fillWidth: true
                 spacing: 8
 
                 Text {
                     Layout.preferredWidth: 40
-                    text: index === 0 ? qsTr("今天") : week[modelData.dayIndex]
-                    color: index === 0 ? Appearance.colors.colOnSurface : Appearance.colors.colOnSurfaceVariant
+                    text: index === 0 ? qsTr("Today") : week[modelData.dayIndex]
+                    color: index === 0 ? Appearance.colors.colOnSurface :
+                                         Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
                     font.pixelSize: 16
                     font.weight: index === 0 ? Font.Medium : Font.Normal
@@ -146,11 +148,8 @@ Item {
                                 position: 1
                                 color: Appearance.colors.colPrimary
                             }
-
                         }
-
                     }
-
                 }
 
                 Text {
@@ -160,11 +159,7 @@ Item {
                     font.family: Fonts.numeric
                     font.pixelSize: 16
                 }
-
             }
-
         }
-
     }
-
 }

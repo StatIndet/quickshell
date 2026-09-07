@@ -11,37 +11,40 @@ StyledFlickable {
     property string deviceAddress: ""
     property string deviceAdapterId: ""
     property bool pageReady: false
-    readonly property var device: BluetoothService.devices.find((candidate) => {
-        return candidate.address === root.deviceAddress && (root.deviceAdapterId.length === 0 || candidate.adapterId === root.deviceAdapterId);
+    readonly property var device: BluetoothService.devices.find(candidate => {
+        return candidate.address === root.deviceAddress && (root.deviceAdapterId.length === 0
+                                                            || candidate.adapterId === root.deviceAdapterId);
     }) || null
-    readonly property string pageTitle: root.device ? root.device.name : qsTr("蓝牙设备")
-    readonly property bool deviceChanging: root.device && (root.device.connecting || root.device.disconnecting || root.device.pairing)
+    readonly property string pageTitle: root.device ? root.device.name : qsTr("Bluetooth device")
+    readonly property bool deviceChanging: root.device && (root.device.connecting
+                                                           || root.device.disconnecting
+                                                           || root.device.pairing)
 
-    signal returnRequested()
+    signal returnRequested
 
     function statusText() {
         if (!root.device)
             return "";
 
         if (root.device.blocked)
-            return qsTr("已阻止");
+            return qsTr("Blocked");
 
         if (root.device.connecting)
-            return qsTr("正在连接…");
+            return qsTr("Connecting…");
 
         if (root.device.disconnecting)
-            return qsTr("正在断开连接…");
+            return qsTr("Disconnecting…");
 
         if (root.device.connected)
-            return root.device.batteryAvailable ? qsTr("已连接 · %1%").arg(root.device.batteryLevel) : qsTr("已连接");
+            return root.device.batteryAvailable ? qsTr("Connected · %1%").arg(root.device.batteryLevel) : qsTr(
+                                                      "Connected");
 
-        return qsTr("已保存");
+        return qsTr("Saved");
     }
 
     function ensureDeviceAvailable() {
         if (root.pageReady && !root.device)
             root.returnRequested();
-
     }
 
     clip: true
@@ -57,13 +60,11 @@ StyledFlickable {
         function onEnabledChanged() {
             if (!BluetoothService.enabled)
                 root.returnRequested();
-
         }
 
         function onOperationSucceeded(operation) {
             if (operation === "forget")
                 root.returnRequested();
-
         }
 
         target: BluetoothService
@@ -95,13 +96,14 @@ StyledFlickable {
 
                 trailing: ActionButton {
                     visible: root.device !== null
-                    enabled: root.device && BluetoothService.enabled && !BluetoothService.busy && !root.deviceChanging && (!root.device.blocked || root.device.connected)
+                    enabled: root.device && BluetoothService.enabled && !BluetoothService.busy &&
+                             !root.deviceChanging && (!root.device.blocked || root.device.connected)
                     filled: root.device ? !root.device.connected : false
                     iconName: root.device && root.device.connected ? "link_off" : "link"
-                    text: root.device && root.device.connected ? qsTr("断开连接") : qsTr("连接")
+                    text: root.device && root.device.connected ? qsTr("Disconnect") : qsTr("Connect")
                     onClicked: {
                         if (!root.device)
-                            return ;
+                            return;
 
                         if (root.device.connected)
                             BluetoothService.disconnectDevice(root.device);
@@ -109,117 +111,109 @@ StyledFlickable {
                             BluetoothService.connectDevice(root.device);
                     }
                 }
-
             }
 
             SettingsActionRow {
                 Layout.fillWidth: true
                 enabled: root.device !== null && !BluetoothService.busy
                 iconName: "delete"
-                text: qsTr("遗忘设备")
+                text: qsTr("Forget device")
                 trailingIconName: ""
                 onClicked: forgetDialog.open()
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("连接", "Bluetooth settings section")
+            title: qsTr("Connection", "Bluetooth settings section")
             iconName: "link"
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "verified_user"
-                title: qsTr("受信任设备")
+                title: qsTr("Trusted device")
 
                 trailing: StyledSwitch {
                     checked: root.device ? root.device.trusted : false
                     enabled: root.device !== null && !BluetoothService.busy
-                    Accessible.name: qsTr("受信任设备")
+                    Accessible.name: qsTr("Trusted device")
                     onToggled: {
                         if (root.device)
                             BluetoothService.setDeviceTrusted(root.device, checked);
-
                     }
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "block"
-                title: qsTr("阻止设备")
+                title: qsTr("Block device")
 
                 trailing: StyledSwitch {
                     checked: root.device ? root.device.blocked : false
                     enabled: root.device !== null && !BluetoothService.busy
-                    Accessible.name: qsTr("阻止设备")
+                    Accessible.name: qsTr("Block device")
                     onToggled: {
                         if (root.device)
                             BluetoothService.setDeviceBlocked(root.device, checked);
-
                     }
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "power_settings_new"
-                title: qsTr("允许唤醒")
+                title: qsTr("Allow wake")
 
                 trailing: StyledSwitch {
                     checked: root.device ? root.device.wakeAllowed : false
                     enabled: root.device !== null && !BluetoothService.busy
-                    Accessible.name: qsTr("允许设备唤醒系统")
+                    Accessible.name: qsTr("Allow device to wake the system")
                     onToggled: {
                         if (root.device)
                             BluetoothService.setDeviceWakeAllowed(root.device, checked);
-
                     }
                 }
-
             }
-
         }
 
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("设备信息")
+            title: qsTr("Device information")
             iconName: "info"
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "battery_full"
-                title: qsTr("电池")
-                supportingText: root.device && root.device.batteryAvailable ? qsTr("%1%").arg(root.device.batteryLevel) : qsTr("不可用")
+                title: qsTr("Battery")
+                supportingText: root.device && root.device.batteryAvailable ? qsTr("%1%").arg(root.device.batteryLevel) :
+                                                                              qsTr("Unavailable")
 
                 trailing: ThinReadOnlySlider {
                     visible: root.device && root.device.batteryAvailable
                     Layout.preferredWidth: visible ? Math.min(180, Math.max(80, root.width * 0.28)) : 0
                     value: root.device && root.device.batteryAvailable ? root.device.battery : 0
-                    Accessible.name: root.device && root.device.batteryAvailable ? qsTr("设备电量 %1%").arg(root.device.batteryLevel) : qsTr("设备电量不可用")
+                    Accessible.name: root.device && root.device.batteryAvailable ? qsTr(
+                                                                                       "Device battery %1%").arg(
+                                                                                       root.device.batteryLevel) :
+                                                                                   qsTr("Device battery unavailable")
                 }
-
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "fingerprint"
-                title: qsTr("地址")
+                title: qsTr("Address")
                 supportingText: root.device ? root.device.address : ""
             }
 
             SettingsRow {
                 Layout.fillWidth: true
                 iconName: "settings_bluetooth"
-                title: qsTr("适配器")
+                title: qsTr("Adapter")
                 supportingText: root.device ? root.device.adapterId : ""
             }
-
         }
-
     }
 
     MaterialDialog {
@@ -227,8 +221,8 @@ StyledFlickable {
 
         anchors.centerIn: Overlay.overlay
         width: Math.min(420, root.width - Metrics.spacingL * 2)
-        dialogTitle: root.device ? qsTr("遗忘“%1”？").arg(root.device.name) : qsTr("遗忘设备？")
-        messageText: qsTr("这会删除该设备保存的蓝牙配对信息。")
+        dialogTitle: root.device ? qsTr("Forget “%1”?").arg(root.device.name) : qsTr("Forget device?")
+        messageText: qsTr("This removes the saved Bluetooth pairing information for this device.")
 
         actionsComponent: Component {
             RowLayout {
@@ -239,26 +233,21 @@ StyledFlickable {
                 }
 
                 ActionButton {
-                    text: qsTr("取消")
+                    text: qsTr("Cancel")
                     onClicked: forgetDialog.close()
                 }
 
                 ActionButton {
                     enabled: root.device !== null && !BluetoothService.busy
-                    text: qsTr("遗忘")
+                    text: qsTr("Forget")
                     onClicked: {
                         const target = root.device;
                         forgetDialog.close();
                         if (target)
                             BluetoothService.forgetDevice(target);
-
                     }
                 }
-
             }
-
         }
-
     }
-
 }

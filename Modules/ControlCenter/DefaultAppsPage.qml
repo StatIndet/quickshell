@@ -21,12 +21,10 @@ StyledFlickable {
         required property string title
         required property string iconName
 
-        readonly property var roleState:
-            DefaultApplicationsService.stateFor(settingRow.roleId)
+        readonly property var roleState: DefaultApplicationsService.stateFor(settingRow.roleId)
         readonly property var selectedOption: {
             const options = settingRow.roleState.candidates || [];
-            return options.find(option =>
-                option.value === settingRow.roleState.currentId) || null;
+            return options.find(option => option.value === settingRow.roleState.currentId) || null;
         }
 
         Layout.fillWidth: true
@@ -70,10 +68,8 @@ StyledFlickable {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredWidth: Metrics.iconM
                 Layout.preferredHeight: Metrics.iconM
-                visible: settingRow.selectedOption !== null
-                    && settingRow.selectedOption.icon !== ""
-                source: settingRow.selectedOption
-                    ? settingRow.selectedOption.icon : ""
+                visible: settingRow.selectedOption !== null && settingRow.selectedOption.icon !== ""
+                source: settingRow.selectedOption ? settingRow.selectedOption.icon : ""
                 sourceSize.width: Metrics.iconM * 2
                 sourceSize.height: Metrics.iconM * 2
                 fillMode: Image.PreserveAspectFit
@@ -85,17 +81,16 @@ StyledFlickable {
                 Layout.preferredHeight: Metrics.controlHeightM
                 options: settingRow.roleState.candidates || []
                 value: settingRow.roleState.currentId || ""
-                placeholder: DefaultApplicationsService.loading
-                    ? qsTr("正在加载…")
-                    : settingRow.roleId === "terminal" && settingRow.roleState.currentId === ""
-                        ? qsTr("系统默认") : qsTr("无可用应用")
+                placeholder: DefaultApplicationsService.loading ? qsTr("Loading…") : settingRow.roleId
+                                                                  === "terminal"
+                                                                  && settingRow.roleState.currentId === ""
+                                                                  ? qsTr("System default") : qsTr(
+                                                                        "No available applications")
                 closeOnAccept: true
-                enabled: !DefaultApplicationsService.loading
-                    && !DefaultApplicationsService.busy
-                    && (settingRow.roleState.candidates || []).length > 0
+                enabled: !DefaultApplicationsService.loading && !DefaultApplicationsService.busy && (
+                             settingRow.roleState.candidates || []).length > 0
                 Accessible.name: settingRow.title
-                onAccepted: value =>
-                    DefaultApplicationsService.setRole(settingRow.roleId, value)
+                onAccepted: value => DefaultApplicationsService.setRole(settingRow.roleId, value)
             }
         }
 
@@ -104,9 +99,9 @@ StyledFlickable {
             anchors.leftMargin: Metrics.controlHeightM + Metrics.spacingS
             anchors.right: rowColumn.right
             anchors.top: rowColumn.bottom
-            visible: !DefaultApplicationsService.loading
-                && (settingRow.roleState.candidates || []).length === 0
-            text: qsTr("没有找到可用的系统应用")
+            visible: !DefaultApplicationsService.loading && (settingRow.roleState.candidates || []).length
+                     === 0
+            text: qsTr("No available system applications were found")
             color: Appearance.colors.colError
             font.family: Typography.bodySmall.family
             font.pixelSize: Typography.bodySmall.pixelSize
@@ -137,86 +132,85 @@ StyledFlickable {
     ColumnLayout {
         id: contentColumn
 
-        width: Math.min(root.pageContentWidth,
-            Math.max(0, root.width - Metrics.pageMargin * 2))
+        width: Math.min(root.pageContentWidth, Math.max(0, root.width - Metrics.pageMargin * 2))
         x: Math.max(Metrics.pageMargin, (root.width - width) / 2)
         y: Metrics.pageMargin
         spacing: Metrics.spacingXL
 
         DefaultAppsGroup {
             Layout.fillWidth: true
-            groupTitle: qsTr("互联网")
+            groupTitle: qsTr("Internet")
             groupIcon: "public"
 
             DefaultAppSettingRow {
                 roleId: "browser"
-                title: qsTr("网络浏览器")
+                title: qsTr("Web browser")
                 iconName: "language"
             }
 
             DefaultAppSettingRow {
                 roleId: "mail"
-                title: qsTr("邮件")
+                title: qsTr("Email")
                 iconName: "mail"
             }
         }
 
         DefaultAppsGroup {
             Layout.fillWidth: true
-            groupTitle: qsTr("实用工具")
+            groupTitle: qsTr("Utilities")
             groupIcon: "terminal"
 
             DefaultAppSettingRow {
                 roleId: "file-manager"
-                title: qsTr("文件管理器")
+                title: qsTr("File manager")
                 iconName: "folder"
             }
 
             DefaultAppSettingRow {
                 roleId: "terminal"
-                title: qsTr("终端")
+                title: qsTr("Terminal")
                 iconName: "terminal"
             }
         }
 
         DefaultAppsGroup {
             Layout.fillWidth: true
-            groupTitle: qsTr("文档")
+            groupTitle: qsTr("Documents")
             groupIcon: "description"
 
             DefaultAppSettingRow {
                 roleId: "text-editor"
-                title: qsTr("文本编辑器")
+                title: qsTr("Text editor")
                 iconName: "edit_note"
             }
 
             DefaultAppSettingRow {
                 roleId: "pdf-reader"
-                title: qsTr("PDF 阅读器")
+                title: qsTr("PDF reader")
                 iconName: "picture_as_pdf"
             }
         }
 
         DefaultAppsGroup {
             Layout.fillWidth: true
-            groupTitle: qsTr("多媒体")
+            groupTitle: qsTr("Multimedia")
             groupIcon: "movie"
 
             DefaultAppSettingRow {
                 roleId: "image-viewer"
-                title: qsTr("图像查看器")
+                title: qsTr("Image viewer")
                 iconName: "image"
             }
 
             DefaultAppSettingRow {
                 roleId: "video-player"
-                title: qsTr("视频播放器")
+                title: qsTr("Video player")
                 iconName: "smart_display"
             }
 
             DefaultAppSettingRow {
                 roleId: "music-player"
-                title: qsTr("音乐播放器")
+                title: qsTr("Music player")
                 iconName: "music_note"
             }
         }
@@ -239,7 +233,7 @@ StyledFlickable {
             Layout.fillWidth: true
             visible: DefaultApplicationsService.loading
             iconName: "progress_activity"
-            message: qsTr("正在读取系统默认应用…")
+            message: qsTr("Reading system default applications…")
         }
 
         Item {

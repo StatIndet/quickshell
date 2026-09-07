@@ -40,7 +40,7 @@ Item {
     readonly property color typeContentColor: Appearance.colors.colOnTertiaryContainer
     readonly property var blurBackgroundItems: [mainBlurRegion, satelliteBlurRegion]
 
-    signal stopRequested()
+    signal stopRequested
 
     function smoothStep(value) {
         const clamped = Math.max(0, Math.min(1, value));
@@ -86,7 +86,6 @@ Item {
     onElapsedMsChanged: {
         if (recording)
             heldElapsedMs = elapsedMs;
-
     }
     onRecordingChanged: {
         if (recording)
@@ -152,7 +151,6 @@ Item {
                 fill: 1
                 color: root.typeContentColor
             }
-
         }
 
         Item {
@@ -168,9 +166,7 @@ Item {
                 font.weight: Font.DemiBold
                 rotation: root.edge === "left" ? -90 : 90
             }
-
         }
-
     }
 
     Column {
@@ -192,15 +188,13 @@ Item {
                 running: root.finalizing && root.processingProgress > 0.01
                 dotColor: root.typeContentColor
             }
-
         }
 
         VerticalRecordingStatusLabel {
             anchors.horizontalCenter: parent.horizontalCenter
-            label: qsTr("正在处理")
+            label: qsTr("Processing")
             edge: root.edge
         }
-
     }
 
     Item {
@@ -235,9 +229,7 @@ Item {
                     duration: 800
                     easing.type: Easing.InOutSine
                 }
-
             }
-
         }
 
         MouseArea {
@@ -252,9 +244,7 @@ Item {
 
         StyledToolTip {
             extraVisibleCondition: satelliteMouse.containsMouse && satelliteMouse.enabled
-            text: qsTr("停止录制")
+            text: qsTr("Stop recording")
         }
-
     }
-
 }

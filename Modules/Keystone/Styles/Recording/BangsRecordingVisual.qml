@@ -21,18 +21,21 @@ Item {
     property double heldElapsedMs: 0
     property real entryProgress: active ? 1 : 0
     readonly property real normalizedRecordingInfoProgress: Math.max(0, Math.min(1, recordingInfoProgress))
-    readonly property real normalizedRecordingActionProgress: Math.max(0, Math.min(1, recordingActionProgress))
-    readonly property real normalizedProcessingContentProgress: Math.max(0, Math.min(1, processingContentProgress))
-    readonly property real sessionContentProgress: Math.min(1, normalizedRecordingInfoProgress + normalizedProcessingContentProgress)
-    readonly property color typeColor: recordingType === "gif" ? Appearance.colors.colTertiary : Appearance.colors.colError
+    readonly property real normalizedRecordingActionProgress: Math.max(0, Math.min(1,
+                                                                                   recordingActionProgress))
+    readonly property real normalizedProcessingContentProgress: Math.max(0, Math.min(1,
+                                                                                     processingContentProgress))
+    readonly property real sessionContentProgress: Math.min(1, normalizedRecordingInfoProgress
+                                                            + normalizedProcessingContentProgress)
+    readonly property color typeColor: recordingType === "gif" ? Appearance.colors.colTertiary :
+                                                                 Appearance.colors.colError
 
-    signal stopRequested()
+    signal stopRequested
 
     opacity: entryProgress
     onElapsedMsChanged: {
         if (recording)
             heldElapsedMs = elapsedMs;
-
     }
     onRecordingChanged: {
         if (recording)
@@ -70,13 +73,13 @@ Item {
             enabled: root.recording && root.normalizedRecordingActionProgress > 0.55
             hoverEnabled: true
             scale: down ? 0.9 : (hovered ? 1.04 : 1)
-            Accessible.name: qsTr("停止录制")
+            Accessible.name: qsTr("Stop recording")
             Accessible.role: Accessible.Button
             onClicked: root.stopRequested()
 
             StyledToolTip {
                 extraVisibleCondition: closeButton.hovered && closeButton.enabled
-                text: qsTr("停止录制")
+                text: qsTr("Stop recording")
             }
 
             Behavior on scale {
@@ -85,7 +88,6 @@ Item {
                     easing.type: Appearance.animation.expressiveFastSpatial.type
                     easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                 }
-
             }
 
             background: Item {
@@ -94,7 +96,10 @@ Item {
                     width: 36
                     height: 36
                     radius: width / 2
-                    color: closeButton.down ? Appearance.colors.colErrorContainerActive : (closeButton.hovered ? Appearance.colors.colErrorContainerHover : Appearance.colors.colErrorContainer)
+                    color: closeButton.down ? Appearance.colors.colErrorContainerActive : (
+                                                  closeButton.hovered
+                                                  ? Appearance.colors.colErrorContainerHover :
+                                                    Appearance.colors.colErrorContainer)
 
                     Behavior on color {
                         ColorAnimation {
@@ -102,11 +107,8 @@ Item {
                             easing.type: Appearance.animation.expressiveEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
                         }
-
                     }
-
                 }
-
             }
 
             contentItem: MaterialSymbol {
@@ -115,7 +117,6 @@ Item {
                 fill: 1
                 color: Appearance.colors.colOnErrorContainer
             }
-
         }
 
         Item {
@@ -139,7 +140,6 @@ Item {
                     pixelSize: 18
                     weight: Font.DemiBold
                 }
-
             }
 
             Item {
@@ -170,9 +170,7 @@ Item {
                             duration: 720
                             easing.type: Easing.InOutSine
                         }
-
                     }
-
                 }
 
                 Behavior on opacity {
@@ -181,17 +179,13 @@ Item {
                         easing.type: Appearance.animation.expressiveFastEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
                     }
-
                 }
-
             }
-
         }
 
         transform: Translate {
             y: (1 - root.normalizedRecordingInfoProgress) * -4
         }
-
     }
 
     Item {
@@ -242,11 +236,8 @@ Item {
                         duration: 560
                         easing.type: Easing.InOutSine
                     }
-
                 }
-
             }
-
         }
 
         Item {
@@ -259,7 +250,7 @@ Item {
 
             Text {
                 anchors.fill: parent
-                text: qsTr("正在处理")
+                text: qsTr("Processing")
                 color: Appearance.colors.colOnLayer0
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignVCenter
@@ -270,15 +261,12 @@ Item {
                     pixelSize: 14
                     weight: Font.DemiBold
                 }
-
             }
-
         }
 
         transform: Translate {
             y: (1 - root.normalizedProcessingContentProgress) * 4
         }
-
     }
 
     Column {
@@ -309,9 +297,7 @@ Item {
                     pixelSize: 18
                     weight: Font.DemiBold
                 }
-
             }
-
         }
 
         ToolButton {
@@ -322,13 +308,13 @@ Item {
             height: 48
             enabled: root.recording && root.normalizedRecordingActionProgress > 0.55
             hoverEnabled: true
-            Accessible.name: qsTr("停止录制")
+            Accessible.name: qsTr("Stop recording")
             Accessible.role: Accessible.Button
             onClicked: root.stopRequested()
 
             StyledToolTip {
                 extraVisibleCondition: verticalCloseButton.hovered && verticalCloseButton.enabled
-                text: qsTr("停止录制")
+                text: qsTr("Stop recording")
             }
 
             background: Rectangle {
@@ -336,7 +322,10 @@ Item {
                 height: 36
                 radius: width / 2
                 anchors.centerIn: parent
-                color: verticalCloseButton.down ? Appearance.colors.colErrorContainerActive : (verticalCloseButton.hovered ? Appearance.colors.colErrorContainerHover : Appearance.colors.colErrorContainer)
+                color: verticalCloseButton.down ? Appearance.colors.colErrorContainerActive : (
+                                                      verticalCloseButton.hovered
+                                                      ? Appearance.colors.colErrorContainerHover :
+                                                        Appearance.colors.colErrorContainer)
             }
 
             contentItem: MaterialSymbol {
@@ -345,9 +334,7 @@ Item {
                 fill: 1
                 color: Appearance.colors.colOnErrorContainer
             }
-
         }
-
     }
 
     Column {
@@ -373,15 +360,13 @@ Item {
                 fill: 1
                 color: Appearance.colors.colOnErrorContainer
             }
-
         }
 
         VerticalRecordingStatusLabel {
             anchors.horizontalCenter: parent.horizontalCenter
-            label: qsTr("正在处理")
+            label: qsTr("Processing")
             edge: root.edge
         }
-
     }
 
     component SessionTypeIndicator: Row {
@@ -407,13 +392,10 @@ Item {
                 weight: Font.DemiBold
                 letterSpacing: 0.8
             }
-
         }
-
     }
 
     transform: Translate {
         y: (1 - root.entryProgress) * -6
     }
-
 }

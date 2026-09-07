@@ -21,7 +21,7 @@ FloatingWindow {
 
     parentWindow: root.parentModal
     objectName: "clavisAutostartAppBrowser"
-    title: qsTr("选择应用")
+    title: qsTr("Select application")
     minimumSize: Qt.size(420, 380)
     implicitWidth: 560
     implicitHeight: 620
@@ -35,13 +35,12 @@ FloatingWindow {
             root.filteredApps = source.slice();
         } else {
             root.filteredApps = source.filter(application => {
-                const values = [application.name, application.id,
-                    application.genericName, application.comment];
+                const values = [application.name, application.id, application.genericName,
+                                application.comment];
                 const keywords = application.keywords || [];
                 for (const keyword of keywords)
                     values.push(keyword);
-                return values.some(value => String(value || "")
-                    .toLocaleLowerCase().includes(query));
+                return values.some(value => String(value || "").toLocaleLowerCase().includes(query));
             });
         }
         root.selectedIndex = -1;
@@ -52,8 +51,7 @@ FloatingWindow {
         if (root.filteredApps.length === 0)
             return;
         root.keyboardNavigationActive = true;
-        root.selectedIndex = Math.min(root.selectedIndex + 1,
-            root.filteredApps.length - 1);
+        root.selectedIndex = Math.min(root.selectedIndex + 1, root.filteredApps.length - 1);
         appList.positionViewAtIndex(root.selectedIndex, ListView.Contain);
     }
 
@@ -143,8 +141,7 @@ FloatingWindow {
                 return;
             case Qt.Key_Return:
             case Qt.Key_Enter:
-                root.selectApplication(root.keyboardNavigationActive
-                    ? root.selectedIndex : 0);
+                root.selectApplication(root.keyboardNavigationActive ? root.selectedIndex : 0);
                 event.accepted = true;
                 return;
             }
@@ -185,7 +182,7 @@ FloatingWindow {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("选择应用")
+                            text: qsTr("Select application")
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: Typography.titleMedium.pixelSize
@@ -194,7 +191,7 @@ FloatingWindow {
 
                         Text {
                             Layout.fillWidth: true
-                            text: qsTr("选择一个已安装应用加入用户级开机启动")
+                            text: qsTr("Select an installed application to add to user autostart")
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
                             font.pixelSize: Typography.bodySmall.pixelSize
@@ -203,7 +200,7 @@ FloatingWindow {
                     }
 
                     ActionButton {
-                        text: qsTr("关闭")
+                        text: qsTr("Close")
                         onClicked: root.hide()
                     }
                 }
@@ -222,7 +219,7 @@ FloatingWindow {
                 id: searchField
 
                 Layout.fillWidth: true
-                placeholderText: qsTr("搜索应用名称、ID 或描述")
+                placeholderText: qsTr("Search by application name, ID, or description")
                 leadingContent: Component {
                     MaterialSymbol {
                         anchors.centerIn: parent
@@ -253,17 +250,13 @@ FloatingWindow {
                     required property var modelData
 
                     width: appList.width
-                    height: Math.max(Metrics.controlHeightXL,
-                        appContent.implicitHeight + Metrics.spacingS * 2)
+                    height: Math.max(Metrics.controlHeightXL, appContent.implicitHeight + Metrics.spacingS
+                                     * 2)
                     radius: Metrics.cornerM
-                    color: root.keyboardNavigationActive
-                        && index === root.selectedIndex
-                        ? Appearance.colors.colPrimaryContainer
-                        : pointer.containsMouse
-                            ? Appearance.colors.colLayer2Hover
-                            : Appearance.colors.colLayer1
-                    border.width: root.keyboardNavigationActive
-                        && index === root.selectedIndex ? 1 : 0
+                    color: root.keyboardNavigationActive && index === root.selectedIndex
+                           ? Appearance.colors.colPrimaryContainer : pointer.containsMouse
+                             ? Appearance.colors.colLayer2Hover : Appearance.colors.colLayer1
+                    border.width: root.keyboardNavigationActive && index === root.selectedIndex ? 1 : 0
                     border.color: Appearance.colors.colPrimary
 
                     RowLayout {
@@ -300,8 +293,7 @@ FloatingWindow {
 
                             Text {
                                 Layout.fillWidth: true
-                                text: modelData.genericName || modelData.comment
-                                    || modelData.id
+                                text: modelData.genericName || modelData.comment || modelData.id
                                 color: Appearance.colors.colOnSurfaceVariant
                                 font.family: Fonts.ui
                                 font.pixelSize: Typography.bodySmall.pixelSize
@@ -340,7 +332,7 @@ FloatingWindow {
                     }
 
                     Text {
-                        text: qsTr("没有匹配的应用")
+                        text: qsTr("No matching applications")
                         color: Appearance.colors.colOnSurfaceVariant
                         font.family: Fonts.ui
                         font.pixelSize: Typography.bodyMedium.pixelSize

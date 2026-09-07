@@ -6,12 +6,12 @@ FilePickerWindow {
 
     requiresParentWindow: true
     selectionMode: FilePickerWindow.FilesAndFolders
-    dialogTitle: qsTr("选择壁纸或文件夹")
-    description: qsTr("选择图片作为壁纸，或选择文件夹作为壁纸目录")
+    dialogTitle: qsTr("Select wallpaper or folder")
+    description: qsTr("Select an image as wallpaper or a folder as the wallpaper directory")
     windowIconName: "wallpaper"
-    emptyStateText: qsTr("当前文件夹没有可选择的壁纸")
-    selectionPrompt: qsTr("选择一张壁纸或一个文件夹")
-    acceptLabel: qsTr("应用")
+    emptyStateText: qsTr("This folder contains no selectable wallpapers")
+    selectionPrompt: qsTr("Select a wallpaper or folder")
+    acceptLabel: qsTr("Apply")
     formatSummary: "JPG · PNG · WebP\nBMP · GIF"
 
     signal fileSelected(string path)

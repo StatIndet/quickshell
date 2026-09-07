@@ -15,12 +15,10 @@ Item {
     property int monthShift: 0
     readonly property date viewingDate: CalendarLayout.getDateInXMonthsTime(monthShift)
     readonly property var calendarLayout: CalendarLayout.getCalendarLayout(viewingDate, monthShift === 0)
-    readonly property var weekDays:
-        DateFormat.calendarWeekdays(I18nService.language)
+    readonly property var weekDays: DateFormat.calendarWeekdays(I18nService.language)
 
     function monthTitle(date) {
-        return DateFormat.monthTitle(
-            date, I18nService.language, Qt.locale());
+        return DateFormat.monthTitle(date, I18nService.language, Qt.locale());
     }
 
     focus: true
@@ -64,7 +62,7 @@ Item {
 
             HeaderButton {
                 buttonText: `${root.monthShift !== 0 ? "• " : ""}${root.monthTitle(root.viewingDate)}`
-                tooltipText: root.monthShift === 0 ? "" : qsTr("跳转到当前月份")
+                tooltipText: root.monthShift === 0 ? "" : qsTr("Jump to current month")
                 onClicked: root.monthShift = 0
             }
 
@@ -75,14 +73,14 @@ Item {
             HeaderButton {
                 forceCircle: true
                 iconName: "chevron_left"
-                accessibleName: qsTr("上个月")
+                accessibleName: qsTr("Previous month")
                 onClicked: root.monthShift -= 1
             }
 
             HeaderButton {
                 forceCircle: true
                 iconName: "chevron_right"
-                accessibleName: qsTr("下个月")
+                accessibleName: qsTr("Next month")
                 onClicked: root.monthShift += 1
             }
         }
@@ -210,24 +208,21 @@ Item {
         implicitHeight: 38
         toggled: todayState === 1
         buttonRadius: Appearance.rounding.small
-        containerColor: dayButton.todayState === 1
-            ? Appearance.colors.colPrimary : "transparent"
-        stateLayerColor: dayButton.todayState === 1
-            ? Appearance.colors.colPrimaryHover : Appearance.colors.colLayer1Hover
-        pressedStateLayerColor: dayButton.todayState === 1
-            ? Appearance.colors.colPrimaryActive : Appearance.colors.colLayer1Active
-        rippleColor: dayButton.todayState === 1
-            ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
+        containerColor: dayButton.todayState === 1 ? Appearance.colors.colPrimary : "transparent"
+        stateLayerColor: dayButton.todayState === 1 ? Appearance.colors.colPrimaryHover :
+                                                      Appearance.colors.colLayer1Hover
+        pressedStateLayerColor: dayButton.todayState === 1 ? Appearance.colors.colPrimaryActive :
+                                                             Appearance.colors.colLayer1Active
+        rippleColor: dayButton.todayState === 1 ? Appearance.colors.colOnPrimary :
+                                                  Appearance.colors.colOnLayer1
 
         contentItem: Text {
             text: dayButton.day
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: dayButton.todayState === 1
-                ? Appearance.colors.colOnPrimary
-                : dayButton.todayState === 0
-                    ? Appearance.colors.colOnLayer1
-                    : Appearance.colors.colOutlineVariant
+            color: dayButton.todayState === 1 ? Appearance.colors.colOnPrimary : dayButton.todayState === 0
+                                                ? Appearance.colors.colOnLayer1 :
+                                                  Appearance.colors.colOutlineVariant
             font.family: Fonts.ui
             font.pixelSize: 14
             font.weight: dayButton.bold ? Font.DemiBold : Font.Normal

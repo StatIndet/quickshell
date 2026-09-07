@@ -9,8 +9,7 @@ Rectangle {
     id: root
 
     radius: Appearance.rounding.normal
-    color: BlurService.opaqueBackgroundColor(
-        Appearance.m3colors.m3surfaceContainerLow)
+    color: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainerLow)
     clip: true
 
     NotificationListView {
@@ -76,7 +75,7 @@ Rectangle {
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
-                text: qsTr("暂无通知")
+                text: qsTr("No notifications")
                 font.family: Fonts.ui
                 font.pixelSize: 14
                 font.weight: Font.Medium

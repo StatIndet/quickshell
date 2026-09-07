@@ -15,7 +15,7 @@ FloatingWindow {
 
     function openSavedNetworks() {
         if (!root.parentModal)
-            return ;
+            return;
 
         root.selectedProfile = null;
         root.profileParentPage = "";
@@ -25,7 +25,7 @@ FloatingWindow {
 
     function openProfile(profile, parentPage) {
         if (!root.parentModal || !profile)
-            return ;
+            return;
 
         root.selectedProfile = profile;
         root.profileParentPage = String(parentPage || "");
@@ -36,7 +36,7 @@ FloatingWindow {
 
     function openAddNetwork() {
         if (!root.parentModal)
-            return ;
+            return;
 
         root.selectedProfile = null;
         root.profileParentPage = "";
@@ -63,7 +63,7 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("网络配置")
+    title: qsTr("Network configuration")
     implicitWidth: 620
     implicitHeight: 640
     minimumSize: Qt.size(500, 520)
@@ -94,7 +94,7 @@ FloatingWindow {
     FocusScope {
         anchors.fill: parent
         focus: root.visible
-        Keys.onEscapePressed: (event) => {
+        Keys.onEscapePressed: event => {
             if (root.currentPage === "profile" && root.profileParentPage === "saved")
                 root.leaveProfile();
             else
@@ -115,20 +115,18 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("已保存网络")
+                    title: qsTr("Saved networks")
                     onCloseRequested: root.dismiss()
                 }
 
                 SavedNetworksPage {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    onDetailRequested: (profile) => {
+                    onDetailRequested: profile => {
                         return root.openProfile(profile, "saved");
                     }
                 }
-
             }
-
         }
 
         PageTransitionLayer {
@@ -143,8 +141,9 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("连接配置")
-                    subtitle: root.selectedProfile ? String(root.selectedProfile.ssid || root.selectedProfile.name || "") : ""
+                    title: qsTr("Connection profile")
+                    subtitle: root.selectedProfile ? String(root.selectedProfile.ssid
+                                                            || root.selectedProfile.name || "") : ""
                     showBack: root.profileParentPage === "saved"
                     onBackRequested: root.leaveProfile()
                     onCloseRequested: root.dismiss()
@@ -158,9 +157,7 @@ FloatingWindow {
                     target: root.selectedProfile
                     onProfileForgotten: root.leaveProfile()
                 }
-
             }
-
         }
 
         PageTransitionLayer {
@@ -175,7 +172,7 @@ FloatingWindow {
 
                 WizardHeader {
                     Layout.fillWidth: true
-                    title: qsTr("添加网络")
+                    title: qsTr("Add network")
                     onCloseRequested: root.dismiss()
                 }
 
@@ -186,11 +183,7 @@ FloatingWindow {
                     Layout.fillHeight: true
                     onCompleted: root.dismiss()
                 }
-
             }
-
         }
-
     }
-
 }

@@ -18,15 +18,18 @@ Item {
     readonly property var dashboardKeyholeGlassItems: dashboardContent.keyholeGlassItems
     readonly property real dashboardKeyholeCenterOffset: dashboardContent.keyholeCenterOffset
 
-    signal closeRequested()
-    signal avatarEditRequested()
+    signal closeRequested
+    signal avatarEditRequested
 
     function finishCloudUploadDrop(addedCount) {
         cloudUploadContent.finishDrop(addedCount);
     }
 
-    implicitWidth: currentIndex === 0 ? dashboardContent.implicitWidth : currentIndex === 2 ? 960 : currentIndex === 3 ? 960 : 760
-    implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 : 570)
+    implicitWidth: currentIndex === 0 ? dashboardContent.implicitWidth : currentIndex === 2 ? 960 : currentIndex
+                                                                                              === 3 ? 960 :
+                                                                                                      760
+    implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 :
+                                                                                                          570)
 
     Shortcut {
         sequence: "Tab"
@@ -50,109 +53,101 @@ Item {
 
         TabBtn {
             icon: "dashboard"
-            title: qsTr("仪表板")
+            title: qsTr("Dashboard")
             index: 0
         }
 
         TabBtn {
             icon: "queue_music"
-            title: qsTr("媒体")
+            title: qsTr("Media")
             index: 1
         }
 
         TabBtn {
             icon: "cloud_upload"
-            title: qsTr("上传")
+            title: qsTr("Upload")
             index: 2
         }
 
         TabBtn {
             icon: "sunny"
-            title: qsTr("天气")
+            title: qsTr("Weather")
             index: 3
         }
+    }
 
-        component TabBtn: Item {
-            property string icon: ""
-            property string title: ""
-            property int index: 0
-            property bool active: root.currentIndex === index
+    component TabBtn: Item {
+        property string icon: ""
+        property string title: ""
+        property int index: 0
+        property bool active: root.currentIndex === index
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
-            Column {
-                anchors.centerIn: parent
-                spacing: 6
+        Column {
+            anchors.centerIn: parent
+            spacing: 6
 
-                MaterialSymbol {
-                    text: parent.parent.icon
-                    iconSize: 22
-                    fill: parent.parent.active ? 1 : 0
-                    color: parent.parent.active ? Appearance.colors.colOnLayer0 : Appearance.applyAlpha(Appearance.colors.colOnLayer0, 0.5)
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 200
-                        }
-
-                    }
-
-                }
-
-                Text {
-                    text: parent.parent.title
-                    font.pixelSize: 13
-                    font.bold: parent.parent.active
-                    color: parent.parent.active ? Appearance.colors.colOnLayer0 : Appearance.applyAlpha(Appearance.colors.colOnLayer0, 0.5)
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 200
-                        }
-
-                    }
-
-                }
-
-            }
-
-            Rectangle {
-                anchors.bottom: parent.bottom
+            MaterialSymbol {
+                text: parent.parent.icon
+                iconSize: 22
+                fill: parent.parent.active ? 1 : 0
+                color: parent.parent.active ? Appearance.colors.colOnLayer0 : Appearance.applyAlpha(
+                                                  Appearance.colors.colOnLayer0, 0.5)
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.active ? 40 : 0
-                height: 3
-                radius: 1.5
-                color: Appearance.colors.colPrimary
-                opacity: parent.active ? 1 : 0
 
-                Behavior on width {
-                    NumberAnimation {
-                        duration: 300
-                        easing.type: Easing.OutBack
-                    }
-
-                }
-
-                Behavior on opacity {
-                    NumberAnimation {
+                Behavior on color {
+                    ColorAnimation {
                         duration: 200
                     }
-
                 }
-
             }
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: root.currentIndex = parent.index
-            }
+            Text {
+                text: parent.parent.title
+                font.pixelSize: 13
+                font.bold: parent.parent.active
+                color: parent.parent.active ? Appearance.colors.colOnLayer0 : Appearance.applyAlpha(
+                                                  Appearance.colors.colOnLayer0, 0.5)
+                anchors.horizontalCenter: parent.horizontalCenter
 
+                Behavior on color {
+                    ColorAnimation {
+                        duration: 200
+                    }
+                }
+            }
         }
 
+        Rectangle {
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.active ? 40 : 0
+            height: 3
+            radius: 1.5
+            color: Appearance.colors.colPrimary
+            opacity: parent.active ? 1 : 0
+
+            Behavior on width {
+                NumberAnimation {
+                    duration: 300
+                    easing.type: Easing.OutBack
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                }
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: root.currentIndex = parent.index
+        }
     }
 
     Item {
@@ -177,9 +172,7 @@ Item {
                 NumberAnimation {
                     duration: 300
                 }
-
             }
-
         }
 
         Media {
@@ -193,9 +186,7 @@ Item {
                 NumberAnimation {
                     duration: 300
                 }
-
             }
-
         }
 
         CloudUploadContent {
@@ -213,9 +204,7 @@ Item {
                 NumberAnimation {
                     duration: 300
                 }
-
             }
-
         }
 
         WeatherContent {
@@ -229,11 +218,7 @@ Item {
                 NumberAnimation {
                     duration: 300
                 }
-
             }
-
         }
-
     }
-
 }

@@ -12,7 +12,7 @@ Singleton {
     readonly property bool available: adapter !== null
     readonly property bool enabled: available && adapter.enabled
     readonly property bool blocked: available && adapter.state === BluetoothAdapterState.Blocked
-    readonly property bool discovering: _nativeAdapters.some((candidate) => {
+    readonly property bool discovering: _nativeAdapters.some(candidate => {
         return candidate && candidate.discovering;
     })
     readonly property bool scanning: discovering
@@ -20,27 +20,28 @@ Singleton {
     readonly property bool pairable: available && adapter.pairable
     readonly property bool connected: connectedDevices.length > 0
     readonly property string connectedName: connected ? connectedDevices[0].name : ""
-    readonly property bool busy: _pendingOperation.length > 0 || _nativeAdapters.some((candidate) => {
-        return candidate && (candidate.state === BluetoothAdapterState.Enabling || candidate.state === BluetoothAdapterState.Disabling);
-    }) || _nativeDevices.some((device) => {
-        return device && (device.pairing || device.state === BluetoothDeviceState.Connecting || device.state === BluetoothDeviceState.Disconnecting);
+    readonly property bool busy: _pendingOperation.length > 0 || _nativeAdapters.some(candidate => {
+        return candidate && (candidate.state === BluetoothAdapterState.Enabling || candidate.state
+                             === BluetoothAdapterState.Disabling);
+    }) || _nativeDevices.some(device => {
+        return device && (device.pairing || device.state === BluetoothDeviceState.Connecting || device.state
+                          === BluetoothDeviceState.Disconnecting);
     })
-    readonly property var adapters: _nativeAdapters.map((candidate) => {
+    readonly property var adapters: _nativeAdapters.map(candidate => {
         return root._describeAdapter(candidate);
     })
     readonly property var devices: root._deduplicatedDeviceDescriptors()
-    readonly property var connectedDevices: devices.filter((device) => {
+    readonly property var connectedDevices: devices.filter(device => {
         return device.connected;
     })
-    readonly property var pairedDevices: devices.filter((device) => {
+    readonly property var pairedDevices: devices.filter(device => {
         return !device.connected && (device.paired || device.bonded || device.trusted);
     })
-    readonly property var availableDevices: devices.filter((device) => {
+    readonly property var availableDevices: devices.filter(device => {
         return !device.connected && !device.paired && !device.bonded && !device.trusted;
     })
     property string lastError: ""
-    property var _discoveryOwners: ({
-    })
+    property var _discoveryOwners: ({})
     property bool _manualDiscoveryActive: false
     property string _pendingOperation: ""
     property string _pendingAddress: ""
@@ -61,8 +62,7 @@ Singleton {
 
     function _describeAdapter(candidate) {
         if (!candidate)
-            return {
-        };
+            return {};
 
         return {
             "id": String(candidate.adapterId || ""),
@@ -82,12 +82,11 @@ Singleton {
 
     function _describeDevice(device) {
         if (!device)
-            return {
-        };
+            return {};
 
         const deviceAdapter = device.adapter;
         return {
-            "name": String(device.name || device.deviceName || device.address || qsTr("未知设备")),
+            "name": String(device.name || device.deviceName || device.address || qsTr("Unknown device")),
             "deviceName": String(device.deviceName || ""),
             "address": String(device.address || ""),
             "icon": String(device.icon || ""),
@@ -109,20 +108,20 @@ Singleton {
     }
 
     function _deduplicatedDeviceDescriptors() {
-        const byAddress = {
-        };
+        const byAddress = {};
         for (const device of root._nativeDevices) {
             if (!device)
                 continue;
 
             const descriptor = root._describeDevice(device);
-            const key = descriptor.address.length > 0 ? descriptor.address : descriptor.adapterId + "|" + descriptor.name;
+            const key = descriptor.address.length > 0 ? descriptor.address : descriptor.adapterId + "|"
+                                                        + descriptor.name;
             const current = byAddress[key];
-            if (!current || (descriptor.connected && !current.connected) || (descriptor.paired && !current.paired))
+            if (!current || (descriptor.connected && !current.connected) || (descriptor.paired &&
+                                                                             !current.paired))
                 byAddress[key] = descriptor;
-
         }
-        return Object.keys(byAddress).map((key) => {
+        return Object.keys(byAddress).map(key => {
             return byAddress[key];
         }).sort((a, b) => {
             if (a.connected !== b.connected)
@@ -136,11 +135,13 @@ Singleton {
     }
 
     function _resolveAdapter(adapterLike) {
-        const adapterId = typeof adapterLike === "string" ? adapterLike : adapterLike ? String(adapterLike.id || adapterLike.adapterId || "") : "";
+        const adapterId = typeof adapterLike === "string" ? adapterLike : adapterLike ? String(adapterLike.id
+                                                                                               || adapterLike.adapterId
+                                                                                               || "") : "";
         if (adapterId.length === 0)
             return root.adapter;
 
-        return root._nativeAdapters.find((candidate) => {
+        return root._nativeAdapters.find(candidate => {
             return candidate && candidate.adapterId === adapterId;
         }) || null;
     }
@@ -151,14 +152,16 @@ Singleton {
 
         const address = typeof deviceLike === "string" ? deviceLike : String(deviceLike.address || "");
         const adapterId = typeof deviceLike === "string" ? "" : String(deviceLike.adapterId || "");
-        return root._nativeDevices.find((device) => {
-            return device && device.address === address && (adapterId.length === 0 || (device.adapter && device.adapter.adapterId === adapterId));
+        return root._nativeDevices.find(device => {
+            return device && device.address === address && (adapterId.length === 0 || (device.adapter
+                                                                                       && device.adapter.adapterId
+                                                                                       === adapterId));
         }) || null;
     }
 
     function _beginOperation(operation) {
         if (root._pendingOperation.length > 0) {
-            root.operationFailed(operation, qsTr("另一项蓝牙操作仍在进行"));
+            root.operationFailed(operation, qsTr("Another Bluetooth operation is already in progress"));
             return false;
         }
         root.lastError = "";
@@ -172,7 +175,7 @@ Singleton {
 
     function _finishOperationSucceeded() {
         if (root._pendingOperation.length === 0)
-            return ;
+            return;
 
         const operation = root._pendingOperation;
         operationTimeout.stop();
@@ -182,10 +185,10 @@ Singleton {
 
     function _finishOperationFailed(message) {
         if (root._pendingOperation.length === 0)
-            return ;
+            return;
 
         const operation = root._pendingOperation;
-        root.lastError = String(message || qsTr("蓝牙操作失败"));
+        root.lastError = String(message || qsTr("Bluetooth operation failed"));
         operationTimeout.stop();
         root._clearPendingOperation();
         root.operationFailed(operation, root.lastError);
@@ -206,20 +209,20 @@ Singleton {
         const nativeAdapter = root._resolveAdapter(adapterLike);
         const requested = !!value;
         if (!nativeAdapter) {
-            root.lastError = qsTr("未检测到蓝牙适配器");
+            root.lastError = qsTr("No Bluetooth adapter detected");
             root.operationFailed("set-adapter-enabled", root.lastError);
-            return ;
+            return;
         }
         if (requested && nativeAdapter.state === BluetoothAdapterState.Blocked) {
-            root.lastError = qsTr("蓝牙适配器已被 rfkill 阻止");
+            root.lastError = qsTr("The Bluetooth adapter is blocked by rfkill");
             root.operationFailed("set-adapter-enabled", root.lastError);
-            return ;
+            return;
         }
         if (nativeAdapter.enabled === requested)
-            return ;
+            return;
 
         if (!root._beginOperation("set-adapter-enabled"))
-            return ;
+            return;
 
         root._pendingAdapter = nativeAdapter;
         root._pendingAdapterId = String(nativeAdapter.adapterId || "");
@@ -239,15 +242,16 @@ Singleton {
         const nativeAdapter = root._resolveAdapter(adapterLike);
         const requested = !!value;
         if (!nativeAdapter || !nativeAdapter.enabled) {
-            root.lastError = nativeAdapter ? qsTr("蓝牙适配器已关闭") : qsTr("未检测到蓝牙适配器");
+            root.lastError = nativeAdapter ? qsTr("The Bluetooth adapter is off") : qsTr(
+                                                 "No Bluetooth adapter detected");
             root.operationFailed("set-discoverable", root.lastError);
-            return ;
+            return;
         }
         if (nativeAdapter.discoverable === requested)
-            return ;
+            return;
 
         if (!root._beginOperation("set-discoverable"))
-            return ;
+            return;
 
         root._pendingAdapter = nativeAdapter;
         root._pendingTargetState = requested;
@@ -258,15 +262,16 @@ Singleton {
         const nativeAdapter = root._resolveAdapter(adapterLike);
         const requested = !!value;
         if (!nativeAdapter || !nativeAdapter.enabled) {
-            root.lastError = nativeAdapter ? qsTr("蓝牙适配器已关闭") : qsTr("未检测到蓝牙适配器");
+            root.lastError = nativeAdapter ? qsTr("The Bluetooth adapter is off") : qsTr(
+                                                 "No Bluetooth adapter detected");
             root.operationFailed("set-pairable", root.lastError);
-            return ;
+            return;
         }
         if (nativeAdapter.pairable === requested)
-            return ;
+            return;
 
         if (!root._beginOperation("set-pairable"))
-            return ;
+            return;
 
         root._pendingAdapter = nativeAdapter;
         root._pendingTargetState = requested;
@@ -279,8 +284,7 @@ Singleton {
 
     function acquireDiscovery(owner) {
         const key = root._discoveryOwnerKey(owner);
-        const next = Object.assign({
-        }, root._discoveryOwners);
+        const next = Object.assign({}, root._discoveryOwners);
         next[key] = Number(next[key] || 0) + 1;
         root._discoveryOwners = next;
         root._applyDiscovery();
@@ -288,10 +292,9 @@ Singleton {
 
     function releaseDiscovery(owner) {
         const key = root._discoveryOwnerKey(owner);
-        const next = Object.assign({
-        }, root._discoveryOwners);
+        const next = Object.assign({}, root._discoveryOwners);
         if (!next[key])
-            return ;
+            return;
 
         if (next[key] <= 1)
             delete next[key];
@@ -303,14 +306,14 @@ Singleton {
 
     function requestDiscovery() {
         if (!root.available) {
-            root.lastError = qsTr("未检测到蓝牙适配器或 BlueZ 不可用");
+            root.lastError = qsTr("No Bluetooth adapter detected or BlueZ is unavailable");
             root.operationFailed("discovery", root.lastError);
-            return ;
+            return;
         }
         if (!root.enabled) {
-            root.lastError = qsTr("蓝牙适配器已关闭");
+            root.lastError = qsTr("The Bluetooth adapter is off");
             root.operationFailed("discovery", root.lastError);
-            return ;
+            return;
         }
         root.lastError = "";
         root._manualDiscoveryActive = true;
@@ -335,19 +338,18 @@ Singleton {
             const shouldDiscover = requested && nativeAdapter.enabled;
             if (nativeAdapter.discovering !== shouldDiscover)
                 nativeAdapter.discovering = shouldDiscover;
-
         }
     }
 
     function _beginDeviceOperation(operation, deviceLike, targetState) {
         const nativeDevice = root._resolveDevice(deviceLike);
         if (!nativeDevice) {
-            root.lastError = qsTr("目标蓝牙设备已不可用");
+            root.lastError = qsTr("The target Bluetooth device is no longer available");
             root.operationFailed(operation, root.lastError);
             return null;
         }
         if (nativeDevice.blocked && (operation === "connect" || operation === "pair")) {
-            root.lastError = qsTr("目标蓝牙设备已被阻止");
+            root.lastError = qsTr("The target Bluetooth device is blocked");
             root.operationFailed(operation, root.lastError);
             return null;
         }
@@ -364,23 +366,21 @@ Singleton {
     function connectDevice(device) {
         const current = root._resolveDevice(device);
         if (current && current.connected)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("connect", device, true);
         if (nativeDevice)
             nativeDevice.connect();
-
     }
 
     function disconnectDevice(device) {
         const current = root._resolveDevice(device);
         if (current && !current.connected)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("disconnect", device, false);
         if (nativeDevice)
             nativeDevice.disconnect();
-
     }
 
     function pairDevice(device) {
@@ -388,63 +388,57 @@ Singleton {
         // project-owned BlueZ agent, which the installed Quickshell API does not expose.
         const current = root._resolveDevice(device);
         if (current && current.paired)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("pair", device, true);
         if (nativeDevice)
             nativeDevice.pair();
-
     }
 
     function cancelPairing(device) {
         const current = root._resolveDevice(device);
         if (current && !current.pairing)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("cancel-pair", device, false);
         if (nativeDevice)
             nativeDevice.cancelPair();
-
     }
 
     function forgetDevice(device) {
         const nativeDevice = root._beginDeviceOperation("forget", device, false);
         if (nativeDevice)
             nativeDevice.forget();
-
     }
 
     function setDeviceTrusted(device, value) {
         const current = root._resolveDevice(device);
         if (current && current.trusted === !!value)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("set-trusted", device, value);
         if (nativeDevice)
             nativeDevice.trusted = !!value;
-
     }
 
     function setDeviceBlocked(device, value) {
         const current = root._resolveDevice(device);
         if (current && current.blocked === !!value)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation(value ? "block" : "unblock", device, value);
         if (nativeDevice)
             nativeDevice.blocked = !!value;
-
     }
 
     function setDeviceWakeAllowed(device, value) {
         const current = root._resolveDevice(device);
         if (current && current.wakeAllowed === !!value)
-            return ;
+            return;
 
         const nativeDevice = root._beginDeviceOperation("set-wake-allowed", device, value);
         if (nativeDevice)
             nativeDevice.wakeAllowed = !!value;
-
     }
 
     Component.onCompleted: root._applyDiscovery()
@@ -452,7 +446,6 @@ Singleton {
         for (const nativeAdapter of root._nativeAdapters) {
             if (nativeAdapter && nativeAdapter.discovering)
                 nativeAdapter.discovering = false;
-
         }
     }
 
@@ -474,12 +467,12 @@ Singleton {
 
     Connections {
         function onValuesChanged() {
-            if (root._pendingOperation === "forget" && root._pendingAddress.length > 0 && !root._resolveDevice({
-                "address": root._pendingAddress,
-                "adapterId": root._pendingAdapterId
-            }))
+            if (root._pendingOperation === "forget" && root._pendingAddress.length > 0 && !root._resolveDevice(
+                        {
+                            "address": root._pendingAddress,
+                            "adapterId": root._pendingAdapterId
+                        }))
                 root._finishOperationSucceeded();
-
         }
 
         target: Bluetooth.devices
@@ -488,21 +481,21 @@ Singleton {
     Connections {
         function onEnabledChanged() {
             root._applyDiscovery();
-            if (root._pendingOperation === "set-adapter-enabled" && root._pendingAdapter.enabled === root._pendingTargetState)
+            if (root._pendingOperation === "set-adapter-enabled" && root._pendingAdapter.enabled
+                    === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         function onDiscoverableChanged() {
-            if (root._pendingOperation === "set-discoverable" && root._pendingAdapter.discoverable === root._pendingTargetState)
+            if (root._pendingOperation === "set-discoverable" && root._pendingAdapter.discoverable
+                    === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         function onPairableChanged() {
-            if (root._pendingOperation === "set-pairable" && root._pendingAdapter.pairable === root._pendingTargetState)
+            if (root._pendingOperation === "set-pairable" && root._pendingAdapter.pairable
+                    === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         target: root._pendingAdapter
@@ -519,57 +512,61 @@ Singleton {
 
         function onStateChanged() {
             if (!root._pendingDevice)
-                return ;
+                return;
 
-            if (root._pendingDevice.state === BluetoothDeviceState.Connecting || root._pendingDevice.state === BluetoothDeviceState.Disconnecting)
+            if (root._pendingDevice.state === BluetoothDeviceState.Connecting || root._pendingDevice.state
+                    === BluetoothDeviceState.Disconnecting)
                 root._pendingStateWasChanging = true;
 
-            if (root._pendingOperation === "connect" && root._pendingStateWasChanging && root._pendingDevice.state === BluetoothDeviceState.Disconnected)
-                root._finishOperationFailed(qsTr("设备连接失败"));
-
+            if (root._pendingOperation === "connect" && root._pendingStateWasChanging
+                    && root._pendingDevice.state === BluetoothDeviceState.Disconnected)
+                root._finishOperationFailed(qsTr("Could not connect to the device"));
         }
 
         function onPairingChanged() {
             if (!root._pendingDevice)
-                return ;
+                return;
 
             if (root._pendingDevice.pairing)
                 root._pendingPairingStarted = true;
             else if (root._pendingOperation === "cancel-pair")
                 root._finishOperationSucceeded();
-            else if (root._pendingOperation === "pair" && root._pendingPairingStarted && !root._pendingDevice.paired)
-                root._finishOperationFailed(qsTr("配对失败"));
+            else if (root._pendingOperation === "pair" && root._pendingPairingStarted &&
+                     !root._pendingDevice.paired)
+                root._finishOperationFailed(qsTr("Pairing failed"));
         }
 
         function onPairedChanged() {
             if (root._pendingOperation === "pair" && root._pendingDevice.paired)
                 root._finishOperationSucceeded();
-            else if (root._pendingOperation === "forget" && !root._pendingDevice.paired && !root._pendingDevice.bonded)
+            else if (root._pendingOperation === "forget" && !root._pendingDevice.paired &&
+                     !root._pendingDevice.bonded)
                 root._finishOperationSucceeded();
         }
 
         function onBondedChanged() {
-            if (root._pendingOperation === "forget" && !root._pendingDevice.paired && !root._pendingDevice.bonded)
-                root._finishOperationSucceeded();
+            if (root._pendingOperation === "forget" && !root._pendingDevice.paired &&
+                    !root._pendingDevice.bonded)
 
+                root._finishOperationSucceeded();
         }
 
         function onTrustedChanged() {
-            if (root._pendingOperation === "set-trusted" && root._pendingDevice.trusted === root._pendingTargetState)
+            if (root._pendingOperation === "set-trusted" && root._pendingDevice.trusted
+                    === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         function onBlockedChanged() {
-            if ((root._pendingOperation === "block" || root._pendingOperation === "unblock") && root._pendingDevice.blocked === root._pendingTargetState)
+            if ((root._pendingOperation === "block" || root._pendingOperation === "unblock")
+                    && root._pendingDevice.blocked === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         function onWakeAllowedChanged() {
-            if (root._pendingOperation === "set-wake-allowed" && root._pendingDevice.wakeAllowed === root._pendingTargetState)
+            if (root._pendingOperation === "set-wake-allowed" && root._pendingDevice.wakeAllowed
+                    === root._pendingTargetState)
                 root._finishOperationSucceeded();
-
         }
 
         target: root._pendingDevice
@@ -592,7 +589,7 @@ Singleton {
 
         interval: 60000
         repeat: false
-        onTriggered: root._finishOperationFailed(qsTr("蓝牙操作超时；当前 Quickshell API 未提供更详细的 BlueZ 错误"))
+        onTriggered: root._finishOperationFailed(qsTr(
+                                                     "Bluetooth operation timed out; the current Quickshell API provides no more detailed BlueZ error"))
     }
-
 }

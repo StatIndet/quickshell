@@ -40,17 +40,18 @@ Singleton {
 
     function notifyError(errorObject) {
         if (!errorObject)
-            return ;
+            return;
 
         const code = errorObject.code || "audio_recording_error";
-        const message = errorObject.message || qsTr("录音命令执行失败");
+        const message = errorObject.message || qsTr("Recording command failed");
         const key = code + "\u001f" + message + "\u001f" + root.sessionId;
         if (key === root._lastErrorKey)
-            return ;
+            return;
 
         root._lastErrorKey = key;
         root.commandError(code, message);
-        Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "critical", qsTr("录音失败"), message]);
+        Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "critical", qsTr(
+                                     "Recording failed"), message]);
     }
 
     function applyResponse(text, fallbackCommand) {
@@ -63,7 +64,7 @@ Singleton {
             if (response.schemaVersion !== root.schemaVersion) {
                 root.error = {
                     "code": "unsupported_schema",
-                    "message": qsTr("key audio 返回了不受支持的 JSON schema")
+                    "message": qsTr("key audio returned an unsupported JSON schema")
                 };
                 root.notifyError(root.error);
                 return false;
@@ -82,8 +83,7 @@ Singleton {
             root.state = response.state || "idle";
             root.sessionId = response.sessionId || "";
             root.pid = response.pid || 0;
-            const source = response.source || {
-            };
+            const source = response.source || {};
             root.sourceType = source.type || root.sourceType || "mic";
             root.sourceName = source.name || "";
             root.sourceNodeName = source.nodeName || "";
@@ -100,14 +100,17 @@ Singleton {
             else
                 root._lastErrorKey = "";
             if (command === "audio.stop" && response.ok === true && root.outputPath !== "")
-                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.sourceType === "system" ? qsTr("系统音频已保存") : qsTr("麦克风录音已保存"), qsTr("已保存到 %1").arg(root.outputPath)]);
+                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.sourceType
+                                         === "system" ? qsTr("System audio recording saved") : qsTr(
+                                                            "Microphone recording saved"), qsTr(
+                                             "Saved to %1").arg(root.outputPath)]);
 
             root.commandFinished(command, response.ok === true);
             return true;
         } catch (exception) {
             root.error = {
                 "code": "invalid_key_json",
-                "message": qsTr("无法解析 key audio 返回的 JSON: ") + exception
+                "message": qsTr("Could not parse JSON returned by key audio: ") + exception
             };
             root.notifyError(root.error);
             return false;
@@ -118,8 +121,7 @@ Singleton {
         if (startProcess.running || stopProcess.running || root.isActive)
             return false;
 
-        const settings = options || {
-        };
+        const settings = options || {};
         root.sourceType = source === "system" ? "system" : "mic";
         root.state = "starting";
         root.startedAtMs = 0;
@@ -148,7 +150,7 @@ Singleton {
 
     function refresh() {
         if (statusProcess.running || startProcess.running)
-            return ;
+            return;
 
         statusProcess.command = [root.commandName, "audio", "status", "--json"];
         statusProcess.running = true;
@@ -157,11 +159,10 @@ Singleton {
     Process {
         id: startProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             if (exitCode !== 0)
                 root.refresh();
-
         }
 
         stdout: StdioCollector {
@@ -169,17 +170,16 @@ Singleton {
         }
 
         stderr: SplitParser {
-            onRead: (data) => {
+            onRead: data => {
                 return console.warn("[key audio start]", data.trim());
             }
         }
-
     }
 
     Process {
         id: stopProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             root.refresh();
         }
@@ -189,22 +189,21 @@ Singleton {
         }
 
         stderr: SplitParser {
-            onRead: (data) => {
+            onRead: data => {
                 return console.warn("[key audio stop]", data.trim());
             }
         }
-
     }
 
     Process {
         id: statusProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             if (exitCode !== 0 && !root.error) {
                 root.error = {
                     "code": "key_unavailable",
-                    "message": qsTr("无法通过 key 查询录音状态")
+                    "message": qsTr("Could not query recording status through key")
                 };
                 root.notifyError(root.error);
             }
@@ -215,11 +214,10 @@ Singleton {
         }
 
         stderr: SplitParser {
-            onRead: (data) => {
+            onRead: data => {
                 return console.warn("[key audio status]", data.trim());
             }
         }
-
     }
 
     Timer {
@@ -236,5 +234,4 @@ Singleton {
         running: root.isActive
         onTriggered: root._nowMs = Date.now()
     }
-
 }

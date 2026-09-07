@@ -13,7 +13,7 @@ Item {
     property bool active: false
     property real latitude: 0
     property real longitude: 0
-    property string locationName: qsTr("天气")
+    property string locationName: qsTr("Weather")
     property string currentTemp: "--"
     property string currentIcon: "cloud"
     property string currentDesc: "--"
@@ -36,33 +36,33 @@ Item {
 
     function cssColor(colorValue, alphaMultiplier) {
         const alpha = alphaMultiplier === undefined ? colorValue.a : colorValue.a * alphaMultiplier;
-        return "rgba(" + Math.round(colorValue.r * 255) + "," + Math.round(colorValue.g * 255) + "," + Math.round(colorValue.b * 255) + "," + Math.max(0, Math.min(1, alpha)).toFixed(3) + ")";
+        return "rgba(" + Math.round(colorValue.r * 255) + "," + Math.round(colorValue.g * 255) + "," + Math.round(
+                    colorValue.b * 255) + "," + Math.max(0, Math.min(1, alpha)).toFixed(3) + ")";
     }
 
     function updatedText() {
         if (WeatherPlugin.loading)
-            return root.hasWeather ? qsTr("正在刷新") : qsTr("正在定位");
+            return root.hasWeather ? qsTr("Refreshing") : qsTr("Locating");
 
         if (WeatherPlugin.status === "stale")
-            return qsTr("数据可能已过期");
+            return qsTr("Data may be stale");
 
         if (WeatherPlugin.status === "partial")
-            return qsTr("部分数据已更新");
+            return qsTr("Partially updated");
 
         if (WeatherPlugin.status === "error")
-            return qsTr("更新失败");
+            return qsTr("Update failed");
 
         if (WeatherPlugin.lastUpdated) {
             const updated = new Date(WeatherPlugin.lastUpdated);
             if (!isNaN(updated.getTime()))
-                return qsTr("更新于 %1").arg(UiPreferences.shortTime(updated));
-
+                return qsTr("Updated %1").arg(UiPreferences.shortTime(updated));
         }
-        return qsTr("实时天气");
+        return qsTr("Live weather");
     }
 
     function weatherErrorText() {
-        return WeatherPlugin.errorMessage || qsTr("天气数据不可用");
+        return WeatherPlugin.errorMessage || qsTr("Weather data unavailable");
     }
 
     function hourlyTemperatureBound(findMaximum) {
@@ -90,17 +90,16 @@ Item {
 
     function fetchData() {
         if (WeatherPlugin.loading)
-            return ;
+            return;
 
         WeatherPlugin.refresh();
         if (weatherMapLoader.status === Loader.Ready && weatherMapLoader.item)
             weatherMapLoader.item.refreshMap();
-
     }
 
     function syncWeatherData() {
         if (!WeatherPlugin.hasValidData) {
-            root.locationName = WeatherPlugin.locationName || qsTr("天气");
+            root.locationName = WeatherPlugin.locationName || qsTr("Weather");
             root.currentTemp = "--";
             root.currentIcon = "cloud";
             root.currentDesc = "--";
@@ -110,15 +109,17 @@ Item {
             root.pressure = "--";
             root.hourlyData = [];
             root.dailyData = [];
-            return ;
+            return;
         }
         root.latitude = Number(WeatherPlugin.latitude);
         root.longitude = Number(WeatherPlugin.longitude);
-        root.locationName = WeatherPlugin.locationName || qsTr("未知");
-        root.currentTemp = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC)) + "°";
+        root.locationName = WeatherPlugin.locationName || qsTr("Unknown");
+        root.currentTemp = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC))
+                + "°";
         root.currentIcon = WeatherPlugin.currentIconName || "cloud";
-        root.currentDesc = WeatherPlugin.currentWeatherText || qsTr("未知");
-        root.feelsLike = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentFeelsLikeC)) + UiPreferences.weatherTemperatureSymbol();
+        root.currentDesc = WeatherPlugin.currentWeatherText || qsTr("Unknown");
+        root.feelsLike = Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentFeelsLikeC))
+                + UiPreferences.weatherTemperatureSymbol();
         root.humidity = Math.round(WeatherPlugin.currentRelativeHumidity) + "%";
         root.windSpeed = Math.round(WeatherPlugin.currentWindSpeedMs * 3.6) + " km/h";
         root.pressure = Math.round(WeatherPlugin.currentPressureHpa) + " hPa";
@@ -128,29 +129,35 @@ Item {
             const item = WeatherPlugin.hourlyForecast.get(hourIndex);
             const timeObject = new Date(Number(item.time || 0) * 1000);
             nextHourly.push({
-                "time": UiPreferences.hourTime(timeObject),
-                "temp": Math.round(UiPreferences.weatherTemperature(Number(item.temperatureC || 0))),
-                "icon": item.iconName || "cloud",
-                "description": item.weatherText || qsTr("未知"),
-                "isDaylight": item.isDaylight === undefined ? true : item.isDaylight
-            });
+                                "time": UiPreferences.hourTime(timeObject),
+                                "temp": Math.round(UiPreferences.weatherTemperature(Number(item.temperatureC
+                                                                                           || 0))),
+                                "icon": item.iconName || "cloud",
+                                "description": item.weatherText || qsTr("Unknown"),
+                                "isDaylight": item.isDaylight === undefined ? true : item.isDaylight
+                            });
         }
         root.hourlyData = nextHourly;
         const nextDaily = [];
         const dailyCount = Math.min(5, WeatherPlugin.dailyForecast.count());
         for (let dayIndex = 0; dayIndex < dailyCount; ++dayIndex) {
             const item = WeatherPlugin.dailyForecast.get(dayIndex);
-            const dateObject = item.date ? new Date(item.date + "T00:00:00") : new Date(Number(item.time || 0) * 1000);
-            const dayPart = item.day || ({
-            });
+            const dateObject = item.date ? new Date(item.date + "T00:00:00") : new Date(Number(item.time
+                                                                                               || 0) * 1000);
+            const dayPart = item.day || ({});
             nextDaily.push({
-                "day": dayIndex === 0 ? qsTr("今天") : Qt.formatDate(dateObject, "ddd"),
-                "date": Qt.formatDate(dateObject, "MMM d"),
-                "icon": dayPart.iconName || item.iconName || "cloud",
-                "description": dayPart.weatherText || item.weatherText || qsTr("未知"),
-                "maxTemp": Math.round(UiPreferences.weatherTemperature(Number(item.temperatureMaxC || dayPart.temperatureC || 0))) + "°",
-                "minTemp": Math.round(UiPreferences.weatherTemperature(Number(item.temperatureMinC || 0))) + "°"
-            });
+                               "day": dayIndex === 0 ? qsTr("Today") : Qt.formatDate(dateObject, "ddd"),
+                               "date": Qt.formatDate(dateObject, "MMM d"),
+                               "icon": dayPart.iconName || item.iconName || "cloud",
+                               "description": dayPart.weatherText || item.weatherText || qsTr("Unknown"),
+                               "maxTemp": Math.round(UiPreferences.weatherTemperature(Number(
+                                                                                          item.temperatureMaxC
+                                                                                          || dayPart.temperatureC
+                                                                                          || 0))) + "°",
+                               "minTemp": Math.round(UiPreferences.weatherTemperature(Number(
+                                                                                          item.temperatureMinC
+                                                                                          || 0))) + "°"
+                           });
         }
         root.dailyData = nextDaily;
     }
@@ -163,7 +170,6 @@ Item {
         root.syncWeatherData();
         if (!WeatherPlugin.hasValidData && !WeatherPlugin.loading)
             WeatherPlugin.refresh();
-
     }
 
     Connections {
@@ -193,7 +199,6 @@ Item {
         onTriggered: {
             if (!WeatherPlugin.loading)
                 WeatherPlugin.refresh();
-
         }
     }
 
@@ -240,9 +245,7 @@ Item {
                         WeatherSunriseSunset {
                             Layout.fillWidth: true
                         }
-
                     }
-
                 }
 
                 // Error / Loading State
@@ -270,7 +273,8 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: WeatherPlugin.loading ? qsTr("正在加载天气") : qsTr("天气不可用")
+                            text: WeatherPlugin.loading ? qsTr("Loading weather") : qsTr(
+                                                              "Weather unavailable")
                             color: Appearance.colors.colOnSurface
                             font.family: Fonts.ui
                             font.pixelSize: 16
@@ -280,7 +284,8 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: WeatherPlugin.loading ? qsTr("正在查找本地天气预报…") : root.weatherErrorText()
+                            text: WeatherPlugin.loading ? qsTr("Finding your local forecast…") :
+                                                          root.weatherErrorText()
                             color: Appearance.colors.colOnSurfaceVariant
                             font.family: Fonts.ui
                             font.pixelSize: 12
@@ -289,13 +294,9 @@ Item {
                             maximumLineCount: 3
                             elide: Text.ElideRight
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         // Right Column (Stack 1, 2, 3)
@@ -351,7 +352,6 @@ Item {
                     value: root.active && root.visible
                     when: weatherMapLoader.status === Loader.Ready
                 }
-
             }
 
             Item {
@@ -363,9 +363,7 @@ Item {
                 Layout.fillWidth: true
                 visible: root.hasWeather
             }
-
         }
-
     }
 
     component MetricTile: Rectangle {
@@ -418,11 +416,7 @@ Item {
                     elide: Text.ElideRight
                     textFormat: Text.PlainText
                 }
-
             }
-
         }
-
     }
-
 }

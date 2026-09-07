@@ -22,11 +22,15 @@ FocusScope {
     readonly property Item popupParentItem: root.Window.window ? root.Window.window.contentItem : null
     readonly property real menuPadding: 6
     readonly property real menuGap: 6
-    readonly property var availableOptions: options.filter((option) => {
+    readonly property var availableOptions: options.filter(option => {
         return values.indexOf(optionValue(option)) === -1;
     })
-    readonly property int visibleMenuItemCount: Math.min(Math.max(1, maxVisibleItems), Math.max(1, availableOptions.length))
-    readonly property real listTargetHeight: Math.max(itemHeight + menuPadding * 2, Math.ceil(availableOptions.length / 2) * (itemHeight + menuItemSpacing) + menuPadding * 2)
+    readonly property int visibleMenuItemCount: Math.min(Math.max(1, maxVisibleItems), Math.max(1,
+                                                                                                availableOptions.length))
+    readonly property real listTargetHeight: Math.max(itemHeight + menuPadding * 2, Math.ceil(
+                                                          availableOptions.length / 2) * (itemHeight
+                                                                                          + menuItemSpacing)
+                                                      + menuPadding * 2)
     readonly property bool dragActive: dragCoordinator && dragCoordinator.dragActive
 
     signal toggled(string componentId)
@@ -37,7 +41,8 @@ FocusScope {
     }
 
     function optionLabel(option) {
-        return option && typeof option === "object" ? String(option.label || option.value || "") : String(option || "");
+        return option && typeof option === "object" ? String(option.label || option.value || "") : String(
+                                                          option || "");
     }
 
     function optionIcon(option) {
@@ -48,7 +53,6 @@ FocusScope {
         for (let index = 0; index < root.options.length; index += 1) {
             if (root.optionValue(root.options[index]) === componentId)
                 return root.optionLabel(root.options[index]);
-
         }
         return componentId;
     }
@@ -57,7 +61,6 @@ FocusScope {
         for (let index = 0; index < root.options.length; index += 1) {
             if (root.optionValue(root.options[index]) === componentId)
                 return root.optionIcon(root.options[index]);
-
         }
         return "widgets";
     }
@@ -66,19 +69,17 @@ FocusScope {
         for (let index = 0; index < chipModel.count; index += 1) {
             if (chipModel.get(index).entryKey === entryKey)
                 return index;
-
         }
         return -1;
     }
 
     function synchronizeEntries(entries) {
-        const desiredKeys = entries.map((entry) => {
+        const desiredKeys = entries.map(entry => {
             return entry.entryKey;
         });
         for (let index = chipModel.count - 1; index >= 0; index -= 1) {
             if (desiredKeys.indexOf(chipModel.get(index).entryKey) === -1)
                 chipModel.remove(index);
-
         }
         for (let index = 0; index < entries.length; index += 1) {
             const entry = entries[index];
@@ -97,16 +98,16 @@ FocusScope {
 
     function synchronizeValues() {
         if (root.dragActive)
-            return ;
+            return;
 
         const entries = [];
         const source = Array.isArray(root.values) ? root.values : [];
         for (let index = 0; index < source.length; index += 1) {
             entries.push({
-                "entryKey": source[index],
-                "componentId": source[index],
-                "placeholder": false
-            });
+                             "entryKey": source[index],
+                             "componentId": source[index],
+                             "placeholder": false
+                         });
         }
         root.synchronizeEntries(entries);
     }
@@ -125,18 +126,18 @@ FocusScope {
                 continue;
 
             entries.push({
-                "entryKey": value,
-                "componentId": value,
-                "placeholder": false
-            });
+                             "entryKey": value,
+                             "componentId": value,
+                             "placeholder": false
+                         });
         }
         if (root.zone === targetZone) {
             const insertionIndex = Math.max(0, Math.min(entries.length, targetIndex));
             entries.splice(insertionIndex, 0, {
-                "entryKey": componentId,
-                "componentId": componentId,
-                "placeholder": true
-            });
+                               "entryKey": componentId,
+                               "componentId": componentId,
+                               "placeholder": true
+                           });
         }
         root.synchronizeEntries(entries);
     }
@@ -181,7 +182,7 @@ FocusScope {
 
     function stepAutoScroll() {
         if (root.autoScrollVelocity === 0)
-            return ;
+            return;
 
         chipList.contentX = root.clampContentX(chipList.contentX + root.autoScrollVelocity);
         root.scrollTargetX = chipList.contentX;
@@ -210,7 +211,7 @@ FocusScope {
         else if (isFinite(angleY) && angleY !== 0)
             delta = -angleY;
         if (delta === 0)
-            return ;
+            return;
 
         const base = scrollAnimation.running ? root.scrollTargetX : chipList.contentX;
         root.scrollTargetX = root.clampContentX(base + delta);
@@ -226,10 +227,13 @@ FocusScope {
         const margin = 12;
         optionsPopup.width = root.width;
         optionsPopup.height = root.listTargetHeight;
-        optionsPopup.x = Math.max(margin, Math.min(origin.x, root.popupParentItem.width - optionsPopup.width - margin));
+        optionsPopup.x = Math.max(margin, Math.min(origin.x, root.popupParentItem.width - optionsPopup.width
+                                                   - margin));
         const belowY = origin.y + root.fieldHeight + root.menuGap;
         const aboveY = origin.y - optionsPopup.height - root.menuGap;
-        optionsPopup.y = belowY + optionsPopup.height <= root.popupParentItem.height - margin ? belowY : Math.max(margin, aboveY);
+        optionsPopup.y = belowY + optionsPopup.height <= root.popupParentItem.height - margin ? belowY :
+                                                                                                Math.max(margin,
+                                                                                                         aboveY);
         return true;
     }
 
@@ -253,25 +257,27 @@ FocusScope {
 
     function moveHighlight(delta) {
         if (root.availableOptions.length === 0)
-            return ;
+            return;
 
-        root.highlightedIndex = (root.highlightedIndex + delta + root.availableOptions.length) % root.availableOptions.length;
+        root.highlightedIndex = (root.highlightedIndex + delta + root.availableOptions.length)
+                % root.availableOptions.length;
     }
 
     function toggleHighlighted() {
         if (root.highlightedIndex < 0 || root.highlightedIndex >= root.availableOptions.length)
-            return ;
+            return;
 
         root.toggled(root.optionValue(root.availableOptions[root.highlightedIndex]));
     }
 
     function handleKey(event) {
         if (!root.expanded) {
-            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space || event.key === Qt.Key_Down) {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space
+                    || event.key === Qt.Key_Down) {
                 root.openMenu();
                 event.accepted = true;
             }
-            return ;
+            return;
         }
         if (event.key === Qt.Key_Escape)
             root.closeMenu();
@@ -282,7 +288,7 @@ FocusScope {
         else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space)
             root.toggleHighlighted();
         else
-            return ;
+            return;
         event.accepted = true;
     }
 
@@ -291,7 +297,7 @@ FocusScope {
     activeFocusOnTab: true
     onValuesChanged: synchronizeValues()
     Component.onCompleted: synchronizeValues()
-    Keys.onPressed: (event) => {
+    Keys.onPressed: event => {
         return root.handleKey(event);
     }
     onExpandedChanged: {
@@ -311,7 +317,9 @@ FocusScope {
         anchors.top: parent.top
         height: root.fieldHeight
         clip: true
-        color: root.expanded || fieldTap.pressed ? Appearance.colors.colLayer2Active : fieldHover.hovered ? Appearance.colors.colLayer2Hover : Appearance.colors.colLayer2
+        color: root.expanded || fieldTap.pressed ? Appearance.colors.colLayer2Active : fieldHover.hovered
+                                                   ? Appearance.colors.colLayer2Hover :
+                                                     Appearance.colors.colLayer2
 
         Item {
             id: chipViewport
@@ -349,7 +357,6 @@ FocusScope {
                         easing.type: Appearance.animation.scroll.type
                         easing.bezierCurve: Appearance.animation.scroll.bezierCurve
                     }
-
                 }
 
                 delegate: Item {
@@ -358,11 +365,16 @@ FocusScope {
                     required property string entryKey
                     required property string componentId
                     required property bool placeholder
-                    readonly property bool ownsActiveDrag: root.dragActive && root.dragCoordinator && root.dragCoordinator.componentId === chipDelegate.componentId && root.dragCoordinator.sourceZone === root.zone
-                    readonly property bool isDragged: root.dragActive && root.dragCoordinator.componentId === componentId && !placeholder
+                    readonly property bool ownsActiveDrag: root.dragActive && root.dragCoordinator
+                                                           && root.dragCoordinator.componentId
+                                                           === chipDelegate.componentId
+                                                           && root.dragCoordinator.sourceZone === root.zone
+                    readonly property bool isDragged: root.dragActive && root.dragCoordinator.componentId
+                                                      === componentId && !placeholder
                     readonly property real naturalWidth: Math.max(88, chipLabel.implicitWidth + 70)
 
-                    width: placeholder && root.dragCoordinator ? root.dragCoordinator.dragWidth : isDragged ? 0 : naturalWidth
+                    width: placeholder && root.dragCoordinator ? root.dragCoordinator.dragWidth : isDragged
+                                                                 ? 0 : naturalWidth
                     height: chipList.height
                     opacity: isDragged ? 0 : 1
 
@@ -373,7 +385,10 @@ FocusScope {
                         height: 30
                         anchors.centerIn: parent
                         radius: Appearance.rounding.small
-                        color: chipDelegate.placeholder ? Appearance.colors.colLayer2Active : chipHover.hovered ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colPrimaryContainer
+                        color: chipDelegate.placeholder ? Appearance.colors.colLayer2Active :
+                                                          chipHover.hovered
+                                                          ? Appearance.colors.colPrimaryContainerHover :
+                                                            Appearance.colors.colPrimaryContainer
                         opacity: chipDelegate.placeholder ? 0.45 : 1
 
                         MaterialSymbol {
@@ -407,7 +422,6 @@ FocusScope {
                                 rightMargin: 4
                                 verticalCenter: parent.verticalCenter
                             }
-
                         }
 
                         Item {
@@ -432,12 +446,11 @@ FocusScope {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: (mouse) => {
+                                onClicked: mouse => {
                                     mouse.accepted = true;
                                     root.removed(chipDelegate.componentId);
                                 }
                             }
-
                         }
 
                         HoverHandler {
@@ -447,7 +460,7 @@ FocusScope {
                         MouseArea {
                             enabled: !chipDelegate.placeholder
                             cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
-                            onClicked: (mouse) => {
+                            onClicked: mouse => {
                                 return mouse.accepted = true;
                             }
 
@@ -457,75 +470,72 @@ FocusScope {
                                 top: parent.top
                                 bottom: parent.bottom
                             }
-
                         }
 
                         DragHandler {
                             id: dragHandler
 
-                            enabled: root.dragCoordinator !== null && (!chipDelegate.placeholder || chipDelegate.ownsActiveDrag) && (!closeMouse.containsMouse || chipDelegate.ownsActiveDrag)
+                            enabled: root.dragCoordinator !== null && (!chipDelegate.placeholder
+                                                                       || chipDelegate.ownsActiveDrag) && (
+                                         !closeMouse.containsMouse || chipDelegate.ownsActiveDrag)
                             target: null
                             dragThreshold: 8
                             onActiveChanged: {
                                 if (active)
-                                    root.dragCoordinator.beginDrag(root, chipDelegate.componentId, root.labelFor(chipDelegate.componentId), root.iconFor(chipDelegate.componentId), chipDelegate.naturalWidth, centroid.scenePosition);
-                                else if (root.dragCoordinator && root.dragCoordinator.dragActive && root.dragCoordinator.componentId === chipDelegate.componentId)
+                                    root.dragCoordinator.beginDrag(root, chipDelegate.componentId,
+                                                                   root.labelFor(chipDelegate.componentId),
+                                                                   root.iconFor(chipDelegate.componentId),
+                                                                   chipDelegate.naturalWidth,
+                                                                   centroid.scenePosition);
+                                else if (root.dragCoordinator && root.dragCoordinator.dragActive
+                                         && root.dragCoordinator.componentId === chipDelegate.componentId)
                                     root.dragCoordinator.finishDrag();
                             }
                             onTranslationChanged: {
                                 if (active)
                                     root.dragCoordinator.updateDrag(centroid.scenePosition);
-
                             }
                         }
-
                     }
-
                 }
 
                 move: Transition {
                     ElementMoveAnimation {
                         property: "x"
                     }
-
                 }
 
                 moveDisplaced: Transition {
                     ElementMoveAnimation {
                         property: "x"
                     }
-
                 }
 
                 addDisplaced: Transition {
                     ElementMoveAnimation {
                         property: "x"
                     }
-
                 }
 
                 removeDisplaced: Transition {
                     ElementMoveAnimation {
                         property: "x"
                     }
-
                 }
-
             }
 
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.NoButton
-                onWheel: (wheelEvent) => {
+                onWheel: wheelEvent => {
                     return root.handleWheel(wheelEvent);
                 }
             }
-
         }
 
         Text {
             visible: chipModel.count === 0
-            text: qsTr("未选择组件")
+            text: qsTr("No components selected")
             color: Appearance.colors.colSubtext
             font.family: Fonts.ui
             font.pixelSize: 14
@@ -537,7 +547,6 @@ FocusScope {
                 rightMargin: 8
                 verticalCenter: parent.verticalCenter
             }
-
         }
 
         MaterialSymbol {
@@ -557,9 +566,7 @@ FocusScope {
                     easing.type: Appearance.animation.expressiveFastSpatial.type
                     easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
                 }
-
             }
-
         }
 
         TapHandler {
@@ -585,7 +592,6 @@ FocusScope {
                 right: parent.right
                 bottom: parent.bottom
             }
-
         }
 
         Behavior on color {
@@ -594,9 +600,7 @@ FocusScope {
                 easing.type: Appearance.animation.expressiveFastEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
             }
-
         }
-
     }
 
     ListModel {
@@ -614,8 +618,7 @@ FocusScope {
         closePolicy: Popup.CloseOnEscape
         onClosed: root.expanded = false
 
-        background: Item {
-        }
+        background: Item {}
 
         contentItem: Rectangle {
             id: optionPoolCard
@@ -654,7 +657,10 @@ FocusScope {
                             width: Math.min(optionFlow.width, Math.max(88, optionLabel.implicitWidth + 52))
                             height: 30
                             radius: Appearance.rounding.small
-                            color: optionTap.pressed ? Appearance.colors.colPrimaryContainerActive : optionHover.hovered || highlighted ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colPrimaryContainer
+                            color: optionTap.pressed ? Appearance.colors.colPrimaryContainerActive :
+                                                       optionHover.hovered || highlighted
+                                                       ? Appearance.colors.colPrimaryContainerHover :
+                                                         Appearance.colors.colPrimaryContainer
 
                             MaterialSymbol {
                                 id: optionIcon
@@ -690,7 +696,6 @@ FocusScope {
                                 onHoveredChanged: {
                                     if (hovered)
                                         root.highlightedIndex = optionChip.index;
-
                                 }
                             }
 
@@ -699,27 +704,22 @@ FocusScope {
 
                                 onTapped: root.toggled(optionChip.componentId)
                             }
-
                         }
-
                     }
 
                     Text {
                         visible: root.availableOptions.length === 0
                         width: optionFlow.width
                         height: root.itemHeight
-                        text: qsTr("所有组件均已使用")
+                        text: qsTr("All widgets are in use")
                         color: Appearance.colors.colSubtext
                         font.family: Fonts.ui
                         font.pixelSize: 13
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                 }
-
             }
-
         }
 
         enter: Transition {
@@ -731,9 +731,6 @@ FocusScope {
                 easing.type: Appearance.animation.standardDecel.type
                 easing.bezierCurve: Appearance.animation.standardDecel.bezierCurve
             }
-
         }
-
     }
-
 }

@@ -16,9 +16,9 @@ Singleton {
     property int pid: 0
     property string recordingType: "video"
     property var target: ({
-        "type": "region",
-        "geometry": null
-    })
+                              "type": "region",
+                              "geometry": null
+                          })
     property double startedAtMs: 0
     property string temporaryPath: ""
     property string outputPath: ""
@@ -35,7 +35,7 @@ Singleton {
     readonly property double elapsedMs: isRecording && startedAtMs > 0 ? Math.max(0, _nowMs - startedAtMs) : 0
 
     signal commandFinished(string command, bool ok)
-    signal selectionCancelled()
+    signal selectionCancelled
     signal commandError(string code, string message)
 
     function applyResponse(text, fallbackCommand) {
@@ -48,7 +48,7 @@ Singleton {
             if (response.schemaVersion !== root.schemaVersion) {
                 root.error = {
                     "code": "unsupported_schema",
-                    "message": qsTr("key 返回了不受支持的 JSON schema")
+                    "message": qsTr("key returned an unsupported JSON schema")
                 };
                 root.commandError(root.error.code, root.error.message);
                 return false;
@@ -75,17 +75,21 @@ Singleton {
                 root.selectionCancelled();
 
             if (root.error)
-                root.commandError(root.error.code || "key_error", root.error.message || qsTr("key 命令执行失败"));
+                root.commandError(root.error.code || "key_error", root.error.message || qsTr(
+                                      "key command failed"));
 
-            if (command === "record.stop" && response.ok === true && root.backendState === "completed" && root.outputPath !== "")
-                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.recordingType === "gif" ? qsTr("GIF 已保存") : qsTr("录屏已保存"), qsTr("已保存到 %1").arg(root.outputPath)]);
+            if (command === "record.stop" && response.ok === true && root.backendState === "completed" && root.outputPath
+                    !== "")
+                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.recordingType
+                                         === "gif" ? qsTr("GIF saved") : qsTr("Screen recording saved"), qsTr(
+                                             "Saved to %1").arg(root.outputPath)]);
 
             root.commandFinished(command, response.ok === true);
             return true;
         } catch (exception) {
             root.error = {
                 "code": "invalid_key_json",
-                "message": qsTr("无法解析 key 返回的 JSON: ") + exception
+                "message": qsTr("Could not parse JSON returned by key: ") + exception
             };
             root.commandError(root.error.code, root.error.message);
             return false;
@@ -96,18 +100,17 @@ Singleton {
         if (startProcess.running || root.isActive)
             return false;
 
-        const settings = options || {
-        };
+        const settings = options || {};
         const requestedType = type === "gif" ? "gif" : "video";
         root.error = null;
         root.recordingType = requestedType;
         root.transientState = "selecting";
         if (!RegionSelectionService.begin("record", {
-            "type": requestedType,
-            "audio": settings.audio || "none",
-            "fps": settings.fps || 60,
-            "output": settings.output || ""
-        })) {
+                                              "type": requestedType,
+                                              "audio": settings.audio || "none",
+                                              "fps": settings.fps || 60,
+                                              "output": settings.output || ""
+                                          })) {
             root.transientState = "";
             return false;
         }
@@ -118,10 +121,11 @@ Singleton {
         if (!geometry || startProcess.running)
             return false;
 
-        const settings = options || {
-        };
+        const settings = options || {};
         const requestedType = settings.type === "gif" ? "gif" : "video";
-        const command = [root.commandName, "record", "start", "--type", requestedType, "--target", "region", "--geometry", geometry, "--audio", settings.audio || "none", "--fps", String(settings.fps || 60), "--json"];
+        const command = [root.commandName, "record", "start", "--type", requestedType, "--target", "region", "--geometry",
+                         geometry, "--audio", settings.audio || "none", "--fps", String(settings.fps || 60),
+                         "--json"];
         if (settings.output)
             command.splice(command.length - 1, 0, "--output", settings.output);
 
@@ -148,7 +152,7 @@ Singleton {
 
     function refresh() {
         if (statusProcess.running)
-            return ;
+            return;
 
         statusProcess.command = [root.commandName, "record", "status", "--json"];
         statusProcess.running = true;
@@ -157,13 +161,13 @@ Singleton {
     Connections {
         function onSelectionAccepted(action, geometry, options) {
             if (action !== "record" || root.transientState !== "selecting")
-                return ;
+                return;
 
             if (!root.startSelected(geometry, options)) {
                 root.transientState = "";
                 root.error = {
                     "code": "record_start_unavailable",
-                    "message": qsTr("无法启动录制命令")
+                    "message": qsTr("Could not start the recording command")
                 };
                 root.commandError(root.error.code, root.error.message);
             }
@@ -171,7 +175,7 @@ Singleton {
 
         function onSelectionCancelled(action) {
             if (action !== "record" || root.transientState !== "selecting")
-                return ;
+                return;
 
             root.transientState = "";
             root.selectionCancelled();
@@ -184,7 +188,7 @@ Singleton {
     Process {
         id: startProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             root.transientState = "";
             root.refresh();
@@ -193,13 +197,12 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: root.applyResponse(this.text, "record.start")
         }
-
     }
 
     Process {
         id: stopProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             root.refresh();
         }
@@ -207,18 +210,17 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: root.applyResponse(this.text, "record.stop")
         }
-
     }
 
     Process {
         id: statusProcess
 
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             root.lastExitCode = exitCode;
             if (exitCode !== 0 && !root.error) {
                 root.error = {
                     "code": "key_unavailable",
-                    "message": qsTr("无法通过 key 查询录制状态")
+                    "message": qsTr("Could not query recording status through key")
                 };
                 root.commandError(root.error.code, root.error.message);
             }
@@ -227,7 +229,6 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: root.applyResponse(this.text, "record.status")
         }
-
     }
 
     Timer {
@@ -244,5 +245,4 @@ Singleton {
         running: root.isRecording
         onTriggered: root._nowMs = Date.now()
     }
-
 }

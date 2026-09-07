@@ -21,12 +21,12 @@ FloatingWindow {
 
     signal cameraChanged(real latitude, real longitude, real zoom, real bearing, real tilt)
     signal markerChanged(real latitude, real longitude)
-    signal saveRequested()
-    signal dismissed()
+    signal saveRequested
+    signal dismissed
 
     function showWindow() {
         if (!root.parentModal)
-            return ;
+            return;
 
         root.visible = true;
     }
@@ -38,7 +38,7 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("选择天气位置")
+    title: qsTr("Choose weather location")
     implicitWidth: 920
     implicitHeight: 680
     minimumSize: Qt.size(600, 440)
@@ -87,7 +87,7 @@ FloatingWindow {
 
             IconButton {
                 iconName: "my_location"
-                accessibleName: qsTr("回到已选位置")
+                accessibleName: qsTr("Return to saved location")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
@@ -96,20 +96,19 @@ FloatingWindow {
 
             IconButton {
                 iconName: "close"
-                accessibleName: qsTr("关闭")
+                accessibleName: qsTr("Close")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
                 onClicked: root.dismiss()
             }
-
         }
 
         ActionButton {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: Metrics.spacingL
-            text: qsTr("保存位置")
+            text: qsTr("Save location")
             iconName: "save"
             contentColor: "#FF111111"
             rippleColor: "#FF111111"
@@ -135,7 +134,7 @@ FloatingWindow {
         FocusScope {
             anchors.fill: parent
             focus: root.visible
-            Keys.onEscapePressed: (event) => {
+            Keys.onEscapePressed: event => {
                 root.dismiss();
                 event.accepted = true;
             }
@@ -148,9 +147,6 @@ FloatingWindow {
                 height: mapFrame.height
                 radius: mapFrame.radius
             }
-
         }
-
     }
-
 }

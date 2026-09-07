@@ -7,10 +7,10 @@ import qs.Widgets.common
 Item {
     id: root
 
-    property string message: qsTr("地图暂时不可用")
+    property string message: qsTr("Map temporarily unavailable")
     property bool loading: false
 
-    signal retryRequested()
+    signal retryRequested
 
     Rectangle {
         anchors.fill: parent
@@ -50,12 +50,10 @@ Item {
         ActionButton {
             Layout.alignment: Qt.AlignHCenter
             visible: !root.loading
-            text: qsTr("重试")
+            text: qsTr("Retry")
             iconName: "refresh"
             filled: true
             onClicked: root.retryRequested()
         }
-
     }
-
 }

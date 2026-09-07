@@ -457,14 +457,14 @@ StyledFlickable {
             spacing: 16
 
             ThemePreviewCard {
-                title: qsTr("浅色")
+                title: qsTr("Light")
                 mode: "light"
                 darkPreview: false
                 onClicked: ThemeService.setThemeMode("light")
             }
 
             ThemePreviewCard {
-                title: qsTr("深色")
+                title: qsTr("Dark")
                 mode: "dark"
                 darkPreview: true
                 onClicked: ThemeService.setThemeMode("dark")
@@ -472,7 +472,7 @@ StyledFlickable {
         }
 
         Section {
-            title: qsTr("matugen配色方案")
+            title: qsTr("matugen color scheme")
             iconName: "colors"
 
             ColumnLayout {
@@ -498,7 +498,7 @@ StyledFlickable {
         }
 
         Section {
-            title: qsTr("锁屏")
+            title: qsTr("Lock screen")
             iconName: "lock"
 
             SearchSelectMenuField {
@@ -513,7 +513,7 @@ StyledFlickable {
         }
 
         Section {
-            title: qsTr("光标主题")
+            title: qsTr("Cursor theme")
             iconName: "mouse"
 
             CursorThemeSelect {
@@ -530,86 +530,86 @@ StyledFlickable {
             }
 
             SliderSettingRow {
-                title: qsTr("光标尺寸")
+                title: qsTr("Cursor size")
                 from: 12
                 to: 128
                 stepSize: 1
-                suffix: qsTr("像素")
+                suffix: qsTr("pixels")
                 value: PersonalizationConfig.cursorSize
                 onMoved: value => ThemeService.setCursorSize(Math.round(value))
             }
 
             ToggleSettingRow {
-                title: qsTr("打字时隐藏")
+                title: qsTr("Hide while typing")
                 checked: PersonalizationConfig.cursorHideWhenTyping
                 onToggled: checked => ThemeService.setCursorHideWhenTyping(checked)
             }
 
             SliderSettingRow {
-                title: qsTr("自动超时隐藏")
-                description: qsTr("闲置后隐藏光标，0 表示停用")
+                title: qsTr("Hide after timeout")
+                description: qsTr("Hide the cursor after inactivity; 0 disables this")
                 from: 0
                 to: 5000
                 stepSize: 100
-                suffix: qsTr("毫秒")
+                suffix: qsTr("milliseconds")
                 value: PersonalizationConfig.cursorHideAfterInactiveMs
                 onMoved: value => ThemeService.setCursorHideAfterInactiveMs(Math.round(value))
             }
         }
 
         Section {
-            title: qsTr("图标主题")
+            title: qsTr("Icon theme")
             iconName: "interests"
 
             SearchSelectSettingRow {
-                title: qsTr("图标主题")
+                title: qsTr("Icon theme")
                 options: ThemeService.availableIconThemes
                 value: PersonalizationConfig.iconTheme
-                placeholder: qsTr("选择图标主题")
+                placeholder: qsTr("Choose icon theme")
                 onAccepted: value => ThemeService.setIconTheme(value)
             }
         }
 
         Section {
-            title: qsTr("字体")
+            title: qsTr("Fonts")
             iconName: "text_format"
 
             SearchSelectSettingRow {
-                title: qsTr("界面字体")
-                description: qsTr("普通标题、正文和控件")
+                title: qsTr("UI font")
+                description: qsTr("Regular headings, body text, and controls")
                 options: FontService.fontOptions
                 value: PersonalizationConfig.uiFontFamily
-                placeholder: qsTr("选择界面字体")
+                placeholder: qsTr("Select UI font")
                 fieldWidth: 280
                 onAccepted: value => PersonalizationConfig.setFontFamily("ui", value)
             }
 
             SearchSelectSettingRow {
-                title: qsTr("等宽字体")
-                description: qsTr("命令、路径和技术信息")
+                title: qsTr("Monospace font")
+                description: qsTr("Commands, paths, and technical information")
                 options: FontService.fontOptions
                 value: PersonalizationConfig.monoFontFamily
-                placeholder: qsTr("选择等宽字体")
+                placeholder: qsTr("Select monospace font")
                 fieldWidth: 280
                 onAccepted: value => PersonalizationConfig.setFontFamily("mono", value)
             }
 
             SearchSelectSettingRow {
-                title: qsTr("数字字体")
-                description: qsTr("时间、百分比和系统数值")
+                title: qsTr("Numeric font")
+                description: qsTr("Time, percentages, and system values")
                 options: FontService.fontOptions
                 value: PersonalizationConfig.numericFontFamily
-                placeholder: qsTr("选择数字字体")
+                placeholder: qsTr("Select numeric font")
                 fieldWidth: 280
                 onAccepted: value => PersonalizationConfig.setFontFamily("numeric", value)
             }
 
             SearchSelectSettingRow {
-                title: qsTr("表现性字体")
-                description: qsTr("天气等强调型视觉组件")
+                title: qsTr("Expressive font")
+                description: qsTr("Expressive visual components such as weather")
                 options: FontService.fontOptions
                 value: PersonalizationConfig.expressiveFontFamily
-                placeholder: qsTr("选择表现性字体")
+                placeholder: qsTr("Select expressive font")
                 fieldWidth: 280
                 onAccepted: value => PersonalizationConfig.setFontFamily("expressive", value)
             }
@@ -619,7 +619,7 @@ StyledFlickable {
                 Layout.alignment: Qt.AlignRight
 
                 ActionButton {
-                    text: qsTr("恢复默认字体")
+                    text: qsTr("Restore default fonts")
                     onClicked: PersonalizationConfig.resetFontFamilies()
                 }
             }

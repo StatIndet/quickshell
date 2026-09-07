@@ -39,7 +39,7 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("编辑贝塞尔曲线")
+    title: qsTr("Edit Bézier curve")
     implicitWidth: 980
     implicitHeight: 720
     minimumSize: Qt.size(560, 460)
@@ -150,9 +150,8 @@ FloatingWindow {
             return current;
 
         function isValid(value) {
-            return movingFirst
-                ? dimensionAllowed(value, fixed, requireFunction)
-                : dimensionAllowed(fixed, value, requireFunction);
+            return movingFirst ? dimensionAllowed(value, fixed, requireFunction) : dimensionAllowed(fixed,
+                                                                                                    value, requireFunction);
         }
 
         if (isValid(target))
@@ -185,7 +184,8 @@ FloatingWindow {
 
     function curveText(curve) {
         const c = normalizeCurve(curve || workingCurve);
-        return formatNumber(c[0]) + ", " + formatNumber(c[1]) + ", " + formatNumber(c[2]) + ", " + formatNumber(c[3]);
+        return formatNumber(c[0]) + ", " + formatNumber(c[1]) + ", " + formatNumber(c[2]) + ", " + formatNumber(
+                    c[3]);
     }
 
     function copyCurve() {
@@ -316,7 +316,8 @@ FloatingWindow {
     function resetView() {
         if (editorCanvas.width <= 0 || editorCanvas.height <= 0)
             return;
-        pixelsPerUnit = Math.max(140, Math.min(280, Math.min(editorCanvas.width, editorCanvas.height) * 0.46));
+        pixelsPerUnit = Math.max(140, Math.min(280, Math.min(editorCanvas.width, editorCanvas.height)
+                                               * 0.46));
         panX = 0;
         panY = 0;
         editorCanvas.requestPaint();
@@ -400,14 +401,7 @@ FloatingWindow {
     function flipCurve() {
         const first = p1();
         const second = p2();
-        const next = normalizeCurve([
-            1 - second[0],
-            1 - second[1],
-            1 - first[0],
-            1 - first[1],
-            1,
-            1
-        ]);
+        const next = normalizeCurve([1 - second[0], 1 - second[1], 1 - first[0], 1 - first[1], 1, 1]);
         if (!curveWithinUnit(next))
             return;
 
@@ -432,7 +426,8 @@ FloatingWindow {
         property: "playhead"
         easing.type: Easing.Linear
         onStopped: {
-            if ((root.playbackDirection > 0 && root.playhead >= 1) || (root.playbackDirection < 0 && root.playhead <= 0))
+            if ((root.playbackDirection > 0 && root.playhead >= 1) || (root.playbackDirection < 0
+                                                                       && root.playhead <= 0))
                 root.playing = false;
         }
     }
@@ -479,441 +474,452 @@ FloatingWindow {
         onStopped: root.workingCurve = root.animationTargetCurve
     }
 
-        FocusScope {
-            id: modalContent
+    FocusScope {
+        id: modalContent
+
+        anchors.fill: parent
+        focus: root.visible
+        clip: true
+
+        Rectangle {
+            id: dialogBackground
 
             anchors.fill: parent
-            focus: root.visible
-            clip: true
+            radius: Appearance.rounding.normal
+            color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerLow)
+            antialiasing: true
+        }
 
-            Rectangle {
-                id: dialogBackground
+        CompositorBlurRegion {
+            targetWindow: root
+            backgroundItem: dialogBackground
+        }
 
-                anchors.fill: parent
-                radius: Appearance.rounding.normal
-                color: BlurService.backgroundColor(
-                    Appearance.m3colors.m3surfaceContainerLow)
-                antialiasing: true
-            }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            z: -1
+            onPressed: mouse => mouse.accepted = true
+            onClicked: mouse => mouse.accepted = true
+        }
 
-            CompositorBlurRegion {
-                targetWindow: root
-                backgroundItem: dialogBackground
-            }
+        Keys.onEscapePressed: event => {
+            root.dismiss();
+            event.accepted = true;
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.AllButtons
-                z: -1
-                onPressed: mouse => mouse.accepted = true
-                onClicked: mouse => mouse.accepted = true
-            }
+        Canvas {
+            id: editorCanvas
 
-            Keys.onEscapePressed: event => {
-                root.dismiss();
-                event.accepted = true;
-            }
+            anchors.fill: parent
+            onPaint: {
+                const ctx = getContext("2d");
+                const w = width;
+                const h = height;
+                ctx.clearRect(0, 0, w, h);
 
-            Canvas {
-                id: editorCanvas
-
-                anchors.fill: parent
-                onPaint: {
-                    const ctx = getContext("2d");
-                    const w = width;
-                    const h = height;
-                    ctx.clearRect(0, 0, w, h);
-
-                    function roundedPath(x, y, width, height, radius) {
-                        const r = Math.max(0, Math.min(radius, width / 2, height / 2));
-                        ctx.beginPath();
-                        ctx.moveTo(x + r, y);
-                        ctx.lineTo(x + width - r, y);
-                        ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-                        ctx.lineTo(x + width, y + height - r);
-                        ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-                        ctx.lineTo(x + r, y + height);
-                        ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-                        ctx.lineTo(x, y + r);
-                        ctx.quadraticCurveTo(x, y, x + r, y);
-                        ctx.closePath();
-                    }
-
-                    ctx.save();
-                    roundedPath(0, 0, w, h, Appearance.rounding.normal - 1);
-                    ctx.clip();
-
-                    ctx.fillStyle = Appearance.m3colors.m3surfaceContainerLowest;
-                    ctx.fillRect(0, 0, w, h);
-
-                    const minX = root.worldX(0);
-                    const maxX = root.worldX(w);
-                    const minY = root.worldY(h);
-                    const maxY = root.worldY(0);
-                    const step = root.pixelsPerUnit >= 320 ? 0.1 : root.pixelsPerUnit >= 160 ? 0.25 : root.pixelsPerUnit >= 80 ? 0.5 : 1;
-
-                    function drawGridLines(gridStep, major) {
-                        const xStart = Math.floor(minX / gridStep) * gridStep;
-                        const xEnd = Math.ceil(maxX / gridStep) * gridStep;
-                        const yStart = Math.floor(minY / gridStep) * gridStep;
-                        const yEnd = Math.ceil(maxY / gridStep) * gridStep;
-                        ctx.strokeStyle = major
-                            ? Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.24)
-                            : Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.10);
-                        ctx.lineWidth = major ? 1.1 : 0.8;
-                        ctx.beginPath();
-                        for (let x = xStart; x <= xEnd + gridStep / 2; x += gridStep) {
-                            if (major && Math.abs(x - Math.round(x)) > 0.0001)
-                                continue;
-                            const sx = root.screenX(x);
-                            ctx.moveTo(sx, 0);
-                            ctx.lineTo(sx, h);
-                        }
-                        for (let y = yStart; y <= yEnd + gridStep / 2; y += gridStep) {
-                            if (major && Math.abs(y - Math.round(y)) > 0.0001)
-                                continue;
-                            const sy = root.screenY(y);
-                            ctx.moveTo(0, sy);
-                            ctx.lineTo(w, sy);
-                        }
-                        ctx.stroke();
-                    }
-
-                    drawGridLines(step, false);
-                    drawGridLines(1, true);
-
-                    ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colPrimary, 0.74);
-                    ctx.lineWidth = 1.8;
+                function roundedPath(x, y, width, height, radius) {
+                    const r = Math.max(0, Math.min(radius, width / 2, height / 2));
                     ctx.beginPath();
-                    ctx.moveTo(root.screenX(0), 0);
-                    ctx.lineTo(root.screenX(0), h);
-                    ctx.moveTo(0, root.screenY(0));
-                    ctx.lineTo(w, root.screenY(0));
-                    ctx.stroke();
-
-                    ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colSecondary, 0.74);
-                    ctx.lineWidth = 1.6;
-                    ctx.setLineDash([7, 5]);
-                    ctx.strokeRect(root.screenX(0), root.screenY(1), root.pixelsPerUnit, root.pixelsPerUnit);
-                    ctx.setLineDash([]);
-
-                    const first = root.p1();
-                    const second = root.p2();
-                    const startX = root.screenX(0);
-                    const startY = root.screenY(0);
-                    const endX = root.screenX(1);
-                    const endY = root.screenY(1);
-                    const p1x = root.screenX(first[0]);
-                    const p1y = root.screenY(first[1]);
-                    const p2x = root.screenX(second[0]);
-                    const p2y = root.screenY(second[1]);
-
-                    ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colSecondary, 0.78);
-                    ctx.lineWidth = 1.8;
-                    ctx.setLineDash([8, 6]);
-                    ctx.beginPath();
-                    ctx.moveTo(startX, startY);
-                    ctx.lineTo(p1x, p1y);
-                    ctx.moveTo(endX, endY);
-                    ctx.lineTo(p2x, p2y);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    ctx.lineCap = "round";
-                    ctx.lineJoin = "round";
-                    ctx.strokeStyle = Appearance.colors.colPrimary;
-                    ctx.lineWidth = 3.6;
-                    ctx.beginPath();
-                    for (let i = 0; i <= 180; i += 1) {
-                        const t = i / 180;
-                        const point = root.curvePoint(t);
-                        if (i === 0)
-                            ctx.moveTo(root.screenX(point[0]), root.screenY(point[1]));
-                        else
-                            ctx.lineTo(root.screenX(point[0]), root.screenY(point[1]));
-                    }
-                    ctx.stroke();
-
-                    const playPoint = root.curvePoint(root.playhead);
-                    ctx.fillStyle = Appearance.colors.colTertiary;
-                    ctx.beginPath();
-                    ctx.arc(root.screenX(playPoint[0]), root.screenY(playPoint[1]), 9, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    function drawEndpoint(x, y) {
-                        ctx.fillStyle = Appearance.colors.colPrimary;
-                        ctx.beginPath();
-                        ctx.arc(x, y, 5, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-
-                    function drawControlPoint(x, y, selected) {
-                        const side = selected ? 17 : 15;
-                        ctx.fillStyle = Appearance.m3colors.m3surfaceContainerLowest;
-                        ctx.strokeStyle = selected ? Appearance.colors.colTertiary : Appearance.colors.colSecondary;
-                        ctx.lineWidth = selected ? 2.7 : 2.2;
-                        ctx.beginPath();
-                        ctx.rect(x - side / 2, y - side / 2, side, side);
-                        ctx.fill();
-                        ctx.stroke();
-                    }
-
-                    drawEndpoint(startX, startY);
-                    drawEndpoint(endX, endY);
-                    drawControlPoint(p1x, p1y, root.activePoint === 0);
-                    drawControlPoint(p2x, p2y, root.activePoint === 1);
-
-                    ctx.restore();
+                    ctx.moveTo(x + r, y);
+                    ctx.lineTo(x + width - r, y);
+                    ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+                    ctx.lineTo(x + width, y + height - r);
+                    ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+                    ctx.lineTo(x + r, y + height);
+                    ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+                    ctx.lineTo(x, y + r);
+                    ctx.quadraticCurveTo(x, y, x + r, y);
+                    ctx.closePath();
                 }
+
+                ctx.save();
+                roundedPath(0, 0, w, h, Appearance.rounding.normal - 1);
+                ctx.clip();
+
+                ctx.fillStyle = Appearance.m3colors.m3surfaceContainerLowest;
+                ctx.fillRect(0, 0, w, h);
+
+                const minX = root.worldX(0);
+                const maxX = root.worldX(w);
+                const minY = root.worldY(h);
+                const maxY = root.worldY(0);
+                const step = root.pixelsPerUnit >= 320 ? 0.1 : root.pixelsPerUnit >= 160 ? 0.25 :
+                                                                                           root.pixelsPerUnit
+                                                                                           >= 80 ? 0.5 : 1;
+
+                function drawGridLines(gridStep, major) {
+                    const xStart = Math.floor(minX / gridStep) * gridStep;
+                    const xEnd = Math.ceil(maxX / gridStep) * gridStep;
+                    const yStart = Math.floor(minY / gridStep) * gridStep;
+                    const yEnd = Math.ceil(maxY / gridStep) * gridStep;
+                    ctx.strokeStyle = major ? Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant,
+                                                                    0.24) : Appearance.applyAlpha(
+                                                  Appearance.colors.colOnSurfaceVariant, 0.10);
+                    ctx.lineWidth = major ? 1.1 : 0.8;
+                    ctx.beginPath();
+                    for (let x = xStart; x <= xEnd + gridStep / 2; x += gridStep) {
+                        if (major && Math.abs(x - Math.round(x)) > 0.0001)
+                            continue;
+                        const sx = root.screenX(x);
+                        ctx.moveTo(sx, 0);
+                        ctx.lineTo(sx, h);
+                    }
+                    for (let y = yStart; y <= yEnd + gridStep / 2; y += gridStep) {
+                        if (major && Math.abs(y - Math.round(y)) > 0.0001)
+                            continue;
+                        const sy = root.screenY(y);
+                        ctx.moveTo(0, sy);
+                        ctx.lineTo(w, sy);
+                    }
+                    ctx.stroke();
+                }
+
+                drawGridLines(step, false);
+                drawGridLines(1, true);
+
+                ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colPrimary, 0.74);
+                ctx.lineWidth = 1.8;
+                ctx.beginPath();
+                ctx.moveTo(root.screenX(0), 0);
+                ctx.lineTo(root.screenX(0), h);
+                ctx.moveTo(0, root.screenY(0));
+                ctx.lineTo(w, root.screenY(0));
+                ctx.stroke();
+
+                ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colSecondary, 0.74);
+                ctx.lineWidth = 1.6;
+                ctx.setLineDash([7, 5]);
+                ctx.strokeRect(root.screenX(0), root.screenY(1), root.pixelsPerUnit, root.pixelsPerUnit);
+                ctx.setLineDash([]);
+
+                const first = root.p1();
+                const second = root.p2();
+                const startX = root.screenX(0);
+                const startY = root.screenY(0);
+                const endX = root.screenX(1);
+                const endY = root.screenY(1);
+                const p1x = root.screenX(first[0]);
+                const p1y = root.screenY(first[1]);
+                const p2x = root.screenX(second[0]);
+                const p2y = root.screenY(second[1]);
+
+                ctx.strokeStyle = Appearance.applyAlpha(Appearance.colors.colSecondary, 0.78);
+                ctx.lineWidth = 1.8;
+                ctx.setLineDash([8, 6]);
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(p1x, p1y);
+                ctx.moveTo(endX, endY);
+                ctx.lineTo(p2x, p2y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.strokeStyle = Appearance.colors.colPrimary;
+                ctx.lineWidth = 3.6;
+                ctx.beginPath();
+                for (let i = 0; i <= 180; i += 1) {
+                    const t = i / 180;
+                    const point = root.curvePoint(t);
+                    if (i === 0)
+                        ctx.moveTo(root.screenX(point[0]), root.screenY(point[1]));
+                    else
+                        ctx.lineTo(root.screenX(point[0]), root.screenY(point[1]));
+                }
+                ctx.stroke();
+
+                const playPoint = root.curvePoint(root.playhead);
+                ctx.fillStyle = Appearance.colors.colTertiary;
+                ctx.beginPath();
+                ctx.arc(root.screenX(playPoint[0]), root.screenY(playPoint[1]), 9, 0, Math.PI * 2);
+                ctx.fill();
+
+                function drawEndpoint(x, y) {
+                    ctx.fillStyle = Appearance.colors.colPrimary;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                function drawControlPoint(x, y, selected) {
+                    const side = selected ? 17 : 15;
+                    ctx.fillStyle = Appearance.m3colors.m3surfaceContainerLowest;
+                    ctx.strokeStyle = selected ? Appearance.colors.colTertiary :
+                                                 Appearance.colors.colSecondary;
+                    ctx.lineWidth = selected ? 2.7 : 2.2;
+                    ctx.beginPath();
+                    ctx.rect(x - side / 2, y - side / 2, side, side);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+                drawEndpoint(startX, startY);
+                drawEndpoint(endX, endY);
+                drawControlPoint(p1x, p1y, root.activePoint === 0);
+                drawControlPoint(p2x, p2y, root.activePoint === 1);
+
+                ctx.restore();
+            }
+        }
+
+        MouseArea {
+            anchors.fill: editorCanvas
+            acceptedButtons: Qt.LeftButton
+            hoverEnabled: true
+            preventStealing: true
+            cursorShape: root.activePoint >= 0 || root.panning ? Qt.ClosedHandCursor : root.hitTest(mouseX,
+                                                                                                    mouseY)
+                                                                 >= 0 ? Qt.PointingHandCursor :
+                                                                        Qt.OpenHandCursor
+
+            onPressed: mouse => {
+                const hit = root.hitTest(mouse.x, mouse.y);
+                root.lastMouseX = mouse.x;
+                root.lastMouseY = mouse.y;
+                if (hit >= 0) {
+                    root.activePoint = hit;
+                } else {
+                    root.panning = true;
+                }
+                editorCanvas.requestPaint();
             }
 
-            MouseArea {
-                anchors.fill: editorCanvas
-                acceptedButtons: Qt.LeftButton
-                hoverEnabled: true
-                preventStealing: true
-                cursorShape: root.activePoint >= 0 || root.panning ? Qt.ClosedHandCursor : root.hitTest(mouseX, mouseY) >= 0 ? Qt.PointingHandCursor : Qt.OpenHandCursor
+            onPositionChanged: mouse => {
+                if (root.activePoint >= 0) {
+                    root.setControlPoint(root.activePoint, root.worldX(mouse.x), root.worldY(mouse.y));
+                    return;
+                }
 
-                onPressed: mouse => {
-                    const hit = root.hitTest(mouse.x, mouse.y);
+                if (root.panning) {
+                    root.panX += mouse.x - root.lastMouseX;
+                    root.panY += mouse.y - root.lastMouseY;
                     root.lastMouseX = mouse.x;
                     root.lastMouseY = mouse.y;
-                    if (hit >= 0) {
-                        root.activePoint = hit;
-                    } else {
-                        root.panning = true;
-                    }
-                    editorCanvas.requestPaint();
-                }
-
-                onPositionChanged: mouse => {
-                    if (root.activePoint >= 0) {
-                        root.setControlPoint(root.activePoint, root.worldX(mouse.x), root.worldY(mouse.y));
-                        return;
-                    }
-
-                    if (root.panning) {
-                        root.panX += mouse.x - root.lastMouseX;
-                        root.panY += mouse.y - root.lastMouseY;
-                        root.lastMouseX = mouse.x;
-                        root.lastMouseY = mouse.y;
-                        editorCanvas.requestPaint();
-                    }
-                }
-
-                onReleased: {
-                    root.activePoint = -1;
-                    root.panning = false;
-                    editorCanvas.requestPaint();
-                }
-
-                onCanceled: {
-                    root.activePoint = -1;
-                    root.panning = false;
-                    editorCanvas.requestPaint();
-                }
-
-                onWheel: wheel => {
-                    const beforeX = root.worldX(wheel.x);
-                    const beforeY = root.worldY(wheel.y);
-                    const factor = wheel.angleDelta.y > 0 ? 1.12 : 0.89;
-                    root.pixelsPerUnit = Math.max(48, Math.min(720, root.pixelsPerUnit * factor));
-                    root.panX = wheel.x - (editorCanvas.width / 2 - root.pixelsPerUnit / 2) - beforeX * root.pixelsPerUnit;
-                    root.panY = wheel.y + beforeY * root.pixelsPerUnit - editorCanvas.height / 2 - root.pixelsPerUnit / 2;
-                    wheel.accepted = true;
                     editorCanvas.requestPaint();
                 }
             }
 
-            Item {
-                id: topOverlay
-
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.leftMargin: 18
-                anchors.topMargin: 18
-                width: root.headerInfoWidth
-                height: infoColumn.implicitHeight
-
-                ColumnLayout {
-                    id: infoColumn
-
-                    anchors.fill: parent
-                    spacing: 2
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: "P1 " + root.formatNumber(root.renderX1) + ", " + root.formatNumber(root.renderY1)
-                        color: Appearance.colors.colSubtext
-                        font.family: Fonts.mono
-                        font.pixelSize: 12
-                        fontSizeMode: Text.HorizontalFit
-                        minimumPixelSize: 9
-                        elide: Text.ElideNone
-                        wrapMode: Text.NoWrap
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: "P2 " + root.formatNumber(root.renderX2) + ", " + root.formatNumber(root.renderY2)
-                        color: Appearance.colors.colSubtext
-                        font.family: Fonts.mono
-                        font.pixelSize: 12
-                        fontSizeMode: Text.HorizontalFit
-                        minimumPixelSize: 9
-                        elide: Text.ElideNone
-                        wrapMode: Text.NoWrap
-                    }
-                }
+            onReleased: {
+                root.activePoint = -1;
+                root.panning = false;
+                editorCanvas.requestPaint();
             }
 
-            RowLayout {
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 14
-                anchors.topMargin: 14
-                spacing: 8
-
-                EditorIconButton {
-                    iconName: "content_copy"
-                    tooltipText: qsTr("复制")
-                    onClicked: root.copyCurve()
-                }
-
-                EditorIconButton {
-                    iconName: "save"
-                    tooltipText: qsTr("保存")
-                    onClicked: root.saveCurve()
-                }
-
-                EditorIconButton {
-                    iconName: "center_focus_strong"
-                    tooltipText: qsTr("重置视图")
-                    onClicked: root.resetView()
-                }
-
-                EditorIconButton {
-                    iconName: "close"
-                    tooltipText: qsTr("关闭")
-                    onClicked: root.dismiss()
-                }
+            onCanceled: {
+                root.activePoint = -1;
+                root.panning = false;
+                editorCanvas.requestPaint();
             }
 
-            ManualInputBox {
-                id: manualInputPanel
-
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 14
-                anchors.bottomMargin: 14
-                width: Math.min(380, parent.width - 116)
-                visible: opacity > 0
-                opacity: root.manualInputVisible ? 1 : 0
-                scale: root.manualInputVisible ? 1 : 0.96
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: Appearance.animation.expressiveEffects.duration
-                        easing.type: Appearance.animation.expressiveEffects.type
-                        easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Appearance.animation.standard.duration
-                        easing.type: Appearance.animation.standard.type
-                        easing.bezierCurve: Appearance.animation.standard.bezierCurve
-                    }
-                }
+            onWheel: wheel => {
+                const beforeX = root.worldX(wheel.x);
+                const beforeY = root.worldY(wheel.y);
+                const factor = wheel.angleDelta.y > 0 ? 1.12 : 0.89;
+                root.pixelsPerUnit = Math.max(48, Math.min(720, root.pixelsPerUnit * factor));
+                root.panX = wheel.x - (editorCanvas.width / 2 - root.pixelsPerUnit / 2) - beforeX
+                        * root.pixelsPerUnit;
+                root.panY = wheel.y + beforeY * root.pixelsPerUnit - editorCanvas.height / 2
+                        - root.pixelsPerUnit / 2;
+                wheel.accepted = true;
+                editorCanvas.requestPaint();
             }
-
-            Item {
-                id: fabMenu
-
-                readonly property real collapsedMainSize: 72
-                readonly property real expandedMainSize: 50
-                readonly property real actionSize: 50
-                readonly property real actionGap: 4
-                readonly property real mainGap: 8
-                readonly property int actionCount: 4
-
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 18
-                anchors.bottomMargin: 18
-                width: Math.max(collapsedMainSize, playMiniFab.implicitWidth, reverseMiniFab.implicitWidth, flipMiniFab.implicitWidth, manualMiniFab.implicitWidth)
-                height: expandedMainSize + mainGap + actionCount * actionSize + (actionCount - 1) * actionGap
-
-                Item {
-                    id: menuColumn
-
-                    anchors.fill: parent
-
-                    MiniFab {
-                        id: playMiniFab
-
-                        iconName: root.playing ? "pause" : "play_arrow"
-                        labelText: root.playing ? qsTr("暂停") : qsTr("播放")
-                        expanded: root.fabExpanded
-                        order: 4
-                        itemCount: fabMenu.actionCount
-                        actionSize: fabMenu.actionSize
-                        expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
-                        onClicked: root.togglePlayback()
-                    }
-
-                    MiniFab {
-                        id: reverseMiniFab
-
-                        iconName: "keyboard_double_arrow_left"
-                        labelText: qsTr("倒放")
-                        expanded: root.fabExpanded
-                        order: 3
-                        itemCount: fabMenu.actionCount
-                        actionSize: fabMenu.actionSize
-                        expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
-                        onClicked: root.reversePlayback()
-                    }
-
-                    MiniFab {
-                        id: flipMiniFab
-
-                        iconName: "swap_vert"
-                        labelText: qsTr("翻转")
-                        expanded: root.fabExpanded
-                        order: 2
-                        itemCount: fabMenu.actionCount
-                        actionSize: fabMenu.actionSize
-                        expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
-                        onClicked: root.flipCurve()
-                    }
-
-                    MiniFab {
-                        id: manualMiniFab
-
-                        iconName: "edit_note"
-                        labelText: qsTr("手动输入")
-                        expanded: root.fabExpanded
-                        order: 1
-                        itemCount: fabMenu.actionCount
-                        actionSize: fabMenu.actionSize
-                        expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
-                        onClicked: root.toggleManualInput()
-                    }
-
-                    MainFab {
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        expanded: root.fabExpanded
-                        collapsedSize: fabMenu.collapsedMainSize
-                        expandedSize: fabMenu.expandedMainSize
-                        onClicked: root.fabExpanded = !root.fabExpanded
-                    }
-                }
-            }
-
         }
+
+        Item {
+            id: topOverlay
+
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.leftMargin: 18
+            anchors.topMargin: 18
+            width: root.headerInfoWidth
+            height: infoColumn.implicitHeight
+
+            ColumnLayout {
+                id: infoColumn
+
+                anchors.fill: parent
+                spacing: 2
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "P1 " + root.formatNumber(root.renderX1) + ", " + root.formatNumber(root.renderY1)
+                    color: Appearance.colors.colSubtext
+                    font.family: Fonts.mono
+                    font.pixelSize: 12
+                    fontSizeMode: Text.HorizontalFit
+                    minimumPixelSize: 9
+                    elide: Text.ElideNone
+                    wrapMode: Text.NoWrap
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: "P2 " + root.formatNumber(root.renderX2) + ", " + root.formatNumber(root.renderY2)
+                    color: Appearance.colors.colSubtext
+                    font.family: Fonts.mono
+                    font.pixelSize: 12
+                    fontSizeMode: Text.HorizontalFit
+                    minimumPixelSize: 9
+                    elide: Text.ElideNone
+                    wrapMode: Text.NoWrap
+                }
+            }
+        }
+
+        RowLayout {
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.rightMargin: 14
+            anchors.topMargin: 14
+            spacing: 8
+
+            EditorIconButton {
+                iconName: "content_copy"
+                tooltipText: qsTr("Copy")
+                onClicked: root.copyCurve()
+            }
+
+            EditorIconButton {
+                iconName: "save"
+                tooltipText: qsTr("Save")
+                onClicked: root.saveCurve()
+            }
+
+            EditorIconButton {
+                iconName: "center_focus_strong"
+                tooltipText: qsTr("Reset view")
+                onClicked: root.resetView()
+            }
+
+            EditorIconButton {
+                iconName: "close"
+                tooltipText: qsTr("Close")
+                onClicked: root.dismiss()
+            }
+        }
+
+        ManualInputBox {
+            id: manualInputPanel
+
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 14
+            anchors.bottomMargin: 14
+            width: Math.min(380, parent.width - 116)
+            visible: opacity > 0
+            opacity: root.manualInputVisible ? 1 : 0
+            scale: root.manualInputVisible ? 1 : 0.96
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Appearance.animation.expressiveEffects.duration
+                    easing.type: Appearance.animation.expressiveEffects.type
+                    easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
+                }
+            }
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: Appearance.animation.standard.duration
+                    easing.type: Appearance.animation.standard.type
+                    easing.bezierCurve: Appearance.animation.standard.bezierCurve
+                }
+            }
+        }
+
+        Item {
+            id: fabMenu
+
+            readonly property real collapsedMainSize: 72
+            readonly property real expandedMainSize: 50
+            readonly property real actionSize: 50
+            readonly property real actionGap: 4
+            readonly property real mainGap: 8
+            readonly property int actionCount: 4
+
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 18
+            anchors.bottomMargin: 18
+            width: Math.max(collapsedMainSize, playMiniFab.implicitWidth, reverseMiniFab.implicitWidth,
+                            flipMiniFab.implicitWidth, manualMiniFab.implicitWidth)
+            height: expandedMainSize + mainGap + actionCount * actionSize + (actionCount - 1) * actionGap
+
+            Item {
+                id: menuColumn
+
+                anchors.fill: parent
+
+                MiniFab {
+                    id: playMiniFab
+
+                    iconName: root.playing ? "pause" : "play_arrow"
+                    labelText: root.playing ? qsTr("Pause") : qsTr("Play")
+                    expanded: root.fabExpanded
+                    order: 4
+                    itemCount: fabMenu.actionCount
+                    actionSize: fabMenu.actionSize
+                    expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order
+                               * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
+                    onClicked: root.togglePlayback()
+                }
+
+                MiniFab {
+                    id: reverseMiniFab
+
+                    iconName: "keyboard_double_arrow_left"
+                    labelText: qsTr("Reverse")
+                    expanded: root.fabExpanded
+                    order: 3
+                    itemCount: fabMenu.actionCount
+                    actionSize: fabMenu.actionSize
+                    expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order
+                               * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
+                    onClicked: root.reversePlayback()
+                }
+
+                MiniFab {
+                    id: flipMiniFab
+
+                    iconName: "swap_vert"
+                    labelText: qsTr("Flip")
+                    expanded: root.fabExpanded
+                    order: 2
+                    itemCount: fabMenu.actionCount
+                    actionSize: fabMenu.actionSize
+                    expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order
+                               * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
+                    onClicked: root.flipCurve()
+                }
+
+                MiniFab {
+                    id: manualMiniFab
+
+                    iconName: "edit_note"
+                    labelText: qsTr("Enter manually")
+                    expanded: root.fabExpanded
+                    order: 1
+                    itemCount: fabMenu.actionCount
+                    actionSize: fabMenu.actionSize
+                    expandedY: fabMenu.height - fabMenu.expandedMainSize - fabMenu.mainGap - order
+                               * fabMenu.actionSize - (order - 1) * fabMenu.actionGap
+                    onClicked: root.toggleManualInput()
+                }
+
+                MainFab {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    expanded: root.fabExpanded
+                    collapsedSize: fabMenu.collapsedMainSize
+                    expandedSize: fabMenu.expandedMainSize
+                    onClicked: root.fabExpanded = !root.fabExpanded
+                }
+            }
+        }
+    }
 
     component EditorIconButton: IconButton {
         controlSize: 36
@@ -933,10 +939,9 @@ FloatingWindow {
         property real collapsedRadius: 18
         property real morphProgress: expanded ? 1 : 0
         readonly property QtObject spatialMotion: Appearance.animation.elementMoveFast
-        readonly property real currentSize: collapsedSize
-            + (expandedSize - collapsedSize) * morphProgress
-        readonly property real currentRadius: collapsedRadius
-            + (expandedSize / 2 - collapsedRadius) * morphProgress
+        readonly property real currentSize: collapsedSize + (expandedSize - collapsedSize) * morphProgress
+        readonly property real currentRadius: collapsedRadius + (expandedSize / 2 - collapsedRadius)
+                                              * morphProgress
 
         signal clicked
 
@@ -987,9 +992,7 @@ FloatingWindow {
         property real collapsedWidth: actionSize
         property real revealProgress: expanded ? 1 : 0
         readonly property real horizontalPadding: 16
-        readonly property int motionDelay: expanded
-            ? (order - 1) * 18
-            : (itemCount - order) * 12
+        readonly property int motionDelay: expanded ? (order - 1) * 18 : (itemCount - order) * 12
         readonly property QtObject spatialMotion: Appearance.animation.elementMoveFast
         readonly property real visibleProgress: Math.max(0, Math.min(1, revealProgress))
 
@@ -1052,7 +1055,8 @@ FloatingWindow {
         radius: Appearance.rounding.normal
         color: Appearance.applyAlpha(Appearance.m3colors.m3surfaceContainerHigh, 0.92)
         border.width: 1
-        border.color: root.manualInputInvalid ? Appearance.colors.colError : Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.22)
+        border.color: root.manualInputInvalid ? Appearance.colors.colError : Appearance.applyAlpha(
+                                                    Appearance.colors.colOnSurfaceVariant, 0.22)
 
         function focusInput() {
             manualInput.forceActiveFocus();
@@ -1078,11 +1082,11 @@ FloatingWindow {
                     radius: Appearance.rounding.small
                     color: "transparent"
                     border.width: 1
-                    border.color: root.manualInputInvalid
-                                  ? Appearance.colors.colError
-                                  : manualInput.activeFocus
-                                    ? Appearance.colors.colPrimary
-                                    : Appearance.applyAlpha(Appearance.colors.colOnSurfaceVariant, 0.32)
+                    border.color: root.manualInputInvalid ? Appearance.colors.colError :
+                                                            manualInput.activeFocus
+                                                            ? Appearance.colors.colPrimary :
+                                                              Appearance.applyAlpha(
+                                                                  Appearance.colors.colOnSurfaceVariant, 0.32)
                 }
 
                 Rectangle {
@@ -1099,7 +1103,9 @@ FloatingWindow {
                     x: 14
                     y: 0
                     text: "x1, y1, x2, y2"
-                    color: root.manualInputInvalid ? Appearance.colors.colError : manualInput.activeFocus ? Appearance.colors.colPrimary : Appearance.colors.colSubtext
+                    color: root.manualInputInvalid ? Appearance.colors.colError : manualInput.activeFocus
+                                                     ? Appearance.colors.colPrimary :
+                                                       Appearance.colors.colSubtext
                     font.family: Fonts.ui
                     font.pixelSize: 12
                 }
@@ -1136,7 +1142,7 @@ FloatingWindow {
 
             EditorIconButton {
                 iconName: "check"
-                tooltipText: qsTr("应用到草稿")
+                tooltipText: qsTr("Apply to draft")
                 onClicked: root.applyManualInput()
             }
         }

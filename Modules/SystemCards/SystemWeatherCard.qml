@@ -9,12 +9,19 @@ Item {
     id: root
 
     readonly property bool dataAvailable: WeatherPlugin.hasValidData
-    readonly property string temperature: root.dataAvailable && isFinite(Number(WeatherPlugin.currentTemperatureC)) ? Math.round(UiPreferences.weatherTemperature(WeatherPlugin.currentTemperatureC)) + "°" : "--°"
-    readonly property string weatherIcon: root.dataAvailable && String(WeatherPlugin.currentIconName || "").length > 0 ? WeatherPlugin.currentIconName : "cloud"
+    readonly property string temperature: root.dataAvailable && isFinite(Number(
+                                                                             WeatherPlugin.currentTemperatureC))
+                                          ? Math.round(UiPreferences.weatherTemperature(
+                                                           WeatherPlugin.currentTemperatureC)) + "°" : "--°"
+    readonly property string weatherIcon: root.dataAvailable && String(WeatherPlugin.currentIconName
+                                                                       || "").length > 0
+                                          ? WeatherPlugin.currentIconName : "cloud"
 
     implicitWidth: backgroundShape.implicitWidth
     implicitHeight: backgroundShape.implicitHeight
-    Accessible.name: qsTr("天气，") + root.temperature + "，" + (root.dataAvailable ? WeatherPlugin.currentWeatherText : qsTr("天气不可用"))
+    Accessible.name: qsTr("Weather,") + root.temperature + "，" + (root.dataAvailable
+                                                                  ? WeatherPlugin.currentWeatherText : qsTr(
+                                                                        "Weather unavailable"))
 
     MaterialShape {
         id: backgroundShape
@@ -44,7 +51,6 @@ Item {
                 pixelSize: 80
                 weight: Font.Medium
             }
-
         }
 
         MaterialSymbol {
@@ -58,7 +64,6 @@ Item {
                 leftMargin: 16
                 bottomMargin: 20
             }
-
         }
 
         layer.effect: MultiEffect {
@@ -69,7 +74,5 @@ Item {
             shadowHorizontalOffset: 0
             autoPaddingEnabled: true
         }
-
     }
-
 }

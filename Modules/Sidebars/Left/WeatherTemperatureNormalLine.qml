@@ -11,15 +11,17 @@ Item {
     required property string temperatureText
     required property string numericFontFamily
     required property string uiFontFamily
-    property string normalText: qsTr("标准值")
+    property string normalText: qsTr("Normal")
     property color lineColor
     property color labelColor
-    readonly property real lineY: chartBottom - (temperatureC - domainMinimumC) / (domainMaximumC - domainMinimumC) * (chartBottom - chartTop)
+    readonly property real lineY: chartBottom - (temperatureC - domainMinimumC) / (domainMaximumC
+                                                                                   - domainMinimumC) * (
+                                      chartBottom - chartTop)
 
     y: lineY
     height: 1
     enabled: false
-    Accessible.name: temperatureText + " " + qsTr("1991–2020 常年平均")
+    Accessible.name: temperatureText + " " + qsTr("1991–2020 climate normal")
 
     Rectangle {
         anchors.left: parent.left
@@ -50,5 +52,4 @@ Item {
         font.pixelSize: 11
         font.bold: true
     }
-
 }

@@ -15,16 +15,16 @@ StyledButtonGroup {
     horizontalPadding: 8
     buttonMinWidth: 36
     iconOnly: true
-    model: WeatherMapProviders.layerOptions(providerId).map((layer) => {
+    model: WeatherMapProviders.layerOptions(providerId).map(layer => {
         return ({
-            "value": layer.id,
-            "label": layer.label,
-            "icon": layer.icon,
-            "tooltip": layer.label
-        });
+                    "value": layer.id,
+                    "label": layer.label,
+                    "icon": layer.icon,
+                    "tooltip": layer.label
+                });
     })
-    Accessible.name: qsTr("天气地图图层")
-    onValueSelected: (value) => {
+    Accessible.name: qsTr("Weather map layer")
+    onValueSelected: value => {
         return root.layerSelected(value);
     }
 }
