@@ -331,6 +331,25 @@ StyledFlickable {
         y: 24
         spacing: 30
 
+        NiriSetupPrompt {
+            Layout.fillWidth: true
+            title: qsTr("Overview integration")
+            description: qsTr(
+                             "Create or connect backdrop rules and make the global workspace background transparent.")
+            integrationState: NiriConfigService.state("layer-rules")
+            busy: NiriConfigService.busy && NiriConfigService.activeFeature === "layer-rules"
+            blocked: NiriConfigService.busy
+            error: NiriConfigService.error
+            onSetupRequested: NiriConfigService.setup("layer-rules")
+        }
+
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: NiriConfigService.snapshot.overviewSatisfied === true && !NiriConfigService.ready(
+                         "layer-rules")
+            message: qsTr("Overview is already configured outside Clavis")
+        }
+
         Component {
             id: desktopManagerSectionComponent
 
@@ -965,24 +984,6 @@ StyledFlickable {
 
             FlatSettingsSection {
                 Layout.fillWidth: true
-
-                InlineStatusBanner {
-                    Layout.fillWidth: true
-                    visible: WallpaperService.overviewBackdropRuleProbeComplete &&
-                             !WallpaperService.overviewBackdropRuleDetected
-                    tone: "error"
-                    message: qsTr(
-                                 "The niri backdrop rule is missing. Configure clavis-overview-wallpaper manually as documented.")
-                }
-
-                InlineStatusBanner {
-                    Layout.fillWidth: true
-                    visible: WallpaperService.overviewBackdropRuleProbeComplete &&
-                             !WallpaperService.niriTransparentBackgroundDetected
-                    tone: "error"
-                    message: qsTr(
-                                 "The niri workspace background is opaque. Manually set background-color \"transparent\" in layout.")
-                }
 
                 WallpaperPreview {
                     Layout.alignment: Qt.AlignHCenter

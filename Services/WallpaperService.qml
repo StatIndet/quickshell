@@ -25,9 +25,10 @@ Singleton {
     property var overviewReadyScreens: ({})
     property string lastDesktopError: ""
     property string lastOverviewError: ""
-    property bool overviewBackdropRuleDetected: false
-    property bool niriTransparentBackgroundDetected: false
-    property bool overviewBackdropRuleProbeComplete: false
+    readonly property bool overviewBackdropRuleDetected: NiriConfigService.snapshot.overviewBackdrop === true
+    readonly property bool niriTransparentBackgroundDetected: NiriConfigService.snapshot.overviewTransparent
+                                                              === true
+    readonly property bool overviewBackdropRuleProbeComplete: NiriConfigService.revision !== ""
 
     readonly property bool busy: scanning || switching || ThemeService.generating || AwwwWallpaperService.busy
     readonly property var imageExtensions: ["jpg", "jpeg", "png", "webp", "bmp", "gif"]
@@ -451,12 +452,7 @@ Singleton {
     }
 
     function refreshOverviewBackdropRule() {
-        if (overviewBackdropRuleProbe.running)
-            return;
-        root.overviewBackdropRuleProbeComplete = false;
-        overviewBackdropRuleProbe.command = ["grep", "-R", "-F", "-q", "clavis-overview-wallpaper",
-                                             Paths.xdgConfigHome + "/niri"];
-        overviewBackdropRuleProbe.running = true;
+        NiriConfigService.refresh();
     }
 
     Component.onCompleted: {
@@ -715,26 +711,6 @@ Singleton {
                 root.pendingCycleAction = "";
                 root.applyCycle(action);
             }
-        }
-    }
-
-    Process {
-        id: overviewBackdropRuleProbe
-
-        onExited: exitCode => {
-            root.overviewBackdropRuleDetected = exitCode === 0;
-            niriTransparentBackgroundProbe.command = ["grep", "-F", "-q", "background-color \"transparent\"",
-                                                      Paths.xdgConfigHome + "/niri/config.kdl"];
-            niriTransparentBackgroundProbe.running = true;
-        }
-    }
-
-    Process {
-        id: niriTransparentBackgroundProbe
-
-        onExited: exitCode => {
-            root.niriTransparentBackgroundDetected = exitCode === 0;
-            root.overviewBackdropRuleProbeComplete = true;
         }
     }
 }

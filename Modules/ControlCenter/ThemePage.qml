@@ -452,6 +452,17 @@ StyledFlickable {
         y: 28
         spacing: 30
 
+        NiriSetupPrompt {
+            Layout.fillWidth: true
+            title: qsTr("Cursor integration")
+            description: qsTr("Create or connect the Clavis cursor configuration.")
+            integrationState: NiriConfigService.state("cursor")
+            busy: NiriConfigService.busy && NiriConfigService.activeFeature === "cursor"
+            blocked: NiriConfigService.busy
+            error: NiriConfigService.error
+            onSetupRequested: NiriConfigService.setup("cursor")
+        }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: 16
@@ -517,6 +528,7 @@ StyledFlickable {
             iconName: "mouse"
 
             CursorThemeSelect {
+                enabled: NiriConfigService.ready("cursor")
                 cursorThemes: ThemeService.availableCursorThemes
                 currentCursorTheme: PersonalizationConfig.cursorTheme
                 onAccepted: value => ThemeService.setCursorTheme(value)
@@ -530,6 +542,7 @@ StyledFlickable {
             }
 
             SliderSettingRow {
+                enabled: NiriConfigService.ready("cursor")
                 title: qsTr("Cursor size")
                 from: 12
                 to: 128
@@ -540,12 +553,14 @@ StyledFlickable {
             }
 
             ToggleSettingRow {
+                enabled: NiriConfigService.ready("cursor")
                 title: qsTr("Hide while typing")
                 checked: PersonalizationConfig.cursorHideWhenTyping
                 onToggled: checked => ThemeService.setCursorHideWhenTyping(checked)
             }
 
             SliderSettingRow {
+                enabled: NiriConfigService.ready("cursor")
                 title: qsTr("Hide after timeout")
                 description: qsTr("Hide the cursor after inactivity; 0 disables this")
                 from: 0

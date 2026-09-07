@@ -66,6 +66,14 @@ StyledFlickable {
 
             SettingsActionRow {
                 Layout.fillWidth: true
+                iconName: "keyboard"
+                text: qsTr("Keyboard shortcuts")
+                trailingIconName: "chevron_right"
+                onClicked: root.sectionRequested("shortcuts")
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
                 iconName: "language"
                 text: qsTr("Language & region")
                 trailingIconName: "chevron_right"

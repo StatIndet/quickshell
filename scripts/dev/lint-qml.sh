@@ -131,6 +131,7 @@ if [[ ! -d "${tooling_build_dir}" || ! -f "${tooling_build_dir}/qs/qmldir" ]]; t
 fi
 
 qml_import_args=(
+    --bare
     --max-warnings -1
     -I "${repo_root}"
     -I "${tooling_build_dir}"

@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import qs.Services
 
 Singleton {
     id: root
@@ -13,17 +14,13 @@ Singleton {
     readonly property bool available: root.runningOnNiri && root.compositorSupported
     readonly property bool enabled: root.available && PersonalizationConfig.shellBlurEnabled
     readonly property bool xray: PersonalizationConfig.shellBlurXray
-    readonly property bool integrationBusy: integrationProcess.running
+    readonly property bool integrationBusy: NiriConfigService.busy && NiriConfigService.activeFeature
+                                            === "effects"
 
-    property bool niriIntegrationReady: false
-    property string lastError: ""
+    readonly property bool niriIntegrationReady: NiriConfigService.ready("effects")
+    property string versionErrorText: ""
+    readonly property string lastError: versionErrorText || NiriConfigService.error
     property string niriVersion: ""
-    property bool effectsWritePending: false
-
-    readonly property string niriConfigPath: Paths.xdgConfigHome + "/niri/config.kdl"
-    readonly property string niriConfigDir: Paths.xdgConfigHome + "/niri/clavis"
-    readonly property string effectsConfigPath: root.niriConfigDir + "/effects.kdl"
-    readonly property string configScript: Paths.systemScriptsDir + "/manage-niri-effects.sh"
 
     signal integrationConfigured
     signal integrationFailed(string message)
@@ -53,38 +50,15 @@ Singleton {
         return major > 26 || (major === 26 && minor >= 4);
     }
 
-    function includesEffectsConfig(text) {
-        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/effects\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/.test(
-                    String(text || ""));
-    }
-
     function refreshIntegrationState() {
-        niriConfigFile.reload();
+        NiriConfigService.refresh();
     }
-
     function writeEffectsConfig() {
-        if (!root.available)
-            return;
-        if (effectsWriteProcess.running) {
-            root.effectsWritePending = true;
-            return;
-        }
-
-        root.effectsWritePending = false;
-        root.lastError = "";
-        effectsWriteProcess.command = [root.configScript, "write", root.niriConfigPath, root.effectsConfigPath,
-                                       root.xray ? "true" : "false", "niri"];
-        effectsWriteProcess.running = true;
+        if (root.available)
+            NiriConfigService.update("effects");
     }
-
     function configureNiriIntegration() {
-        if (!root.available || integrationProcess.running)
-            return;
-
-        root.lastError = "";
-        integrationProcess.command = [root.configScript, "configure", root.niriConfigPath,
-                                      root.effectsConfigPath, root.xray ? "true" : "false", "niri"];
-        integrationProcess.running = true;
+        NiriConfigService.setup("effects");
     }
 
     Connections {
@@ -117,72 +91,15 @@ Singleton {
             root.niriVersion = versionOutput.text.trim();
             root.compositorSupported = exitCode === 0 && root.supportsVersion(root.niriVersion);
             if (!root.compositorSupported) {
-                root.lastError = exitCode === 0 ? qsTr(
-                                                      "The current Niri version does not support background blur") :
-                                                  (versionError.text.trim() || qsTr(
-                                                       "Unable to detect the Niri version"));
+                root.versionErrorText = exitCode === 0 ? qsTr(
+                                                             "The current Niri version does not support background blur") :
+                                                         (versionError.text.trim() || qsTr(
+                                                              "Unable to detect the Niri version"));
                 return;
             }
 
-            root.lastError = "";
-            if (root.niriIntegrationReady)
-                root.writeEffectsConfig();
+            root.versionErrorText = "";
             root.refreshIntegrationState();
         }
-    }
-
-    Process {
-        id: effectsWriteProcess
-
-        stderr: StdioCollector {
-            id: effectsWriteError
-        }
-
-        onExited: exitCode => {
-            if (exitCode === 0) {
-                root.lastError = "";
-            } else {
-                root.lastError = effectsWriteError.text.trim() || qsTr(
-                            "Unable to write the Niri effects configuration");
-            }
-            if (root.effectsWritePending)
-                Qt.callLater(root.writeEffectsConfig);
-        }
-    }
-
-    Process {
-        id: integrationProcess
-
-        stderr: StdioCollector {
-            id: integrationError
-        }
-
-        onExited: exitCode => {
-            if (exitCode === 0) {
-                root.lastError = "";
-                root.refreshIntegrationState();
-                root.integrationConfigured();
-                return;
-            }
-
-            root.lastError = integrationError.text.trim() || qsTr("Unable to configure Niri integration");
-            root.integrationFailed(root.lastError);
-        }
-    }
-
-    FileView {
-        id: niriConfigFile
-
-        path: root.niriConfigPath
-        blockLoading: true
-        watchChanges: true
-
-        onLoaded: {
-            root.niriIntegrationReady = root.includesEffectsConfig(niriConfigFile.text());
-            if (root.niriIntegrationReady && root.available)
-                root.writeEffectsConfig();
-        }
-        onLoadFailed: root.niriIntegrationReady = false
-        onFileChanged: Qt.callLater(root.refreshIntegrationState)
     }
 }

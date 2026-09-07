@@ -17,10 +17,10 @@ Singleton {
     property bool coreReloaded: false
     property bool generating: false
     property string lastSource: ""
-    property bool cursorIntegrationReady: false
-    property bool cursorWritePending: false
-    property string cursorLastError: ""
-    readonly property bool cursorSyncBusy: cursorWritePending || writeNiriCursorProcess.running
+    readonly property bool cursorIntegrationReady: NiriConfigService.ready("cursor")
+    readonly property string cursorLastError: NiriConfigService.error
+    readonly property bool cursorSyncBusy: NiriConfigService.busy && NiriConfigService.activeFeature
+                                           === "cursor"
     property var availableIconThemes: [({
                                             "label": qsTr("System default"),
                                             "value": ""
@@ -32,14 +32,8 @@ Singleton {
     property string systemDefaultIconTheme: ""
     property string systemDefaultCursorTheme: ""
 
-    readonly property string sessionDesktop: (Quickshell.env("XDG_CURRENT_DESKTOP") || Quickshell.env(
-                                                  "XDG_SESSION_DESKTOP") || "").toLowerCase()
-    readonly property bool isNiriSession: sessionDesktop.indexOf("niri") !== -1 || (Quickshell.env(
-                                                                                        "NIRI_SOCKET") || "")
-                                          !== ""
-    readonly property string niriConfigPath: Paths.xdgConfigHome + "/niri/config.kdl"
-    readonly property string cursorConfigPath: Paths.xdgConfigHome + "/niri/clavis/cursor.kdl"
-    readonly property string cursorConfigScript: Paths.scriptPath("theme", "write_niri_cursor_config.sh")
+    readonly property bool isNiriSession: NiriConfigService.supported
+
     function applyConfigToAppearance() {
         Appearance.matugenScheme = PersonalizationConfig.matugenScheme;
         Appearance.matugenMode = PersonalizationConfig.themeMode;
@@ -193,21 +187,8 @@ Singleton {
     }
 
     function generateNiriCursorConfig() {
-        if (!root.isNiriSession || !PersonalizationConfig.ready)
-            return;
-        if (writeNiriCursorProcess.running) {
-            root.cursorWritePending = true;
-            return;
-        }
-
-        root.cursorWritePending = false;
-        root.cursorLastError = "";
-        writeNiriCursorProcess.command = ["bash", root.cursorConfigScript, root.cursorConfigPath,
-                                          root.niriConfigPath, root.effectiveCursorTheme(), String(
-                                              PersonalizationConfig.cursorSize),
-                                          PersonalizationConfig.cursorHideWhenTyping ? "true" : "false",
-                                          String(PersonalizationConfig.cursorHideAfterInactiveMs), "niri"];
-        writeNiriCursorProcess.running = true;
+        if (PersonalizationConfig.ready)
+            NiriConfigService.update("cursor");
     }
 
     function generateFromWallpaper(path, templateId) {
@@ -351,48 +332,8 @@ Singleton {
         }
     }
 
-    Process {
-        id: writeNiriCursorProcess
-
-        stderr: StdioCollector {
-            id: writeNiriCursorError
-        }
-
-        onExited: exitCode => {
-            if (exitCode === 0) {
-                root.cursorIntegrationReady = true;
-                root.cursorLastError = "";
-                root.refreshCursorIntegrationState();
-            } else {
-                root.cursorLastError = writeNiriCursorError.text.trim() || qsTr(
-                            "Could not write the Niri cursor configuration");
-            }
-
-            if (root.cursorWritePending)
-                root.generateNiriCursorConfig();
-        }
-    }
-
-    function includesCursorConfig(text) {
-        return /(^|\n)\s*include(?:\s+optional=true)?\s+"clavis\/cursor\.kdl"\s*(?:\/\/[^\n]*)?(?:\n|$)/.test(
-                    String(text || ""));
-    }
-
     function refreshCursorIntegrationState() {
-        if (root.isNiriSession)
-            niriConfigFile.reload();
-    }
-
-    FileView {
-        id: niriConfigFile
-
-        path: root.niriConfigPath
-        blockLoading: true
-        watchChanges: true
-
-        onLoaded: root.cursorIntegrationReady = root.includesCursorConfig(niriConfigFile.text())
-        onLoadFailed: root.cursorIntegrationReady = false
-        onFileChanged: Qt.callLater(root.refreshCursorIntegrationState)
+        NiriConfigService.refresh();
     }
 
     Process {

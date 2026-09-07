@@ -34,7 +34,7 @@ overview 表面始终按输出由 Quickshell 创建，不参与桌面后端选�
 
 ## niri layer rule
 
-需要在用户自己的 niri 配置中加入以下规则，Clavis 不会自动修改配置：
+壁纸页的 Overview“设置”按钮可显式创建并接入 `clavis/layer-rules.kdl`：
 
 ```kdl
 layer-rule {
@@ -49,8 +49,8 @@ layout {
 
 如果配置中仍是旧的
 `match namespace="awww-daemonoverview"`，需要由用户手动替换为上面的
-`clavis-overview-wallpaper` 规则。设置中心只检测并提示，不会写入 niri
-配置文件。
+`clavis-overview-wallpaper` 规则。设置中心读取有效 include 链；外部已满足规则与 Clavis 托管接入分别显示。
+首次启动与打开页面不写配置，只有点击“设置”才创建缺失片段并追加 include。
 
 透明的 workspace 背景是 backdrop 与窗口透明/模糊效果正常共存的必要条件。
 如果保持 niri 默认的不透明背景色，kitty 的 `background_opacity` 仍会生效，

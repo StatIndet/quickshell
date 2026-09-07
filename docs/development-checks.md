@@ -40,7 +40,7 @@ normalize。仅明确格式迁移时使用全树写入 `--all`；`--check-all` �
 ```bash
 sudo pacman -S --needed base-devel cmake ninja qt6-base qt6-declarative \
   qt6-shadertools qt6-tools qtkeychain-qt6 libpipewire cava \
-  clang shellcheck python git
+  clang shellcheck python git libxkbcommon
 # Matugen 集成测试需要：
 sudo pacman -S --needed matugen jq
 ```
@@ -101,3 +101,7 @@ QML tooling 依赖 Quickshell 生成的 `.qmlls.ini` 及其 VFS；不能伪造 q
 此时保留失败日志，按本次范围单独运行不依赖格式化的 `scripts/dev/lint-qml.sh`，以及
 确有需要的语法、构建或现有测试。不要重跑已通过阶段，也不要修改脚本来隐藏失败。
 最终分别说明已通过、阻断和未执行项；提供对应日志中的人工恢复命令。
+
+本地 native module 增加导出后，qmllint 使用 `--bare` 和显式 import 根，避免 Qt
+默认的已安装模块优先于 build/qml，造成新增类型无法识别。仍使用真实 Quickshell VFS，
+不编辑系统 import 根或生成的 qmldir。

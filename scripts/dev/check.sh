@@ -98,7 +98,7 @@ for test_name in niri_cursor_config manage_niri_effects matugen_registry; do
     [[ ${scope} != all ]] || run_test=true
     for file in "${files[@]}"; do
         case "${test_name}:${file}" in
-            niri_cursor_config:scripts/system/write_niri_cursor_config.sh|niri_cursor_config:tests/test_niri_cursor_config.sh|\
+            niri_cursor_config:scripts/theme/write_niri_cursor_config.sh|niri_cursor_config:tests/test_niri_cursor_config.sh|\
             manage_niri_effects:scripts/system/manage-niri-effects.sh|manage_niri_effects:tests/test_manage_niri_effects.sh|\
             matugen_registry:scripts/theme/*|matugen_registry:scripts/lib/matugen-registry.sh|matugen_registry:tests/test_matugen_registry.sh|\
             *:scripts/lib/clavis-paths.sh|*:scripts/system/manage-niri-fragment.sh|*:tests/fixtures/*) run_test=true ;;

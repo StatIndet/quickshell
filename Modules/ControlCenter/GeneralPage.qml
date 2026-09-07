@@ -72,6 +72,8 @@ Item {
                 return "Spotlight";
             case "effects":
                 return qsTr("Transparency and blur");
+            case "shortcuts":
+                return qsTr("Keyboard shortcuts");
             case "language-region":
                 return qsTr("Language & region");
             case "autostart":
@@ -103,6 +105,8 @@ Item {
                 return "search";
             case "effects":
                 return "blur_on";
+            case "shortcuts":
+                return "keyboard";
             case "language-region":
                 return "language";
             case "autostart":
@@ -143,6 +147,8 @@ Item {
                 return Qt.resolvedUrl("SpotlightPage.qml");
             case "effects":
                 return Qt.resolvedUrl("GeneralEffectsPage.qml");
+            case "shortcuts":
+                return Qt.resolvedUrl("ShortcutsPage.qml");
             case "language-region":
                 return Qt.resolvedUrl("LanguageAndRegionPage.qml");
             case "autostart":

@@ -27,7 +27,8 @@ Clavis 测试必须在单独 clone 后成立，不能依赖 `../keytop`、`../ke
 顶层 CMake/Ninja 统一构建原生 module、测试与 QML 安装；构建命令与开发入口见
 [docs/development.md](docs/development.md)，仅在准备开发环境或启动 shell 时阅读。
 开发入口 `~/.config/quickshell/clavis` 指向源码；外部入口使用 `${CLAVIS_KEY:-key}`。
-IPC 文档与快捷键使用 `key ipc ...`。不得将仓库或构建绝对路径写入 Niri 配置。
+新增快捷键直接使用 `qs -c clavis ipc call TARGET METHOD [ARGUMENTS...]`；
+`key ipc` 兼容入口保留。不得将仓库或构建绝对路径写入 Niri 配置。
 
 ## QML modules
 

@@ -7,6 +7,8 @@ set_target_properties(ClavisRuntime PROPERTIES
 qt_add_qml_module(ClavisRuntime
     URI Clavis.Runtime
     SOURCES
+        src/config_file_watch.h
+        src/config_file_watch.cpp
         src/clavis_build_info.h
         src/clavis_build_info.cpp
         src/clavis_file_system.h

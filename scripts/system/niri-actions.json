@@ -1,0 +1,1190 @@
+[
+  {
+    "id": "niri:quit",
+    "category": "niri",
+    "name": "Quit",
+    "expression": "quit",
+    "parameters": false
+  },
+  {
+    "id": "niri:suspend",
+    "category": "niri",
+    "name": "Suspend",
+    "expression": "suspend",
+    "parameters": false
+  },
+  {
+    "id": "niri:power-off-monitors",
+    "category": "niri",
+    "name": "Power off monitors",
+    "expression": "power-off-monitors",
+    "parameters": false
+  },
+  {
+    "id": "niri:power-on-monitors",
+    "category": "niri",
+    "name": "Power on monitors",
+    "expression": "power-on-monitors",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-debug-tint",
+    "category": "niri",
+    "name": "Toggle debug tint",
+    "expression": "toggle-debug-tint",
+    "parameters": false
+  },
+  {
+    "id": "niri:debug-toggle-opaque-regions",
+    "category": "niri",
+    "name": "Debug toggle opaque regions",
+    "expression": "debug-toggle-opaque-regions",
+    "parameters": false
+  },
+  {
+    "id": "niri:debug-toggle-damage",
+    "category": "niri",
+    "name": "Debug toggle damage",
+    "expression": "debug-toggle-damage",
+    "parameters": false
+  },
+  {
+    "id": "niri:do-screen-transition",
+    "category": "niri",
+    "name": "Do screen transition",
+    "expression": "do-screen-transition",
+    "parameters": false
+  },
+  {
+    "id": "niri:screenshot",
+    "category": "niri",
+    "name": "Screenshot",
+    "expression": "screenshot",
+    "parameters": false
+  },
+  {
+    "id": "niri:screenshot-screen",
+    "category": "niri",
+    "name": "Screenshot screen",
+    "expression": "screenshot-screen",
+    "parameters": false
+  },
+  {
+    "id": "niri:screenshot-window",
+    "category": "niri",
+    "name": "Screenshot window",
+    "expression": "screenshot-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-keyboard-shortcuts-inhibit",
+    "category": "niri",
+    "name": "Toggle keyboard shortcuts inhibit",
+    "expression": "toggle-keyboard-shortcuts-inhibit",
+    "parameters": false
+  },
+  {
+    "id": "niri:close-window",
+    "category": "niri",
+    "name": "Close window",
+    "expression": "close-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:fullscreen-window",
+    "category": "niri",
+    "name": "Fullscreen window",
+    "expression": "fullscreen-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-windowed-fullscreen",
+    "category": "niri",
+    "name": "Toggle windowed fullscreen",
+    "expression": "toggle-windowed-fullscreen",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-in-column",
+    "category": "niri",
+    "name": "Focus window in column",
+    "expression": "focus-window-in-column 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:focus-window-previous",
+    "category": "niri",
+    "name": "Focus window previous",
+    "expression": "focus-window-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-left",
+    "category": "niri",
+    "name": "Focus column left",
+    "expression": "focus-column-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-right",
+    "category": "niri",
+    "name": "Focus column right",
+    "expression": "focus-column-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-first",
+    "category": "niri",
+    "name": "Focus column first",
+    "expression": "focus-column-first",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-last",
+    "category": "niri",
+    "name": "Focus column last",
+    "expression": "focus-column-last",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-right-or-first",
+    "category": "niri",
+    "name": "Focus column right or first",
+    "expression": "focus-column-right-or-first",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-left-or-last",
+    "category": "niri",
+    "name": "Focus column left or last",
+    "expression": "focus-column-left-or-last",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column",
+    "category": "niri",
+    "name": "Focus column",
+    "expression": "focus-column 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:focus-window-or-monitor-up",
+    "category": "niri",
+    "name": "Focus window or monitor up",
+    "expression": "focus-window-or-monitor-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-or-monitor-down",
+    "category": "niri",
+    "name": "Focus window or monitor down",
+    "expression": "focus-window-or-monitor-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-or-monitor-left",
+    "category": "niri",
+    "name": "Focus column or monitor left",
+    "expression": "focus-column-or-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-column-or-monitor-right",
+    "category": "niri",
+    "name": "Focus column or monitor right",
+    "expression": "focus-column-or-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-down",
+    "category": "niri",
+    "name": "Focus window down",
+    "expression": "focus-window-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-up",
+    "category": "niri",
+    "name": "Focus window up",
+    "expression": "focus-window-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-down-or-column-left",
+    "category": "niri",
+    "name": "Focus window down or column left",
+    "expression": "focus-window-down-or-column-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-down-or-column-right",
+    "category": "niri",
+    "name": "Focus window down or column right",
+    "expression": "focus-window-down-or-column-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-up-or-column-left",
+    "category": "niri",
+    "name": "Focus window up or column left",
+    "expression": "focus-window-up-or-column-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-up-or-column-right",
+    "category": "niri",
+    "name": "Focus window up or column right",
+    "expression": "focus-window-up-or-column-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-or-workspace-down",
+    "category": "niri",
+    "name": "Focus window or workspace down",
+    "expression": "focus-window-or-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-or-workspace-up",
+    "category": "niri",
+    "name": "Focus window or workspace up",
+    "expression": "focus-window-or-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-top",
+    "category": "niri",
+    "name": "Focus window top",
+    "expression": "focus-window-top",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-bottom",
+    "category": "niri",
+    "name": "Focus window bottom",
+    "expression": "focus-window-bottom",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-down-or-top",
+    "category": "niri",
+    "name": "Focus window down or top",
+    "expression": "focus-window-down-or-top",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-window-up-or-bottom",
+    "category": "niri",
+    "name": "Focus window up or bottom",
+    "expression": "focus-window-up-or-bottom",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-left",
+    "category": "niri",
+    "name": "Move column left",
+    "expression": "move-column-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-right",
+    "category": "niri",
+    "name": "Move column right",
+    "expression": "move-column-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-first",
+    "category": "niri",
+    "name": "Move column to first",
+    "expression": "move-column-to-first",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-last",
+    "category": "niri",
+    "name": "Move column to last",
+    "expression": "move-column-to-last",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-left-or-to-monitor-left",
+    "category": "niri",
+    "name": "Move column left or to monitor left",
+    "expression": "move-column-left-or-to-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-right-or-to-monitor-right",
+    "category": "niri",
+    "name": "Move column right or to monitor right",
+    "expression": "move-column-right-or-to-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-index",
+    "category": "niri",
+    "name": "Move column to index",
+    "expression": "move-column-to-index 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-window-down",
+    "category": "niri",
+    "name": "Move window down",
+    "expression": "move-window-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-up",
+    "category": "niri",
+    "name": "Move window up",
+    "expression": "move-window-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-down-or-to-workspace-down",
+    "category": "niri",
+    "name": "Move window down or to workspace down",
+    "expression": "move-window-down-or-to-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-up-or-to-workspace-up",
+    "category": "niri",
+    "name": "Move window up or to workspace up",
+    "expression": "move-window-up-or-to-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:consume-or-expel-window-left",
+    "category": "niri",
+    "name": "Consume or expel window left",
+    "expression": "consume-or-expel-window-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:consume-or-expel-window-right",
+    "category": "niri",
+    "name": "Consume or expel window right",
+    "expression": "consume-or-expel-window-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:consume-window-into-column",
+    "category": "niri",
+    "name": "Consume window into column",
+    "expression": "consume-window-into-column",
+    "parameters": false
+  },
+  {
+    "id": "niri:expel-window-from-column",
+    "category": "niri",
+    "name": "Expel window from column",
+    "expression": "expel-window-from-column",
+    "parameters": false
+  },
+  {
+    "id": "niri:swap-window-left",
+    "category": "niri",
+    "name": "Swap window left",
+    "expression": "swap-window-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:swap-window-right",
+    "category": "niri",
+    "name": "Swap window right",
+    "expression": "swap-window-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-column-tabbed-display",
+    "category": "niri",
+    "name": "Toggle column tabbed display",
+    "expression": "toggle-column-tabbed-display",
+    "parameters": false
+  },
+  {
+    "id": "niri:set-column-display",
+    "category": "niri",
+    "name": "Set column display",
+    "expression": "set-column-display \"tabbed\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:center-column",
+    "category": "niri",
+    "name": "Center column",
+    "expression": "center-column",
+    "parameters": false
+  },
+  {
+    "id": "niri:center-window",
+    "category": "niri",
+    "name": "Center window",
+    "expression": "center-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:center-visible-columns",
+    "category": "niri",
+    "name": "Center visible columns",
+    "expression": "center-visible-columns",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-workspace-down",
+    "category": "niri",
+    "name": "Focus workspace down",
+    "expression": "focus-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-workspace-up",
+    "category": "niri",
+    "name": "Focus workspace up",
+    "expression": "focus-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-workspace",
+    "category": "niri",
+    "name": "Focus workspace",
+    "expression": "focus-workspace 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:focus-workspace-previous",
+    "category": "niri",
+    "name": "Focus workspace previous",
+    "expression": "focus-workspace-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-workspace-down",
+    "category": "niri",
+    "name": "Move window to workspace down",
+    "expression": "move-window-to-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-workspace-up",
+    "category": "niri",
+    "name": "Move window to workspace up",
+    "expression": "move-window-to-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-workspace",
+    "category": "niri",
+    "name": "Move window to workspace",
+    "expression": "move-window-to-workspace 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-column-to-workspace-down",
+    "category": "niri",
+    "name": "Move column to workspace down",
+    "expression": "move-column-to-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-workspace-up",
+    "category": "niri",
+    "name": "Move column to workspace up",
+    "expression": "move-column-to-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-workspace",
+    "category": "niri",
+    "name": "Move column to workspace",
+    "expression": "move-column-to-workspace 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-workspace-down",
+    "category": "niri",
+    "name": "Move workspace down",
+    "expression": "move-workspace-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-up",
+    "category": "niri",
+    "name": "Move workspace up",
+    "expression": "move-workspace-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-index",
+    "category": "niri",
+    "name": "Move workspace to index",
+    "expression": "move-workspace-to-index 1",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-workspace-to-monitor",
+    "category": "niri",
+    "name": "Move workspace to monitor",
+    "expression": "move-workspace-to-monitor \"<output>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:set-workspace-name",
+    "category": "niri",
+    "name": "Set workspace name",
+    "expression": "set-workspace-name \"<name>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:unset-workspace-name",
+    "category": "niri",
+    "name": "Unset workspace name",
+    "expression": "unset-workspace-name",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-left",
+    "category": "niri",
+    "name": "Focus monitor left",
+    "expression": "focus-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-right",
+    "category": "niri",
+    "name": "Focus monitor right",
+    "expression": "focus-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-down",
+    "category": "niri",
+    "name": "Focus monitor down",
+    "expression": "focus-monitor-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-up",
+    "category": "niri",
+    "name": "Focus monitor up",
+    "expression": "focus-monitor-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-previous",
+    "category": "niri",
+    "name": "Focus monitor previous",
+    "expression": "focus-monitor-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor-next",
+    "category": "niri",
+    "name": "Focus monitor next",
+    "expression": "focus-monitor-next",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-monitor",
+    "category": "niri",
+    "name": "Focus monitor",
+    "expression": "focus-monitor \"<output>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-window-to-monitor-left",
+    "category": "niri",
+    "name": "Move window to monitor left",
+    "expression": "move-window-to-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor-right",
+    "category": "niri",
+    "name": "Move window to monitor right",
+    "expression": "move-window-to-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor-down",
+    "category": "niri",
+    "name": "Move window to monitor down",
+    "expression": "move-window-to-monitor-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor-up",
+    "category": "niri",
+    "name": "Move window to monitor up",
+    "expression": "move-window-to-monitor-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor-previous",
+    "category": "niri",
+    "name": "Move window to monitor previous",
+    "expression": "move-window-to-monitor-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor-next",
+    "category": "niri",
+    "name": "Move window to monitor next",
+    "expression": "move-window-to-monitor-next",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-monitor",
+    "category": "niri",
+    "name": "Move window to monitor",
+    "expression": "move-window-to-monitor \"<output>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:move-column-to-monitor-left",
+    "category": "niri",
+    "name": "Move column to monitor left",
+    "expression": "move-column-to-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor-right",
+    "category": "niri",
+    "name": "Move column to monitor right",
+    "expression": "move-column-to-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor-down",
+    "category": "niri",
+    "name": "Move column to monitor down",
+    "expression": "move-column-to-monitor-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor-up",
+    "category": "niri",
+    "name": "Move column to monitor up",
+    "expression": "move-column-to-monitor-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor-previous",
+    "category": "niri",
+    "name": "Move column to monitor previous",
+    "expression": "move-column-to-monitor-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor-next",
+    "category": "niri",
+    "name": "Move column to monitor next",
+    "expression": "move-column-to-monitor-next",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-column-to-monitor",
+    "category": "niri",
+    "name": "Move column to monitor",
+    "expression": "move-column-to-monitor \"<output>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:set-window-width",
+    "category": "niri",
+    "name": "Set window width",
+    "expression": "set-window-width \"50%\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:set-window-height",
+    "category": "niri",
+    "name": "Set window height",
+    "expression": "set-window-height \"50%\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:reset-window-height",
+    "category": "niri",
+    "name": "Reset window height",
+    "expression": "reset-window-height",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-column-width",
+    "category": "niri",
+    "name": "Switch preset column width",
+    "expression": "switch-preset-column-width",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-column-width-back",
+    "category": "niri",
+    "name": "Switch preset column width back",
+    "expression": "switch-preset-column-width-back",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-window-width",
+    "category": "niri",
+    "name": "Switch preset window width",
+    "expression": "switch-preset-window-width",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-window-width-back",
+    "category": "niri",
+    "name": "Switch preset window width back",
+    "expression": "switch-preset-window-width-back",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-window-height",
+    "category": "niri",
+    "name": "Switch preset window height",
+    "expression": "switch-preset-window-height",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-preset-window-height-back",
+    "category": "niri",
+    "name": "Switch preset window height back",
+    "expression": "switch-preset-window-height-back",
+    "parameters": false
+  },
+  {
+    "id": "niri:maximize-column",
+    "category": "niri",
+    "name": "Maximize column",
+    "expression": "maximize-column",
+    "parameters": false
+  },
+  {
+    "id": "niri:maximize-window-to-edges",
+    "category": "niri",
+    "name": "Maximize window to edges",
+    "expression": "maximize-window-to-edges",
+    "parameters": false
+  },
+  {
+    "id": "niri:set-column-width",
+    "category": "niri",
+    "name": "Set column width",
+    "expression": "set-column-width \"50%\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:expand-column-to-available-width",
+    "category": "niri",
+    "name": "Expand column to available width",
+    "expression": "expand-column-to-available-width",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-layout",
+    "category": "niri",
+    "name": "Switch layout",
+    "expression": "switch-layout \"next\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:show-hotkey-overlay",
+    "category": "niri",
+    "name": "Show hotkey overlay",
+    "expression": "show-hotkey-overlay",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-left",
+    "category": "niri",
+    "name": "Move workspace to monitor left",
+    "expression": "move-workspace-to-monitor-left",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-right",
+    "category": "niri",
+    "name": "Move workspace to monitor right",
+    "expression": "move-workspace-to-monitor-right",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-down",
+    "category": "niri",
+    "name": "Move workspace to monitor down",
+    "expression": "move-workspace-to-monitor-down",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-up",
+    "category": "niri",
+    "name": "Move workspace to monitor up",
+    "expression": "move-workspace-to-monitor-up",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-previous",
+    "category": "niri",
+    "name": "Move workspace to monitor previous",
+    "expression": "move-workspace-to-monitor-previous",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-workspace-to-monitor-next",
+    "category": "niri",
+    "name": "Move workspace to monitor next",
+    "expression": "move-workspace-to-monitor-next",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-window-floating",
+    "category": "niri",
+    "name": "Toggle window floating",
+    "expression": "toggle-window-floating",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-floating",
+    "category": "niri",
+    "name": "Move window to floating",
+    "expression": "move-window-to-floating",
+    "parameters": false
+  },
+  {
+    "id": "niri:move-window-to-tiling",
+    "category": "niri",
+    "name": "Move window to tiling",
+    "expression": "move-window-to-tiling",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-floating",
+    "category": "niri",
+    "name": "Focus floating",
+    "expression": "focus-floating",
+    "parameters": false
+  },
+  {
+    "id": "niri:focus-tiling",
+    "category": "niri",
+    "name": "Focus tiling",
+    "expression": "focus-tiling",
+    "parameters": false
+  },
+  {
+    "id": "niri:switch-focus-between-floating-and-tiling",
+    "category": "niri",
+    "name": "Switch focus between floating and tiling",
+    "expression": "switch-focus-between-floating-and-tiling",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-window-rule-opacity",
+    "category": "niri",
+    "name": "Toggle window rule opacity",
+    "expression": "toggle-window-rule-opacity",
+    "parameters": false
+  },
+  {
+    "id": "niri:set-dynamic-cast-window",
+    "category": "niri",
+    "name": "Set dynamic cast window",
+    "expression": "set-dynamic-cast-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:set-dynamic-cast-monitor",
+    "category": "niri",
+    "name": "Set dynamic cast monitor",
+    "expression": "set-dynamic-cast-monitor",
+    "parameters": false
+  },
+  {
+    "id": "niri:clear-dynamic-cast-target",
+    "category": "niri",
+    "name": "Clear dynamic cast target",
+    "expression": "clear-dynamic-cast-target",
+    "parameters": false
+  },
+  {
+    "id": "niri:toggle-overview",
+    "category": "niri",
+    "name": "Toggle overview",
+    "expression": "toggle-overview",
+    "parameters": false
+  },
+  {
+    "id": "niri:open-overview",
+    "category": "niri",
+    "name": "Open overview",
+    "expression": "open-overview",
+    "parameters": false
+  },
+  {
+    "id": "niri:close-overview",
+    "category": "niri",
+    "name": "Close overview",
+    "expression": "close-overview",
+    "parameters": false
+  },
+  {
+    "id": "niri:spawn",
+    "category": "niri",
+    "name": "Run program",
+    "expression": "spawn \"<program>\"",
+    "parameters": true
+  },
+  {
+    "id": "niri:spawn-sh",
+    "category": "niri",
+    "name": "Run shell command",
+    "expression": "spawn-sh \"<shell-command>\"",
+    "parameters": true
+  },
+  {
+    "id": "clavis:lock:open",
+    "category": "clavis",
+    "name": "Lock: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"lock\" \"open\"",
+    "parameters": false,
+    "target": "lock",
+    "method": "open"
+  },
+  {
+    "id": "clavis:lock:isLocked",
+    "category": "clavis",
+    "name": "Lock: is locked",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"lock\" \"isLocked\"",
+    "parameters": false,
+    "target": "lock",
+    "method": "isLocked"
+  },
+  {
+    "id": "clavis:spotlight:toggle",
+    "category": "clavis",
+    "name": "Spotlight: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"toggle\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:spotlight:open",
+    "category": "clavis",
+    "name": "Spotlight: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"open\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "open"
+  },
+  {
+    "id": "clavis:spotlight:close",
+    "category": "clavis",
+    "name": "Spotlight: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"close\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "close"
+  },
+  {
+    "id": "clavis:spotlight:web",
+    "category": "clavis",
+    "name": "Spotlight: web",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"web\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "web"
+  },
+  {
+    "id": "clavis:spotlight:openMode",
+    "category": "clavis",
+    "name": "Spotlight: open mode",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"openMode\" \"<mode>\"",
+    "parameters": true,
+    "target": "spotlight",
+    "method": "openMode"
+  },
+  {
+    "id": "clavis:wallpaper:set",
+    "category": "clavis",
+    "name": "Wallpaper: set",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"set\" \"<path>\"",
+    "parameters": true,
+    "target": "wallpaper",
+    "method": "set"
+  },
+  {
+    "id": "clavis:wallpaper:setForScreen",
+    "category": "clavis",
+    "name": "Wallpaper: set for screen",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"setForScreen\" \"<path>\" \"<screenName>\"",
+    "parameters": true,
+    "target": "wallpaper",
+    "method": "setForScreen"
+  },
+  {
+    "id": "clavis:wallpaper:clear",
+    "category": "clavis",
+    "name": "Wallpaper: clear",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"clear\"",
+    "parameters": false,
+    "target": "wallpaper",
+    "method": "clear"
+  },
+  {
+    "id": "clavis:wallpaper:clearForScreen",
+    "category": "clavis",
+    "name": "Wallpaper: clear for screen",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"clearForScreen\" \"<screenName>\"",
+    "parameters": true,
+    "target": "wallpaper",
+    "method": "clearForScreen"
+  },
+  {
+    "id": "clavis:wallpaper:previous",
+    "category": "clavis",
+    "name": "Wallpaper: previous",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"previous\"",
+    "parameters": false,
+    "target": "wallpaper",
+    "method": "previous"
+  },
+  {
+    "id": "clavis:wallpaper:next",
+    "category": "clavis",
+    "name": "Wallpaper: next",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"next\"",
+    "parameters": false,
+    "target": "wallpaper",
+    "method": "next"
+  },
+  {
+    "id": "clavis:wallpaper:random",
+    "category": "clavis",
+    "name": "Wallpaper: random",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"random\"",
+    "parameters": false,
+    "target": "wallpaper",
+    "method": "random"
+  },
+  {
+    "id": "clavis:wallpaper:setFolder",
+    "category": "clavis",
+    "name": "Wallpaper: set folder",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"wallpaper\" \"setFolder\" \"<path>\"",
+    "parameters": true,
+    "target": "wallpaper",
+    "method": "setFolder"
+  },
+  {
+    "id": "clavis:control-center:open",
+    "category": "clavis",
+    "name": "Control center: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"<pageId>\"",
+    "parameters": true,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:close",
+    "category": "clavis",
+    "name": "Control center: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"close\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "close"
+  },
+  {
+    "id": "clavis:control-center:toggle",
+    "category": "clavis",
+    "name": "Control center: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"<pageId>\"",
+    "parameters": true,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:keystone:cancelRecord",
+    "category": "clavis",
+    "name": "Keystone: cancel record",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"cancelRecord\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "cancelRecord"
+  },
+  {
+    "id": "clavis:keystone:closeAllOthers",
+    "category": "clavis",
+    "name": "Keystone: close all others",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"closeAllOthers\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "closeAllOthers"
+  },
+  {
+    "id": "clavis:keystone:currentStyle",
+    "category": "clavis",
+    "name": "Keystone: current style",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"currentStyle\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "currentStyle"
+  },
+  {
+    "id": "clavis:keystone:dashboard",
+    "category": "clavis",
+    "name": "Keystone: dashboard",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"dashboard\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "dashboard"
+  },
+  {
+    "id": "clavis:keystone:hub",
+    "category": "clavis",
+    "name": "Keystone: hub",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"hub\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "hub"
+  },
+  {
+    "id": "clavis:keystone:tools",
+    "category": "clavis",
+    "name": "Keystone: tools",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"tools\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "tools"
+  },
+  {
+    "id": "clavis:sidebar:open",
+    "category": "clavis",
+    "name": "Sidebar: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"<side>\"",
+    "parameters": true,
+    "target": "sidebar",
+    "method": "open"
+  },
+  {
+    "id": "clavis:sidebar:close",
+    "category": "clavis",
+    "name": "Sidebar: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"<side>\"",
+    "parameters": true,
+    "target": "sidebar",
+    "method": "close"
+  },
+  {
+    "id": "clavis:sidebar:toggle",
+    "category": "clavis",
+    "name": "Sidebar: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"<side>\"",
+    "parameters": true,
+    "target": "sidebar",
+    "method": "toggle"
+  }
+]

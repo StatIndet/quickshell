@@ -1,33 +1,55 @@
 # 配置与启动所有权
 
-Clavis 设置数据库位于 `$XDG_CONFIG_HOME/clavis/config.json`，它只保存 Shell 自身
-设置。Niri 的输出、布局与快捷键配置由用户直接管理，不属于 Clavis 设置中心。
+Clavis 设置数据库位于 `$XDG_CONFIG_HOME/clavis/config.json`，保存 Shell 设置。
+Niri 主配置、输出、布局和用户自己的片段仍由用户管理；设置中心只读有效 include
+链，日常仅写以下 Clavis 托管片段，不迁移用户原有绑定。
 
-| 路径或机制 | 所有者 | 职责 |
+| 片段 | 职责 | 显式入口 |
 | --- | --- | --- |
-| `$XDG_CONFIG_HOME/niri/config.kdl` | 用户 | 主配置与 include 顺序 |
-| 用户自己的其他 `.kdl` | 用户 | Niri 输出、布局、快捷键与其他配置 |
-| `$XDG_CONFIG_HOME/niri/clavis/colors.kdl` | Clavis | Matugen 生成的 Niri 配色 |
-| `$XDG_CONFIG_HOME/niri/clavis/effects.kdl` | Clavis | Shell 背景模糊集成 |
-| `$XDG_CONFIG_HOME/niri/clavis/cursor.kdl` | Clavis | 根据 Cursor 设置生成的 Niri 鼠标指针 fragment |
-| `$XDG_CONFIG_HOME/clavis/config.json` | Clavis | 设置中心持久化 |
-| 两个 `clavis-*.service` | systemd user | 与 `niri.service` 同生命周期的进程 |
-| `$XDG_CONFIG_HOME/autostart/*.desktop` | 用户/XDG | 普通桌面应用启动 |
+| `clavis/effects.kdl` | Clavis 表面的 X-Ray 规则；默认可只有注释，不接管全局 blur | General → 透明与模糊 |
+| `clavis/cursor.kdl` | 光标主题、尺寸和隐藏选项 | 主题的光标区域 |
+| `clavis/layer-rules.kdl` | Overview backdrop 规则及全局透明 workspace 背景 | 壁纸的 Overview 区域 |
+| `clavis/binds.kdl` | 用户在快捷键页新增的绑定及完整覆盖 | General → 系统 → 快捷键 |
 
-Clavis 不扫描、编辑或持久化 Niri 的输出、布局与快捷键设置，也不把这些字段写入
-Shell 配置数据库。
+没有内置 outputs/colors 片段注册或模板；历史文档的 colors.kdl 所有权说明已撤下。
+正常 Matugen、colors.json、输出查询、多屏定位和按屏幕壁纸保持各自职责。
+用户仍可注册自己的任意 Matugen 模板。历史用户文件及 include 不会自动清扫。
 
-会话由 `niri-session` 启动，`key session` 已删除。Shell 与剪贴板 watcher 的 unit
-通过 `WantedBy=niri.service` 安装，且声明 `PartOf=`、`Requisite=` 和 `After=`；安装只
-enable，不使用 `--now`。Fcitx5、nm-applet、blueman-applet 由 XDG Autostart 管理，
-Polkit 代理仍由用户 `startup.kdl` 启动。
+安装只部署程序与只读资源。启动、页面加载、文件监听均不初始化片段。
+点击对应“设置”才创建缺失文件并在主配置末尾追加缺失的顶层 include；已有文件
+即使为空也不填充。普通、可选、间接和等价路径 include 均由 KDL 解析器识别。
+删除文件或 include 后停止生成并重新提示，不能用永久 firstSetupDone 标记代替状态。
 
-Matugen 颜色写入 `niri/clavis/colors.kdl`，背景效果写入
-`niri/clavis/effects.kdl`，鼠标指针设置写入 `niri/clavis/cursor.kdl`。
-`config.json` 是用户在 Clavis 设置中心选择的持久化 source of truth；
-`cursor.kdl` 只是自动生成、供 Niri 的
-`include optional=true "clavis/cursor.kdl"` 消费的 fragment，不应手工编辑。
-外部应用仍读取自己的配置。
+默认主配置采用 XDG 路径；优先尊重 NIRI_CONFIG 和可确认的 niri 自定义启动路径。
+不能确定多个会话配置时拒绝写入。主配置不存在时不另建；符号链接、硬链接、特殊
+文件和不可写目标只读，不提权。片段路径相对于实际主配置的目录。
+
+共享按需 helper `scripts/system/niri_config.py` 使用随程序部署的 KDL-py 解析器，
+不执行动作。候选 include 图在临时目录中保留合并边界，用真实 `niri validate`
+验证后发布。所有功能共用 flock，提交前比较读取版本；主配置修改前保存唯一命名
+的备份。先发布片段，再追加 include；失败时在内容仍为本次版本的情况下回滚片段。
+多文件操作不是原子事务；不遵守锁的外部编辑器仍存在最后检查后的竞争窗口。
+磁盘保存、已引用及 niri 实际重载是不同状态，不主动执行 reload 或重启。
+
+快捷键按照完整的有类型动作表达式归组；目录占位不保存到配置数据库。
+内置动作始终保留，参数模板需要用户填写。当前项目没有明确的初始 IPC 键位方案，
+新 binds.kdl 为空。升级和重新启动不补回已删除绑定。
+
+外部绑定的标题或选项编辑会在 binds.kdl 中建立同键的完整覆盖，不修改源文件。
+每颗 chip 的标题和选项独立；未设置标题、空串和 null 分别保留。
+同一托管项就地更新；改键组成一次候选修改。撞上另一托管键时拒绝，不自动让位。
+外部原绑定不能删除或直接改键；使用“+”添加另一个键。托管项可删除，覆盖项可
+移除覆盖，之后重新展示外部回落。后续 include 可以再次覆盖 Clavis 项，UI 展示来源
+及覆盖状态；不调整 include 顺序。Mod 与实际修饰键的不同拼写按 niri 的符号合并与
+物理触发顺序分别判断，物理冲突不伪报成后写覆盖。鼠标、滚轮、switch-events 等范围外内容原样保留。
+
+监听只覆盖主配置、有效 include 链及这些文件的父目录，支持原子替换和缺失文件
+恢复，不扫描备份或轮询整个目录。编辑期间保留草稿，版本变化要求取消并重载。
+按键录制仅在实际设置窗口获准 ShortcutInhibitor 后捕获，失焦/关闭立即释放；
+无法匹配实时键盘布局时提示手工输入 XKB 键名。
+
+会话由 niri-session 启动，Shell 与剪贴板 watcher 的 unit 跟随 niri.service。
+Fcitx5、nm-applet、blueman-applet 由 XDG Autostart 管理，Polkit 代理仍由用户配置启动。
 
 ## Matugen 模板注册与启用状态
 

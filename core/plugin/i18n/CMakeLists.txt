@@ -25,6 +25,7 @@ file(GLOB_RECURSE CLAVIS_TRANSLATION_SOURCES CONFIGURE_DEPENDS
     "${CLAVIS_SOURCE_ROOT}/Widgets/*.qml"
 )
 list(APPEND CLAVIS_TRANSLATION_SOURCES
+    "${CLAVIS_SOURCE_ROOT}/core/plugin/keyboard/src/shortcut_recorder.cpp"
     "${CLAVIS_SOURCE_ROOT}/AppShell.qml"
     "${CLAVIS_SOURCE_ROOT}/shell.qml"
 )

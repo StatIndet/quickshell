@@ -11,15 +11,7 @@ StyledFlickable {
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
 
-    Component.onCompleted: BlurService.writeEffectsConfig()
-
-    Connections {
-        target: BlurService
-        function onAvailableChanged() {
-            if (BlurService.available)
-                BlurService.writeEffectsConfig();
-        }
-    }
+    Component.onCompleted: NiriConfigService.refresh()
 
     ColumnLayout {
         id: contentColumn
@@ -27,6 +19,17 @@ StyledFlickable {
         width: Math.min(640, Math.max(0, root.width - Metrics.pageMargin * 2))
         x: Math.max(Metrics.pageMargin, (root.width - width) / 2)
         y: Metrics.pageMargin
+
+        NiriSetupPrompt {
+            Layout.fillWidth: true
+            title: qsTr("Background effects")
+            description: qsTr("Create or connect the Clavis X-Ray rules.")
+            integrationState: NiriConfigService.state("effects")
+            busy: NiriConfigService.busy && NiriConfigService.activeFeature === "effects"
+            blocked: NiriConfigService.busy
+            error: NiriConfigService.error
+            onSetupRequested: NiriConfigService.setup("effects")
+        }
 
         SettingsSection {
             Layout.fillWidth: true
@@ -71,17 +74,6 @@ StyledFlickable {
                     Accessible.name: qsTr("Blur wallpaper only")
                     onToggled: PersonalizationConfig.setShellBlurXray(checked)
                 }
-            }
-
-            SettingsActionRow {
-                Layout.fillWidth: true
-                visible: BlurService.available && !BlurService.niriIntegrationReady
-                iconName: "settings"
-                text: BlurService.integrationBusy ? qsTr("Configuring Niri integration…") : qsTr(
-                                                        "Configure Niri integration")
-                trailingIconName: "chevron_right"
-                enabled: !BlurService.integrationBusy
-                onClicked: BlurService.configureNiriIntegration()
             }
 
             InlineStatusBanner {
