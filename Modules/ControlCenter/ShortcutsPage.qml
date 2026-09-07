@@ -178,7 +178,6 @@ ListView {
             cancel();
             return;
         }
-        cleanup.stop();
         recording = false;
         inlineRecording = false;
         editorOpen = expand;
@@ -232,14 +231,15 @@ ListView {
     }
 
     function cancel() {
+        const wasOpen = editorOpen;
         recording = false;
         inlineRecording = false;
         editorOpen = false;
-        cleanup.restart();
+        if (!wasOpen)
+            clearDraft();
     }
 
     function clearDraft() {
-        cleanup.stop();
         recording = false;
         inlineRecording = false;
         editorOpen = false;
@@ -248,10 +248,15 @@ ListView {
         rebuild();
     }
 
-    Timer {
-        id: cleanup
-        interval: Appearance.animation.expressiveDefaultSpatial.duration
-        onTriggered: root.clearDraft()
+    function finishCollapse(groupId) {
+        if (!editorOpen && !inlineRecording && draftGroup === groupId)
+            clearDraft();
+    }
+
+    component CollapseAnimation: NumberAnimation {
+        duration: Appearance.animation.expressiveDefaultEffects.duration
+        easing.type: Appearance.animation.expressiveDefaultEffects.type
+        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
     }
 
     ShortcutRecorder {
@@ -463,7 +468,6 @@ ListView {
                         width: Math.min(implicitWidth, chips.width)
                         enabled: !NiriConfigService.busy
                         onClicked: {
-                            cleanup.stop();
                             root.recording = false;
                             root.inlineRecording = false;
                             root.editorOpen = true;
@@ -544,15 +548,21 @@ ListView {
                 enabled: expanded
                 opacity: expanded ? 1 : 0
                 Behavior on Layout.preferredHeight {
-                    ElementMoveAnimation {}
+                    CollapseAnimation {
+                        id: editorResize
+                        onRunningChanged: {
+                            if (!running && !editorHost.expanded)
+                                Qt.callLater(root.finishCollapse, row.modelData.id);
+                        }
+                    }
                 }
                 Behavior on opacity {
-                    ElementMoveAnimation {}
+                    CollapseAnimation {}
                 }
                 Loader {
                     id: editorLoader
                     width: parent.width
-                    active: editorHost.expanded || editorHost.height > 0
+                    active: editorHost.expanded || editorResize.running || editorHost.height > 0
                     property var bindingDraft: ({
                                                     props: {}
                                                 })
@@ -661,10 +671,10 @@ ListView {
                 enabled: root.advanced
                 opacity: root.advanced ? 1 : 0
                 Behavior on Layout.preferredHeight {
-                    ElementMoveAnimation {}
+                    CollapseAnimation {}
                 }
                 Behavior on opacity {
-                    ElementMoveAnimation {}
+                    CollapseAnimation {}
                 }
                 ColumnLayout {
                     id: advancedContent
