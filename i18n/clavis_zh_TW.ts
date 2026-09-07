@@ -7813,190 +7813,189 @@ Right click: Control Center</source>
 <context>
     <name>ShortcutsPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="118"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="168"/>
         <source>New action</source>
         <translation>新增動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="211"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="264"/>
         <source>Overridden by later configuration</source>
         <translation>被後續配置覆蓋</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="210"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="262"/>
         <source>Configuration validation failed</source>
         <translation>配置校驗失敗</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="213"/>
-        <source>Overrides user configuration</source>
-        <translation>覆蓋使用者配置</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="215"/>
-        <source>Clavis managed</source>
-        <translation>Clavis 託管</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="217"/>
-        <source>From user configuration</source>
-        <translation>來自使用者配置</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="218"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="266"/>
         <source>This binding is read-only</source>
         <translation>此繫結為只讀</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="264"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="313"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="265"/>
-        <source>Create or connect the Clavis shortcuts file. Your existing bindings stay in their original files.</source>
-        <translation>建立或接入 Clavis 快捷鍵檔案，已有繫結保留在原檔案中。</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="289"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="338"/>
         <source>Search actions</source>
         <translation>搜尋動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="293"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="342"/>
         <source>Add action</source>
         <translation>新增動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="124"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="383"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="174"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="451"/>
         <source>Not configured</source>
         <translation>未配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="209"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="260"/>
         <source>Conflicting key spelling; check the active binding</source>
         <translation>鍵位拼寫存在衝突，請檢查有效繫結</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="336"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="419"/>
         <source>Press shortcut…</source>
         <translation>按下快捷鍵…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="451"/>
         <source>Unavailable in this niri version</source>
         <translation>當前 niri 版本不支援</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="409"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="481"/>
         <source>Add shortcut</source>
         <translation>新增快捷鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="416"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="468"/>
         <source>Delete action</source>
         <translation>刪除動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
-        <source>Only Clavis bindings are deleted; user configuration is kept</source>
-        <translation>僅刪除 Clavis 託管繫結，使用者配置會保留</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="483"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="539"/>
         <source>Configuration changed. Cancel and reload before saving; your draft has been kept.</source>
         <translation>配置已變更。草稿已保留，請取消並重新載入後再儲存。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="491"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="547"/>
         <source>Key</source>
         <translation>鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="568"/>
         <source>Cancel recording</source>
         <translation>取消錄製</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="568"/>
         <source>Record key</source>
         <translation>錄製按鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="282"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="527"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="331"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="583"/>
         <source>Shortcut inhibition is not active. Use manual key input if recording is unavailable.</source>
         <translation>快捷鍵抑制尚未生效；無法錄製時請手動輸入鍵名。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="533"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="314"/>
+        <source>Create or connect the shortcuts file. Your existing bindings stay in their original files.</source>
+        <translation>建立或接入快捷鍵檔案。現有綁定保留在原始檔案中。</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="356"/>
+        <source>All</source>
+        <translation>全部</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="360"/>
+        <source>Assigned</source>
+        <translation>已分配</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="364"/>
+        <source>Assigned by me</source>
+        <translation>由我分配</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="368"/>
+        <source>Unassigned</source>
+        <translation>未分配</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="589"/>
         <source>Fill in the action parameters before saving</source>
         <translation>儲存前請填寫動作引數</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="538"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="594"/>
         <source>Action expression</source>
         <translation>動作表示式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="543"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="599"/>
         <source>Title</source>
         <translation>標題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="550"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="606"/>
         <source>Advanced options</source>
         <translation>進階選項</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="571"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="627"/>
         <source>Repeat while held</source>
         <translation>按住時重複觸發</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="579"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="635"/>
         <source>Allow while locked</source>
         <translation>鎖屏時仍可執行</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="580"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="636"/>
         <source>Only available for spawn and spawn-sh</source>
         <translation>僅適用於 spawn 和 spawn-sh</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="589"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="645"/>
         <source>Remove lock option</source>
         <translation>移除鎖屏選項</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="594"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="650"/>
         <source>Minimum interval (ms)</source>
         <translation>最短觸發間隔（毫秒）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="605"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="661"/>
         <source>Keep working when apps inhibit shortcuts</source>
         <translation>應用接管快捷鍵時仍然生效</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="617"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="673"/>
         <source>Save</source>
         <translation>儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="694"/>
         <source>Remove override</source>
         <translation>移除覆蓋</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="694"/>
         <source>Delete</source>
         <translation>刪除</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="648"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="704"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>

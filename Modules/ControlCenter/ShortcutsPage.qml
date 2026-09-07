@@ -23,9 +23,79 @@ StyledFlickable {
     property bool inlineRecording: false
     property bool editorOpen: false
     property string query: ""
+    property string category: "all"
     clip: true
     contentWidth: width
     contentHeight: column.implicitHeight + Metrics.pageMargin * 2
+
+    component ShortcutChip: RippleButton {
+        id: shortcutChip
+        property bool recordingStyle: false
+        property bool removable: false
+        property bool removalEnabled: true
+        property string removalLabel: qsTr("Delete")
+        signal removeRequested
+        implicitWidth: label.implicitWidth + leftPadding + rightPadding
+        implicitHeight: Metrics.controlHeightS
+        height: Metrics.controlHeightS
+        topInset: 0
+        bottomInset: 0
+        leftInset: 0
+        rightInset: 0
+        topPadding: 0
+        bottomPadding: 0
+        leftPadding: Metrics.spacingM
+        rightPadding: removable ? removeButton.width + Metrics.spacingXS * 2 : Metrics.spacingM
+        buttonRadius: Appearance.rounding.small
+        buttonRadiusPressed: buttonRadius
+        containerColor: recordingStyle ? Appearance.colors.colPrimary : Appearance.colors.colLayer2
+        stateLayerColor: recordingStyle ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer0
+        rippleColor: stateLayerColor
+        stateLayerOpacity: Appearance.interaction.hoverStateLayerOpacity
+        focusStateLayerOpacity: Appearance.interaction.focusStateLayerOpacity
+        pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
+        IconButton {
+            id: removeButton
+            z: 2
+            anchors.right: parent.right
+            anchors.rightMargin: Metrics.spacingXS
+            anchors.verticalCenter: parent.verticalCenter
+            controlSize: Metrics.controlHeightS - Metrics.spacingXS * 2
+            iconSize: Metrics.iconS
+            iconName: "close"
+            iconColor: shortcutChip.stateLayerColor
+            visible: shortcutChip.removable
+            enabled: shortcutChip.removalEnabled
+            accessibleName: shortcutChip.removalLabel
+            showTooltip: false
+            onClicked: shortcutChip.removeRequested()
+        }
+        contentItem: Text {
+            id: label
+            text: shortcutChip.text
+            textFormat: Text.PlainText
+            elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            color: shortcutChip.stateLayerColor
+            font.family: Typography.labelMedium.family
+            font.pixelSize: Typography.labelMedium.pixelSize
+        }
+    }
+
+    function matchesCategory(group) {
+        const assigned = group.chips.some(chip => !chip.draft);
+        switch (category) {
+        case "assigned":
+            return assigned;
+        case "managed":
+            return group.chips.some(chip => chip.managed && !chip.draft);
+        case "unassigned":
+            return !assigned;
+        default:
+            return true;
+        }
+    }
 
     function rebuild() {
         if (draft)
@@ -205,17 +275,16 @@ StyledFlickable {
         return draft && draft.props[name] !== undefined ? draft.props[name] : fallback;
     }
 
-    function sourceText(chip) {
-        const label = chip.collision ? qsTr("Conflicting key spelling; check the active binding") :
-                                       chip.invalid ? qsTr("Configuration validation failed") :
-                                                      chip.overridden ? qsTr(
-                                                                            "Overridden by later configuration") :
-                                                                        chip.override ? qsTr(
-                                                                                            "Overrides user configuration") :
-                                                                                        chip.managed ? qsTr(
-                                                                                                           "Clavis managed") :
-                                                                                                       qsTr("From user configuration");
-        return label + (chip.editable ? "" : "\n" + qsTr("This binding is read-only")) + "\n" + chip.source;
+    function bindingWarning(binding) {
+        if (binding.collision)
+            return qsTr("Conflicting key spelling; check the active binding");
+        if (binding.invalid)
+            return qsTr("Configuration validation failed");
+        if (binding.overridden)
+            return qsTr("Overridden by later configuration");
+        if (!binding.editable)
+            return qsTr("This binding is read-only");
+        return "";
     }
 
     function closeChildWindows() {
@@ -263,7 +332,7 @@ StyledFlickable {
             Layout.fillWidth: true
             title: qsTr("Keyboard shortcuts")
             description: qsTr(
-                             "Create or connect the Clavis shortcuts file. Your existing bindings stay in their original files.")
+                             "Create or connect the shortcuts file. Your existing bindings stay in their original files.")
             integrationState: NiriConfigService.state("binds")
             busy: NiriConfigService.busy && NiriConfigService.activeFeature === "binds"
             blocked: NiriConfigService.busy
@@ -297,15 +366,49 @@ StyledFlickable {
             }
         }
 
+        StyledButtonGroup {
+            Layout.fillWidth: true
+            currentValue: root.category
+            enabled: !NiriConfigService.busy
+            model: [
+                {
+                    value: "all",
+                    label: qsTr("All")
+                },
+                {
+                    value: "assigned",
+                    label: qsTr("Assigned")
+                },
+                {
+                    value: "managed",
+                    label: qsTr("Assigned by me")
+                },
+                {
+                    value: "unassigned",
+                    label: qsTr("Unassigned")
+                }
+            ]
+            onValueSelected: value => {
+                if (root.category === value)
+                    return;
+                root.clearDraft();
+                root.category = value;
+            }
+        }
+
         Repeater {
             model: root.groups
             delegate: ColumnLayout {
                 id: row
                 required property var modelData
                 Layout.fillWidth: true
-                visible: root.draftGroup === modelData.id || root.query === "" || (modelData.name + " "
-                                                                                   + modelData.expression).toLowerCase(
-                             ).indexOf(root.query) >= 0
+                visible: root.draftGroup === modelData.id || (root.matchesCategory(modelData) && (root.query
+                                                                                                  === "" || (
+                                                                                                      modelData.name
+                                                                                                      + " " + modelData.expression).toLowerCase(
+                                                                                                      ).indexOf(
+                                                                                                      root.query)
+                                                                                                  >= 0))
                 spacing: Metrics.spacingS
 
                 RowLayout {
@@ -331,14 +434,13 @@ StyledFlickable {
                         spacing: Metrics.spacingXS
                         layoutDirection: Qt.RightToLeft
 
-                        ActionButton {
+                        ShortcutChip {
                             visible: root.inlineRecording && root.draftGroup === row.modelData.id
                             text: root.recording ? qsTr("Press shortcut…") : (root.draft ? root.draft.key :
                                                                                            "")
 
-                            filled: true
+                            recordingStyle: true
                             focusPolicy: Qt.TabFocus
-                            implicitHeight: Metrics.controlHeightS
                             width: Math.min(implicitWidth, chips.width)
                             enabled: !NiriConfigService.busy
                             onClicked: {
@@ -350,39 +452,29 @@ StyledFlickable {
                         }
                         Repeater {
                             // Keep the stable binding order when right-aligning the chips.
-                            model: row.modelData.chips.slice().reverse()
-                            delegate: RippleButton {
-                                id: chip
+                            model: (root.category === "managed" ? row.modelData.chips.filter(binding => binding.managed) :
+                                                                  row.modelData.chips).slice().reverse()
+                            delegate: ShortcutChip {
                                 required property var modelData
                                 text: modelData.key
-                                implicitWidth: chipLabel.implicitWidth + Metrics.spacingM * 2
-                                implicitHeight: Metrics.controlHeightS
+                                removable: !!modelData.id && modelData.managed
+                                removalEnabled: NiriConfigService.ready("binds") && (!root.draft
+                                                                                     || root.draftRevision
+                                                                                     === NiriConfigService.revision)
+                                removalLabel: modelData.override ? qsTr("Remove override") : qsTr("Delete")
+                                onRemoveRequested: {
+                                    root.recording = false;
+                                    NiriConfigService.save({
+                                                               operation: "delete",
+                                                               id: modelData.id,
+                                                               revision: root.draft ? root.draftRevision :
+                                                                                      NiriConfigService.revision
+                                                           });
+                                }
                                 width: Math.min(implicitWidth, chips.width)
-                                leftPadding: Metrics.spacingM
-                                rightPadding: Metrics.spacingM
-                                buttonRadius: Appearance.rounding.small
-                                containerColor: Appearance.colors.colLayer2
-                                stateLayerOpacity: Appearance.interaction.hoverStateLayerOpacity
-                                focusStateLayerOpacity: Appearance.interaction.focusStateLayerOpacity
-                                pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
                                 enabled: !NiriConfigService.busy
                                 opacity: modelData.effective ? 1 : 0.55
                                 onClicked: root.edit(row.modelData, modelData)
-                                contentItem: Text {
-                                    id: chipLabel
-                                    text: chip.text
-                                    textFormat: Text.PlainText
-                                    elide: Text.ElideRight
-                                    verticalAlignment: Text.AlignVCenter
-                                    horizontalAlignment: Text.AlignHCenter
-                                    color: Appearance.colors.colOnLayer0
-                                    font.family: Typography.labelMedium.family
-                                    font.pixelSize: Typography.labelMedium.pixelSize
-                                }
-                                StyledToolTip {
-                                    text: chip.modelData.draft ? qsTr("Not configured") : chip.modelData.key
-                                                                 + "\n" + root.sourceText(chip.modelData)
-                                }
                             }
                         }
                         Text {
@@ -401,6 +493,20 @@ StyledFlickable {
                         }
                     }
                     IconButton {
+                        iconName: "delete"
+                        iconColor: Appearance.colors.colError
+                        controlSize: Metrics.controlHeightS
+                        iconSize: Metrics.iconS
+                        visible: !row.modelData.builtin && row.modelData.chips.some(chip => chip.managed)
+                        enabled: !root.draft && NiriConfigService.ready("binds") && !NiriConfigService.busy
+                        accessibleName: qsTr("Delete action")
+                        onClicked: NiriConfigService.save({
+                                                              operation: "delete-group",
+                                                              group: row.modelData.identity,
+                                                              revision: NiriConfigService.revision
+                                                          })
+                    }
+                    IconButton {
                         iconName: "add_circle"
                         controlSize: Metrics.controlHeightS
                         iconSize: Metrics.iconS
@@ -408,19 +514,6 @@ StyledFlickable {
                                  !NiriConfigService.busy
                         accessibleName: qsTr("Add shortcut")
                         onClicked: root.addShortcut(row.modelData)
-                    }
-                }
-                ActionButton {
-                    visible: !row.modelData.builtin && row.modelData.chips.some(chip => chip.managed)
-                    enabled: !root.draft && NiriConfigService.ready("binds") && !NiriConfigService.busy
-                    text: qsTr("Delete action")
-                    onClicked: NiriConfigService.save({
-                                                          operation: "delete-group",
-                                                          group: row.modelData.identity,
-                                                          revision: NiriConfigService.revision
-                                                      })
-                    StyledToolTip {
-                        text: qsTr("Only Clavis bindings are deleted; user configuration is kept")
                     }
                 }
                 Item {
@@ -469,13 +562,10 @@ StyledFlickable {
             readonly property var bindingDraft: parent.bindingDraft
             spacing: Metrics.spacingS
             enabled: !NiriConfigService.busy
-            Text {
+            InlineStatusBanner {
                 Layout.fillWidth: true
-                visible: !!editorContent.bindingDraft.id
-                text: editorContent.bindingDraft.id ? root.sourceText(editorContent.bindingDraft) : ""
-                textFormat: Text.PlainText
-                wrapMode: Text.WrapAnywhere
-                color: Appearance.colors.colSubtext
+                message: root.bindingWarning(editorContent.bindingDraft)
+                visible: !!editorContent.bindingDraft.id && message !== ""
             }
             InlineStatusBanner {
                 Layout.fillWidth: true
