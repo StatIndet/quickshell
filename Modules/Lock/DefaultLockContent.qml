@@ -16,7 +16,7 @@ Item {
     readonly property real contentWidth: 360 * uiScale
     readonly property real avatarSize: 240 * uiScale
     readonly property real fieldHeight: 64 * uiScale
-    property real clockScale: authenticating ? 1.08 : 1
+    property real clockScale: authenticating ? 0.72 : 1
     property real authScale: authenticating ? 1 : 0.94
 
     Behavior on clockScale {
@@ -280,8 +280,17 @@ Item {
                     clip: true
                     spacing: 10 * root.uiScale
                     model: dots
-                    onCountChanged: Qt.callLater(positionViewAtEnd)
-                    onWidthChanged: positionViewAtEnd()
+                    // Center short input; smoothly follow the tail once it fills
+                    // the viewport. Never jump by a whole dot with positionViewAtEnd.
+                    contentX: Math.max(0, naturalWidth - width) - leftMargin
+                    cacheBuffer: 52 * root.uiScale
+                    Behavior on contentX {
+                        NumberAnimation {
+                            duration: 160
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+                        }
+                    }
                     Behavior on width {
                         NumberAnimation {
                             duration: 180
@@ -292,6 +301,17 @@ Item {
 
                     delegate: Item {
                         id: dot
+                        readonly property real viewportCenter: x + width / 2 - dotsView.contentX
+                        readonly property real edgeFade: dotsView.naturalWidth > dotsView.width ? Math.min(1,
+                                                                                                           Math.max(0,
+                                                                                                                    viewportCenter
+                                                                                                                    / (14 * root.uiScale)),
+                                                                                                           Math.max(0,
+                                                                                                                    (dotsView.width
+                                                                                                                     - viewportCenter)
+                                                                                                                    / (14 * root.uiScale))) :
+                                                                                                  1
+                        opacity: edgeFade
                         width: 16 * root.uiScale
                         height: 28 * root.uiScale
                         ListView.onRemove: {
