@@ -120,7 +120,8 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: parent.height * 0.18
                 visible: UiPreferences.useTwelveHourClock
-                text: root.now.getHours() < 12 ? "AM" : "PM"
+                text: root.now.getHours() < 12 ? Qt.locale(Qt.uiLanguage).amText : Qt.locale(
+                                                     Qt.uiLanguage).pmText
                 color: "white"
                 font.family: Fonts.numeric
                 font.pixelSize: Math.min(root.width * 0.045, 48)
@@ -130,7 +131,7 @@ Item {
 
         Text {
             width: parent.width
-            text: Qt.formatDate(root.now, "yyyy MMMM d, dddd")
+            text: root.now.toLocaleDateString(Qt.locale(Qt.uiLanguage), qsTr("yyyy MMMM d, dddd"))
             color: "white"
             font.family: Fonts.ui
             font.pixelSize: Math.min(26, root.width * 0.035)

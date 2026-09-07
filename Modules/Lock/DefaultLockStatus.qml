@@ -45,22 +45,50 @@ Item {
         height: 40
 
         Row {
+            width: 46
+            height: 40
+            spacing: 2
+            Repeater {
+                model: 8
+                Rectangle {
+                    required property int index
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 4
+                    height: 2 + 22 * (root.spectrumActive && AudioSpectrum.available ? Math.max(0, Math.min(1,
+                                                                                                            Number(AudioSpectrum.values[Math.floor(
+                                                                                                                                            index * AudioSpectrum.bars
+                                                                                                                                            / 8)]) || 0)) :
+                                                                                       0)
+                    radius: 2
+                    color: "#F5F7FA"
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: 80
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
+                        }
+                    }
+                }
+            }
+        }
+
+        Row {
             spacing: 2
             MediaButton {
                 iconName: "skip_previous"
-                tooltipText: qsTr("上一首")
+                accessibleName: qsTr("上一首")
                 enabled: root.player !== null && root.player.canGoPrevious
                 onClicked: root.player.previous()
             }
             MediaButton {
                 iconName: root.player && root.player.isPlaying ? "pause" : "play_arrow"
-                tooltipText: root.player && root.player.isPlaying ? qsTr("暂停") : qsTr("播放")
+                accessibleName: root.player && root.player.isPlaying ? qsTr("暂停") : qsTr("播放")
                 enabled: root.player !== null && root.player.canTogglePlaying
                 onClicked: root.player.togglePlaying()
             }
             MediaButton {
                 iconName: "skip_next"
-                tooltipText: qsTr("下一首")
+                accessibleName: qsTr("下一首")
                 enabled: root.player !== null && root.player.canGoNext
                 onClicked: root.player.next()
             }
@@ -68,7 +96,7 @@ Item {
 
         Item {
             id: titleViewport
-            width: Math.max(40, Math.min(220, root.parent.width - 440))
+            width: Math.max(40, Math.min(220, root.parent.width - 530))
             height: 40
             clip: true
             readonly property real overflow: Math.max(0, titleText.implicitWidth - width)
@@ -120,40 +148,23 @@ Item {
                     easing.bezierCurve: [0.25, 0.1, 0.25, 1, 1, 1]
                 }
             }
-            HoverHandler {
-                id: titleHover
-            }
-            PopupToolTip {
-                text: root.title
-                extraVisibleCondition: titleHover.hovered
-            }
         }
 
         Row {
-            width: 46
-            height: 40
-            spacing: 2
-            Repeater {
-                model: 8
-                Rectangle {
-                    required property int index
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 4
-                    height: 2 + 22 * (root.spectrumActive && AudioSpectrum.available ? Math.max(0, Math.min(1,
-                                                                                                            Number(AudioSpectrum.values[Math.floor(
-                                                                                                                                            index * AudioSpectrum.bars
-                                                                                                                                            / 8)]) || 0)) :
-                                                                                       0)
-                    radius: 2
-                    color: "#F5F7FA"
-                    Behavior on height {
-                        NumberAnimation {
-                            duration: 80
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: [0.2, 0, 0, 1, 1, 1]
-                        }
-                    }
-                }
+            spacing: 4
+            StatusIcon {
+                symbol: WeatherPlugin.hasValidData ? WeatherPlugin.currentIconName || "cloud" : "cloud_off"
+                description: WeatherPlugin.hasValidData ? WeatherPlugin.currentWeatherText : qsTr("天气不可用")
+            }
+            Text {
+                height: 40
+                verticalAlignment: Text.AlignVCenter
+                text: WeatherPlugin.hasValidData ? Math.round(UiPreferences.weatherTemperature(
+                                                                  WeatherPlugin.currentTemperatureC))
+                                                   + UiPreferences.weatherTemperatureSymbol() : "—"
+                font.family: Fonts.numeric
+                font.pixelSize: 16
+                color: "#F5F7FA"
             }
         }
 
@@ -209,6 +220,7 @@ Item {
         normalHoverStateLayerColor: "#20FFFFFF"
         normalPressedStateLayerColor: "#30FFFFFF"
         opacity: enabled ? 1 : 0.35
+        showTooltip: false
         focusPolicy: Qt.NoFocus
     }
     component StatusIcon: Item {
@@ -225,13 +237,6 @@ Item {
             text: status.symbol
             iconSize: 24
             color: status.active ? "#F5F7FA" : "#80F5F7FA"
-        }
-        HoverHandler {
-            id: statusHover
-        }
-        PopupToolTip {
-            text: status.description
-            extraVisibleCondition: statusHover.hovered
         }
     }
 }
