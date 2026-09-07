@@ -7813,184 +7813,190 @@ Right click: Control Center</translation>
 <context>
     <name>ShortcutsPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="96"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="118"/>
         <source>New action</source>
         <translation>New action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="138"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="211"/>
         <source>Overridden by later configuration</source>
         <translation>Overridden by later configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="137"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="210"/>
         <source>Configuration validation failed</source>
         <translation>Configuration validation failed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="140"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="213"/>
         <source>Overrides user configuration</source>
         <translation>Overrides user configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="142"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="215"/>
         <source>Clavis managed</source>
         <translation>Clavis managed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="144"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="217"/>
         <source>From user configuration</source>
         <translation>From user configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="218"/>
         <source>This binding is read-only</source>
         <translation>This binding is read-only</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="191"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="264"/>
         <source>Keyboard shortcuts</source>
         <translation>Keyboard shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="192"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="265"/>
         <source>Create or connect the Clavis shortcuts file. Your existing bindings stay in their original files.</source>
         <translation>Create or connect the Clavis shortcuts file. Your existing bindings stay in their original files.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="210"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="289"/>
         <source>Search actions</source>
         <translation>Search actions</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="214"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="293"/>
         <source>Add action</source>
         <translation>Add action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="102"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="253"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="383"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
         <source>Not configured</source>
         <translation>Not configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="209"/>
         <source>Conflicting key spelling; check the active binding</source>
         <translation>Conflicting key spelling; check the active binding</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="336"/>
+        <source>Press shortcut…</source>
+        <translation>Press shortcut…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
         <source>Unavailable in this niri version</source>
         <translation>Unavailable in this niri version</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="409"/>
         <source>Add shortcut</source>
         <translation>Add shortcut</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="278"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="416"/>
         <source>Delete action</source>
         <translation>Delete action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="285"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
         <source>Only Clavis bindings are deleted; user configuration is kept</source>
         <translation>Only Clavis bindings are deleted; user configuration is kept</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="313"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="483"/>
         <source>Configuration changed. Cancel and reload before saving; your draft has been kept.</source>
         <translation>Configuration changed. Cancel and reload before saving; your draft has been kept.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="321"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="491"/>
         <source>Key</source>
         <translation>Key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
         <source>Cancel recording</source>
         <translation>Cancel recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
         <source>Record key</source>
         <translation>Record key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="357"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="282"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="527"/>
         <source>Shortcut inhibition is not active. Use manual key input if recording is unavailable.</source>
         <translation>Shortcut inhibition is not active. Use manual key input if recording is unavailable.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="363"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="533"/>
         <source>Fill in the action parameters before saving</source>
         <translation>Fill in the action parameters before saving</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="368"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="538"/>
         <source>Action expression</source>
         <translation>Action expression</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="373"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="543"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="380"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="550"/>
         <source>Advanced options</source>
         <translation>Advanced options</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="389"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="571"/>
         <source>Repeat while held</source>
         <translation>Repeat while held</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="397"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="579"/>
         <source>Allow while locked</source>
         <translation>Allow while locked</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="398"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="580"/>
         <source>Only available for spawn and spawn-sh</source>
         <translation>Only available for spawn and spawn-sh</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="407"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="589"/>
         <source>Remove lock option</source>
         <translation>Remove lock option</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="412"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="594"/>
         <source>Minimum interval (ms)</source>
         <translation>Minimum interval (ms)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="605"/>
         <source>Keep working when apps inhibit shortcuts</source>
         <translation>Keep working when apps inhibit shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="434"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="617"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
         <source>Remove override</source>
         <translation>Remove override</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="463"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="648"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -9281,32 +9287,32 @@ detected</translation>
 <context>
     <name>ThemePage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="460"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="471"/>
         <source>Light</source>
         <translation>Light</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="467"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="478"/>
         <source>Dark</source>
         <translation>Dark</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="475"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="486"/>
         <source>matugen color scheme</source>
         <translation>matugen color scheme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="501"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="512"/>
         <source>Lock screen</source>
         <translation>Lock screen</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="517"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="457"/>
         <source>Cursor integration</source>
         <translation>Cursor integration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="518"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="458"/>
         <source>Create or connect the Clavis cursor configuration.</source>
         <translation>Create or connect the Clavis cursor configuration.</translation>
     </message>
@@ -9869,220 +9875,220 @@ Scroll to adjust; click to open sound</translation>
         <translation>Flip</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="338"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="358"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="357"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="377"/>
         <source>Desktop wallpaper manager</source>
         <translation>Desktop wallpaper manager</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="354"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="373"/>
         <source>The awww or awww-daemon command is missing</source>
         <translation>The awww or awww-daemon command is missing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="355"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="374"/>
         <source>Detecting awww…</source>
         <translation>Detecting awww…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="376"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="395"/>
         <source>Current wallpaper</source>
         <translation>Current wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="401"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="420"/>
         <source>No wallpaper selected</source>
         <translation>No wallpaper selected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="426"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="445"/>
         <source>Previous</source>
         <translation>Previous</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="429"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="448"/>
         <source>Random</source>
         <translation>Random</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="432"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="451"/>
         <source>Next</source>
         <translation>Next</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="464"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="468"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="483"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="487"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1037"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1041"/>
         <source>Per-monitor wallpapers</source>
         <translation>Per-monitor wallpapers</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="477"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1050"/>
         <source>Select output</source>
         <translation>Select output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="478"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="497"/>
         <source>Desktop wallpaper output</source>
         <translation>Desktop wallpaper output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="515"/>
         <source>Transition</source>
         <translation>Transition</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="505"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="524"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1058"/>
         <source>Transition type</source>
         <translation>Transition type</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="585"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="604"/>
         <source>awww FPS</source>
         <translation>awww FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="600"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="619"/>
         <source>awww transition FPS</source>
         <translation>awww transition FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
         <source>The none transition does not use FPS.</source>
         <translation>The none transition does not use FPS.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
         <source>Independent FPS is available only with awww.</source>
         <translation>Independent FPS is available only with awww.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="646"/>
         <source>Transition step · %1</source>
         <translation>Transition step · %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="642"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="661"/>
         <source>awww transition step</source>
         <translation>awww transition step</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="649"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="668"/>
         <source>Transition step is only available with the awww desktop backend.</source>
         <translation>Transition step is only available with the awww desktop backend.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="651"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="670"/>
         <source>The none transition does not use transition step.</source>
         <translation>The none transition does not use transition step.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="653"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="672"/>
         <source>Step controls the amount of change per frame.</source>
         <translation>Step controls the amount of change per frame.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="674"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="693"/>
         <source>Transition duration</source>
         <translation>Transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="700"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="719"/>
         <source>Wallpaper transition duration</source>
         <translation>Wallpaper transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="707"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="726"/>
         <source>The current transition does not use duration.</source>
         <translation>The current transition does not use duration.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="725"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="744"/>
         <source>Easing curve</source>
         <translation>Easing curve</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="784"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="789"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="803"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="808"/>
         <source>Edit Bézier curve</source>
         <translation>Edit Bézier curve</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="812"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="831"/>
         <source>The current transition does not use an easing curve.</source>
         <translation>The current transition does not use an easing curve.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="818"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="837"/>
         <source>Parallax effects</source>
         <translation>Parallax effects</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="835"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="840"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="854"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="859"/>
         <source>Vertical parallax</source>
         <translation>Vertical parallax</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="848"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="865"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="867"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="884"/>
         <source>Follow workspaces</source>
         <translation>Follow workspaces</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="872"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="891"/>
         <source>Enable vertical parallax first.</source>
         <translation>Enable vertical parallax first.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="880"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="885"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="899"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="904"/>
         <source>Follow sidebars</source>
         <translation>Follow sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="893"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="898"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="912"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="917"/>
         <source>Follow tiled-window focus</source>
         <translation>Follow tiled-window focus</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="909"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="923"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="928"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="942"/>
         <source>Wallpaper scale</source>
         <translation>Wallpaper scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="935"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="949"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="968"/>
         <source>Horizontal travel columns</source>
         <translation>Horizontal travel columns</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="957"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="976"/>
         <source>Desktop parallax is available only with Quickshell.</source>
         <translation>Desktop parallax is available only with Quickshell.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="963"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="982"/>
         <source>Overview background</source>
         <translation>Overview background</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="971"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="336"/>
         <source>Overview integration</source>
         <translation>Overview integration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="972"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="337"/>
         <source>Create or connect backdrop rules and make the global workspace background transparent.</source>
         <translation>Create or connect backdrop rules and make the global workspace background transparent.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="985"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="350"/>
         <source>Overview is already configured outside Clavis</source>
         <translation>Overview is already configured outside Clavis</translation>
     </message>

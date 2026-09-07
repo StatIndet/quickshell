@@ -7813,184 +7813,190 @@ Right click: Control Center</source>
 <context>
     <name>ShortcutsPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="96"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="118"/>
         <source>New action</source>
         <translation>新增動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="138"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="211"/>
         <source>Overridden by later configuration</source>
         <translation>被後續配置覆蓋</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="137"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="210"/>
         <source>Configuration validation failed</source>
         <translation>配置校驗失敗</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="140"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="213"/>
         <source>Overrides user configuration</source>
         <translation>覆蓋使用者配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="142"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="215"/>
         <source>Clavis managed</source>
         <translation>Clavis 託管</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="144"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="217"/>
         <source>From user configuration</source>
         <translation>來自使用者配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="218"/>
         <source>This binding is read-only</source>
         <translation>此繫結為只讀</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="191"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="264"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="192"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="265"/>
         <source>Create or connect the Clavis shortcuts file. Your existing bindings stay in their original files.</source>
         <translation>建立或接入 Clavis 快捷鍵檔案，已有繫結保留在原檔案中。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="210"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="289"/>
         <source>Search actions</source>
         <translation>搜尋動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="214"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="293"/>
         <source>Add action</source>
         <translation>新增動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="102"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="253"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="383"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
         <source>Not configured</source>
         <translation>未配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="209"/>
         <source>Conflicting key spelling; check the active binding</source>
         <translation>鍵位拼寫存在衝突，請檢查有效繫結</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="336"/>
+        <source>Press shortcut…</source>
+        <translation>按下快捷鍵…</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
         <source>Unavailable in this niri version</source>
         <translation>當前 niri 版本不支援</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="409"/>
         <source>Add shortcut</source>
         <translation>新增快捷鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="278"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="416"/>
         <source>Delete action</source>
         <translation>刪除動作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="285"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
         <source>Only Clavis bindings are deleted; user configuration is kept</source>
         <translation>僅刪除 Clavis 託管繫結，使用者配置會保留</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="313"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="483"/>
         <source>Configuration changed. Cancel and reload before saving; your draft has been kept.</source>
         <translation>配置已變更。草稿已保留，請取消並重新載入後再儲存。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="321"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="491"/>
         <source>Key</source>
         <translation>鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
         <source>Cancel recording</source>
         <translation>取消錄製</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="512"/>
         <source>Record key</source>
         <translation>錄製按鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="357"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="282"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="527"/>
         <source>Shortcut inhibition is not active. Use manual key input if recording is unavailable.</source>
         <translation>快捷鍵抑制尚未生效；無法錄製時請手動輸入鍵名。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="363"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="533"/>
         <source>Fill in the action parameters before saving</source>
         <translation>儲存前請填寫動作引數</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="368"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="538"/>
         <source>Action expression</source>
         <translation>動作表示式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="373"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="543"/>
         <source>Title</source>
         <translation>標題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="380"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="550"/>
         <source>Advanced options</source>
         <translation>進階選項</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="389"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="571"/>
         <source>Repeat while held</source>
         <translation>按住時重複觸發</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="397"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="579"/>
         <source>Allow while locked</source>
         <translation>鎖屏時仍可執行</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="398"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="580"/>
         <source>Only available for spawn and spawn-sh</source>
         <translation>僅適用於 spawn 和 spawn-sh</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="407"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="589"/>
         <source>Remove lock option</source>
         <translation>移除鎖屏選項</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="412"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="594"/>
         <source>Minimum interval (ms)</source>
         <translation>最短觸發間隔（毫秒）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="605"/>
         <source>Keep working when apps inhibit shortcuts</source>
         <translation>應用接管快捷鍵時仍然生效</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="434"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="617"/>
         <source>Save</source>
         <translation>儲存</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
         <source>Remove override</source>
         <translation>移除覆蓋</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="638"/>
         <source>Delete</source>
         <translation>刪除</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="463"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="648"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -9278,32 +9284,32 @@ detected</source>
 <context>
     <name>ThemePage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="460"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="471"/>
         <source>Light</source>
         <translation>淺色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="467"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="478"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="475"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="486"/>
         <source>matugen color scheme</source>
         <translation>matugen配色方案</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="501"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="512"/>
         <source>Lock screen</source>
         <translation>鎖定螢幕</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="517"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="457"/>
         <source>Cursor integration</source>
         <translation>游標配置接入</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="518"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="458"/>
         <source>Create or connect the Clavis cursor configuration.</source>
         <translation>建立或接入 Clavis 游標配置。</translation>
     </message>
@@ -9864,220 +9870,220 @@ Scroll to adjust; click to open sound</source>
         <translation>翻轉</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="338"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="358"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="357"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="377"/>
         <source>Desktop wallpaper manager</source>
         <translation>桌面壁紙管理器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="354"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="373"/>
         <source>The awww or awww-daemon command is missing</source>
         <translation>缺少 awww 或 awww-daemon 命令</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="355"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="374"/>
         <source>Detecting awww…</source>
         <translation>正在檢測 awww…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="376"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="395"/>
         <source>Current wallpaper</source>
         <translation>當前桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="401"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="420"/>
         <source>No wallpaper selected</source>
         <translation>未選擇桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="426"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="445"/>
         <source>Previous</source>
         <translation>上一張</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="429"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="448"/>
         <source>Random</source>
         <translation>隨機</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="432"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="451"/>
         <source>Next</source>
         <translation>下一張</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="464"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="468"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="483"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="487"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1037"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1041"/>
         <source>Per-monitor wallpapers</source>
         <translation>每個顯示器獨立桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="477"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1050"/>
         <source>Select output</source>
         <translation>選擇輸出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="478"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="497"/>
         <source>Desktop wallpaper output</source>
         <translation>桌面壁紙輸出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="515"/>
         <source>Transition</source>
         <translation>過渡效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="505"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="524"/>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1058"/>
         <source>Transition type</source>
         <translation>轉場類型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="585"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="604"/>
         <source>awww FPS</source>
         <translation>awww FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="600"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="619"/>
         <source>awww transition FPS</source>
         <translation>awww 轉場 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
         <source>The none transition does not use FPS.</source>
         <translation>none 轉場不會使用 FPS。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
         <source>Independent FPS is available only with awww.</source>
         <translation>獨立 FPS 僅適用於 awww。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="627"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="646"/>
         <source>Transition step · %1</source>
         <translation>過渡步長 · %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="642"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="661"/>
         <source>awww transition step</source>
         <translation>awww 過渡步長</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="649"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="668"/>
         <source>Transition step is only available with the awww desktop backend.</source>
         <translation>過渡步長僅適用於 awww 桌面後端。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="651"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="670"/>
         <source>The none transition does not use transition step.</source>
         <translation>none 轉場不會使用過渡步長。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="653"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="672"/>
         <source>Step controls the amount of change per frame.</source>
         <translation>步長控制每幀的變化幅度。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="674"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="693"/>
         <source>Transition duration</source>
         <translation>過渡時間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="700"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="719"/>
         <source>Wallpaper transition duration</source>
         <translation>桌布過渡時間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="707"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="726"/>
         <source>The current transition does not use duration.</source>
         <translation>目前轉場不使用持續時間。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="725"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="744"/>
         <source>Easing curve</source>
         <translation>緩動曲線</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="784"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="789"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="803"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="808"/>
         <source>Edit Bézier curve</source>
         <translation>編輯貝塞爾</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="812"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="831"/>
         <source>The current transition does not use an easing curve.</source>
         <translation>目前轉場不使用緩動曲線。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="818"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="837"/>
         <source>Parallax effects</source>
         <translation>視差效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="835"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="840"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="854"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="859"/>
         <source>Vertical parallax</source>
         <translation>垂直視差</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="848"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="865"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="867"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="884"/>
         <source>Follow workspaces</source>
         <translation>隨工作區移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="872"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="891"/>
         <source>Enable vertical parallax first.</source>
         <translation>需要先啟用垂直視差。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="880"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="885"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="899"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="904"/>
         <source>Follow sidebars</source>
         <translation>隨側邊欄移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="893"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="898"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="912"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="917"/>
         <source>Follow tiled-window focus</source>
         <translation>隨平鋪視窗焦點移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="909"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="923"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="928"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="942"/>
         <source>Wallpaper scale</source>
         <translation>桌布縮放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="935"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="949"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="968"/>
         <source>Horizontal travel columns</source>
         <translation>橫向行程欄數</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="957"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="976"/>
         <source>Desktop parallax is available only with Quickshell.</source>
         <translation>桌面視差僅適用於 Quickshell。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="963"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="982"/>
         <source>Overview background</source>
         <translation>Overview 背景</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="971"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="336"/>
         <source>Overview integration</source>
         <translation>概覽配置接入</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="972"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="337"/>
         <source>Create or connect backdrop rules and make the global workspace background transparent.</source>
         <translation>建立或接入背景規則，並將全域性工作區背景設為透明。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="985"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="350"/>
         <source>Overview is already configured outside Clavis</source>
         <translation>概覽已由外部配置滿足</translation>
     </message>
