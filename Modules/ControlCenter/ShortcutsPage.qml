@@ -21,8 +21,6 @@ ListView {
     property var unset: []
     property bool advanced: false
     property bool recording: false
-    readonly property string recordingPrompt: inhibitor.active ? qsTr("Press shortcut…") : qsTr(
-                                                                     "Preparing to record…")
     property bool inlineRecording: false
     property bool editorOpen: false
     property string query: ""
@@ -55,19 +53,6 @@ ListView {
             visibleGroups = filtered;
         // ListView retains the current delegate even when it scrolls out of view.
         currentIndex = visibleGroups.findIndex(group => group.id === draftGroup);
-    }
-
-    TextMetrics {
-        id: preparingPromptMetrics
-        text: qsTr("Preparing to record…")
-        font.family: Typography.labelMedium.family
-        font.pixelSize: Typography.labelMedium.pixelSize
-    }
-    TextMetrics {
-        id: readyPromptMetrics
-        text: qsTr("Press shortcut…")
-        font.family: Typography.labelMedium.family
-        font.pixelSize: Typography.labelMedium.pixelSize
     }
 
     component ShortcutChip: RippleButton {
@@ -471,19 +456,10 @@ ListView {
 
                     ShortcutChip {
                         visible: root.inlineRecording && root.draftGroup === row.modelData.id
-                        text: root.recording ? root.recordingPrompt : (root.draft ? root.draft.key : "")
-                        // Both capture states occupy the same space, including near a wrap boundary.
-                        implicitWidth: Math.max(preparingPromptMetrics.width, readyPromptMetrics.width,
-                                                capturedPromptMetrics.width) + Metrics.spacingM * 2
-                        TextMetrics {
-                            id: capturedPromptMetrics
-                            text: root.draft ? root.draft.key : ""
-                            font.family: Typography.labelMedium.family
-                            font.pixelSize: Typography.labelMedium.pixelSize
-                        }
-
+                        text: root.recording ? qsTr("Press shortcut...") : (root.draft ? root.draft.key : "")
                         recordingStyle: true
                         focusPolicy: Qt.TabFocus
+                        implicitWidth: 128
                         width: Math.min(implicitWidth, chips.width)
                         enabled: !NiriConfigService.busy
                         onClicked: {
@@ -620,7 +596,8 @@ ListView {
                 MaterialFilledTextField {
                     id: keyField
                     Layout.fillWidth: true
-                    labelText: root.recording && !root.inlineRecording ? root.recordingPrompt : qsTr("Key")
+                    labelText: root.recording && !root.inlineRecording ? qsTr("Press shortcut...") : qsTr(
+                                                                             "Key")
                     text: editorContent.bindingDraft.key
                     readOnly: !editorContent.bindingDraft.managed || root.recording
                     onActiveFocusChanged: if (!activeFocus)

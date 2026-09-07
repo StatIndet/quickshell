@@ -7813,193 +7813,187 @@ Right click: Control Center</translation>
 <context>
     <name>ShortcutsPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="232"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="217"/>
         <source>New action</source>
         <translation>New action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="328"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="313"/>
         <source>Overridden by later configuration</source>
         <translation>Overridden by later configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="326"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="311"/>
         <source>Configuration validation failed</source>
         <translation>Configuration validation failed</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="24"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="62"/>
-        <source>Preparing to record…</source>
-        <translation>Preparing to record…</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="330"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="315"/>
         <source>This binding is read-only</source>
         <translation>This binding is read-only</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="374"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="359"/>
         <source>Keyboard shortcuts</source>
         <translation>Keyboard shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="393"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="378"/>
         <source>Search actions</source>
         <translation>Search actions</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="397"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="382"/>
         <source>Add action</source>
         <translation>Add action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="238"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="528"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="504"/>
         <source>Not configured</source>
         <translation>Not configured</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="324"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="309"/>
         <source>Conflicting key spelling; check the active binding</source>
         <translation>Conflicting key spelling; check the active binding</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="24"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="68"/>
-        <source>Press shortcut…</source>
-        <translation>Press shortcut…</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="528"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="504"/>
         <source>Unavailable in this niri version</source>
         <translation>Unavailable in this niri version</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="558"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="534"/>
         <source>Add shortcut</source>
         <translation>Add shortcut</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="545"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="521"/>
         <source>Delete action</source>
         <translation>Delete action</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="615"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="591"/>
         <source>Configuration changed. Cancel and reload before saving; your draft has been kept.</source>
         <translation>Configuration changed. Cancel and reload before saving; your draft has been kept.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="623"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="599"/>
         <source>Key</source>
         <translation>Key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="644"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="621"/>
         <source>Cancel recording</source>
         <translation>Cancel recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="644"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="621"/>
         <source>Record key</source>
         <translation>Record key</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="375"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="360"/>
         <source>Create or connect the shortcuts file. Your existing bindings stay in their original files.</source>
         <translation>Create or connect the shortcuts file. Your existing bindings stay in their original files.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="411"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="459"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="599"/>
+        <source>Press shortcut...</source>
+        <translation>Press shortcut...</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="396"/>
         <source>All</source>
         <translation>All</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="415"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="400"/>
         <source>Assigned</source>
         <translation>Assigned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="419"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="404"/>
         <source>Assigned by me</source>
         <translation>Assigned by me</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="423"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="408"/>
         <source>Unassigned</source>
         <translation>Unassigned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="659"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="636"/>
         <source>Fill in the action parameters before saving</source>
         <translation>Fill in the action parameters before saving</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="664"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="641"/>
         <source>Action expression</source>
         <translation>Action expression</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="669"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="646"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="676"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="653"/>
         <source>Advanced options</source>
         <translation>Advanced options</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="697"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="674"/>
         <source>Repeat while held</source>
         <translation>Repeat while held</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="705"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="682"/>
         <source>Allow while locked</source>
         <translation>Allow while locked</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="706"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="683"/>
         <source>Only available for spawn and spawn-sh</source>
         <translation>Only available for spawn and spawn-sh</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="715"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="692"/>
         <source>Remove lock option</source>
         <translation>Remove lock option</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="720"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="697"/>
         <source>Minimum interval (ms)</source>
         <translation>Minimum interval (ms)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="731"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="708"/>
         <source>Keep working when apps inhibit shortcuts</source>
         <translation>Keep working when apps inhibit shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="743"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="720"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="508"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="764"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="484"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="741"/>
         <source>Remove override</source>
         <translation>Remove override</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="78"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="508"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="764"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="484"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="741"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="774"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="751"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
