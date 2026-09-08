@@ -2591,7 +2591,7 @@ Scroll to adjust</source>
     <message>
         <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="43"/>
         <source>Keystone</source>
-        <translation>鑰石</translation>
+        <translation>拱心石</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="48"/>
@@ -4559,12 +4559,12 @@ Scroll to adjust</source>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="55"/>
         <source>Back to Keystone settings</source>
-        <translation>返回鑰石設定</translation>
+        <translation>返回拱心石設定</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="77"/>
         <source>Keystone style</source>
-        <translation>鑰石樣式</translation>
+        <translation>拱心石樣式</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="81"/>
@@ -4574,7 +4574,7 @@ Scroll to adjust</source>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="84"/>
         <source>Choose Keystone style</source>
-        <translation>選擇鑰石樣式</translation>
+        <translation>選擇拱心石樣式</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="92"/>
@@ -6902,7 +6902,7 @@ Click to open network settings</source>
     <message>
         <location filename="../Common/NiriActionNames.js" line="173"/>
         <source>Control center: open Keystone</source>
-        <translation>設定中心：開啟鑰石頁</translation>
+        <translation>設定中心：開啟拱心石頁</translation>
     </message>
     <message>
         <location filename="../Common/NiriActionNames.js" line="174"/>
@@ -6942,7 +6942,7 @@ Click to open network settings</source>
     <message>
         <location filename="../Common/NiriActionNames.js" line="181"/>
         <source>Control center: toggle Keystone</source>
-        <translation>設定中心：切換鑰石頁</translation>
+        <translation>設定中心：切換拱心石頁</translation>
     </message>
     <message>
         <location filename="../Common/NiriActionNames.js" line="182"/>
