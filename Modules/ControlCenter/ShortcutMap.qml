@@ -34,10 +34,46 @@ PanelWindow {
                                                           = ActionNames.translated(action.name));
         return NiriConfigService.bindings.map(binding => ({
             key: binding.key,
+            category: root.category(binding.action),
             name: binding.props["hotkey-overlay-title"] || names[binding.group] || root.actionName(
                 binding.action),
             effective: binding.effective
         }));
+    }
+
+        function category(expression) {
+        const command = expression.split(/\s/)[0].replace(/;$/, "");
+        if (command === "spawn" || command === "spawn-sh")
+        return /"(?:qs|key)".*"ipc".*"call"/.test(expression) ? qsTr("Shell") : qsTr(
+        "Applications and custom actions");
+        if (/workspace/.test(command))
+        return qsTr("Workspaces");
+        if (/screenshot|cast/.test(command))
+        return qsTr("Screenshots and recording");
+        if (/quit|suspend|power-off|power-on/.test(command))
+        return qsTr("Session");
+        if (/monitor|output/.test(command))
+        return qsTr("Displays");
+        if (/debug|overlay|inhibit|layout/.test(command))
+        return qsTr("System");
+        return qsTr("Windows");
+    }
+
+        readonly property var sections: {
+        const result = [];
+        const byCategory = {};
+        for (const entry of entries) {
+        if (!byCategory[entry.category]) {
+        byCategory[entry.category] = {
+        title: entry.category,
+        entries: []
+    };
+        result.push(byCategory[entry.category]);
+    }
+        byCategory[entry.category].entries.push(entry);
+    }
+        const custom = byCategory[qsTr("Applications and custom actions")];
+        return custom ? result.filter(section => section !== custom).concat([custom]) : result;
     }
 
         function actionName(expression) {
@@ -137,12 +173,44 @@ PanelWindow {
         orientation: ListView.Horizontal
         clip: true
         boundsBehavior: Flickable.StopAtBounds
-        readonly property int columnCount: Math.ceil(root.entries.length / rows)
-        readonly property int rows: Math.max(1, Math.floor((height - 20) / 48))
-        readonly property int columnWidth: 520
-        model: columnCount
-        spacing: 32
-        ScrollBar.horizontal: ScrollBar {
+        readonly property var sectionColumns: {
+        const columns = [];
+        let blocks = [];
+        let used = 0;
+        const available = Math.max(108, height - 20);
+        for (const section of root.sections) {
+        let offset = 0;
+        while (offset < section.entries.length) {
+        const gap = blocks.length ? 24 : 0;
+        const headerHeight = offset === 0 ? 52 : 0;
+        const count = Math.floor((available - used - gap - headerHeight) / 56);
+        if (count < 1) {
+        columns.push(blocks);
+        blocks = [];
+        used = 0;
+        continue;
+    }
+        const entries = section.entries.slice(offset, offset + count);
+        const blockHeight = headerHeight + entries.length * 56;
+        blocks.push({
+        title: section.title,
+        headerHeight: headerHeight,
+        entries: entries,
+        y: used + gap,
+        height: blockHeight
+    });
+        used += gap + blockHeight;
+        offset += entries.length;
+    }
+    }
+        if (blocks.length)
+        columns.push(blocks);
+        return columns;
+    }
+        readonly property int columnWidth: 580
+        model: sectionColumns
+        spacing: 64
+        ScrollBar.horizontal: StyledScrollBar {
         policy: ScrollBar.AsNeeded
     }
         focus: true
@@ -164,26 +232,43 @@ PanelWindow {
     }
         delegate: Item {
         id: page
-        required property int index
+        required property var modelData
         width: pages.columnWidth
         height: pages.height
+        Repeater {
+        model: page.modelData
+        delegate: Item {
+        id: sectionBlock
+        required property var modelData
+        width: pages.columnWidth
+        height: modelData.height
+        y: modelData.y
+        Text {
+        width: parent.width
+        visible: sectionBlock.modelData.headerHeight > 0
+        text: sectionBlock.modelData.title
+        font.family: Fonts.ui
+        font.pixelSize: 24
+        font.weight: Font.DemiBold
+        color: Appearance.colors.colOnSurface
+        elide: Text.ElideRight
+    }
         Grid {
+        y: sectionBlock.modelData.headerHeight
         columns: 1
         columnSpacing: 24
         rowSpacing: 8
         Repeater {
-        model: Array.from({
-        length: pages.rows
-    }, (_, row) => root.entries[row * pages.columnCount + page.index]).filter(entry => entry !== undefined)
+        model: sectionBlock.modelData.entries
         delegate: RowLayout {
         id: entryCell
         required property var modelData
         width: pages.columnWidth
-        height: 40
+        height: 48
         spacing: 16
         Flickable {
         Layout.preferredWidth: entryCell.width * 0.48
-        Layout.preferredHeight: 28
+        Layout.preferredHeight: 34
         contentWidth: keyRow.width
         contentHeight: height
         clip: true
@@ -200,11 +285,11 @@ PanelWindow {
         Text {
         visible: parent.index > 0
         text: "+"
-        height: 26
+        height: 32
         verticalAlignment: Text.AlignVCenter
         color: Appearance.colors.colOnSurfaceVariant
         font.family: Fonts.mono
-        font.pixelSize: 13
+        font.pixelSize: 16
     }
         ShortcutKeycap {
         keyText: parent.modelData
@@ -220,10 +305,12 @@ PanelWindow {
         color: entryCell.modelData.effective ? Appearance.colors.colOnSurface :
         Appearance.colors.colOnSurfaceVariant
         font.family: Fonts.ui
-        font.pixelSize: Typography.bodyMedium.pixelSize
+        font.pixelSize: 16
         maximumLineCount: 2
         wrapMode: Text.Wrap
         elide: Text.ElideRight
+    }
+    }
     }
     }
     }

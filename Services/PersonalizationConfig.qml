@@ -270,6 +270,64 @@ Singleton {
     property string lockScreenStyle: "default"
     property string themeMode: "dark"
     property string superKeyStyle: "text"
+    readonly property var superKeyStyles: [
+        {
+            "value": "text",
+            "label": "Super"
+        },
+        {
+            "value": "windows",
+            "label": "Windows"
+        },
+        {
+            "value": "arch",
+            "label": "Arch"
+        },
+        {
+            "value": "linux",
+            "label": "Linux"
+        },
+        {
+            "value": "ubuntu",
+            "label": "Ubuntu"
+        },
+        {
+            "value": "debian",
+            "label": "Debian"
+        },
+        {
+            "value": "fedora",
+            "label": "Fedora"
+        },
+        {
+            "value": "nixos",
+            "label": "NixOS"
+        },
+        {
+            "value": "linuxmint",
+            "label": "Linux Mint"
+        },
+        {
+            "value": "gentoo",
+            "label": "Gentoo"
+        },
+        {
+            "value": "steam",
+            "label": "Steam"
+        },
+        {
+            "value": "apple",
+            "label": "Apple"
+        },
+        {
+            "value": "googlechrome",
+            "label": "Chrome"
+        },
+        {
+            "value": "command",
+            "label": "Command"
+        }
+    ]
     property string cursorTheme: ""
     property int cursorSize: 24
     property bool cursorHideWhenTyping: false
@@ -1614,7 +1672,7 @@ Singleton {
         root.matugenTemplates = normalizedMatugenTemplates(theme.matugenTemplates);
         root.lockScreenStyle = normalizedOption(root.lockScreenStyles, theme.lockScreenStyle, "default");
         root.themeMode = theme.mode === "light" ? "light" : "dark";
-        root.superKeyStyle = ["text", "windows", "arch"].indexOf(theme.superKeyStyle) !== -1
+        root.superKeyStyle = root.superKeyStyles.some(style => style.value === theme.superKeyStyle)
                 ? theme.superKeyStyle : "text";
         root.cursorTheme = root.normalizedCursorTheme(theme.cursorTheme);
         root.cursorSize = root.normalizedBoundedInt(theme.cursorSize, 24, 12, 128);

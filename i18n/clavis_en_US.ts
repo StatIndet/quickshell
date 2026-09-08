@@ -7361,83 +7361,83 @@ Click to open network settings</translation>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="341"/>
         <source>Weather</source>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="287"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="345"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="380"/>
         <source>Quick Settings</source>
         <translation>Quick Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="291"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="349"/>
         <source>Pomodoro</source>
         <translation>Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="302"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="360"/>
         <source>Workspaces</source>
         <translation>Workspaces</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="306"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="364"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="368"/>
         <source>Active Window</source>
         <translation>Active Window</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="314"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="372"/>
         <source>Tray</source>
         <translation>Tray</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="318"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="376"/>
         <source>System Monitor</source>
         <translation>System Monitor</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="330"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="388"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="334"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="392"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="338"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="396"/>
         <source>Brightness</source>
         <translation>Brightness</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="342"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="400"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="346"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="404"/>
         <source>Microphone</source>
         <translation>Microphone</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="350"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="408"/>
         <source>Battery</source>
         <translation>Battery</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="355"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="413"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="360"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="418"/>
         <source>Power</source>
         <translation>Power</translation>
     </message>
@@ -7945,32 +7945,72 @@ Right click: Control Center</translation>
 <context>
     <name>ShortcutMap</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="49"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="47"/>
+        <source>Shell</source>
+        <translation>Shell</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="47"/>
+        <source>Applications and custom actions</source>
+        <translation>Applications and custom actions</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="50"/>
+        <source>Workspaces</source>
+        <translation>Workspaces</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="52"/>
+        <source>Screenshots and recording</source>
+        <translation>Screenshots and recording</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="54"/>
+        <source>Session</source>
+        <translation>Session</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="56"/>
+        <source>Displays</source>
+        <translation>Displays</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="58"/>
+        <source>System</source>
+        <translation>System</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="59"/>
+        <source>Windows</source>
+        <translation>Windows</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="84"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="88"/>
         <source>Run %1</source>
         <translation>Run %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="103"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="141"/>
         <source>Shortcut map</source>
         <translation>Shortcut map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="110"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="152"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="122"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="164"/>
         <source>No shortcuts assigned</source>
         <translation>No shortcuts assigned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="271"/>
         <source>%1 (inactive)</source>
         <translation>%1 (inactive)</translation>
     </message>
@@ -9467,7 +9507,7 @@ detected</translation>
         <translation>matugen color scheme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="538"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="545"/>
         <source>Lock screen</source>
         <translation>Lock screen</translation>
     </message>
@@ -9487,118 +9527,118 @@ detected</translation>
         <translation>Super key appearance</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="553"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="560"/>
         <source>Cursor theme</source>
         <translation>Cursor theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="572"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="579"/>
         <source>Cursor size</source>
         <translation>Cursor size</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="576"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
         <source>pixels</source>
         <translation>pixels</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
         <source>Hide while typing</source>
         <translation>Hide while typing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="597"/>
         <source>Hide after timeout</source>
         <translation>Hide after timeout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="591"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="598"/>
         <source>Hide the cursor after inactivity; 0 disables this</source>
         <translation>Hide the cursor after inactivity; 0 disables this</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="595"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
         <source>milliseconds</source>
         <translation>milliseconds</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="606"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="613"/>
         <source>Icon theme</source>
         <translation>Icon theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="616"/>
         <source>Choose icon theme</source>
         <translation>Choose icon theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="615"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="622"/>
         <source>Fonts</source>
         <translation>Fonts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="619"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="626"/>
         <source>UI font</source>
         <translation>UI font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="620"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="627"/>
         <source>Regular headings, body text, and controls</source>
         <translation>Regular headings, body text, and controls</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="623"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
         <source>Select UI font</source>
         <translation>Select UI font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="629"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="636"/>
         <source>Monospace font</source>
         <translation>Monospace font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="637"/>
         <source>Commands, paths, and technical information</source>
         <translation>Commands, paths, and technical information</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="633"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
         <source>Select monospace font</source>
         <translation>Select monospace font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="639"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="646"/>
         <source>Numeric font</source>
         <translation>Numeric font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="647"/>
         <source>Time, percentages, and system values</source>
         <translation>Time, percentages, and system values</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="643"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
         <source>Select numeric font</source>
         <translation>Select numeric font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="649"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="656"/>
         <source>Expressive font</source>
         <translation>Expressive font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="657"/>
         <source>Expressive visual components such as weather</source>
         <translation>Expressive visual components such as weather</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="653"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="660"/>
         <source>Select expressive font</source>
         <translation>Select expressive font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="663"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="670"/>
         <source>Restore default fonts</source>
         <translation>Restore default fonts</translation>
     </message>

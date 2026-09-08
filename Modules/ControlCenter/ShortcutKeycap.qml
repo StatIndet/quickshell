@@ -9,10 +9,10 @@ Rectangle {
     property string keyText: ""
     property string superStyle: PersonalizationConfig.superKeyStyle
     readonly property bool superKey: ["super", "win"].indexOf(keyText.toLowerCase()) !== -1
-    readonly property bool logo: superKey && superStyle !== "text"
+    readonly property bool logo: superKey && superStyle !== "text" && superStyle !== "command"
 
-    implicitWidth: Math.max(24, logo ? 26 : label.implicitWidth + 12)
-    implicitHeight: 26
+    implicitWidth: Math.max(30, logo ? 32 : label.implicitWidth + 14)
+    implicitHeight: 32
     radius: 5
     color: Appearance.colors.colOnSurface
     Accessible.role: Accessible.StaticText
@@ -31,19 +31,19 @@ Rectangle {
             id: label
             anchors.centerIn: parent
             visible: !root.logo
-            text: root.superKey ? "Super" : root.keyText
+            text: root.superKey ? (root.superStyle === "command" ? "⌘" : "Super") : root.keyText
             font.family: Fonts.mono
-            font.pixelSize: 13
+            font.pixelSize: 16
             color: Appearance.colors.colOnSurface
         }
         Image {
             id: logoImage
             anchors.centerIn: parent
-            width: 16
-            height: 16
+            width: 20
+            height: 20
             visible: false
             source: root.logo ? Qt.resolvedUrl("../../assets/icons/keyboard/" + root.superStyle + ".svg") : ""
-            sourceSize: Qt.size(16, 16)
+            sourceSize: Qt.size(20, 20)
         }
         MultiEffect {
             anchors.fill: logoImage

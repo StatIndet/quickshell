@@ -7361,83 +7361,83 @@ Click to open network settings</source>
         <translation>右側</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="341"/>
         <source>Weather</source>
         <translation>天氣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="287"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="345"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="380"/>
         <source>Quick Settings</source>
         <translation>快速設定</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="291"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="349"/>
         <source>Pomodoro</source>
         <translation>番茄鐘</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="302"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="360"/>
         <source>Workspaces</source>
         <translation>工作區</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="306"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="364"/>
         <source>Information</source>
         <translation>資訊</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="368"/>
         <source>Active Window</source>
         <translation>聚焦視窗</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="314"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="372"/>
         <source>Tray</source>
         <translation>系統匣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="318"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="376"/>
         <source>System Monitor</source>
         <translation>系統監視器</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="330"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="388"/>
         <source>Network</source>
         <translation>網路</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="334"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="392"/>
         <source>Bluetooth</source>
         <translation>藍牙</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="338"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="396"/>
         <source>Brightness</source>
         <translation>亮度</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="342"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="400"/>
         <source>Volume</source>
         <translation>音量</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="346"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="404"/>
         <source>Microphone</source>
         <translation>麥克風</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="350"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="408"/>
         <source>Battery</source>
         <translation>電池</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="355"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="413"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="360"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="418"/>
         <source>Power</source>
         <translation>電源</translation>
     </message>
@@ -7945,32 +7945,72 @@ Right click: Control Center</source>
 <context>
     <name>ShortcutMap</name>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="49"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="47"/>
+        <source>Shell</source>
+        <translation>Shell 功能</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="47"/>
+        <source>Applications and custom actions</source>
+        <translation>應用程式與自訂動作</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="50"/>
+        <source>Workspaces</source>
+        <translation>工作區</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="52"/>
+        <source>Screenshots and recording</source>
+        <translation>螢幕擷取與錄製</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="54"/>
+        <source>Session</source>
+        <translation>工作階段</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="56"/>
+        <source>Displays</source>
+        <translation>顯示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="58"/>
+        <source>System</source>
+        <translation>系統</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="59"/>
+        <source>Windows</source>
+        <translation>視窗</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="84"/>
         <source>%1: %2</source>
         <translation>%1：%2</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="88"/>
         <source>Run %1</source>
         <translation>執行 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="103"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="141"/>
         <source>Shortcut map</source>
         <translation>快捷鍵配置圖</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="110"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="152"/>
         <source>Close</source>
         <translation>關閉</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="122"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="164"/>
         <source>No shortcuts assigned</source>
         <translation>尚未設定快捷鍵</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="271"/>
         <source>%1 (inactive)</source>
         <translation>%1（未生效）</translation>
     </message>
@@ -9464,7 +9504,7 @@ detected</source>
         <translation>matugen配色方案</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="538"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="545"/>
         <source>Lock screen</source>
         <translation>鎖定螢幕</translation>
     </message>
@@ -9484,118 +9524,118 @@ detected</source>
         <translation>Super 鍵樣式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="553"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="560"/>
         <source>Cursor theme</source>
         <translation>游標主題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="572"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="579"/>
         <source>Cursor size</source>
         <translation>游標尺寸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="576"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
         <source>pixels</source>
         <translation>畫素</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
         <source>Hide while typing</source>
         <translation>打字時隱藏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="597"/>
         <source>Hide after timeout</source>
         <translation>自動超時隱藏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="591"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="598"/>
         <source>Hide the cursor after inactivity; 0 disables this</source>
         <translation>閒置後隱藏游標，0 表示停用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="595"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
         <source>milliseconds</source>
         <translation>毫秒</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="606"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="613"/>
         <source>Icon theme</source>
         <translation>圖示主題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="616"/>
         <source>Choose icon theme</source>
         <translation>選擇圖示主題</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="615"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="622"/>
         <source>Fonts</source>
         <translation>字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="619"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="626"/>
         <source>UI font</source>
         <translation>介面字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="620"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="627"/>
         <source>Regular headings, body text, and controls</source>
         <translation>普通標題、正文和控制元件</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="623"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
         <source>Select UI font</source>
         <translation>選擇介面字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="629"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="636"/>
         <source>Monospace font</source>
         <translation>等寬字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="637"/>
         <source>Commands, paths, and technical information</source>
         <translation>命令、路徑和技術資訊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="633"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
         <source>Select monospace font</source>
         <translation>選擇等寬字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="639"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="646"/>
         <source>Numeric font</source>
         <translation>數字字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="647"/>
         <source>Time, percentages, and system values</source>
         <translation>時間、百分比和系統數值</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="643"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
         <source>Select numeric font</source>
         <translation>選擇數字字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="649"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="656"/>
         <source>Expressive font</source>
         <translation>表現性字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="657"/>
         <source>Expressive visual components such as weather</source>
         <translation>天氣等強調型視覺元件</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="653"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="660"/>
         <source>Select expressive font</source>
         <translation>選擇表現性字型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="663"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="670"/>
         <source>Restore default fonts</source>
         <translation>恢復預設字型</translation>
     </message>

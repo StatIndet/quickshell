@@ -511,25 +511,39 @@ StyledFlickable {
         Section {
             title: qsTr("Super key appearance")
             iconName: "keyboard"
-            RowLayout {
+            Flow {
                 Layout.fillWidth: true
-                spacing: Metrics.spacingL
-                StyledButtonGroup {
-                    model: [({
-                                 value: "text",
-                                 label: "Super"
-                             }), ({
-                                      value: "windows",
-                                      label: "Windows"
-                                  }), ({
-                                           value: "arch",
-                                           label: "Arch"
-                                       })]
-                    currentValue: PersonalizationConfig.superKeyStyle
-                    onValueSelected: value => PersonalizationConfig.setValue("superKeyStyle", value)
-                }
-                ShortcutKeycap {
-                    keyText: "Super"
+                spacing: Metrics.spacingS
+                Repeater {
+                    model: PersonalizationConfig.superKeyStyles
+                    delegate: RippleButton {
+                        id: superChoice
+                        required property var modelData
+                        implicitWidth: 84
+                        implicitHeight: 56
+                        buttonRadius: Appearance.rounding.small
+                        containerColor: PersonalizationConfig.superKeyStyle === modelData.value
+                                        ? Appearance.colors.colSecondaryContainer :
+                                          Appearance.colors.colLayer2
+                        hoverStateLayerOpacity: 0.08
+                        pressedStateLayerOpacity: 0.12
+                        focusStateLayerOpacity: 0.12
+                        Accessible.name: modelData.label
+                        Accessible.role: Accessible.RadioButton
+                        Accessible.checked: PersonalizationConfig.superKeyStyle === modelData.value
+                        onClicked: PersonalizationConfig.setValue("superKeyStyle", modelData.value)
+                        contentItem: Item {
+                            ShortcutKeycap {
+                                anchors.centerIn: parent
+                                keyText: "Super"
+                                superStyle: superChoice.modelData.value
+                            }
+                        }
+                        StyledToolTip {
+                            text: parent.modelData.label
+                            visible: parent.hovered
+                        }
+                    }
                 }
             }
         }

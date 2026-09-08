@@ -6,3 +6,5 @@
 Rendered in the current theme foreground color. Brand names and logos belong to their respective owners.
 
 Monochrome paths use white as the source mask for theme colorization.
+
+Additional Linux, Ubuntu, Debian, Fedora, NixOS, Linux Mint, Gentoo, Steam, Apple and Google Chrome icons are from the same Simple Icons collection under CC0.
