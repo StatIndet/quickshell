@@ -3699,62 +3699,62 @@ Scroll to adjust</source>
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="68"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
         <source>Bar</source>
         <translation>条栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="70"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
         <source>Sidebars</source>
         <translation>侧边栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="74"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
         <source>Transparency and blur</source>
         <translation>透明与模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="76"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="78"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
         <source>Language &amp; region</source>
         <translation>语言与地区</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="80"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="83"/>
         <source>Autostart</source>
         <translation>开机启动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="82"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
         <source>Default applications</source>
         <translation>默认应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="87"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="89"/>
         <source>Connected devices</source>
         <translation>连接的设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="88"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="91"/>
         <source>Pair new device</source>
         <translation>配对新设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="92"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="95"/>
         <source>Bluetooth device</source>
         <translation>蓝牙设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="98"/>
         <source>General</source>
         <translation>通用</translation>
     </message>
@@ -6848,6 +6848,131 @@ Click to open network settings</source>
         <location filename="../Common/NiriActionNames.js" line="165"/>
         <source>Run shell command</source>
         <translation>运行 Shell 命令</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="166"/>
+        <source>Spotlight: open applications</source>
+        <translation>Spotlight：打开应用</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="167"/>
+        <source>Spotlight: open clipboard</source>
+        <translation>Spotlight：打开剪贴板</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="168"/>
+        <source>Spotlight: open wallpaper picker</source>
+        <translation>Spotlight：打开壁纸选择</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="169"/>
+        <source>Control center: open Account</source>
+        <translation>设置中心：打开账户页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="170"/>
+        <source>Control center: open General</source>
+        <translation>设置中心：打开通用页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="171"/>
+        <source>Control center: open Wallpaper</source>
+        <translation>设置中心：打开壁纸页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="172"/>
+        <source>Control center: open Theme</source>
+        <translation>设置中心：打开主题页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="173"/>
+        <source>Control center: open Keystone</source>
+        <translation>设置中心：打开钥石页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="174"/>
+        <source>Control center: open Advanced</source>
+        <translation>设置中心：打开高级页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="175"/>
+        <source>Control center: open Language &amp; region</source>
+        <translation>设置中心：打开语言与地区页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="176"/>
+        <source>Control center: open current page</source>
+        <translation>设置中心：打开当前页面</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="177"/>
+        <source>Control center: toggle Account</source>
+        <translation>设置中心：切换账户页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="178"/>
+        <source>Control center: toggle General</source>
+        <translation>设置中心：切换通用页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="179"/>
+        <source>Control center: toggle Wallpaper</source>
+        <translation>设置中心：切换壁纸页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="180"/>
+        <source>Control center: toggle Theme</source>
+        <translation>设置中心：切换主题页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="181"/>
+        <source>Control center: toggle Keystone</source>
+        <translation>设置中心：切换钥石页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="182"/>
+        <source>Control center: toggle Advanced</source>
+        <translation>设置中心：切换高级页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="183"/>
+        <source>Control center: toggle Language &amp; region</source>
+        <translation>设置中心：切换语言与地区页</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="184"/>
+        <source>Control center: toggle current page</source>
+        <translation>设置中心：切换当前页面</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="185"/>
+        <source>Notifications: open</source>
+        <translation>通知侧栏：打开</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="186"/>
+        <source>Quick settings: open</source>
+        <translation>快捷设置：打开</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="187"/>
+        <source>Notifications: close</source>
+        <translation>通知侧栏：关闭</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="188"/>
+        <source>Quick settings: close</source>
+        <translation>快捷设置：关闭</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="189"/>
+        <source>Notifications: toggle</source>
+        <translation>通知侧栏：切换</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="190"/>
+        <source>Quick settings: toggle</source>
+        <translation>快捷设置：切换</translation>
     </message>
 </context>
 <context>

@@ -1008,6 +1008,33 @@
     "method": "openMode"
   },
   {
+    "id": "clavis:spotlight:openMode:apps",
+    "category": "clavis",
+    "name": "Spotlight: open applications",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"openMode\" \"apps\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "openMode"
+  },
+  {
+    "id": "clavis:spotlight:openMode:clipboard",
+    "category": "clavis",
+    "name": "Spotlight: open clipboard",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"openMode\" \"clipboard\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "openMode"
+  },
+  {
+    "id": "clavis:spotlight:openMode:wallpapers",
+    "category": "clavis",
+    "name": "Spotlight: open wallpaper picker",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"spotlight\" \"openMode\" \"wallpapers\"",
+    "parameters": false,
+    "target": "spotlight",
+    "method": "openMode"
+  },
+  {
     "id": "clavis:wallpaper:set",
     "category": "clavis",
     "name": "Wallpaper: set",
@@ -1089,6 +1116,78 @@
     "method": "open"
   },
   {
+    "id": "clavis:control-center:open:account",
+    "category": "clavis",
+    "name": "Control center: open Account",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"account\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:general",
+    "category": "clavis",
+    "name": "Control center: open General",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"general\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:wallpaper",
+    "category": "clavis",
+    "name": "Control center: open Wallpaper",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"wallpaper\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:theme",
+    "category": "clavis",
+    "name": "Control center: open Theme",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"theme\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:keystone",
+    "category": "clavis",
+    "name": "Control center: open Keystone",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"keystone\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:advanced",
+    "category": "clavis",
+    "name": "Control center: open Advanced",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"advanced\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:language-region",
+    "category": "clavis",
+    "name": "Control center: open Language & region",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"language-region\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
+    "id": "clavis:control-center:open:current",
+    "category": "clavis",
+    "name": "Control center: open current page",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"open\" \"\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "open"
+  },
+  {
     "id": "clavis:control-center:close",
     "category": "clavis",
     "name": "Control center: close",
@@ -1103,6 +1202,78 @@
     "name": "Control center: toggle",
     "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"<pageId>\"",
     "parameters": true,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:account",
+    "category": "clavis",
+    "name": "Control center: toggle Account",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"account\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:general",
+    "category": "clavis",
+    "name": "Control center: toggle General",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"general\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:wallpaper",
+    "category": "clavis",
+    "name": "Control center: toggle Wallpaper",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"wallpaper\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:theme",
+    "category": "clavis",
+    "name": "Control center: toggle Theme",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"theme\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:keystone",
+    "category": "clavis",
+    "name": "Control center: toggle Keystone",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"keystone\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:advanced",
+    "category": "clavis",
+    "name": "Control center: toggle Advanced",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"advanced\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:language-region",
+    "category": "clavis",
+    "name": "Control center: toggle Language & region",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"language-region\"",
+    "parameters": false,
+    "target": "control-center",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:control-center:toggle:current",
+    "category": "clavis",
+    "name": "Control center: toggle current page",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"control-center\" \"toggle\" \"\"",
+    "parameters": false,
     "target": "control-center",
     "method": "toggle"
   },
@@ -1170,6 +1341,24 @@
     "method": "open"
   },
   {
+    "id": "clavis:sidebar:open:left",
+    "category": "clavis",
+    "name": "Notifications: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"left\"",
+    "parameters": false,
+    "target": "sidebar",
+    "method": "open"
+  },
+  {
+    "id": "clavis:sidebar:open:right",
+    "category": "clavis",
+    "name": "Quick settings: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"right\"",
+    "parameters": false,
+    "target": "sidebar",
+    "method": "open"
+  },
+  {
     "id": "clavis:sidebar:close",
     "category": "clavis",
     "name": "Sidebar: close",
@@ -1179,11 +1368,47 @@
     "method": "close"
   },
   {
+    "id": "clavis:sidebar:close:left",
+    "category": "clavis",
+    "name": "Notifications: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"left\"",
+    "parameters": false,
+    "target": "sidebar",
+    "method": "close"
+  },
+  {
+    "id": "clavis:sidebar:close:right",
+    "category": "clavis",
+    "name": "Quick settings: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"right\"",
+    "parameters": false,
+    "target": "sidebar",
+    "method": "close"
+  },
+  {
     "id": "clavis:sidebar:toggle",
     "category": "clavis",
     "name": "Sidebar: toggle",
     "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"<side>\"",
     "parameters": true,
+    "target": "sidebar",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:sidebar:toggle:left",
+    "category": "clavis",
+    "name": "Notifications: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"left\"",
+    "parameters": false,
+    "target": "sidebar",
+    "method": "toggle"
+  },
+  {
+    "id": "clavis:sidebar:toggle:right",
+    "category": "clavis",
+    "name": "Quick settings: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"right\"",
+    "parameters": false,
     "target": "sidebar",
     "method": "toggle"
   }

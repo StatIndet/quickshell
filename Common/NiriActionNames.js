@@ -163,6 +163,31 @@ function translated(name) {
     case "Sidebar: toggle": return qsTranslate("NiriActions", "Sidebar: toggle");
     case "Run program": return qsTranslate("NiriActions", "Run program");
     case "Run shell command": return qsTranslate("NiriActions", "Run shell command");
+    case "Spotlight: open applications": return qsTranslate("NiriActions", "Spotlight: open applications");
+    case "Spotlight: open clipboard": return qsTranslate("NiriActions", "Spotlight: open clipboard");
+    case "Spotlight: open wallpaper picker": return qsTranslate("NiriActions", "Spotlight: open wallpaper picker");
+    case "Control center: open Account": return qsTranslate("NiriActions", "Control center: open Account");
+    case "Control center: open General": return qsTranslate("NiriActions", "Control center: open General");
+    case "Control center: open Wallpaper": return qsTranslate("NiriActions", "Control center: open Wallpaper");
+    case "Control center: open Theme": return qsTranslate("NiriActions", "Control center: open Theme");
+    case "Control center: open Keystone": return qsTranslate("NiriActions", "Control center: open Keystone");
+    case "Control center: open Advanced": return qsTranslate("NiriActions", "Control center: open Advanced");
+    case "Control center: open Language & region": return qsTranslate("NiriActions", "Control center: open Language & region");
+    case "Control center: open current page": return qsTranslate("NiriActions", "Control center: open current page");
+    case "Control center: toggle Account": return qsTranslate("NiriActions", "Control center: toggle Account");
+    case "Control center: toggle General": return qsTranslate("NiriActions", "Control center: toggle General");
+    case "Control center: toggle Wallpaper": return qsTranslate("NiriActions", "Control center: toggle Wallpaper");
+    case "Control center: toggle Theme": return qsTranslate("NiriActions", "Control center: toggle Theme");
+    case "Control center: toggle Keystone": return qsTranslate("NiriActions", "Control center: toggle Keystone");
+    case "Control center: toggle Advanced": return qsTranslate("NiriActions", "Control center: toggle Advanced");
+    case "Control center: toggle Language & region": return qsTranslate("NiriActions", "Control center: toggle Language & region");
+    case "Control center: toggle current page": return qsTranslate("NiriActions", "Control center: toggle current page");
+    case "Notifications: open": return qsTranslate("NiriActions", "Notifications: open");
+    case "Quick settings: open": return qsTranslate("NiriActions", "Quick settings: open");
+    case "Notifications: close": return qsTranslate("NiriActions", "Notifications: close");
+    case "Quick settings: close": return qsTranslate("NiriActions", "Quick settings: close");
+    case "Notifications: toggle": return qsTranslate("NiriActions", "Notifications: toggle");
+    case "Quick settings: toggle": return qsTranslate("NiriActions", "Quick settings: toggle");
     default: return name;
     }
 }

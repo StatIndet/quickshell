@@ -21,6 +21,20 @@ import kdl
 PRINT = kdl.PrintConfig(indent='    ', semicolons=True)
 FRAGMENTS = ('effects', 'cursor', 'layer-rules', 'binds')
 
+# Stable first-setup defaults. Existing fragments, including empty ones, are preserved.
+DEFAULT_BINDINGS = (
+    ('Mod+Space', 'spotlight', 'toggle'),
+    ('Mod+Shift+Space', 'spotlight', 'web'),
+    ('Mod+Alt+V', 'spotlight', 'openMode', 'clipboard'),
+    ('Mod+Alt+W', 'spotlight', 'openMode', 'wallpapers'),
+    ('Mod+N', 'sidebar', 'toggle', 'left'),
+    ('Mod+A', 'sidebar', 'toggle', 'right'),
+    ('Mod+Ctrl+Comma', 'control-center', 'toggle', 'general'),
+    ('Mod+Shift+W', 'keystone', 'hub'),
+    ('Mod+Shift+T', 'keystone', 'tools'),
+    ('Alt+Shift+L', 'lock', 'open'),
+)
+
 
 def read_text(path):
     # Preserve CRLF and every other untouched byte when appending/splicing.
@@ -224,8 +238,11 @@ def replace_file(path, text):
 def initial(feature, request):
     header = '// Managed by Clavis.\n'
     if feature == 'binds':
-        # No initial key assignments are defined in the current project.
-        return header + '// Add keyboard bindings in Settings.\nbinds {\n}\n'
+        section = kdl.Node('binds')
+        for key, *command in DEFAULT_BINDINGS:
+            section.nodes.append(kdl.Node(key, props={'repeat': False}, nodes=[
+                kdl.Node('spawn', args=['qs', '-c', 'clavis', 'ipc', 'call', *command])]))
+        return header + render(section)
     if feature == 'layer-rules':
         return header + 'layer-rule {\n    match namespace="^clavis-overview-wallpaper$";\n    place-within-backdrop true;\n}\nlayout {\n    background-color "transparent";\n}\n'
     if feature == 'effects':
@@ -525,6 +542,13 @@ def mutate(request):
             candidate = edit_bindings(graph, path_key(path), request)
         else:
             candidate = initial(feature, request)
+        if request['operation'] == 'setup' and feature == 'binds' and not exists:
+            existing, mod = bindings(graph, path_key(path))
+            occupied = {row['identity'] for row in existing}
+            conflicts = [key for key, *_ in DEFAULT_BINDINGS if key_identity(key, mod) in occupied]
+            if conflicts:
+                raise ValueError('Default shortcuts are already assigned: ' + ', '.join(conflicts)
+                                 + '. Free these keys or create a custom clavis/binds.kdl before setup.')
         main_text = graph.files[path_key(main)]
         main_candidate = main_text
         if request['operation'] == 'setup' and not included:

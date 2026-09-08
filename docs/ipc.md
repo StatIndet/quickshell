@@ -31,7 +31,28 @@ spawn "qs" "-c" "clavis" "ipc" "call" "keystone" "hub"
 `key ipc call` 的标准既有绑定可以识别为同一 Clavis 动作，但保留原文本。
 录屏、录音、剪贴板继续使用各自的 `key` 接口。
 动作目录根据实际 IpcHandler 注册维护；需参数的方法保留显式参数模板。
-当前仓库没有规定初始 IPC 键位，因此首次创建的 binds.kdl 不分配快捷键。
+首次在快捷键页面点击“设置”创建缺失的 binds.kdl 时，写入以下默认键位。
+全部使用 `spawn "qs" "-c" "clavis" "ipc" "call" ...`，并设置 `repeat=false`。
+`Mod` 跟随 Niri 的主修饰键（通常为 Super）。
+
+| 快捷键 | 功能 | IPC target / method / arguments |
+| --- | --- | --- |
+| Mod+Space | 启动器 | spotlight toggle |
+| Mod+Shift+Space | 网页搜索 | spotlight web |
+| Mod+Alt+V | 剪贴板历史 | spotlight openMode clipboard |
+| Mod+Alt+W | 壁纸选择 | spotlight openMode wallpapers |
+| Mod+N | 通知与信息侧栏 | sidebar toggle left |
+| Mod+A | 快捷设置侧栏 | sidebar toggle right |
+| Mod+Ctrl+Comma | 设置中心 | control-center toggle general |
+| Mod+Shift+W | Keystone 主面板 | keystone hub |
+| Mod+Shift+T | 工具面板 | keystone tools |
+| Alt+Shift+L | 锁屏 | lock open |
+
+这些键避开 Niri 常用窗口、工作区、截图和媒体控制。首次接入前按有效 include 链
+检查物理键位占用（含 Mod/Super 别名），发现冲突则拒绝写入并列出键名；用户可释放
+这些键，或自行创建自定义 binds.kdl 后接入。任意第三方配置都可能占用默认键，不能
+保证对所有配置天然无冲突。已有文件即使为空也不补写，升级不恢复用户删改的绑定。
+安装只部署程序；不会自动改写用户 Niri 配置。
 
 目录维护依据：[niri 键绑定](https://niri-wm.github.io/niri/Configuration:-Key-Bindings.html)、
 [默认配置](https://github.com/niri-wm/niri/blob/main/resources/default-config.kdl)、

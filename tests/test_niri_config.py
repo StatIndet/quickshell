@@ -34,8 +34,36 @@ class ConfigurationContracts(unittest.TestCase):
         return self.main.parent / 'clavis' / (feature + '.kdl')
 
     def setup_binds(self):
+        # Editing contracts start from an explicitly empty user fragment.
+        self.fragment().parent.mkdir(exist_ok=True)
+        if not self.fragment().exists():
+            self.fragment().write_text('binds {}\n')
         self.run_config('setup')
         return self.run_config()
+
+    def test_first_setup_defaults_are_unique_direct_ipc_and_not_restored(self):
+        state = self.run_config('setup')
+        rows = state['bindings']
+        self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS))
+        self.assertEqual(len({row['identity'] for row in rows}), len(rows))
+        self.assertTrue(all(row['effective'] and not row.get('collision') for row in rows))
+        for row in rows:
+            action = config.parse(row['action']).nodes[0]
+            self.assertEqual(action.name, 'spawn')
+            self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
+            self.assertIs(row['props']['repeat'], False)
+        self.run_config('delete', id=rows[0]['id'])
+        remaining = self.fragment().read_bytes()
+        self.run_config('setup')
+        self.assertEqual(self.fragment().read_bytes(), remaining)
+
+    def test_default_conflict_rejects_setup_without_writing(self):
+        self.main.write_text('binds { Super+Space { spawn "user-launcher"; }; }\n')
+        original = self.main.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'Default shortcuts are already assigned: Mod\\+Space'):
+            self.run_config('setup')
+        self.assertEqual(self.main.read_bytes(), original)
+        self.assertFalse(self.fragment().exists())
 
     def test_later_include_override_and_invalid_duplicate_are_distinct(self):
         self.setup_binds()

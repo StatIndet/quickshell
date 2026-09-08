@@ -3699,62 +3699,62 @@ Scroll to adjust</translation>
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="68"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
         <source>Bar</source>
         <translation>Bar</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="70"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
         <source>Sidebars</source>
         <translation>Sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="74"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
         <source>Transparency and blur</source>
         <translation>Transparency and blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="76"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
         <source>Keyboard shortcuts</source>
         <translation>Keyboard shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="78"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
         <source>Language &amp; region</source>
         <translation>Language &amp; region</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="80"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="83"/>
         <source>Autostart</source>
         <translation>Autostart</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="82"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
         <source>Default applications</source>
         <translation>Default applications</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="87"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="89"/>
         <source>Connected devices</source>
         <translation>Connected devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="88"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="91"/>
         <source>Pair new device</source>
         <translation>Pair new device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="92"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="95"/>
         <source>Bluetooth device</source>
         <translation>Bluetooth device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="98"/>
         <source>General</source>
         <translation>General</translation>
     </message>
@@ -6848,6 +6848,131 @@ Click to open network settings</translation>
         <location filename="../Common/NiriActionNames.js" line="165"/>
         <source>Run shell command</source>
         <translation>Run shell command</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="166"/>
+        <source>Spotlight: open applications</source>
+        <translation>Spotlight: open applications</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="167"/>
+        <source>Spotlight: open clipboard</source>
+        <translation>Spotlight: open clipboard</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="168"/>
+        <source>Spotlight: open wallpaper picker</source>
+        <translation>Spotlight: open wallpaper picker</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="169"/>
+        <source>Control center: open Account</source>
+        <translation>Control center: open Account</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="170"/>
+        <source>Control center: open General</source>
+        <translation>Control center: open General</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="171"/>
+        <source>Control center: open Wallpaper</source>
+        <translation>Control center: open Wallpaper</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="172"/>
+        <source>Control center: open Theme</source>
+        <translation>Control center: open Theme</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="173"/>
+        <source>Control center: open Keystone</source>
+        <translation>Control center: open Keystone</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="174"/>
+        <source>Control center: open Advanced</source>
+        <translation>Control center: open Advanced</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="175"/>
+        <source>Control center: open Language &amp; region</source>
+        <translation>Control center: open Language &amp; region</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="176"/>
+        <source>Control center: open current page</source>
+        <translation>Control center: open current page</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="177"/>
+        <source>Control center: toggle Account</source>
+        <translation>Control center: toggle Account</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="178"/>
+        <source>Control center: toggle General</source>
+        <translation>Control center: toggle General</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="179"/>
+        <source>Control center: toggle Wallpaper</source>
+        <translation>Control center: toggle Wallpaper</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="180"/>
+        <source>Control center: toggle Theme</source>
+        <translation>Control center: toggle Theme</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="181"/>
+        <source>Control center: toggle Keystone</source>
+        <translation>Control center: toggle Keystone</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="182"/>
+        <source>Control center: toggle Advanced</source>
+        <translation>Control center: toggle Advanced</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="183"/>
+        <source>Control center: toggle Language &amp; region</source>
+        <translation>Control center: toggle Language &amp; region</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="184"/>
+        <source>Control center: toggle current page</source>
+        <translation>Control center: toggle current page</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="185"/>
+        <source>Notifications: open</source>
+        <translation>Notifications: open</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="186"/>
+        <source>Quick settings: open</source>
+        <translation>Quick settings: open</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="187"/>
+        <source>Notifications: close</source>
+        <translation>Notifications: close</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="188"/>
+        <source>Quick settings: close</source>
+        <translation>Quick settings: close</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="189"/>
+        <source>Notifications: toggle</source>
+        <translation>Notifications: toggle</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="190"/>
+        <source>Quick settings: toggle</source>
+        <translation>Quick settings: toggle</translation>
     </message>
 </context>
 <context>
