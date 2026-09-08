@@ -139,116 +139,129 @@ Item {
     }
 
     IpcHandler {
-        target: "shortcut-map"
+        target: "power-menu"
         function open(): void {
-        ShortcutMapService.open();
+        PowerMenuService.open();
     }
         function close(): void {
-                              ShortcutMapService.close();
+                              PowerMenuService.close();
                           }
         function toggle(): void {
-        ShortcutMapService.toggle();
+        PowerMenuService.toggle();
     }
     }
 
         IpcHandler {
-            function open() {
-                return sessionLocker.open();
-            }
-
-            function isLocked() {
-                return sessionLocker.isLocked();
-            }
-
-            target: "lock"
+            target: "shortcut-map"
+            function open(): void {
+            ShortcutMapService.open();
+        }
+            function close(): void {
+                                  ShortcutMapService.close();
+                              }
+            function toggle(): void {
+            ShortcutMapService.toggle();
+        }
         }
 
-        LauncherWindow {
-            id: spotlightLauncher
+            IpcHandler {
+                function open() {
+                    return sessionLocker.open();
+                }
+
+                function isLocked() {
+                    return sessionLocker.isLocked();
+                }
+
+                target: "lock"
+            }
+
+            LauncherWindow {
+                id: spotlightLauncher
+            }
+
+            IpcHandler {
+                function toggle(): string {
+                    spotlightLauncher.toggleWindow();
+                    return spotlightLauncher.windowPhase.toUpperCase();
+                }
+
+                function open(): string {
+                    spotlightLauncher.openSpotlight();
+                    return spotlightLauncher.windowPhase.toUpperCase();
+                }
+
+                function close(): string {
+                    spotlightLauncher.requestClose();
+                    return spotlightLauncher.windowPhase.toUpperCase();
+                }
+
+                function web(): string {
+                    spotlightLauncher.openSpotlight();
+                    spotlightLauncher.enterWeb();
+                    return "WEB";
+                }
+
+                function openMode(mode: string): string {
+                    if (spotlightLauncher.normalizedMode(mode || "") === "")
+                        return "INVALID_MODE";
+
+                    spotlightLauncher.openSpotlight(mode);
+                    return String(mode).toUpperCase();
+                }
+
+                target: "spotlight"
+            }
+
+            IpcHandler {
+                function set(path: string): string {
+                    return WallpaperService.setWallpaper(path || "", "") ? "OK" : "INVALID";
+                }
+
+                function setForScreen(path: string, screenName: string): string {
+                    return WallpaperService.setWallpaper(path || "", screenName || "") ? "OK" : "INVALID";
+                }
+
+                function clear(): string {
+                    return WallpaperService.clearWallpaper("") ? "OK" : "INVALID";
+                }
+
+                function clearForScreen(screenName: string): string {
+                    return WallpaperService.clearWallpaper(screenName || "") ? "OK" : "INVALID";
+                }
+
+                function previous(): string {
+                    return WallpaperService.cyclePrevious() ? "OK" : "PENDING";
+                }
+
+                function next(): string {
+                    return WallpaperService.cycleNext() ? "OK" : "PENDING";
+                }
+
+                function random(): string {
+                    return WallpaperService.cycleRandom() ? "OK" : "PENDING";
+                }
+
+                function setFolder(path: string): string {
+                    return WallpaperService.setWallpaperFolder(path || "") ? "OK" : "INVALID";
+                }
+
+                target: "wallpaper"
+            }
+
+            IpcHandler {
+                function open(pageId: string): string {
+                    return ControlCenterService.open(pageId || "") ? "OK" : "UNAVAILABLE";
+                }
+
+                function close(): string {
+                    return ControlCenterService.close() ? "OK" : "CLOSED";
+                }
+
+                function toggle(pageId: string): string {
+                    return ControlCenterService.toggle(pageId || "") ? "OPENING" : "CLOSING";
+                }
+
+                target: "control-center"
+            }
         }
-
-        IpcHandler {
-            function toggle(): string {
-                spotlightLauncher.toggleWindow();
-                return spotlightLauncher.windowPhase.toUpperCase();
-            }
-
-            function open(): string {
-                spotlightLauncher.openSpotlight();
-                return spotlightLauncher.windowPhase.toUpperCase();
-            }
-
-            function close(): string {
-                spotlightLauncher.requestClose();
-                return spotlightLauncher.windowPhase.toUpperCase();
-            }
-
-            function web(): string {
-                spotlightLauncher.openSpotlight();
-                spotlightLauncher.enterWeb();
-                return "WEB";
-            }
-
-            function openMode(mode: string): string {
-                if (spotlightLauncher.normalizedMode(mode || "") === "")
-                    return "INVALID_MODE";
-
-                spotlightLauncher.openSpotlight(mode);
-                return String(mode).toUpperCase();
-            }
-
-            target: "spotlight"
-        }
-
-        IpcHandler {
-            function set(path: string): string {
-                return WallpaperService.setWallpaper(path || "", "") ? "OK" : "INVALID";
-            }
-
-            function setForScreen(path: string, screenName: string): string {
-                return WallpaperService.setWallpaper(path || "", screenName || "") ? "OK" : "INVALID";
-            }
-
-            function clear(): string {
-                return WallpaperService.clearWallpaper("") ? "OK" : "INVALID";
-            }
-
-            function clearForScreen(screenName: string): string {
-                return WallpaperService.clearWallpaper(screenName || "") ? "OK" : "INVALID";
-            }
-
-            function previous(): string {
-                return WallpaperService.cyclePrevious() ? "OK" : "PENDING";
-            }
-
-            function next(): string {
-                return WallpaperService.cycleNext() ? "OK" : "PENDING";
-            }
-
-            function random(): string {
-                return WallpaperService.cycleRandom() ? "OK" : "PENDING";
-            }
-
-            function setFolder(path: string): string {
-                return WallpaperService.setWallpaperFolder(path || "") ? "OK" : "INVALID";
-            }
-
-            target: "wallpaper"
-        }
-
-        IpcHandler {
-            function open(pageId: string): string {
-                return ControlCenterService.open(pageId || "") ? "OK" : "UNAVAILABLE";
-            }
-
-            function close(): string {
-                return ControlCenterService.close() ? "OK" : "CLOSED";
-            }
-
-            function toggle(pageId: string): string {
-                return ControlCenterService.toggle(pageId || "") ? "OPENING" : "CLOSING";
-            }
-
-            target: "control-center"
-        }
-    }

@@ -1438,5 +1438,32 @@
     "parameters": false,
     "target": "shortcut-map",
     "method": "toggle"
+  },
+  {
+    "id": "clavis:power-menu:open",
+    "category": "clavis",
+    "name": "Power menu: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"power-menu\" \"open\"",
+    "parameters": false,
+    "target": "power-menu",
+    "method": "open"
+  },
+  {
+    "id": "clavis:power-menu:close",
+    "category": "clavis",
+    "name": "Power menu: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"power-menu\" \"close\"",
+    "parameters": false,
+    "target": "power-menu",
+    "method": "close"
+  },
+  {
+    "id": "clavis:power-menu:toggle",
+    "category": "clavis",
+    "name": "Power menu: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"power-menu\" \"toggle\"",
+    "parameters": false,
+    "target": "power-menu",
+    "method": "toggle"
   }
 ]

@@ -13,6 +13,15 @@ PanelWindow {
     required property var targetScreen
     readonly property real buttonSize: Math.max(72, Math.min(128, (width - 112 - actionRow.spacing * 5) / 6))
 
+    property int selectedIndex: 0
+
+    onVisibleChanged: {
+        if (visible) {
+            root.selectedIndex = 0;
+            interactionArea.forceActiveFocus(Qt.OtherFocusReason);
+        }
+    }
+
     screen: targetScreen
     visible: PowerMenuService.active && targetScreen && targetScreen.name
              === PowerMenuService.targetScreenName
@@ -37,6 +46,19 @@ PanelWindow {
         focus: root.visible
         Keys.onPressed: event => {
             switch (event.key) {
+            case Qt.Key_Left:
+            case Qt.Key_Up:
+                root.selectedIndex = (root.selectedIndex + actionRepeater.count - 1) % actionRepeater.count;
+                break;
+            case Qt.Key_Right:
+            case Qt.Key_Down:
+                root.selectedIndex = (root.selectedIndex + 1) % actionRepeater.count;
+                break;
+            case Qt.Key_Return:
+            case Qt.Key_Enter:
+                if (!event.isAutoRepeat)
+                    PowerMenuService.trigger(actionRepeater.itemAt(root.selectedIndex).modelData.action);
+                break;
             case Qt.Key_Escape:
                 PowerMenuService.close();
                 break;
@@ -89,6 +111,7 @@ PanelWindow {
                 spacing: 16
 
                 Repeater {
+                    id: actionRepeater
                     model: [
                         {
                             "action": "lock",
@@ -125,13 +148,20 @@ PanelWindow {
                     delegate: Rectangle {
                         id: actionButton
 
+                        required property int index
                         required property var modelData
+                        readonly property bool selected: root.selectedIndex === index
+
+                        Accessible.role: Accessible.Button
+                        Accessible.name: modelData.label
+                        Accessible.focused: selected && interactionArea.activeFocus
+                        Accessible.onPressAction: PowerMenuService.trigger(modelData.action)
 
                         Layout.preferredWidth: root.buttonSize
                         Layout.preferredHeight: root.buttonSize
                         radius: Appearance.rounding.large
                         color: actionMouse.pressed ? Appearance.colors.colPrimaryActive : (
-                                                         actionMouse.containsMouse
+                                                         actionButton.selected
                                                          ? Appearance.colors.colPrimaryHover :
                                                            Appearance.colors.colLayer1)
 
@@ -151,10 +181,10 @@ PanelWindow {
                                     text: actionButton.modelData.icon
                                     iconSize: 54
                                     fill: 0
-                                    color: actionMouse.containsMouse ? Appearance.colors.colOnPrimary :
-                                                                       Appearance.colors.colOnLayer1
-                                    scale: actionMouse.pressed ? 50 / 54 : (actionMouse.containsMouse ? 1 : 44
-                                                                                                        / 54)
+                                    color: actionButton.selected ? Appearance.colors.colOnPrimary :
+                                                                   Appearance.colors.colOnLayer1
+                                    scale: actionMouse.pressed ? 50 / 54 : (actionButton.selected ? 1 : 44
+                                                                                                    / 54)
                                     transformOrigin: Item.Center
                                     smooth: true
                                     layer.enabled: true
@@ -184,8 +214,8 @@ PanelWindow {
                             Text {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: actionButton.modelData.label
-                                color: actionMouse.containsMouse ? Appearance.colors.colOnPrimary :
-                                                                   Appearance.colors.colOnLayer1
+                                color: actionButton.selected ? Appearance.colors.colOnPrimary :
+                                                               Appearance.colors.colOnLayer1
                                 font.family: Fonts.ui
                                 font.pixelSize: 18
                                 font.weight: Font.DemiBold
@@ -198,6 +228,7 @@ PanelWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
+                            onEntered: root.selectedIndex = actionButton.index
                             onClicked: PowerMenuService.trigger(actionButton.modelData.action)
                         }
 

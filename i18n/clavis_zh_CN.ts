@@ -7020,6 +7020,18 @@ Click to open network settings</source>
         <source>Shortcut map: toggle</source>
         <translation>快捷键配置图：切换</translation>
     </message>
+    <message>
+        <source>Power menu: open</source>
+        <translation>电源菜单：打开</translation>
+    </message>
+    <message>
+        <source>Power menu: close</source>
+        <translation>电源菜单：关闭</translation>
+    </message>
+    <message>
+        <source>Power menu: toggle</source>
+        <translation>电源菜单：切换</translation>
+    </message>
 </context>
 <context>
     <name>NiriSetupPrompt</name>

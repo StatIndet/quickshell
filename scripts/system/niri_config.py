@@ -25,6 +25,7 @@ FRAGMENTS = ('effects', 'cursor', 'layer-rules', 'binds')
 DEFAULT_BINDINGS = (
     ('Mod+Space', 'spotlight', 'toggle'),
     ('Mod+Slash', 'shortcut-map', 'toggle'),
+    ('Mod+BackSpace', 'power-menu', 'toggle'),
     ('Mod+Shift+Space', 'spotlight', 'web'),
     ('Mod+Alt+V', 'spotlight', 'openMode', 'clipboard'),
     ('Mod+Alt+W', 'spotlight', 'openMode', 'wallpapers'),

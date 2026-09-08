@@ -1,5 +1,6 @@
 pragma Singleton
 import QtQuick
+import Quickshell
 import qs.Common
 
 QtObject {
@@ -11,6 +12,7 @@ QtObject {
     signal actionRequested(string action)
 
     function open(screen) {
+        screen = screen || Quickshell.screens[0];
         if (!screen || !screen.name)
             return false;
 
@@ -18,6 +20,10 @@ QtObject {
         root.targetScreenName = screen.name;
         root.active = true;
         return true;
+    }
+
+    function toggle() {
+        return root.active ? root.close() : root.open();
     }
 
     function close() {
@@ -36,5 +42,4 @@ QtObject {
         root.actionRequested(String(action || ""));
         return true;
     }
-
 }
