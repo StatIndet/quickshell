@@ -254,9 +254,10 @@ ListView {
     }
 
     component CollapseAnimation: NumberAnimation {
-        duration: Appearance.animation.expressiveDefaultEffects.duration
-        easing.type: Appearance.animation.expressiveDefaultEffects.type
-        easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
+        // Start and finish at rest; the standard curve stays within the target bounds.
+        duration: Appearance.animation.standardSmall.duration
+        easing.type: Appearance.animation.standardSmall.type
+        easing.bezierCurve: Appearance.animation.standardSmall.bezierCurve
     }
 
     ShortcutRecorder {
@@ -543,11 +544,14 @@ ListView {
                 id: editorHost
                 readonly property bool expanded: root.editorOpen && root.draftGroup === row.modelData.id
                 Layout.fillWidth: true
-                Layout.preferredHeight: expanded ? editorLoader.implicitHeight : 0
+                // Animate the outer reveal only. Inner height animations must flow through
+                // immediately so the footer never runs ahead of this clipping boundary.
+                property real revealProgress: expanded ? 1 : 0
+                Layout.preferredHeight: revealProgress * editorLoader.implicitHeight
                 clip: true
                 enabled: expanded
-                opacity: expanded ? 1 : 0
-                Behavior on Layout.preferredHeight {
+                opacity: revealProgress
+                Behavior on revealProgress {
                     CollapseAnimation {
                         id: editorResize
                         onRunningChanged: {
@@ -555,9 +559,6 @@ ListView {
                                 Qt.callLater(root.finishCollapse, row.modelData.id);
                         }
                     }
-                }
-                Behavior on opacity {
-                    CollapseAnimation {}
                 }
                 Loader {
                     id: editorLoader
@@ -690,7 +691,6 @@ ListView {
                     SettingsRow {
                         Layout.fillWidth: true
                         title: qsTr("Allow while locked")
-                        supportingText: qsTr("Only available for spawn and spawn-sh")
                         trailing: StyledSwitch {
                             enabled: /^\s*(spawn|spawn-sh)\s/.test(actionField.text)
                             checked: root.option("allow-when-locked", false)
