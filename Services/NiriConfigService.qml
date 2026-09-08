@@ -155,16 +155,25 @@ Singleton {
     }
 
     FileView {
+        id: actionCatalogFile
         path: Paths.systemScriptsDir + "/niri-actions.json"
+        watchChanges: true
+        onFileChanged: reload()
         onLoaded: {
-            if (!root.catalogChecked) {
-                try {
-                    root.actionCatalog = JSON.parse(text()).map(entry => Object.assign({}, entry, {
-                                                                                           supported: false
-                                                                                       }));
-                } catch (e) {
-                    root.error = String(e);
-                }
+            try {
+                const previous = {};
+                root.actionCatalog.forEach(entry => previous[entry.id] = entry);
+                root.actionCatalog = JSON.parse(text()).map(entry => Object.assign({}, entry, {
+                                                                                       supported:
+                                                                                       entry.category
+                                                                                       === "clavis" || !!(
+                                                                                           previous[entry.id]
+                                                                                           && previous[entry.id].supported)
+                                                                                   }));
+                root.catalogChecked = false;
+                Qt.callLater(root.refresh);
+            } catch (e) {
+                root.error = String(e);
             }
         }
     }

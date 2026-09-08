@@ -22,19 +22,9 @@ Item {
                                                                          root.presentationActive)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
-    Loader {
-        id: shortcutMapLoader
-        active: false
-        sourceComponent: ShortcutMap {
-            targetScreen: root.parentModal ? root.parentModal.screen : null
-            onDismissed: shortcutMapLoader.active = false
-        }
-    }
-
     function closeChildWindows() {
         avatarPicker.dismiss();
         backupWindow.dismiss();
-        shortcutMapLoader.active = false;
     }
 
     readonly property real maximumContentWidth: 1024
@@ -445,7 +435,7 @@ Item {
                         Layout.fillWidth: true
                         text: qsTr("Shortcut map")
                         trailingIconName: "open_in_new"
-                        onClicked: shortcutMapLoader.active = true
+                        onClicked: ShortcutMapService.open(root.parentModal ? root.parentModal.screen : null)
                     }
                 }
 

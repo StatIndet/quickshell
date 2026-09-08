@@ -4,289 +4,289 @@
 <context>
     <name>AccountPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="76"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>KB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>GB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>TB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>PB</source>
         <translation>PB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="100"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="90"/>
         <source>Not connected to cloud storage</source>
         <translation>未连接云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="123"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="113"/>
         <source>Other cloud storage</source>
         <translation>其他云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="142"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="132"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
         <source>Paired</source>
         <translation>已配对</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="155"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="145"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="156"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="165"/>
         <source>Network unavailable</source>
         <translation>网络不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="177"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="185"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="167"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
         <source>Connecting</source>
         <translation>正在连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="170"/>
         <source>Not connected</source>
         <translation>未连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="189"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="179"/>
         <source>Connected, wired</source>
         <translation>已连接，有线</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="190"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
         <source>Connected, secure</source>
         <translation>已连接，安全</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="191"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
         <source>Connected, open</source>
         <translation>已连接，开放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="235"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="255"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
         <source>Display language</source>
         <translation>显示语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="266"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="256"/>
         <source>Choose language</source>
         <translation>选择语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="281"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="271"/>
         <source>Bluetooth devices</source>
         <translation>蓝牙设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
         <source>Bluetooth</source>
         <translation>蓝牙</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
         <source>Turn on Bluetooth to connect devices</source>
         <translation>开启蓝牙以连接设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="300"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
         <source>Bluetooth switch</source>
         <translation>蓝牙开关</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="354"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="389"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="344"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="379"/>
         <source>Unnamed device</source>
         <translation>未命名设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="388"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="378"/>
         <source>More options for %1</source>
         <translation>%1 的更多选项</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="400"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="390"/>
         <source>Forget device</source>
         <translation>遗忘设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="415"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="405"/>
         <source>No paired devices</source>
         <translation>暂无已配对设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="424"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="414"/>
         <source>More Bluetooth settings</source>
         <translation>更多蓝牙设置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="434"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="424"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="430"/>
         <source>Configure shortcuts</source>
         <translation>配置快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="446"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="436"/>
         <source>Shortcut map</source>
         <translation>快捷键配置图</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="458"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="448"/>
         <source>Cloud storage</source>
         <translation>云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="487"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="477"/>
         <source>Refresh cloud storage information</source>
         <translation>刷新云存储信息</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="500"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="490"/>
         <source>Storage: Used %1 of %2 (%3%)</source>
         <translation>容量：已使用 %1，共 %2（%3%）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="507"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="497"/>
         <source>Reading capacity…</source>
         <translation>正在读取容量…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="518"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="508"/>
         <source>Cloud storage used capacity</source>
         <translation>云存储已使用容量</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="546"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="536"/>
         <source>Backing up</source>
         <translation>正在备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="551"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="541"/>
         <source>Stopping backup…</source>
         <translation>正在停止备份…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="555"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="545"/>
         <source>%1: current folder %2%</source>
         <translation>%1：当前文件夹 %2%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="563"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="553"/>
         <source>Checking files…</source>
         <translation>正在检查文件…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="566"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="556"/>
         <source>%1 items scanned</source>
         <translation>已扫描 %1 个项目</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="569"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="559"/>
         <source>Scanning files…</source>
         <translation>正在扫描文件…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="570"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="560"/>
         <source>Preparing backup</source>
         <translation>正在准备备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="585"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="575"/>
         <source>Computer backup</source>
         <translation>电脑备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="594"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="584"/>
         <source>Manage cloud storage</source>
         <translation>管理云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="598"/>
         <source>Personalization</source>
         <translation>个性化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="637"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="627"/>
         <source>Use wallpaper %1</source>
         <translation>使用壁纸 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="716"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="706"/>
         <source>Color mode</source>
         <translation>色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="726"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="716"/>
         <source>Light</source>
         <translation>浅色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="729"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="719"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="733"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="723"/>
         <source>Choose color mode</source>
         <translation>选择色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="745"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="735"/>
         <source>Wallpaper</source>
         <translation>壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="753"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="743"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="769"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="759"/>
         <source>Choose avatar</source>
         <translation>选择头像</translation>
     </message>
@@ -6989,6 +6989,21 @@ Click to open network settings</source>
         <source>Quick settings: toggle</source>
         <translation>快捷设置：切换</translation>
     </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="191"/>
+        <source>Shortcut map: open</source>
+        <translation>快捷键配置图：打开</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="192"/>
+        <source>Shortcut map: close</source>
+        <translation>快捷键配置图：关闭</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="193"/>
+        <source>Shortcut map: toggle</source>
+        <translation>快捷键配置图：切换</translation>
+    </message>
 </context>
 <context>
     <name>NiriSetupPrompt</name>
@@ -7951,6 +7966,7 @@ Right click: Control Center</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="47"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="75"/>
         <source>Applications and custom actions</source>
         <translation>应用与自定义动作</translation>
     </message>
@@ -7985,32 +8001,32 @@ Right click: Control Center</source>
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="85"/>
         <source>%1: %2</source>
         <translation>%1：%2</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="88"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="89"/>
         <source>Run %1</source>
         <translation>运行 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="141"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="145"/>
         <source>Shortcut map</source>
         <translation>快捷键配置图</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="152"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="156"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="164"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="168"/>
         <source>No shortcuts assigned</source>
         <translation>尚未配置快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="306"/>
         <source>%1 (inactive)</source>
         <translation>%1（未生效）</translation>
     </message>
@@ -9504,7 +9520,7 @@ detected</source>
         <translation>matugen配色方案</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="545"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="552"/>
         <source>Lock screen</source>
         <translation>锁屏</translation>
     </message>
@@ -9524,118 +9540,118 @@ detected</source>
         <translation>Super 键样式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="560"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="567"/>
         <source>Cursor theme</source>
         <translation>光标主题</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="579"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="586"/>
         <source>Cursor size</source>
         <translation>光标尺寸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
         <source>pixels</source>
         <translation>像素</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="597"/>
         <source>Hide while typing</source>
         <translation>打字时隐藏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="597"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="604"/>
         <source>Hide after timeout</source>
         <translation>自动超时隐藏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="598"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="605"/>
         <source>Hide the cursor after inactivity; 0 disables this</source>
         <translation>闲置后隐藏光标，0 表示停用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
         <source>milliseconds</source>
         <translation>毫秒</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="613"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="616"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="620"/>
         <source>Icon theme</source>
         <translation>图标主题</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="616"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="623"/>
         <source>Choose icon theme</source>
         <translation>选择图标主题</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="622"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="629"/>
         <source>Fonts</source>
         <translation>字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="626"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="633"/>
         <source>UI font</source>
         <translation>界面字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="627"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="634"/>
         <source>Regular headings, body text, and controls</source>
         <translation>普通标题、正文和控件</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="637"/>
         <source>Select UI font</source>
         <translation>选择界面字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="636"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="643"/>
         <source>Monospace font</source>
         <translation>等宽字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="637"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="644"/>
         <source>Commands, paths, and technical information</source>
         <translation>命令、路径和技术信息</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="647"/>
         <source>Select monospace font</source>
         <translation>选择等宽字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="646"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="653"/>
         <source>Numeric font</source>
         <translation>数字字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="647"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="654"/>
         <source>Time, percentages, and system values</source>
         <translation>时间、百分比和系统数值</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="657"/>
         <source>Select numeric font</source>
         <translation>选择数字字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="656"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="663"/>
         <source>Expressive font</source>
         <translation>表现性字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="657"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="664"/>
         <source>Expressive visual components such as weather</source>
         <translation>天气等强调型视觉组件</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="660"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="667"/>
         <source>Select expressive font</source>
         <translation>选择表现性字体</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="670"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="677"/>
         <source>Restore default fonts</source>
         <translation>恢复默认字体</translation>
     </message>

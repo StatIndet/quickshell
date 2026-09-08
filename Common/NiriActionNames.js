@@ -188,6 +188,9 @@ function translated(name) {
     case "Quick settings: close": return qsTranslate("NiriActions", "Quick settings: close");
     case "Notifications: toggle": return qsTranslate("NiriActions", "Notifications: toggle");
     case "Quick settings: toggle": return qsTranslate("NiriActions", "Quick settings: toggle");
+    case "Shortcut map: open": return qsTranslate("NiriActions", "Shortcut map: open");
+    case "Shortcut map: close": return qsTranslate("NiriActions", "Shortcut map: close");
+    case "Shortcut map: toggle": return qsTranslate("NiriActions", "Shortcut map: toggle");
     default: return name;
     }
 }

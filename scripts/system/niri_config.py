@@ -24,6 +24,7 @@ FRAGMENTS = ('effects', 'cursor', 'layer-rules', 'binds')
 # Stable first-setup defaults. Existing fragments, including empty ones, are preserved.
 DEFAULT_BINDINGS = (
     ('Mod+Space', 'spotlight', 'toggle'),
+    ('Mod+Slash', 'shortcut-map', 'toggle'),
     ('Mod+Shift+Space', 'spotlight', 'web'),
     ('Mod+Alt+V', 'spotlight', 'openMode', 'clipboard'),
     ('Mod+Alt+W', 'spotlight', 'openMode', 'wallpapers'),

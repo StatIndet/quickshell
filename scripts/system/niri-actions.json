@@ -1411,5 +1411,32 @@
     "parameters": false,
     "target": "sidebar",
     "method": "toggle"
+  },
+  {
+    "id": "clavis:shortcut-map:open",
+    "category": "clavis",
+    "name": "Shortcut map: open",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"shortcut-map\" \"open\"",
+    "parameters": false,
+    "target": "shortcut-map",
+    "method": "open"
+  },
+  {
+    "id": "clavis:shortcut-map:close",
+    "category": "clavis",
+    "name": "Shortcut map: close",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"shortcut-map\" \"close\"",
+    "parameters": false,
+    "target": "shortcut-map",
+    "method": "close"
+  },
+  {
+    "id": "clavis:shortcut-map:toggle",
+    "category": "clavis",
+    "name": "Shortcut map: toggle",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"shortcut-map\" \"toggle\"",
+    "parameters": false,
+    "target": "shortcut-map",
+    "method": "toggle"
   }
 ]

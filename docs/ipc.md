@@ -38,6 +38,7 @@ spawn "qs" "-c" "clavis" "ipc" "call" "keystone" "hub"
 | 快捷键 | 功能 | IPC target / method / arguments |
 | --- | --- | --- |
 | Mod+Space | 启动器 | spotlight toggle |
+| Mod+Slash | 快捷键配置图 | shortcut-map toggle |
 | Mod+Shift+Space | 网页搜索 | spotlight web |
 | Mod+Alt+V | 剪贴板历史 | spotlight openMode clipboard |
 | Mod+Alt+W | 壁纸选择 | spotlight openMode wallpapers |
@@ -60,3 +61,6 @@ spawn "qs" "-c" "clavis" "ipc" "call" "keystone" "hub"
 [Quickshell IpcHandler](https://quickshell.org/docs/v0.3.0/types/Quickshell.Io/IpcHandler/)。
 托管片段按 [niri include 顺序](https://niri-wm.github.io/niri/Configuration:-Include.html)
 处理覆盖。目录随程序部署，运行时只在本机验证动作支持，不联网下载。
+
+快捷键配置图独立于设置中心加载，使用 `qs -c clavis ipc call shortcut-map toggle`
+打开或关闭；也提供无参数的 `open` 和 `close`。账户页按钮与 IPC 共用同一个弹层。
