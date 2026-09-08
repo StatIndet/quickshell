@@ -269,6 +269,7 @@ Singleton {
     ]
     property string lockScreenStyle: "default"
     property string themeMode: "dark"
+    property string superKeyStyle: "text"
     property string cursorTheme: ""
     property int cursorSize: 24
     property bool cursorHideWhenTyping: false
@@ -1497,6 +1498,7 @@ Singleton {
                 "matugenScheme": root.matugenScheme,
                 "matugenTemplates": root.normalizedMatugenTemplates(root.matugenTemplates),
                 "mode": root.themeMode,
+                "superKeyStyle": root.superKeyStyle,
                 "lockScreenStyle": root.lockScreenStyle,
                 "cursorTheme": root.cursorTheme,
                 "cursorSize": root.cursorSize,
@@ -1612,6 +1614,8 @@ Singleton {
         root.matugenTemplates = normalizedMatugenTemplates(theme.matugenTemplates);
         root.lockScreenStyle = normalizedOption(root.lockScreenStyles, theme.lockScreenStyle, "default");
         root.themeMode = theme.mode === "light" ? "light" : "dark";
+        root.superKeyStyle = ["text", "windows", "arch"].indexOf(theme.superKeyStyle) !== -1
+                ? theme.superKeyStyle : "text";
         root.cursorTheme = root.normalizedCursorTheme(theme.cursorTheme);
         root.cursorSize = root.normalizedBoundedInt(theme.cursorSize, 24, 12, 128);
         root.cursorHideWhenTyping = typeof theme.cursorHideWhenTyping === "boolean"

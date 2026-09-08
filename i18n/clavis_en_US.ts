@@ -4,274 +4,289 @@
 <context>
     <name>AccountPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="76"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="86"/>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>KB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>GB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>TB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="87"/>
         <source>PB</source>
         <translation>PB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="100"/>
         <source>Not connected to cloud storage</source>
         <translation>Not connected to cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="113"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="123"/>
         <source>Other cloud storage</source>
         <translation>Other cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="132"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="142"/>
         <source>Connected</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="143"/>
         <source>Paired</source>
         <translation>Paired</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="155"/>
         <source>Disconnect</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="156"/>
         <source>Connect</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
         <source>Network unavailable</source>
         <translation>Network unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="167"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="185"/>
         <source>Connecting</source>
         <translation>Connecting</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
         <source>Not connected</source>
         <translation>Not connected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="189"/>
         <source>Connected, wired</source>
         <translation>Connected, wired</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="190"/>
         <source>Connected, secure</source>
         <translation>Connected, secure</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="191"/>
         <source>Connected, open</source>
         <translation>Connected, open</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="235"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="255"/>
         <source>Display language</source>
         <translation>Display language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="256"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="266"/>
         <source>Choose language</source>
         <translation>Choose language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="281"/>
         <source>Bluetooth devices</source>
         <translation>Bluetooth devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
         <source>Turn on Bluetooth to connect devices</source>
         <translation>Turn on Bluetooth to connect devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="300"/>
         <source>Bluetooth switch</source>
         <translation>Bluetooth switch</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="344"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="379"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="354"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="389"/>
         <source>Unnamed device</source>
         <translation>Unnamed device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="378"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="388"/>
         <source>More options for %1</source>
         <translation>More options for %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="390"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="400"/>
         <source>Forget device</source>
         <translation>Forget device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="405"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="415"/>
         <source>No paired devices</source>
         <translation>No paired devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="414"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="424"/>
         <source>More Bluetooth settings</source>
         <translation>More Bluetooth settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="426"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="434"/>
+        <source>Keyboard shortcuts</source>
+        <translation>Keyboard shortcuts</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="440"/>
+        <source>Configure shortcuts</source>
+        <translation>Configure shortcuts</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="446"/>
+        <source>Shortcut map</source>
+        <translation>Shortcut map</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="458"/>
         <source>Cloud storage</source>
         <translation>Cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="455"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="487"/>
         <source>Refresh cloud storage information</source>
         <translation>Refresh cloud storage information</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="468"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="500"/>
         <source>Storage: Used %1 of %2 (%3%)</source>
         <translation>Storage: Used %1 of %2 (%3%)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="475"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="507"/>
         <source>Reading capacity…</source>
         <translation>Reading capacity…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="486"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="518"/>
         <source>Cloud storage used capacity</source>
         <translation>Cloud storage used capacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="514"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="546"/>
         <source>Backing up</source>
         <translation>Backing up</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="519"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="551"/>
         <source>Stopping backup…</source>
         <translation>Stopping backup…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="523"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="555"/>
         <source>%1: current folder %2%</source>
         <translation>%1: current folder %2%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="531"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="563"/>
         <source>Checking files…</source>
         <translation>Checking files…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="534"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="566"/>
         <source>%1 items scanned</source>
         <translation>%1 items scanned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="537"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="569"/>
         <source>Scanning files…</source>
         <translation>Scanning files…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="538"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="570"/>
         <source>Preparing backup</source>
         <translation>Preparing backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="553"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="585"/>
         <source>Computer backup</source>
         <translation>Computer backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="562"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="594"/>
         <source>Manage cloud storage</source>
         <translation>Manage cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="576"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="608"/>
         <source>Personalization</source>
         <translation>Personalization</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="605"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="637"/>
         <source>Use wallpaper %1</source>
         <translation>Use wallpaper %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="684"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="716"/>
         <source>Color mode</source>
         <translation>Color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="694"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="726"/>
         <source>Light</source>
         <translation>Light</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="697"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="729"/>
         <source>Dark</source>
         <translation>Dark</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="701"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="733"/>
         <source>Choose color mode</source>
         <translation>Choose color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="713"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="745"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="721"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="753"/>
         <source>Theme</source>
         <translation>Theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="737"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="769"/>
         <source>Choose avatar</source>
         <translation>Choose avatar</translation>
     </message>
@@ -7346,83 +7361,83 @@ Click to open network settings</translation>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="282"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="283"/>
         <source>Weather</source>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="286"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="321"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="287"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="322"/>
         <source>Quick Settings</source>
         <translation>Quick Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="290"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="291"/>
         <source>Pomodoro</source>
         <translation>Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="301"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="302"/>
         <source>Workspaces</source>
         <translation>Workspaces</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="305"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="306"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="309"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="310"/>
         <source>Active Window</source>
         <translation>Active Window</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="313"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="314"/>
         <source>Tray</source>
         <translation>Tray</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="317"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="318"/>
         <source>System Monitor</source>
         <translation>System Monitor</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="329"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="330"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="333"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="334"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="337"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="338"/>
         <source>Brightness</source>
         <translation>Brightness</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="341"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="342"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="345"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="346"/>
         <source>Microphone</source>
         <translation>Microphone</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="349"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="350"/>
         <source>Battery</source>
         <translation>Battery</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="354"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="355"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="359"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="360"/>
         <source>Power</source>
         <translation>Power</translation>
     </message>
@@ -7925,6 +7940,39 @@ Right-click to change shape; scroll to reorder</translation>
 Right click: Control Center</source>
         <translation>Left click: Quick Settings
 Right click: Control Center</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutMap</name>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="49"/>
+        <source>%1: %2</source>
+        <translation>%1: %2</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="53"/>
+        <source>Run %1</source>
+        <translation>Run %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="103"/>
+        <source>Shortcut map</source>
+        <translation>Shortcut map</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="110"/>
+        <source>Close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="122"/>
+        <source>No shortcuts assigned</source>
+        <translation>No shortcuts assigned</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="190"/>
+        <source>%1 (inactive)</source>
+        <translation>%1 (inactive)</translation>
     </message>
 </context>
 <context>
@@ -9419,7 +9467,7 @@ detected</translation>
         <translation>matugen color scheme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="538"/>
         <source>Lock screen</source>
         <translation>Lock screen</translation>
     </message>
@@ -9434,118 +9482,123 @@ detected</translation>
         <translation>Create or connect the Clavis cursor configuration.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="527"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="512"/>
+        <source>Super key appearance</source>
+        <translation>Super key appearance</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="553"/>
         <source>Cursor theme</source>
         <translation>Cursor theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="546"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="572"/>
         <source>Cursor size</source>
         <translation>Cursor size</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="550"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="576"/>
         <source>pixels</source>
         <translation>pixels</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="557"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
         <source>Hide while typing</source>
         <translation>Hide while typing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="564"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="590"/>
         <source>Hide after timeout</source>
         <translation>Hide after timeout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="565"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="591"/>
         <source>Hide the cursor after inactivity; 0 disables this</source>
         <translation>Hide the cursor after inactivity; 0 disables this</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="569"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="595"/>
         <source>milliseconds</source>
         <translation>milliseconds</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="576"/>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="580"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="602"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="606"/>
         <source>Icon theme</source>
         <translation>Icon theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="583"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="609"/>
         <source>Choose icon theme</source>
         <translation>Choose icon theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="589"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="615"/>
         <source>Fonts</source>
         <translation>Fonts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="593"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="619"/>
         <source>UI font</source>
         <translation>UI font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="594"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="620"/>
         <source>Regular headings, body text, and controls</source>
         <translation>Regular headings, body text, and controls</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="597"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="623"/>
         <source>Select UI font</source>
         <translation>Select UI font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="603"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="629"/>
         <source>Monospace font</source>
         <translation>Monospace font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="604"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="630"/>
         <source>Commands, paths, and technical information</source>
         <translation>Commands, paths, and technical information</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="607"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="633"/>
         <source>Select monospace font</source>
         <translation>Select monospace font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="613"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="639"/>
         <source>Numeric font</source>
         <translation>Numeric font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="614"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="640"/>
         <source>Time, percentages, and system values</source>
         <translation>Time, percentages, and system values</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="617"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="643"/>
         <source>Select numeric font</source>
         <translation>Select numeric font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="623"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="649"/>
         <source>Expressive font</source>
         <translation>Expressive font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="624"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="650"/>
         <source>Expressive visual components such as weather</source>
         <translation>Expressive visual components such as weather</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="627"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="653"/>
         <source>Select expressive font</source>
         <translation>Select expressive font</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="637"/>
+        <location filename="../Modules/ControlCenter/ThemePage.qml" line="663"/>
         <source>Restore default fonts</source>
         <translation>Restore default fonts</translation>
     </message>

@@ -343,7 +343,9 @@ FloatingWindow {
 
                 Connections {
                     function onNavigateRequested(pageId) {
-                        if (pageId === "connected-devices" || pageId === "network") {
+                        if (pageId === "connected-devices" || pageId === "network" || pageId
+                                === "shortcuts") {
+
                             root.openPageSection("general", pageId);
                             return;
                         }

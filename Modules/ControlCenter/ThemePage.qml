@@ -509,6 +509,32 @@ StyledFlickable {
         }
 
         Section {
+            title: qsTr("Super key appearance")
+            iconName: "keyboard"
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Metrics.spacingL
+                StyledButtonGroup {
+                    model: [({
+                                 value: "text",
+                                 label: "Super"
+                             }), ({
+                                      value: "windows",
+                                      label: "Windows"
+                                  }), ({
+                                           value: "arch",
+                                           label: "Arch"
+                                       })]
+                    currentValue: PersonalizationConfig.superKeyStyle
+                    onValueSelected: value => PersonalizationConfig.setValue("superKeyStyle", value)
+                }
+                ShortcutKeycap {
+                    keyText: "Super"
+                }
+            }
+        }
+
+        Section {
             title: qsTr("Lock screen")
             iconName: "lock"
 

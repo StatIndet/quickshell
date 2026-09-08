@@ -22,9 +22,19 @@ Item {
                                                                          root.presentationActive)
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
+    Loader {
+        id: shortcutMapLoader
+        active: false
+        sourceComponent: ShortcutMap {
+            targetScreen: root.parentModal ? root.parentModal.screen : null
+            onDismissed: shortcutMapLoader.active = false
+        }
+    }
+
     function closeChildWindows() {
         avatarPicker.dismiss();
         backupWindow.dismiss();
+        shortcutMapLoader.active = false;
     }
 
     readonly property real maximumContentWidth: 1024
@@ -224,7 +234,7 @@ Item {
                 id: cardLayout
 
                 width: parent.width
-                height: root.wideLayout ? Math.max(bluetoothCard.y + bluetoothCard.height,
+                height: root.wideLayout ? Math.max(shortcutsCard.y + shortcutsCard.height,
                                                    personalizationCard.y + personalizationCard.height) :
                                           personalizationCard.y + personalizationCard.height
 
@@ -418,10 +428,32 @@ Item {
                 }
 
                 MaterialCard {
+                    id: shortcutsCard
+                    y: bluetoothCard.y + bluetoothCard.height + root.cardGap
+                    width: root.columnWidth
+                    title: qsTr("Keyboard shortcuts")
+                    iconName: "keyboard"
+                    containerColor: Appearance.m3colors.m3surfaceContainerHigh
+
+                    SettingsActionRow {
+                        Layout.fillWidth: true
+                        text: qsTr("Configure shortcuts")
+                        trailingIconName: "chevron_right"
+                        onClicked: root.navigateRequested("shortcuts")
+                    }
+                    SettingsActionRow {
+                        Layout.fillWidth: true
+                        text: qsTr("Shortcut map")
+                        trailingIconName: "open_in_new"
+                        onClicked: shortcutMapLoader.active = true
+                    }
+                }
+
+                MaterialCard {
                     id: cloudCard
 
                     x: root.wideLayout ? root.columnWidth + root.cardGap : 0
-                    y: root.wideLayout ? 0 : bluetoothCard.y + bluetoothCard.height + root.cardGap
+                    y: root.wideLayout ? 0 : shortcutsCard.y + shortcutsCard.height + root.cardGap
                     width: root.columnWidth
                     title: qsTr("Cloud storage")
                     iconName: "cloud"
