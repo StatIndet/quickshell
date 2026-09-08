@@ -4796,8 +4796,8 @@ Scroll to adjust</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/LocationPicker.qml" line="121"/>
-        <source>Return to saved location</source>
-        <translation>回到已選位置</translation>
+        <source>Center current marker</source>
+        <translation>置中目前標記</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/LocationPicker.qml" line="130"/>
@@ -4819,6 +4819,10 @@ Scroll to adjust</source>
         <source>Use automatic location</source>
         <translation>使用自動位置</translation>
     </message>
+    <message>
+        <source>Return to saved location and initial view</source>
+        <translation>返回已儲存位置並恢復初始視圖</translation>
+    </message>
 </context>
 <context>
     <name>LocationPickerWindow</name>
@@ -4829,8 +4833,8 @@ Scroll to adjust</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="90"/>
-        <source>Return to saved location</source>
-        <translation>回到已選位置</translation>
+        <source>Center current marker</source>
+        <translation>置中目前標記</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="99"/>
@@ -4841,6 +4845,10 @@ Scroll to adjust</source>
         <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="111"/>
         <source>Save location</source>
         <translation>儲存位置</translation>
+    </message>
+    <message>
+        <source>Return to saved location and initial view</source>
+        <translation>返回已儲存位置並恢復初始視圖</translation>
     </message>
 </context>
 <context>

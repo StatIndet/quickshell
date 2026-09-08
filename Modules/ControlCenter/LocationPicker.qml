@@ -15,9 +15,12 @@ ColumnLayout {
     property real candidateLongitude: Number(WeatherPlugin.longitude)
     property real cameraLatitude: candidateLatitude
     property real cameraLongitude: candidateLongitude
-    property real mapZoom: 12
-    property real mapBearing: 35
-    property real mapTilt: 0
+    readonly property real initialZoom: 12
+    readonly property real initialBearing: 35
+    readonly property real initialTilt: 0
+    property real mapZoom: initialZoom
+    property real mapBearing: initialBearing
+    property real mapTilt: initialTilt
     property string coordinateError: ""
     readonly property bool expanded: expandedWindow.visible
 
@@ -52,6 +55,19 @@ ColumnLayout {
         root.cameraLatitude = latitudeValue;
         root.cameraLongitude = longitudeValue;
         embeddedMap.recenter(latitudeValue, longitudeValue, root.mapZoom);
+    }
+
+    function returnToSavedLocation() {
+        const latitudeValue = Number(WeatherPlugin.latitude);
+        const longitudeValue = Number(WeatherPlugin.longitude);
+        root.setCandidate(latitudeValue, longitudeValue);
+        root.cameraLatitude = latitudeValue;
+        root.cameraLongitude = longitudeValue;
+        root.mapZoom = root.initialZoom;
+        root.mapBearing = root.initialBearing;
+        root.mapTilt = root.initialTilt;
+        embeddedMap.recenter(latitudeValue, longitudeValue, root.initialZoom);
+        expandedWindow.recenter(latitudeValue, longitudeValue, root.initialZoom);
     }
 
     function saveCoordinate() {
@@ -118,11 +134,20 @@ ColumnLayout {
 
             IconButton {
                 iconName: "my_location"
-                accessibleName: qsTr("Return to saved location")
+                accessibleName: qsTr("Center current marker")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
                 onClicked: embeddedMap.recenter(root.candidateLatitude, root.candidateLongitude, root.mapZoom)
+            }
+
+            IconButton {
+                iconName: "restore"
+                accessibleName: qsTr("Return to saved location and initial view")
+                iconColor: "#FF111111"
+                normalHoverStateLayerColor: "#14111111"
+                normalPressedStateLayerColor: "#1F111111"
+                onClicked: root.returnToSavedLocation()
             }
 
             IconButton {
@@ -222,5 +247,6 @@ ColumnLayout {
             return root.setCandidate(latitudeValue, longitudeValue);
         }
         onSaveRequested: root.saveCoordinate()
+        onRestoreRequested: root.returnToSavedLocation()
     }
 }

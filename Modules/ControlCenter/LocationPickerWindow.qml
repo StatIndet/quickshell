@@ -21,8 +21,13 @@ FloatingWindow {
 
     signal cameraChanged(real latitude, real longitude, real zoom, real bearing, real tilt)
     signal markerChanged(real latitude, real longitude)
+    signal restoreRequested
     signal saveRequested
     signal dismissed
+
+    function recenter(latitudeValue, longitudeValue, zoomValue) {
+        map.recenter(latitudeValue, longitudeValue, zoomValue);
+    }
 
     function showWindow() {
         if (!root.parentModal)
@@ -88,11 +93,20 @@ FloatingWindow {
 
             IconButton {
                 iconName: "my_location"
-                accessibleName: qsTr("Return to saved location")
+                accessibleName: qsTr("Center current marker")
                 iconColor: "#FF111111"
                 normalHoverStateLayerColor: "#14111111"
                 normalPressedStateLayerColor: "#1F111111"
                 onClicked: map.recenter(root.markerLatitude, root.markerLongitude, root.zoomLevel)
+            }
+
+            IconButton {
+                iconName: "restore"
+                accessibleName: qsTr("Return to saved location and initial view")
+                iconColor: "#FF111111"
+                normalHoverStateLayerColor: "#14111111"
+                normalPressedStateLayerColor: "#1F111111"
+                onClicked: root.restoreRequested()
             }
 
             IconButton {
