@@ -1218,11 +1218,6 @@ Singleton {
         return true;
     }
 
-    function resetFontFamilies() {
-        Fonts.resetConfiguredFamilies();
-        root.save();
-    }
-
     function setShellBackgroundOpacity(value) {
         setValue("shellBackgroundOpacity", normalizedBoundedReal(value, 1, 0, 1));
     }
@@ -1338,12 +1333,6 @@ Singleton {
         return root.moveBarComponent(componentId, zone, root.barZoneComponents(zone).length);
     }
 
-    function resetBarComponents() {
-        root.barLeadingComponents = root.defaultBarLeadingComponents.slice();
-        root.barTrailingComponents = root.defaultBarTrailingComponents.slice();
-        root.save();
-    }
-
     function normalizedQuickSettingsComponents(raw) {
         const source = Array.isArray(raw) ? raw : root.defaultQuickSettingsComponents;
         const result = [];
@@ -1397,11 +1386,6 @@ Singleton {
             return root.removeQuickSettingsComponent(id);
 
         return root.moveQuickSettingsComponent(id, root.quickSettingsComponents.length);
-    }
-
-    function resetQuickSettingsComponents() {
-        root.quickSettingsComponents = root.defaultQuickSettingsComponents.slice();
-        root.save();
     }
 
     function setKeystonePosition(value) {
@@ -1462,15 +1446,6 @@ Singleton {
 
     function setKeystoneHideDate(value) {
         setValue("keystoneHideDate", !!value);
-    }
-
-    function resetHorizontalClock(persist) {
-        root.keystoneHideDate = false;
-        root.horizontalClockFontSize = 22;
-        root.horizontalClockAxes = root.normalizedHorizontalClockAxes(root.horizontalClockAxisDefaults);
-        root.horizontalClockDigits = root.normalizedHorizontalClockDigits(root.horizontalClockDigitDefaults);
-        if (persist !== false)
-            root.save();
     }
 
     function setHorizontalClockFontSize(value, persist) {

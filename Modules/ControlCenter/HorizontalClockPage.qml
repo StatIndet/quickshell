@@ -346,43 +346,6 @@ StyledFlickable {
                                                                               value, true);
                 }
             }
-
-            RippleButton {
-                Layout.alignment: Qt.AlignLeft
-                Layout.preferredWidth: 116
-                Layout.preferredHeight: 40
-                buttonRadius: Appearance.rounding.full
-                containerColor: Appearance.colors.colSecondaryContainer
-                stateLayerColor: Appearance.colors.colSecondaryContainerHover
-                pressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
-                rippleColor: Appearance.colors.colOnSecondaryContainer
-                Accessible.name: qsTr("Reset horizontal clock style")
-                releaseAction: () => {
-                    return PersonalizationConfig.resetHorizontalClock(true);
-                }
-
-                contentItem: RowLayout {
-                    spacing: 6
-
-                    MaterialSymbol {
-                        Layout.alignment: Qt.AlignVCenter
-                        text: "restart_alt"
-                        iconSize: 18
-                        color: Appearance.colors.colOnSecondaryContainer
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: qsTr("Reset")
-                        color: Appearance.colors.colOnSecondaryContainer
-                        font.family: Fonts.ui
-                        font.pixelSize: 13
-                        font.weight: Font.Medium
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-            }
         }
 
         Item {

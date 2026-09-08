@@ -4191,16 +4191,6 @@ Scroll to adjust</translation>
         <source>Rotation</source>
         <translation>Rotation</translation>
     </message>
-    <message>
-        <location filename="../Modules/ControlCenter/HorizontalClockPage.qml" line="355"/>
-        <source>Reset horizontal clock style</source>
-        <translation>Reset horizontal clock style</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/HorizontalClockPage.qml" line="372"/>
-        <source>Reset</source>
-        <translation>Reset</translation>
-    </message>
 </context>
 <context>
     <name>HorizontalLyricsLayout</name>
@@ -9712,11 +9702,6 @@ detected</translation>
         <location filename="../Modules/ControlCenter/ThemePage.qml" line="667"/>
         <source>Select expressive font</source>
         <translation>Select expressive font</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ThemePage.qml" line="677"/>
-        <source>Restore default fonts</source>
-        <translation>Restore default fonts</translation>
     </message>
 </context>
 <context>

@@ -20,8 +20,10 @@ Singleton {
     property string configuredExpressive: ""
     readonly property string ui: root.resolveFamily(root.configuredUi, root.defaultUi, "")
     readonly property string mono: root.resolveFamily(root.configuredMono, root.defaultMono, "monospace")
-    readonly property string numeric: root.resolveFamily(root.configuredNumeric, root.defaultNumeric, "monospace")
-    readonly property string expressive: root.resolveFamily(root.configuredExpressive, root.bundledFamilyName, root.ui)
+    readonly property string numeric: root.resolveFamily(root.configuredNumeric, root.defaultNumeric,
+                                                         "monospace")
+    readonly property string expressive: root.resolveFamily(root.configuredExpressive, root.bundledFamilyName,
+                                                            root.ui)
     // This role is intentionally independent of every user preference. If
     // the bundled file cannot load, Qt's normal font fallback still applies
     // to this family name; the clock must never switch to a user-selected
@@ -75,10 +77,6 @@ Singleton {
         root.configuredExpressive = String(expressive || "").trim();
     }
 
-    function resetConfiguredFamilies() {
-        root.setConfiguredFamilies("", "", "", "");
-    }
-
     // Canvas accepts a CSS font-family string rather than a QML family
     // property. Keep the quoting in one place so a family selected by the
     // user cannot break the drawing command.
@@ -89,7 +87,7 @@ Singleton {
     FontLoader {
         id: bundledFont
 
-        source: Paths.fileUrl(Paths.fontsDir + "/google-sans-flex/" + "GoogleSansFlex-VariableFont_" + "GRAD,ROND,opsz,slnt,wdth,wght.ttf")
+        source: Paths.fileUrl(Paths.fontsDir + "/google-sans-flex/" + "GoogleSansFlex-VariableFont_"
+                              + "GRAD,ROND,opsz,slnt,wdth,wght.ttf")
     }
-
 }

@@ -668,16 +668,6 @@ StyledFlickable {
                 fieldWidth: 280
                 onAccepted: value => PersonalizationConfig.setFontFamily("expressive", value)
             }
-
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignRight
-
-                ActionButton {
-                    text: qsTr("Restore default fonts")
-                    onClicked: PersonalizationConfig.resetFontFamilies()
-                }
-            }
         }
 
         Item {
