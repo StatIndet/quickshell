@@ -599,18 +599,30 @@ StyledFlickable {
                     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
                 }
 
-                Text {
+                RowLayout {
                     Layout.fillWidth: true
-                    text: qsTr("awww FPS")
-                    color: Appearance.colors.colOnSurface
-                    font.family: Fonts.ui
-                    font.pixelSize: 15
-                    font.weight: Font.Medium
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: qsTr("awww FPS")
+                        color: Appearance.colors.colOnSurface
+                        font.family: Fonts.ui
+                        font.pixelSize: 15
+                        font.weight: Font.Medium
+                    }
+
+                    Text {
+                        text: qsTr("%1 FPS").arg(PersonalizationConfig.awwwTransitionFps)
+                        color: Appearance.colors.colOnSurfaceVariant
+                        font.family: Fonts.numeric
+                        font.pixelSize: Typography.bodyMedium.pixelSize
+                        font.weight: Font.Medium
+                    }
                 }
 
                 MaterialSlider {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: Math.min(520, root.pageContentWidth - 60)
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 72
                     from: 10
                     to: 240
                     stepSize: 5
@@ -636,23 +648,30 @@ StyledFlickable {
                 spacing: 6
                 opacity: root.desktopUsesAwww && root.awwwStepSupported ? 1 : 0.45
 
-                HoverHandler {
-                    id: stepHover
-                    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-                }
-
-                Text {
+                RowLayout {
                     Layout.fillWidth: true
-                    text: qsTr("Transition step · %1").arg(PersonalizationConfig.awwwTransitionStep)
-                    color: Appearance.colors.colOnSurface
-                    font.family: Fonts.ui
-                    font.pixelSize: 15
-                    font.weight: Font.Medium
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: qsTr("Transition step")
+                        color: Appearance.colors.colOnSurface
+                        font.family: Fonts.ui
+                        font.pixelSize: 15
+                        font.weight: Font.Medium
+                    }
+
+                    Text {
+                        text: qsTr("Step %1").arg(PersonalizationConfig.awwwTransitionStep)
+                        color: Appearance.colors.colOnSurfaceVariant
+                        font.family: Fonts.numeric
+                        font.pixelSize: Typography.bodyMedium.pixelSize
+                        font.weight: Font.Medium
+                    }
                 }
 
                 MaterialSlider {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: Math.min(520, root.pageContentWidth - 60)
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 72
                     from: 0
                     to: 255
                     stepSize: 1
@@ -661,15 +680,6 @@ StyledFlickable {
                     accessibleName: qsTr("awww transition step")
                     valueFormatter: sliderValue => Math.round(sliderValue).toString()
                     onMoved: PersonalizationConfig.setAwwwTransitionStep(Math.round(value))
-                }
-
-                StyledToolTip {
-                    extraVisibleCondition: stepHover.hovered
-                    text: !root.desktopUsesAwww ? qsTr(
-                                                      "Transition step is only available with the awww desktop backend.") :
-                                                  !root.awwwStepSupported ? qsTr(
-                                                                                "The none transition does not use transition step.") :
-                                                                            qsTr("Step controls the amount of change per frame.")
                 }
             }
 

@@ -194,3 +194,37 @@ function translated(name) {
     default: return name;
     }
 }
+
+// Recognize only complete, known default commands; never infer an action from
+// the bound key or a substring of an arbitrary shell script.
+function commandName(expression) {
+    const match = expression.trim().match(/^(spawn|spawn-sh)\s+((?:"(?:[^"\\]|\\.)*"\s*)+);?$/);
+    if (!match)
+        return "";
+    let args;
+    try {
+        args = JSON.parse("[" + match[2].match(/"(?:[^"\\]|\\.)*"/g).join(",") + "]");
+    } catch (error) {
+        return "";
+    }
+    const commands = [
+        { shell: "pkill orca || exec orca", argv: [], name: qsTranslate("NiriCommands", "Toggle screen reader") },
+        { shell: "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0", argv: ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "0.1+", "-l", "1.0"], name: qsTranslate("NiriCommands", "Increase volume") },
+        { shell: "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-", argv: ["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", "0.1-"], name: qsTranslate("NiriCommands", "Decrease volume") },
+        { shell: "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle", argv: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"], name: qsTranslate("NiriCommands", "Toggle audio mute") },
+        { shell: "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle", argv: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle"], name: qsTranslate("NiriCommands", "Toggle microphone mute") },
+        { shell: "playerctl play-pause", argv: ["playerctl", "play-pause"], name: qsTranslate("NiriCommands", "Play/pause media") },
+        { shell: "playerctl stop", argv: ["playerctl", "stop"], name: qsTranslate("NiriCommands", "Stop media") },
+        { shell: "playerctl previous", argv: ["playerctl", "previous"], name: qsTranslate("NiriCommands", "Previous track") },
+        { shell: "playerctl next", argv: ["playerctl", "next"], name: qsTranslate("NiriCommands", "Next track") },
+        { shell: "brightnessctl --class=backlight set +10%", argv: ["brightnessctl", "--class=backlight", "set", "+10%"], name: qsTranslate("NiriCommands", "Increase screen brightness") },
+        { shell: "brightnessctl --class=backlight set 10%-", argv: ["brightnessctl", "--class=backlight", "set", "10%-"], name: qsTranslate("NiriCommands", "Decrease screen brightness") },
+    ];
+    for (const command of commands) {
+        if (match[1] === "spawn-sh" && args.length === 1 && args[0] === command.shell)
+            return command.name;
+        if (match[1] === "spawn" && command.argv.length && JSON.stringify(args) === JSON.stringify(command.argv))
+            return command.name;
+    }
+    return "";
+}

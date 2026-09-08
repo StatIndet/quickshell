@@ -77,6 +77,9 @@ PanelWindow {
     }
 
         function actionName(expression) {
+        const knownCommand = ActionNames.commandName(expression);
+        if (knownCommand)
+        return knownCommand;
         const command = expression.split(/\s/)[0];
         const entry = NiriConfigService.actionCatalog.find(action => action.category === "niri"
         && action.expression.split(/\s/)[0] === command);

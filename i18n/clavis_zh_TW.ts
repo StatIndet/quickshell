@@ -10056,6 +10056,14 @@ Scroll to adjust; click to open sound</source>
 <context>
     <name>WallpaperPage</name>
     <message>
+        <source>%1 FPS</source>
+        <translation>%1 FPS</translation>
+    </message>
+    <message>
+        <source>Step %1</source>
+        <translation>步長 %1</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="37"/>
         <source>Global</source>
         <translation>全局</translation>
@@ -10188,8 +10196,8 @@ Scroll to adjust; click to open sound</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="646"/>
-        <source>Transition step · %1</source>
-        <translation>過渡步長 · %1</translation>
+        <source>Transition step</source>
+        <translation>過渡步長</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="661"/>
@@ -11378,4 +11386,51 @@ Windows: </source>
 視窗: </translation>
     </message>
 </context>
+    <context>
+        <name>NiriCommands</name>
+        <message>
+            <source>Toggle screen reader</source>
+            <translation>切換螢幕閱讀器</translation>
+        </message>
+        <message>
+            <source>Increase volume</source>
+            <translation>提高音量</translation>
+        </message>
+        <message>
+            <source>Decrease volume</source>
+            <translation>降低音量</translation>
+        </message>
+        <message>
+            <source>Toggle audio mute</source>
+            <translation>切換靜音</translation>
+        </message>
+        <message>
+            <source>Toggle microphone mute</source>
+            <translation>切換麥克風靜音</translation>
+        </message>
+        <message>
+            <source>Play/pause media</source>
+            <translation>播放／暫停</translation>
+        </message>
+        <message>
+            <source>Stop media</source>
+            <translation>停止播放</translation>
+        </message>
+        <message>
+            <source>Previous track</source>
+            <translation>上一首</translation>
+        </message>
+        <message>
+            <source>Next track</source>
+            <translation>下一首</translation>
+        </message>
+        <message>
+            <source>Increase screen brightness</source>
+            <translation>提高螢幕亮度</translation>
+        </message>
+        <message>
+            <source>Decrease screen brightness</source>
+            <translation>降低螢幕亮度</translation>
+        </message>
+    </context>
 </TS>

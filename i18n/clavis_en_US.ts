@@ -10061,6 +10061,14 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WallpaperPage</name>
     <message>
+        <source>%1 FPS</source>
+        <translation>%1 FPS</translation>
+    </message>
+    <message>
+        <source>Step %1</source>
+        <translation>Step %1</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="37"/>
         <source>Global</source>
         <translation>Global</translation>
@@ -10193,8 +10201,8 @@ Scroll to adjust; click to open sound</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="646"/>
-        <source>Transition step · %1</source>
-        <translation>Transition step · %1</translation>
+        <source>Transition step</source>
+        <translation>Transition step</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="661"/>
@@ -11383,4 +11391,51 @@ Windows: </source>
 Windows: </translation>
     </message>
 </context>
+    <context>
+        <name>NiriCommands</name>
+        <message>
+            <source>Toggle screen reader</source>
+            <translation>Toggle screen reader</translation>
+        </message>
+        <message>
+            <source>Increase volume</source>
+            <translation>Increase volume</translation>
+        </message>
+        <message>
+            <source>Decrease volume</source>
+            <translation>Decrease volume</translation>
+        </message>
+        <message>
+            <source>Toggle audio mute</source>
+            <translation>Toggle audio mute</translation>
+        </message>
+        <message>
+            <source>Toggle microphone mute</source>
+            <translation>Toggle microphone mute</translation>
+        </message>
+        <message>
+            <source>Play/pause media</source>
+            <translation>Play/pause media</translation>
+        </message>
+        <message>
+            <source>Stop media</source>
+            <translation>Stop media</translation>
+        </message>
+        <message>
+            <source>Previous track</source>
+            <translation>Previous track</translation>
+        </message>
+        <message>
+            <source>Next track</source>
+            <translation>Next track</translation>
+        </message>
+        <message>
+            <source>Increase screen brightness</source>
+            <translation>Increase screen brightness</translation>
+        </message>
+        <message>
+            <source>Decrease screen brightness</source>
+            <translation>Decrease screen brightness</translation>
+        </message>
+    </context>
 </TS>
