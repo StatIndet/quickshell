@@ -4655,6 +4655,22 @@ Scroll to adjust</translation>
         <source>Choose the current folder or a selected subfolder</source>
         <translation>Choose the current folder or a selected subfolder</translation>
     </message>
+    <message>
+        <source>Mouse actions</source>
+        <translation>Mouse actions</translation>
+    </message>
+    <message>
+        <source>Hover</source>
+        <translation>Hover</translation>
+    </message>
+    <message>
+        <source>Left click</source>
+        <translation>Left click</translation>
+    </message>
+    <message>
+        <source>Middle click</source>
+        <translation>Middle click</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -7455,6 +7471,38 @@ Click to open network settings</translation>
         <location filename="../Services/PersonalizationConfig.qml" line="418"/>
         <source>Power</source>
         <translation>Power</translation>
+    </message>
+    <message>
+        <source>Do not open</source>
+        <translation>Do not open</translation>
+    </message>
+    <message>
+        <source>Media controls</source>
+        <translation>Media controls</translation>
+    </message>
+    <message>
+        <source>Lyrics</source>
+        <translation>Lyrics</translation>
+    </message>
+    <message>
+        <source>Dashboard</source>
+        <translation>Dashboard</translation>
+    </message>
+    <message>
+        <source>Media library</source>
+        <translation>Media library</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Upload</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>Tools</translation>
+    </message>
+    <message>
+        <source>Peak</source>
+        <translation>Peak</translation>
     </message>
 </context>
 <context>

@@ -4655,6 +4655,22 @@ Scroll to adjust</source>
         <source>Choose the current folder or a selected subfolder</source>
         <translation>可選擇目前資料夾或選取的子資料夾</translation>
     </message>
+    <message>
+        <source>Mouse actions</source>
+        <translation>滑鼠操作</translation>
+    </message>
+    <message>
+        <source>Hover</source>
+        <translation>懸停</translation>
+    </message>
+    <message>
+        <source>Left click</source>
+        <translation>按一下左鍵</translation>
+    </message>
+    <message>
+        <source>Middle click</source>
+        <translation>按一下中鍵</translation>
+    </message>
 </context>
 <context>
     <name>LanguageAndRegionPage</name>
@@ -7455,6 +7471,38 @@ Click to open network settings</source>
         <location filename="../Services/PersonalizationConfig.qml" line="418"/>
         <source>Power</source>
         <translation>電源</translation>
+    </message>
+    <message>
+        <source>Do not open</source>
+        <translation>不開啟</translation>
+    </message>
+    <message>
+        <source>Media controls</source>
+        <translation>媒體控制</translation>
+    </message>
+    <message>
+        <source>Lyrics</source>
+        <translation>歌詞</translation>
+    </message>
+    <message>
+        <source>Dashboard</source>
+        <translation>儀表板</translation>
+    </message>
+    <message>
+        <source>Media library</source>
+        <translation>媒體庫</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>上傳</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>工具</translation>
+    </message>
+    <message>
+        <source>Peak</source>
+        <translation>Peak</translation>
     </message>
 </context>
 <context>

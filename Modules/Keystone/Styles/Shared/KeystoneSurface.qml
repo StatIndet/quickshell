@@ -401,6 +401,43 @@ Variants {
             Item {
                 id: root
 
+                function activateMouseAction(action, toggle) {
+                    if (action === "none" || action === "peak" || root.contentPresentationActive
+                            || root.isNotifMode || root.isVolumeMode)
+                        return;
+                    const tabs = {
+                        dashboard: 0,
+                        library: 1,
+                        upload: 2,
+                        weather: 3
+                    };
+                    const isTab = Object.prototype.hasOwnProperty.call(tabs, action);
+                    const alreadyOpen = action === "media" ? root.expanded : action === "lyrics"
+                                                             ? root.showLyrics : action === "tools"
+                                                               ? root.showTools : isTab && root.showHub
+                                                                 && root.hubTabIndex === tabs[action];
+                    keystoneWindow.closeAllOthers();
+                    if (toggle && alreadyOpen)
+                        return;
+                    if (action === "media")
+                        root.expanded = true;
+                    else if (action === "lyrics")
+                        root.showLyrics = true;
+                    else if (action === "tools")
+                        root.showTools = true;
+                    else if (isTab) {
+                        root.hubTabIndex = tabs[action];
+                        root.showHub = true;
+                    }
+                }
+
+                HoverHandler {
+                    onHoveredChanged: {
+                        if (hovered && root.isCollapsedMode)
+                            root.activateMouseAction(PersonalizationConfig.keystoneHoverAction, false);
+                    }
+                }
+
                 property bool showLyrics: false
                 property bool expanded: false
                 property bool showVolume: false
@@ -443,8 +480,9 @@ Variants {
                                            !isLyricsMode
                 property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode &&
                                                !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
-                property bool isCollapsedHovered: isCollapsedMode && (keystoneMouseArea.containsMouse
-                                                                      || collapsedInputArea.containsMouse)
+                property bool isCollapsedHovered: PersonalizationConfig.keystoneHoverAction === "peak"
+                                                  && isCollapsedMode && (keystoneMouseArea.containsMouse
+                                                                         || collapsedInputArea.containsMouse)
                 // Lyrics remain visible while the user works in desktop windows.
                 // They can coexist with expanded state, so exclude them explicitly.
                 readonly property bool escapeDismissActive: !contentPresentationActive && !isLyricsMode && (
@@ -1173,20 +1211,10 @@ Variants {
                     enabled: !root.contentPresentationActive && !root.isNotifMode && !root.isVolumeMode
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     onClicked: mouse => {
-                        if (mouse.button === Qt.MiddleButton) {
-                            if (root.showHub)
-                                root.showHub = false;
-                            else if (root.showTools)
-                                root.showTools = false;
-                            root.showLyrics = !root.showLyrics;
-                            if (root.showLyrics)
-                                root.expanded = false;
-                        } else {
-                            if (root.isLyricsMode || root.isHubMode || root.isToolsMode)
-                                return;
-
-                            root.expanded = !root.expanded;
-                        }
+                        root.activateMouseAction(mouse.button === Qt.MiddleButton
+                                                 ? PersonalizationConfig.keystoneMiddleClickAction :
+                                                   PersonalizationConfig.keystoneLeftClickAction, true);
+                        mouse.accepted = true;
                     }
                 }
 
@@ -1400,13 +1428,9 @@ Variants {
                     cursorShape: Qt.PointingHandCursor
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     onClicked: mouse => {
-                        if (mouse.button === Qt.MiddleButton) {
-                            root.showLyrics = !root.showLyrics;
-                            if (root.showLyrics)
-                                root.expanded = false;
-                        } else if (mouse.button === Qt.LeftButton) {
-                            root.expanded = true;
-                        }
+                        root.activateMouseAction(mouse.button === Qt.MiddleButton
+                                                 ? PersonalizationConfig.keystoneMiddleClickAction :
+                                                   PersonalizationConfig.keystoneLeftClickAction, true);
                         mouse.accepted = true;
                     }
                 }

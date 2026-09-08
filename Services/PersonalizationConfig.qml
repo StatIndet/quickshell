@@ -424,6 +424,64 @@ Singleton {
     property var quickSettingsComponents: root.defaultQuickSettingsComponents.slice()
     property string keystonePosition: "top"
     property bool keystoneHideDate: false
+    property string keystoneHoverAction: "peak"
+    property string keystoneLeftClickAction: "media"
+    property string keystoneMiddleClickAction: "lyrics"
+    readonly property var keystoneActionOptions: [
+        {
+            value: "none",
+            label: qsTr("Do not open")
+        },
+        {
+            value: "media",
+            label: qsTr("Media controls")
+        },
+        {
+            value: "lyrics",
+            label: qsTr("Lyrics")
+        },
+        {
+            value: "dashboard",
+            label: qsTr("Dashboard")
+        },
+        {
+            value: "library",
+            label: qsTr("Media library")
+        },
+        {
+            value: "upload",
+            label: qsTr("Upload")
+        },
+        {
+            value: "weather",
+            label: qsTr("Weather")
+        },
+        {
+            value: "tools",
+            label: qsTr("Tools")
+        }
+    ]
+
+    readonly property var keystoneHoverActionOptions: [
+        {
+            value: "peak",
+            label: qsTr("Peak")
+        }
+    ].concat(root.keystoneActionOptions)
+
+    function setKeystoneAction(gesture, action) {
+        const properties = {
+            hover: "keystoneHoverAction",
+            left: "keystoneLeftClickAction",
+            middle: "keystoneMiddleClickAction"
+        };
+        if (!Object.prototype.hasOwnProperty.call(properties, gesture))
+            return;
+        setValue(properties[gesture], normalizedOption(gesture === "hover" ? root.keystoneHoverActionOptions :
+                                                                             root.keystoneActionOptions,
+                                                       action, gesture === "hover" ? "peak" : "none"));
+    }
+
     readonly property var horizontalClockAxisDefaults: ({
                                                             "wght": 900,
                                                             "wdth": 85,
@@ -1579,6 +1637,9 @@ Singleton {
                 "style": root.keystoneStyle,
                 "position": root.keystonePosition,
                 "hideDate": root.keystoneHideDate,
+                "hoverAction": root.keystoneHoverAction,
+                "leftClickAction": root.keystoneLeftClickAction,
+                "middleClickAction": root.keystoneMiddleClickAction,
                 "keyhole": {
                     "cards": root.keystoneKeyholeCards.slice()
                 },
@@ -1689,6 +1750,12 @@ Singleton {
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
         root.keystonePosition = normalizedEdgePosition(keystone.position);
         root.keystoneHideDate = typeof keystone.hideDate === "boolean" ? keystone.hideDate : false;
+        root.keystoneHoverAction = normalizedOption(root.keystoneHoverActionOptions, keystone.hoverAction,
+                                                    "peak");
+        root.keystoneLeftClickAction = normalizedOption(root.keystoneActionOptions, keystone.leftClickAction,
+                                                        "media");
+        root.keystoneMiddleClickAction = normalizedOption(root.keystoneActionOptions,
+                                                          keystone.middleClickAction, "lyrics");
         root.keystoneKeyholeCards = root.normalizedKeystoneKeyholeCards(keyhole.cards);
         root.horizontalClockFontSize = root.normalizedBoundedInt(horizontalClock.fontSize, 22, 16, 28);
         root.horizontalClockAxes = root.normalizedHorizontalClockAxes(horizontalClock.axes);

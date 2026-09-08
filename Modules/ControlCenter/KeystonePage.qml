@@ -101,6 +101,32 @@ Item {
             }
 
             KeystoneSection {
+                title: qsTr("Mouse actions")
+                iconName: "mouse"
+
+                SearchSelectSettingRow {
+                    title: qsTr("Hover")
+                    options: PersonalizationConfig.keystoneHoverActionOptions
+                    value: PersonalizationConfig.keystoneHoverAction
+                    onAccepted: value => PersonalizationConfig.setKeystoneAction("hover", value)
+                }
+
+                SearchSelectSettingRow {
+                    title: qsTr("Left click")
+                    options: PersonalizationConfig.keystoneActionOptions
+                    value: PersonalizationConfig.keystoneLeftClickAction
+                    onAccepted: value => PersonalizationConfig.setKeystoneAction("left", value)
+                }
+
+                SearchSelectSettingRow {
+                    title: qsTr("Middle click")
+                    options: PersonalizationConfig.keystoneActionOptions
+                    value: PersonalizationConfig.keystoneMiddleClickAction
+                    onAccepted: value => PersonalizationConfig.setKeystoneAction("middle", value)
+                }
+            }
+
+            KeystoneSection {
                 title: qsTr("Keyhole")
                 iconName: "view_carousel"
 
