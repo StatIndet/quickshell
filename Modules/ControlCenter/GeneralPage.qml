@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import qs.Common
 import qs.Services
@@ -55,88 +57,93 @@ Item {
             pageLoader.item.closeChildWindows();
     }
 
-    GeneralSubpageHeader {
+    Component {
         id: subpageHeader
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        visible: root.currentSection !== "overview"
-        title: {
-            switch (root.currentSection) {
-            case "bar":
-                return qsTr("Bar");
-            case "sidebar":
-                return qsTr("Sidebars");
-            case "spotlight":
-                return "Spotlight";
-            case "effects":
-                return qsTr("Transparency and blur");
-            case "shortcuts":
-                return qsTr("Keyboard shortcuts");
-            case "language-region":
-                return qsTr("Language & region");
-            case "autostart":
-                return qsTr("Autostart");
-            case "default-apps":
-                return qsTr("Default applications");
-            case "network":
-                return qsTr("Network");
-            case "connected-devices":
-                return qsTr("Connected devices");
-            case "bluetooth-pairing":
-                return qsTr("Pair new device");
-            case "bluetooth-device":
-            {
-                const device = root.selectedBluetoothDevice();
-                return device ? device.name : qsTr("Bluetooth device");
+        GeneralSubpageHeader {
+            readonly property string section: parent.route
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            title: {
+                switch (section) {
+                case "bar":
+                    return qsTr("Bar");
+                case "sidebar":
+                    return qsTr("Sidebars");
+                case "spotlight":
+                    return "Spotlight";
+                case "effects":
+                    return qsTr("Transparency and blur");
+                case "shortcuts":
+                    return qsTr("Keyboard shortcuts");
+                case "language-region":
+                    return qsTr("Language & region");
+                case "autostart":
+                    return qsTr("Autostart");
+                case "default-apps":
+                    return qsTr("Default applications");
+                case "network":
+                    return qsTr("Network");
+                case "connected-devices":
+                    return qsTr("Connected devices");
+                case "bluetooth-pairing":
+                    return qsTr("Pair new device");
+                case "bluetooth-device":
+                {
+                    const device = root.selectedBluetoothDevice();
+                    return device ? device.name : qsTr("Bluetooth device");
+                }
+                default:
+                    return qsTr("General");
+                }
             }
-            default:
-                return qsTr("General");
+            iconName: {
+                switch (section) {
+                case "bar":
+                    return "dock_to_bottom";
+                case "sidebar":
+                    return "side_navigation";
+                case "spotlight":
+                    return "search";
+                case "effects":
+                    return "blur_on";
+                case "shortcuts":
+                    return "keyboard";
+                case "language-region":
+                    return "language";
+                case "autostart":
+                    return "rocket_launch";
+                case "default-apps":
+                    return "apps";
+                case "network":
+                    return "wifi";
+                case "connected-devices":
+                case "bluetooth-pairing":
+                    return "devices_other";
+                case "bluetooth-device":
+                {
+                    const device = root.selectedBluetoothDevice();
+                    return BluetoothDeviceIcon.iconName(device);
+                }
+                default:
+                    return "settings";
+                }
             }
+            onBackRequested: root.goBack()
         }
-        iconName: {
-            switch (root.currentSection) {
-            case "bar":
-                return "dock_to_bottom";
-            case "sidebar":
-                return "side_navigation";
-            case "spotlight":
-                return "search";
-            case "effects":
-                return "blur_on";
-            case "shortcuts":
-                return "keyboard";
-            case "language-region":
-                return "language";
-            case "autostart":
-                return "rocket_launch";
-            case "default-apps":
-                return "apps";
-            case "network":
-                return "wifi";
-            case "connected-devices":
-            case "bluetooth-pairing":
-                return "devices_other";
-            case "bluetooth-device":
-            {
-                const device = root.selectedBluetoothDevice();
-                return BluetoothDeviceIcon.iconName(device);
-            }
-            default:
-                return "settings";
-            }
-        }
-        onBackRequested: root.goBack()
     }
 
-    Loader {
+    SettingsPageHost {
         id: pageLoader
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: subpageHeader.visible ? subpageHeader.bottom : parent.top
-        anchors.bottom: parent.bottom
+        anchors.fill: parent
+        route: root.currentSection
+        navigationDepth: root.currentSection === "overview" ? 0 : (root.currentSection === "bluetooth-device"
+                                                                   || root.currentSection
+                                                                   === "bluetooth-pairing" ? 2 : 1)
+        presentationActive: root.presentationActive
+        headerComponent: root.currentSection === "overview" ? null : subpageHeader
         source: {
             switch (root.currentSection) {
             case "bar":
@@ -174,9 +181,10 @@ Item {
             if ("parentModal" in item)
                 item.parentModal = root.parentModal;
 
-            if ("presentationActive" in item)
-                item.presentationActive = Qt.binding(function () {
-                    return root.presentationActive;
+            const page = item;
+            if ("presentationActive" in page)
+                page.presentationActive = Qt.binding(function () {
+                    return root.presentationActive && pageLoader.item === page;
                 });
 
             if ("deviceAddress" in item)

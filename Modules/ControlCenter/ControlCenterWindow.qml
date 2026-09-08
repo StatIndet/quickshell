@@ -319,20 +319,22 @@ FloatingWindow {
                 color: root.currentPage === 0 ? "transparent" : Appearance.m3colors.m3surfaceContainerLow
                 clip: true
 
-                Loader {
+                SettingsPageHost {
                     id: pageLoader
 
                     property var parentModal: root
 
                     anchors.fill: parent
                     source: root.pageSource(root.currentPage)
+                    presentationActive: root.visible
                     onLoaded: {
                         if (item && "parentModal" in item)
                             item.parentModal = parentModal;
 
-                        if (item && "presentationActive" in item)
-                            item.presentationActive = Qt.binding(function () {
-                                return root.visible;
+                        const page = item;
+                        if (page && "presentationActive" in page)
+                            page.presentationActive = Qt.binding(function () {
+                                return root.visible && pageLoader.item === page;
                             });
 
                         root.applyPendingPageSection();
