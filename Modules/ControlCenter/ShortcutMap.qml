@@ -130,11 +130,14 @@ PanelWindow {
 
         ColumnLayout {
         anchors.fill: parent
-        anchors.margins: Metrics.spacingL
-        spacing: Metrics.spacingL
+        anchors.leftMargin: 48
+        anchors.rightMargin: 48
+        anchors.topMargin: 32
+        anchors.bottomMargin: 40
+        spacing: 32
         Item {
         Layout.fillWidth: true
-        Layout.preferredHeight: 48
+        Layout.preferredHeight: 56
         Text {
         anchors.centerIn: parent
         width: Math.max(0, parent.width - 96)
@@ -142,7 +145,7 @@ PanelWindow {
         text: qsTr("Shortcut map")
         color: Appearance.colors.colOnSurface
         font.family: Fonts.ui
-        font.pixelSize: 28
+        font.pixelSize: 30
         font.weight: Font.Bold
         elide: Text.ElideRight
     }
@@ -177,13 +180,13 @@ PanelWindow {
         const columns = [];
         let blocks = [];
         let used = 0;
-        const available = Math.max(108, height - 20);
+        const available = Math.max(120, height - 20);
         for (const section of root.sections) {
         let offset = 0;
         while (offset < section.entries.length) {
-        const gap = blocks.length ? 24 : 0;
-        const headerHeight = offset === 0 ? 52 : 0;
-        const count = Math.floor((available - used - gap - headerHeight) / 56);
+        const gap = blocks.length ? 36 : 0;
+        const headerHeight = offset === 0 ? 56 : 0;
+        const count = Math.floor((available - used - gap - headerHeight) / 64);
         if (count < 1) {
         columns.push(blocks);
         blocks = [];
@@ -191,7 +194,7 @@ PanelWindow {
         continue;
     }
         const entries = section.entries.slice(offset, offset + count);
-        const blockHeight = headerHeight + entries.length * 56;
+        const blockHeight = headerHeight + entries.length * 64;
         blocks.push({
         title: section.title,
         headerHeight: headerHeight,
@@ -207,9 +210,9 @@ PanelWindow {
         columns.push(blocks);
         return columns;
     }
-        readonly property int columnWidth: 580
+        readonly property int columnWidth: 620
         model: sectionColumns
-        spacing: 64
+        spacing: 88
         ScrollBar.horizontal: StyledScrollBar {
         policy: ScrollBar.AsNeeded
     }
@@ -249,7 +252,7 @@ PanelWindow {
         text: sectionBlock.modelData.title
         font.family: Fonts.ui
         font.pixelSize: 24
-        font.weight: Font.DemiBold
+        font.weight: Font.Bold
         color: Appearance.colors.colOnSurface
         elide: Text.ElideRight
     }
@@ -257,7 +260,7 @@ PanelWindow {
         y: sectionBlock.modelData.headerHeight
         columns: 1
         columnSpacing: 24
-        rowSpacing: 8
+        rowSpacing: 16
         Repeater {
         model: sectionBlock.modelData.entries
         delegate: RowLayout {
@@ -267,7 +270,7 @@ PanelWindow {
         height: 48
         spacing: 16
         Flickable {
-        Layout.preferredWidth: entryCell.width * 0.48
+        Layout.preferredWidth: entryCell.width * 0.46
         Layout.preferredHeight: 34
         contentWidth: keyRow.width
         contentHeight: height
@@ -305,7 +308,7 @@ PanelWindow {
         color: entryCell.modelData.effective ? Appearance.colors.colOnSurface :
         Appearance.colors.colOnSurfaceVariant
         font.family: Fonts.ui
-        font.pixelSize: 16
+        font.pixelSize: 17
         maximumLineCount: 2
         wrapMode: Text.Wrap
         elide: Text.ElideRight
