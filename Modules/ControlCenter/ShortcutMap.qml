@@ -186,7 +186,7 @@ PanelWindow {
         while (offset < section.entries.length) {
         const gap = blocks.length ? 36 : 0;
         const headerHeight = offset === 0 ? 56 : 0;
-        const count = Math.floor((available - used - gap - headerHeight) / 64);
+        const count = Math.floor((available - used - gap - headerHeight) / 58);
         if (count < 1) {
         columns.push(blocks);
         blocks = [];
@@ -194,7 +194,7 @@ PanelWindow {
         continue;
     }
         const entries = section.entries.slice(offset, offset + count);
-        const blockHeight = headerHeight + entries.length * 64;
+        const blockHeight = headerHeight + entries.length * 58;
         blocks.push({
         title: section.title,
         headerHeight: headerHeight,
@@ -260,7 +260,7 @@ PanelWindow {
         y: sectionBlock.modelData.headerHeight
         columns: 1
         columnSpacing: 24
-        rowSpacing: 16
+        rowSpacing: 10
         Repeater {
         model: sectionBlock.modelData.entries
         delegate: RowLayout {
