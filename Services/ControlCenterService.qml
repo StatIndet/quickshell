@@ -2,6 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 
 Singleton {
     id: root
@@ -47,8 +48,7 @@ Singleton {
 
     function open(pageId) {
         root._openRequested = true;
-        if (pageId !== undefined && pageId !== null
-                && String(pageId) !== "") {
+        if (pageId !== undefined && pageId !== null && String(pageId) !== "") {
             root._pendingPage = String(pageId);
         }
 
@@ -65,13 +65,24 @@ Singleton {
         return true;
     }
 
+    function openOrFocus() {
+        if (root.visible) {
+            const target = ToplevelManager.toplevels.values.find(window => window.title
+                                                                           === root.controlCenterWindow.title);
+            if (target) {
+                target.activate();
+                return true;
+            }
+        }
+        return root.open();
+    }
+
     function close() {
         root._openRequested = false;
         root._pendingPage = "";
 
-        const window = root.controlCenterWindow
-            || (root.controlCenterLoader
-                ? root.controlCenterLoader.item : null);
+        const window = root.controlCenterWindow || (root.controlCenterLoader ? root.controlCenterLoader.item :
+                                                                               null);
         if (window) {
             if (window.hideWindow)
                 window.hideWindow();
@@ -94,8 +105,7 @@ Singleton {
     }
 
     function windowClosed(window) {
-        if (root.controlCenterWindow
-                && root.controlCenterWindow !== window) {
+        if (root.controlCenterWindow && root.controlCenterWindow !== window) {
             return;
         }
 

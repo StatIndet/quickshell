@@ -26,5 +26,5 @@ BarCircularButton {
             WidgetState.qsOpen = true;
         }
     }
-    onAltClicked: ControlCenterService.open()
+    onAltClicked: ControlCenterService.openOrFocus()
 }
