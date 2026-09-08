@@ -95,6 +95,7 @@ Variants {
         }
 
         function closeAllOthers(): string {
+            root.hoverOpened = false;
             root.showHub = false;
             root.showLyrics = false;
             root.showTools = false;
@@ -401,6 +402,8 @@ Variants {
             Item {
                 id: root
 
+                property bool hoverOpened: false
+
                 function activateMouseAction(action, toggle) {
                     if (action === "none" || action === "peak" || root.contentPresentationActive
                             || root.isNotifMode || root.isVolumeMode)
@@ -433,8 +436,18 @@ Variants {
 
                 HoverHandler {
                     onHoveredChanged: {
-                        if (hovered && root.isCollapsedMode)
-                            root.activateMouseAction(PersonalizationConfig.keystoneHoverAction, false);
+                        if (!hovered) {
+                            if (root.hoverOpened)
+                                keystoneWindow.closeAllOthers();
+                            return;
+                        }
+                        if (!root.isCollapsedMode)
+                            return;
+                        const action = PersonalizationConfig.keystoneHoverAction;
+                        if (action === "none")
+                            return;
+                        root.activateMouseAction(action, false);
+                        root.hoverOpened = true;
                     }
                 }
 
@@ -481,12 +494,12 @@ Variants {
                 property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode &&
                                                !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: PersonalizationConfig.keystoneHoverAction === "peak"
-                                                  && isCollapsedMode && (keystoneMouseArea.containsMouse
-                                                                         || collapsedInputArea.containsMouse)
-                // Lyrics remain visible while the user works in desktop windows.
-                // They can coexist with expanded state, so exclude them explicitly.
-                readonly property bool escapeDismissActive: !contentPresentationActive && !isLyricsMode && (
-                                                                expanded || isHubMode || isToolsMode)
+                                                  && isCollapsedMode && root.hoverOpened
+                readonly property bool escapeDismissActive: !contentPresentationActive && (expanded
+                                                                                           || isLyricsMode
+                                                                                           || isHubMode
+                                                                                           || isToolsMode
+                                                                                           || isCollapsedHovered)
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(
                                                                    keystoneWindow.modelData.name || "default")
@@ -549,6 +562,7 @@ Variants {
                 }
 
                 function closeKeystonePopups() {
+                    root.hoverOpened = false;
                     root.expanded = false;
                     root.showLyrics = false;
                     root.showVolume = false;
