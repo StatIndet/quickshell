@@ -510,13 +510,12 @@ WidgetPanel {
                 pressedStateLayerColor: Appearance.colors.colLayer3Active
                 onClicked: deviceMenu.open()
 
-                Menu {
+                StyledMenu {
                     id: deviceMenu
 
-                    Material.theme: Material.System
-                    Material.accent: Appearance.colors.colPrimary
-
-                    MenuItem {
+                    StyledMenuItem {
+                        iconName: "delete"
+                        destructive: true
                         text: qsTr("Forget device")
                         onTriggered: {
                             root.pendingForgetDevice = deviceRow.deviceData;

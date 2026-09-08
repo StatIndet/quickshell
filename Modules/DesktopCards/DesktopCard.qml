@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import qs.Widgets.common
 import qs.Common
 import qs.Services
 import qs.Modules.SystemCards
@@ -154,13 +155,11 @@ Item {
         onPressed: menu.open()
     }
 
-    Menu {
+    StyledMenu {
         id: menu
 
-        Material.theme: Material.System
-        Material.accent: Appearance.colors.colPrimary
-
-        MenuItem {
+        StyledMenuItem {
+            iconName: "dock_to_right"
             text: qsTr("Return to sidebar")
             onTriggered: SystemCardService.setContainer(root.tileId, "sidebar", "")
         }

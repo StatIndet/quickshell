@@ -381,12 +381,16 @@ Item {
                                                 onClicked: forgetMenu.open()
                                             }
 
-                                            Menu {
+                                            StyledMenu {
                                                 id: forgetMenu
+                                                parent: moreButton
+                                                x: moreButton.width - width
 
                                                 y: moreButton.height
 
-                                                MenuItem {
+                                                StyledMenuItem {
+                                                    iconName: "delete"
+                                                    destructive: true
                                                     text: qsTr("Forget device")
                                                     onTriggered: BluetoothService.forgetDevice(
                                                                      deviceRow.modelData)

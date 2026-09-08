@@ -496,13 +496,12 @@ WidgetPanel {
                     pressedStateLayerColor: Appearance.colors.colLayer3Active
                     onClicked: profileMenu.open()
 
-                    Menu {
+                    StyledMenu {
                         id: profileMenu
 
-                        Material.theme: Material.System
-                        Material.accent: Appearance.colors.colPrimary
-
-                        MenuItem {
+                        StyledMenuItem {
+                            iconName: "delete"
+                            destructive: true
                             text: qsTr("Forget network")
                             onTriggered: {
                                 root.pendingForgetNetwork = profileRoot.profile;
@@ -612,19 +611,19 @@ WidgetPanel {
                     pressedStateLayerColor: Appearance.colors.colLayer3Active
                     onClicked: networkMenu.open()
 
-                    Menu {
+                    StyledMenu {
                         id: networkMenu
 
-                        Material.theme: Material.System
-                        Material.accent: Appearance.colors.colPrimary
-
-                        MenuItem {
+                        StyledMenuItem {
                             visible: itemRoot.networkActive
+                            iconName: "link_off"
                             text: qsTr("Disconnect")
                             onTriggered: NetworkService.disconnectNetwork(itemRoot.wifiNetwork)
                         }
 
-                        MenuItem {
+                        StyledMenuItem {
+                            iconName: "delete"
+                            destructive: true
                             text: qsTr("Forget network")
                             onTriggered: {
                                 root.pendingForgetNetwork = itemRoot.wifiNetwork;
