@@ -23,23 +23,25 @@ Item {
     readonly property bool ready: mapView.map.mapReady
     readonly property string errorString: mapView.map.error !== 0 ? mapView.map.errorString : ""
 
-    signal mapReady()
+    signal mapReady
     signal mapFailed(string message)
     signal coordinateTapped(real latitude, real longitude)
     signal markerMoved(real latitude, real longitude)
     signal cameraMoved(real latitude, real longitude, real zoom, real bearing, real tilt)
 
-    function recenter(latitudeValue, longitudeValue, zoomValue) {
+    function recenter(latitudeValue, longitudeValue, zoomValue, bearingValue, tiltValue) {
         mapView.map.center = QtPositioning.coordinate(latitudeValue, longitudeValue);
         if (zoomValue !== undefined)
             mapView.map.zoomLevel = zoomValue;
-
+        if (bearingValue !== undefined)
+            mapView.map.bearing = bearingValue;
+        if (tiltValue !== undefined)
+            mapView.map.tilt = tiltValue;
     }
 
     Component.onCompleted: {
         if (root.ready)
             root.mapReady();
-
     }
 
     Plugin {
@@ -51,7 +53,6 @@ Item {
             name: "maplibre.map.styles"
             value: root.styleUrl
         }
-
     }
 
     MapView {
@@ -70,29 +71,31 @@ Item {
             function onMapReadyChanged() {
                 if (mapView.map.mapReady)
                     root.mapReady();
-
             }
 
             function onErrorChanged() {
                 if (mapView.map.error !== 0)
                     root.mapFailed(mapView.map.errorString);
-
             }
 
             function onCenterChanged() {
-                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel, mapView.map.bearing, mapView.map.tilt);
+                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel,
+                                 mapView.map.bearing, mapView.map.tilt);
             }
 
             function onZoomLevelChanged() {
-                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel, mapView.map.bearing, mapView.map.tilt);
+                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel,
+                                 mapView.map.bearing, mapView.map.tilt);
             }
 
             function onBearingChanged() {
-                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel, mapView.map.bearing, mapView.map.tilt);
+                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel,
+                                 mapView.map.bearing, mapView.map.tilt);
             }
 
             function onTiltChanged() {
-                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel, mapView.map.bearing, mapView.map.tilt);
+                root.cameraMoved(mapView.map.center.latitude, mapView.map.center.longitude, mapView.map.zoomLevel,
+                                 mapView.map.bearing, mapView.map.tilt);
             }
 
             target: mapView.map
@@ -110,7 +113,8 @@ Item {
             LayerParameter {
                 property string source: "clavis-weather-overlay-source"
                 // Qt's display zoom is one level above the native style zoom.
-                property real maxzoom: root.overlayMaximumDisplayZoom > 0 ? root.overlayMaximumDisplayZoom - 1 : 25
+                property real maxzoom: root.overlayMaximumDisplayZoom > 0 ? root.overlayMaximumDisplayZoom
+                                                                            - 1 : 25
 
                 styleId: "clavis-weather-overlay-layer"
                 type: "raster"
@@ -118,9 +122,7 @@ Item {
                     "raster-opacity": root.overlayOpacity
                 }
             }
-
         }
-
     }
 
     MapQuickItem {
@@ -130,9 +132,6 @@ Item {
         anchorPoint: Qt.point(24, 24)
         zoomLevel: 0
 
-        sourceItem: MapCoordinateMarker {
-        }
-
+        sourceItem: MapCoordinateMarker {}
     }
-
 }

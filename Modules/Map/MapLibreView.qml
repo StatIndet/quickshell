@@ -92,14 +92,18 @@ Item {
         root.errorMessage = message || qsTr("Map temporarily unavailable");
     }
 
-    function recenter(latitudeValue, longitudeValue, zoomValue) {
+    function recenter(latitudeValue, longitudeValue, zoomValue, bearingValue, tiltValue) {
         root.centerLatitude = latitudeValue;
         root.centerLongitude = longitudeValue;
         if (zoomValue !== undefined)
             root.zoomLevel = zoomValue;
+        if (bearingValue !== undefined)
+            root.bearing = bearingValue;
+        if (tiltValue !== undefined)
+            root.tilt = tiltValue;
 
         if (mapLoader.item)
-            mapLoader.item.recenter(latitudeValue, longitudeValue, zoomValue);
+            mapLoader.item.recenter(latitudeValue, longitudeValue, zoomValue, bearingValue, tiltValue);
     }
 
     onActiveChanged: active ? reload() : unload()

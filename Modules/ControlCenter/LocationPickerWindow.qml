@@ -25,8 +25,8 @@ FloatingWindow {
     signal saveRequested
     signal dismissed
 
-    function recenter(latitudeValue, longitudeValue, zoomValue) {
-        map.recenter(latitudeValue, longitudeValue, zoomValue);
+    function recenter(latitudeValue, longitudeValue, zoomValue, bearingValue, tiltValue) {
+        map.recenter(latitudeValue, longitudeValue, zoomValue, bearingValue, tiltValue);
     }
 
     function showWindow() {

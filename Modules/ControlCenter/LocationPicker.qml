@@ -16,7 +16,7 @@ ColumnLayout {
     property real cameraLatitude: candidateLatitude
     property real cameraLongitude: candidateLongitude
     readonly property real initialZoom: 12
-    readonly property real initialBearing: 35
+    readonly property real initialBearing: 0
     readonly property real initialTilt: 0
     property real mapZoom: initialZoom
     property real mapBearing: initialBearing
@@ -66,8 +66,10 @@ ColumnLayout {
         root.mapZoom = root.initialZoom;
         root.mapBearing = root.initialBearing;
         root.mapTilt = root.initialTilt;
-        embeddedMap.recenter(latitudeValue, longitudeValue, root.initialZoom);
-        expandedWindow.recenter(latitudeValue, longitudeValue, root.initialZoom);
+        embeddedMap.recenter(latitudeValue, longitudeValue, root.initialZoom, root.initialBearing,
+                             root.initialTilt);
+        expandedWindow.recenter(latitudeValue, longitudeValue, root.initialZoom, root.initialBearing,
+                                root.initialTilt);
     }
 
     function saveCoordinate() {
