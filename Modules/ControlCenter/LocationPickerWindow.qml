@@ -38,7 +38,8 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("Choose weather location")
+    // Stable compositor rule identity; visible headings remain localized.
+    title: "clavis-control-center-location-picker"
     implicitWidth: 920
     implicitHeight: 680
     minimumSize: Qt.size(600, 440)

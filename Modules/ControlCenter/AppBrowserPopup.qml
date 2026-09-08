@@ -21,7 +21,8 @@ FloatingWindow {
 
     parentWindow: root.parentModal
     objectName: "clavisAutostartAppBrowser"
-    title: qsTr("Select application")
+    // Stable compositor rule identity; visible headings remain localized.
+    title: "clavis-control-center-application-browser"
     minimumSize: Qt.size(420, 380)
     implicitWidth: 560
     implicitHeight: 620

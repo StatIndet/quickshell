@@ -204,7 +204,8 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("Add cloud storage")
+    // Stable compositor rule identity; visible headings remain localized.
+    title: "clavis-control-center-cloud-add"
     implicitWidth: 720
     implicitHeight: 680
     minimumSize: Qt.size(560, 520)

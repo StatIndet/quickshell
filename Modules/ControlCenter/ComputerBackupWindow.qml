@@ -255,7 +255,8 @@ FloatingWindow {
 
     visible: false
     parentWindow: root.parentModal
-    title: qsTr("Back up computer")
+    // Stable compositor rule identity; visible headings remain localized.
+    title: "clavis-control-center-computer-backup"
     implicitWidth: 600
     implicitHeight: 640
     minimumSize: Qt.size(480, 520)

@@ -249,7 +249,7 @@ def initial(feature, request):
     if feature == 'effects':
         if request.get('xray', True):
             return header + "// X-Ray is niri's default for client-requested effects.\n"
-        return header + 'layer-rule {\n    match namespace="^clavis-shell-";\n    background-effect { xray false; };\n}\nwindow-rule {\n    match title="^(clavis-control-center|clavis-file-picker)$";\n    background-effect { xray false; };\n}\n'
+        return header + 'layer-rule {\n    match namespace="^clavis-shell-";\n    background-effect { xray false; };\n}\nwindow-rule {\n    match title="^(clavis-control-center(-[a-z-]+)?|clavis-file-picker)$";\n    background-effect { xray false; };\n}\n'
     size = int(request.get('size', 24))
     hide = int(request.get('hideAfter', 0))
     if not 12 <= size <= 128 or not 0 <= hide <= 5000:

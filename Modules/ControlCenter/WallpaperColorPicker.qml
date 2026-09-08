@@ -154,7 +154,8 @@ Item {
 
         parentWindow: root.parentModal
         visible: root.shouldBeVisible
-        title: root.pickerTitle
+        // Stable compositor rule identity; visible headings remain localized.
+        title: "clavis-control-center-color-picker"
         implicitWidth: 680
         implicitHeight: 704
         minimumSize: Qt.size(560, 620)
