@@ -179,6 +179,7 @@ StyledFlickable {
 
             ClockSliderSetting {
                 title: qsTr("Slant")
+                discrete: true
                 axisTag: "slnt"
                 from: -10
                 to: 0
@@ -293,6 +294,7 @@ StyledFlickable {
 
             ClockSliderSetting {
                 title: qsTr("X offset")
+                discrete: true
                 axisTag: "x"
                 from: -8
                 to: 8
@@ -310,6 +312,7 @@ StyledFlickable {
 
             ClockSliderSetting {
                 title: qsTr("Y offset")
+                discrete: true
                 axisTag: "y"
                 from: -6
                 to: 6
@@ -327,6 +330,7 @@ StyledFlickable {
 
             ClockSliderSetting {
                 title: qsTr("Rotation")
+                discrete: true
                 axisTag: "°"
                 from: -12
                 to: 12

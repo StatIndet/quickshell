@@ -9,13 +9,13 @@ Item {
     property real to: 1
     property real stepSize: 0
     property real value: 0
+    property bool discrete: false
     property bool live: true
     property string accessibleName: qsTr("Slider")
     property string valueSuffix: ""
     property int valueDecimals: 0
-    property var valueFormatter: function(sliderValue) {
-        return Number(sliderValue).toFixed(root.valueDecimals)
-            + root.valueSuffix;
+    property var valueFormatter: function (sliderValue) {
+        return Number(sliderValue).toFixed(root.valueDecimals) + root.valueSuffix;
     }
     property bool showValueIndicator: true
 
@@ -27,11 +27,10 @@ Item {
     readonly property real trackHeight: 16
     readonly property real handleHeight: 44
     readonly property real handleTrackGap: 18
-    readonly property real trackCenterY: Math.min(54,
-        Math.max(30, root.height - 12))
-    readonly property bool valueIndicatorVisible: root.showValueIndicator
-        && root.enabled
-        && (control.pressed || control.hovered || control.visualFocus)
+    readonly property real trackCenterY: Math.min(54, Math.max(30, root.height - 12))
+    readonly property bool valueIndicatorVisible: root.showValueIndicator && root.enabled && (control.pressed
+                                                                                              || control.hovered
+                                                                                              || control.visualFocus)
 
     signal moved(real value)
     signal committed(real value)
@@ -39,8 +38,7 @@ Item {
     function formattedValue(sliderValue) {
         if (typeof root.valueFormatter === "function")
             return String(root.valueFormatter(sliderValue));
-        return Number(sliderValue).toFixed(root.valueDecimals)
-            + root.valueSuffix;
+        return Number(sliderValue).toFixed(root.valueDecimals) + root.valueSuffix;
     }
 
     implicitWidth: 360
@@ -56,6 +54,7 @@ Item {
         from: root.from
         to: root.to
         stepSize: root.stepSize
+        snapMode: root.discrete ? Slider.SnapAlways : Slider.NoSnap
         enabled: root.enabled
         live: root.live
         hoverEnabled: true
@@ -89,18 +88,13 @@ Item {
             width: control.availableWidth
             height: control.height
 
-            readonly property real usableWidth: Math.max(1,
-                width - root.trackInset * 2)
+            readonly property real usableWidth: Math.max(1, width - root.trackInset * 2)
             readonly property real trackStartX: root.trackInset
-            readonly property real trackEndX: root.trackInset
-                + usableWidth
-            readonly property real handleCenterX: root.trackInset
-                + control.visualPosition * usableWidth
+            readonly property real trackEndX: root.trackInset + usableWidth
+            readonly property real handleCenterX: root.trackInset + control.visualPosition * usableWidth
             readonly property real halfGap: root.handleTrackGap / 2
-            readonly property real activeEndX: Math.max(trackStartX,
-                handleCenterX - halfGap)
-            readonly property real inactiveStartX: Math.min(trackEndX,
-                handleCenterX + halfGap)
+            readonly property real activeEndX: Math.max(trackStartX, handleCenterX - halfGap)
+            readonly property real inactiveStartX: Math.min(trackEndX, handleCenterX + halfGap)
 
             Rectangle {
                 id: activeTrack
@@ -111,10 +105,8 @@ Item {
                 height: root.trackHeight
                 radius: height / 2
                 visible: width > 0
-                color: control.enabled
-                    ? Appearance.colors.colPrimary
-                    : Appearance.applyAlpha(
-                        Appearance.colors.colOnSurface, 0.38)
+                color: control.enabled ? Appearance.colors.colPrimary : Appearance.applyAlpha(
+                                             Appearance.colors.colOnSurface, 0.38)
 
                 Behavior on width {
                     enabled: !control.pressed
@@ -135,10 +127,8 @@ Item {
                 height: root.trackHeight
                 radius: height / 2
                 visible: width > 0
-                color: control.enabled
-                    ? Appearance.colors.colSecondaryContainer
-                    : Appearance.applyAlpha(
-                        Appearance.colors.colOnSurface, 0.12)
+                color: control.enabled ? Appearance.colors.colSecondaryContainer : Appearance.applyAlpha(
+                                             Appearance.colors.colOnSurface, 0.12)
 
                 Behavior on x {
                     enabled: !control.pressed
@@ -159,6 +149,30 @@ Item {
                 }
             }
 
+            Repeater {
+                model: root.discrete && root.stepSize > 0 ? Math.floor(Math.abs(root.to - root.from)
+                                                                       / root.stepSize) + 1 : 0
+
+                Rectangle {
+                    required property int index
+                    readonly property real fraction: Math.min(1, index * root.stepSize / Math.abs(root.to
+                                                                                                  - root.from))
+                    readonly property real centerX: track.trackStartX + (control.mirrored ? 1 - fraction :
+                                                                                            fraction)
+                                                    * track.usableWidth
+                    width: 4
+                    height: 4
+                    radius: 2
+                    x: Math.max(track.trackStartX + root.trackHeight / 2, Math.min(track.trackEndX - root.trackHeight
+                                                                                   / 2, centerX)) - width / 2
+                    y: root.trackCenterY - height / 2
+                    visible: x + width < track.activeEndX || x > track.inactiveStartX
+                    color: fraction <= control.position ? Appearance.colors.colOnPrimary :
+                                                          Appearance.colors.colOnSecondaryContainer
+                    opacity: control.enabled ? 1 : 0.38
+                }
+            }
+
             Rectangle {
                 id: endStopIndicator
 
@@ -168,22 +182,18 @@ Item {
                 // Keep the complete circle inside the inactive track cap.
                 x: track.trackEndX - root.trackHeight / 2 - width / 2
                 y: root.trackCenterY - height / 2
-                visible: inactiveTrack.width >= root.trackHeight
-                color: control.enabled
-                    ? Appearance.colors.colOnSecondaryContainer
-                    : Appearance.applyAlpha(
-                        Appearance.colors.colOnSurface, 0.38)
+                visible: !root.discrete && inactiveTrack.width >= root.trackHeight
+                color: control.enabled ? Appearance.colors.colOnSecondaryContainer : Appearance.applyAlpha(
+                                             Appearance.colors.colOnSurface, 0.38)
             }
         }
 
         handle: Item {
             id: handleRoot
 
-            x: control.leftPadding + root.trackInset
-                + control.visualPosition
-                    * Math.max(1, control.availableWidth
-                        - root.trackInset * 2)
-                - width / 2
+            x: control.leftPadding + root.trackInset + control.visualPosition * Math.max(1, control.availableWidth
+                                                                                         - root.trackInset
+                                                                                         * 2) - width / 2
             y: root.trackCenterY - height / 2
             width: root.stateLayerSize
             height: root.handleHeight
@@ -203,9 +213,8 @@ Item {
 
                 width: Math.max(40, valueLabel.implicitWidth + 20)
                 height: 32
-                x: Math.max(-handleRoot.x,
-                    Math.min(root.width - handleRoot.x - width,
-                        (handleRoot.width - width) / 2))
+                x: Math.max(-handleRoot.x, Math.min(root.width - handleRoot.x - width, (handleRoot.width
+                                                                                        - width) / 2))
                 y: -height - 8 + (root.valueIndicatorVisible ? 0 : 8)
                 opacity: root.valueIndicatorVisible ? 1 : 0
                 scale: root.valueIndicatorVisible ? 1 : 0.82
@@ -256,10 +265,8 @@ Item {
                 width: control.pressed || control.visualFocus ? 2 : 4
                 height: parent.height
                 radius: width / 2
-                color: control.enabled
-                    ? Appearance.colors.colPrimary
-                    : Appearance.applyAlpha(
-                        Appearance.colors.colOnSurface, 0.38)
+                color: control.enabled ? Appearance.colors.colPrimary : Appearance.applyAlpha(
+                                             Appearance.colors.colOnSurface, 0.38)
 
                 Behavior on width {
                     NumberAnimation {

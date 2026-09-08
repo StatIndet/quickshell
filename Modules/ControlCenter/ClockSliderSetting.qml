@@ -12,6 +12,7 @@ ColumnLayout {
     property real from: 0
     property real to: 1
     property real stepSize: 1
+    property bool discrete: false
     property int valueDecimals: 0
     property string suffix: ""
 
@@ -35,10 +36,7 @@ ColumnLayout {
         }
 
         Text {
-            text: root.axisTag
-                + "  "
-                + Number(root.value).toFixed(root.valueDecimals)
-                + root.suffix
+            text: root.axisTag + "  " + Number(root.value).toFixed(root.valueDecimals) + root.suffix
             color: Appearance.colors.colOnSecondaryContainer
             font.family: Fonts.numeric
             font.pixelSize: 12
@@ -50,6 +48,7 @@ ColumnLayout {
         from: root.from
         to: root.to
         stepSize: root.stepSize
+        discrete: root.discrete
         value: root.value
         valueDecimals: root.valueDecimals
         valueSuffix: root.suffix
