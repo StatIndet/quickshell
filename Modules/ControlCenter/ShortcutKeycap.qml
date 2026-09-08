@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Effects
 import qs.Common
 import qs.Services
+import qs.Components
+import "../../Common/ShortcutKeySymbols.js" as KeySymbols
 
 Rectangle {
     id: root
@@ -11,7 +13,9 @@ Rectangle {
     readonly property bool superKey: ["super", "win"].indexOf(keyText.toLowerCase()) !== -1
     readonly property bool logo: superKey && superStyle !== "text" && superStyle !== "command"
 
-    implicitWidth: Math.max(30, logo ? 32 : label.implicitWidth + 14)
+    readonly property string symbol: KeySymbols.forKey(keyText)
+
+    implicitWidth: Math.max(30, (logo || symbol.length > 0) ? 32 : label.implicitWidth + 14)
     implicitHeight: 32
     radius: 5
     color: Appearance.colors.colOnSurface
@@ -30,10 +34,17 @@ Rectangle {
         Text {
             id: label
             anchors.centerIn: parent
-            visible: !root.logo
+            visible: !root.logo && root.symbol.length === 0
             text: root.superKey ? (root.superStyle === "command" ? "⌘" : "Super") : root.keyText
             font.family: Fonts.mono
             font.pixelSize: 16
+            color: Appearance.colors.colOnSurface
+        }
+        MaterialSymbol {
+            anchors.centerIn: parent
+            visible: root.symbol.length > 0
+            text: root.symbol
+            iconSize: 20
             color: Appearance.colors.colOnSurface
         }
         Image {
