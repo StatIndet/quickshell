@@ -95,11 +95,11 @@ Variants {
         }
 
         function closeAllOthers(): string {
-            root.hoverOpened = false;
             root.showHub = false;
             root.showLyrics = false;
             root.showTools = false;
             root.expanded = false;
+            root.hoverOpened = false;
             return "OTHERS_CLOSED";
         }
 
@@ -141,10 +141,24 @@ Variants {
         WlrLayershell.namespace: "clavis-shell-keystone"
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        // Layer-shell owns desktop focus. Release it as soon as the panel
-        // closes, even while its visual exit animation is still running.
-        WlrLayershell.keyboardFocus: root.escapeDismissActive ? WlrKeyboardFocus.Exclusive :
-                                                                WlrKeyboardFocus.None
+        // On-demand focus lets desktop clicks leave the island and clicks on
+        // the island focus it again. Hover previews never request keyboard input.
+        WlrLayershell.keyboardFocus: root.keyboardInteractionActive ? WlrKeyboardFocus.OnDemand :
+                                                                      WlrKeyboardFocus.None
+
+        function activateKeyboardSurface() {
+            // Niri focuses newly mapped OnDemand surfaces, but does not focus
+            // an already mapped surface when only keyboard_interactivity changes.
+            // Remap once on intentional expansion; never on focus loss or hover.
+            Qt.callLater(() => {
+                if (!root.keyboardInteractionActive)
+                    return;
+                keystoneWindow.visible = false;
+                Qt.callLater(() => {
+                    keystoneWindow.visible = true;
+                });
+            });
+        }
 
         anchors {
             top: true
@@ -404,7 +418,7 @@ Variants {
 
                 property bool hoverOpened: false
 
-                function activateMouseAction(action, toggle) {
+                function activateMouseAction(action, toggle, fromHover = false) {
                     if (action === "none" || action === "peak" || root.contentPresentationActive
                             || root.isNotifMode || root.isVolumeMode)
                         return;
@@ -422,6 +436,7 @@ Variants {
                     keystoneWindow.closeAllOthers();
                     if (toggle && alreadyOpen)
                         return;
+                    root.hoverOpened = fromHover;
                     if (action === "media")
                         root.expanded = true;
                     else if (action === "lyrics")
@@ -446,9 +461,17 @@ Variants {
                         const action = PersonalizationConfig.keystoneHoverAction;
                         if (action === "none")
                             return;
-                        root.activateMouseAction(action, false);
+                        root.activateMouseAction(action, false, true);
                         root.hoverOpened = true;
                     }
+                }
+
+                TapHandler {
+                    // A click turns a hover preview into a persistent keyboard
+                    // interaction without consuming child controls' pointer events.
+                    enabled: root.hoverOpened && !root.isCollapsedMode
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+                    onTapped: root.hoverOpened = false
                 }
 
                 property bool showLyrics: false
@@ -500,6 +523,14 @@ Variants {
                                                                                            || isHubMode
                                                                                            || isToolsMode
                                                                                            || isCollapsedHovered)
+                readonly property bool keyboardInteractionActive: escapeDismissActive && !hoverOpened &&
+                                                                  !isCollapsedMode
+                onKeyboardInteractionActiveChanged: {
+                    if (keyboardInteractionActive) {
+                        keystoneWindow.activateKeyboardSurface();
+                        root.requestKeyboardFocus();
+                    }
+                }
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(
                                                                    keystoneWindow.modelData.name || "default")
@@ -562,12 +593,12 @@ Variants {
                 }
 
                 function closeKeystonePopups() {
-                    root.hoverOpened = false;
                     root.expanded = false;
                     root.showLyrics = false;
                     root.showVolume = false;
                     root.showHub = false;
                     root.showTools = false;
+                    root.hoverOpened = false;
                     if (root.isNotifMode)
                         NotificationManager.hideAllPopups();
                 }
@@ -588,7 +619,7 @@ Variants {
 
                 function requestKeyboardFocus() {
                     Qt.callLater(() => {
-                        if (!root.escapeDismissActive)
+                        if (!root.keyboardInteractionActive)
                             return;
 
                         if (root.isToolsMode)
@@ -606,11 +637,7 @@ Variants {
                                                                                      root.dashboardTabActive)
                 Component.onDestruction: SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
                                                                                  false)
-                focus: root.escapeDismissActive
-                onEscapeDismissActiveChanged: {
-                    if (root.escapeDismissActive)
-                        root.requestKeyboardFocus();
-                }
+                focus: root.keyboardInteractionActive
                 Keys.onEscapePressed: event => {
                     WidgetState.closeAllPopups();
                     event.accepted = true;
