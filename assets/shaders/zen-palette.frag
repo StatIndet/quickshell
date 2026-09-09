@@ -45,6 +45,18 @@ float radialPosition(vec2 uv, vec2 center) {
     vec2 farthest = max(center,1.0-center)*resolution;
     return length((uv-center)*resolution)/max(length(farthest),1.0);
 }
+// Mix both integer pixel coordinates before the avalanche. A sine/dot hash
+// loses precision at desktop-sized coordinates and produces repeated diagonal
+// patterns. Keep 24 output bits so conversion to float is exact and below 1.
+float pixelGrain(uvec2 pixel) {
+    uint hash = (pixel.x * 0x9e3779b9u) ^ (pixel.y * 0x85ebca6bu);
+    hash ^= hash >> 16u;
+    hash *= 0x7feb352du;
+    hash ^= hash >> 15u;
+    hash *= 0x846ca68bu;
+    hash ^= hash >> 16u;
+    return float(hash >> 8u) * (1.0 / 16777216.0);
+}
 void main() {
     vec2 uv = qt_TexCoord0;
     // Zen Linux opaque-window path: each color is blended with the toolbar
@@ -65,8 +77,7 @@ void main() {
     vec3 color = result.rgb + baseColor.rgb*(1.0-result.a);
     // Independent deterministic monochrome grain, ordinary alpha overlay
     // as on Zen's background (hard-light belongs only to its knob preview).
-    vec2 pixel = floor(uv*resolution);
-    float noise = fract(sin(dot(pixel,vec2(12.9898,78.233)))*43758.5453);
+    float noise = pixelGrain(uvec2(floor(uv*resolution)));
     color = mix(color,vec3(noise),grain*0.16);
     fragColor = vec4(color,1.0)*qt_Opacity;
 }

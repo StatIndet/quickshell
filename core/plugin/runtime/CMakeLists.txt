@@ -29,5 +29,7 @@ target_link_libraries(ClavisRuntime PRIVATE
 qt_add_shaders(ClavisRuntime "clavis_palette_shaders"
     PREFIX "/clavis/shaders"
     BASE "${CLAVIS_SOURCE_ROOT}/assets/shaders"
+    # Integer grain hashing requires GLSL integer/bitwise operations.
+    GLSL "300es,150"
     FILES "${CLAVIS_SOURCE_ROOT}/assets/shaders/zen-palette.frag"
 )
