@@ -17,6 +17,7 @@ class ShortcutRecorder : public QObject {
   public:
     explicit ShortcutRecorder(QObject *parent = nullptr);
     ~ShortcutRecorder() override;
+    Q_INVOKABLE void captureMouse(int button, int modifiers);
   signals:
     void captured(const QString &key);
     void cancelled();
@@ -28,5 +29,6 @@ class ShortcutRecorder : public QObject {
   private:
     QPointer<QQuickItem> m_target;
     bool m_enabled = false;
+    bool m_escapeHeld = false;
     QVariantMap m_keymap;
 };

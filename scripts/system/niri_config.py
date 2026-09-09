@@ -281,6 +281,9 @@ def key_identity(key, mod='Super'):
         if part.lower() not in aliases:
             raise ValueError('Invalid key modifier: ' + part)
         modifiers.add(aliases[part.lower()])
+    mouse = {name.lower(): name for name in ('MouseLeft', 'MouseMiddle', 'MouseRight', 'MouseBack', 'MouseForward')}
+    if parts[-1].lower() in mouse:
+        return '+'.join(sorted(modifiers)) + ':' + mouse[parts[-1].lower()]
     sym = _xkb.xkb_keysym_from_name(parts[-1].encode(), 1)
     if parts[-1].lower() == 'xf86screensaver':
         sym = _xkb.xkb_keysym_from_name(parts[-1].encode(), 0) or _xkb.xkb_keysym_from_name(b'XF86ScreenSaver', 0)
@@ -334,7 +337,7 @@ def bindings(graph, managed):
         if section.name != 'binds':
             continue
         for node in section.nodes:
-            if any(node.name.split('+')[-1].lower().startswith(p) for p in ('mouse', 'wheelscroll', 'touchpadscroll', 'tabletstylusbutton')):
+            if any(node.name.split('+')[-1].lower().startswith(p) for p in ('wheelscroll', 'touchpadscroll', 'tabletstylusbutton')):
                 continue
             identity = key_identity(node.name, mod)
             action = node.nodes[0] if len(node.nodes) == 1 else None

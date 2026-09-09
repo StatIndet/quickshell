@@ -12,8 +12,24 @@ ShortcutRecorder::~ShortcutRecorder() { qGuiApp->removeEventFilter(this); }
 
 bool ShortcutRecorder::eventFilter(QObject *object, QEvent *event)
 {
-    if (!m_enabled || !m_target || object != m_target->window())
+    if (!m_target || object != m_target->window())
         return false;
+    if (m_escapeHeld && (event->type() == QEvent::KeyRelease || event->type() == QEvent::KeyPress ||
+                         event->type() == QEvent::ShortcutOverride)) {
+        auto *key = static_cast<QKeyEvent *>(event);
+        if (key->key() == Qt::Key_Escape) {
+            if (event->type() == QEvent::KeyRelease && !key->isAutoRepeat())
+                m_escapeHeld = false;
+            event->accept();
+            return true;
+        }
+    }
+    if (!m_enabled)
+        return false;
+    if (event->type() == QEvent::ShortcutOverride) {
+        event->accept();
+        return true;
+    }
     if (event->type() == QEvent::FocusOut || event->type() == QEvent::WindowDeactivate) {
         emit cancelled();
         return false;
@@ -23,6 +39,8 @@ bool ShortcutRecorder::eventFilter(QObject *object, QEvent *event)
     auto *key = static_cast<QKeyEvent *>(event);
     if (key->isAutoRepeat())
         return true;
+    const auto shortcutModifiers = Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier |
+                                   Qt::ShiftModifier | Qt::GroupSwitchModifier;
     switch (key->key()) {
     case Qt::Key_Control:
     case Qt::Key_Shift:
@@ -88,6 +106,11 @@ bool ShortcutRecorder::eventFilter(QObject *object, QEvent *event)
         xkb_keymap_unref(map);
     }
     xkb_context_unref(context);
+    if (key->key() == Qt::Key_Escape && !(key->modifiers() & shortcutModifiers) && !levelFive) {
+        m_escapeHeld = true;
+        emit cancelled();
+        return true;
+    }
     // Keypad NumLock chooses a distinct trigger; retain that native keysym.
     if (key->modifiers().testFlag(Qt::KeypadModifier))
         symbol = key->nativeVirtualKey();
@@ -113,4 +136,43 @@ bool ShortcutRecorder::eventFilter(QObject *object, QEvent *event)
     parts << QString::fromLatin1(name);
     emit captured(parts.join('+'));
     return true;
+}
+
+void ShortcutRecorder::captureMouse(int button, int modifiers)
+{
+    if (!m_enabled)
+        return;
+    QString name;
+    switch (button) {
+    case Qt::LeftButton:
+        name = "MouseLeft";
+        break;
+    case Qt::MiddleButton:
+        name = "MouseMiddle";
+        break;
+    case Qt::RightButton:
+        name = "MouseRight";
+        break;
+    case Qt::BackButton:
+        name = "MouseBack";
+        break;
+    case Qt::ForwardButton:
+        name = "MouseForward";
+        break;
+    default:
+        return;
+    }
+    QStringList parts;
+    if (modifiers & Qt::ControlModifier)
+        parts << "Ctrl";
+    if (modifiers & Qt::AltModifier)
+        parts << "Alt";
+    if (modifiers & Qt::MetaModifier)
+        parts << "Super";
+    if (modifiers & Qt::ShiftModifier)
+        parts << "Shift";
+    if (modifiers & Qt::GroupSwitchModifier)
+        parts << "ISO_Level3_Shift";
+    parts << name;
+    emit captured(parts.join('+'));
 }

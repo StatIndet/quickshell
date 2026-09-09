@@ -41,6 +41,18 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('setup')
         return self.run_config()
 
+    def test_mouse_bindings_remain_visible_after_save_and_reload(self):
+        self.setup_binds()
+        keys = ['MouseLeft', 'MouseMiddle', 'MouseRight', 'MouseBack', 'Ctrl+MouseForward']
+        for key in keys:
+            self.run_config('save', key=key, action='close-window')
+        rows = self.run_config()['bindings']
+        self.assertEqual({row['key'] for row in rows}, set(keys))
+        self.assertTrue(all(row['managed'] and row['editable'] and row['effective'] for row in rows))
+        forward = next(row for row in rows if row['key'] == 'Ctrl+MouseForward')
+        self.run_config('delete', id=forward['id'])
+        self.assertEqual({row['key'] for row in self.run_config()['bindings']}, set(keys[:-1]))
+
     def test_first_setup_defaults_are_unique_direct_ipc_and_not_restored(self):
         state = self.run_config('setup')
         rows = state['bindings']

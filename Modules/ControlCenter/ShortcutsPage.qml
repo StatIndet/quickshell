@@ -252,6 +252,7 @@ Item {
     }
 
     ShortcutRecorder {
+        id: inlineRecorder
         target: root
         enabled: root.inlineRecording && root.recording && inhibitor.active
         keymap: NiriConfigService.snapshot.keymap || ({})
@@ -283,8 +284,34 @@ Item {
             NiriConfigService.error = reason;
         }
     }
-    onActiveFocusChanged: if (!activeFocus && inlineRecording && recording)
-                              stopRecording()
+    // Observe complete taps without taking the grab from buttons or the list.
+    // A drag cancels the tap recognizer, so scrolling never discards a recording.
+    function isInteractiveAt(item, position) {
+        for (let child of item.children) {
+            if (!child.visible || !child.enabled)
+                continue;
+            const local = child.mapFromItem(root, position);
+            if (!child.contains(local))
+                continue;
+            if (child instanceof Control || (child instanceof MouseArea && child.cursorShape
+                                             === Qt.PointingHandCursor))
+                return true;
+            if (root.isInteractiveAt(child, position))
+                return true;
+        }
+        return false;
+    }
+
+    TapHandler {
+        acceptedButtons: Qt.LeftButton
+        acceptedModifiers: Qt.NoModifier
+        gesturePolicy: TapHandler.DragThreshold
+        onTapped: eventPoint => {
+            if (eventPoint.position.y < results.y && root.recording && !root.isInteractiveAt(root,
+                                                                                             eventPoint.position))
+                root.stopRecording();
+        }
+    }
 
     function change(name, value) {
         patch = Object.assign({}, patch, {
@@ -417,6 +444,16 @@ Item {
 
     ListView {
         id: results
+        TapHandler {
+            acceptedButtons: Qt.LeftButton
+            acceptedModifiers: Qt.NoModifier
+            gesturePolicy: TapHandler.DragThreshold
+            onTapped: eventPoint => {
+                const position = results.mapToItem(root, eventPoint.position);
+                if (root.recording && !root.isInteractiveAt(root, position))
+                    root.stopRecording();
+            }
+        }
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: column.bottom
@@ -473,11 +510,18 @@ Item {
                             text: root.recording ? qsTr("Press shortcut...") : (root.draft ? root.draft.key :
                                                                                              "")
 
-                            recordingStyle: true
+                            recordingStyle: root.recording
                             focusPolicy: Qt.TabFocus
                             implicitWidth: 128
                             width: Math.min(implicitWidth, chips.width)
                             enabled: !NiriConfigService.busy
+                            MouseArea {
+                                anchors.fill: parent
+                                enabled: root.recording
+                                acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
+                                                 | Qt.BackButton | Qt.ForwardButton
+                                onClicked: mouse => inlineRecorder.captureMouse(mouse.button, mouse.modifiers)
+                            }
                             onClicked: {
                                 root.recording = false;
                                 root.inlineRecording = false;
@@ -622,8 +666,6 @@ Item {
                                                                              "Key")
                     text: editorContent.bindingDraft.key
                     readOnly: !editorContent.bindingDraft.managed || root.recording
-                    onActiveFocusChanged: if (!activeFocus)
-                                              root.recording = false
                 }
                 ShortcutRecorder {
                     target: keyField
@@ -633,7 +675,7 @@ Item {
                         keyField.text = key;
                         root.recording = false;
                     }
-                    onCancelled: root.recording = false
+                    onCancelled: root.stopRecording()
                     onFailed: reason => {
                         root.recording = false;
                         NiriConfigService.error = reason;
