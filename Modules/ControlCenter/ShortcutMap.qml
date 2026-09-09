@@ -222,18 +222,10 @@ PanelWindow {
         Keys.onEscapePressed: root.dismissed()
         Keys.onRightPressed: contentX = Math.min(Math.max(0, contentWidth - width), contentX + width)
         Keys.onLeftPressed: contentX = Math.max(0, contentX - width)
-        MouseArea {
-        // Keep wheel interception on the viewport, outside the scrolling contentItem.
-        parent: pages
-        anchors.fill: parent
-        z: 10
-        acceptedButtons: Qt.NoButton
-        onWheel: event => {
-        const delta = event.pixelDelta.x || event.pixelDelta.y || event.angleDelta.x || event.angleDelta.y;
-        pages.contentX = Math.max(0, Math.min(Math.max(0, pages.contentWidth - pages.width), pages.contentX
-        - delta));
-        event.accepted = true;
-    }
+        WheelScrollController {
+        flickable: pages
+        orientation: Qt.Horizontal
+        enabled: pages.interactive
     }
         delegate: Item {
         id: page
