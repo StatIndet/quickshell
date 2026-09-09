@@ -11527,107 +11527,82 @@ Windows: </source>
     <name>ZenPaletteEditor</name>
     <message>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Light</source>
-        <translation>淺色</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Light gradients</source>
-        <translation>淺色漸層</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Dark</source>
-        <translation>深色</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Dark gradients</source>
-        <translation>深色漸層</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
-        <source>Grayscale</source>
-        <translation>灰階</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
         <source>Single color</source>
         <translation>單色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
         <source>Complementary</source>
         <translation>互補色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="40"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
         <source>Analogous</source>
         <translation>相鄰色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="39"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
         <source>Split complementary</source>
         <translation>分裂互補色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="41"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
         <source>Triadic</source>
         <translation>三角配色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
         <source>Primary color</source>
         <translation>主色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
         <source>Color %1</source>
         <translation>色彩 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="194"/>
         <source>Add color</source>
         <translation>新增色彩</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="200"/>
         <source>Remove color</source>
         <translation>移除色彩</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="221"/>
         <source>Previous presets</source>
         <translation>上一頁預設</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="290"/>
         <source>Next presets</source>
         <translation>下一頁預設</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="263"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="285"/>
         <source>Preset %1</source>
         <translation>預設 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="277"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="305"/>
         <source>Opacity</source>
         <translation>不透明度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="329"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="357"/>
         <source>Opacity: %1%</source>
         <translation>不透明度：%1%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="337"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="365"/>
         <source>Grain</source>
         <translation>顆粒</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="412"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>顆粒：%1%</translation>
     </message>

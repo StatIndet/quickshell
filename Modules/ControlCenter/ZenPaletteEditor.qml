@@ -20,7 +20,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
 import qs.Widgets.common
-import qs.Modules.Wallpaper
 import "../../Common/functions/ZenPalette.js" as Zen
 
 ColumnLayout {
@@ -30,8 +29,6 @@ ColumnLayout {
     property bool draggingPoints: false
     readonly property var points: Zen.positions(paletteState)
     readonly property var colors: Zen.colors(paletteState)
-    readonly property var pageNames: [qsTr("Light"), qsTr("Light gradients"), qsTr("Dark"), qsTr("Dark gradients"),
-        qsTr("Grayscale")]
     readonly property var algorithmNames: ({
                                                floating: qsTr("Single color"),
                                                complementary: qsTr("Complementary"),
@@ -107,7 +104,7 @@ ColumnLayout {
                 Rectangle {
                     id: dot
                     required property int index
-                    width: index === 0 ? 38 : 28
+                    width: index === 0 ? 50 : 26
                     height: width
                     radius: width / 2
                     // Animation state is separate from the authoritative draft.
@@ -135,8 +132,8 @@ ColumnLayout {
                         }
                     }
                     color: Zen.hex(root.colors[index])
-                    border.width: index === 0 ? 5 : 3
-                    border.color: index === 0 ? Appearance.colors.colOnSurface : Appearance.colors.colSurface
+                    border.width: index === 0 ? 6 : 3
+                    border.color: "#ffffff"
                     scale: drag.pressed ? 1.15 : 1
                     Behavior on scale {
                         NumberAnimation {
@@ -190,7 +187,7 @@ ColumnLayout {
         }
         Row {
             anchors.bottom: parent.bottom
-            anchors.right: parent.right
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.margins: 8
             IconButton {
                 iconName: "add"
@@ -218,50 +215,81 @@ ColumnLayout {
     }
     RowLayout {
         Layout.fillWidth: true
+        spacing: 4
         IconButton {
             iconName: "chevron_left"
             tooltipText: qsTr("Previous presets")
             enabled: root.page > 0
             onClicked: root.page--
         }
-        Text {
-            Layout.fillWidth: true
-            horizontalAlignment: Text.AlignHCenter
-            text: root.pageNames[root.page]
-            color: Appearance.colors.colOnSurface
-            font.family: Fonts.ui
+        Repeater {
+            model: root.page === 4 ? 9 : 8
+            Item {
+                id: presetItem
+                required property int index
+                readonly property int presetIndex: root.page * 8 + index
+                Layout.fillWidth: true
+                Layout.preferredHeight: 34
+                Canvas {
+                    id: swatch
+                    anchors.centerIn: parent
+                    width: 26
+                    height: width
+                    property var colors: Zen.swatches[presetItem.presetIndex]
+                    onColorsChanged: requestPaint()
+                    scale: presetMouse.pressed ? 0.95 : presetMouse.containsMouse ? 1.05 : 1
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Animations.curves.standard
+                        }
+                    }
+                    onPaint: {
+                        const ctx = getContext("2d");
+                        ctx.reset();
+                        ctx.beginPath();
+                        ctx.arc(width / 2, height / 2, width / 2, 0, Math.PI * 2);
+                        ctx.clip();
+                        if (colors.length === 1) {
+                            ctx.fillStyle = colors[0];
+                            ctx.fillRect(0, 0, width, height);
+                        } else {
+                            // CSS backgrounds paint last to first, with premultiplied alpha.
+                            let gradient = ctx.createLinearGradient(0, height, 0, height * 0.4);
+                            gradient.addColorStop(0, colors[2]);
+                            gradient.addColorStop(1, "transparent");
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(0, 0, width, height);
+                            for (let i = 1; i >= 0; --i) {
+                                const x = i === 0 ? 0 : width;
+                                gradient = ctx.createRadialGradient(x, 0, 0, x, 0, Math.sqrt(width * width
+                                                                                             + height
+                                                                                             * height));
+                                gradient.addColorStop(0, colors[i]);
+                                gradient.addColorStop(1, "transparent");
+                                ctx.fillStyle = gradient;
+                                ctx.fillRect(0, 0, width, height);
+                            }
+                        }
+                    }
+                }
+                MouseArea {
+                    id: presetMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.edited(Zen.preset(presetItem.presetIndex, root.paletteState))
+                }
+                Accessible.role: Accessible.Button
+                Accessible.name: qsTr("Preset %1").arg(presetIndex + 1)
+            }
         }
         IconButton {
             iconName: "chevron_right"
             tooltipText: qsTr("Next presets")
             enabled: root.page < 4
             onClicked: root.page++
-        }
-    }
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: 6
-        Repeater {
-            model: root.page === 4 ? 9 : 8
-            Item {
-                id: presetItem
-                required property int index
-                readonly property var value: Zen.preset(root.page * 8 + index, root.paletteState)
-                Layout.fillWidth: true
-                Layout.preferredHeight: 30
-                clip: true
-                ZenPaletteRenderer {
-                    anchors.fill: parent
-                    paletteState: presetItem.value
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.edited(presetItem.value)
-                }
-                Accessible.role: Accessible.Button
-                Accessible.name: qsTr("Preset %1").arg(root.page * 8 + index + 1)
-            }
         }
     }
     RowLayout {

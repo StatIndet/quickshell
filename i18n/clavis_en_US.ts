@@ -11532,107 +11532,82 @@ Windows: </translation>
     <name>ZenPaletteEditor</name>
     <message>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Light</source>
-        <translation>Light</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Light gradients</source>
-        <translation>Light gradients</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Dark</source>
-        <translation>Dark</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
-        <source>Dark gradients</source>
-        <translation>Dark gradients</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
-        <source>Grayscale</source>
-        <translation>Grayscale</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
         <source>Single color</source>
         <translation>Single color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
         <source>Complementary</source>
         <translation>Complementary</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="40"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
         <source>Analogous</source>
         <translation>Analogous</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="39"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
         <source>Split complementary</source>
         <translation>Split complementary</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="41"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
         <source>Triadic</source>
         <translation>Triadic</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
         <source>Primary color</source>
         <translation>Primary color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
         <source>Color %1</source>
         <translation>Color %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="194"/>
         <source>Add color</source>
         <translation>Add color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="200"/>
         <source>Remove color</source>
         <translation>Remove color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="221"/>
         <source>Previous presets</source>
         <translation>Previous presets</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="290"/>
         <source>Next presets</source>
         <translation>Next presets</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="263"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="285"/>
         <source>Preset %1</source>
         <translation>Preset %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="277"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="305"/>
         <source>Opacity</source>
         <translation>Opacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="329"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="357"/>
         <source>Opacity: %1%</source>
         <translation>Opacity: %1%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="337"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="365"/>
         <source>Grain</source>
         <translation>Grain</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="412"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>Grain: %1%</translation>
     </message>
