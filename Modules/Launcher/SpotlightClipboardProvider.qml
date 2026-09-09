@@ -194,6 +194,11 @@ Item {
     }
 
     function replaceModel(next) {
+        let sameOrder = clipboardModel.count === next.length;
+        for (let index = 0; sameOrder && index < next.length; index += 1)
+            sameOrder = clipboardModel.get(index).clipboardEntryId === String(next[index].id || "");
+        if (sameOrder)
+            return;
         clipboardModel.clear();
         for (let index = 0; index < next.length; index += 1)
             clipboardModel.append({
@@ -293,7 +298,7 @@ Item {
     }
 
     function refresh() {
-        ClipboardService.refresh(100);
+        ClipboardService.refresh(750);
     }
 
     function requestDetails(id) {

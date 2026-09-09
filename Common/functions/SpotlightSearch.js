@@ -2,13 +2,13 @@
 var engines = [
     {
         "id": "google",
-        "icon": "google.ico",
+        "icon": "google.png",
         "label": "Google",
         "url": "https://www.google.com/search?q="
     },
     {
         "id": "bing",
-        "icon": "bing.ico",
+        "icon": "bing.png",
         "label": "Bing",
         "url": "https://www.bing.com/search?q="
     },
@@ -20,13 +20,13 @@ var engines = [
     },
     {
         "id": "yahoo",
-        "icon": "yahoo.ico",
+        "icon": "yahoo.png",
         "label": "Yahoo",
         "url": "https://search.yahoo.com/search?p="
     },
     {
         "id": "baidu",
-        "icon": "baidu.ico",
+        "icon": "baidu.png",
         "label": "百度",
         "url": "https://www.baidu.com/s?wd="
     },
@@ -50,7 +50,7 @@ var engines = [
     },
     {
         "id": "ecosia",
-        "icon": "ecosia.ico",
+        "icon": "ecosia.png",
         "label": "Ecosia",
         "url": "https://www.ecosia.org/search?q="
     },
@@ -74,7 +74,7 @@ var engines = [
     },
     {
         "id": "sogou",
-        "icon": "sogou.ico",
+        "icon": "sogou.png",
         "label": "搜狗",
         "url": "https://www.sogou.com/web?query="
     },
@@ -92,7 +92,7 @@ var engines = [
     },
     {
         "id": "daum",
-        "icon": "daum.ico",
+        "icon": "daum.png",
         "label": "Daum",
         "url": "https://search.daum.net/search?q="
     },

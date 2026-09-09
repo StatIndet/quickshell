@@ -11,6 +11,8 @@ StyledFlickable {
         enginePicker.closeMenu();
     }
 
+    Component.onCompleted: ClipboardService.loadHistoryConfig()
+
     clip: true
     contentWidth: width
     contentHeight: contentColumn.implicitHeight + Metrics.pageMargin * 2
@@ -61,6 +63,39 @@ StyledFlickable {
                         }
                     }
                 }
+            }
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            flat: true
+            title: qsTr("Clipboard")
+            iconName: "content_paste"
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("History limit")
+                supportingText: qsTr("Oldest items are removed when new content is saved.")
+                iconName: "history"
+
+                trailing: MaterialStepper {
+                    from: 50
+                    to: 750
+                    stepSize: 50
+                    value: ClipboardService.historyLimit
+                    enabled: ClipboardService.historyConfigLoaded
+                    busy: ClipboardService.historyConfigBusy
+                    Accessible.name: qsTr("History limit")
+                    onValueModified: value => ClipboardService.setHistoryLimit(value)
+                }
+            }
+
+            InlineStatusBanner {
+                Layout.fillWidth: true
+                visible: ClipboardService.historyConfigError !== null
+                tone: "error"
+                message: ClipboardService.historyConfigError ? ClipboardService.historyConfigError.message :
+                                                               ""
             }
         }
     }

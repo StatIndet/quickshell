@@ -1940,100 +1940,116 @@ Scroll to adjust</translation>
 <context>
     <name>ClipboardService</name>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="70"/>
+        <location filename="../Services/ClipboardService.qml" line="78"/>
         <source>The cliphist watcher is not running; enable the service and copy content again</source>
         <translation>The cliphist watcher is not running; enable the service and copy content again</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="72"/>
+        <location filename="../Services/ClipboardService.qml" line="80"/>
         <source>cliphist is missing; clipboard history cannot be read</source>
         <translation>cliphist is missing; clipboard history cannot be read</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="73"/>
+        <location filename="../Services/ClipboardService.qml" line="81"/>
         <source>wl-copy is missing; clipboard contents cannot be restored</source>
         <translation>wl-copy is missing; clipboard contents cannot be restored</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="74"/>
+        <location filename="../Services/ClipboardService.qml" line="82"/>
         <source>cliphist or wl-copy is missing; clipboard history is unavailable</source>
         <translation>cliphist or wl-copy is missing; clipboard history is unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="76"/>
+        <location filename="../Services/ClipboardService.qml" line="84"/>
         <source>Unable to decode this entry from cliphist</source>
         <translation>Unable to decode this entry from cliphist</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="77"/>
+        <location filename="../Services/ClipboardService.qml" line="85"/>
         <source>Unable to inspect this clipboard entry</source>
         <translation>Unable to inspect this clipboard entry</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="78"/>
+        <location filename="../Services/ClipboardService.qml" line="86"/>
         <source>Unable to generate a clipboard preview</source>
         <translation>Unable to generate a clipboard preview</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="79"/>
+        <location filename="../Services/ClipboardService.qml" line="87"/>
         <source>This clipboard content exceeds the safe size limit</source>
         <translation>This clipboard content exceeds the safe size limit</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="80"/>
+        <location filename="../Services/ClipboardService.qml" line="88"/>
         <source>Image data is damaged or too large</source>
         <translation>Image data is damaged or too large</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="81"/>
+        <location filename="../Services/ClipboardService.qml" line="89"/>
         <source>The file in the clipboard no longer exists</source>
         <translation>The file in the clipboard no longer exists</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="82"/>
+        <location filename="../Services/ClipboardService.qml" line="90"/>
         <source>This clipboard format cannot be restored reliably</source>
         <translation>This clipboard format cannot be restored reliably</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="83"/>
+        <location filename="../Services/ClipboardService.qml" line="91"/>
         <source>wl-copy failed to write the system clipboard</source>
         <translation>wl-copy failed to write the system clipboard</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="84"/>
-        <location filename="../Services/ClipboardService.qml" line="125"/>
-        <location filename="../Services/ClipboardService.qml" line="138"/>
+        <location filename="../Services/ClipboardService.qml" line="92"/>
+        <location filename="../Services/ClipboardService.qml" line="136"/>
+        <location filename="../Services/ClipboardService.qml" line="149"/>
+        <location filename="../Services/ClipboardService.qml" line="260"/>
         <source>The clipboard service returned invalid data</source>
         <translation>The clipboard service returned invalid data</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="85"/>
+        <location filename="../Services/ClipboardService.qml" line="93"/>
         <source>The current key does not provide the required clipboard capability</source>
         <translation>The current key does not provide the required clipboard capability</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="87"/>
-        <location filename="../Services/ClipboardService.qml" line="234"/>
+        <location filename="../Services/ClipboardService.qml" line="95"/>
+        <source>Unable to read clipboard settings</source>
+        <translation>Unable to read clipboard settings</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="96"/>
+        <source>Unable to save clipboard settings</source>
+        <translation>Unable to save clipboard settings</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="97"/>
+        <source>History limit must be from 50 to 750 in steps of 50</source>
+        <translation>History limit must be from 50 to 750 in steps of 50</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="98"/>
+        <location filename="../Services/ClipboardService.qml" line="292"/>
         <source>A clipboard operation is already running</source>
         <translation>A clipboard operation is already running</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="160"/>
+        <location filename="../Services/ClipboardService.qml" line="171"/>
         <source>The current key does not support the required clipboard capabilities</source>
         <translation>The current key does not support the required clipboard capabilities</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="180"/>
+        <location filename="../Services/ClipboardService.qml" line="191"/>
         <source>Clipboard history is unavailable</source>
         <translation>Clipboard history is unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="281"/>
+        <location filename="../Services/ClipboardService.qml" line="339"/>
         <source>Clipboard operation failed</source>
         <translation>Clipboard operation failed</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="367"/>
+        <location filename="../Services/ClipboardService.qml" line="425"/>
         <source>Unable to inspect clipboard entry</source>
         <translation>Unable to inspect clipboard entry</translation>
     </message>
@@ -8391,12 +8407,12 @@ Right click: Control Center</translation>
         <translation>Text</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="324"/>
+        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="329"/>
         <source>Clipboard restore is unavailable</source>
         <translation>Clipboard restore is unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="329"/>
+        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="334"/>
         <source>This format cannot be restored reliably</source>
         <translation>This format cannot be restored reliably</translation>
     </message>
@@ -8404,15 +8420,31 @@ Right click: Control Center</translation>
 <context>
     <name>SpotlightPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="28"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="30"/>
         <source>Web search</source>
         <translation>Web search</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="33"/>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="46"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="48"/>
         <source>Search engine</source>
         <translation>Search engine</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="72"/>
+        <source>Clipboard</source>
+        <translation>Clipboard</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="87"/>
+        <source>History limit</source>
+        <translation>History limit</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="78"/>
+        <source>Oldest items are removed when new content is saved.</source>
+        <translation>Oldest items are removed when new content is saved.</translation>
     </message>
 </context>
 <context>

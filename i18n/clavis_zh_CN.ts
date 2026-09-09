@@ -1940,100 +1940,116 @@ Scroll to adjust</source>
 <context>
     <name>ClipboardService</name>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="70"/>
+        <location filename="../Services/ClipboardService.qml" line="78"/>
         <source>The cliphist watcher is not running; enable the service and copy content again</source>
         <translation>cliphist 监听服务未运行；请启用服务后重新复制内容</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="72"/>
+        <location filename="../Services/ClipboardService.qml" line="80"/>
         <source>cliphist is missing; clipboard history cannot be read</source>
         <translation>缺少 cliphist，无法读取剪贴板历史</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="73"/>
+        <location filename="../Services/ClipboardService.qml" line="81"/>
         <source>wl-copy is missing; clipboard contents cannot be restored</source>
         <translation>缺少 wl-copy，无法恢复剪贴板内容</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="74"/>
+        <location filename="../Services/ClipboardService.qml" line="82"/>
         <source>cliphist or wl-copy is missing; clipboard history is unavailable</source>
         <translation>缺少 cliphist 或 wl-copy，剪贴板历史不可用</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="76"/>
+        <location filename="../Services/ClipboardService.qml" line="84"/>
         <source>Unable to decode this entry from cliphist</source>
         <translation>无法从 cliphist 解码该条目</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="77"/>
+        <location filename="../Services/ClipboardService.qml" line="85"/>
         <source>Unable to inspect this clipboard entry</source>
         <translation>无法检查该剪贴板条目</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="78"/>
+        <location filename="../Services/ClipboardService.qml" line="86"/>
         <source>Unable to generate a clipboard preview</source>
         <translation>无法生成剪贴板预览</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="79"/>
+        <location filename="../Services/ClipboardService.qml" line="87"/>
         <source>This clipboard content exceeds the safe size limit</source>
         <translation>该剪贴板内容超过安全大小限制</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="80"/>
+        <location filename="../Services/ClipboardService.qml" line="88"/>
         <source>Image data is damaged or too large</source>
         <translation>图片数据已损坏或尺寸过大</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="81"/>
+        <location filename="../Services/ClipboardService.qml" line="89"/>
         <source>The file in the clipboard no longer exists</source>
         <translation>剪贴板中的文件已不存在</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="82"/>
+        <location filename="../Services/ClipboardService.qml" line="90"/>
         <source>This clipboard format cannot be restored reliably</source>
         <translation>无法可靠恢复该剪贴板格式</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="83"/>
+        <location filename="../Services/ClipboardService.qml" line="91"/>
         <source>wl-copy failed to write the system clipboard</source>
         <translation>wl-copy 写入系统剪贴板失败</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="84"/>
-        <location filename="../Services/ClipboardService.qml" line="125"/>
-        <location filename="../Services/ClipboardService.qml" line="138"/>
+        <location filename="../Services/ClipboardService.qml" line="92"/>
+        <location filename="../Services/ClipboardService.qml" line="136"/>
+        <location filename="../Services/ClipboardService.qml" line="149"/>
+        <location filename="../Services/ClipboardService.qml" line="260"/>
         <source>The clipboard service returned invalid data</source>
         <translation>剪贴板服务返回了无效数据</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="85"/>
+        <location filename="../Services/ClipboardService.qml" line="93"/>
         <source>The current key does not provide the required clipboard capability</source>
         <translation>当前 key 不提供所需的剪贴板能力</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="87"/>
-        <location filename="../Services/ClipboardService.qml" line="234"/>
+        <location filename="../Services/ClipboardService.qml" line="95"/>
+        <source>Unable to read clipboard settings</source>
+        <translation>无法读取剪贴板设置</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="96"/>
+        <source>Unable to save clipboard settings</source>
+        <translation>无法保存剪贴板设置</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="97"/>
+        <source>History limit must be from 50 to 750 in steps of 50</source>
+        <translation>历史记录上限须为 50 至 750，且为 50 的倍数</translation>
+    </message>
+    <message>
+        <location filename="../Services/ClipboardService.qml" line="98"/>
+        <location filename="../Services/ClipboardService.qml" line="292"/>
         <source>A clipboard operation is already running</source>
         <translation>已有剪贴板操作正在执行</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="160"/>
+        <location filename="../Services/ClipboardService.qml" line="171"/>
         <source>The current key does not support the required clipboard capabilities</source>
         <translation>当前 key 不支持所需的剪贴板能力</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="180"/>
+        <location filename="../Services/ClipboardService.qml" line="191"/>
         <source>Clipboard history is unavailable</source>
         <translation>剪贴板历史不可用</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="281"/>
+        <location filename="../Services/ClipboardService.qml" line="339"/>
         <source>Clipboard operation failed</source>
         <translation>剪贴板操作失败</translation>
     </message>
     <message>
-        <location filename="../Services/ClipboardService.qml" line="367"/>
+        <location filename="../Services/ClipboardService.qml" line="425"/>
         <source>Unable to inspect clipboard entry</source>
         <translation>无法检查剪贴板条目</translation>
     </message>
@@ -8390,12 +8406,12 @@ Right click: Control Center</source>
         <translation>文本</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="324"/>
+        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="329"/>
         <source>Clipboard restore is unavailable</source>
         <translation>剪贴板恢复不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="329"/>
+        <location filename="../Modules/Launcher/SpotlightClipboardProvider.qml" line="334"/>
         <source>This format cannot be restored reliably</source>
         <translation>该格式无法可靠恢复</translation>
     </message>
@@ -8403,15 +8419,31 @@ Right click: Control Center</source>
 <context>
     <name>SpotlightPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="28"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="30"/>
         <source>Web search</source>
         <translation>网页搜索</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="33"/>
-        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="46"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="48"/>
         <source>Search engine</source>
         <translation>搜索引擎</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="72"/>
+        <source>Clipboard</source>
+        <translation>剪贴板</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="87"/>
+        <source>History limit</source>
+        <translation>历史记录上限</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/SpotlightPage.qml" line="78"/>
+        <source>Oldest items are removed when new content is saved.</source>
+        <translation>保存新内容时会移除最早的记录。</translation>
     </message>
 </context>
 <context>

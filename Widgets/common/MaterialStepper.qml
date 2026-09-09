@@ -9,10 +9,14 @@ Rectangle {
     property int from: 0
     property int to: 100
     property int stepSize: 1
+    // Pause value requests without canceling a held pointer during async saves.
+    property bool busy: false
 
     signal valueModified(int value)
 
     function setValue(nextValue) {
+        if (!root.enabled || root.busy)
+            return;
         const normalized = Math.max(root.from, Math.min(root.to, Math.round(nextValue)));
         if (normalized === root.value)
             return;
@@ -76,11 +80,27 @@ Rectangle {
         MouseArea {
             id: pointer
 
+            property bool repeated: false
+
             anchors.fill: parent
             enabled: button.canChange
             hoverEnabled: true
             cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-            onClicked: root.setValue(root.value + (button.increase ? root.stepSize : -root.stepSize))
+            onPressed: repeated = false
+            onClicked: {
+                if (!repeated)
+                    root.setValue(root.value + (button.increase ? root.stepSize : -root.stepSize));
+            }
+
+            Timer {
+                interval: pointer.repeated ? 100 : 400
+                repeat: true
+                running: pointer.pressed && pointer.containsMouse && pointer.enabled && pointer.visible
+                onTriggered: {
+                    pointer.repeated = true;
+                    root.setValue(root.value + (button.increase ? root.stepSize : -root.stepSize));
+                }
+            }
         }
 
         Behavior on color {

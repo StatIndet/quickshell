@@ -10,6 +10,14 @@ Singleton {
     id: root
 
     readonly property string commandName: Paths.stableKey
+    property int historyLimit: 500
+    property bool historyConfigLoaded: false
+    property bool historyConfigBusy: false
+    property var historyConfigError: null
+    property string _configOutput: ""
+    property bool _configExited: false
+    property bool _configStdoutFinished: false
+    property int _configExitCode: -1
     property bool loading: false
     property bool actionRunning: false
     property bool inspecting: false
@@ -84,6 +92,9 @@ Singleton {
             invalid_clipboard_response: qsTr("The clipboard service returned invalid data"),
             clipboard_capability_missing: qsTr(
                                               "The current key does not provide the required clipboard capability"),
+            clipboard_config_read_failed: qsTr("Unable to read clipboard settings"),
+            clipboard_config_write_failed: qsTr("Unable to save clipboard settings"),
+            invalid_clipboard_limit: qsTr("History limit must be from 50 to 750 in steps of 50"),
             clipboard_action_busy: qsTr("A clipboard operation is already running")
         };
         return {
@@ -205,10 +216,57 @@ Singleton {
         root.detailsRevision += 1;
     }
 
+    function loadHistoryConfig() {
+        return requestHistoryConfig(null);
+    }
+
+    function setHistoryLimit(value) {
+        if (!root.historyConfigLoaded)
+            return false;
+        return requestHistoryConfig(value);
+    }
+
+    function requestHistoryConfig(value) {
+        if (root.historyConfigBusy)
+            return false;
+        root.historyConfigBusy = true;
+        root.historyConfigError = null;
+        root._configOutput = "";
+        root._configExited = false;
+        root._configStdoutFinished = false;
+        root._configExitCode = -1;
+        const command = [root.commandName, "clipboard", "config", "--format", "json"];
+        if (value !== null)
+            command.push("--max-items", String(value));
+        else
+            root.historyConfigLoaded = false;
+        configProcess.command = command;
+        configProcess.running = true;
+        return true;
+    }
+
+    function finalizeConfigIfReady() {
+        if (!root._configExited || !root._configStdoutFinished)
+            return;
+        const response = root.parseResponse(root._configOutput);
+        const valid = response && response.schemaVersion === 1 && response.command === "clipboard.config";
+        const value = valid ? response.maxItems : null;
+        if (valid && root._configExitCode === 0 && response.ok === true && response.error === null
+                && typeof value === "number" && value >= 50 && value <= 750 && value % 50 === 0) {
+            root.historyLimit = value;
+            root.historyConfigLoaded = true;
+        } else {
+            root.historyConfigError = root.normalizedError(valid ? response.error : null,
+                                                           "invalid_clipboard_response", qsTr(
+                                                               "The clipboard service returned invalid data"));
+        }
+        root.historyConfigBusy = false;
+    }
+
     function refresh(limit) {
         if (listProcess.running)
             return false;
-        const safeLimit = Math.max(1, Math.min(500, Number(limit) || 100));
+        const safeLimit = Math.max(1, Math.min(750, Number(limit) || 100));
         root.loading = true;
         root._listOutput = "";
         root._listErrorOutput = "";
@@ -370,6 +428,23 @@ Singleton {
         root._inspectId = "";
         root.inspecting = root._inspectQueue.length > 0;
         Qt.callLater(root.startNextInspect);
+    }
+
+    Process {
+        id: configProcess
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root._configOutput = this.text;
+                root._configStdoutFinished = true;
+                root.finalizeConfigIfReady();
+            }
+        }
+        onExited: exitCode => {
+            root._configExitCode = exitCode;
+            root._configExited = true;
+            root.finalizeConfigIfReady();
+        }
     }
 
     Process {
