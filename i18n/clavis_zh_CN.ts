@@ -4550,7 +4550,7 @@ Scroll to adjust</source>
     <name>KeystonePage</name>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="54"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="211"/>
         <source>Horizontal clock style</source>
         <translation>横向时钟样式</translation>
     </message>
@@ -4581,75 +4581,92 @@ Scroll to adjust</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="130"/>
+        <source>Keyboard indicators</source>
+        <translation>键盘状态提示</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="135"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="138"/>
+        <source>Caps Lock changes</source>
+        <translation>大小写锁定状态变化</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="148"/>
+        <source>Num Lock changes</source>
+        <translation>小键盘数字锁定状态变化</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="155"/>
         <source>Keyhole</source>
         <translation>钥匙孔</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="153"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="178"/>
         <source>Horizontal clock</source>
         <translation>横向时钟</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="174"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="199"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="203"/>
         <source>Hide date</source>
         <translation>隐藏日期</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="187"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
         <source>Font, digit positions, and colors</source>
         <translation>字体、数字位置和颜色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="194"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="219"/>
         <source>Recording</source>
         <translation>录制</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="198"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="223"/>
         <source>Video recording</source>
         <translation>视频录制</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="229"/>
         <source>GIF recording</source>
         <translation>GIF 录制</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="210"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="235"/>
         <source>Microphone recording</source>
         <translation>麦克风录音</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="216"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="241"/>
         <source>System audio recording</source>
         <translation>系统音频录音</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="259"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="306"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="284"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="331"/>
         <source>Save location</source>
         <translation>保存位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="263"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="288"/>
         <source>This folder is empty</source>
         <translation>当前文件夹为空</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="264"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="316"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="317"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="289"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="341"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="342"/>
         <source>Choose folder</source>
         <translation>选择文件夹</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="265"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="290"/>
         <source>Choose</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="266"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="291"/>
         <source>Choose the current folder or a selected subfolder</source>
         <translation>可选择当前文件夹或选中的子文件夹</translation>
     </message>
@@ -11605,6 +11622,34 @@ Windows: </source>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>颗粒：%1%</translation>
+    </message>
+</context>
+<context>
+    <name>KeyboardLockIndicator</name>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Caps Lock</source>
+        <translation>大写锁定</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Num Lock</source>
+        <translation>数字锁定</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>On</source>
+        <translation>已开启</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>Off</source>
+        <translation>已关闭</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="16"/>
+        <source>%1: %2</source>
+        <translation>%1：%2</translation>
     </message>
 </context>
 </TS>

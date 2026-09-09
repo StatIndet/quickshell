@@ -424,6 +424,8 @@ Singleton {
     property var barTrailingComponents: root.defaultBarTrailingComponents.slice()
     property var quickSettingsComponents: root.defaultQuickSettingsComponents.slice()
     property string keystonePosition: "top"
+    property bool keystoneCapsLockOsd: true
+    property bool keystoneNumLockOsd: true
     property bool keystoneHideDate: false
     property string keystoneHoverAction: "peak"
     property string keystoneLeftClickAction: "media"
@@ -1447,6 +1449,14 @@ Singleton {
         return root.moveKeystoneKeyholeCard(id, root.keystoneKeyholeCards.length);
     }
 
+    function setKeystoneCapsLockOsd(value) {
+        setValue("keystoneCapsLockOsd", !!value);
+    }
+
+    function setKeystoneNumLockOsd(value) {
+        setValue("keystoneNumLockOsd", !!value);
+    }
+
     function setKeystoneHideDate(value) {
         setValue("keystoneHideDate", !!value);
     }
@@ -1614,6 +1624,8 @@ Singleton {
             "keystone": {
                 "style": root.keystoneStyle,
                 "position": root.keystonePosition,
+                "capsLockOsd": root.keystoneCapsLockOsd,
+                "numLockOsd": root.keystoneNumLockOsd,
                 "hideDate": root.keystoneHideDate,
                 "hoverAction": root.keystoneHoverAction,
                 "leftClickAction": root.keystoneLeftClickAction,
@@ -1727,6 +1739,8 @@ Singleton {
         root.shellBlurXray = typeof effects.shellBlurXray === "boolean" ? effects.shellBlurXray : true;
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style, "bangs");
         root.keystonePosition = normalizedEdgePosition(keystone.position);
+        root.keystoneCapsLockOsd = typeof keystone.capsLockOsd === "boolean" ? keystone.capsLockOsd : true;
+        root.keystoneNumLockOsd = typeof keystone.numLockOsd === "boolean" ? keystone.numLockOsd : true;
         root.keystoneHideDate = typeof keystone.hideDate === "boolean" ? keystone.hideDate : false;
         root.keystoneHoverAction = normalizedOption(root.keystoneHoverActionOptions, keystone.hoverAction,
                                                     "peak");

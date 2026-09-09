@@ -6,6 +6,7 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Wayland
+import Clavis.Keyboard
 import Clavis.Niri
 import qs.Services
 import qs.Common
@@ -588,8 +589,10 @@ Variants {
                 readonly property var recordingBlurBackgroundItems: useRecordingBlurRegions
                                                                     ? pillRecordingPresenter.item.blurBackgroundItems :
                                                                       []
-                property real targetW: activeLayout.targetWidth
-                property real targetH: activeLayout.targetHeight
+                property real targetW: isVolumeMode && keyboardOsd ? (keystoneWindow.horizontalEdge ? 260 :
+                                                                                                      112) : activeLayout.targetWidth
+                property real targetH: isVolumeMode && keyboardOsd ? (keystoneWindow.horizontalEdge ? 64 :
+                                                                                                      144) : activeLayout.targetHeight
                 property int targetR: styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) :
                                                               12
                 property int wDuration: KeystoneMotion.expandingDuration
@@ -603,6 +606,29 @@ Variants {
                 property var sourceAudioNode: Pipewire.defaultAudioSource ? Pipewire.defaultAudioSource.audio :
                                                                             null
                 property string sliderMode: "volume"
+                readonly property bool keyboardOsd: sliderMode === "capslock" || sliderMode === "numlock"
+                property bool locksInitialized: false
+                property bool previousCapsLock: false
+                property bool previousNumLock: false
+                property bool lockEnabled: false
+
+                function updateKeyboardLocks() {
+                    const caps = KeyboardLockState.capsLock;
+                    const num = KeyboardLockState.numLock;
+                    if (locksInitialized) {
+                        if (caps !== previousCapsLock && PersonalizationConfig.keystoneCapsLockOsd) {
+                            root.lockEnabled = caps;
+                            root.triggerSliderOSD("capslock");
+                        }
+                        if (num !== previousNumLock && PersonalizationConfig.keystoneNumLockOsd) {
+                            root.lockEnabled = num;
+                            root.triggerSliderOSD("numlock");
+                        }
+                    }
+                    previousCapsLock = caps;
+                    previousNumLock = num;
+                }
+
                 readonly property var currentPlayer: MediaManager.active
 
                 function isHoverWidthMotion(nextW) {
@@ -755,6 +781,9 @@ Variants {
                     recordingPresentationOut.restart();
                 }
                 Component.onCompleted: {
+                    KeyboardLockState.refresh();
+                    root.updateKeyboardLocks();
+                    root.locksInitialized = true;
                     SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
                                                             root.dashboardTabActive);
                     root.componentReady = true;
@@ -1218,6 +1247,25 @@ Variants {
                     onCutoutRadiusChanged: requestPaint()
                 }
 
+                Connections {
+                    target: KeyboardLockState
+                    function onLockStateChanged() {
+                        root.updateKeyboardLocks();
+                    }
+                }
+
+                Connections {
+                    target: PersonalizationConfig
+                    function onKeystoneCapsLockOsdChanged() {
+                        if (!PersonalizationConfig.keystoneCapsLockOsd && root.sliderMode === "capslock")
+                            root.showVolume = false;
+                    }
+                    function onKeystoneNumLockOsdChanged() {
+                        if (!PersonalizationConfig.keystoneNumLockOsd && root.sliderMode === "numlock")
+                            root.showVolume = false;
+                    }
+                }
+
                 PwObjectTracker {
                     objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
                 }
@@ -1227,7 +1275,7 @@ Variants {
 
                     interval: 2000
                     onTriggered: {
-                        if (volumeWidget.isInteractionActive)
+                        if (!root.keyboardOsd && volumeWidget.isInteractionActive)
                             restart();
                         else
                             root.showVolume = false;
@@ -1292,6 +1340,17 @@ Variants {
                     width: 1600
                     height: 1200
 
+                    KeyboardLockIndicator {
+                        anchors.top: parent.top
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: keystoneWindow.horizontalEdge ? 260 : 112
+                        height: keystoneWindow.horizontalEdge ? 64 : 144
+                        vertical: !keystoneWindow.horizontalEdge
+                        capsLock: root.sliderMode === "capslock"
+                        lockEnabled: root.lockEnabled
+                        visible: root.isVolumeMode && root.keyboardOsd
+                    }
+
                     VolumeContent {
                         id: volumeWidget
 
@@ -1305,7 +1364,7 @@ Variants {
                                                                   ? root.sourceAudioNode : null
                         externalValue: Brightness.brightnessValue
                         iconName: root.sliderMode === "brightness" ? "brightness_medium" : ""
-                        opacity: root.isVolumeMode ? 1 : 0
+                        opacity: root.isVolumeMode && !root.keyboardOsd ? 1 : 0
                         visible: opacity > 0.01
                         onMoved: value => {
                             if (root.sliderMode === "brightness")

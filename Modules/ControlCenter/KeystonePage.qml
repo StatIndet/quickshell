@@ -127,6 +127,31 @@ Item {
             }
 
             KeystoneSection {
+                title: qsTr("Keyboard indicators")
+                iconName: "keyboard"
+
+                SettingsRow {
+                    Layout.fillWidth: true
+                    title: qsTr("Caps Lock changes")
+                    trailing: StyledSwitch {
+                        checked: PersonalizationConfig.keystoneCapsLockOsd
+                        Accessible.name: qsTr("Caps Lock changes")
+                        onToggled: PersonalizationConfig.setKeystoneCapsLockOsd(checked)
+                    }
+                }
+
+                SettingsRow {
+                    Layout.fillWidth: true
+                    title: qsTr("Num Lock changes")
+                    trailing: StyledSwitch {
+                        checked: PersonalizationConfig.keystoneNumLockOsd
+                        Accessible.name: qsTr("Num Lock changes")
+                        onToggled: PersonalizationConfig.setKeystoneNumLockOsd(checked)
+                    }
+                }
+            }
+
+            KeystoneSection {
                 title: qsTr("Keyhole")
                 iconName: "view_carousel"
 
