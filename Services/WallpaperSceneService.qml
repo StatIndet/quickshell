@@ -14,9 +14,8 @@ Singleton {
     property var lastFocusedHorizontalColumnByWorkspace: ({})
 
     function rememberFocusedWindow() {
-        const next = WallpaperMath.rememberFocusedHorizontalColumn(
-            root.lastFocusedHorizontalColumnByWorkspace,
-            Niri.focusedWindow);
+        const next = WallpaperMath.rememberFocusedHorizontalColumn(root.lastFocusedHorizontalColumnByWorkspace,
+                                                                   Niri.focusedWindow);
         if (next !== root.lastFocusedHorizontalColumnByWorkspace)
             root.lastFocusedHorizontalColumnByWorkspace = next;
     }
@@ -28,19 +27,15 @@ Singleton {
 
         root.rememberFocusedWindow();
         const workspaceKey = String(workspaceId);
-        let preferred = Number(
-            root.lastFocusedHorizontalColumnByWorkspace[workspaceKey]);
+        let preferred = Number(root.lastFocusedHorizontalColumnByWorkspace[workspaceKey]);
         if (!isFinite(preferred) || preferred <= 0) {
-            const activeWindow = Niri.windowById(
-                workspace.activeWindowId || 0);
+            const activeWindow = Niri.windowById(workspace.activeWindowId || 0);
             if (WallpaperMath.isHorizontalTiledWindow(activeWindow))
                 preferred = Number(activeWindow.layoutColumn);
         }
 
-        const resolved = WallpaperMath.nearestHorizontalColumn(
-            columns, preferred);
-        if (Number(root.lastFocusedHorizontalColumnByWorkspace[workspaceKey])
-                !== resolved) {
+        const resolved = WallpaperMath.nearestHorizontalColumn(columns, preferred);
+        if (Number(root.lastFocusedHorizontalColumnByWorkspace[workspaceKey]) !== resolved) {
             const next = {};
             for (let key in root.lastFocusedHorizontalColumnByWorkspace)
                 next[key] = root.lastFocusedHorizontalColumnByWorkspace[key];
@@ -63,8 +58,8 @@ Singleton {
         if (root.scenes[key])
             return root.scenes[key];
         const scene = sceneComponent.createObject(root, {
-            "screenName": key
-        });
+                                                      "screenName": key
+                                                  });
         if (!scene)
             return null;
         const next = {};
@@ -102,138 +97,104 @@ Singleton {
             property int serviceRevision: WallpaperService.revision
             property int settingsRevision: WallpaperService.settingsRevision
 
-            readonly property string sourcePath:
-                serviceRevision >= 0
-                    ? WallpaperService.wallpaperForScreen(screenName) : ""
-            readonly property string fillModeName:
-                settingsRevision >= 0
-                    ? WallpaperService.fillModeForScreen(screenName) : "Fill"
-            readonly property int fillMode:
-                WallpaperService.qtFillMode(fillModeName)
-            readonly property bool sourceIsColor:
-                WallpaperService.isColorSource(sourcePath)
-            readonly property bool externalBackend:
-                AwwwWallpaperService.effectiveBackend === "awww"
-            readonly property bool panoramaSelected:
-                fillModeName === "panorama" && !externalBackend
-            readonly property bool hasHorizontalDriver:
-                PersonalizationConfig.parallaxFollowTiledColumns
-                || PersonalizationConfig.parallaxFollowSidebars
-            readonly property bool hasVerticalDriver:
-                PersonalizationConfig.parallaxVerticalEnabled
-                && PersonalizationConfig.parallaxFollowWorkspaces
-            readonly property bool parallaxRequested:
-                hasHorizontalDriver || hasVerticalDriver
-            readonly property bool parallaxSupported:
-                !externalBackend && WallpaperMath.supportsParallaxCanvas(
-                    !panoramaSelected
-                        && fillMode === Image.PreserveAspectCrop,
-                    sourcePath,
-                    sourceIsColor)
-            readonly property bool manualParallaxActive:
-                parallaxRequested && parallaxSupported
-            readonly property real preferredScale:
-                panoramaSelected
-                    ? 1
-                    : manualParallaxActive
-                    ? PersonalizationConfig.parallaxPreferredScale : 1
-            readonly property var panoramaGeometry:
-                WallpaperMath.panoramaGeometry(
-                    screenWidth,
-                    screenHeight,
-                    imagePixelWidth,
-                    imagePixelHeight,
-                    panoramaSelected && !sourceIsColor)
-            readonly property var parallaxCanvas:
-                WallpaperMath.parallaxCanvasGeometry(
-                    screenWidth,
-                    screenHeight,
-                    preferredScale,
-                    manualParallaxActive)
-            readonly property var canvasGeometry:
-                panoramaGeometry.active
-                    ? panoramaGeometry : ({
-                        scale: parallaxCanvas.scale,
-                        canvasWidth: parallaxCanvas.scaledWidth,
-                        canvasHeight: parallaxCanvas.scaledHeight,
-                        overflowX: parallaxCanvas.overflowX,
-                        overflowY: parallaxCanvas.overflowY
-                    })
-            readonly property real canvasWidth:
-                Math.max(1, canvasGeometry.canvasWidth
-                    || parallaxCanvas.scaledWidth)
-            readonly property real canvasHeight:
-                Math.max(1, canvasGeometry.canvasHeight
-                    || parallaxCanvas.scaledHeight)
-            readonly property bool analysisGeometryReady:
-                sourceIsColor
-                || (imagePixelWidth > 1 && imagePixelHeight > 1
-                    && isFinite(canvasWidth) && isFinite(canvasHeight)
-                    && canvasWidth >= 1 && canvasHeight >= 1)
-            readonly property real overflowX:
-                Math.max(0, canvasWidth - Math.max(1, screenWidth))
-            readonly property real overflowY:
-                Math.max(0, canvasHeight - Math.max(1, screenHeight))
+            readonly property string sourcePath: serviceRevision >= 0 ? WallpaperService.wallpaperForScreen(
+                                                                            screenName) : ""
+            readonly property string fillModeName: settingsRevision >= 0 ? WallpaperService.fillModeForScreen(
+                                                                               screenName) : "Fill"
+            readonly property int fillMode: WallpaperService.qtFillMode(fillModeName)
+            readonly property bool sourceIsColor: !WallpaperService.isImagePath(sourcePath)
+            readonly property bool externalBackend: AwwwWallpaperService.effectiveBackend === "awww"
+            readonly property bool panoramaSelected: fillModeName === "panorama" && !externalBackend
+            readonly property bool hasHorizontalDriver: PersonalizationConfig.parallaxFollowTiledColumns
+                                                        || PersonalizationConfig.parallaxFollowSidebars
+            readonly property bool hasVerticalDriver: PersonalizationConfig.parallaxVerticalEnabled
+                                                      && PersonalizationConfig.parallaxFollowWorkspaces
+            readonly property bool parallaxRequested: hasHorizontalDriver || hasVerticalDriver
+            readonly property bool parallaxSupported: !externalBackend && WallpaperMath.supportsParallaxCanvas(
+                                                          !panoramaSelected && fillMode
+                                                          === Image.PreserveAspectCrop, sourcePath,
+                                                          sourceIsColor)
+            readonly property bool manualParallaxActive: parallaxRequested && parallaxSupported
+            readonly property real preferredScale: panoramaSelected ? 1 : manualParallaxActive
+                                                                      ? PersonalizationConfig.parallaxPreferredScale :
+                                                                        1
+            readonly property var panoramaGeometry: WallpaperMath.panoramaGeometry(screenWidth, screenHeight,
+                                                                                   imagePixelWidth,
+                                                                                   imagePixelHeight,
+                                                                                   panoramaSelected &&
+                                                                                   !sourceIsColor)
+            readonly property var parallaxCanvas: WallpaperMath.parallaxCanvasGeometry(screenWidth,
+                                                                                       screenHeight,
+                                                                                       preferredScale,
+                                                                                       manualParallaxActive)
+            readonly property var canvasGeometry: panoramaGeometry.active ? panoramaGeometry : ({
+                                                                                                    scale: parallaxCanvas.scale,
+                                                                                                    canvasWidth:
+                                                                                                    parallaxCanvas.scaledWidth,
+                                                                                                    canvasHeight:
+                                                                                                    parallaxCanvas.scaledHeight,
+                                                                                                    overflowX:
+                                                                                                    parallaxCanvas.overflowX,
+                                                                                                    overflowY:
+                                                                                                    parallaxCanvas.overflowY
+                                                                                                })
+            readonly property real canvasWidth: Math.max(1, canvasGeometry.canvasWidth
+                                                         || parallaxCanvas.scaledWidth)
+            readonly property real canvasHeight: Math.max(1, canvasGeometry.canvasHeight
+                                                          || parallaxCanvas.scaledHeight)
+            readonly property bool analysisGeometryReady: sourceIsColor || (imagePixelWidth > 1
+                                                                            && imagePixelHeight > 1
+                                                                            && isFinite(canvasWidth)
+                                                                            && isFinite(canvasHeight)
+                                                                            && canvasWidth >= 1
+                                                                            && canvasHeight >= 1)
+            readonly property real overflowX: Math.max(0, canvasWidth - Math.max(1, screenWidth))
+            readonly property real overflowY: Math.max(0, canvasHeight - Math.max(1, screenHeight))
             readonly property real tiledProgress: {
                 if (!PersonalizationConfig.parallaxFollowTiledColumns)
                     return 0.5;
-                return WallpaperMath.focusedColumnProgress(
-                    horizontalColumns,
-                    focusedHorizontalColumn,
-                    PersonalizationConfig.parallaxTiledColumnSpan);
+                return WallpaperMath.focusedColumnProgress(horizontalColumns, focusedHorizontalColumn,
+                                                           PersonalizationConfig.parallaxTiledColumnSpan);
             }
-            readonly property bool leftSidebarOnThisScreen:
-                WidgetState.leftSidebarOpen
-                && Brightness.activeScreen
-                && Brightness.activeScreen.name === screenName
-            readonly property string rightSidebarScreenName:
-                WidgetState.qsScreenName !== ""
-                    ? WidgetState.qsScreenName
-                    : (Brightness.activeScreen
-                        ? Brightness.activeScreen.name : "")
-            readonly property bool rightSidebarOnThisScreen:
-                WidgetState.qsOpen
-                && rightSidebarScreenName === screenName
-            readonly property real sidebarStep:
-                PersonalizationConfig.parallaxPreferredScale
-                / Math.max(2,
-                    PersonalizationConfig.parallaxTiledColumnSpan)
-                / 2
-            readonly property real horizontalProgress:
-                WallpaperMath.horizontalProgress(
-                    tiledProgress,
-                    PersonalizationConfig.parallaxFollowSidebars
-                        && leftSidebarOnThisScreen,
-                    PersonalizationConfig.parallaxFollowSidebars
-                        && rightSidebarOnThisScreen,
-                    sidebarStep)
+            readonly property bool leftSidebarOnThisScreen: WidgetState.leftSidebarOpen
+                                                            && Brightness.activeScreen
+                                                            && Brightness.activeScreen.name === screenName
+            readonly property string rightSidebarScreenName: WidgetState.qsScreenName !== ""
+                                                             ? WidgetState.qsScreenName : (
+                                                                   Brightness.activeScreen
+                                                                   ? Brightness.activeScreen.name : "")
+            readonly property bool rightSidebarOnThisScreen: WidgetState.qsOpen && rightSidebarScreenName
+                                                             === screenName
+            readonly property real sidebarStep: PersonalizationConfig.parallaxPreferredScale / Math.max(2,
+                                                                                                        PersonalizationConfig.parallaxTiledColumnSpan)
+                                                / 2
+            readonly property real horizontalProgress: WallpaperMath.horizontalProgress(tiledProgress,
+                                                                                        PersonalizationConfig.parallaxFollowSidebars
+                                                                                        && leftSidebarOnThisScreen,
+                                                                                        PersonalizationConfig.parallaxFollowSidebars
+                                                                                        && rightSidebarOnThisScreen,
+                                                                                        sidebarStep)
             property real panoramaHorizontalProgress: horizontalProgress
             readonly property real verticalProgress: {
-                if (!PersonalizationConfig.parallaxVerticalEnabled
-                        || !PersonalizationConfig
-                            .parallaxFollowWorkspaces)
+                if (!PersonalizationConfig.parallaxVerticalEnabled ||
+                        !PersonalizationConfig.parallaxFollowWorkspaces)
                     return 0.5;
                 return WallpaperMath.workspaceProgress(outputWorkspaces);
             }
-            readonly property real offsetX:
-                WallpaperMath.wallpaperPosition(
-                    overflowX,
-                    panoramaSelected
-                        ? panoramaHorizontalProgress : horizontalProgress)
-            readonly property real offsetY:
-                WallpaperMath.wallpaperPosition(overflowY, verticalProgress)
+            readonly property real offsetX: WallpaperMath.wallpaperPosition(overflowX, panoramaSelected
+                                                                            ? panoramaHorizontalProgress :
+                                                                              horizontalProgress)
+            readonly property real offsetY: WallpaperMath.wallpaperPosition(overflowY, verticalProgress)
             // These are the only animated screen transforms.  Wallpaper and
             // DesktopCardCanvas both consume them, so parallax never gives
             // the two surfaces separate easing timelines.
             property real animatedOffsetX: offsetX
             property real animatedOffsetY: offsetY
-            readonly property string analysisKey:
-                sourcePath + "|revision=" + serviceRevision + "|"
-                + fillModeName + "|"
-                + Math.round(canvasWidth) + "x" + Math.round(canvasHeight)
-                + "|" + Math.round(imagePixelWidth) + "x"
-                + Math.round(imagePixelHeight) + "|"
-                + (externalBackend ? "external" : "clavis")
+            readonly property string analysisKey: sourcePath + "|revision=" + serviceRevision + "|"
+                                                  + fillModeName + "|" + Math.round(canvasWidth) + "x"
+                                                  + Math.round(canvasHeight) + "|" + Math.round(
+                                                      imagePixelWidth) + "x" + Math.round(imagePixelHeight)
+                                                  + "|" + (externalBackend ? "external" : "clavis")
 
             Behavior on animatedOffsetX {
                 NumberAnimation {
@@ -250,53 +211,45 @@ Singleton {
             }
 
             function wallpaperToScreen(x, y) {
-                return { x: Number(x) + scene.animatedOffsetX,
-                    y: Number(y) + scene.animatedOffsetY };
+                return {
+                    x: Number(x) + scene.animatedOffsetX,
+                    y: Number(y) + scene.animatedOffsetY
+                };
             }
 
             function screenToWallpaper(x, y) {
-                return { x: Number(x) - scene.animatedOffsetX,
-                    y: Number(y) - scene.animatedOffsetY };
+                return {
+                    x: Number(x) - scene.animatedOffsetX,
+                    y: Number(y) - scene.animatedOffsetY
+                };
             }
 
             function normalizedToWallpaper(xNorm, yNorm) {
                 const normalizedX = Number(xNorm);
                 const normalizedY = Number(yNorm);
                 return {
-                    x: Math.max(0, Math.min(1,
-                        isFinite(normalizedX) ? normalizedX : 0.5))
-                        * scene.canvasWidth,
-                    y: Math.max(0, Math.min(1,
-                        isFinite(normalizedY) ? normalizedY : 0.5))
-                        * scene.canvasHeight
+                    x: Math.max(0, Math.min(1, isFinite(normalizedX) ? normalizedX : 0.5)) * scene.canvasWidth,
+                    y: Math.max(0, Math.min(1, isFinite(normalizedY) ? normalizedY : 0.5))
+                       * scene.canvasHeight
                 };
             }
 
             function wallpaperToNormalized(x, y) {
                 return {
-                    xNorm: Math.max(0, Math.min(1,
-                        Number(x) / Math.max(1, scene.canvasWidth))),
-                    yNorm: Math.max(0, Math.min(1,
-                        Number(y) / Math.max(1, scene.canvasHeight)))
+                    xNorm: Math.max(0, Math.min(1, Number(x) / Math.max(1, scene.canvasWidth))),
+                    yNorm: Math.max(0, Math.min(1, Number(y) / Math.max(1, scene.canvasHeight)))
                 };
             }
 
             function refreshNiriState() {
-                scene.outputWorkspaces =
-                    Niri.workspacesForOutput(scene.screenName);
-                scene.activeWorkspace =
-                    Niri.activeWorkspaceForOutput(scene.screenName);
-                const workspaceId = scene.activeWorkspace
-                    && scene.activeWorkspace.id
-                    ? scene.activeWorkspace.id : 0;
-                const windows = workspaceId
-                    ? Niri.windowsForWorkspace(workspaceId) : [];
-                scene.horizontalColumns =
-                    WallpaperMath.horizontalColumns(windows);
-                scene.focusedHorizontalColumn =
-                    root.resolveHorizontalColumn(
-                        scene.activeWorkspace,
-                        scene.horizontalColumns);
+                scene.outputWorkspaces = Niri.workspacesForOutput(scene.screenName);
+                scene.activeWorkspace = Niri.activeWorkspaceForOutput(scene.screenName);
+                const workspaceId = scene.activeWorkspace && scene.activeWorkspace.id
+                      ? scene.activeWorkspace.id : 0;
+                const windows = workspaceId ? Niri.windowsForWorkspace(workspaceId) : [];
+                scene.horizontalColumns = WallpaperMath.horizontalColumns(windows);
+                scene.focusedHorizontalColumn = root.resolveHorizontalColumn(scene.activeWorkspace,
+                                                                             scene.horizontalColumns);
             }
 
             Component.onCompleted: scene.refreshNiriState()
@@ -306,8 +259,14 @@ Singleton {
     Connections {
         target: Niri
 
-        function onWorkspacesChanged() { root.refreshAllScenes(); }
-        function onWindowsChanged() { root.refreshAllScenes(); }
-        function onOutputsChanged() { root.refreshAllScenes(); }
+        function onWorkspacesChanged() {
+            root.refreshAllScenes();
+        }
+        function onWindowsChanged() {
+            root.refreshAllScenes();
+        }
+        function onOutputsChanged() {
+            root.refreshAllScenes();
+        }
     }
 }

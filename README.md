@@ -145,6 +145,7 @@ explicit migration, never part of routine checks.
 Clavis takes inspiration from and integrates ideas or components from projects including:
 
 - [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland)
+- [Zen Browser](https://github.com/zen-browser/desktop) — palette algorithms and editor; see [source and license mapping](licenses/README.md).
 - [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell)
 - [Caelestia Shell](https://github.com/caelestia-dots/shell)
 - [qml-niri](https://github.com/imiric/qml-niri)

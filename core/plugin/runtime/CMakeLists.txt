@@ -25,3 +25,9 @@ target_link_libraries(ClavisRuntime PRIVATE
     Qt6::Core
     Qt6::Qml
 )
+
+qt_add_shaders(ClavisRuntime "clavis_palette_shaders"
+    PREFIX "/clavis/shaders"
+    BASE "${CLAVIS_SOURCE_ROOT}/assets/shaders"
+    FILES "${CLAVIS_SOURCE_ROOT}/assets/shaders/zen-palette.frag"
+)

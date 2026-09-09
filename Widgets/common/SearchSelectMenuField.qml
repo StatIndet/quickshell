@@ -15,6 +15,7 @@ FocusScope {
     property int maxVisibleItems: 10
     property string textRole: "label"
     property string valueRole: "value"
+    property bool forbiddenDisabledCursor: false
     property string enabledRole: "enabled"
     property string tooltipRole: "tooltip"
     property bool closeOnAccept: false
@@ -710,6 +711,9 @@ FocusScope {
 
                             HoverHandler {
                                 id: optionHover
+                                cursorShape: root.forbiddenDisabledCursor && !optionItem.itemEnabled
+                                             ? Qt.ForbiddenCursor : (optionItem.itemEnabled
+                                                                     ? Qt.PointingHandCursor : Qt.ArrowCursor)
                                 enabled: optionItem.tooltipText !== ""
                             }
 

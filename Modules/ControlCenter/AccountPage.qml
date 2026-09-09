@@ -642,8 +642,8 @@ Item {
                                         id: wallpaperImage
 
                                         anchors.fill: parent
-                                        source: WallpaperService.isColorSource(wallpaperChoice.modelData)
-                                                ? "" : Paths.fileUrl(wallpaperChoice.modelData)
+                                        source: WallpaperService.isImagePath(wallpaperChoice.modelData)
+                                                ? Paths.fileUrl(wallpaperChoice.modelData) : ""
                                         sourceSize: Qt.size(Math.max(1, Math.ceil(width
                                                                                   * Screen.devicePixelRatio
                                                                                   * 2)), Math.max(1, Math.ceil(

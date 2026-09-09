@@ -1,3 +1,5 @@
+.import "WallpaperSource.js" as WallpaperSource
+
 function clamp(value, fallback, minimum, maximum) {
     const numberValue = Number(value);
     if (!isFinite(numberValue))
@@ -91,15 +93,6 @@ function bezier(curve) {
     return normalizedBezier(curve).join(",");
 }
 
-function isColorSource(source) {
-    return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/
-        .test(String(source || ""));
-}
-
-function colorValue(source) {
-    return String(source || "").substring(1).toLowerCase();
-}
-
 function transition(value) {
     const supported = [
         "none", "simple", "fade", "left", "right", "top",
@@ -166,6 +159,7 @@ function supportsStep(transitionType) {
 
 function image(commandPath, namespaceName, outputName, source,
                fillMode, options) {
+    if (!WallpaperSource.isImage(source)) return [];
     const settings = options || {};
     const transitionType = transition(settings.type);
     const args = [String(commandPath || "awww"), "img"]
@@ -211,23 +205,11 @@ function image(commandPath, namespaceName, outputName, source,
             String(settings.wave || "20,20"));
     }
 
-    args.push("--", String(source || ""));
+    args.push("--", WallpaperSource.localPath(source));
     return args;
 }
 
-function clear(commandPath, namespaceName, outputName, source) {
-    const args = [String(commandPath || "awww"), "clear"]
-        .concat(namespaceArgs(namespaceName));
-    if (outputName)
-        args.push("-o", String(outputName));
-    args.push(colorValue(source));
-    return args;
-}
-
-function apply(commandPath, namespaceName, outputName, source,
-               fillMode, options) {
-    if (isColorSource(source))
-        return clear(commandPath, namespaceName, outputName, source);
-    return image(commandPath, namespaceName, outputName, source,
-        fillMode, options);
+function apply(commandPath, namespaceName, outputName, source, fillMode, options) {
+    if (!WallpaperSource.isImage(source)) return [];
+    return image(commandPath, namespaceName, outputName, WallpaperSource.localPath(source), fillMode, options);
 }

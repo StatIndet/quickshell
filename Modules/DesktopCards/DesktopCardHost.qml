@@ -41,19 +41,28 @@ Variants {
         property string layoutRequestReason: ""
         property string layoutPriorityId: ""
         readonly property string analysisRequestKey: "desktop-cards:" + String(modelData.name)
-        readonly property bool ownsPresentationDrag: SystemCardDragSession.presentationActive && SystemCardDragSession.screenName === window.screenKey
+        readonly property bool ownsPresentationDrag: SystemCardDragSession.presentationActive
+                                                     && SystemCardDragSession.screenName === window.screenKey
 
         function requestAnalysis() {
-            if (!window.scene || window.analysisKey === "" || !SystemCardService.isWallpaperLayoutMode(window.layoutMode) || window.desktopIds.length === 0 || !window.scene.analysisGeometryReady)
-                return ;
+            if (!window.scene || window.analysisKey === "" || !SystemCardService.isWallpaperLayoutMode(
+                        window.layoutMode) || window.desktopIds.length === 0 ||
+                    !window.scene.analysisGeometryReady)
+                return;
 
             if (window.requestedAnalysisKey === window.analysisKey)
-                return ;
+                return;
 
             window.analysis = null;
             window.requestedAnalysisKey = window.analysisKey;
             window.analysisGeneration += 1;
-            WallpaperAnalyzer.request(window.analysisRequestKey, window.analysisGeneration, window.scene.sourcePath, Math.round(window.scene.canvasWidth), Math.round(window.scene.canvasHeight), window.scene.panoramaSelected ? "panorama" : window.scene.fillModeName, Math.round(window.scene.imagePixelWidth), Math.round(window.scene.imagePixelHeight));
+            WallpaperAnalyzer.request(window.analysisRequestKey, window.analysisGeneration, (
+                                          WallpaperService.isImagePath(window.scene.sourcePath)
+                                          ? window.scene.sourcePath : ""), Math.round(
+                                          window.scene.canvasWidth), Math.round(window.scene.canvasHeight),
+                                      window.scene.panoramaSelected ? "panorama" : window.scene.fillModeName,
+                                      Math.round(window.scene.imagePixelWidth), Math.round(
+                                          window.scene.imagePixelHeight));
         }
 
         function scheduleDesktopLayout(reason, priorityId) {
@@ -62,10 +71,10 @@ Variants {
                 window.layoutPriorityId = String(priorityId || "");
 
             if (window.layoutScheduled)
-                return ;
+                return;
 
             window.layoutScheduled = true;
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 window.layoutScheduled = false;
                 const requestReason = window.layoutRequestReason;
                 window.layoutRequestReason = "";
@@ -74,11 +83,12 @@ Variants {
         }
 
         function layoutBlocked() {
-            return !cardCanvas.allActiveCardsPresented || cardCanvas.screenTransitionActive || cardCanvas.anyCardDragging || SystemCardDragSession.visualHandoffPending;
+            return !cardCanvas.allActiveCardsPresented || cardCanvas.screenTransitionActive
+                    || cardCanvas.anyCardDragging || SystemCardDragSession.visualHandoffPending;
         }
 
         function normalizedScreenPlacements(rects) {
-            return (Array.isArray(rects) ? rects : []).map(function(rect) {
+            return (Array.isArray(rects) ? rects : []).map(function (rect) {
                 const point = Placement.normalizedPosition(rect.x, rect.y, window.width, window.height);
                 return {
                     "id": String(rect.id),
@@ -118,12 +128,12 @@ Variants {
                 window.analysis = null;
                 window.requestedAnalysisKey = "";
                 window.runFreeCollisionLayout();
-                return ;
+                return;
             }
             window.layoutPriorityId = "";
             if (SystemCardService.isScreenLayoutMode(mode)) {
                 window.runScreenLayout();
-                return ;
+                return;
             }
             if (SystemCardService.isWallpaperLayoutMode(mode)) {
                 window.requestAnalysis();
@@ -134,35 +144,37 @@ Variants {
         function cardDescriptors(space) {
             const result = [];
             const coordinateSpace = String(space || "wallpaper");
-            window.desktopIds.forEach(function(id) {
+            window.desktopIds.forEach(function (id) {
                 const state = SystemCardService.card(id);
                 if (!state || !state.desktop)
-                    return ;
+                    return;
 
                 const size = SystemCardService.cardSize(id);
                 result.push({
-                    "id": id,
-                    "width": size.width,
-                    "height": size.height,
-                    "xNorm": state.desktop[coordinateSpace].xNorm,
-                    "yNorm": state.desktop[coordinateSpace].yNorm
-                });
+                                "id": id,
+                                "width": size.width,
+                                "height": size.height,
+                                "xNorm": state.desktop[coordinateSpace].xNorm,
+                                "yNorm": state.desktop[coordinateSpace].yNorm
+                            });
             });
             return result;
         }
 
         function runWallpaperLayout() {
             const mode = SystemCardService.globalDesktopLayoutMode;
-            if (!window.scene || window.desktopIds.length === 0 || !SystemCardService.isWallpaperLayoutMode(mode) || !window.analysis)
-                return ;
+            if (!window.scene || window.desktopIds.length === 0 || !SystemCardService.isWallpaperLayoutMode(
+                        mode) || !window.analysis)
+                return;
 
             // Do not let a cached analysis result move a newly transferred
             // card before its first frame has been presented at the drop
             // point. This is a handoff barrier, not a visibility gate.
             if (window.layoutBlocked())
-                return ;
+                return;
 
-            const placements = DesktopCardLayout.solve(window.cardDescriptors(), window.scene.canvasWidth, window.scene.canvasHeight, window.analysis, mode);
+            const placements = DesktopCardLayout.solve(window.cardDescriptors(), window.scene.canvasWidth,
+                                                       window.scene.canvasHeight, window.analysis, mode);
             if (!DesktopCardLayout.hasNoOverlap(placements, 0))
                 console.warn("[DesktopCards] wallpaper solver produced overlap", mode, window.screenKey);
 
@@ -172,12 +184,14 @@ Variants {
 
         function runScreenLayout() {
             const mode = SystemCardService.globalDesktopLayoutMode;
-            if (!SystemCardService.isScreenLayoutMode(mode) || window.desktopIds.length === 0 || window.layoutBlocked())
-                return ;
+            if (!SystemCardService.isScreenLayoutMode(mode) || window.desktopIds.length === 0 || window.layoutBlocked(
+                        ))
+                return;
 
-            const placements = DesktopCardLayout.solveScreen(window.cardDescriptors("screen"), window.width, window.height, mode);
+            const placements = DesktopCardLayout.solveScreen(window.cardDescriptors("screen"), window.width,
+                                                             window.height, mode);
             if (placements.length === 0)
-                return ;
+                return;
 
             if (!DesktopCardLayout.hasNoOverlap(placements, 0))
                 console.warn("[DesktopCards] screen solver produced overlap", mode, window.screenKey);
@@ -186,7 +200,6 @@ Variants {
             SystemCardService.applyDesktopScreenLayout(placements);
             if (prepared)
                 cardCanvas.startScreenLayoutTransition();
-
         }
 
         screen: modelData
@@ -228,9 +241,10 @@ Variants {
         Component.onCompleted: {
             WallpaperSceneService.sceneFor(window.screenKey);
             DesktopPresentationService.registerHost(window.screenKey, viewport);
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 window.lastLayoutMode = window.layoutMode;
-                if (SystemCardService.isFreeLayoutMode(window.layoutMode) || SystemCardService.isScreenLayoutMode(window.layoutMode))
+                if (SystemCardService.isFreeLayoutMode(window.layoutMode)
+                        || SystemCardService.isScreenLayoutMode(window.layoutMode))
                     cardCanvas.promoteCardsToScreen();
 
                 window.scheduleDesktopLayout("host-ready");
@@ -267,8 +281,13 @@ Variants {
         CompositorBlurRegion {
             targetWindow: window
             backgroundItem: cardCanvas.inputSlot0
-            additionalBackgroundItems: [cardCanvas.inputSlot1, cardCanvas.inputSlot2, cardCanvas.inputSlot3, cardCanvas.inputSlot4, cardCanvas.inputSlot5, cardCanvas.inputSlot6, cardCanvas.inputSlot7, cardCanvas.inputSlot8, cardCanvas.inputSlot9, cardCanvas.inputSlot10, presentationGhost]
-            subtractedBackgroundItems: cardCanvas.systemCardBlurExclusionItems.concat(window.ownsPresentationDrag && SystemCardService.cardExcludesHostBlur(SystemCardDragSession.tileId) ? [presentationGhost] : [])
+            additionalBackgroundItems: [cardCanvas.inputSlot1, cardCanvas.inputSlot2, cardCanvas.inputSlot3,
+                cardCanvas.inputSlot4, cardCanvas.inputSlot5, cardCanvas.inputSlot6, cardCanvas.inputSlot7,
+                cardCanvas.inputSlot8, cardCanvas.inputSlot9, cardCanvas.inputSlot10, presentationGhost]
+            subtractedBackgroundItems: cardCanvas.systemCardBlurExclusionItems.concat(
+                                           window.ownsPresentationDrag
+                                           && SystemCardService.cardExcludesHostBlur(
+                                               SystemCardDragSession.tileId) ? [presentationGhost] : [])
             radius: Appearance.rounding.extraLarge
         }
 
@@ -319,27 +338,28 @@ Variants {
                     active: presentationGhost.visible
                     useShellManagedSurface: true
                 }
-
             }
-
         }
 
         Connections {
             function onAnalysisReady(requestKey, generation, result) {
                 if (requestKey !== window.analysisRequestKey || generation !== window.analysisGeneration)
-                    return ;
+                    return;
 
                 window.analysis = result || ({
-                    "valid": false
-                });
+                                                 "valid": false
+                                             });
                 if (!result || !result.valid) {
-                    console.warn("[DesktopCards] analysis failed path=" + String(window.scene ? window.scene.sourcePath : "") + " reason=" + String(result ? result.errorString : "no-result"));
+                    console.warn("[DesktopCards] analysis failed path=" + String(window.scene
+                                                                                 ? window.scene.sourcePath :
+                                                                                   "") + " reason=" + String(
+                                     result ? result.errorString : "no-result"));
                     // The solver treats an invalid analysis as a uniform
                     // busy map and still supplies a deterministic,
                     // collision-free wallpaper placement. Analysis failure
                     // must not leave an automatic card in screen space.
                     window.scheduleDesktopLayout("analysis-failed");
-                    return ;
+                    return;
                 }
                 window.scheduleDesktopLayout("analysis-ready");
             }
@@ -375,7 +395,6 @@ Variants {
             function onHandoffReady(tileId) {
                 if (SystemCardDragSession.completeVisualHandoff(tileId))
                     window.scheduleDesktopLayout("handoff-complete");
-
             }
 
             function onScreenTransitionsFinished() {
@@ -385,19 +404,16 @@ Variants {
             function onAllActiveCardsPresentedChanged() {
                 if (cardCanvas.allActiveCardsPresented)
                     window.scheduleDesktopLayout("delegates-presented");
-
             }
 
             function onAnyCardDraggingChanged() {
                 if (!cardCanvas.anyCardDragging)
                     window.scheduleDesktopLayout("drag-finished");
-
             }
 
             function onScreenTransitionActiveChanged() {
                 if (!cardCanvas.screenTransitionActive)
                     window.scheduleDesktopLayout("transition-unblocked");
-
             }
 
             target: cardCanvas
@@ -407,7 +423,6 @@ Variants {
             function onVisualHandoffPendingChanged() {
                 if (!SystemCardDragSession.visualHandoffPending)
                     window.scheduleDesktopLayout("handoff-unblocked");
-
             }
 
             target: SystemCardDragSession
@@ -477,9 +492,6 @@ Variants {
             Region {
                 item: PopupInputRegionService.itemForWindow(window)
             }
-
         }
-
     }
-
 }

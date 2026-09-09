@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import "../Common/functions/WallpaperSource.js" as WallpaperSource
 import qs.Services
 
 Singleton {
@@ -770,6 +771,8 @@ Singleton {
     }
 
     function setDesktopWallpaperBackend(value) {
+        if (value === "awww" && !WallpaperService.canUseAwww)
+            return;
         setValue("desktopWallpaperBackend", value === "awww" ? "awww" : "quickshell");
     }
 
@@ -1785,6 +1788,65 @@ Singleton {
                 !== root.normalizedEdgePosition(bar.position) || !keystone || typeof keystone !== "object"
                 || Array.isArray(keystone) || keystone.position !== root.normalizedEdgePosition(
                     keystone.position);
+    }
+
+    function commitPalette(scope, source) {
+        if (!scope || ["desktop", "overview"].indexOf(scope.target) < 0 || ["path", "pathLight",
+                                                                            "pathDark"].indexOf(scope.field)
+                < 0 || (scope.target === "desktop" && root.desktopWallpaperBackend === "awww") || !root.storeReady
+                || root.loading || !WallpaperSource.decode(source))
+            return false;
+        const candidate = JSON.parse(JSON.stringify(root.toJson()));
+        const section = scope.target === "overview" ? candidate.wallpaper.overview : candidate.wallpaper;
+        if (scope.monitor)
+            section.monitorWallpapers[scope.monitor] = source;
+        else
+            section[scope.field] = source;
+        const seed = WallpaperSource.primary(source);
+        candidate.wallpaper.recentColors = root.normalizedRecentColors([seed].concat(
+                                                                           root.recentWallpaperColors));
+        // FileView suppresses identical setText() calls even after failure.
+        // A fresh writer makes the same draft retryable without reloading or
+        // mutating the formal configuration on a failed Save.
+        const writer = paletteWriterComponent.createObject(root, {
+                                                               path: root.filePath
+                                                           });
+        if (!writer)
+            return false;
+        writer.setText(JSON.stringify(candidate, null, 2));
+        writer.waitForJob();
+        const saved = writer.succeeded;
+        writer.destroy();
+        if (!saved)
+            return false;
+        // Publish only after the atomic write succeeded. No normal setters,
+        // extra writes, or theme generation are involved in this operation.
+        if (scope.monitor) {
+            const propertyName = scope.target === "overview" ? "overviewMonitorWallpapers" :
+                                                               "monitorWallpapers";
+            const next = root.cloneMap(root[propertyName]);
+            next[scope.monitor] = source;
+            root[propertyName] = next;
+        } else {
+            const propertyName = scope.target === "overview" ? "overviewWallpaperPath" : scope.field
+                                                               === "pathLight" ? "wallpaperPathLight" :
+                                                                                 scope.field === "pathDark"
+                                                                                 ? "wallpaperPathDark" :
+                                                                                   "wallpaperPath";
+            root[propertyName] = source;
+        }
+        root.recentWallpaperColors = candidate.wallpaper.recentColors;
+        return true;
+    }
+
+    Component {
+        id: paletteWriterComponent
+        FileView {
+            property bool succeeded: false
+            blockWrites: true
+            atomicWrites: true
+            onSaved: succeeded = true
+        }
     }
 
     function save() {

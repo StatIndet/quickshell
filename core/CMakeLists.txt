@@ -135,3 +135,8 @@ install(
     FILES "${CLAVIS_SOURCE_ROOT}/packaging/systemd/user/clavis-shell.service"
     DESTINATION "${CLAVIS_SYSTEMD_USER_INSTALL_DIR}"
 )
+
+install(DIRECTORY "${CLAVIS_SOURCE_ROOT}/licenses/"
+    DESTINATION "${CLAVIS_CONFIG_INSTALL_DIR}/licenses")
+install(FILES "${CLAVIS_SOURCE_ROOT}/LICENSE"
+    DESTINATION "${CLAVIS_CONFIG_INSTALL_DIR}")

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Services
+import "../Common/functions/WallpaperSource.js" as WallpaperSource
 
 Singleton {
     id: root
@@ -16,6 +17,7 @@ Singleton {
     property int revision: 0
     property int settingsRevision: 0
     property string pendingCycleAction: ""
+    property bool pendingCycleAutomatic: false
     property string pendingWallpaperPath: ""
     property string pendingWallpaperScreen: ""
     property bool scanRequested: false
@@ -47,6 +49,8 @@ Singleton {
         if (!path)
             return "";
         const value = String(path);
+        if (WallpaperSource.kind(value) === "palette")
+            return qsTr("Palette wallpaper");
         if (root.isColorSource(value))
             return qsTr("Solid-color wallpaper ") + value;
         return value.substring(value.lastIndexOf("/") + 1);
@@ -59,30 +63,30 @@ Singleton {
     }
 
     function normalizedPath(value) {
-        const path = String(value || "").trim();
-        if (!path.startsWith("file://"))
-            return path;
-        let localPath = path.substring("file://".length);
-        if (localPath.startsWith("localhost/"))
-            localPath = localPath.substring("localhost".length);
-        try {
-            return decodeURIComponent(localPath);
-        } catch (error) {
-            return localPath;
-        }
+        return WallpaperSource.localPath(value);
     }
 
     function isColorSource(value) {
-        return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(String(value || ""));
+        return WallpaperSource.isSolid(value);
     }
-
-    function isImagePath(path) {
-        const lower = String(path || "").toLowerCase();
-        for (let i = 0; i < root.imageExtensions.length; i += 1) {
-            if (lower.endsWith("." + root.imageExtensions[i]))
-                return true;
-        }
-        return false;
+    function isImagePath(value) {
+        return WallpaperSource.isImage(value);
+    }
+    function sourceKind(value) {
+        return WallpaperSource.kind(value);
+    }
+    function primaryColor(value) {
+        return WallpaperSource.primary(value);
+    }
+    readonly property bool canUseAwww: {
+        const revision = root.revision;
+        const screens = Quickshell.screens;
+        if (!screens.length)
+            return WallpaperSource.isImage(root.wallpaperForScreen(""));
+        for (let i = 0; i < screens.length; ++i)
+            if (!WallpaperSource.isImage(root.wallpaperForScreen(screens[i].name)))
+                return false;
+        return true;
     }
 
     function fillModeForScreen(screenName) {
@@ -260,7 +264,7 @@ Singleton {
     }
 
     function setWallpaper(path, screenName) {
-        if (!path || path === "" || (!root.isImagePath(path) && !root.isColorSource(path)))
+        if (!WallpaperSource.supported(path, PersonalizationConfig.desktopWallpaperBackend))
             return false;
 
         if (PersonalizationConfig.perMonitorWallpaper && screenName)
@@ -272,13 +276,13 @@ Singleton {
 
         root.currentWallpaper = path;
         root.rememberWallpaper(path);
-        Appearance.currentWallpaperPreview = root.isColorSource(path) ? path : Paths.fileUrl(path);
+        Appearance.currentWallpaperPreview = root.isImagePath(path) ? Paths.fileUrl(path) : path;
         root.switching = true;
 
         if (root.isImagePath(path))
             ThemeService.generateFromWallpaper(path);
-        else if (root.isColorSource(path))
-            ThemeService.generateFromColor(path);
+        else if (WallpaperSource.primary(path))
+            ThemeService.generateFromColor(WallpaperSource.primary(path));
         else
             root.switching = false;
 
@@ -342,6 +346,8 @@ Singleton {
     }
 
     function setDesktopWallpaperBackend(value) {
+        if (value === "awww" && !root.canUseAwww)
+            return false;
         PersonalizationConfig.setDesktopWallpaperBackend(value);
         return true;
     }
@@ -367,7 +373,7 @@ Singleton {
     }
 
     function setOverviewWallpaper(path, screenName) {
-        if (!path || (!root.isImagePath(path) && !root.isColorSource(path)))
+        if (!WallpaperSource.supported(path, "quickshell"))
             return false;
         if (screenName) {
             PersonalizationConfig.setOverviewMonitorWallpaper(screenName, path);
@@ -394,9 +400,12 @@ Singleton {
         return true;
     }
 
-    function cycle(action) {
+    function cycle(action, automatic) {
+        if (automatic && WallpaperPaletteSession.desktopActive)
+            return false;
         if (root.wallpapers.length === 0) {
             root.pendingCycleAction = action;
+            root.pendingCycleAutomatic = !!automatic;
             root.scan();
             return false;
         }
@@ -651,15 +660,17 @@ Singleton {
         id: cycleTimer
         interval: Math.max(5, PersonalizationConfig.autoCycleInterval) * 1000
         repeat: true
-        running: PersonalizationConfig.autoCycleEnabled && PersonalizationConfig.autoCycleMode === "interval"
-        onTriggered: root.cycleNext()
+        running: !WallpaperPaletteSession.desktopActive && PersonalizationConfig.autoCycleEnabled
+                 && PersonalizationConfig.autoCycleMode === "interval"
+        onTriggered: root.cycle("next", true)
     }
 
     Timer {
         id: dailyTimer
         interval: 30000
         repeat: true
-        running: PersonalizationConfig.autoCycleEnabled && PersonalizationConfig.autoCycleMode === "time"
+        running: !WallpaperPaletteSession.desktopActive && PersonalizationConfig.autoCycleEnabled
+                 && PersonalizationConfig.autoCycleMode === "time"
         property string lastTriggered: ""
         onTriggered: {
             const now = new Date();
@@ -667,7 +678,7 @@ Singleton {
             const current = ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2);
             if (current === PersonalizationConfig.autoCycleTime && lastTriggered !== stamp) {
                 lastTriggered = stamp;
-                root.cycleNext();
+                root.cycle("next", true);
             }
         }
     }
@@ -709,7 +720,9 @@ Singleton {
             if (root.pendingCycleAction !== "" && root.wallpapers.length > 0) {
                 const action = root.pendingCycleAction;
                 root.pendingCycleAction = "";
-                root.applyCycle(action);
+                if (!root.pendingCycleAutomatic || !WallpaperPaletteSession.desktopActive)
+                    root.applyCycle(action);
+                root.pendingCycleAutomatic = false;
             }
         }
     }

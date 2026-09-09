@@ -7,6 +7,7 @@ import QtQuick.Window
 import Quickshell
 import qs.Common
 import qs.Services
+import qs.Modules.Wallpaper
 import qs.Components
 import qs.Widgets.common
 
@@ -49,7 +50,7 @@ StyledFlickable {
     readonly property string currentOverviewPath: WallpaperService.overviewWallpaperForScreen(
                                                       selectedOverviewOutput)
     readonly property bool currentWallpaperIsColor: WallpaperService.isColorSource(currentWallpaperPath)
-    readonly property bool currentWallpaperIsImage: currentWallpaperPath !== "" && !currentWallpaperIsColor
+    readonly property bool currentWallpaperIsImage: WallpaperService.isImagePath(currentWallpaperPath)
     readonly property string currentDesktopFillMode: selectedDesktopOutput !== ""
                                                      ? PersonalizationConfig.monitorFillMode(
                                                            selectedDesktopOutput) :
@@ -75,8 +76,7 @@ StyledFlickable {
     }
 
     function chooseWallpaperColor() {
-        wallpaperColorPicker.showWithColor(root.currentWallpaperIsColor ? root.currentWallpaperPath :
-                                                                          Appearance.colors.colPrimary);
+        wallpaperColorPicker.showFor("desktop", root.selectedDesktopOutput);
     }
 
     function closeChildWindows() {
@@ -89,15 +89,13 @@ StyledFlickable {
 
     function chooseOverviewFile() {
         const source = root.currentOverviewPath;
-        const base = source !== "" && !WallpaperService.isColorSource(source) ? WallpaperService.parentFolder(
-                                                                                    source) : PersonalizationConfig.wallpaperFolder;
+        const base = WallpaperService.isImagePath(source) ? WallpaperService.parentFolder(source) :
+                                                            PersonalizationConfig.wallpaperFolder;
         overviewFileBrowser.openAt(base || PersonalizationConfig.wallpaperFolder);
     }
 
     function chooseOverviewColor() {
-        const source = root.currentOverviewPath;
-        overviewColorPicker.showWithColor(WallpaperService.isColorSource(source) ? source :
-                                                                                   Appearance.colors.colPrimary);
+        overviewColorPicker.showFor("overview", root.selectedOverviewOutput);
     }
 
     function desktopFillModeOptionEnabled(value, usesAwww) {
@@ -179,8 +177,10 @@ StyledFlickable {
 
         property string sourcePath: ""
         property bool actionsEnabled: true
+        property bool paletteEnabled: true
+        property string previewSource: ""
         readonly property bool sourceIsColor: WallpaperService.isColorSource(sourcePath)
-        readonly property bool sourceIsImage: sourcePath !== "" && !sourceIsColor
+        readonly property bool sourceIsImage: WallpaperService.isImagePath(sourcePath)
 
         signal chooseFile
         signal chooseColor
@@ -195,20 +195,10 @@ StyledFlickable {
             color: preview.sourceIsColor ? preview.sourcePath : Appearance.colors.colLayer2
         }
 
-        Image {
+        WallpaperImageViewport {
             anchors.fill: parent
             anchors.margins: 1
-            source: preview.sourceIsImage ? Paths.fileUrl(preview.sourcePath) : ""
-            sourceSize: Qt.size(Math.max(1, Math.ceil(width * Screen.devicePixelRatio * 2)), Math.max(1,
-                                                                                                      Math.ceil(
-                                                                                                          height * Screen.devicePixelRatio
-                                                                                                          * 2)))
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            cache: true
-            smooth: false
-            mipmap: false
-            visible: source !== ""
+            sourcePath: preview.previewSource || preview.sourcePath
             layer.enabled: true
             layer.effect: MultiEffect {
                 maskEnabled: true
@@ -268,9 +258,11 @@ StyledFlickable {
 
                 HoverActionButton {
                     iconName: "palette"
-                    tooltipText: qsTr("Choose color")
+                    tooltipText: preview.paletteEnabled ? qsTr("Choose color") : qsTr(
+                                                              "Color and gradient wallpapers require the Quickshell backend")
                     darkOverlay: true
-                    enabled: preview.actionsEnabled
+                    enabled: preview.actionsEnabled && preview.paletteEnabled
+                    disabledHoverFeedback: !preview.paletteEnabled
                     onClicked: preview.chooseColor()
                 }
 
@@ -358,6 +350,7 @@ StyledFlickable {
                 iconName: "display_settings"
 
                 headerTrailing: SearchSelectMenuField {
+                    forbiddenDisabledCursor: true
                     Layout.preferredWidth: 168
                     Layout.preferredHeight: Metrics.controlHeightM
                     options: [({
@@ -367,8 +360,12 @@ StyledFlickable {
                                }), ({
                                         "value": "awww",
                                         "label": "awww",
-                                        "enabled": AwwwWallpaperService.available,
-                                        "tooltip": AwwwWallpaperService.available ? "" :
+                                        "enabled": AwwwWallpaperService.available
+                                                   && WallpaperService.canUseAwww,
+                                        "tooltip": AwwwWallpaperService.available ? (
+                                                                                        WallpaperService.canUseAwww
+                                                                                        ? "" : qsTr(
+                                                                                              "Select an image wallpaper before switching to awww")) :
                                                                                     AwwwWallpaperService.probeComplete
                                                                                     ? qsTr("The awww or awww-daemon command is missing") :
                                                                                       qsTr("Detecting awww…")
@@ -404,6 +401,9 @@ StyledFlickable {
                         Layout.preferredWidth: 340
                         Layout.preferredHeight: 200
                         sourcePath: root.currentWallpaperPath
+                        paletteEnabled: !root.desktopUsesAwww
+                        previewSource: WallpaperPaletteSession.previewForScreen("desktop",
+                                                                                root.selectedDesktopOutput)
                         onChooseFile: root.chooseWallpaperFile()
                         onChooseColor: root.chooseWallpaperColor()
                         onClearWallpaper: WallpaperService.clearWallpaper(root.selectedDesktopOutput)
@@ -429,7 +429,9 @@ StyledFlickable {
 
                         Text {
                             Layout.fillWidth: true
-                            text: root.currentWallpaperPath
+                            text: WallpaperService.sourceKind(root.currentWallpaperPath) === "palette"
+                                  ? WallpaperService.primaryColor(root.currentWallpaperPath) :
+                                    root.currentWallpaperPath
                             color: Appearance.colors.colSubtext
                             font.family: Fonts.mono
                             font.pixelSize: 14
@@ -1000,6 +1002,8 @@ StyledFlickable {
                     Layout.preferredWidth: 300
                     Layout.preferredHeight: 176
                     sourcePath: root.currentOverviewPath
+                    previewSource: WallpaperPaletteSession.previewForScreen("overview",
+                                                                            root.selectedOverviewOutput)
                     actionsEnabled: !PersonalizationConfig.overviewUseDesktopWallpaper
                     onChooseFile: root.chooseOverviewFile()
                     onChooseColor: root.chooseOverviewColor()
@@ -1213,7 +1217,6 @@ StyledFlickable {
     WallpaperColorPicker {
         id: wallpaperColorPicker
         parentModal: root.parentModal
-        onColorSelected: color => WallpaperService.setWallpaper(color, root.selectedDesktopOutput)
     }
 
     WallpaperFileBrowser {
@@ -1226,7 +1229,6 @@ StyledFlickable {
     WallpaperColorPicker {
         id: overviewColorPicker
         parentModal: root.parentModal
-        onColorSelected: color => WallpaperService.setOverviewWallpaper(color, root.selectedOverviewOutput)
     }
 
     BezierCurveLayerEditor {

@@ -3,6 +3,8 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import qs.Common
 import qs.Components
+import qs.Modules.Wallpaper
+import "../../Common/functions/WallpaperSource.js" as Source
 
 Rectangle {
     id: root
@@ -30,8 +32,7 @@ Rectangle {
 
     property color surfaceColor: Appearance.m3colors.m3surfaceContainerHigh
     readonly property color profileSurfaceColor: surfaceColor
-    readonly property string wallpaperUrl: wallpaperPath !== "" && !colorWallpaper ? Paths.fileUrl(
-                                                                                         wallpaperPath) : ""
+    readonly property string wallpaperUrl: Source.isImage(wallpaperPath) ? Paths.fileUrl(wallpaperPath) : ""
 
     function distroLogo() {
         const logos = {
@@ -84,17 +85,12 @@ Rectangle {
             }
         }
 
-        Image {
+        WallpaperImageViewport {
             id: wallpaperImage
-
             anchors.fill: parent
-            source: root.wallpaperUrl
-            sourceSize: Qt.size(Math.max(1, width * 2), Math.max(1, height * 2))
-            fillMode: Image.PreserveAspectCrop
-            asynchronous: true
-            cache: false
-            smooth: true
+            sourcePath: root.wallpaperPath
             visible: false
+            layer.enabled: true
         }
 
         Rectangle {
@@ -115,7 +111,7 @@ Rectangle {
             maskSource: coverMask
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1
-            opacity: wallpaperImage.status === Image.Ready ? 1 : 0
+            opacity: wallpaperImage.ready ? 1 : 0
 
             Behavior on opacity {
                 NumberAnimation {

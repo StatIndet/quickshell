@@ -106,6 +106,8 @@ Singleton {
     }
 
     function beginAwwwActivation() {
+        if (!root.validateSources())
+            return;
         if (!root.probeComplete) {
             root.state = "probing";
             return;
@@ -200,7 +202,16 @@ Singleton {
         daemonProcess.running = true;
     }
 
+    function validateSources() {
+        if (WallpaperService.canUseAwww)
+            return true;
+        root.failAwwwActivation(qsTr("Select an image wallpaper before switching to awww"));
+        return false;
+    }
+
     function scheduleApplyAll() {
+        if (!root.validateSources())
+            return;
         if (!root.backendIsAwww() || !root.available || !root.daemonRunning)
             return;
         const targets = root.applyTargets();
@@ -227,6 +238,8 @@ Singleton {
     }
 
     function applyNext() {
+        if (root.backendIsAwww() && !root.validateSources())
+            return;
         if (!root.backendIsAwww()) {
             root.applyOutputs = [];
             root.activeApplyTargets = [];
@@ -261,13 +274,14 @@ Singleton {
         const target = root.activeApplyTargets[root.applyIndex];
         const output = target.output;
         const source = target.source;
-        if (!source) {
+        if (!WallpaperService.isImagePath(source)) {
             root.failAwwwActivation(qsTr("No desktop wallpaper is available for %1").arg(output));
             return;
         }
 
         applyProcess.outputName = output;
-        applyProcess.command = AwwwCommand.apply(root.awwwCommand, root.namespaceName, output, source, target.fillMode,
+        applyProcess.command = AwwwCommand.apply(root.awwwCommand, root.namespaceName, output,
+                                                 WallpaperService.normalizedPath(source), target.fillMode,
                                                  root.activeTransitionOptions);
         applyProcess.running = true;
     }
@@ -294,7 +308,7 @@ Singleton {
         target: WallpaperService
 
         function onRevisionChanged() {
-            if (root.backendIsAwww() && root.effectiveBackend === "awww")
+            if (root.backendIsAwww())
                 root.scheduleApplyAll();
         }
     }
@@ -303,7 +317,7 @@ Singleton {
         target: Quickshell
 
         function onScreensChanged() {
-            if (root.backendIsAwww() && root.effectiveBackend === "awww")
+            if (root.backendIsAwww())
                 root.scheduleApplyAll();
         }
     }
@@ -382,6 +396,8 @@ Singleton {
             }
 
             if (exitCode === 0) {
+                if (!root.validateSources())
+                    return;
                 queryRetry.stop();
                 root.daemonRunning = true;
                 root.queryAttempts = 0;

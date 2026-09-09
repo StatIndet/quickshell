@@ -263,8 +263,8 @@ Singleton {
         const path = WallpaperService.currentWallpaper || PersonalizationConfig.wallpaperPath;
         if (path && path !== "" && WallpaperService.isImagePath(path))
             root.generateFromWallpaper(path, templateId);
-        else if (path && path !== "" && WallpaperService.isColorSource(path))
-            root.generateFromColor(path, templateId);
+        else if (WallpaperService.primaryColor(path))
+            root.generateFromColor(WallpaperService.primaryColor(path), templateId);
     }
 
     Component.onCompleted: {

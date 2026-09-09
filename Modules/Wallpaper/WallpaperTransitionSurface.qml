@@ -1,10 +1,12 @@
 import QtQuick
 import qs.Common
+import "../../Common/functions/WallpaperSource.js" as WallpaperSource
 
 Item {
     id: root
 
     property string sourcePath: ""
+    property string previewSource: ""
     property int imageFillMode: Image.PreserveAspectCrop
     property real shaderFillMode: 2
     property string transitionType: "fade"
@@ -69,7 +71,7 @@ Item {
     signal loadFailed(string source, string message)
 
     function isColorSource(path) {
-        return /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/.test(String(path || ""));
+        return !WallpaperSource.isImage(path);
     }
 
     function chooseTransition() {
@@ -270,6 +272,13 @@ Item {
 
         onReadyChanged: root.handleViewportReady(viewportB)
         onLoadFailed: source => root.handleViewportFailure(viewportB, source)
+    }
+
+    WallpaperImageViewport {
+        anchors.fill: parent
+        sourcePath: root.previewSource
+        visible: root.previewSource !== ""
+        z: 10
     }
 
     ShaderEffectSource {
