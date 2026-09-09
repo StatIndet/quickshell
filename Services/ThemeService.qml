@@ -271,8 +271,8 @@ Singleton {
         root.applyConfigToAppearance();
         root.detectAvailableThemes();
         root.applyCursorSettings();
-        if (PersonalizationConfig.themeMode === "dark" && !UiPreferences.darkMode)
-            UiPreferences.setDarkMode(true);
+        // UiPreferences reads the system scheme on startup. The Matugen mode
+        // is generation configuration, not a request to change the system theme.
     }
 
     Connections {
