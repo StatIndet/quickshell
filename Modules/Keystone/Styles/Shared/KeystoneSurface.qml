@@ -146,18 +146,45 @@ Variants {
         WlrLayershell.keyboardFocus: root.keyboardInteractionActive ? WlrKeyboardFocus.OnDemand :
                                                                       WlrKeyboardFocus.None
 
-        function activateKeyboardSurface() {
-            // Niri focuses newly mapped OnDemand surfaces, but does not focus
-            // an already mapped surface when only keyboard_interactivity changes.
-            // Remap once on intentional expansion; never on focus loss or hover.
-            Qt.callLater(() => {
-                if (!root.keyboardInteractionActive)
-                    return;
-                keystoneWindow.visible = false;
-                Qt.callLater(() => {
-                    keystoneWindow.visible = true;
-                });
-            });
+        PanelWindow {
+            // Niri focuses newly mapped OnDemand surfaces. Keep that mapping
+            // separate from the visible island so expansion never drops a frame.
+            // After a desktop click, neither window requests focus again.
+            visible: root.keyboardInteractionActive
+            screen: keystoneWindow.screen
+            implicitWidth: 1
+            implicitHeight: 1
+            color: "transparent"
+            exclusiveZone: -1
+            WlrLayershell.namespace: "clavis-shell-keystone-keyboard"
+            WlrLayershell.layer: WlrLayer.Top
+            WlrLayershell.exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+            anchors {
+                top: true
+                left: true
+            }
+            mask: Region {}
+
+            Item {
+                anchors.fill: parent
+                focus: true
+                Keys.forwardTo: root.isToolsMode ? [toolsWidget, root] : [root]
+
+                // Shortcuts belong to their receiving window. Mouse interaction
+                // focuses the visible island, where HubContent handles them.
+                Shortcut {
+                    enabled: root.isHubMode
+                    sequence: "Tab"
+                    onActivated: hub.currentIndex = (hub.currentIndex + 1) % 4
+                }
+
+                Shortcut {
+                    enabled: root.isHubMode
+                    sequence: "Shift+Tab"
+                    onActivated: hub.currentIndex = (hub.currentIndex + 3) % 4
+                }
+            }
         }
 
         anchors {
@@ -526,10 +553,8 @@ Variants {
                 readonly property bool keyboardInteractionActive: escapeDismissActive && !hoverOpened &&
                                                                   !isCollapsedMode
                 onKeyboardInteractionActiveChanged: {
-                    if (keyboardInteractionActive) {
-                        keystoneWindow.activateKeyboardSurface();
+                    if (keyboardInteractionActive)
                         root.requestKeyboardFocus();
-                    }
                 }
                 readonly property bool dashboardTabActive: isHubMode && hubTabIndex === 0
                 readonly property string dashboardUptimeOwner: "keystone-dashboard:" + String(
