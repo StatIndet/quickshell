@@ -438,6 +438,7 @@ ColumnLayout {
             focus: knobMouse.pressed
             Keys.onLeftPressed: root.change("grain", Math.max(0, root.paletteState.grain - 1 / 16))
             Keys.onRightPressed: root.change("grain", Math.min(15 / 16, root.paletteState.grain + 1 / 16))
+            readonly property real ringRadius: width / 2 - 4
             Repeater {
                 model: 16
                 Rectangle {
@@ -445,51 +446,78 @@ ColumnLayout {
                     width: 4
                     height: 4
                     radius: 2
-                    x: 38 + 34 * Math.sin(index * Math.PI / 8)
-                    y: 38 - 34 * Math.cos(index * Math.PI / 8)
-                    color: index <= root.paletteState.grain * 16 ? Appearance.colors.colPrimary :
-                                                                   Appearance.colors.colOutline
+                    x: knob.width / 2 - width / 2 + knob.ringRadius * Math.sin(index * Math.PI / 8)
+                    y: knob.height / 2 - height / 2 - knob.ringRadius * Math.cos(index * Math.PI / 8)
+                    color: UiPreferences.darkMode ? "#4dffffff" : "#4d000000"
+                    opacity: index <= root.paletteState.grain * 16 ? 1 : 0.4
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 200
+                        }
+                    }
+                }
+            }
+            Canvas {
+                anchors.centerIn: parent
+                width: knob.width * 0.6
+                height: width
+                property real amount: root.paletteState.grain
+                property bool dark: UiPreferences.darkMode
+                property color base: Appearance.colors.colLayer2Base
+                onAmountChanged: requestPaint()
+                onDarkChanged: requestPaint()
+                onBaseChanged: requestPaint()
+                onWidthChanged: requestPaint()
+                onPaint: {
+                    const ctx = getContext("2d");
+                    ctx.reset();
+                    ctx.beginPath();
+                    ctx.arc(width / 2, height / 2, width / 2 - 0.5, 0, Math.PI * 2);
+                    ctx.save();
+                    ctx.clip();
+                    // Stationary monochrome texture with the knob's hard-light blend.
+                    function blend(c, n) {
+                        return n < 0.5 ? 2 * c * n : 1 - 2 * (1 - c) * (1 - n);
+                    }
+                    for (let y = 0; y < height; ++y)
+                        for (let x = 0; x < width; ++x) {
+                            let hash = Math.imul(x, 0x9e3779b9) ^ Math.imul(y, 0x85ebca6b);
+                            hash = Math.imul(hash ^ (hash >>> 16), 0x7feb352d);
+                            hash = Math.imul(hash ^ (hash >>> 15), 0x846ca68b);
+                            const n = ((hash ^ (hash >>> 16)) >>> 8) / 16777216;
+                            ctx.fillStyle = Qt.rgba(blend(base.r, n), blend(base.g, n), blend(base.b, n),
+                                                    amount * 0.25);
+                            ctx.fillRect(x, y, 1, 1);
+                        }
+                    // Zen's subtle diagonal face shading is above the texture.
+                    const shade = ctx.createLinearGradient(width, height, 0, 0);
+                    shade.addColorStop(0, dark ? "rgba(255,255,255,0.008)" : "rgba(0,0,0,0.008)");
+                    shade.addColorStop(1, dark ? "rgba(255,255,255,0.092)" : "rgba(0,0,0,0.092)");
+                    ctx.fillStyle = shade;
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.restore();
+                    ctx.strokeStyle = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
                 }
             }
             Rectangle {
-                anchors.centerIn: parent
-                width: 48
-                height: 48
-                radius: 24
-                color: Appearance.colors.colLayer3
-                border.color: Appearance.colors.colOutline
+                width: 6
+                height: indicatorHover.hovered || knobMouse.pressed ? 14 : 12
+                radius: 2
+                x: knob.width / 2 + knob.ringRadius * Math.sin(root.paletteState.grain * Math.PI * 2) - width
+                   / 2
+                y: knob.height / 2 - knob.ringRadius * Math.cos(root.paletteState.grain * Math.PI * 2)
+                   - height / 2
                 rotation: root.paletteState.grain * 360
-                Canvas {
-                    anchors.fill: parent
-                    property real amount: root.paletteState.grain
-                    property color base: Appearance.colors.colLayer3
-                    onAmountChanged: requestPaint()
-                    onBaseChanged: requestPaint()
-                    onPaint: {
-                        const ctx = getContext("2d");
-                        ctx.reset();
-                        ctx.beginPath();
-                        ctx.arc(width / 2, height / 2, width / 2 - 1, 0, Math.PI * 2);
-                        ctx.clip();
-                        function blend(c, n) {
-                            return n < 0.5 ? 2 * c * n : 1 - 2 * (1 - c) * (1 - n);
-                        }
-                        for (let y = 0; y < height; y += 2)
-                            for (let x = 0; x < width; x += 2) {
-                                const n = Math.abs(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
-                                ctx.fillStyle = Qt.rgba(blend(base.r, n), blend(base.g, n), blend(base.b, n),
-                                                        amount * 0.25);
-                                ctx.fillRect(x, y, 2, 2);
-                            }
+                color: UiPreferences.darkMode ? "#d1d1d1" : "#757575"
+                Behavior on height {
+                    NumberAnimation {
+                        duration: 100
                     }
                 }
-                Rectangle {
-                    x: 22
-                    y: 5
-                    width: 4
-                    height: 10
-                    radius: 2
-                    color: Appearance.colors.colPrimary
+                HoverHandler {
+                    id: indicatorHover
                 }
             }
             MouseArea {
@@ -498,7 +526,8 @@ ColumnLayout {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 function updateValue(mouse) {
-                    let angle = (Math.atan2(mouse.y - 40, mouse.x - 40) * 180 / Math.PI + 450) % 360;
+                    let angle = (Math.atan2(mouse.y - knob.height / 2, mouse.x - knob.width / 2) * 180
+                                 / Math.PI + 450) % 360;
                     root.change("grain", (Math.round(angle / 360 * 16) % 16) / 16);
                 }
                 onPressed: mouse => updateValue(mouse)
