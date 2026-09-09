@@ -19,6 +19,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import qs.Common
+import qs.Services
 import qs.Widgets.common
 import "../../Common/functions/ZenPalette.js" as Zen
 
@@ -50,7 +51,7 @@ ColumnLayout {
         Layout.fillHeight: true
         Layout.minimumHeight: 250
         radius: Appearance.rounding.normal
-        color: Appearance.colors.colLayer2
+        color: Appearance.colors.colLayer2Base
         clip: true
         Canvas {
             id: grid
@@ -118,17 +119,17 @@ ColumnLayout {
                     Behavior on displayX {
                         enabled: dot.initialized && !root.draggingPoints
                         NumberAnimation {
-                            duration: Animations.animation.expressiveDefaultSpatial.duration
+                            duration: Animations.animation.expressiveFastSpatial.duration
                             easing.type: Easing.BezierSpline
-                            easing.bezierCurve: Animations.animation.expressiveDefaultSpatial.bezierCurve
+                            easing.bezierCurve: Animations.animation.expressiveFastSpatial.bezierCurve
                         }
                     }
                     Behavior on displayY {
                         enabled: dot.initialized && !root.draggingPoints
                         NumberAnimation {
-                            duration: Animations.animation.expressiveDefaultSpatial.duration
+                            duration: Animations.animation.expressiveFastSpatial.duration
                             easing.type: Easing.BezierSpline
-                            easing.bezierCurve: Animations.animation.expressiveDefaultSpatial.bezierCurve
+                            easing.bezierCurve: Animations.animation.expressiveFastSpatial.bezierCurve
                         }
                     }
                     color: Zen.hex(root.colors[index])
@@ -218,76 +219,107 @@ ColumnLayout {
         spacing: 4
         IconButton {
             iconName: "chevron_left"
-            tooltipText: qsTr("Previous presets")
+            Accessible.name: qsTr("Previous presets")
             enabled: root.page > 0
             onClicked: root.page--
         }
-        Repeater {
-            model: root.page === 4 ? 9 : 8
-            Item {
-                id: presetItem
-                required property int index
-                readonly property int presetIndex: root.page * 8 + index
-                Layout.fillWidth: true
-                Layout.preferredHeight: 34
-                Canvas {
-                    id: swatch
-                    anchors.centerIn: parent
-                    width: 26
-                    height: width
-                    property var colors: Zen.swatches[presetItem.presetIndex]
-                    onColorsChanged: requestPaint()
-                    scale: presetMouse.pressed ? 0.95 : presetMouse.containsMouse ? 1.05 : 1
-                    Behavior on scale {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.BezierSpline
-                            easing.bezierCurve: Animations.curves.standard
-                        }
-                    }
-                    onPaint: {
-                        const ctx = getContext("2d");
-                        ctx.reset();
-                        ctx.beginPath();
-                        ctx.arc(width / 2, height / 2, width / 2, 0, Math.PI * 2);
-                        ctx.clip();
-                        if (colors.length === 1) {
-                            ctx.fillStyle = colors[0];
-                            ctx.fillRect(0, 0, width, height);
-                        } else {
-                            // CSS backgrounds paint last to first, with premultiplied alpha.
-                            let gradient = ctx.createLinearGradient(0, height, 0, height * 0.4);
-                            gradient.addColorStop(0, colors[2]);
-                            gradient.addColorStop(1, "transparent");
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(0, 0, width, height);
-                            for (let i = 1; i >= 0; --i) {
-                                const x = i === 0 ? 0 : width;
-                                gradient = ctx.createRadialGradient(x, 0, 0, x, 0, Math.sqrt(width * width
-                                                                                             + height
-                                                                                             * height));
-                                gradient.addColorStop(0, colors[i]);
-                                gradient.addColorStop(1, "transparent");
-                                ctx.fillStyle = gradient;
-                                ctx.fillRect(0, 0, width, height);
+        Item {
+            id: presetViewport
+            Layout.fillWidth: true
+            Layout.preferredHeight: 34
+            clip: true
+            // Animate page units so resizing never adds a second scrolling motion.
+            property real displayedPage: root.page
+            Behavior on displayedPage {
+                NumberAnimation {
+                    duration: Animations.animation.standard.duration
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Animations.animation.standard.bezierCurve
+                }
+            }
+            Row {
+                x: -presetViewport.displayedPage * presetViewport.width
+                height: parent.height
+                Repeater {
+                    model: 5
+                    RowLayout {
+                        id: presetPage
+                        required property int index
+                        width: presetViewport.width
+                        height: presetViewport.height
+                        spacing: 4
+                        Repeater {
+                            model: presetPage.index === 4 ? 9 : 8
+                            Item {
+                                id: presetItem
+                                required property int index
+                                readonly property int presetIndex: presetPage.index * 8 + index
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 34
+                                Canvas {
+                                    id: swatch
+                                    anchors.centerIn: parent
+                                    width: 26
+                                    height: width
+                                    property var colors: Zen.swatches[presetItem.presetIndex]
+                                    onColorsChanged: requestPaint()
+                                    scale: presetMouse.pressed ? 0.95 : presetMouse.containsMouse ? 1.05 : 1
+                                    Behavior on scale {
+                                        NumberAnimation {
+                                            duration: 100
+                                            easing.type: Easing.BezierSpline
+                                            easing.bezierCurve: Animations.curves.standard
+                                        }
+                                    }
+                                    onPaint: {
+                                        const ctx = getContext("2d");
+                                        ctx.reset();
+                                        ctx.beginPath();
+                                        ctx.arc(width / 2, height / 2, width / 2, 0, Math.PI * 2);
+                                        ctx.clip();
+                                        if (colors.length === 1) {
+                                            ctx.fillStyle = colors[0];
+                                            ctx.fillRect(0, 0, width, height);
+                                        } else {
+                                            // CSS backgrounds paint last to first, with premultiplied alpha.
+                                            let gradient = ctx.createLinearGradient(0, height, 0, height
+                                                                                    * 0.4);
+                                            gradient.addColorStop(0, colors[2]);
+                                            gradient.addColorStop(1, "transparent");
+                                            ctx.fillStyle = gradient;
+                                            ctx.fillRect(0, 0, width, height);
+                                            for (let i = 1; i >= 0; --i) {
+                                                const x = i === 0 ? 0 : width;
+                                                gradient = ctx.createRadialGradient(x, 0, 0, x, 0, Math.sqrt(
+                                                                                        width * width
+                                                                                        + height * height));
+                                                gradient.addColorStop(0, colors[i]);
+                                                gradient.addColorStop(1, "transparent");
+                                                ctx.fillStyle = gradient;
+                                                ctx.fillRect(0, 0, width, height);
+                                            }
+                                        }
+                                    }
+                                }
+                                MouseArea {
+                                    id: presetMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: root.edited(Zen.preset(presetItem.presetIndex,
+                                                                      root.paletteState))
+                                }
+                                Accessible.role: Accessible.Button
+                                Accessible.name: qsTr("Preset %1").arg(presetIndex + 1)
                             }
                         }
                     }
                 }
-                MouseArea {
-                    id: presetMouse
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.edited(Zen.preset(presetItem.presetIndex, root.paletteState))
-                }
-                Accessible.role: Accessible.Button
-                Accessible.name: qsTr("Preset %1").arg(presetIndex + 1)
             }
         }
         IconButton {
             iconName: "chevron_right"
-            tooltipText: qsTr("Next presets")
+            Accessible.name: qsTr("Next presets")
             enabled: root.page < 4
             onClicked: root.page++
         }
@@ -311,41 +343,80 @@ ColumnLayout {
             }
             onMoved: root.change("opacity", value)
             readonly property real progress: (root.paletteState.opacity - 0.25) / 0.55
-            background: Canvas {
-                id: wave
-                x: 15
-                y: 15
-                width: Math.max(1, opacitySlider.width - 30)
+            leftPadding: 15
+            rightPadding: 15
+            background: Item {
+                y: (opacitySlider.height - height) / 2
+                width: opacitySlider.width
                 height: 48
-                property real progress: opacitySlider.progress
-                property color strokeColor: Appearance.colors.colOnSurfaceVariant
-                onProgressChanged: requestPaint()
-                onStrokeColorChanged: requestPaint()
-                onWidthChanged: requestPaint()
-                onPaint: {
-                    const ctx = getContext("2d");
-                    ctx.reset();
-                    ctx.lineWidth = 4;
-                    ctx.lineCap = "round";
-                    ctx.strokeStyle = strokeColor;
-                    ctx.beginPath();
-                    for (let x = 0; x <= width; x++) {
-                        const y = height / 2 + Math.sin(x / width * Math.PI * 24) * progress * 12;
-                        if (x === 0)
-                            ctx.moveTo(x, y);
-                        else
-                            ctx.lineTo(x, y);
+                Rectangle {
+                    x: opacitySlider.leftPadding - 3
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: opacitySlider.availableWidth + 6
+                    height: 18
+                    radius: height / 2
+                    color: UiPreferences.darkMode ? "#1affffff" : "#1a000000"
+                }
+                Canvas {
+                    id: wave
+                    anchors.fill: parent
+                    property real progress: opacitySlider.progress
+                    property real visualProgress: opacitySlider.visualPosition
+                    property bool dark: UiPreferences.darkMode
+                    onProgressChanged: requestPaint()
+                    onVisualProgressChanged: requestPaint()
+                    onDarkChanged: requestPaint()
+                    onWidthChanged: requestPaint()
+                    onHeightChanged: requestPaint()
+                    onPaint: {
+                        const ctx = getContext("2d");
+                        ctx.reset();
+                        const start = opacitySlider.leftPadding;
+                        const span = opacitySlider.availableWidth;
+                        const split = start + visualProgress * span;
+                        const center = height / 2;
+                        // Zen's SVG has six waves made of cubic half-wave segments.
+                        // Interpolate their control-point heights from a flat line.
+                        const amplitude = 35.898 / 70 * height * progress;
+                        function drawWave(color) {
+                            ctx.strokeStyle = color;
+                            ctx.lineWidth = 5;
+                            ctx.lineCap = "round";
+                            ctx.lineJoin = "round";
+                            ctx.beginPath();
+                            ctx.moveTo(start, center);
+                            for (let i = 0; i < 12; ++i) {
+                                const x = start + i * span / 12;
+                                const segment = span / 12;
+                                const y = center + (i % 2 === 0 ? -amplitude : amplitude);
+                                ctx.bezierCurveTo(x + segment / 3, y, x + segment * 2 / 3, y, x + segment,
+                                                  center);
+                            }
+                            ctx.stroke();
+                        }
+                        // Clip only the color split; the canvas includes room for both round caps.
+                        const active = dark ? "rgb(161,161,161)" : "rgb(90,90,90)";
+                        const inactive = dark ? "rgba(161,161,161,0.5)" : "rgba(77,77,77,0.5)";
+                        for (let side = 0; side < 2; ++side) {
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.rect(side === 0 ? 0 : split, 0, side === 0 ? split : width - split, height);
+                            ctx.clip();
+                            const filled = opacitySlider.mirrored ? side === 1 : side === 0;
+                            drawWave(filled && progress > 0.001 ? active : inactive);
+                            ctx.restore();
+                        }
                     }
-                    ctx.stroke();
                 }
             }
             handle: Rectangle {
                 width: 10 + opacitySlider.progress * 15
                 height: 40 + opacitySlider.progress * 15
                 radius: width / 2
-                x: 15 + opacitySlider.visualPosition * (opacitySlider.width - 30) - width / 2
+                x: opacitySlider.leftPadding + opacitySlider.visualPosition * opacitySlider.availableWidth
+                   - width / 2
                 y: (opacitySlider.height - height) / 2
-                color: Appearance.colors.colPrimary
+                color: UiPreferences.darkMode ? "#ffffff" : "#000000"
                 scale: opacitySlider.pressed ? 1.06 : 1
                 Behavior on scale {
                     NumberAnimation {
