@@ -49,6 +49,7 @@ Item {
     component ShortcutChip: RippleButton {
         id: shortcutChip
         property bool recordingStyle: false
+        property bool conflicting: false
         property bool removable: false
         property bool removalEnabled: true
         property string removalLabel: qsTr("Delete")
@@ -66,8 +67,10 @@ Item {
         rightPadding: removable ? removeButton.width + Metrics.spacingXS * 2 : Metrics.spacingM
         buttonRadius: Appearance.rounding.small
         buttonRadiusPressed: buttonRadius
-        containerColor: recordingStyle ? Appearance.colors.colPrimary : Appearance.colors.colLayer2
-        stateLayerColor: recordingStyle ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer0
+        containerColor: conflicting ? Appearance.m3colors.m3errorContainer : recordingStyle
+                                      ? Appearance.colors.colPrimary : Appearance.colors.colLayer2
+        stateLayerColor: conflicting ? Appearance.m3colors.m3onErrorContainer : recordingStyle
+                                       ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer0
         rippleColor: stateLayerColor
         stateLayerOpacity: Appearance.interaction.hoverStateLayerOpacity
         focusStateLayerOpacity: Appearance.interaction.focusStateLayerOpacity
@@ -221,7 +224,9 @@ Item {
         edit(group, null);
     }
 
-    function cancel() {
+    function cancel(discardError = true) {
+        if (discardError)
+            NiriConfigService.clearEditError();
         const wasOpen = editorOpen;
         recording = false;
         inlineRecording = false;
@@ -328,23 +333,26 @@ Item {
         return draft && draft.props[name] !== undefined ? draft.props[name] : fallback;
     }
 
+    function currentBinding(binding) {
+        return NiriConfigService.bindings.find(current => current.id === binding.id) || binding;
+    }
+
     function bindingWarning(binding) {
+        binding = root.currentBinding(binding);
         if (binding.collision)
-            return qsTr("Conflicting key spelling; check the active binding");
+            return qsTr("Shortcut conflicts");
         if (binding.invalid)
             return qsTr("Configuration validation failed");
-        if (binding.overridden)
-            return qsTr("Overridden by later configuration");
         if (!binding.editable)
             return qsTr("This binding is read-only");
         return "";
     }
 
     function closeChildWindows() {
-        cancel();
+        cancel(false);
     }
     onPresentationActiveChanged: if (!presentationActive)
-                                     cancel()
+                                     cancel(false)
     // The shared service loads once and watches the configuration files thereafter.
     Component.onCompleted: rebuild()
     Component.onDestruction: recording = false
@@ -392,9 +400,22 @@ Item {
         }
         InlineStatusBanner {
             Layout.fillWidth: true
+            visible: !!NiriConfigService.diagnostics.conflicts
+            tone: "error"
+            message: qsTr("Shortcut conflicts")
+        }
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            visible: NiriConfigService.configurationMessage !== ""
+            tone: "error"
+            message: NiriConfigService.configurationMessage
+        }
+        InlineStatusBanner {
+            Layout.fillWidth: true
             visible: NiriConfigService.ready("binds") && NiriConfigService.error !== ""
             tone: "error"
-            message: NiriConfigService.error
+            message: NiriConfigService.errorFeature === "binds" ? NiriConfigService.operationMessage :
+                                                                  NiriConfigService.error
         }
         RowLayout {
             Layout.fillWidth: true
@@ -551,7 +572,7 @@ Item {
                                 }
                                 width: Math.min(implicitWidth, chips.width)
                                 enabled: !NiriConfigService.busy
-                                opacity: modelData.effective ? 1 : 0.55
+                                conflicting: !!root.currentBinding(modelData).collision
                                 onClicked: root.edit(row.modelData, modelData)
                             }
                         }

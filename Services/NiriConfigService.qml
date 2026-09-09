@@ -23,6 +23,25 @@ Singleton {
     property bool catalogChecked: false
     property var pendingUpdates: ({})
     property string error: ""
+    property string readError: ""
+    property string errorFeature: ""
+    readonly property string operationMessage: error === "" ? "" : qsTr("Unable to save changes")
+    readonly property var diagnostics: snapshot.diagnostics || ({})
+    readonly property string configurationMessage: readError !== "" ? qsTr("Unable to check configuration") :
+                                                                      diagnostics.invalid ? qsTr(
+                                                                                                "Configuration is invalid") :
+                                                                                            diagnostics.writable
+                                                                                            === false ? qsTr(
+                                                                                                            "Configuration is not writable") :
+                                                                                                        ""
+
+    function clearEditError() {
+        if (errorFeature === "binds" || errorFeature === "") {
+            error = "";
+            errorFeature = "";
+        }
+    }
+
     property string activeFeature: ""
     property bool refreshPending: false
     readonly property bool busy: operation.running
@@ -99,7 +118,6 @@ Singleton {
             return;
         activeFeature = request.feature || "";
         operation.writing = request.operation !== "status" && request.operation !== "catalog";
-        error = "";
         operation.command = ["python3", Paths.systemScriptsDir + "/niri_config.py", JSON.stringify(request)];
         operation.running = true;
     }
@@ -122,17 +140,40 @@ Singleton {
                 response = JSON.parse(result.text);
                 if (response.schemaVersion !== 1)
                     throw new Error("Unsupported configuration response");
-                root.error = response.error || "";
+                if (writing) {
+                    if (code !== 0) {
+                        root.error = response.error || qsTr("Unable to save changes");
+                        root.errorFeature = root.activeFeature;
+                    } else if (root.errorFeature === root.activeFeature) {
+                        root.error = "";
+                        root.errorFeature = "";
+                    }
+                }
+                if (response.fragments)
+                    root.readError = response.error || "";
                 if (response.catalog) {
                     root.actionCatalog = response.catalog;
                     root.catalogChecked = true;
                 }
-                if (response.fragments)
-                    root.snapshot = response;
+                if (response.fragments) {
+                    if (response.error) {
+                        root.snapshot = Object.assign({}, root.snapshot, {
+                                                          files: response.files,
+                                                          fragments: response.fragments
+                                                      });
+                    } else {
+                        root.snapshot = response;
+                    }
+                }
                 if (code === 0 && writing)
                     root.saved();
             } catch (e) {
-                root.error = diagnostic.text.trim() || String(e);
+                if (writing) {
+                    root.error = diagnostic.text.trim() || String(e);
+                    root.errorFeature = root.activeFeature;
+                } else {
+                    root.readError = diagnostic.text.trim() || String(e);
+                }
             }
             root.activeFeature = "";
             const pending = Object.keys(root.pendingUpdates);

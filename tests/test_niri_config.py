@@ -48,7 +48,7 @@ class ConfigurationContracts(unittest.TestCase):
             self.run_config('save', key=key, action='close-window')
         rows = self.run_config()['bindings']
         self.assertEqual({row['key'] for row in rows}, set(keys))
-        self.assertTrue(all(row['managed'] and row['editable'] and row['effective'] for row in rows))
+        self.assertTrue(all(row['managed'] and row['editable'] for row in rows))
         forward = next(row for row in rows if row['key'] == 'Ctrl+MouseForward')
         self.run_config('delete', id=forward['id'])
         self.assertEqual({row['key'] for row in self.run_config()['bindings']}, set(keys[:-1]))
@@ -58,7 +58,7 @@ class ConfigurationContracts(unittest.TestCase):
         rows = state['bindings']
         self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS))
         self.assertEqual(len({row['identity'] for row in rows}), len(rows))
-        self.assertTrue(all(row['effective'] and not row.get('collision') for row in rows))
+        self.assertTrue(all(not row.get('collision') for row in rows))
         for row in rows:
             action = config.parse(row['action']).nodes[0]
             self.assertEqual(action.name, 'spawn')
@@ -69,13 +69,35 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('setup')
         self.assertEqual(self.fragment().read_bytes(), remaining)
 
-    def test_default_conflict_rejects_setup_without_writing(self):
+    def test_conflicts_follow_includes_and_clear_independently_of_unrelated_saves(self):
+        self.main.write_text('binds { Control+F1 { close-window; }; }\n')
+        self.setup_binds()
+        self.main.parent.joinpath('unused.kdl').write_text('binds { F9 { quit; }; F9 { quit; }; }')
+        state = self.run_config('save', key='Ctrl+F1', action='close-window', patch={'hotkey-overlay-title': 'Title'})
+        self.assertFalse(state['diagnostics']['conflicts'])
+        state = self.run_config('save', key='Ctrl+F1', action='quit')
+        self.assertTrue(state['diagnostics']['conflicts'])
+        self.assertTrue(state['diagnostics']['invalid'])
+        self.assertTrue(all(row['collision'] for row in state['bindings']))
+        duplicate = state['bindings'][-1]
+        state = self.run_config('save', key='F2', action='close-window')
+        self.assertTrue(state['diagnostics']['conflicts'])
+        state = self.run_config('delete', id=duplicate['id'])
+        self.assertFalse(state['diagnostics']['conflicts'])
+        self.assertFalse(state['diagnostics']['invalid'])
+        self.assertEqual(state['fragments']['binds']['state'], 'ready')
+        self.main.write_text(self.main.read_text().replace('close-window', 'quit'))
+        self.assertTrue(self.run_config()['diagnostics']['conflicts'])
+        self.main.write_text(self.main.read_text().replace('quit', 'close-window'))
+        self.assertFalse(self.run_config()['diagnostics']['conflicts'])
+
+    def test_default_conflict_is_diagnostic_and_keeps_user_binding(self):
         self.main.write_text('binds { Super+Space { spawn "user-launcher"; }; }\n')
-        original = self.main.read_bytes()
-        with self.assertRaisesRegex(ValueError, 'Default shortcuts are already assigned: Mod\\+Space'):
-            self.run_config('setup')
-        self.assertEqual(self.main.read_bytes(), original)
-        self.assertFalse(self.fragment().exists())
+        state = self.run_config('setup')
+        self.assertTrue(state['diagnostics']['conflicts'])
+        self.assertIn('spawn "user-launcher"', self.main.read_text())
+        self.assertTrue(self.fragment().exists())
+        self.assertEqual(state['fragments']['binds']['state'], 'ready')
 
     def test_later_include_override_and_invalid_duplicate_are_distinct(self):
         self.setup_binds()
@@ -85,13 +107,12 @@ class ConfigurationContracts(unittest.TestCase):
         with self.main.open('a') as out:
             out.write('include "later.kdl"\n')
         state = self.run_config()
-        self.assertFalse(state['bindings'][0]['effective'])
-        self.assertTrue(state['bindings'][1]['effective'])
         self.assertEqual(state['error'], '')
         later.write_text('binds { F1 { quit; }; F1 { close-window; }; }\n')
         state = self.run_config()
-        self.assertTrue(state['error'])
-        self.assertTrue(all(not row['effective'] for row in state['bindings']))
+        self.assertTrue(state['diagnostics']['invalid'])
+        self.assertTrue(all(row['collision'] for row in state['bindings']))
+        self.assertEqual(state['fragments']['binds']['state'], 'ready')
 
     def test_group_deletion_keeps_external_binding(self):
         self.main.write_text('binds { F1 { spawn "never-run"; }; }\n')
@@ -142,8 +163,7 @@ class ConfigurationContracts(unittest.TestCase):
         state = self.run_config('save', key='Super+Q', action='quit')
         self.assertEqual(state['error'], '')
         first, last = state['bindings']
-        self.assertTrue(first['effective'])
-        self.assertFalse(last['effective'])
+        self.assertTrue(first['collision'])
         self.assertTrue(last['collision'])
         self.assertFalse(last['override'])
 
@@ -254,10 +274,8 @@ class ConfigurationContracts(unittest.TestCase):
         self.assertTrue(managed['override'])
         self.assertFalse(managed['props']['repeat'])
         self.assertEqual(managed['props']['cooldown-ms'], 100)
-        self.assertFalse(state['bindings'][0]['effective'])
         state = self.run_config('delete', id=managed['id'], revision=state['revision'])
         self.assertEqual(len(state['bindings']), 1)
-        self.assertTrue(state['bindings'][0]['effective'])
         with self.assertRaises(ValueError):
             self.run_config('delete', id=external['id'])
 
@@ -281,13 +299,13 @@ class ConfigurationContracts(unittest.TestCase):
         state = self.run_config('save', key='Mod+Q', action='close-window')
         row = state['bindings'][0]
         before = self.fragment().read_bytes()
-        for action in ['not-a-niri-action', 'close-window; spawn "never"', 'close-window; }\nbinds { F1 { quit; } }']:
+        for action in ['close-window; spawn "never"', 'close-window; }\nbinds { F1 { quit; } }']:
             with self.assertRaises(Exception):
                 self.run_config('save', id=row['id'], key='F5', action=action)
             self.assertEqual(before, self.fragment().read_bytes())
-        with self.assertRaises(ValueError):
-            self.run_config('save', key='Super+q', action='quit')
-        self.assertEqual(before, self.fragment().read_bytes())
+        state = self.run_config('save', key='Super+q', action='quit')
+        self.assertEqual(len(state['bindings']), 2)
+        self.assertTrue(state['diagnostics']['conflicts'])
 
     def test_external_changes_and_parse_failure_do_not_overwrite(self):
         state = self.setup_binds()

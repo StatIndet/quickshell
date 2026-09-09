@@ -36,8 +36,7 @@ PanelWindow {
             key: binding.key,
             category: root.category(binding.action),
             name: binding.props["hotkey-overlay-title"] || names[binding.group] || root.actionName(
-                binding.action),
-            effective: binding.effective
+                binding.action)
         }));
     }
 
@@ -306,10 +305,8 @@ PanelWindow {
     }
         Text {
         Layout.fillWidth: true
-        text: entryCell.modelData.effective ? entryCell.modelData.name : qsTr("%1 (inactive)").arg(
-        entryCell.modelData.name)
-        color: entryCell.modelData.effective ? Appearance.colors.colOnSurface :
-        Appearance.colors.colOnSurfaceVariant
+        text: entryCell.modelData.name
+        color: Appearance.colors.colOnSurface
         font.family: Fonts.ui
         font.pixelSize: 17
         maximumLineCount: 2

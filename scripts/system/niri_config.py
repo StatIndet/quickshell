@@ -113,7 +113,7 @@ class Graph:
         self.error = None
         try:
             self.visit(main, [])
-        except (ValueError, OSError, kdl.ParseError) as error:
+        except (ValueError, OSError, kdl.ParseError, subprocess.TimeoutExpired) as error:
             if not tolerant:
                 raise
             self.error = error
@@ -347,36 +347,29 @@ def bindings(graph, managed):
                        props={key: str(value) if isinstance(value, kdl.Value) else value for key, value in node.props.items()},
                        editable=action is not None and not node.tag and not node.args and not action.tag and not action.nodes and not any(isinstance(value, kdl.Value) for value in node.props.values()),
                        start=node.source_start, end=node.source_end,
-                       raw=graph.files[path][node.source_start:node.source_end], effective=True,
-                       overridden=False, override=False)
+                       raw=graph.files[path][node.source_start:node.source_end], override=False, section=str(path) + ':' + str(section.source_start))
             for previous in rows:
                 if previous['symbolicIdentity'] == row['symbolicIdentity']:
-                    previous['effective'] = False
-                    previous['overridden'] = True
                     if previous['source'] != str(managed) and row['managed']:
                         row['override'] = True
             rows.append(row)
-    # niri merges identical symbolic keys, then selects the first matching
-    # physical trigger from the remaining vector. Mod and Super may physically
-    # collide without being the same merge key (niri-config/src/lib.rs,
-    # src/input/mod.rs::find_bind). Retain both and expose the collision.
-    active = {}
+    # Diagnose disk definitions, not which command the compositor will execute.
+    by_key = {}
     for row in rows:
-        if not row['effective']:
-            continue
-        if row['identity'] in active:
-            row['effective'] = False
-            row['collision'] = True
-            active[row['identity']]['collision'] = True
-        else:
-            active[row['identity']] = row
+        by_key.setdefault(row['identity'], []).append(row)
+    for matches in by_key.values():
+        different_actions = len({row['group'] or row['action'] for row in matches}) > 1
+        sections = [row['section'] for row in matches]
+        duplicate_section = len(set(sections)) < len(sections)
+        for row in matches:
+            row['collision'] = different_actions or duplicate_section
     return rows, mod
 
 
 def status(request):
     main = main_path(request)
     managed_dir = main.parent / 'clavis'
-    state = dict(schemaVersion=1, main=str(main), fragments={}, files=[str(main)], bindings=[], revision='', error='')
+    state = dict(schemaVersion=1, main=str(main), fragments={}, files=[str(main)], bindings=[], revision='', error='', diagnostics=dict(conflicts=False, invalid=False, writable=True, details=''))
     # Inspect missing managed fragments without initializing them.
     try:
         graph = Graph(main, repair={path_key(managed_dir / (f + ".kdl")) for f in FRAGMENTS}, tolerant=True)
@@ -385,6 +378,11 @@ def status(request):
             raise graph.error
         state['revision'] = graph.revision()
         state['bindings'], state['modKey'] = bindings(graph, path_key(managed_dir / 'binds.kdl'))
+        state['diagnostics']['conflicts'] = any(row['collision'] for row in state['bindings'])
+        try:
+            safe_target(managed_dir / 'binds.kdl', missing=True)
+        except (OSError, ValueError):
+            state['diagnostics']['writable'] = False
         for feature in FRAGMENTS:
             path = path_key(managed_dir / (feature + '.kdl'))
             included = path in graph.references
@@ -420,16 +418,12 @@ def status(request):
             try:
                 graph.validate(request.get('niri', 'niri'))
             except ValueError as error:
-                state['error'] = str(error)
-                for row in state['bindings']:
-                    row['effective'] = False
-                    row['invalid'] = True
-                for fragment in state['fragments'].values():
-                    fragment['state'] = 'error'
+                state['diagnostics']['invalid'] = True
+                state['diagnostics']['details'] = str(error)
         state['overviewSatisfied'] = transparent and backdrop
         state['overviewBackdrop'] = backdrop
         state['overviewTransparent'] = transparent
-    except (ValueError, OSError, kdl.ParseError) as error:
+    except (ValueError, OSError, kdl.ParseError, subprocess.TimeoutExpired) as error:
         state['error'] = str(error)
         for feature in FRAGMENTS:
             state['fragments'][feature] = dict(path=str(managed_dir / (feature + '.kdl')), state='error')
@@ -473,10 +467,7 @@ def edit_bindings(graph, path, request):
     key = request.get('key', selected['key'] if selected else '')
     if selected and not selected['managed'] and key != selected['key']:
         raise ValueError('Use + to add another key; the external key remains configured')
-    identity = key_identity(key, mod)
-    existing = [r for r in rows if r['managed'] and r['identity'] == identity and (not selected or r['id'] != selected['id'])]
-    if existing:
-        raise ValueError('This key already has a Clavis binding; edit that binding instead')
+    key_identity(key, mod)
     action_text = request.get('action', selected['action'] if selected else '')
     actions = parse(action_text + '\n').nodes
     if len(actions) != 1 or actions[0].nodes or actions[0].tag:
@@ -547,19 +538,20 @@ def mutate(request):
             candidate = edit_bindings(graph, path_key(path), request)
         else:
             candidate = initial(feature, request)
-        if request['operation'] == 'setup' and feature == 'binds' and not exists:
-            existing, mod = bindings(graph, path_key(path))
-            occupied = {row['identity'] for row in existing}
-            conflicts = [key for key, *_ in DEFAULT_BINDINGS if key_identity(key, mod) in occupied]
-            if conflicts:
-                raise ValueError('Default shortcuts are already assigned: ' + ', '.join(conflicts)
-                                 + '. Free these keys or create a custom clavis/binds.kdl before setup.')
         main_text = graph.files[path_key(main)]
         main_candidate = main_text
         if request['operation'] == 'setup' and not included:
             main_candidate += '\n' + render(kdl.Node('include', args=['clavis/' + feature + '.kdl']))
         replacements = {path_key(main): main_candidate, path_key(path): candidate}
-        Graph(main, replacements=replacements).validate(request.get('niri', 'niri'))
+        candidate_graph = Graph(main, replacements=replacements)
+        try:
+            candidate_graph.validate(request.get('niri', 'niri'))
+        except ValueError:
+            if feature != 'binds':
+                raise
+            # A parseable binding may still be rejected by niri. Publish the
+            # user's edit and expose validation as current diagnostics instead.
+
         graph.unchanged()
         if (read_text(path) if path.exists() else None) != previous:
             raise ValueError('Managed fragment changed externally; reload before saving')

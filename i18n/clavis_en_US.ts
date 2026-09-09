@@ -8279,6 +8279,10 @@ Right click: Control Center</translation>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
+    <message>
+        <source>Shortcut conflicts</source>
+        <translation>Shortcut conflicts</translation>
+    </message>
 </context>
 <context>
     <name>SidebarCookieClock</name>
@@ -11491,4 +11495,23 @@ Windows: </translation>
             <translation>Decrease screen brightness</translation>
         </message>
     </context>
+<context>
+    <name>NiriConfigService</name>
+    <message>
+        <source>Unable to check configuration</source>
+        <translation>Unable to check configuration</translation>
+    </message>
+    <message>
+        <source>Configuration is invalid</source>
+        <translation>Configuration is invalid</translation>
+    </message>
+    <message>
+        <source>Configuration is not writable</source>
+        <translation>Configuration is not writable</translation>
+    </message>
+    <message>
+        <source>Unable to save changes</source>
+        <translation>Unable to save changes</translation>
+    </message>
+</context>
 </TS>
