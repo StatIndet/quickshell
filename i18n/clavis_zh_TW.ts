@@ -7200,6 +7200,30 @@ Click to open network settings</source>
         <source>Notification</source>
         <translation>通知</translation>
     </message>
+    <message>
+        <source>File action failed</source>
+        <translation>檔案操作失敗</translation>
+    </message>
+    <message>
+        <source>Could not open the saved file or its location: %1</source>
+        <translation>無法開啟已儲存的檔案或其所在位置：%1</translation>
+    </message>
+    <message>
+        <source>File no longer exists</source>
+        <translation>檔案已不存在</translation>
+    </message>
+    <message>
+        <source>Opened the containing folder: %1</source>
+        <translation>已開啟所在資料夾：%1</translation>
+    </message>
+    <message>
+        <source>Show in folder</source>
+        <translation>顯示所在位置</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>開啟</translation>
+    </message>
 </context>
 <context>
     <name>NotificationUtils</name>

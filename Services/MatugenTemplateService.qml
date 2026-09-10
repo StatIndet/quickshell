@@ -15,8 +15,6 @@ Singleton {
     property bool ready: false
     property string error: ""
     property string operationError: ""
-    // Start the asynchronous desktop-entry scan before an open-location request.
-    readonly property var desktopApplications: DesktopEntries.applications.values
     readonly property bool busy: mutation.running || pendingOperation !== null
     readonly property bool adding: busy && (pendingOperation ? pendingOperation.name : operation) === "add"
     property var pendingOperation: null
@@ -76,32 +74,7 @@ Singleton {
             console.warn("Cannot open template location: invalid absolute source path");
             return;
         }
-        const directory = path.substring(0, path.lastIndexOf("/")) || "/";
-        if (locationHandler.running)
-            return;
-        locationHandler.directory = directory;
-        locationHandler.running = true;
-    }
-
-    Process {
-        id: locationHandler
-        property string directory: ""
-        command: ["xdg-mime", "query", "default", "inode/directory"]
-        stdout: StdioCollector {
-            id: locationDesktopId
-        }
-        onExited: exitCode => {
-            const desktopId = exitCode === 0 ? locationDesktopId.text.trim() : "";
-            const applicationId = desktopId.replace(/\.desktop$/, "");
-            const application = root.desktopApplications.find(entry => entry.id === applicationId);
-            // xdg-open's generic backend ignores Terminal=true. Give terminal
-            // file managers a terminal without changing the user's MIME defaults.
-            const command = application && application.runInTerminal ? ["xdg-terminal-exec", "xdg-open",
-                                                                        locationHandler.directory] :
-                                                                       ["xdg-open",
-                                                                        locationHandler.directory];
-            Quickshell.execDetached(command);
-        }
+        FileActionService.run("reveal", path);
     }
 
     Connections {

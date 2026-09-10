@@ -18,6 +18,8 @@ Singleton {
                                                       && WidgetState.leftSidebarView === "info")
     readonly property bool hasNotifs: popupList.length > 0
 
+    property bool historyReady: false
+    property var pendingSavedFiles: []
     property int unread: 0
     property int idOffset: 0
     property list<Notif> list: []
@@ -51,6 +53,8 @@ Singleton {
         property double popupStartedAt: 0
         property double receivedAt: Date.now()
         property string summary: ""
+        property string localKind: ""
+        property string filePath: ""
         property Timer timer: null
         property var urgency: NotificationUrgency.Normal
         property Connections closeConnection: Connections {
@@ -91,6 +95,70 @@ Singleton {
     }
 
     Component.onCompleted: ensureStoreDir.running = true
+
+    onInitDone: {
+        root.historyReady = true;
+        const pending = root.pendingSavedFiles;
+        root.pendingSavedFiles = [];
+        pending.forEach(item => root.fileSaved(item.title, item.path));
+    }
+
+    Connections {
+        target: FileActionService
+        function onFinished(action, path, response) {
+            if (!response || !response.ok)
+                root.addLocal(qsTr("File action failed"), qsTr(
+                                  "Could not open the saved file or its location: %1").arg(path));
+            else if (!response.fileExists)
+                root.addLocal(qsTr("File no longer exists"), qsTr("Opened the containing folder: %1").arg(
+                                  path));
+        }
+    }
+
+    function fileSaved(title, path) {
+        if (typeof path !== "string" || !path.startsWith("/") || path.indexOf("\u0000") !== -1)
+            return;
+        if (!root.historyReady) {
+            root.pendingSavedFiles = [...root.pendingSavedFiles,
+                                      {
+                                          title,
+                                          path
+                                      }
+                    ];
+            return;
+        }
+        root.addLocal(title, path, path);
+    }
+
+    function addLocal(title, body, filePath) {
+        const now = Date.now();
+        const notif = notifComponent.createObject(root, {
+                                                      notificationId: ++root.idOffset,
+                                                      appName: "Clavis Shell",
+                                                      appIcon: "folder",
+                                                      summary: title,
+                                                      body: body.replace(/&/g, "&amp;").replace(/</g,
+                                                                                                "&lt;").replace(
+                                                                />/g, "&gt;"),
+                                                      localKind: filePath ? "file-saved" : "",
+                                                      filePath: filePath || "",
+                                                      receivedAt: now,
+                                                      urgency: NotificationUrgency.Low,
+                                                      popup: !root.popupInhibited,
+                                                      popupStartedAt: now,
+                                                      popupExpiresAt: now + root.defaultPopupTimeoutMs
+                                                  });
+        notif.timer = notifTimerComponent.createObject(root, {
+                                                           notificationId: notif.notificationId,
+                                                           interval: root.defaultPopupTimeoutMs
+                                                       });
+        root.list = [...root.list, notif];
+        if (notif.popup)
+            root.unread++;
+        root.trimPopupList(3);
+        root.saveNotifications();
+        root.notify(notif);
+    }
 
     onListChanged: {
         const nextLatest = {};
@@ -195,6 +263,13 @@ Singleton {
                     maxId = Math.max(maxId, notificationId);
                     return notifComponent.createObject(root, {
                                                            "notificationId": notificationId,
+                                                           "localKind": notif.localKind === "file-saved"
+                                                                        ? "file-saved" : "",
+                                                           "filePath": notif.localKind === "file-saved"
+                                                                       && typeof notif.filePath === "string"
+                                                                       && notif.filePath.startsWith("/")
+                                                                       && notif.filePath.indexOf("\u0000")
+                                                                       === -1 ? notif.filePath : "",
                                                            "appIcon": root.durableHistorySource(notif.appIcon),
                                                            "appName": notif.appName || qsTr("System"),
                                                            "body": notif.body || "",
@@ -244,6 +319,26 @@ Singleton {
     }
 
     function nativeActions(notifObject) {
+        if (notifObject && notifObject.localKind === "file-saved" && notifObject.filePath) {
+            const path = notifObject.filePath;
+            return [
+                        {
+                            identifier: "default",
+                            text: qsTr("Show in folder"),
+                            invoke: () => FileActionService.run("reveal", path)
+                        },
+                        {
+                            identifier: "reveal",
+                            text: qsTr("Show in folder"),
+                            invoke: () => FileActionService.run("reveal", path)
+                        },
+                        {
+                            identifier: "open",
+                            text: qsTr("Open"),
+                            invoke: () => FileActionService.run("open", path)
+                        }
+                    ];
+        }
         return notifObject && notifObject.notification && notifObject.notification.actions
                 ? notifObject.notification.actions : [];
     }
@@ -264,6 +359,8 @@ Singleton {
     function notifToJSON(notif) {
         return {
             "notificationId": notif.notificationId,
+            "localKind": notif.localKind,
+            "filePath": notif.filePath,
             "appIcon": root.durableHistorySource(notif.appIcon),
             "appName": notif.appName,
             "body": notif.body,

@@ -125,9 +125,9 @@ Singleton {
         if (!snapshot && (newer || expectedCommand === "record.stop") && response.ok && response.state === "completed"
                 && response.outputPath && root._lastSavedKey !== savedKey) {
             root._lastSavedKey = savedKey;
-            Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.recordingType
-                                     === "gif" ? qsTr("GIF saved") : qsTr("Screen recording saved"), qsTr(
-                                         "Saved to %1").arg(response.outputPath)]);
+            NotificationManager.fileSaved(root.recordingType === "gif" ? qsTr("GIF saved") : qsTr(
+                                                                             "Screen recording saved"),
+                                          response.outputPath);
         }
         if (root.backendActive && !watchProcess.running && !reconnect.running) {
             root._reconnectAttempts = 0;

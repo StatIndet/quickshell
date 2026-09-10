@@ -7200,6 +7200,30 @@ Click to open network settings</translation>
         <source>Notification</source>
         <translation>Notification</translation>
     </message>
+    <message>
+        <source>File action failed</source>
+        <translation>File action failed</translation>
+    </message>
+    <message>
+        <source>Could not open the saved file or its location: %1</source>
+        <translation>Could not open the saved file or its location: %1</translation>
+    </message>
+    <message>
+        <source>File no longer exists</source>
+        <translation>File no longer exists</translation>
+    </message>
+    <message>
+        <source>Opened the containing folder: %1</source>
+        <translation>Opened the containing folder: %1</translation>
+    </message>
+    <message>
+        <source>Show in folder</source>
+        <translation>Show in folder</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
 </context>
 <context>
     <name>NotificationUtils</name>
