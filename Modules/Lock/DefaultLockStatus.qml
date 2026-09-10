@@ -177,13 +177,15 @@ Item {
                                                        qsTr("Disconnected")
         }
         StatusIcon {
+            visible: KeyboardLockState.available
             symbol: "keyboard_capslock"
-            active: KeyboardLockState.capsLock
+            active: KeyboardLockState.available && KeyboardLockState.capsLock
             description: active ? qsTr("Caps Lock on") : qsTr("Caps Lock off")
         }
         StatusIcon {
+            visible: KeyboardLockState.available
             symbol: "pin"
-            active: KeyboardLockState.numLock
+            active: KeyboardLockState.available && KeyboardLockState.numLock
             description: active ? qsTr("Num Lock on") : qsTr("Num Lock off")
         }
         Row {

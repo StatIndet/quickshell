@@ -3,24 +3,28 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import Clavis.Niri
+import Clavis.Runtime
 
 Singleton {
     id: root
 
-    signal brightnessChanged()
+    signal brightnessChanged
 
     property var ddcMonitors: []
     property var pendingDdcMonitors: []
     property real fallbackBrightnessValue: 0.5
     property var monitors: []
-    property string focusedScreenName: ""
-    readonly property var activeScreen: root.getScreenByName(root.focusedScreenName) || (Quickshell.screens.length > 0 ? Quickshell.screens[0] : null)
-    readonly property var activeMonitor: root.getMonitorByName(root.focusedScreenName) || (root.monitors.length > 0 ? root.monitors[0] : null)
-    readonly property real brightnessValue: root.activeMonitor ? root.activeMonitor.brightness : root.fallbackBrightnessValue
+    readonly property string focusedScreenName: Niri.currentOutput
+    readonly property var activeScreen: root.getScreenByName(root.focusedScreenName) || (
+                                            Quickshell.screens.length > 0 ? Quickshell.screens[0] : null)
+    readonly property var activeMonitor: root.getMonitorByName(root.focusedScreenName) || (
+                                             root.monitors.length > 0 ? root.monitors[0] : null)
+    readonly property real brightnessValue: root.activeMonitor ? root.activeMonitor.brightness :
+                                                                 root.fallbackBrightnessValue
 
     Component.onCompleted: {
         root.rebuildMonitors();
-        root.refreshFocusedOutput();
     }
 
     Connections {
@@ -38,27 +42,28 @@ Singleton {
         const next = [];
         for (let i = 0; i < Quickshell.screens.length; i += 1)
             next.push(monitorComponent.createObject(root, {
-                screen: Quickshell.screens[i]
-            }));
+                                                        screen: Quickshell.screens[i]
+                                                    }));
 
         root.monitors = next;
         root.rescanDdcMonitors();
     }
 
-    function refreshFocusedOutput() {
-        if (!focusedOutputProcess.running)
-            focusedOutputProcess.running = true;
+    Connections {
+        target: BacklightState
+        function onChanged() {
+            for (const monitor of root.monitors) {
+                if (monitor.ready && !monitor.isDdc)
+                    monitor.applyBacklight();
+            }
+        }
     }
 
-    function parseFocusedOutput(text) {
-        const firstLine = String(text || "").split("\n")[0] || "";
-        const match = firstLine.match(/\(([^)]+)\)/);
-        if (!match)
-            return;
-
-        const screenName = root.normalizeConnectorName(match[1]);
-        if (screenName.length > 0)
-            root.focusedScreenName = screenName;
+    function backlightCommand(percent) {
+        const command = ["brightnessctl", "--class", "backlight"];
+        if (BacklightState.deviceName.length > 0)
+            command.push("--device", BacklightState.deviceName);
+        return command.concat(["s", percent + "%", "--quiet"]);
     }
 
     function clampBrightness(value, allowZero) {
@@ -84,7 +89,8 @@ Singleton {
         const normalizedName = root.normalizeConnectorName(name);
         if (normalizedName.length === 0)
             return null;
-        return Quickshell.screens.find(screen => root.normalizeConnectorName(screen.name) === normalizedName) || null;
+        return Quickshell.screens.find(screen => root.normalizeConnectorName(screen.name) === normalizedName)
+                || null;
     }
 
     function getMonitorByName(name) {
@@ -108,7 +114,7 @@ Singleton {
         const safeVal = root.clampBrightness(val, allowZero);
         const pct = Math.round(safeVal * 100);
         fallbackBrightnessValue = safeVal;
-        fallbackSetProc.exec(["brightnessctl", "--class", "backlight", "s", pct + "%", "--quiet"]);
+        fallbackSetProc.exec(root.backlightCommand(pct));
         root.brightnessChanged();
     }
 
@@ -137,9 +143,9 @@ Singleton {
 
         const next = pendingDdcMonitors.slice();
         next.push({
-            name: connector,
-            busNum: busMatch[1]
-        });
+                      name: connector,
+                      busNum: busMatch[1]
+                  });
         pendingDdcMonitors = next;
     }
 
@@ -168,35 +174,7 @@ Singleton {
 
     Process {
         id: fallbackSetProc
-    }
-
-    Process {
-        id: focusedOutputProcess
-
-        command: ["niri", "msg", "focused-output"]
-
-        stdout: StdioCollector {
-            onStreamFinished: root.parseFocusedOutput(this.text)
-        }
-    }
-
-    Timer {
-        id: pollTimer
-
-        interval: 5000
-        running: true
-        repeat: true
-        onTriggered: {
-            if (root.activeMonitor && !root.activeMonitor.isDdc)
-                root.activeMonitor.refresh();
-        }
-    }
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: root.refreshFocusedOutput()
+        onExited: BacklightState.refresh()
     }
 
     Component {
@@ -235,18 +213,41 @@ Singleton {
                 pendingSync = false;
 
                 const connectorName = root.normalizeConnectorName(screenName);
-                const match = root.ddcMonitors.find(m => root.normalizeConnectorName(m.name) === connectorName);
+                const match = root.ddcMonitors.find(m => root.normalizeConnectorName(m.name)
+                                                         === connectorName);
                 isDdc = !!match;
                 busNum = match ? match.busNum : "";
                 refresh();
             }
 
-            function refresh() {
+            function applyBacklight() {
+                if (!BacklightState.available)
+                    return;
                 reading = true;
-                if (isDdc)
-                    readProcess.command = ["ddcutil", "-b", busNum, "getvcp", "10", "--brief"];
-                else
-                    readProcess.command = ["brightnessctl", "--class", "backlight", "-m"];
+                rawMaxBrightness = BacklightState.maxBrightness;
+                brightness = BacklightState.brightness;
+                reading = false;
+                root.fallbackBrightnessValue = brightness;
+            }
+
+            function finishRead() {
+                reading = false;
+                ready = true;
+                if (pendingSync) {
+                    pendingSync = false;
+                    scheduleSync();
+                }
+                root.initializeMonitor(root.monitors.indexOf(monitor) + 1);
+            }
+
+            function refresh() {
+                if (!isDdc) {
+                    applyBacklight();
+                    finishRead();
+                    return;
+                }
+                reading = true;
+                readProcess.command = ["ddcutil", "-b", busNum, "getvcp", "10", "--brief"];
                 readProcess.running = true;
             }
 
@@ -267,17 +268,6 @@ Singleton {
                     }
                     return;
                 }
-
-                const parts = data.split(",");
-                if (parts.length < 5)
-                    return;
-
-                const percent = parseInt(parts[3].replace("%", ""));
-                const max = parseInt(parts[4]);
-                if (!isNaN(max) && max > 0)
-                    rawMaxBrightness = max;
-                if (!isNaN(percent))
-                    brightness = Math.max(0, Math.min(1, percent / 100.0));
             }
 
             function setBrightness(value, allowZero) {
@@ -300,7 +290,7 @@ Singleton {
                 }
 
                 const percent = Math.round(safeBrightness * 100);
-                setProcess.exec(["brightnessctl", "--class", "backlight", "s", percent + "%", "--quiet"]);
+                setProcess.exec(root.backlightCommand(percent));
             }
 
             readonly property Process readProcess: Process {
@@ -308,20 +298,15 @@ Singleton {
                     onStreamFinished: monitor.parseReadOutput(this.text)
                 }
 
-                onExited: {
-                    monitor.reading = false;
-                    monitor.ready = true;
-
-                    if (monitor.pendingSync) {
-                        monitor.pendingSync = false;
-                        monitor.scheduleSync();
-                    }
-
-                    root.initializeMonitor(root.monitors.indexOf(monitor) + 1);
-                }
+                onExited: monitor.finishRead()
             }
 
-            readonly property Process setProcess: Process {}
+            readonly property Process setProcess: Process {
+                onExited: {
+                    if (!monitor.isDdc)
+                        BacklightState.refresh();
+                }
+            }
 
             readonly property Timer ddcSetTimer: Timer {
                 id: ddcSetTimer

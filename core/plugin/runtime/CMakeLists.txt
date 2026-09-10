@@ -7,6 +7,8 @@ set_target_properties(ClavisRuntime PROPERTIES
 qt_add_qml_module(ClavisRuntime
     URI Clavis.Runtime
     SOURCES
+        src/backlight_state.h
+        src/backlight_state.cpp
         src/config_file_watch.h
         src/config_file_watch.cpp
         src/clavis_build_info.h
@@ -22,6 +24,7 @@ target_include_directories(ClavisRuntime PRIVATE
 )
 
 target_link_libraries(ClavisRuntime PRIVATE
+    ClavisRuntimeCore
     Qt6::Core
     Qt6::Qml
 )

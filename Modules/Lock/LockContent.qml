@@ -377,6 +377,8 @@ Item {
                     id: stateMessage
 
                     property string msg: {
+                        if (!KeyboardLockState.available)
+                            return "";
                         if (KeyboardLockState.capsLock && KeyboardLockState.numLock)
                             return qsTr("Caps Lock and Num Lock are on.");
 

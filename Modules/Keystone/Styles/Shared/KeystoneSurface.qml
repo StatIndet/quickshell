@@ -613,6 +613,12 @@ Variants {
                 property bool lockEnabled: false
 
                 function updateKeyboardLocks() {
+                    if (!KeyboardLockState.available) {
+                        locksInitialized = false;
+                        if (keyboardOsd)
+                            showVolume = false;
+                        return;
+                    }
                     const caps = KeyboardLockState.capsLock;
                     const num = KeyboardLockState.numLock;
                     if (locksInitialized) {
@@ -627,6 +633,7 @@ Variants {
                     }
                     previousCapsLock = caps;
                     previousNumLock = num;
+                    locksInitialized = true;
                 }
 
                 readonly property var currentPlayer: MediaManager.active
@@ -783,7 +790,6 @@ Variants {
                 Component.onCompleted: {
                     KeyboardLockState.refresh();
                     root.updateKeyboardLocks();
-                    root.locksInitialized = true;
                     SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
                                                             root.dashboardTabActive);
                     root.componentReady = true;
@@ -1249,6 +1255,10 @@ Variants {
 
                 Connections {
                     target: KeyboardLockState
+                    function onAvailabilityChanged() {
+                        root.locksInitialized = false;
+                        root.updateKeyboardLocks();
+                    }
                     function onLockStateChanged() {
                         root.updateKeyboardLocks();
                     }

@@ -3,9 +3,14 @@ qt_add_library(ClavisRuntimeCore STATIC)
 target_sources(ClavisRuntimeCore PRIVATE
     runtime/clavis_paths.h
     runtime/clavis_paths.cpp
+    runtime/udev_monitor.h
+    runtime/udev_monitor.cpp
+    runtime/keyboard_led_state.h
+    runtime/backlight_reading.h
+    runtime/backlight_reading.cpp
 )
 set_target_properties(ClavisRuntimeCore PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(ClavisRuntimeCore PRIVATE Qt6::Core Qt6::Network)
+target_link_libraries(ClavisRuntimeCore PRIVATE Qt6::Core Qt6::Network PkgConfig::Udev)
 target_include_directories(ClavisRuntimeCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 qt_add_library(ClavisWeatherMapCore STATIC)

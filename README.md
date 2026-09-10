@@ -53,6 +53,7 @@ Core development dependencies include:
 - QtKeychain
 - MapLibre Native Qt (`maplibre-native-qt` on Arch Linux)
 - PipeWire
+- libudev (`systemd-libs` on Arch Linux)
 - libcava
 - M3Shapes QML runtime module (`qt6-m3shapes-git` on Arch Linux)
 

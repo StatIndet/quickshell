@@ -40,7 +40,7 @@ normalize。仅明确格式迁移时使用全树写入 `--all`；`--check-all` �
 ```bash
 sudo pacman -S --needed base-devel cmake ninja qt6-base qt6-declarative \
   qt6-shadertools qt6-tools qtkeychain-qt6 libpipewire cava \
-  clang shellcheck python git libxkbcommon
+  clang shellcheck python git libxkbcommon systemd-libs
 # Matugen 集成测试需要：
 sudo pacman -S --needed matugen jq
 ```

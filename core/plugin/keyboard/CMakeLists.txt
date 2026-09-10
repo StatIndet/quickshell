@@ -19,6 +19,7 @@ target_include_directories(ClavisKeyboard PUBLIC src)
 pkg_check_modules(XkbCommon REQUIRED IMPORTED_TARGET xkbcommon)
 
 target_link_libraries(ClavisKeyboard PRIVATE
+    ClavisRuntimeCore
     Qt6::Quick
     Qt6::Gui
     PkgConfig::XkbCommon

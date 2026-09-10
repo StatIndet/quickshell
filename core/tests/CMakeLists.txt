@@ -132,3 +132,7 @@ add_test(NAME i18n_manager_tests COMMAND i18n_manager_tests)
 
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 add_test(NAME niri_config_contracts COMMAND ${Python3_EXECUTABLE} ${CLAVIS_SOURCE_ROOT}/tests/test_niri_config.py)
+
+qt_add_executable(device_state_tests device_state_test.cpp)
+target_link_libraries(device_state_tests PRIVATE ClavisRuntimeCore Qt6::Core Qt6::Test)
+add_test(NAME device_state_tests COMMAND device_state_tests)
