@@ -37,18 +37,13 @@ Item {
 
     // --- 内部状态 ---
     property real _targetX: root.progress * root.width
-    property real _activeX: seekMa.pressed
-        ? Math.max(0, Math.min(seekMa.mouseX, root.width))
-        : _targetX
+    property real _activeX: seekMa.pressed ? Math.max(0, Math.min(seekMa.mouseX, root.width)) : _targetX
     property real _visualX: _activeX
-    readonly property bool _hasProgressSplit:
-        _visualX > 0 && _visualX < width
-    readonly property real _playedEndX: _hasProgressSplit
-        ? Math.max(0, _visualX - progressGap / 2)
-        : Math.max(0, Math.min(_visualX, width))
-    readonly property real _remainingStartX: _hasProgressSplit
-        ? Math.min(width, _visualX + progressGap / 2)
-        : Math.max(0, Math.min(_visualX, width))
+    readonly property bool _hasProgressSplit: _visualX > 0 && _visualX < width
+    readonly property real _playedEndX: _hasProgressSplit ? Math.max(0, _visualX - progressGap / 2) : Math.max(
+                                                                0, Math.min(_visualX, width))
+    readonly property real _remainingStartX: _hasProgressSplit ? Math.min(width, _visualX + progressGap / 2) :
+                                                                 Math.max(0, Math.min(_visualX, width))
 
     Behavior on _visualX {
         enabled: root.visible && !seekMa.pressed
@@ -90,10 +85,24 @@ Item {
         }
 
         onPhaseChanged: requestPaint()
+        onAvailableChanged: {
+            if (available)
+                requestPaint();
+        }
+        onVisibleChanged: {
+            if (visible)
+                requestPaint();
+        }
 
         Connections {
             target: root
-            function on_VisualXChanged() { waveCanvas.requestPaint() }
+            function on_VisualXChanged() {
+                waveCanvas.requestPaint();
+            }
+            // Theme colors may arrive after the first paint, even while paused.
+            function onWaveColorChanged() {
+                waveCanvas.requestPaint();
+            }
         }
 
         onPaint: {
@@ -121,13 +130,7 @@ Item {
             ctx.beginPath();
             ctx.moveTo(endCenterX, centerY + trackH / 2);
             ctx.lineTo(radius, centerY + trackH / 2);
-            ctx.arc(
-                radius,
-                centerY,
-                radius,
-                Math.PI / 2,
-                Math.PI * 1.5
-            );
+            ctx.arc(radius, centerY, radius, Math.PI / 2, Math.PI * 1.5);
 
             let freq = root.waveFrequency;
             let maxAmp = root.waveAmplitude;
@@ -149,23 +152,20 @@ Item {
                 }
 
                 let wave1 = Math.sin(x * freq - phase);
-                let wave2 = Math.sin(x * freq * root.secondaryWaveFrequencyMultiplier - phase * 2.0) * root.secondaryWaveAmplitude;
+                let wave2 = Math.sin(x * freq * root.secondaryWaveFrequencyMultiplier - phase * 2.0)
+                    * root.secondaryWaveAmplitude;
                 let combined = (wave1 + wave2 + root.waveBias) / (2 * root.waveBias);
 
-                if (combined < 0) combined = 0;
-                if (combined > 1) combined = 1;
+                if (combined < 0)
+                    combined = 0;
+                if (combined > 1)
+                    combined = 1;
 
                 let y = (centerY - trackH / 2) - (combined * maxAmp * envelope);
                 ctx.lineTo(x, y);
             }
 
-            ctx.arc(
-                endCenterX,
-                centerY,
-                radius,
-                -Math.PI / 2,
-                Math.PI / 2
-            );
+            ctx.arc(endCenterX, centerY, radius, -Math.PI / 2, Math.PI / 2);
             ctx.closePath();
             ctx.fillStyle = String(root.waveColor);
             ctx.fill();
@@ -179,7 +179,7 @@ Item {
         anchors.margins: -root.seekMargin
         cursorShape: Qt.PointingHandCursor
 
-        onReleased: (mouse) => {
+        onReleased: mouse => {
             let clampedX = Math.max(0, Math.min(mouse.x, root.width));
             root.seekRequested(clampedX / root.width);
         }
