@@ -23,11 +23,13 @@ Singleton {
 
     function context() {
         const p = PersonalizationConfig;
-        return JSON.stringify([p.wallpaperPath, p.wallpaperPathLight, p.wallpaperPathDark, p.monitorWallpapers,
-                               p.perMonitorWallpaper, p.perModeWallpaper, p.overviewWallpaperPath,
-                               p.overviewMonitorWallpapers, p.overviewPerMonitorWallpaper,
-                               p.overviewUseDesktopWallpaper, p.desktopWallpaperBackend,
-                               UiPreferences.darkMode, Quickshell.screens.map(s => s.name).sort()]);
+        return JSON.stringify([p.bannerSource, p.wallpaperPath, p.wallpaperPathLight, p.wallpaperPathDark,
+                               p.monitorWallpapers, p.perMonitorWallpaper, p.perModeWallpaper,
+                               p.overviewWallpaperPath, p.overviewMonitorWallpapers,
+                               p.overviewPerMonitorWallpaper, p.overviewUseDesktopWallpaper,
+                               p.desktopWallpaperBackend, UiPreferences.darkMode, Quickshell.screens.map(s
+                                                                                                         => s.name).sort(
+                                   )]);
     }
     function begin(target, output) {
         if (root.active) {
@@ -45,12 +47,16 @@ Singleton {
         root.capturedContext = root.context();
         root.scope = {
             target: target,
-            monitor: target === "overview" ? (p.overviewPerMonitorWallpaper ? output : "") : (
-                                                 p.perMonitorWallpaper ? output : ""),
+            monitor: target === "banner" ? "" : target === "overview" ? (p.overviewPerMonitorWallpaper
+                                                                         ? output : "") : (
+                                                                            p.perMonitorWallpaper ? output :
+                                                                                                    ""),
             field: target === "desktop" && p.perModeWallpaper ? (UiPreferences.darkMode ? "pathDark" : "pathLight") :
                                                                 "path"
         };
-        root.originalSource = target === "overview" ? WallpaperService.overviewWallpaperForScreen(output) :
+        root.originalSource = target === "banner" ? (p.bannerSource || WallpaperService.currentWallpaper) :
+                                                    target === "overview"
+                                                    ? WallpaperService.overviewWallpaperForScreen(output) :
                                                       WallpaperService.wallpaperForScreen(output);
         root.capturedContext = root.context();
         root.token += 1;
@@ -93,7 +99,8 @@ Singleton {
         const source = Source.encode(root.draft);
         if (!source)
             return false;
-        if (source === root.originalSource) {
+        if (source === root.originalSource && (root.scope.target !== "banner"
+                                               || PersonalizationConfig.bannerSource === source)) {
             root.cancel(sessionToken);
             return true;
         }

@@ -1,4 +1,6 @@
 import QtQuick
+import Quickshell
+import qs.Modules.ControlCenter
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -7,19 +9,11 @@ AccountProfileHeader {
     id: root
 
     property string screenName: ""
-    readonly property int wallpaperRevision: WallpaperService.revision
-    readonly property string resolvedWallpaperPath: wallpaperRevision >= 0 ? (
-                                                                                 WallpaperService.wallpaperForScreen(
-                                                                                     screenName)
-                                                                                 || WallpaperService.currentWallpaper
-                                                                                 || PersonalizationConfig.wallpaperPath) :
-                                                                             ""
-
     coverHeight: Math.round(width / 2.5)
     profileAreaHeight: 112
     avatarSize: 96
-    wallpaperPath: resolvedWallpaperPath
-    colorWallpaper: WallpaperService.isColorSource(resolvedWallpaperPath)
+    wallpaperPath: bannerEditor.source
+    colorWallpaper: WallpaperService.isColorSource(wallpaperPath)
     avatarUrl: AvatarService.avatarUrl
     fallbackAvatarUrl: Paths.fileUrl(Paths.defaultAvatar)
     accountIdentity: SystemIdentityService.accountIdentity
@@ -30,6 +24,20 @@ AccountProfileHeader {
     surfaceColor: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
     avatarActionLabel: qsTr("Open Settings")
 
+    ProfileBannerEditor {
+        id: bannerEditor
+        parentModal: root.QsWindow.window
+    }
+    onBannerFileActivated: bannerEditor.chooseFile()
+    onBannerColorActivated: bannerEditor.chooseColor()
+    onBannerCleared: bannerEditor.clear()
+    Connections {
+        target: WidgetState
+        function onLeftSidebarOpenChanged() {
+            if (!WidgetState.leftSidebarOpen)
+                bannerEditor.close();
+        }
+    }
     onAvatarActivated: {
         WidgetState.leftSidebarOpen = false;
         ControlCenterService.open();

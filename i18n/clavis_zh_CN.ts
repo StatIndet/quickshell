@@ -4,289 +4,289 @@
 <context>
     <name>AccountPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="76"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>KB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>GB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>TB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>PB</source>
         <translation>PB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="91"/>
         <source>Not connected to cloud storage</source>
         <translation>未连接云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="113"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="114"/>
         <source>Other cloud storage</source>
         <translation>其他云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="132"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="134"/>
         <source>Paired</source>
         <translation>已配对</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="147"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="166"/>
         <source>Network unavailable</source>
         <translation>网络不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="167"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="176"/>
         <source>Connecting</source>
         <translation>正在连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="171"/>
         <source>Not connected</source>
         <translation>未连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
         <source>Connected, wired</source>
         <translation>已连接，有线</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
         <source>Connected, secure</source>
         <translation>已连接，安全</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="182"/>
         <source>Connected, open</source>
         <translation>已连接，开放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="235"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="239"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="249"/>
         <source>Display language</source>
         <translation>显示语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="256"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="260"/>
         <source>Choose language</source>
         <translation>选择语言</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="275"/>
         <source>Bluetooth devices</source>
         <translation>蓝牙设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="284"/>
         <source>Bluetooth</source>
         <translation>蓝牙</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="284"/>
         <source>Turn on Bluetooth to connect devices</source>
         <translation>开启蓝牙以连接设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="294"/>
         <source>Bluetooth switch</source>
         <translation>蓝牙开关</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="344"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="379"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="348"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="383"/>
         <source>Unnamed device</source>
         <translation>未命名设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="378"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="382"/>
         <source>More options for %1</source>
         <translation>%1 的更多选项</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="394"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="398"/>
         <source>Forget device</source>
         <translation>遗忘设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="409"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="413"/>
         <source>No paired devices</source>
         <translation>暂无已配对设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="418"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="422"/>
         <source>More Bluetooth settings</source>
         <translation>更多蓝牙设置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="428"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="432"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="434"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="438"/>
         <source>Configure shortcuts</source>
         <translation>配置快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="444"/>
         <source>Shortcut map</source>
         <translation>快捷键配置图</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="452"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="456"/>
         <source>Cloud storage</source>
         <translation>云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="481"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="485"/>
         <source>Refresh cloud storage information</source>
         <translation>刷新云存储信息</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="494"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="498"/>
         <source>Storage: Used %1 of %2 (%3%)</source>
         <translation>容量：已使用 %1，共 %2（%3%）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="501"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="505"/>
         <source>Reading capacity…</source>
         <translation>正在读取容量…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="516"/>
         <source>Cloud storage used capacity</source>
         <translation>云存储已使用容量</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="540"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="544"/>
         <source>Backing up</source>
         <translation>正在备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="545"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="549"/>
         <source>Stopping backup…</source>
         <translation>正在停止备份…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="549"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="553"/>
         <source>%1: current folder %2%</source>
         <translation>%1：当前文件夹 %2%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="557"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="561"/>
         <source>Checking files…</source>
         <translation>正在检查文件…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="560"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="564"/>
         <source>%1 items scanned</source>
         <translation>已扫描 %1 个项目</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="563"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="567"/>
         <source>Scanning files…</source>
         <translation>正在扫描文件…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="564"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="568"/>
         <source>Preparing backup</source>
         <translation>正在准备备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="579"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="583"/>
         <source>Computer backup</source>
         <translation>电脑备份</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="588"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="592"/>
         <source>Manage cloud storage</source>
         <translation>管理云存储</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="602"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="606"/>
         <source>Personalization</source>
         <translation>个性化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="631"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="635"/>
         <source>Use wallpaper %1</source>
         <translation>使用壁纸 %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="710"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="714"/>
         <source>Color mode</source>
         <translation>色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="720"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="724"/>
         <source>Light</source>
         <translation>浅色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="723"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="727"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="727"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="731"/>
         <source>Choose color mode</source>
         <translation>选择色彩模式</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="739"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="743"/>
         <source>Wallpaper</source>
         <translation>壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="747"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="751"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="763"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="772"/>
         <source>Choose avatar</source>
         <translation>选择头像</translation>
     </message>
@@ -294,12 +294,23 @@
 <context>
     <name>AccountProfileHeader</name>
     <message>
+        <location filename="../Modules/ControlCenter/ProfileBannerEditor.qml" line="31"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="139"/>
+        <source>Choose banner image</source>
+        <translation>选择横幅图片</translation>
+    </message>
+    <message>
         <location filename="../Widgets/common/AccountProfileHeader.qml" line="24"/>
         <source>Change avatar</source>
         <translation>更改头像</translation>
     </message>
     <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="292"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="140"/>
+        <source>Reset to desktop wallpaper</source>
+        <translation>恢复跟随桌面壁纸</translation>
+    </message>
+    <message>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="305"/>
         <source>Up for %1</source>
         <translation>已运行 %1</translation>
     </message>
@@ -4531,6 +4542,34 @@ Scroll to adjust</source>
         <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="232"/>
         <source>Collapse tools</source>
         <translation>收起工具</translation>
+    </message>
+</context>
+<context>
+    <name>KeyboardLockIndicator</name>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Caps Lock</source>
+        <translation>大写锁定</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Num Lock</source>
+        <translation>数字锁定</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>On</source>
+        <translation>已开启</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>Off</source>
+        <translation>已关闭</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="16"/>
+        <source>%1: %2</source>
+        <translation>%1：%2</translation>
     </message>
 </context>
 <context>
@@ -10224,12 +10263,12 @@ Scroll to adjust; click to open sound</source>
 <context>
     <name>WallpaperPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="617"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="559"/>
         <source>%1 FPS</source>
         <translation>%1 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="666"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
         <source>Step %1</source>
         <translation>步长 %1</translation>
     </message>
@@ -10239,312 +10278,312 @@ Scroll to adjust; click to open sound</source>
         <translation>全局</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="253"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="10"/>
         <source>Choose folder</source>
         <translation>选择文件夹</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="261"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="67"/>
         <source>Choose color</source>
         <translation>选择颜色</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="261"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="67"/>
         <source>Color and gradient wallpapers require the Quickshell backend</source>
         <translation>纯色和渐变壁纸需要 Quickshell 后端</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="271"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="11"/>
         <source>Clear wallpaper</source>
         <translation>清除壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="298"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="240"/>
         <source>Pause</source>
         <translation>暂停</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="298"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="240"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="302"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="244"/>
         <source>Reverse</source>
         <translation>倒放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="306"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="248"/>
         <source>Flip</source>
         <translation>翻转</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="349"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="374"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="291"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="316"/>
         <source>Desktop wallpaper manager</source>
         <translation>桌面壁纸管理器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="367"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="309"/>
         <source>Select an image wallpaper before switching to awww</source>
         <translation>请先选择图片壁纸，再切换到 awww</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="370"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="312"/>
         <source>The awww or awww-daemon command is missing</source>
         <translation>缺少 awww 或 awww-daemon 命令</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="371"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="313"/>
         <source>Detecting awww…</source>
         <translation>正在检测 awww…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="392"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="334"/>
         <source>Current wallpaper</source>
         <translation>当前壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="420"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="362"/>
         <source>No wallpaper selected</source>
         <translation>未选择壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="447"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="389"/>
         <source>Previous</source>
         <translation>上一张</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="450"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="392"/>
         <source>Random</source>
         <translation>随机</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="395"/>
         <source>Next</source>
         <translation>下一张</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="485"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="489"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1051"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1055"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="427"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="431"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="993"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="997"/>
         <source>Per-monitor wallpapers</source>
         <translation>每显示器独立壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="498"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1064"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1006"/>
         <source>Select output</source>
         <translation>选择输出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="499"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="441"/>
         <source>Desktop wallpaper output</source>
         <translation>桌面壁纸输出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="517"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="459"/>
         <source>Transition</source>
         <translation>过渡效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="526"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1072"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="468"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1014"/>
         <source>Transition type</source>
         <translation>转场类型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="551"/>
         <source>awww FPS</source>
         <translation>awww FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="633"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="575"/>
         <source>awww transition FPS</source>
         <translation>awww 转场 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="641"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="583"/>
         <source>The none transition does not use FPS.</source>
         <translation>none 转场不会使用 FPS。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="641"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="583"/>
         <source>Independent FPS is available only with awww.</source>
         <translation>独立 FPS 仅适用于 awww。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="658"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="600"/>
         <source>Transition step</source>
         <translation>过渡步长</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="682"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="624"/>
         <source>awww transition step</source>
         <translation>awww 过渡步长</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="705"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="647"/>
         <source>Transition duration</source>
         <translation>过渡时间</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="731"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="673"/>
         <source>Wallpaper transition duration</source>
         <translation>壁纸过渡时间</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="738"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="680"/>
         <source>The current transition does not use duration.</source>
         <translation>当前转场不使用持续时间。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="756"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="698"/>
         <source>Easing curve</source>
         <translation>缓动曲线</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="815"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="820"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="757"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="762"/>
         <source>Edit Bézier curve</source>
         <translation>编辑贝塞尔</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="843"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="785"/>
         <source>The current transition does not use an easing curve.</source>
         <translation>当前转场不使用缓动曲线。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="849"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="791"/>
         <source>Parallax effects</source>
         <translation>视差效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="866"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="871"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="808"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="813"/>
         <source>Vertical parallax</source>
         <translation>垂直视差</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="879"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="896"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="821"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="838"/>
         <source>Follow workspaces</source>
         <translation>随工作区移动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="903"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="845"/>
         <source>Enable vertical parallax first.</source>
         <translation>需要先启用垂直视差。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="911"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="916"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="853"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="858"/>
         <source>Follow sidebars</source>
         <translation>随侧边栏移动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="924"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="929"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="866"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="871"/>
         <source>Follow tiled-window focus</source>
         <translation>随平铺窗口焦点移动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="940"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="882"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="896"/>
         <source>Wallpaper scale</source>
         <translation>壁纸缩放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="966"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="980"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="908"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="922"/>
         <source>Horizontal travel columns</source>
         <translation>横向行程列数</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="988"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="930"/>
         <source>Desktop parallax is available only with Quickshell.</source>
         <translation>桌面视差仅适用于 Quickshell。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="994"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="936"/>
         <source>Overview background</source>
         <translation>Overview 背景</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="328"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="270"/>
         <source>Overview integration</source>
         <translation>概览配置接入</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="329"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="271"/>
         <source>Create or connect backdrop rules and make the global workspace background transparent.</source>
         <translation>创建或接入背景规则，并将全局工作区背景设为透明。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="284"/>
         <source>Overview is already configured outside Clavis</source>
         <translation>概览已由外部配置满足</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1027"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1031"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="969"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="973"/>
         <source>Enable background</source>
         <translation>启用背景</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1039"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1043"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="981"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="985"/>
         <source>Use desktop wallpaper</source>
         <translation>使用桌面壁纸</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1065"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1007"/>
         <source>Overview wallpaper output</source>
         <translation>overview 壁纸输出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1091"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1033"/>
         <source>Image effects</source>
         <translation>图像效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1099"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1041"/>
         <source>Blur</source>
         <translation>模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1112"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1054"/>
         <source>Overview blur</source>
         <translation>overview 模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1123"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1065"/>
         <source>Dim</source>
         <translation>暗化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1136"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1078"/>
         <source>Overview dimming</source>
         <translation>overview 暗化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1147"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1089"/>
         <source>Saturation</source>
         <translation>饱和度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1160"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1102"/>
         <source>Overview saturation</source>
         <translation>overview 饱和度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1171"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1113"/>
         <source>Contrast</source>
         <translation>对比度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1184"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1126"/>
         <source>Overview contrast</source>
         <translation>overview 对比度</translation>
     </message>
@@ -11646,34 +11685,6 @@ Windows: </source>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>颗粒：%1%</translation>
-    </message>
-</context>
-<context>
-    <name>KeyboardLockIndicator</name>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
-        <source>Caps Lock</source>
-        <translation>大写锁定</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
-        <source>Num Lock</source>
-        <translation>数字锁定</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
-        <source>On</source>
-        <translation>已开启</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
-        <source>Off</source>
-        <translation>已关闭</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="16"/>
-        <source>%1: %2</source>
-        <translation>%1：%2</translation>
     </message>
 </context>
 </TS>

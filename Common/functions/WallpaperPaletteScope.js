@@ -2,6 +2,7 @@
 // saved configuration only; the draft never participates in fallback lookup.
 function affects(scope, target, output, config, dark) {
     if (!scope) return false;
+    if (scope.target === "banner" || target === "banner") return scope.target === target;
     var desktopMonitor = config.perMonitorWallpaper && (config.monitorWallpapers || {})[output];
     var overviewMonitor = config.overviewPerMonitorWallpaper && (config.overviewMonitorWallpapers || {})[output];
     if (scope.target === "overview") {

@@ -212,6 +212,7 @@ Singleton {
     property bool loading: false
     property bool loaded: false
     readonly property bool ready: root.storeReady && root.loaded && !root.loading
+    property string bannerSource: ""
     property string wallpaperFolder: Paths.dataHome + "/wallpapers"
     property string wallpaperPath: ""
     property string wallpaperPathLight: ""
@@ -747,6 +748,10 @@ Singleton {
 
         root[propertyName] = value;
         root.save();
+    }
+
+    function setBannerSource(value) {
+        setValue("bannerSource", String(value || ""));
     }
 
     function setWallpaperFolder(value) {
@@ -1543,6 +1548,7 @@ Singleton {
     function toJson() {
         return {
             "wallpaper": {
+                "bannerSource": root.bannerSource,
                 "folder": root.wallpaperFolder,
                 "path": root.wallpaperPath,
                 "pathLight": root.wallpaperPathLight,
@@ -1671,6 +1677,7 @@ Singleton {
         const fonts = theme.fonts || {};
         const horizontalClock = keystone.horizontalClock || {};
         const keyhole = keystone.keyhole || {};
+        root.bannerSource = String(wallpaper.bannerSource || "");
         root.wallpaperFolder = wallpaper.folder || Paths.dataHome + "/wallpapers";
         root.wallpaperPath = wallpaper.path === Paths.currentWallpaper ? "" : (wallpaper.path || "");
         root.wallpaperPathLight = wallpaper.pathLight || "";
@@ -1805,14 +1812,17 @@ Singleton {
     }
 
     function commitPalette(scope, source) {
-        if (!scope || ["desktop", "overview"].indexOf(scope.target) < 0 || ["path", "pathLight",
-                                                                            "pathDark"].indexOf(scope.field)
-                < 0 || (scope.target === "desktop" && root.desktopWallpaperBackend === "awww") || !root.storeReady
-                || root.loading || !WallpaperSource.decode(source))
+        if (!scope || ["desktop", "overview", "banner"].indexOf(scope.target) < 0 || ["path", "pathLight",
+                                                                                      "pathDark"].indexOf(
+                    scope.field) < 0 || (scope.target === "desktop" && root.desktopWallpaperBackend
+                                         === "awww") || !root.storeReady || root.loading ||
+                !WallpaperSource.decode(source))
             return false;
         const candidate = JSON.parse(JSON.stringify(root.toJson()));
         const section = scope.target === "overview" ? candidate.wallpaper.overview : candidate.wallpaper;
-        if (scope.monitor)
+        if (scope.target === "banner")
+            section.bannerSource = source;
+        else if (scope.monitor)
             section.monitorWallpapers[scope.monitor] = source;
         else
             section[scope.field] = source;
@@ -1835,7 +1845,9 @@ Singleton {
             return false;
         // Publish only after the atomic write succeeded. No normal setters,
         // extra writes, or theme generation are involved in this operation.
-        if (scope.monitor) {
+        if (scope.target === "banner") {
+            root.bannerSource = source;
+        } else if (scope.monitor) {
             const propertyName = scope.target === "overview" ? "overviewMonitorWallpapers" :
                                                                "monitorWallpapers";
             const next = root.cloneMap(root[propertyName]);

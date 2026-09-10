@@ -27,6 +27,10 @@ Rectangle {
     property real avatarSize: 104
     property real avatarCoverFraction: 0.42
 
+    signal bannerFileActivated
+    signal bannerColorActivated
+    signal bannerCleared
+
     signal avatarActivated
     signal networkActivated
 
@@ -128,11 +132,20 @@ Rectangle {
             topRightRadius: root.radius
             color: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.08)
         }
+        WallpaperActions {
+            anchors.fill: parent
+            topRadius: root.radius
+            bottomRadius: 0
+            fileTooltip: qsTr("Choose banner image")
+            clearTooltip: qsTr("Reset to desktop wallpaper")
+            onChooseFile: root.bannerFileActivated()
+            onChooseColor: root.bannerColorActivated()
+            onClearWallpaper: root.bannerCleared()
+        }
     }
 
     Rectangle {
         id: avatarFrame
-
         x: Appearance.spacing.panelPadding
         y: root.coverHeight - root.avatarSize * root.avatarCoverFraction
         z: 2

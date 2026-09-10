@@ -155,23 +155,6 @@ StyledFlickable {
         radius: 0
     }
 
-    component HoverActionButton: IconButton {
-        id: action
-
-        property bool darkOverlay: false
-
-        controlSize: 32
-        iconSize: 18
-        iconFill: 1
-        iconColor: action.darkOverlay ? "white" : Appearance.colors.colOnSurface
-        normalContainerColor: action.darkOverlay ? Appearance.applyAlpha("white", 0.18) :
-                                                   Appearance.colors.colSurfaceContainerHigh
-        hoverStateLayerColor: action.darkOverlay ? Appearance.applyAlpha("white", 0.28) :
-                                                   Appearance.colors.colSurfaceContainerHighest
-        pressedStateLayerColor: action.darkOverlay ? Appearance.applyAlpha("white", 0.36) :
-                                                     Appearance.colors.colLayer3Active
-    }
-
     component WallpaperPreview: Item {
         id: preview
 
@@ -226,54 +209,13 @@ StyledFlickable {
             visible: preview.sourcePath === ""
         }
 
-        HoverHandler {
-            id: previewHover
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-        }
-
-        Rectangle {
+        WallpaperActions {
             anchors.fill: parent
-            radius: Appearance.rounding.normal
-            color: Appearance.applyAlpha(Appearance.m3colors.m3scrim, 0.7)
-            opacity: previewHover.hovered ? 1 : 0
-
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 160
-                    easing.type: Easing.OutSine
-                }
-            }
-
-            Row {
-                anchors.centerIn: parent
-                spacing: 4
-
-                HoverActionButton {
-                    iconName: "folder_open"
-                    tooltipText: qsTr("Choose folder")
-                    darkOverlay: true
-                    enabled: preview.actionsEnabled
-                    onClicked: preview.chooseFile()
-                }
-
-                HoverActionButton {
-                    iconName: "palette"
-                    tooltipText: preview.paletteEnabled ? qsTr("Choose color") : qsTr(
-                                                              "Color and gradient wallpapers require the Quickshell backend")
-                    darkOverlay: true
-                    enabled: preview.actionsEnabled && preview.paletteEnabled
-                    disabledHoverFeedback: !preview.paletteEnabled
-                    onClicked: preview.chooseColor()
-                }
-
-                HoverActionButton {
-                    iconName: "clear"
-                    tooltipText: qsTr("Clear wallpaper")
-                    darkOverlay: true
-                    enabled: preview.actionsEnabled
-                    onClicked: preview.clearWallpaper()
-                }
-            }
+            actionsEnabled: preview.actionsEnabled
+            paletteEnabled: preview.paletteEnabled
+            onChooseFile: preview.chooseFile()
+            onChooseColor: preview.chooseColor()
+            onClearWallpaper: preview.clearWallpaper()
         }
     }
 

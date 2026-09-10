@@ -23,6 +23,7 @@ Item {
     Component.onDestruction: SystemIdentityService.setUptimeConsumer("account-page", false)
 
     function closeChildWindows() {
+        bannerEditor.close();
         avatarPicker.dismiss();
         backupWindow.dismiss();
     }
@@ -204,7 +205,7 @@ Item {
 
             AccountProfileHeader {
                 width: parent.width
-                wallpaperPath: WallpaperService.currentWallpaper
+                wallpaperPath: bannerEditor.source
                 colorWallpaper: WallpaperService.isColorSource(wallpaperPath)
                 avatarUrl: AvatarService.avatarUrl
                 fallbackAvatarUrl: Paths.fileUrl(Paths.defaultAvatar)
@@ -216,6 +217,9 @@ Item {
                 networkIconName: root.networkStatusIcon()
                 networkStatusText: root.networkStatusText()
                 networkStatusDetail: root.networkStatusDetail()
+                onBannerFileActivated: bannerEditor.chooseFile()
+                onBannerColorActivated: bannerEditor.chooseColor()
+                onBannerCleared: bannerEditor.clear()
                 onAvatarActivated: avatarPicker.openAt(avatarPicker.picturesDir)
                 onNetworkActivated: root.navigateRequested("network")
             }
@@ -753,6 +757,11 @@ Item {
                 }
             }
         }
+    }
+
+    ProfileBannerEditor {
+        id: bannerEditor
+        parentModal: root.parentModal
     }
 
     FilePickerWindow {

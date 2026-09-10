@@ -4,289 +4,289 @@
 <context>
     <name>AccountPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="76"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>KB</source>
         <translation>KB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>GB</source>
         <translation>GB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>TB</source>
         <translation>TB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="78"/>
         <source>PB</source>
         <translation>PB</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="91"/>
         <source>Not connected to cloud storage</source>
         <translation>Not connected to cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="113"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="114"/>
         <source>Other cloud storage</source>
         <translation>Other cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="132"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
         <source>Connected</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="133"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="134"/>
         <source>Paired</source>
         <translation>Paired</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
         <source>Disconnect</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="147"/>
         <source>Connect</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="166"/>
         <source>Network unavailable</source>
         <translation>Network unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="167"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="175"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="176"/>
         <source>Connecting</source>
         <translation>Connecting</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="171"/>
         <source>Not connected</source>
         <translation>Not connected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
         <source>Connected, wired</source>
         <translation>Connected, wired</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="180"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
         <source>Connected, secure</source>
         <translation>Connected, secure</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="182"/>
         <source>Connected, open</source>
         <translation>Connected, open</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="235"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="239"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="245"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="249"/>
         <source>Display language</source>
         <translation>Display language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="256"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="260"/>
         <source>Choose language</source>
         <translation>Choose language</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="275"/>
         <source>Bluetooth devices</source>
         <translation>Bluetooth devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="284"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="284"/>
         <source>Turn on Bluetooth to connect devices</source>
         <translation>Turn on Bluetooth to connect devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="294"/>
         <source>Bluetooth switch</source>
         <translation>Bluetooth switch</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="344"/>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="379"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="348"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="383"/>
         <source>Unnamed device</source>
         <translation>Unnamed device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="378"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="382"/>
         <source>More options for %1</source>
         <translation>More options for %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="394"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="398"/>
         <source>Forget device</source>
         <translation>Forget device</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="409"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="413"/>
         <source>No paired devices</source>
         <translation>No paired devices</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="418"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="422"/>
         <source>More Bluetooth settings</source>
         <translation>More Bluetooth settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="428"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="432"/>
         <source>Keyboard shortcuts</source>
         <translation>Keyboard shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="434"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="438"/>
         <source>Configure shortcuts</source>
         <translation>Configure shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="444"/>
         <source>Shortcut map</source>
         <translation>Shortcut map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="452"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="456"/>
         <source>Cloud storage</source>
         <translation>Cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="481"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="485"/>
         <source>Refresh cloud storage information</source>
         <translation>Refresh cloud storage information</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="494"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="498"/>
         <source>Storage: Used %1 of %2 (%3%)</source>
         <translation>Storage: Used %1 of %2 (%3%)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="501"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="505"/>
         <source>Reading capacity…</source>
         <translation>Reading capacity…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="516"/>
         <source>Cloud storage used capacity</source>
         <translation>Cloud storage used capacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="540"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="544"/>
         <source>Backing up</source>
         <translation>Backing up</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="545"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="549"/>
         <source>Stopping backup…</source>
         <translation>Stopping backup…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="549"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="553"/>
         <source>%1: current folder %2%</source>
         <translation>%1: current folder %2%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="557"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="561"/>
         <source>Checking files…</source>
         <translation>Checking files…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="560"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="564"/>
         <source>%1 items scanned</source>
         <translation>%1 items scanned</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="563"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="567"/>
         <source>Scanning files…</source>
         <translation>Scanning files…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="564"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="568"/>
         <source>Preparing backup</source>
         <translation>Preparing backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="579"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="583"/>
         <source>Computer backup</source>
         <translation>Computer backup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="588"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="592"/>
         <source>Manage cloud storage</source>
         <translation>Manage cloud storage</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="602"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="606"/>
         <source>Personalization</source>
         <translation>Personalization</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="631"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="635"/>
         <source>Use wallpaper %1</source>
         <translation>Use wallpaper %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="710"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="714"/>
         <source>Color mode</source>
         <translation>Color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="720"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="724"/>
         <source>Light</source>
         <translation>Light</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="723"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="727"/>
         <source>Dark</source>
         <translation>Dark</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="727"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="731"/>
         <source>Choose color mode</source>
         <translation>Choose color mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="739"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="743"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="747"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="751"/>
         <source>Theme</source>
         <translation>Theme</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/AccountPage.qml" line="763"/>
+        <location filename="../Modules/ControlCenter/AccountPage.qml" line="772"/>
         <source>Choose avatar</source>
         <translation>Choose avatar</translation>
     </message>
@@ -294,12 +294,23 @@
 <context>
     <name>AccountProfileHeader</name>
     <message>
+        <location filename="../Modules/ControlCenter/ProfileBannerEditor.qml" line="31"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="139"/>
+        <source>Choose banner image</source>
+        <translation>Choose banner image</translation>
+    </message>
+    <message>
         <location filename="../Widgets/common/AccountProfileHeader.qml" line="24"/>
         <source>Change avatar</source>
         <translation>Change avatar</translation>
     </message>
     <message>
-        <location filename="../Widgets/common/AccountProfileHeader.qml" line="292"/>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="140"/>
+        <source>Reset to desktop wallpaper</source>
+        <translation>Reset to desktop wallpaper</translation>
+    </message>
+    <message>
+        <location filename="../Widgets/common/AccountProfileHeader.qml" line="305"/>
         <source>Up for %1</source>
         <translation>Up for %1</translation>
     </message>
@@ -4531,6 +4542,34 @@ Scroll to adjust</translation>
         <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="232"/>
         <source>Collapse tools</source>
         <translation>Collapse tools</translation>
+    </message>
+</context>
+<context>
+    <name>KeyboardLockIndicator</name>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Caps Lock</source>
+        <translation>Caps Lock</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
+        <source>Num Lock</source>
+        <translation>Num Lock</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>On</source>
+        <translation>On</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
+        <source>Off</source>
+        <translation>Off</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="16"/>
+        <source>%1: %2</source>
+        <translation>%1: %2</translation>
     </message>
 </context>
 <context>
@@ -10229,12 +10268,12 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WallpaperPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="617"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="559"/>
         <source>%1 FPS</source>
         <translation>%1 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="666"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="608"/>
         <source>Step %1</source>
         <translation>Step %1</translation>
     </message>
@@ -10244,312 +10283,312 @@ Scroll to adjust; click to open sound</translation>
         <translation>Global</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="253"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="10"/>
         <source>Choose folder</source>
         <translation>Choose folder</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="261"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="67"/>
         <source>Choose color</source>
         <translation>Choose color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="261"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="67"/>
         <source>Color and gradient wallpapers require the Quickshell backend</source>
         <translation>Color and gradient wallpapers require the Quickshell backend</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="271"/>
+        <location filename="../Widgets/common/WallpaperActions.qml" line="11"/>
         <source>Clear wallpaper</source>
         <translation>Clear wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="298"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="240"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="298"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="240"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="302"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="244"/>
         <source>Reverse</source>
         <translation>Reverse</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="306"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="248"/>
         <source>Flip</source>
         <translation>Flip</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="349"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="374"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="291"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="316"/>
         <source>Desktop wallpaper manager</source>
         <translation>Desktop wallpaper manager</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="367"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="309"/>
         <source>Select an image wallpaper before switching to awww</source>
         <translation>Select an image wallpaper before switching to awww</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="370"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="312"/>
         <source>The awww or awww-daemon command is missing</source>
         <translation>The awww or awww-daemon command is missing</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="371"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="313"/>
         <source>Detecting awww…</source>
         <translation>Detecting awww…</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="392"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="334"/>
         <source>Current wallpaper</source>
         <translation>Current wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="420"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="362"/>
         <source>No wallpaper selected</source>
         <translation>No wallpaper selected</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="447"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="389"/>
         <source>Previous</source>
         <translation>Previous</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="450"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="392"/>
         <source>Random</source>
         <translation>Random</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="453"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="395"/>
         <source>Next</source>
         <translation>Next</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="485"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="489"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1051"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1055"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="427"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="431"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="993"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="997"/>
         <source>Per-monitor wallpapers</source>
         <translation>Per-monitor wallpapers</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="498"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1064"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1006"/>
         <source>Select output</source>
         <translation>Select output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="499"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="441"/>
         <source>Desktop wallpaper output</source>
         <translation>Desktop wallpaper output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="517"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="459"/>
         <source>Transition</source>
         <translation>Transition</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="526"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1072"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="468"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1014"/>
         <source>Transition type</source>
         <translation>Transition type</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="609"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="551"/>
         <source>awww FPS</source>
         <translation>awww FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="633"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="575"/>
         <source>awww transition FPS</source>
         <translation>awww transition FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="641"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="583"/>
         <source>The none transition does not use FPS.</source>
         <translation>The none transition does not use FPS.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="641"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="583"/>
         <source>Independent FPS is available only with awww.</source>
         <translation>Independent FPS is available only with awww.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="658"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="600"/>
         <source>Transition step</source>
         <translation>Transition step</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="682"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="624"/>
         <source>awww transition step</source>
         <translation>awww transition step</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="705"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="647"/>
         <source>Transition duration</source>
         <translation>Transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="731"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="673"/>
         <source>Wallpaper transition duration</source>
         <translation>Wallpaper transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="738"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="680"/>
         <source>The current transition does not use duration.</source>
         <translation>The current transition does not use duration.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="756"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="698"/>
         <source>Easing curve</source>
         <translation>Easing curve</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="815"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="820"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="757"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="762"/>
         <source>Edit Bézier curve</source>
         <translation>Edit Bézier curve</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="843"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="785"/>
         <source>The current transition does not use an easing curve.</source>
         <translation>The current transition does not use an easing curve.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="849"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="791"/>
         <source>Parallax effects</source>
         <translation>Parallax effects</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="866"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="871"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="808"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="813"/>
         <source>Vertical parallax</source>
         <translation>Vertical parallax</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="879"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="896"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="821"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="838"/>
         <source>Follow workspaces</source>
         <translation>Follow workspaces</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="903"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="845"/>
         <source>Enable vertical parallax first.</source>
         <translation>Enable vertical parallax first.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="911"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="916"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="853"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="858"/>
         <source>Follow sidebars</source>
         <translation>Follow sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="924"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="929"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="866"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="871"/>
         <source>Follow tiled-window focus</source>
         <translation>Follow tiled-window focus</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="940"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="954"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="882"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="896"/>
         <source>Wallpaper scale</source>
         <translation>Wallpaper scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="966"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="980"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="908"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="922"/>
         <source>Horizontal travel columns</source>
         <translation>Horizontal travel columns</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="988"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="930"/>
         <source>Desktop parallax is available only with Quickshell.</source>
         <translation>Desktop parallax is available only with Quickshell.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="994"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="936"/>
         <source>Overview background</source>
         <translation>Overview background</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="328"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="270"/>
         <source>Overview integration</source>
         <translation>Overview integration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="329"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="271"/>
         <source>Create or connect backdrop rules and make the global workspace background transparent.</source>
         <translation>Create or connect backdrop rules and make the global workspace background transparent.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="284"/>
         <source>Overview is already configured outside Clavis</source>
         <translation>Overview is already configured outside Clavis</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1027"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1031"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="969"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="973"/>
         <source>Enable background</source>
         <translation>Enable background</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1039"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1043"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="981"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="985"/>
         <source>Use desktop wallpaper</source>
         <translation>Use desktop wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1065"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1007"/>
         <source>Overview wallpaper output</source>
         <translation>Overview wallpaper output</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1091"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1033"/>
         <source>Image effects</source>
         <translation>Image effects</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1099"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1041"/>
         <source>Blur</source>
         <translation>Blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1112"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1054"/>
         <source>Overview blur</source>
         <translation>Overview blur</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1123"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1065"/>
         <source>Dim</source>
         <translation>Dim</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1136"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1078"/>
         <source>Overview dimming</source>
         <translation>Overview dimming</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1147"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1089"/>
         <source>Saturation</source>
         <translation>Saturation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1160"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1102"/>
         <source>Overview saturation</source>
         <translation>Overview saturation</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1171"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1113"/>
         <source>Contrast</source>
         <translation>Contrast</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1184"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1126"/>
         <source>Overview contrast</source>
         <translation>Overview contrast</translation>
     </message>
@@ -11651,34 +11690,6 @@ Windows: </translation>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>Grain: %1%</translation>
-    </message>
-</context>
-<context>
-    <name>KeyboardLockIndicator</name>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
-        <source>Caps Lock</source>
-        <translation>Caps Lock</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="12"/>
-        <source>Num Lock</source>
-        <translation>Num Lock</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
-        <source>On</source>
-        <translation>On</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="13"/>
-        <source>Off</source>
-        <translation>Off</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/Styles/Shared/KeyboardLockIndicator.qml" line="16"/>
-        <source>%1: %2</source>
-        <translation>%1: %2</translation>
     </message>
 </context>
 </TS>
