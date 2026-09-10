@@ -287,6 +287,7 @@
     </message>
     <message>
         <location filename="../Modules/ControlCenter/AccountPage.qml" line="772"/>
+        <location filename="../Modules/Sidebars/Left/ProfileHeaderCard.qml" line="49"/>
         <source>Choose avatar</source>
         <translation>Choose avatar</translation>
     </message>
@@ -7784,14 +7785,6 @@ Click to open network settings</translation>
         <location filename="../Modules/PowerMenu/PowerMenuWindow.qml" line="144"/>
         <source>Restart</source>
         <translation>Restart</translation>
-    </message>
-</context>
-<context>
-    <name>ProfileHeaderCard</name>
-    <message>
-        <location filename="../Modules/Sidebars/Left/ProfileHeaderCard.qml" line="31"/>
-        <source>Open Settings</source>
-        <translation>Open Settings</translation>
     </message>
 </context>
 <context>

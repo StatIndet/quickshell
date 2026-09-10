@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import qs.Modules.FilePicker
 import qs.Modules.ControlCenter
 import qs.Common
 import qs.Services
@@ -22,7 +23,6 @@ AccountProfileHeader {
     uptimeText: SystemIdentityService.uptimeText
     showNetworkStatus: false
     surfaceColor: BlurService.opaqueBackgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
-    avatarActionLabel: qsTr("Open Settings")
 
     ProfileBannerEditor {
         id: bannerEditor
@@ -34,12 +34,22 @@ AccountProfileHeader {
     Connections {
         target: WidgetState
         function onLeftSidebarOpenChanged() {
-            if (!WidgetState.leftSidebarOpen)
+            if (!WidgetState.leftSidebarOpen) {
                 bannerEditor.close();
+                avatarPicker.dismiss();
+            }
         }
     }
-    onAvatarActivated: {
-        WidgetState.leftSidebarOpen = false;
-        ControlCenterService.open();
+    onAvatarActivated: avatarPicker.openAt(avatarPicker.picturesDir)
+
+    FilePickerWindow {
+        id: avatarPicker
+        parentModal: root.QsWindow.window
+        requiresParentWindow: true
+        dialogTitle: qsTranslate("AccountPage", "Choose avatar")
+        onAccepted: (path, isDirectory) => {
+            if (!isDirectory)
+                AvatarService.setAvatar(path);
+        }
     }
 }
