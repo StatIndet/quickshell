@@ -1429,7 +1429,9 @@ QUrl Lyrics::netEaseLyricsUrl(const QString &id) const
     QUrl url(QStringLiteral("https://music.163.com/api/song/lyric"));
     QUrlQuery query;
     query.addQueryItem(QStringLiteral("id"), id);
-    query.addQueryItem(QStringLiteral("lv"), QStringLiteral("1"));
+    // Request the lyric body regardless of its version. Sending lv=1 can
+    // return an empty lyric for tracks whose current lyric version is 1.
+    query.addQueryItem(QStringLiteral("lv"), QStringLiteral("-1"));
     query.addQueryItem(QStringLiteral("kv"), QStringLiteral("1"));
     query.addQueryItem(QStringLiteral("tv"), QStringLiteral("-1"));
     url.setQuery(query);

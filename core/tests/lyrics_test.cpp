@@ -378,13 +378,13 @@ void LyricsTest::netEaseRequestUsesCompatibleContract()
     QCOMPARE(lyricRequest.url().path(), QStringLiteral("/api/song/lyric"));
     QUrlQuery lyricQuery(lyricRequest.url());
     QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("id")), QStringLiteral("7"));
-    QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("lv")), QStringLiteral("1"));
+    QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("lv")), QStringLiteral("-1"));
     QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("kv")), QStringLiteral("1"));
     QCOMPARE(lyricQuery.queryItemValue(QStringLiteral("tv")), QStringLiteral("-1"));
     QVERIFY(lyricRequest.rawHeader("User-Agent").startsWith("Mozilla/"));
     QCOMPARE(lyricRequest.rawHeader("Referer"), QByteArrayLiteral("https://music.163.com/"));
 
-    manager.replyAt(2)->complete(QByteArrayLiteral(R"({"lrc":{"lyric":"[00:01.00]found"}})"));
+    manager.replyAt(2)->complete(QByteArrayLiteral(R"({"lrc":{"version":1,"lyric":"[00:01.00]found"}})"));
     QTRY_VERIFY_WITH_TIMEOUT(lyrics.hasLyrics(), 1000);
     QCOMPARE(lyrics.provider(), QStringLiteral("NetEase"));
 }
