@@ -8,9 +8,13 @@ import qs.Common
 Singleton {
     id: root
 
-    property bool available: false
-    property bool capsLock: false
-    property bool numLock: false
+    // supported remembers a trusted source only across transport reconnects.
+    // UI visibility always follows available, never cached support or LED values.
+    property bool supported: false
+    property string state: "connecting"
+    readonly property bool available: state === "ready"
+    property var capsLock: null
+    property var numLock: null
     property var error: null
     property bool _hasSnapshot: false
     property int _reconnectAttempts: 0
@@ -18,8 +22,12 @@ Singleton {
     signal lockStateChanged
     signal availabilityChanged
 
-    function unavailable(code, message) {
-        available = false;
+    function unavailable(code, message, nextState) {
+        state = nextState || "unavailable";
+        if (state !== "reconnecting")
+            supported = false;
+        capsLock = null;
+        numLock = null;
         _hasSnapshot = false;
         error = {
             code: code,
@@ -49,15 +57,16 @@ Singleton {
         }
         const snapshot = value.event === "snapshot" || !_hasSnapshot || !available;
         const changed = capsLock !== value.capsLock || numLock !== value.numLock;
-        available = value.available;
+        supported = value.available;
+        state = value.available ? "ready" : "unavailable";
+        capsLock = value.capsLock;
+        numLock = value.numLock;
         error = value.error;
         _hasSnapshot = available;
         if (!available) {
             availabilityChanged();
             return;
         }
-        capsLock = value.capsLock;
-        numLock = value.numLock;
         if (snapshot) {
             // Establish an OSD baseline without announcing a toggle.
             availabilityChanged();
@@ -75,9 +84,11 @@ Singleton {
             onRead: data => root.consume(data)
         }
         onExited: {
+            const retry = root._reconnectAttempts < 3;
             root.unavailable(root.error ? root.error.code : "keyboard_backend_disconnected", root.error ? root.error.message :
-                                                                                                          "Keyboard backend exited");
-            if (root._reconnectAttempts < 3) {
+                                                                                                          "Keyboard backend exited",
+                             retry ? "reconnecting" : "unavailable");
+            if (retry) {
                 root._reconnectAttempts += 1;
                 reconnect.start();
             }

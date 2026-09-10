@@ -374,6 +374,8 @@ Item {
 
                 Text {
                     id: stateMessage
+                    // Hide immediately on loss of trust, including any fading old text.
+                    visible: KeyboardLockService.available
 
                     property string msg: {
                         if (!KeyboardLockService.available)

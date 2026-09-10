@@ -127,6 +127,7 @@ Item {
             }
 
             KeystoneSection {
+                visible: KeyboardLockService.available
                 title: qsTr("Keyboard indicators")
                 iconName: "keyboard"
 

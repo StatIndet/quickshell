@@ -35,3 +35,12 @@ QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
 设备按名称排序选择，`brightnessctl` 写入显式使用同一设备。启动、设备事件及自身写入结束
 时读回，无周期轮询；驱动若不为外部硬件亮度变化发送事件，该变化不会自动同步，需人工
 在对应硬件上验证。DDC 检测、读取及写入节流保持原有流程。
+
+键盘状态服务区分 `connecting`（尚未收到可信快照）、`ready`（状态可信）、
+`reconnecting`（进程退出后有限重连）和 `unavailable`（明确不可用或重连耗尽）。
+`available` 仅在 `ready` 时为 true；未知的 `capsLock` / `numLock` 为 null。
+`supported` 在可信快照后为 true，仅跨进程重连保留；明确不可用响应、协议错误或
+重连耗尽将其清除。不通过授权包是否安装推断可信状态，也不将其持久化。
+设置中心 Keyboard indicators 分区、两个锁屏的键盘状态 UI 和键盘 OSD 都使用
+`available` 控制呈现；暂时重连也隐藏。隐藏不会重置 OSD 偏好，恢复快照仅更新基线。
+`key-cli-keyboard-access` 继续独立、可选，由 key-cli 打包；Clavis 不安装授权规则。
