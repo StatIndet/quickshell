@@ -23,6 +23,8 @@ Singleton {
                                                      "selecting": qsTr("Selecting recording region"),
                                                      "starting": qsTr("Starting recording"),
                                                      "recording": qsTr("Recording"),
+                                                     "paused": qsTr("Recording"),
+                                                     "stopping": qsTr("Processing recording"),
                                                      "finalizing": qsTr("Processing recording")
                                                  })
     readonly property var ownAudioStatusTexts: ({
@@ -36,6 +38,6 @@ Singleton {
                                                                        || "") : (ownAudioSessionPresent ? (
                                                                                                               ownAudioStatusTexts[AudioRecordingService.state]
                                                                                                               || "") : "")
-    readonly property bool canStop: RecordingService.isRecording || RecordingService.isFinalizing
-                                    || AudioRecordingService.isRecording
+    readonly property bool canStop: (RecordingService.isRecording || RecordingService.state === "paused") &&
+                                    !RecordingService.isStopPending || AudioRecordingService.isRecording
 }

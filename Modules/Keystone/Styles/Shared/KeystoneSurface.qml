@@ -90,7 +90,6 @@ Variants {
         property real edgeCurveOuterControl: 0.42
 
         function cancelRecord(): string {
-            RecordingService.refresh();
             return "RECORD_CANCELLED";
         }
 
@@ -513,7 +512,8 @@ Variants {
                 readonly property bool stopPresentationActive: RecordingService.isStopPending || (
                                                                    styleSurface.detached
                                                                    && pillStopFusionMinimumActive)
-                readonly property bool isRecording: RecordingService.isRecording && !stopPresentationActive
+                readonly property bool isRecording: (RecordingService.isRecording || RecordingService.state
+                                                     === "paused") && !stopPresentationActive
                 readonly property bool isFinalizing: backendFinalizing || stopPresentationActive
                 readonly property bool isRecordingMode: isRecording || isFinalizing
                 property bool recordingExitActive: false

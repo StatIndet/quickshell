@@ -3,13 +3,16 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import "../Common/RecordingState.js" as RecordingState
 
 Singleton {
     id: root
 
     readonly property int schemaVersion: 1
     readonly property string commandName: Paths.stableKey
-    property string state: "idle"
+    property string backendState: "idle"
+    property string transientState: ""
+    readonly property string state: transientState || backendState
     property string sessionId: ""
     property int pid: 0
     property string sourceType: "mic"
@@ -23,6 +26,10 @@ Singleton {
     property string temporaryPath: ""
     property string outputPath: ""
     property var error: null
+    property var operationError: null
+    property string _lastSavedKey: ""
+    property int _reconnectAttempts: 0
+    readonly property bool backendActive: RecordingState.isActive(backendState)
     property int lastExitCode: 0
     property double _nowMs: Date.now()
     property string _lastErrorKey: ""
@@ -54,67 +61,96 @@ Singleton {
                                      "Recording failed"), message]);
     }
 
-    function applyResponse(text, fallbackCommand) {
-        const trimmed = text ? text.trim() : "";
-        if (trimmed === "")
+    function reportOperation(errorObject) {
+        root.operationError = errorObject;
+        if (errorObject)
+            root.commandError(errorObject.code, errorObject.message);
+    }
+
+    function applyResponse(text, expectedCommand) {
+        if (!text || !text.trim())
             return false;
-
+        let response;
         try {
-            const response = JSON.parse(trimmed);
-            if (response.schemaVersion !== root.schemaVersion) {
-                root.error = {
-                    "code": "unsupported_schema",
-                    "message": qsTr("key audio returned an unsupported JSON schema")
-                };
-                root.notifyError(root.error);
-                return false;
-            }
-            const command = response.command || fallbackCommand;
-            if (command === "audio.status" && startProcess.running)
-                return false;
-
-            if (command === "audio.status" && stopProcess.running && response.state === "recording")
-                return false;
-
-            const incomingUpdatedAtMs = response.updatedAtMs || 0;
-            if (incomingUpdatedAtMs > 0 && root.updatedAtMs > 0 && incomingUpdatedAtMs < root.updatedAtMs)
-                return false;
-
-            root.state = response.state || "idle";
-            root.sessionId = response.sessionId || "";
-            root.pid = response.pid || 0;
+            response = JSON.parse(text);
+        } catch (exception) {
+            root.reportOperation({
+                                     "code": "invalid_key_json",
+                                     "message": String(exception)
+                                 });
+            return false;
+        }
+        if (!response || typeof response !== "object" || response.schemaVersion !== root.schemaVersion
+                || response.command !== expectedCommand || typeof response.ok !== "boolean") {
+            root.reportOperation({
+                                     "code": "invalid_key_response",
+                                     "message": qsTr("Recording command failed")
+                                 });
+            return false;
+        }
+        const watching = expectedCommand === "audio.watch";
+        const snapshot = expectedCommand === "audio.status" || (watching && response.event === "snapshot");
+        if (watching && response.event !== "snapshot" && response.event !== "changed") {
+            root.reportOperation(response.error);
+            return false;
+        }
+        if (!watching) {
+            if (expectedCommand !== "audio.status")
+                root.transientState = "";
+            root.commandFinished(expectedCommand, response.ok);
+        }
+        if (!RecordingState.valid(response)) {
+            // Initialization can race a CLI operation; watch waits for its lock once.
+            if (expectedCommand === "audio.status" && response.error && response.error.code
+                    === "recording_busy")
+                watchProcess.running = true;
+            root.reportOperation(response.error || {
+                                     "code": "invalid_key_state",
+                                     "message": qsTr("Recording command failed")
+                                 });
+            return false;
+        }
+        if (response.updatedAtMs < root.updatedAtMs || (response.updatedAtMs === root.updatedAtMs
+                                                        && response.sessionId !== root.sessionId))
+            return false;
+        const newer = response.updatedAtMs > root.updatedAtMs;
+        if (newer || root.updatedAtMs === 0) {
+            root.backendState = response.state;
+            root.sessionId = response.sessionId;
+            root.updatedAtMs = response.updatedAtMs;
+            root.pid = response.pid;
+            root.startedAtMs = response.startedAtMs;
+            root.temporaryPath = response.temporaryPath;
+            root.outputPath = response.outputPath;
+            root.error = response.state === "error" ? response.error : null;
             const source = response.source || {};
-            root.sourceType = source.type || root.sourceType || "mic";
+            root.sourceType = source.type || root.sourceType;
             root.sourceName = source.name || "";
             root.sourceNodeName = source.nodeName || "";
             root.sourceDescription = source.description || "";
             root.captureSink = source.captureSink === true;
-            root.startedAtMs = response.startedAtMs || 0;
-            root.completedAtMs = response.completedAtMs || 0;
-            root.updatedAtMs = incomingUpdatedAtMs;
-            root.temporaryPath = response.temporaryPath || "";
-            root.outputPath = response.outputPath || "";
-            root.error = response.error || null;
-            if (root.error)
+            root.completedAtMs = response.completedAtMs;
+            if (!snapshot && newer && root.backendState === "error" && root.error)
                 root.notifyError(root.error);
-            else
-                root._lastErrorKey = "";
-            if (command === "audio.stop" && response.ok === true && root.outputPath !== "")
-                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.sourceType
-                                         === "system" ? qsTr("System audio recording saved") : qsTr(
-                                                            "Microphone recording saved"), qsTr(
-                                             "Saved to %1").arg(root.outputPath)]);
-
-            root.commandFinished(command, response.ok === true);
-            return true;
-        } catch (exception) {
-            root.error = {
-                "code": "invalid_key_json",
-                "message": qsTr("Could not parse JSON returned by key audio: ") + exception
-            };
-            root.notifyError(root.error);
-            return false;
         }
+        if (!response.ok && response.state !== "error")
+            root.reportOperation(response.error);
+        else
+            root.operationError = null;
+        const savedKey = response.sessionId + ":" + response.updatedAtMs;
+        if (!snapshot && (newer || expectedCommand === "audio.stop") && response.ok && response.state === "completed"
+                && response.outputPath && root._lastSavedKey !== savedKey) {
+            root._lastSavedKey = savedKey;
+            Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.sourceType
+                                     === "system" ? qsTr("System audio recording saved") : qsTr(
+                                                        "Microphone recording saved"), qsTr("Saved to %1").arg(
+                                         response.outputPath)]);
+        }
+        if (root.backendActive && !watchProcess.running && !reconnect.running) {
+            root._reconnectAttempts = 0;
+            watchProcess.running = true;
+        }
+        return true;
     }
 
     function start(source, options) {
@@ -123,10 +159,9 @@ Singleton {
 
         const settings = options || {};
         root.sourceType = source === "system" ? "system" : "mic";
-        root.state = "starting";
+        root.transientState = "starting";
         root.startedAtMs = 0;
         root.completedAtMs = 0;
-        root.updatedAtMs = 0;
         root.error = null;
         root._lastErrorKey = "";
         const command = [root.commandName, "audio", "start", "--source", root.sourceType, "--json"];
@@ -142,18 +177,10 @@ Singleton {
         if (stopProcess.running || !root.isRecording)
             return false;
 
-        root.state = "stopping";
+        root.transientState = "stopping";
         stopProcess.command = [root.commandName, "audio", "stop", "--json"];
         stopProcess.running = true;
         return true;
-    }
-
-    function refresh() {
-        if (statusProcess.running || startProcess.running)
-            return;
-
-        statusProcess.command = [root.commandName, "audio", "status", "--json"];
-        statusProcess.running = true;
     }
 
     Process {
@@ -161,8 +188,12 @@ Singleton {
 
         onExited: exitCode => {
             root.lastExitCode = exitCode;
-            if (exitCode !== 0)
-                root.refresh();
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("Recording command failed")
+                                     });
+            root.transientState = "";
         }
 
         stdout: StdioCollector {
@@ -181,7 +212,12 @@ Singleton {
 
         onExited: exitCode => {
             root.lastExitCode = exitCode;
-            root.refresh();
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("Recording command failed")
+                                     });
+            root.transientState = "";
         }
 
         stdout: StdioCollector {
@@ -195,37 +231,44 @@ Singleton {
         }
     }
 
+    Component.onCompleted: initialStatus.running = true
+
     Process {
-        id: statusProcess
-
+        id: initialStatus
+        command: [root.commandName, "audio", "status", "--json"]
         onExited: exitCode => {
-            root.lastExitCode = exitCode;
-            if (exitCode !== 0 && !root.error) {
-                root.error = {
-                    "code": "key_unavailable",
-                    "message": qsTr("Could not query recording status through key")
-                };
-                root.notifyError(root.error);
-            }
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("Could not query recording status through key")
+                                     });
         }
-
         stdout: StdioCollector {
             onStreamFinished: root.applyResponse(this.text, "audio.status")
         }
+    }
 
-        stderr: SplitParser {
-            onRead: data => {
-                return console.warn("[key audio status]", data.trim());
+    Process {
+        id: watchProcess
+        command: [root.commandName, "audio", "watch", "--format", "jsonl"]
+        stdout: SplitParser {
+            onRead: data => root.applyResponse(data, "audio.watch")
+        }
+        onExited: exitCode => {
+            if (root.backendActive && root._reconnectAttempts < 3) {
+                root._reconnectAttempts++;
+                reconnect.start();
             }
         }
     }
 
     Timer {
-        interval: root.isActive ? 400 : 2000
-        repeat: true
-        running: true
-        triggeredOnStart: true
-        onTriggered: root.refresh()
+        id: reconnect
+        interval: 1000 * root._reconnectAttempts
+        onTriggered: {
+            if (root.backendActive)
+                watchProcess.running = true;
+        }
     }
 
     Timer {

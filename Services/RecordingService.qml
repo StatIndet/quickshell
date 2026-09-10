@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.Common
+import "../Common/RecordingState.js" as RecordingState
 
 Singleton {
     id: root
@@ -13,6 +14,7 @@ Singleton {
     property string transientState: ""
     readonly property string state: transientState !== "" ? transientState : backendState
     property string sessionId: ""
+    property double updatedAtMs: 0
     property int pid: 0
     property string recordingType: "video"
     property var target: ({
@@ -23,6 +25,10 @@ Singleton {
     property string temporaryPath: ""
     property string outputPath: ""
     property var error: null
+    property var operationError: null
+    property string _lastSavedKey: ""
+    property int _reconnectAttempts: 0
+    readonly property bool backendActive: RecordingState.isActive(backendState)
     property int lastExitCode: 0
     property double _nowMs: Date.now()
     readonly property bool isSelecting: state === "selecting"
@@ -30,70 +36,104 @@ Singleton {
     readonly property bool isRecording: state === "recording"
     readonly property bool isFinalizing: state === "finalizing"
     readonly property bool isCompleted: state === "completed"
-    readonly property bool isActive: isSelecting || isStarting || isRecording || isFinalizing
-    readonly property bool isStopPending: stopProcess.running
-    readonly property double elapsedMs: isRecording && startedAtMs > 0 ? Math.max(0, _nowMs - startedAtMs) : 0
+    readonly property bool isActive: isSelecting || isStarting || isRecording || state === "paused" || state
+                                     === "stopping" || isFinalizing
+    readonly property bool isStopPending: stopProcess.running || state === "stopping" || isFinalizing
+    readonly property double elapsedMs: (isRecording || state === "paused") && startedAtMs > 0 ? Math.max(0,
+                                                                                                          _nowMs - startedAtMs) :
+                                                                                                 0
 
     signal commandFinished(string command, bool ok)
     signal selectionCancelled
     signal commandError(string code, string message)
 
-    function applyResponse(text, fallbackCommand) {
-        const trimmed = text ? text.trim() : "";
-        if (trimmed === "")
+    function reportOperation(errorObject) {
+        root.operationError = errorObject;
+        if (errorObject)
+            root.commandError(errorObject.code, errorObject.message);
+    }
+
+    function applyResponse(text, expectedCommand) {
+        if (!text || !text.trim())
             return false;
-
+        let response;
         try {
-            const response = JSON.parse(trimmed);
-            if (response.schemaVersion !== root.schemaVersion) {
-                root.error = {
-                    "code": "unsupported_schema",
-                    "message": qsTr("key returned an unsupported JSON schema")
-                };
-                root.commandError(root.error.code, root.error.message);
-                return false;
-            }
-            root.backendState = response.state || "idle";
-            root.sessionId = response.sessionId || "";
-            root.pid = response.pid || 0;
-            if (response.type === "gif" || response.type === "video")
-                root.recordingType = response.type;
-
-            root.target = response.target || {
-                "type": "region",
-                "geometry": null
-            };
-            root.startedAtMs = response.startedAtMs || 0;
-            root.temporaryPath = response.temporaryPath || "";
-            root.outputPath = response.outputPath || "";
-            root.error = response.error || null;
-            const command = response.command || fallbackCommand;
-            if (command === "record.start")
-                root.transientState = "";
-
-            if (response.cancelled === true)
-                root.selectionCancelled();
-
-            if (root.error)
-                root.commandError(root.error.code || "key_error", root.error.message || qsTr(
-                                      "key command failed"));
-
-            if (command === "record.stop" && response.ok === true && root.backendState === "completed" && root.outputPath
-                    !== "")
-                Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.recordingType
-                                         === "gif" ? qsTr("GIF saved") : qsTr("Screen recording saved"), qsTr(
-                                             "Saved to %1").arg(root.outputPath)]);
-
-            root.commandFinished(command, response.ok === true);
-            return true;
+            response = JSON.parse(text);
         } catch (exception) {
-            root.error = {
-                "code": "invalid_key_json",
-                "message": qsTr("Could not parse JSON returned by key: ") + exception
-            };
-            root.commandError(root.error.code, root.error.message);
+            root.reportOperation({
+                                     "code": "invalid_key_json",
+                                     "message": String(exception)
+                                 });
             return false;
         }
+        if (!response || typeof response !== "object" || response.schemaVersion !== root.schemaVersion
+                || response.command !== expectedCommand || typeof response.ok !== "boolean") {
+            root.reportOperation({
+                                     "code": "invalid_key_response",
+                                     "message": qsTr("key command failed")
+                                 });
+            return false;
+        }
+        const watching = expectedCommand === "record.watch";
+        const snapshot = expectedCommand === "record.status" || (watching && response.event === "snapshot");
+        if (watching && response.event !== "snapshot" && response.event !== "changed") {
+            root.reportOperation(response.error);
+            return false;
+        }
+        if (!watching) {
+            if (expectedCommand !== "record.status")
+                root.transientState = "";
+            root.commandFinished(expectedCommand, response.ok);
+        }
+        if (response.cancelled === true)
+            root.selectionCancelled();
+        if (!RecordingState.valid(response)) {
+            // Initialization can race a CLI operation; watch waits for its lock once.
+            if (expectedCommand === "record.status" && response.error && response.error.code
+                    === "recording_busy")
+                watchProcess.running = true;
+            root.reportOperation(response.error || {
+                                     "code": "invalid_key_state",
+                                     "message": qsTr("key command failed")
+                                 });
+            return false;
+        }
+        if (response.updatedAtMs < root.updatedAtMs || (response.updatedAtMs === root.updatedAtMs
+                                                        && response.sessionId !== root.sessionId))
+            return false;
+        const newer = response.updatedAtMs > root.updatedAtMs;
+        if (newer || root.updatedAtMs === 0) {
+            root.backendState = response.state;
+            root.sessionId = response.sessionId;
+            root.updatedAtMs = response.updatedAtMs;
+            root.pid = response.pid;
+            root.startedAtMs = response.startedAtMs;
+            root.temporaryPath = response.temporaryPath;
+            root.outputPath = response.outputPath;
+            root.error = response.state === "error" ? response.error : null;
+            if (response.type === "gif" || response.type === "video")
+                root.recordingType = response.type;
+            root.target = response.target || root.target;
+            if (!snapshot && newer && root.backendState === "error" && root.error)
+                root.commandError(root.error.code, root.error.message);
+        }
+        if (!response.ok && response.state !== "error")
+            root.reportOperation(response.error);
+        else
+            root.operationError = null;
+        const savedKey = response.sessionId + ":" + response.updatedAtMs;
+        if (!snapshot && (newer || expectedCommand === "record.stop") && response.ok && response.state === "completed"
+                && response.outputPath && root._lastSavedKey !== savedKey) {
+            root._lastSavedKey = savedKey;
+            Quickshell.execDetached(["notify-send", "-a", "Clavis Shell", "-u", "low", root.recordingType
+                                     === "gif" ? qsTr("GIF saved") : qsTr("Screen recording saved"), qsTr(
+                                         "Saved to %1").arg(response.outputPath)]);
+        }
+        if (root.backendActive && !watchProcess.running && !reconnect.running) {
+            root._reconnectAttempts = 0;
+            watchProcess.running = true;
+        }
+        return true;
     }
 
     function start(type, options) {
@@ -142,20 +182,12 @@ Singleton {
     }
 
     function stop() {
-        if (stopProcess.running)
+        if (root.isStopPending || !(root.isRecording || root.state === "paused"))
             return false;
 
         stopProcess.command = [root.commandName, "record", "stop", "--json"];
         stopProcess.running = true;
         return true;
-    }
-
-    function refresh() {
-        if (statusProcess.running)
-            return;
-
-        statusProcess.command = [root.commandName, "record", "status", "--json"];
-        statusProcess.running = true;
     }
 
     Connections {
@@ -190,8 +222,13 @@ Singleton {
 
         onExited: exitCode => {
             root.lastExitCode = exitCode;
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("key command failed")
+                                     });
             root.transientState = "";
-            root.refresh();
+            root.transientState = "";
         }
 
         stdout: StdioCollector {
@@ -204,7 +241,12 @@ Singleton {
 
         onExited: exitCode => {
             root.lastExitCode = exitCode;
-            root.refresh();
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("key command failed")
+                                     });
+            root.transientState = "";
         }
 
         stdout: StdioCollector {
@@ -212,31 +254,44 @@ Singleton {
         }
     }
 
+    Component.onCompleted: initialStatus.running = true
+
     Process {
-        id: statusProcess
-
+        id: initialStatus
+        command: [root.commandName, "record", "status", "--json"]
         onExited: exitCode => {
-            root.lastExitCode = exitCode;
-            if (exitCode !== 0 && !root.error) {
-                root.error = {
-                    "code": "key_unavailable",
-                    "message": qsTr("Could not query recording status through key")
-                };
-                root.commandError(root.error.code, root.error.message);
-            }
+            if (exitCode !== 0 && !root.operationError && !root.error)
+                root.reportOperation({
+                                         "code": "key_unavailable",
+                                         "message": qsTr("Could not query recording status through key")
+                                     });
         }
-
         stdout: StdioCollector {
             onStreamFinished: root.applyResponse(this.text, "record.status")
         }
     }
 
+    Process {
+        id: watchProcess
+        command: [root.commandName, "record", "watch", "--format", "jsonl"]
+        stdout: SplitParser {
+            onRead: data => root.applyResponse(data, "record.watch")
+        }
+        onExited: exitCode => {
+            if (root.backendActive && root._reconnectAttempts < 3) {
+                root._reconnectAttempts++;
+                reconnect.start();
+            }
+        }
+    }
+
     Timer {
-        interval: root.isActive ? 500 : 2000
-        repeat: true
-        running: true
-        triggeredOnStart: true
-        onTriggered: root.refresh()
+        id: reconnect
+        interval: 1000 * root._reconnectAttempts
+        onTriggered: {
+            if (root.backendActive)
+                watchProcess.running = true;
+        }
     }
 
     Timer {
