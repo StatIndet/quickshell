@@ -23,9 +23,14 @@ Item {
     property int parentDragIndex: dragHost ? dragHost.dragIndex : -1
     property real parentDragDistance: dragHost ? dragHost.dragDistance : 0
     property int dragIndexDiff: Math.abs(parentDragIndex - delegateIndex)
-    property real xOffset: dragIndexDiff === 0 ? parentDragDistance : Math.abs(parentDragDistance) > dragConfirmThreshold ? 0 : dragIndexDiff === 1 ? parentDragDistance * 0.3 : dragIndexDiff === 2 ? parentDragDistance * 0.1 : 0
+    property real xOffset: dragIndexDiff === 0 ? parentDragDistance : Math.abs(parentDragDistance)
+                                                 > dragConfirmThreshold ? 0 : dragIndexDiff === 1
+                                                                          ? parentDragDistance * 0.3 :
+                                                                            dragIndexDiff === 2
+                                                                            ? parentDragDistance * 0.1 : 0
     readonly property var notificationActions: NotificationManager.normalActions(notificationObject)
-    readonly property var notificationUrgency: notificationObject ? notificationObject.urgency : NotificationUrgency.Normal
+    readonly property var notificationUrgency: notificationObject ? notificationObject.urgency :
+                                                                    NotificationUrgency.Normal
 
     signal dismissGroup(bool left)
 
@@ -69,11 +74,11 @@ Item {
         running: false
         onFinished: {
             if (!root.notificationObject)
-                return ;
+                return;
 
             if (root.onlyNotification) {
                 root.dismissGroup(destroyAnimation.left);
-                return ;
+                return;
             }
             NotificationManager.discardNotification(root.notificationObject.notificationId);
         }
@@ -86,7 +91,6 @@ Item {
             easing.type: Appearance.animation.expressiveDefaultSpatial.type
             easing.bezierCurve: Appearance.animation.expressiveDefaultSpatial.bezierCurve
         }
-
     }
 
     DragManager {
@@ -97,7 +101,7 @@ Item {
         interactive: root.expanded
         automaticallyReset: false
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-        onClicked: (mouse) => {
+        onClicked: mouse => {
             if (mouse.button === Qt.MiddleButton)
                 root.destroyWithAnimation();
             else if (mouse.button === Qt.LeftButton && root.notificationObject)
@@ -106,21 +110,18 @@ Item {
         onDraggingChanged: {
             if (dragging && root.dragHost)
                 root.dragHost.dragIndex = root.delegateIndex;
-
         }
         onDragDiffXChanged: {
             if (root.dragHost)
                 root.dragHost.dragDistance = dragDiffX;
-
         }
-        onDragReleased: (diffX) => {
+        onDragReleased: diffX => {
             if (Math.abs(diffX) > root.dragConfirmThreshold) {
                 root.destroyWithAnimation(diffX < 0);
             } else {
                 dragManager.resetDrag();
                 if (root.dragHost)
                     root.dragHost.resetDrag();
-
             }
         }
     }
@@ -128,7 +129,8 @@ Item {
     NotificationAppIcon {
         id: notificationIcon
 
-        opacity: (!root.onlyNotification && root.notificationObject && root.notificationObject.image !== "" && root.expanded) ? 1 : 0
+        opacity: (!root.onlyNotification && root.notificationObject && root.notificationObject.image !== ""
+                  && root.expanded) ? 1 : 0
         visible: opacity > 0
         image: root.notificationObject ? root.notificationObject.image : ""
         appIcon: root.notificationObject ? root.notificationObject.appIcon : ""
@@ -144,9 +146,7 @@ Item {
                 easing.type: Appearance.animation.expressiveDefaultEffects.type
                 easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
             }
-
         }
-
     }
 
     Rectangle {
@@ -156,8 +156,15 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: root.xOffset
         radius: Appearance.rounding.small
-        color: (root.expanded && !root.onlyNotification) ? (root.isCriticalUrgency(root.notificationUrgency) ? Appearance.mix(Appearance.colors.colSecondaryContainer, Appearance.colors.colLayer2, 0.35) : Appearance.colors.colLayer3) : Appearance.transparentize(Appearance.colors.colLayer3, 1)
-        implicitHeight: root.expanded ? contentColumn.implicitHeight + root.padding * 2 : root.onlyNotification ? notificationBodyText.implicitHeight : summaryRow.implicitHeight
+        color: (root.expanded && !root.onlyNotification) ? (root.isCriticalUrgency(root.notificationUrgency)
+                                                            ? Appearance.mix(
+                                                                  Appearance.colors.colSecondaryContainer,
+                                                                  Appearance.colors.colLayer2, 0.35) :
+                                                              Appearance.colors.colLayer3) :
+                                                           Appearance.transparentize(
+                                                               Appearance.colors.colLayer3, 1)
+        implicitHeight: root.expanded ? contentColumn.implicitHeight + root.padding * 2 : root.onlyNotification
+                                        ? notificationBodyText.implicitHeight : summaryRow.implicitHeight
 
         ColumnLayout {
             id: contentColumn
@@ -176,7 +183,8 @@ Item {
                 Text {
                     id: summaryText
 
-                    Layout.fillWidth: summaryTextMetrics.width >= summaryRow.implicitWidth * root.summaryElideRatio
+                    Layout.fillWidth: summaryTextMetrics.width >= summaryRow.implicitWidth
+                                      * root.summaryElideRatio
                     visible: !root.onlyNotification
                     text: root.notificationObject ? root.notificationObject.summary : ""
                     font.family: Fonts.ui
@@ -205,11 +213,8 @@ Item {
                             easing.type: Appearance.animation.expressiveDefaultEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                         }
-
                     }
-
                 }
-
             }
 
             ColumnLayout {
@@ -231,8 +236,8 @@ Item {
                     font.family: Fonts.ui
                     font.pixelSize: root.fontSize
                     color: Appearance.colors.colSubtext
-                    onLinkActivated: (link) => {
-                        return Qt.openUrlExternally(link);
+                    onLinkActivated: link => {
+                        return ApplicationService.openUrl(link);
                     }
                 }
 
@@ -278,7 +283,6 @@ Item {
                                     urgency: root.notificationUrgency
                                     onClicked: NotificationManager.invokeAction(modelData)
                                 }
-
                             }
 
                             NotificationActionButton {
@@ -288,7 +292,8 @@ Item {
                                 iconName: "content_copy"
                                 urgency: root.notificationUrgency
                                 onClicked: {
-                                    Quickshell.clipboardText = root.notificationObject ? root.notificationObject.body : "";
+                                    Quickshell.clipboardText = root.notificationObject
+                                            ? root.notificationObject.body : "";
                                     copyButton.iconName = "inventory";
                                     copyIconTimer.restart();
                                 }
@@ -300,11 +305,8 @@ Item {
                                     repeat: false
                                     onTriggered: copyButton.iconName = "content_copy"
                                 }
-
                             }
-
                         }
-
                     }
 
                     Behavior on opacity {
@@ -313,7 +315,6 @@ Item {
                             easing.type: Appearance.animation.expressiveDefaultEffects.type
                             easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                         }
-
                     }
 
                     layer.effect: OpacityMask {
@@ -323,9 +324,7 @@ Item {
                             height: actionsFlickable.height
                             radius: Appearance.rounding.small
                         }
-
                     }
-
                 }
 
                 Behavior on opacity {
@@ -334,9 +333,7 @@ Item {
                         easing.type: Appearance.animation.expressiveDefaultEffects.type
                         easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                     }
-
                 }
-
             }
 
             Behavior on anchors.margins {
@@ -345,9 +342,7 @@ Item {
                     easing.type: Appearance.animation.expressiveDefaultEffects.type
                     easing.bezierCurve: Appearance.animation.expressiveDefaultEffects.bezierCurve
                 }
-
             }
-
         }
 
         Behavior on anchors.leftMargin {
@@ -358,9 +353,6 @@ Item {
                 easing.type: Appearance.animation.expressiveFastSpatial.type
                 easing.bezierCurve: Appearance.animation.expressiveFastSpatial.bezierCurve
             }
-
         }
-
     }
-
 }

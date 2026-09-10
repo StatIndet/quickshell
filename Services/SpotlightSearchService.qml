@@ -10,7 +10,8 @@ Singleton {
     id: root
 
     readonly property var searchEngines: SpotlightSearch.engines
-    readonly property string searchEngineName: SpotlightSearch.engineFor(UiPreferences.spotlightSearchEngine).label
+    readonly property string searchEngineName: SpotlightSearch.engineFor(
+                                                   UiPreferences.spotlightSearchEngine).label
     property string pendingUrl: ""
     property var browserIds: []
     property var previousWindows: []
@@ -46,68 +47,67 @@ Singleton {
 
     function launchBrowser(desktopId) {
         if (root.pendingUrl === "")
-            return ;
+            return;
 
         const entry = DefaultApplicationsService.applicationForId(desktopId);
-        root.browserIds = [desktopId, entry ? entry.id : "", entry ? entry.startupClass : ""].map((value) => {
+        root.browserIds = [desktopId, entry ? entry.id : "", entry ? entry.startupClass : ""].map(value => {
             return root.normalizedId(value);
-        }).filter((value) => {
+        }).filter(value => {
             return value !== "";
         });
-        root.previousWindows = ToplevelManager.toplevels.values.map((window) => {
+        root.previousWindows = ToplevelManager.toplevels.values.map(window => {
             return ({
-                "window": window,
-                "title": window.title,
-                "active": window.activated
-            });
+                        "window": window,
+                        "title": window.title,
+                        "active": window.activated
+                    });
         });
         root.initialActiveWindow = ToplevelManager.activeToplevel;
         const url = root.pendingUrl;
         root.pendingUrl = "";
-        if (!Qt.openUrlExternally(url)) {
+        if (!ApplicationService.openUrl(url)) {
             console.warn("Spotlight could not open the search URL");
             root.cancelActivation();
-            return ;
+            return;
         }
         root.openedAt = Date.now();
         root.activationDeadline = root.openedAt + 5000;
         if (root.browserIds.length > 0)
             focusTimer.restart();
-
     }
 
     function tryActivateBrowser() {
         if (Date.now() >= root.activationDeadline) {
             root.cancelActivation();
-            return ;
+            return;
         }
-        const candidates = ToplevelManager.toplevels.values.filter((window) => {
+        const candidates = ToplevelManager.toplevels.values.filter(window => {
             return root.browserIds.includes(root.normalizedId(window.appId));
         });
         if (candidates.length === 0)
-            return ;
+            return;
 
         // Respect a browser's own window selection before choosing an existing window.
-        if (candidates.some((window) => {
+        if (candidates.some(window => {
             return window.activated;
         })) {
             root.cancelActivation();
-            return ;
+            return;
         }
-        let target = candidates.find((window) => {
-            return !root.previousWindows.some((previous) => {
+        let target = candidates.find(window => {
+            return !root.previousWindows.some(previous => {
                 return previous.window === window && previous.title === window.title;
             });
         });
         if (!target && Date.now() - root.openedAt < 600)
-            return ;
+            return;
 
         if (!target)
-            target = candidates.find((window) => {
-            return root.previousWindows.some((previous) => {
-                return previous.window === window && previous.active;
-            });
-        }) || candidates[0];
+            target = candidates.find(window => {
+                return root.previousWindows.some(previous => {
+                    return previous.window === window && previous.active;
+                });
+            }) || candidates[0];
 
         // The timer stops on acknowledgement or at the activation deadline.
         target.activate();
@@ -116,9 +116,9 @@ Singleton {
     Connections {
         function onActiveToplevelChanged() {
             const active = ToplevelManager.activeToplevel;
-            if (focusTimer.running && active && active !== root.initialActiveWindow && !root.browserIds.includes(root.normalizedId(active.appId)))
+            if (focusTimer.running && active && active !== root.initialActiveWindow && !root.browserIds.includes(
+                        root.normalizedId(active.appId)))
                 root.cancelActivation();
-
         }
 
         target: ToplevelManager
@@ -128,7 +128,7 @@ Singleton {
         id: browserQuery
 
         command: ["xdg-mime", "query", "default", "x-scheme-handler/https"]
-        onExited: (exitCode) => {
+        onExited: exitCode => {
             queryTimeout.stop();
             root.launchBrowser(exitCode === 0 ? browserOutput.text.trim() : "");
         }
@@ -136,7 +136,6 @@ Singleton {
         stdout: StdioCollector {
             id: browserOutput
         }
-
     }
 
     Timer {
@@ -156,5 +155,4 @@ Singleton {
         repeat: true
         onTriggered: root.tryActivateBrowser()
     }
-
 }

@@ -18,9 +18,8 @@ Item {
             return true;
         for (let index = 1; index < text.length; index += 1) {
             const previous = text.charAt(index - 1);
-            if ((previous === " " || previous === "-" || previous === "_"
-                    || previous === "." || previous === "/")
-                    && text.indexOf(query, index) === index)
+            if ((previous === " " || previous === "-" || previous === "_" || previous === "." || previous
+                 === "/") && text.indexOf(query, index) === index)
                 return true;
         }
         return false;
@@ -30,8 +29,7 @@ Item {
         let queryIndex = 0;
         let firstIndex = -1;
         let lastIndex = -1;
-        for (let index = 0; index < text.length && queryIndex < query.length;
-                index += 1) {
+        for (let index = 0; index < text.length && queryIndex < query.length; index += 1) {
             if (text.charAt(index) !== query.charAt(queryIndex))
                 continue;
             if (firstIndex < 0)
@@ -67,10 +65,7 @@ Item {
         let best = -1;
         best = Math.max(best, fieldScore(app.name, needle, 80));
         best = Math.max(best, fieldScore(app.genericName, needle, 60));
-        best = Math.max(
-            best,
-            fieldScore(Array.from(app.keywords || []).join(" "), needle, 40)
-        );
+        best = Math.max(best, fieldScore(Array.from(app.keywords || []).join(" "), needle, 40));
         best = Math.max(best, fieldScore(app.id, needle, 20));
         return best;
     }
@@ -87,16 +82,16 @@ Item {
             if (score < 0)
                 continue;
             next.push({
-                provider: "apps",
-                id: String(app.id || app.name || index),
-                title: String(app.name || app.id || ""),
-                subtitle: String(app.genericName || app.comment || app.id || ""),
-                icon: String(app.icon || ""),
-                preview: "",
-                score: score,
-                actions: ["launch"],
-                appObject: app
-            });
+                          provider: "apps",
+                          id: String(app.id || app.name || index),
+                          title: String(app.name || app.id || ""),
+                          subtitle: String(app.genericName || app.comment || app.id || ""),
+                          icon: String(app.icon || ""),
+                          preview: "",
+                          score: score,
+                          actions: ["launch"],
+                          appObject: app
+                      });
         }
         next.sort((left, right) => {
             if (right.score !== left.score)
@@ -111,8 +106,7 @@ Item {
         const result = root.results[index];
         if (!result || !result.appObject)
             return false;
-        result.appObject.execute();
-        return true;
+        return ApplicationService.launchApplication(result.appObject);
     }
 
     onQueryChanged: rebuild()

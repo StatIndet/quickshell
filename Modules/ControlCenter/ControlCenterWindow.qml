@@ -122,7 +122,7 @@ FloatingWindow {
     }
 
     function openConfig() {
-        Qt.openUrlExternally(Paths.fileUrl(PersonalizationConfig.filePath));
+        ApplicationService.openUrl(Paths.fileUrl(PersonalizationConfig.filePath));
     }
 
     function copyConfigPath() {

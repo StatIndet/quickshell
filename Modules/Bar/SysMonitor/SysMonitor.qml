@@ -149,7 +149,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: Quickshell.execDetached(["gnome-system-monitor"])
+        onClicked: ApplicationService.launchCommand(["gnome-system-monitor"])
     }
 
     PopupToolTip {

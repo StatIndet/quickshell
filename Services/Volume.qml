@@ -3,6 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Services.Pipewire
 import QtQuick
+import qs.Services
 
 Singleton {
     id: root
@@ -259,6 +260,6 @@ Singleton {
     }
 
     function openMixer() {
-        Quickshell.execDetached(["pavucontrol"]);
+        ApplicationService.launchCommand(["pavucontrol"]);
     }
 }

@@ -673,7 +673,7 @@ Singleton {
 
         if (exitCode === 0 && root._terminalCandidate) {
             try {
-                Quickshell.execDetached(root._terminalCommand(root._terminalCandidate.program));
+                ApplicationService.launchCommand(root._terminalCommand(root._terminalCandidate.program));
                 root.actionBusy = false;
                 root.actionError = "";
             } catch (exception) {

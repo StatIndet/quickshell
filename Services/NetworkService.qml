@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Networking
+import qs.Services
 
 Singleton {
     id: root
@@ -945,7 +946,7 @@ Singleton {
     }
 
     function openPublicWifiPortal() {
-        Quickshell.execDetached(["xdg-open", "https://nmcheck.gnome.org/"]);
+        ApplicationService.openUrl("https://nmcheck.gnome.org/");
     }
 
     Component.onCompleted: root._applyScanning()

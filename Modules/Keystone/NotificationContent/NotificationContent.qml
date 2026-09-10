@@ -115,7 +115,7 @@ Item {
                         elide: Text.ElideRight
                         maximumLineCount: delegateRoot.normalActions.length > 0 ? 1 : 2
                         onLinkActivated: link => {
-                            return Qt.openUrlExternally(link);
+                            return ApplicationService.openUrl(link);
                         }
                     }
 
