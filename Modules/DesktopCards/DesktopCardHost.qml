@@ -47,8 +47,12 @@ Variants {
         function requestAnalysis() {
             if (!window.scene || window.analysisKey === "" || !SystemCardService.isWallpaperLayoutMode(
                         window.layoutMode) || window.desktopIds.length === 0 ||
-                    !window.scene.analysisGeometryReady)
+                    !window.scene.analysisGeometryReady) {
+                window.analysis = null;
+                window.requestedAnalysisKey = "";
+                WallpaperAnalyzer.release(window.analysisRequestKey);
                 return;
+            }
 
             if (window.requestedAnalysisKey === window.analysisKey)
                 return;
@@ -124,9 +128,12 @@ Variants {
 
         function reconcileDesktopLayout(reason) {
             const mode = SystemCardService.globalDesktopLayoutMode;
-            if (SystemCardService.isFreeLayoutMode(mode)) {
+            if (!SystemCardService.isWallpaperLayoutMode(mode)) {
                 window.analysis = null;
                 window.requestedAnalysisKey = "";
+                WallpaperAnalyzer.release(window.analysisRequestKey);
+            }
+            if (SystemCardService.isFreeLayoutMode(mode)) {
                 window.runFreeCollisionLayout();
                 return;
             }
@@ -250,7 +257,10 @@ Variants {
                 window.scheduleDesktopLayout("host-ready");
             });
         }
-        Component.onDestruction: DesktopPresentationService.unregisterHost(window.screenKey, viewport)
+        Component.onDestruction: {
+            WallpaperAnalyzer.release(window.analysisRequestKey);
+            DesktopPresentationService.unregisterHost(window.screenKey, viewport);
+        }
 
         anchors {
             top: true

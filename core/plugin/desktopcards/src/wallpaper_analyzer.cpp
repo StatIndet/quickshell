@@ -3,7 +3,7 @@
 #include <QFileInfo>
 #include <QImage>
 #include <QImageReader>
-#include <QMutexLocker>
+#include <QTimer>
 #include <QPainter>
 #include <QThreadPool>
 #include <QUrl>
@@ -157,10 +157,19 @@ QImage renderForAnalysis(const QImage &source, int width, int height, const QStr
     // Fill, PreserveAspectCrop and panorama all expose the visible rendered
     // canvas.  The caller supplies the panorama canvas aspect, so this crop
     // also remains valid for a complete wide canvas rather than a viewport.
-    const QImage scaled = source.scaled(targetSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    const int left = std::max(0, (scaled.width() - targetSize.width()) / 2);
-    const int top = std::max(0, (scaled.height() - targetSize.height()) / 2);
-    return scaled.copy(left, top, targetSize.width(), targetSize.height());
+    QImage result(targetSize, QImage::Format_RGB32);
+    if (result.isNull())
+        return {};
+    result.fill(Qt::black);
+    const double scale = std::max(double(width) / source.width(), double(height) / source.height());
+    const double cropWidth = width / scale;
+    const double cropHeight = height / scale;
+    const QRectF crop((source.width() - cropWidth) / 2, (source.height() - cropHeight) / 2, cropWidth,
+                      cropHeight);
+    QPainter painter(&result);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    painter.drawImage(QRectF(QPointF(0, 0), QSizeF(targetSize)), source, crop);
+    return result;
 }
 
 QSharedPointer<WallpaperAnalysisData> analyzeImage(const QString &sourcePath, int canvasWidth,
@@ -333,11 +342,7 @@ WallpaperAnalyzer::WallpaperAnalyzer(QObject *parent) : QObject(parent)
 
 WallpaperAnalyzer::~WallpaperAnalyzer() { m_threadPool.waitForDone(); }
 
-int WallpaperAnalyzer::pendingCount() const
-{
-    QMutexLocker locker(&m_mutex);
-    return m_pendingCount;
-}
+int WallpaperAnalyzer::pendingCount() const { return m_pending.size() + (m_running ? 1 : 0); }
 
 QString WallpaperAnalyzer::cacheKey(const QString &sourcePath, int canvasWidth, int canvasHeight,
                                     const QString &fillMode, int imageWidth, int imageHeight) const
@@ -354,50 +359,64 @@ void WallpaperAnalyzer::request(const QString &requestKey, int generation, const
                                 int canvasWidth, int canvasHeight, const QString &fillMode, int imageWidth,
                                 int imageHeight)
 {
-    const QString key = cacheKey(sourcePath, canvasWidth, canvasHeight, fillMode, imageWidth, imageHeight);
-    {
-        QMutexLocker locker(&m_mutex);
-        m_latestGeneration[requestKey] = generation;
-        const auto cached = m_cache.value(key);
-        if (cached) {
-            QMetaObject::invokeMethod(
-                this,
-                [this, requestKey, generation, cached]() {
-                    emit analysisReady(requestKey, generation, new WallpaperAnalysisResult(cached, this));
-                },
-                Qt::QueuedConnection);
-            return;
-        }
-        if (m_inFlight.contains(key)) {
-            m_inFlight[key].append({requestKey, generation});
-            return;
-        }
-        m_inFlight.insert(key, {{requestKey, generation}});
-        ++m_pendingCount;
-    }
+    release(requestKey);
+    m_pending.insert(requestKey,
+                     {cacheKey(sourcePath, canvasWidth, canvasHeight, fillMode, imageWidth, imageHeight),
+                      sourcePath, fillMode, generation, canvasWidth, canvasHeight, imageWidth, imageHeight});
     emit pendingCountChanged();
-    m_threadPool.start(new AnalysisRunnable(this, key, sourcePath, canvasWidth, canvasHeight, fillMode,
-                                            imageWidth, imageHeight));
+    scheduleNext();
+}
+
+void WallpaperAnalyzer::release(const QString &requestKey)
+{
+    if (auto *result = m_results.take(requestKey))
+        result->deleteLater();
+    if (m_pending.remove(requestKey))
+        emit pendingCountChanged();
+}
+
+void WallpaperAnalyzer::scheduleNext()
+{
+    if (m_running || m_scheduled || m_pending.isEmpty())
+        return;
+    m_scheduled = true;
+    QTimer::singleShot(0, this, [this]() {
+        m_scheduled = false;
+        processNext();
+    });
+}
+
+void WallpaperAnalyzer::processNext()
+{
+    if (m_running || m_pending.isEmpty())
+        return;
+    const QString requestKey = m_pending.constBegin().key();
+    const PendingRequest request = m_pending.value(requestKey);
+    if (const auto *cached = m_cache.object(request.key)) {
+        auto *result = new WallpaperAnalysisResult(*cached, this);
+        m_pending.remove(requestKey);
+        m_results.insert(requestKey, result);
+        emit analysisReady(requestKey, request.generation, result);
+        emit pendingCountChanged();
+        scheduleNext();
+        return;
+    }
+    m_running = true;
+    emit pendingCountChanged();
+    m_threadPool.start(new AnalysisRunnable(this, request.key, request.sourcePath, request.canvasWidth,
+                                            request.canvasHeight, request.fillMode, request.imageWidth,
+                                            request.imageHeight));
 }
 
 void WallpaperAnalyzer::finish(const QString &key, const QSharedPointer<const WallpaperAnalysisData> &data)
 {
-    QVector<AnalysisWaiter> waiters;
-    {
-        QMutexLocker locker(&m_mutex);
-        m_cache.insert(key, data);
-        waiters = m_inFlight.take(key);
-        m_pendingCount = std::max(0, m_pendingCount - 1);
-    }
+    const qsizetype bytes =
+        sizeof(WallpaperAnalysisData) +
+        (data->sum.capacity() + data->squareSum.capacity() + data->edgeSum.capacity()) * sizeof(double);
+    m_cache.insert(key, new QSharedPointer<const WallpaperAnalysisData>(data),
+                   static_cast<int>((bytes + 1023) / 1024));
+    m_running = false;
     emit pendingCountChanged();
-    for (const AnalysisWaiter &waiter : std::as_const(waiters)) {
-        bool current = false;
-        {
-            QMutexLocker locker(&m_mutex);
-            current = m_latestGeneration.value(waiter.requestKey, waiter.generation) == waiter.generation;
-        }
-        if (!current)
-            continue;
-        emit analysisReady(waiter.requestKey, waiter.generation, new WallpaperAnalysisResult(data, this));
-    }
+    // Resolve only the latest requests, including cache hits, on the owning thread.
+    scheduleNext();
 }

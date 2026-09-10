@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QHash>
-#include <QMutex>
+#include <QCache>
 #include <QObject>
 #include <QSharedPointer>
 #include <QString>
@@ -57,6 +57,9 @@ class WallpaperAnalyzer : public QObject {
 
     int pendingCount() const;
 
+    // Releases this consumer's pending work and last published result.
+    Q_INVOKABLE void release(const QString &requestKey);
+
     Q_INVOKABLE void request(const QString &requestKey, int generation, const QString &sourcePath,
                              int canvasWidth, int canvasHeight, const QString &fillMode, int imageWidth,
                              int imageHeight);
@@ -66,10 +69,18 @@ class WallpaperAnalyzer : public QObject {
     void analysisReady(const QString &requestKey, int generation, WallpaperAnalysisResult *result);
 
   private:
-    struct AnalysisWaiter {
-        QString requestKey;
-        int generation = 0;
+    struct PendingRequest {
+        QString key;
+        QString sourcePath;
+        QString fillMode;
+        int generation;
+        int canvasWidth;
+        int canvasHeight;
+        int imageWidth;
+        int imageHeight;
     };
+    void scheduleNext();
+    void processNext();
 
     QString cacheKey(const QString &sourcePath, int canvasWidth, int canvasHeight, const QString &fillMode,
                      int imageWidth, int imageHeight) const;
@@ -78,10 +89,11 @@ class WallpaperAnalyzer : public QObject {
     void finish(const QString &key, const QSharedPointer<const WallpaperAnalysisData> &data);
 
   private:
-    mutable QMutex m_mutex;
     QThreadPool m_threadPool;
-    QHash<QString, QSharedPointer<const WallpaperAnalysisData>> m_cache;
-    QHash<QString, QVector<AnalysisWaiter>> m_inFlight;
-    QHash<QString, int> m_latestGeneration;
-    int m_pendingCount = 0;
+    // Costs are KiB; active consumers may retain data beyond this cache budget.
+    QCache<QString, QSharedPointer<const WallpaperAnalysisData>> m_cache{64 * 1024};
+    QHash<QString, PendingRequest> m_pending;
+    QHash<QString, WallpaperAnalysisResult *> m_results;
+    bool m_running = false;
+    bool m_scheduled = false;
 };

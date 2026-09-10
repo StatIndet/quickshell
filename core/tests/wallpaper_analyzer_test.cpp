@@ -1,6 +1,7 @@
 #include "wallpaper_analyzer.h"
 
 #include <QImage>
+#include <QPointer>
 #include <QTemporaryDir>
 #include <QTest>
 
@@ -12,6 +13,7 @@ class WallpaperAnalyzerTest final : public QObject {
     void staleGenerationCannotPublish();
     void invalidWallpaperFallsBackGracefully();
     void pathologicalCanvasAspectIsBounded();
+    void releasesResultsAndCoalescesCachedRequests();
 };
 
 void WallpaperAnalyzerTest::findsLowAndHighBusyRegions()
@@ -98,7 +100,7 @@ void WallpaperAnalyzerTest::pathologicalCanvasAspectIsBounded()
     QTemporaryDir directory;
     QVERIFY(directory.isValid());
     const QString path = directory.filePath(QStringLiteral("wallpaper.png"));
-    QImage image(64, 64, QImage::Format_RGB32);
+    QImage image(1, 540, QImage::Format_RGB32);
     image.fill(Qt::gray);
     QVERIFY(image.save(path));
 
@@ -111,6 +113,40 @@ void WallpaperAnalyzerTest::pathologicalCanvasAspectIsBounded()
     QVERIFY(result->valid());
     QVERIFY(result->analysisWidth() <= 4096);
     QVERIFY(result->analysisHeight() <= 540);
+}
+
+void WallpaperAnalyzerTest::releasesResultsAndCoalescesCachedRequests()
+{
+    QTemporaryDir directory;
+    QVERIFY(directory.isValid());
+    const QString path = directory.filePath(QStringLiteral("wallpaper.png"));
+    QImage image(32, 32, QImage::Format_RGB32);
+    image.fill(Qt::gray);
+    QVERIFY(image.save(path));
+    WallpaperAnalyzer analyzer;
+    QPointer<WallpaperAnalysisResult> result;
+    QList<int> generations;
+    connect(&analyzer, &WallpaperAnalyzer::analysisReady, this,
+            [&](const QString &, int generation, WallpaperAnalysisResult *value) {
+                result = value;
+                generations.append(generation);
+            });
+    analyzer.request("screen", 1, path, 32, 32, "Fill", 32, 32);
+    QTRY_COMPARE(generations.size(), 1);
+    QPointer<WallpaperAnalysisResult> previous = result;
+    for (int generation = 2; generation <= 100; ++generation)
+        analyzer.request("screen", generation, path, 32, 32, "Fill", 32, 32);
+    QCOMPARE(analyzer.pendingCount(), 1);
+    QTRY_COMPARE(generations, QList<int>({1, 100}));
+    QTRY_VERIFY(previous.isNull());
+    QVERIFY(result && result->valid());
+    analyzer.release("screen");
+    QTRY_VERIFY(result.isNull());
+    analyzer.request("screen", 101, path, 32, 32, "Fill", 32, 32);
+    analyzer.release("screen");
+    QCoreApplication::processEvents();
+    QCOMPARE(generations, QList<int>({1, 100}));
+    QCOMPARE(analyzer.pendingCount(), 0);
 }
 
 QTEST_MAIN(WallpaperAnalyzerTest)
