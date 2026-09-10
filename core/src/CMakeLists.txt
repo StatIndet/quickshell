@@ -102,8 +102,3 @@ target_link_libraries(ClavisMediaCore PRIVATE
     Qt6::Gui
 )
 target_include_directories(ClavisMediaCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Material 3 expressive shape geometry and morphing backend.  The vendored
-# source is kept in its own subdirectory because it requires C++20 while the
-# rest of ClavisCore intentionally remains on C++17.
-add_subdirectory(m3shapes)

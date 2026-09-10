@@ -74,7 +74,6 @@ add_subdirectory(plugin/cava)
 add_subdirectory(plugin/media)
 add_subdirectory(plugin/keyboard)
 add_subdirectory(plugin/lyrics)
-add_subdirectory(plugin/m3shapes)
 add_subdirectory(plugin/i18n)
 add_subdirectory(plugin/runtime)
 
@@ -86,14 +85,7 @@ install(
         PATTERN "*.qmltypes"
         PATTERN "*.so*"
 )
-install(
-    DIRECTORY "${CLAVIS_QML_BUILD_DIR}/M3Shapes/"
-    DESTINATION "${CLAVIS_QML_INSTALL_DIR}/M3Shapes"
-    FILES_MATCHING
-        PATTERN "qmldir"
-        PATTERN "*.qmltypes"
-        PATTERN "*.so*"
-)
+
 
 install(
     DIRECTORY

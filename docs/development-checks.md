@@ -8,7 +8,7 @@
 | --- | --- |
 | 所有改动 | `git diff --check HEAD` |
 | 改动 QML | Qt 6 qmlformat 比较、qmllint（必要时准备 native build 与真实 Quickshell VFS） |
-| 改动 first-party C++ | clang-format 检查；跳过 vendored m3shapes |
+| 改动 first-party C++ | clang-format 检查 |
 | 改动 Shell | bash 语法与 ShellCheck；配置写入、Niri effects、Matugen 相关路径选已有集成测试 |
 | 改动 Python | 内存编译检查，不写 `__pycache__` |
 | core、CMake、QML tests | configure/build、全部现有 CTest |
@@ -44,6 +44,9 @@ sudo pacman -S --needed base-devel cmake ninja qt6-base qt6-declarative \
 # Matugen 集成测试需要：
 sudo pacman -S --needed matugen jq
 ```
+
+M3Shapes 是另行安装的 QML 运行时依赖，Arch 包名为 `qt6-m3shapes-git`
+（AUR）。`lint-qml.sh` 使用 Qt 的系统 import 根解析它，不要求 `build/qml/M3Shapes`。
 
 `base-devel` 提供编译器和 pkgconf 等构建工具；`clang` 提供 clang-format。
 Qt 6 的 qmlformat、qmllint、qmltestrunner 属于

@@ -1,5 +1,10 @@
 # 开发流程
 
+先安装外部 QML 运行时依赖 M3Shapes（Arch：`qt6-m3shapes-git`）。
+Clavis 不编译或安装它；`build/qml` 继续只为 Clavis 原生模块提供开发导入路径。
+从旧 checkout 迁移时，清理旧构建目录中的 `build/qml/M3Shapes`，避免遮蔽系统模块；
+不要向该目录复制系统模块或创建同名软链接。
+
 源码开发使用 Quickshell 的 XDG 配置优先级和 CMake 生成的 import tree：
 
 ```bash

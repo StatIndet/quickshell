@@ -37,8 +37,7 @@ command -v qs >/dev/null 2>&1 || {
 
 native_build_ready() {
     [[ -f "${qml_build_dir}/Clavis/Weather/qmldir" ]] \
-        && [[ -f "${qml_build_dir}/Clavis/Lyrics/qmldir" ]] \
-        && [[ -f "${qml_build_dir}/M3Shapes/qmldir" ]]
+        && [[ -f "${qml_build_dir}/Clavis/Lyrics/qmldir" ]]
 }
 
 if ! native_build_ready; then

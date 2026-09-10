@@ -66,7 +66,7 @@ for file in "${files[@]}"; do
     esac
     [[ -f ${file} ]] || continue
     case ${file} in
-        build/*|generated/*|third-party/*|vendor/*|core/src/m3shapes/*|core/plugin/m3shapes/src/*) continue ;;
+        build/*|generated/*|third-party/*|vendor/*) continue ;;
     esac
     case ${file} in
         *.qml) qml=true ;;

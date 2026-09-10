@@ -8,7 +8,9 @@
 - `Clavis.Weather` / `Clavis.WeatherMap`：Open-Meteo、地图凭据和 RainViewer metadata；地图渲染与网络瓦片缓存由 MapLibre Native Qt 负责；
 - `Clavis.Cava`：PipeWire 实时采集、RMS/Peak、频谱和 libcava；
 - `Clavis.Lyrics`：异步 Local/LRCLIB/NetEase provider、缓存、LRC 和 seek 映射；
-- `Clavis.Media`、`Clavis.Keyboard`、`Clavis.I18n`、`Clavis.Runtime`、`M3Shapes`。
+- `Clavis.Media`、`Clavis.Keyboard`、`Clavis.I18n`、`Clavis.Runtime`。
+
+`M3Shapes` 由系统包提供（Arch：`qt6-m3shapes-git`），是外部 QML 运行时依赖。
 
 ## key-cli
 

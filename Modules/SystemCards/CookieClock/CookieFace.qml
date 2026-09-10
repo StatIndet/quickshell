@@ -2,14 +2,16 @@ import QtQuick
 import M3Shapes
 
 // Geometry adapted from end-4/dots-hyprland's ii Cookie Clock (GPL-3.0).
-// The Clavis M3Shapes backend owns every cookie contour, including the
+// The external M3Shapes module owns every cookie contour, including the
 // arbitrary-side fallback.
 MaterialShape {
     id: root
 
     property int sides: 14
     property color fillColor: "transparent"
-    readonly property bool genericShape: root.sides !== 0 && root.sides !== 1 && root.sides !== 4 && root.sides !== 6 && root.sides !== 7 && root.sides !== 9 && root.sides !== 12
+    readonly property bool genericShape: root.sides !== 0 && root.sides !== 1 && root.sides !== 4
+                                         && root.sides !== 6 && root.sides !== 7 && root.sides !== 9 && root.sides
+                                         !== 12
     readonly property int genericPoints: Math.max(3, root.sides)
     readonly property real genericCornerRadius: (root.sides < 17 ? 1.5 : 1.1) / Math.max(root.sides, 1)
 
@@ -33,7 +35,8 @@ MaterialShape {
             return MaterialShape.Custom;
         }
     }
-    customShape: root.genericShape ? shapeFactory.star(root.genericPoints, 0.8, root.genericCornerRadius, 0) : shapeFactory.regularPolygon(3)
+    customShape: root.genericShape ? shapeFactory.star(root.genericPoints, 0.8, root.genericCornerRadius, 0) :
+                                     shapeFactory.regularPolygon(3)
     rotation: root.genericShape ? 30 : 0
     color: root.fillColor
 
@@ -44,5 +47,4 @@ MaterialShape {
 
         visible: false
     }
-
 }

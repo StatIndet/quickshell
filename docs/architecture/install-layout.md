@@ -5,9 +5,11 @@ Clavis Shell 使用标准 CMake 安装，不维护应用内版本管理器：
 ```text
 /etc/xdg/quickshell/clavis/       QML 源码、assets、scripts、matugen
 /lib/qt6/qml/Clavis/              Clavis 原生 QML modules
-/lib/qt6/qml/M3Shapes/            Material 3 shapes module
 /usr/lib/systemd/user/            Clavis 自己的 clavis-shell.service
 ```
+
+M3Shapes 是外部 QML 运行时依赖（Arch：`qt6-m3shapes-git`），
+由系统包安装到 Qt 模块目录，不属于 Clavis 的安装或 DESTDIR staging 内容。
 
 路径通过 `CMAKE_INSTALL_PREFIX`、`CMAKE_INSTALL_LIBDIR`、
 `CLAVIS_QML_BUILD_DIR`、`CLAVIS_QML_INSTALL_DIR`、

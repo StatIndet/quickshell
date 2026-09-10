@@ -10,7 +10,7 @@ plugin。
 三个仓库是独立项目，测试和构建不得跨仓库依赖：
 
 - Clavis 负责 QML UI、Quickshell 生命周期、Niri IPC、窗口/工作区/输出、天气、
-  WeatherMapProvider、M3Shapes、MediaPalette、键盘锁状态、实时 Cava、MPRIS 歌词和
+  WeatherMapProvider、MediaPalette、键盘锁状态、实时 Cava、MPRIS 歌词和
   同步时间轴。
 - `key-cli` 负责 `key shell`、`key ipc`、录屏、音频文件录制、剪贴板 backend 以及
   对外 machine JSON protocol。
@@ -31,6 +31,9 @@ Clavis 测试必须在单独 clone 后成立，不能依赖 `../keytop`、`../ke
 `key ipc` 兼容入口保留。不得将仓库或构建绝对路径写入 Niri 配置。
 
 ## QML modules
+
+- `import M3Shapes` 使用系统安装的外部 QML 运行时模块（Arch：`qt6-m3shapes-git`），
+  不由 Clavis 编译或安装，不恢复 vendored 实现。
 
 - `import qs.Common`、`import qs.Services`、`import qs.Modules.Foo` 是 Quickshell
   root-relative shell modules。纯 QML 目录不得新增手写 `qmldir`。

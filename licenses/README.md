@@ -46,3 +46,16 @@ QML/JS and GLSL source are installed with the shell. The shader is compiled by
 CMake source distributions include that build recipe. No reference checkout
 is needed to build, test, install or run Clavis. This port does not imply Zen
 Browser endorsement.
+
+## M3Shapes and Cookie Clock
+
+[M3Shapes](https://github.com/soramanew/m3shapes) is an external QML runtime
+dependency, supplied on Arch by `qt6-m3shapes-git`. Clavis no longer distributes
+or builds its former vendored C++ geometry, morphing, renderer or plugin sources.
+`M3Shapes-Apache-2.0.txt` is retained as an upstream license reference; the installed
+module and its license are provided by the system package.
+
+The retained `Modules/SystemCards/CookieClock/` QML geometry and presentation
+adaptations from end-4/dots-hyprland remain covered by
+`end-4-dots-hyprland-GPL-3.0.txt` and their source notices. They consume the external
+M3Shapes API and are not the removed vendored M3Shapes C++ implementation.

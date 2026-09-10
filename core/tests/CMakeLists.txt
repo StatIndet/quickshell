@@ -85,36 +85,6 @@ target_link_libraries(clavis_paths_tests PRIVATE
 
 add_test(NAME clavis_paths_tests COMMAND clavis_paths_tests)
 
-qt_add_executable(m3shapes_tests
-    m3shapes_test.cpp
-)
-
-target_link_libraries(m3shapes_tests PRIVATE
-    M3ShapesCore
-    M3ShapesMorph
-    M3ShapesGeometry
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Qml
-    Qt6::Quick
-    Qt6::Test
-)
-
-target_include_directories(m3shapes_tests PRIVATE
-    ${CLAVIS_SOURCE_ROOT}/core/src
-)
-
-target_compile_features(m3shapes_tests PRIVATE cxx_std_20)
-target_compile_definitions(m3shapes_tests PRIVATE
-    M3SHAPES_IMPORT_PATH="$<SHELL_PATH:${CLAVIS_QML_BUILD_DIR}>"
-)
-add_dependencies(m3shapes_tests M3Shapes)
-
-add_test(NAME m3shapes_tests COMMAND m3shapes_tests)
-set_tests_properties(m3shapes_tests PROPERTIES
-    ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
-)
-
 qt_add_executable(wallpaper_analyzer_tests
     wallpaper_analyzer_test.cpp
 )
