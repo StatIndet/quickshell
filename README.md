@@ -40,7 +40,10 @@ Clavis is split into three repositories:
 | **[key-cli](https://github.com/StatIndet/key-cli)** | `key` command, shell IPC/lifecycle, recording and clipboard integration |
 | **[keytop](https://github.com/StatIndet/keytop)** | Standalone system monitor, TUI and machine-readable metrics |
 
-Install `key-cli` and `keytop` for the full Clavis experience.
+Install `key-cli` and `keytop` for the full Clavis experience. For key-cli development,
+use its editable `.venv`; for a standalone source installation, use its
+`scripts/install.sh`. Distribution packaging is not required. See
+[development integration](docs/development.md#与-key-cli-源码联调) for service overrides.
 
 ## Requirements
 
