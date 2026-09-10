@@ -1,6 +1,5 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import Clavis.Keyboard
 import qs.Common
 import qs.Components
 import qs.Services
@@ -177,15 +176,15 @@ Item {
                                                        qsTr("Disconnected")
         }
         StatusIcon {
-            visible: KeyboardLockState.available
+            visible: KeyboardLockService.available
             symbol: "keyboard_capslock"
-            active: KeyboardLockState.available && KeyboardLockState.capsLock
+            active: KeyboardLockService.available && KeyboardLockService.capsLock
             description: active ? qsTr("Caps Lock on") : qsTr("Caps Lock off")
         }
         StatusIcon {
-            visible: KeyboardLockState.available
+            visible: KeyboardLockService.available
             symbol: "pin"
-            active: KeyboardLockState.available && KeyboardLockState.numLock
+            active: KeyboardLockService.available && KeyboardLockService.numLock
             description: active ? qsTr("Num Lock on") : qsTr("Num Lock off")
         }
         Row {

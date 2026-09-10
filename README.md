@@ -28,7 +28,7 @@ A desktop shell for [niri](https://github.com/YaLTeR/niri), built with [Quickshe
 - Screen and audio recording controls
 - Dynamic Material theming with Matugen
 - Settings center for shell, cursor, wallpaper, default apps and integrations
-- Native QML modules for niri, media, weather, Cava, keyboard state
+- Native QML modules for niri, media, weather, Cava, shortcut recording
 
 ## Project family
 

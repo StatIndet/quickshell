@@ -23,12 +23,12 @@ QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
 
 正式安装由发行版打包流程负责；本仓库默认只构建和测试源码，不创建运行时版本快照。
 
-键盘锁状态通过 evdev LED 事件读取，libudev 负责设备枚举与热插拔；编译和运行需
-`libudev`（Arch：`systemd-libs`）。运行用户需要相关键盘 `/dev/input/event*` 的读取权限。
-权限不足、设备不可读或事件订阅失败时，`KeyboardLockState.available` 为 false，
-`error` 与日志提供原因，锁屏提示和灵动岛不把未知状态显示成切换结果。Clavis 不修改
-系统权限、不启动特权代理，也不回退到周期扫描；权限变化的 udev 事件或显式 `refresh()`
-会重新检查设备。多个键盘仍按任一 LED 点亮即开启汇总，丢帧后用 `EVIOCGLED` 重同步。
+键盘锁状态由独立的 key-cli 提供：`key keyboard status --format json` 用于诊断，
+`key keyboard watch --format jsonl` 由 `KeyboardLockService` 的单个 Process 管理。
+启动、设备恢复和重同步快照不弹 OSD，真实切换才触发提示；无定期查询或静默超时。
+权限不足时保持不可用，由用户选择安装 key-cli 的可选键盘授权包。
+`Clavis.Keyboard` 仅保留依赖 Qt 输入事件的快捷键录制。libudev 仍由背光 backend 使用。
+剪贴板 watcher 继续由独立的 systemd 用户服务管理，不随键盘进程退出而停止。
 
 亮度服务直接使用 `Niri.currentOutput`，不再启动 focused-output 查询进程。内置背光由
 `BacklightState` 订阅 backlight udev 事件并读取 `actual_brightness` / `max_brightness`，

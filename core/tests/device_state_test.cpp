@@ -1,5 +1,4 @@
 #include "runtime/backlight_reading.h"
-#include "runtime/keyboard_led_state.h"
 #include <QFile>
 #include <QTemporaryDir>
 #include <QtTest>
@@ -7,50 +6,6 @@
 class DeviceStateTest : public QObject {
     Q_OBJECT
   private slots:
-    void authoritativeLeds()
-    {
-        KeyboardLedState state;
-        input_event event{};
-        event.type = EV_KEY;
-        event.code = KEY_CAPSLOCK;
-        event.value = 1;
-        QVERIFY(!state.consume(event));
-        QVERIFY(!state.caps);
-        event.type = EV_LED;
-        event.code = LED_CAPSL;
-        state.consume(event);
-        QVERIFY(state.caps);
-        event.code = LED_NUML;
-        state.consume(event);
-        QVERIFY(state.num);
-        event.value = 0;
-        event.code = LED_CAPSL;
-        state.consume(event);
-        QVERIFY(!state.caps);
-        QVERIFY(state.num);
-    }
-    void droppedFrame()
-    {
-        KeyboardLedState state{true, false, false};
-        input_event event{};
-        event.type = EV_SYN;
-        event.code = SYN_DROPPED;
-        QVERIFY(!state.consume(event));
-        event.type = EV_LED;
-        event.code = LED_CAPSL;
-        event.value = 0;
-        QVERIFY(!state.consume(event));
-        QVERIFY(state.caps);
-        event.type = EV_SYN;
-        event.code = SYN_REPORT;
-        QVERIFY(state.consume(event));
-        // The snapshot replaces all bits, including clearing the dropped flag.
-        state = {false, true, false};
-        event.type = EV_LED;
-        event.code = LED_NUML;
-        state.consume(event);
-        QVERIFY(!state.num);
-    }
     void backlightSnapshot()
     {
         QTemporaryDir dir;

@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import Clavis.Keyboard
 import qs.Common
 import qs.Services
 import "Cards"
@@ -377,15 +376,15 @@ Item {
                     id: stateMessage
 
                     property string msg: {
-                        if (!KeyboardLockState.available)
+                        if (!KeyboardLockService.available)
                             return "";
-                        if (KeyboardLockState.capsLock && KeyboardLockState.numLock)
+                        if (KeyboardLockService.capsLock && KeyboardLockService.numLock)
                             return qsTr("Caps Lock and Num Lock are on.");
 
-                        if (KeyboardLockState.capsLock)
+                        if (KeyboardLockService.capsLock)
                             return qsTr("Caps Lock is on.");
 
-                        if (KeyboardLockState.numLock)
+                        if (KeyboardLockService.numLock)
                             return qsTr("Num Lock is on.");
 
                         return "";

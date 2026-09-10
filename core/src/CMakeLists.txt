@@ -5,7 +5,6 @@ target_sources(ClavisRuntimeCore PRIVATE
     runtime/clavis_paths.cpp
     runtime/udev_monitor.h
     runtime/udev_monitor.cpp
-    runtime/keyboard_led_state.h
     runtime/backlight_reading.h
     runtime/backlight_reading.cpp
 )

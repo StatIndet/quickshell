@@ -10,9 +10,9 @@ plugin。
 三个仓库是独立项目，测试和构建不得跨仓库依赖：
 
 - Clavis 负责 QML UI、Quickshell 生命周期、Niri IPC、窗口/工作区/输出、天气、
-  WeatherMapProvider、MediaPalette、键盘锁状态、实时 Cava、MPRIS 歌词和
+  WeatherMapProvider、MediaPalette、快捷键录制、实时 Cava、MPRIS 歌词和
   同步时间轴。
-- `key-cli` 负责 `key shell`、`key ipc`、录屏、音频文件录制、剪贴板 backend 以及
+- `key-cli` 负责 `key shell`、`key ipc`、录屏、音频文件录制、剪贴板与键盘锁状态 backend 以及
   对外 machine JSON protocol。
 - `keytop` 唯一负责系统指标采集、解析、TUI 和 JSON/JSONL machine protocol；Clavis
   直接消费 `keytop value stream --format jsonl`，不得在 Clavis 重新实现 keytop parser。

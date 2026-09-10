@@ -6,7 +6,6 @@ import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Wayland
-import Clavis.Keyboard
 import Clavis.Niri
 import qs.Services
 import qs.Common
@@ -613,14 +612,14 @@ Variants {
                 property bool lockEnabled: false
 
                 function updateKeyboardLocks() {
-                    if (!KeyboardLockState.available) {
+                    if (!KeyboardLockService.available) {
                         locksInitialized = false;
                         if (keyboardOsd)
                             showVolume = false;
                         return;
                     }
-                    const caps = KeyboardLockState.capsLock;
-                    const num = KeyboardLockState.numLock;
+                    const caps = KeyboardLockService.capsLock;
+                    const num = KeyboardLockService.numLock;
                     if (locksInitialized) {
                         if (caps !== previousCapsLock && PersonalizationConfig.keystoneCapsLockOsd) {
                             root.lockEnabled = caps;
@@ -788,7 +787,6 @@ Variants {
                     recordingPresentationOut.restart();
                 }
                 Component.onCompleted: {
-                    KeyboardLockState.refresh();
                     root.updateKeyboardLocks();
                     SystemIdentityService.setUptimeConsumer(root.dashboardUptimeOwner,
                                                             root.dashboardTabActive);
@@ -1254,7 +1252,7 @@ Variants {
                 }
 
                 Connections {
-                    target: KeyboardLockState
+                    target: KeyboardLockService
                     function onAvailabilityChanged() {
                         root.locksInitialized = false;
                         root.updateKeyboardLocks();

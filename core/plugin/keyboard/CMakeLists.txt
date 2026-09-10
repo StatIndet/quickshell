@@ -9,8 +9,6 @@ qt_add_qml_module(ClavisKeyboard
     SOURCES
         src/shortcut_recorder.h
         src/shortcut_recorder.cpp
-        src/keyboard_lock_plugin.h
-        src/keyboard_lock_plugin.cpp
     OUTPUT_DIRECTORY ${CLAVIS_QML_BUILD_DIR}/Clavis/Keyboard
 )
 
@@ -19,7 +17,6 @@ target_include_directories(ClavisKeyboard PUBLIC src)
 pkg_check_modules(XkbCommon REQUIRED IMPORTED_TARGET xkbcommon)
 
 target_link_libraries(ClavisKeyboard PRIVATE
-    ClavisRuntimeCore
     Qt6::Quick
     Qt6::Gui
     PkgConfig::XkbCommon
