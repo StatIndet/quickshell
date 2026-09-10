@@ -120,7 +120,7 @@ Item {
             if (w < radius * 2) {
                 ctx.beginPath();
                 ctx.arc(w / 2, centerY, w / 2, 0, Math.PI * 2);
-                ctx.fillStyle = String(root.waveColor);
+                ctx.fillStyle = root.waveColor;
                 ctx.fill();
                 return;
             }
@@ -167,7 +167,9 @@ Item {
 
             ctx.arc(endCenterX, centerY, radius, -Math.PI / 2, Math.PI / 2);
             ctx.closePath();
-            ctx.fillStyle = String(root.waveColor);
+            // Passing a color value resends the brush even if a previous paint
+            // was skipped while the canvas rounded down to zero pixels.
+            ctx.fillStyle = root.waveColor;
             ctx.fill();
         }
     }
