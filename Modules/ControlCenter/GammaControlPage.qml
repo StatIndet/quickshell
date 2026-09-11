@@ -24,7 +24,7 @@ StyledFlickable {
         width: Math.min(640, Math.max(0, root.width - Metrics.pageMargin * 2))
         x: Math.max(Metrics.pageMargin, (root.width - width) / 2)
         y: Metrics.pageMargin
-        spacing: Metrics.spacingL
+        spacing: Metrics.spacingXL
         InlineStatusBanner {
             Layout.fillWidth: true
             visible: !DisplayColor.available
@@ -40,6 +40,7 @@ StyledFlickable {
             Layout.fillWidth: true
             title: qsTr("Color")
             iconName: "contrast"
+            flat: true
             enabled: DisplayColor.ready
             GeneralSliderSetting {
                 title: qsTr("Gamma")
@@ -71,11 +72,11 @@ StyledFlickable {
         }
         SettingsSection {
             Layout.fillWidth: true
-            title: qsTr("Night Mode")
-            iconName: "nightlight"
+            flat: true
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("Night Mode")
+                iconName: "nightlight"
                 trailing: StyledSwitch {
                     checked: root.preferences.nightEnabled
                     Accessible.name: qsTr("Night Mode")
@@ -83,6 +84,7 @@ StyledFlickable {
                 }
             }
             GeneralSliderSetting {
+                visible: root.preferences.nightEnabled
                 title: qsTr("Night temperature")
                 from: 1000
                 to: 6500
@@ -91,6 +93,13 @@ StyledFlickable {
                 value: root.preferences.nightTemperature
                 onMoved: value => DisplayColor.setPreference("nightTemperature", value)
             }
+        }
+        SettingsSection {
+            Layout.fillWidth: true
+            visible: root.preferences.nightEnabled
+            title: qsTr("Schedule")
+            iconName: "schedule"
+            flat: true
             DisplayChoice {
                 Layout.fillWidth: true
                 title: qsTr("Automatic control")
@@ -191,7 +200,7 @@ StyledFlickable {
                 Layout.fillWidth: true
                 visible: root.preferences.mode === "location"
                 title: qsTr("Automatic IP location")
-                supportingText: qsTr("Uses ipwho.is only when enabled; weather location stays unchanged")
+
                 trailing: StyledSwitch {
                     checked: root.preferences.useIP
                     Accessible.name: qsTr("Automatic IP location")
@@ -227,6 +236,7 @@ StyledFlickable {
             SettingsRow {
                 Layout.fillWidth: true
                 title: qsTr("Scheduled temperature")
+                iconName: "thermostat"
                 supportingText: qsTr("%1 K · Target %2 K").arg(DisplayColor.schedule.temperature).arg(
                                     DisplayColor.schedule.target)
             }
@@ -234,6 +244,7 @@ StyledFlickable {
                 Layout.fillWidth: true
                 visible: DisplayColor.schedule.next > 0
                 title: qsTr("Next transition")
+                iconName: "schedule"
                 supportingText: Qt.formatDateTime(new Date(DisplayColor.schedule.next), "ddd hh:mm")
             }
         }
@@ -241,20 +252,22 @@ StyledFlickable {
             Layout.fillWidth: true
             title: qsTr("Outputs")
             iconName: "monitor"
+            flat: true
             Repeater {
                 model: DisplayColor.outputs
                 SettingsRow {
                     required property var modelData
                     Layout.fillWidth: true
                     title: modelData.name
+                    iconName: "monitor"
                     supportingText: {
                         switch (modelData.state) {
                         case "failed":
-                            return qsTr("Gamma control failed; the compositor did not provide a reason");
+                            return qsTr("Gamma control failed (reason unavailable)");
                         case "submitted":
-                            return qsTr("Curve submitted; actual Gamma cannot be read back");
+                            return qsTr("Curve submitted");
                         case "pending":
-                            return qsTr("Waiting for output capability");
+                            return qsTr("Waiting for display");
                         case "unavailable":
                             return qsTr("Gamma control unavailable");
                         default:

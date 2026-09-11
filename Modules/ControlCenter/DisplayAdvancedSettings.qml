@@ -16,7 +16,6 @@ ColumnLayout {
     SettingsRow {
         Layout.fillWidth: true
         title: qsTr("Focus at Startup")
-        supportingText: qsTr("Takes effect when Niri starts")
         trailing: StyledSwitch {
             checked: root.settings.focusAtStartup === true
             Accessible.name: qsTr("Focus at Startup")

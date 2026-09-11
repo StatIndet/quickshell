@@ -41,7 +41,7 @@ Rectangle {
                                                                                    * 2) / bounds.height))
     readonly property real offsetX: (width - bounds.width * canvasScale) / 2 - bounds.left * canvasScale
     readonly property real offsetY: (height - bounds.height * canvasScale) / 2 - bounds.top * canvasScale
-    implicitHeight: 260
+    implicitHeight: Math.max(200, Math.min(300, width * 0.48))
     radius: Appearance.rounding.normal
     color: Appearance.colors.colSurfaceContainer
     clip: true
@@ -94,9 +94,10 @@ Rectangle {
             height: logical.height * root.canvasScale
             radius: Appearance.rounding.small
             color: DisplayConfigService.selection === row.key ? Appearance.colors.colPrimaryContainer :
-                                                                Appearance.colors.colSecondaryContainer
-            border.width: activeFocus ? 3 : 1
-            border.color: Appearance.colors.colPrimary
+                                                                Appearance.colors.colSurfaceContainerHigh
+            border.width: activeFocus ? 3 : DisplayConfigService.selection === row.key ? 2 : 1
+            border.color: DisplayConfigService.selection === row.key || activeFocus
+                          ? Appearance.colors.colPrimary : Appearance.colors.colOutlineVariant
             activeFocusOnTab: true
             onActiveFocusChanged: {
                 if (activeFocus)
@@ -135,13 +136,15 @@ Rectangle {
             Text {
                 anchors.fill: parent
                 anchors.margins: Metrics.spacingXS
-                text: monitor.row.name
+                text: monitor.row.name + "\n" + monitor.logical.width + " × " + monitor.logical.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
                 font.family: Fonts.ui
+                font.pixelSize: Typography.labelLarge.pixelSize
+                font.weight: Typography.labelLarge.weight
                 color: DisplayConfigService.selection === monitor.row.key
-                       ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSecondaryContainer
+                       ? Appearance.colors.colOnPrimaryContainer : Appearance.colors.colOnSurface
             }
             MouseArea {
                 anchors.fill: parent

@@ -6,9 +6,10 @@ import qs.Widgets.common
 ColumnLayout {
     id: root
     property string section: "configuration"
-    spacing: Metrics.spacingM
+    spacing: 0
     StyledButtonGroup {
-        Layout.alignment: Qt.AlignHCenter
+        Layout.alignment: Qt.AlignLeft
+        Layout.leftMargin: Math.max(Metrics.pageMargin, (root.width - 640) / 2)
         Layout.topMargin: Metrics.pageMargin
         currentValue: root.section
         horizontalPadding: Metrics.spacingM

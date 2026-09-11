@@ -3394,80 +3394,75 @@ Scroll to adjust</translation>
     <name>DisplayAdvancedSettings</name>
     <message>
         <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="18"/>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="21"/>
         <source>Focus at Startup</source>
         <translation>Focus at Startup</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="19"/>
-        <source>Takes effect when Niri starts</source>
-        <translation>Takes effect when Niri starts</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="28"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="27"/>
         <source>Hot corners</source>
         <translation>Hot corners</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="32"/>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="94"/>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="109"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="31"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="93"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="108"/>
         <source>Inherit</source>
         <translation>Inherit</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="36"/>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="117"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="116"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="40"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="39"/>
         <source>Select corners</source>
         <translation>Select corners</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="58"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="57"/>
         <source>Top left</source>
         <translation>Top left</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="62"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="61"/>
         <source>Top right</source>
         <translation>Top right</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="66"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="65"/>
         <source>Bottom left</source>
         <translation>Bottom left</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="70"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="69"/>
         <source>Bottom right</source>
         <translation>Bottom right</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="93"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="92"/>
         <source>Window gaps</source>
         <translation>Window gaps</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="105"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="104"/>
         <source>Always center single column</source>
         <translation>Always center single column</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="113"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="112"/>
         <source>On</source>
         <translation>On</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="129"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="128"/>
         <source>Default column width</source>
         <translation>Default column width</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="135"/>
         <source>Preset column widths</source>
         <translation>Preset column widths</translation>
     </message>
@@ -3605,214 +3600,204 @@ Scroll to adjust</translation>
 <context>
     <name>DisplayConfigurationPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="30"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="35"/>
         <source>Display configuration</source>
         <translation>Display configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="31"/>
-        <source>Create or connect the Clavis output configuration.</source>
-        <translation>Create or connect the Clavis output configuration.</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="46"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="51"/>
         <source>Layout</source>
         <translation>Layout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="60"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="66"/>
         <source>Identify displays</source>
         <translation>Identify displays</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="64"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="72"/>
         <source>Reload</source>
         <translation>Reload</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="69"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="260"/>
+        <source>VRR unavailable</source>
+        <translation>VRR unavailable</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="261"/>
+        <source>VRR active</source>
+        <translation>VRR active</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="263"/>
+        <source>VRR inactive</source>
+        <translation>VRR inactive</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="349"/>
+        <source>Discard</source>
+        <translation>Discard</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="354"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="83"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="95"/>
         <source>Display</source>
         <translation>Display</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="99"/>
         <source>%1 (disconnected)</source>
         <translation>%1 (disconnected)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="94"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="84"/>
         <source>This output is read-only. Resolve conflicting or unsupported settings in %1.</source>
         <translation>This output is read-only. Resolve conflicting or unsupported settings in %1.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="101"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="91"/>
         <source>Output settings</source>
         <translation>Output settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="105"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="111"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="110"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="117"/>
         <source>Enabled</source>
         <translation>Enabled</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="118"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="124"/>
         <source>Resolution and refresh rate</source>
         <translation>Resolution and refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="122"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="129"/>
         <source>%1 × %2 · %3 Hz</source>
         <translation>%1 × %2 · %3 Hz</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="132"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="136"/>
         <source>Scale</source>
         <translation>Scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="139"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="143"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="152"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="160"/>
         <source>Custom scale</source>
         <translation>Custom scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="173"/>
         <source>Logical X</source>
         <translation>Logical X</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="169"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="177"/>
         <source>Logical Y</source>
         <translation>Logical Y</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="187"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="196"/>
         <source>Rotation and reflection</source>
         <translation>Rotation and reflection</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="191"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="200"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="207"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="216"/>
         <source>Flipped</source>
         <translation>Flipped</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="211"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="220"/>
         <source>Flipped · 90°</source>
         <translation>Flipped · 90°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="215"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="224"/>
         <source>Flipped · 180°</source>
         <translation>Flipped · 180°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="219"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="228"/>
         <source>Flipped · 270°</source>
         <translation>Flipped · 270°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="227"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
         <source>Variable refresh rate</source>
         <translation>Variable refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="232"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="242"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="246"/>
         <source>On</source>
         <translation>On</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
         <source>On-Demand</source>
         <translation>On-Demand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="249"/>
-        <source>VRR capability and activity</source>
-        <translation>VRR capability and activity</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="251"/>
-        <source>Not supported</source>
-        <translation>Not supported</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="252"/>
-        <source>Supported · Currently active</source>
-        <translation>Supported · Currently active</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="254"/>
-        <source>Supported · Currently inactive</source>
-        <translation>Supported · Currently inactive</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="257"/>
-        <source>Hide advanced settings</source>
-        <translation>Hide advanced settings</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="257"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="267"/>
         <source>Advanced settings</source>
         <translation>Advanced settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="267"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
         <source>Delete saved display</source>
         <translation>Delete saved display</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="273"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="286"/>
         <source>Presets</source>
         <translation>Presets</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="277"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="297"/>
         <source>Saved preset</source>
         <translation>Saved preset</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="287"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="307"/>
         <source>Preset name</source>
         <translation>Preset name</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="296"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="316"/>
         <source>Save preset</source>
         <translation>Save preset</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="301"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="321"/>
         <source>Rename</source>
         <translation>Rename</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="307"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="327"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="314"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="317"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="334"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="337"/>
         <source>Match presets when displays change</source>
         <translation>Match presets when displays change</translation>
     </message>
@@ -3846,12 +3831,12 @@ Scroll to adjust</translation>
 <context>
     <name>DisplaysPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="18"/>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="19"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="23"/>
         <source>Gamma Control</source>
         <translation>Gamma Control</translation>
     </message>
@@ -4034,155 +4019,154 @@ Scroll to adjust</translation>
         <translation>Color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="45"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="46"/>
         <source>Gamma</source>
         <translation>Gamma</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="54"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="55"/>
         <source>Contrast</source>
         <translation>Contrast</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="63"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="64"/>
         <source>Software dimming</source>
         <translation>Software dimming</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="74"/>
         <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="78"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="82"/>
         <source>Night Mode</source>
         <translation>Night Mode</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="88"/>
         <source>Night temperature</source>
         <translation>Night temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="96"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="100"/>
+        <source>Schedule</source>
+        <translation>Schedule</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="105"/>
         <source>Automatic control</source>
         <translation>Automatic control</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="100"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="109"/>
         <source>Fixed temperature</source>
         <translation>Fixed temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="104"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="113"/>
         <source>Time</source>
         <translation>Time</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="108"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="117"/>
         <source>Sunrise and sunset</source>
         <translation>Sunrise and sunset</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="116"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="125"/>
         <source>Day temperature</source>
         <translation>Day temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="139"/>
         <source>Night starts (HH:MM)</source>
         <translation>Night starts (HH:MM)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="139"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="148"/>
         <source>Day starts (HH:MM)</source>
         <translation>Day starts (HH:MM)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="149"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="158"/>
         <source>Transition duration</source>
         <translation>Transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="153"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="162"/>
         <source> min</source>
         <translation> min</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="165"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="174"/>
         <source>Latitude</source>
         <translation>Latitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="179"/>
         <source>Longitude</source>
         <translation>Longitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="193"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="197"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="202"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="206"/>
         <source>Automatic IP location</source>
         <translation>Automatic IP location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="194"/>
-        <source>Uses ipwho.is only when enabled; weather location stays unchanged</source>
-        <translation>Uses ipwho.is only when enabled; weather location stays unchanged</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="266"/>
+        <source>Gamma control failed (reason unavailable)</source>
+        <translation>Gamma control failed (reason unavailable)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="212"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="268"/>
+        <source>Curve submitted</source>
+        <translation>Curve submitted</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="270"/>
+        <source>Waiting for display</source>
+        <translation>Waiting for display</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="221"/>
         <source>Refresh location</source>
         <translation>Refresh location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="219"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="228"/>
         <source>Use weather location</source>
         <translation>Use weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="229"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="238"/>
         <source>Scheduled temperature</source>
         <translation>Scheduled temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="230"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="240"/>
         <source>%1 K · Target %2 K</source>
         <translation>%1 K · Target %2 K</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="246"/>
         <source>Next transition</source>
         <translation>Next transition</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="242"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="253"/>
         <source>Outputs</source>
         <translation>Outputs</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="253"/>
-        <source>Gamma control failed; the compositor did not provide a reason</source>
-        <translation>Gamma control failed; the compositor did not provide a reason</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="255"/>
-        <source>Curve submitted; actual Gamma cannot be read back</source>
-        <translation>Curve submitted; actual Gamma cannot be read back</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="257"/>
-        <source>Waiting for output capability</source>
-        <translation>Waiting for output capability</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="259"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="272"/>
         <source>Gamma control unavailable</source>
         <translation>Gamma control unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="261"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="274"/>
         <source>Control released</source>
         <translation>Control released</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="267"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
         <source>Retry output control</source>
         <translation>Retry output control</translation>
     </message>
