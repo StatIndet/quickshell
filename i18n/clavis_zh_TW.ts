@@ -3600,27 +3600,12 @@ Scroll to adjust</source>
         <translation>識別顯示器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="252"/>
-        <source>VRR unavailable</source>
-        <translation>VRR 無法使用</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="253"/>
-        <source>VRR active</source>
-        <translation>VRR 目前運作中</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="255"/>
-        <source>VRR inactive</source>
-        <translation>VRR 目前未運作</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="283"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="274"/>
         <source>Discard</source>
         <translation>捨棄變更</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="288"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
         <source>Apply</source>
         <translation>套用</translation>
     </message>
@@ -3736,12 +3721,12 @@ Scroll to adjust</source>
         <translation>視需要</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="259"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
         <source>Advanced settings</source>
         <translation>進階設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="262"/>
         <source>Delete saved display</source>
         <translation>刪除已儲存的顯示器</translation>
     </message>

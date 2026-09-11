@@ -245,15 +245,6 @@ StyledFlickable {
                     value: root.settings.vrr || "off"
                     onSelected: value => root.edit("vrr", value)
                 }
-                SettingsRow {
-                    Layout.fillWidth: true
-                    visible: root.selected && root.selected.connected
-                    title: !root.selected || !root.selected.live ? "" : !root.selected.live.vrrSupported
-                                                                   ? qsTr("VRR unavailable") :
-                                                                     root.selected.live.vrrEnabled ? qsTr(
-                                                                                                         "VRR active") :
-                                                                                                     qsTr("VRR inactive")
-                }
                 SettingsActionRow {
                     Layout.fillWidth: true
                     text: qsTr("Advanced settings")

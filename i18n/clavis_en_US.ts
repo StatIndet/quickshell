@@ -3600,27 +3600,12 @@ Scroll to adjust</translation>
         <translation>Identify displays</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="252"/>
-        <source>VRR unavailable</source>
-        <translation>VRR unavailable</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="253"/>
-        <source>VRR active</source>
-        <translation>VRR active</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="255"/>
-        <source>VRR inactive</source>
-        <translation>VRR inactive</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="283"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="274"/>
         <source>Discard</source>
         <translation>Discard</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="288"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
@@ -3736,12 +3721,12 @@ Scroll to adjust</translation>
         <translation>On-Demand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="259"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
         <source>Advanced settings</source>
         <translation>Advanced settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="262"/>
         <source>Delete saved display</source>
         <translation>Delete saved display</translation>
     </message>

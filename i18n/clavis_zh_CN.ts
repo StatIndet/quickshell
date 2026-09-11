@@ -3600,27 +3600,12 @@ Scroll to adjust</source>
         <translation>识别显示器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="252"/>
-        <source>VRR unavailable</source>
-        <translation>VRR 不可用</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="253"/>
-        <source>VRR active</source>
-        <translation>VRR 当前运行中</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="255"/>
-        <source>VRR inactive</source>
-        <translation>VRR 当前未运行</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="283"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="274"/>
         <source>Discard</source>
         <translation>放弃更改</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="288"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
@@ -3736,12 +3721,12 @@ Scroll to adjust</source>
         <translation>按需</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="259"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
         <source>Advanced settings</source>
         <translation>高级设置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="262"/>
         <source>Delete saved display</source>
         <translation>删除已保存的显示器</translation>
     </message>
