@@ -47,6 +47,7 @@ Singleton {
     readonly property bool busy: operation.running
     readonly property string revision: snapshot.revision || ""
     readonly property var bindings: snapshot.bindings || []
+    readonly property var outputs: snapshot.outputs || []
     signal saved
 
     function state(feature) {

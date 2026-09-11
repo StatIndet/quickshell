@@ -46,6 +46,10 @@ class NiriPlugin : public QObject {
     QStringList keyboardLayoutNames() const;
     QString currentKeyboardLayoutName() const;
     Q_INVOKABLE bool connectToNiri();
+    Q_INVOKABLE QVariantList outputSnapshot() const;
+    Q_INVOKABLE void refreshOutputs();
+    Q_INVOKABLE void configureOutput(const QString &requestId, const QString &name, const QVariant &action);
+
     Q_INVOKABLE QVariantList workspacesForOutput(const QString &outputName) const;
     Q_INVOKABLE QVariantList windowsForWorkspace(quint64 workspaceId) const;
     Q_INVOKABLE QVariantList windowsForOutput(const QString &outputName) const;
@@ -80,6 +84,7 @@ class NiriPlugin : public QObject {
     void workspacesChanged();
     void windowsChanged();
     void outputsChanged();
+    void outputRequestFinished(const QString &requestId, bool success, const QString &error);
     void focusedWindowChanged();
     void focusedWorkspaceChanged();
     void overviewChanged();
@@ -122,4 +127,5 @@ class NiriPlugin : public QObject {
     bool m_inOverview = false;
     QStringList m_keyboardLayoutNames;
     int m_currentKeyboardLayoutIndex = -1;
+    quint64 m_outputRefreshGeneration = 0;
 };

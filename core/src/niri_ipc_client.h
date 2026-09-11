@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QJsonValue>
 #include <QLocalSocket>
+#include <functional>
 
 class NiriIpcClient : public QObject {
     Q_OBJECT
@@ -17,6 +18,9 @@ class NiriIpcClient : public QObject {
     bool connectToNiri();
     void disconnectFromNiri();
     QJsonValue sendRequest(const QJsonValue &request, bool *ok = nullptr);
+
+    using Reply = std::function<void(const QJsonValue &, const QString &)>;
+    void requestAsync(const QJsonValue &request, QObject *context, Reply reply, int timeoutMs = 3000);
 
   signals:
     void connectedChanged();

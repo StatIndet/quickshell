@@ -66,6 +66,14 @@ StyledFlickable {
 
             SettingsActionRow {
                 Layout.fillWidth: true
+                iconName: "monitor"
+                text: qsTr("Displays")
+                trailingIconName: "chevron_right"
+                onClicked: root.sectionRequested("displays")
+            }
+
+            SettingsActionRow {
+                Layout.fillWidth: true
                 iconName: "keyboard"
                 text: qsTr("Keyboard shortcuts")
                 trailingIconName: "chevron_right"

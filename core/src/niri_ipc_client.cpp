@@ -4,6 +4,9 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcessEnvironment>
+#include <QPointer>
+#include <QTimer>
+#include <memory>
 
 NiriIpcClient::NiriIpcClient(QObject *parent) : QObject(parent)
 {
@@ -15,6 +18,13 @@ NiriIpcClient::NiriIpcClient(QObject *parent) : QObject(parent)
 
 NiriIpcClient::~NiriIpcClient()
 {
+    // Cancel child requests before derived owners destroy their state. A
+    // QPointer to the owner's QObject is cleared only in its base destructor.
+    for (auto *socket : findChildren<QLocalSocket *>(QString(), Qt::FindDirectChildrenOnly)) {
+        socket->disconnect();
+        socket->abort();
+        delete socket;
+    }
     QObject::disconnect(&m_eventSocket, nullptr, this, nullptr);
     QObject::disconnect(&m_requestSocket, nullptr, this, nullptr);
     m_eventSocket.abort();
@@ -175,4 +185,57 @@ bool NiriIpcClient::ensureRequestSocket()
         return false;
     }
     return true;
+}
+
+void NiriIpcClient::requestAsync(const QJsonValue &request, QObject *context, Reply reply, int timeoutMs)
+{
+    auto *socket = new QLocalSocket(this);
+    auto *timer = new QTimer(socket);
+    timer->setSingleShot(true);
+    const QPointer<QObject> guard(context);
+    auto done = std::make_shared<bool>(false);
+    const auto finish = [socket, timer, guard, done, reply](const QJsonValue &value, const QString &error) {
+        if (*done)
+            return;
+        *done = true;
+        timer->stop();
+        socket->abort();
+        socket->deleteLater();
+        if (guard)
+            reply(value, error);
+    };
+    connect(context, &QObject::destroyed, socket,
+            [finish] { finish({}, QStringLiteral("Request owner was destroyed")); });
+    connect(timer, &QTimer::timeout, socket,
+            [finish] { finish({}, QStringLiteral("Niri request timed out")); });
+    connect(socket, &QLocalSocket::errorOccurred, socket,
+            [finish, socket](auto) { finish({}, socket->errorString()); });
+    connect(socket, &QLocalSocket::disconnected, socket,
+            [finish] { finish({}, QStringLiteral("Niri disconnected before replying")); });
+    connect(socket, &QLocalSocket::connected, socket, [socket, request] {
+        QByteArray bytes = QJsonDocument(QJsonArray{request}).toJson(QJsonDocument::Compact);
+        bytes = bytes.mid(1, bytes.size() - 2) + '\n';
+        socket->write(bytes);
+    });
+    connect(socket, &QLocalSocket::readyRead, socket, [socket, request, finish] {
+        if (socket->bytesAvailable() > 8 * 1024 * 1024) {
+            finish({}, QStringLiteral("Niri reply exceeds size limit"));
+            return;
+        }
+        if (!socket->canReadLine())
+            return;
+        QJsonParseError error;
+        const auto document = QJsonDocument::fromJson(socket->readLine(), &error);
+        const auto object = document.object();
+        if (error.error != QJsonParseError::NoError || !object.contains(QStringLiteral("Ok"))) {
+            finish({}, object.value(QStringLiteral("Err")).toString(QStringLiteral("Invalid Niri reply")));
+            return;
+        }
+        auto value = object.value(QStringLiteral("Ok"));
+        if (request.isString() && value.isObject() && value.toObject().contains(request.toString()))
+            value = value.toObject().value(request.toString());
+        finish(value, {});
+    });
+    timer->start(qBound(100, timeoutMs, 30000));
+    socket->connectToServer(qEnvironmentVariable("NIRI_SOCKET"));
 }

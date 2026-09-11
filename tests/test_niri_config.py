@@ -350,6 +350,56 @@ class ConfigurationContracts(unittest.TestCase):
         self.assertEqual(first['group'], second['group'])
 
 
+class OutputContracts(unittest.TestCase):
+    setUp = ConfigurationContracts.setUp
+    run_config = ConfigurationContracts.run_config
+    fragment = ConfigurationContracts.fragment
+    def test_output_roundtrip_preserves_unowned_content_and_inheritance(self):
+        self.run_config('setup', feature='outputs')
+        fragment=self.fragment('outputs')
+        fragment.write_text('// preserved header\noutput "DP-1" {\n    backdrop-color "#112233" // keep this\n    layout { border { width 3; }; gaps 8; always-center-single-column true; }\n}\n')
+        before=self.run_config()
+        patch=dict(identifier='DP-1', settings={'mode':'1920x1080@59.951','scale':1.25,
+            'transform':'normal','position':{'x':0,'y':0},'vrr':'on-demand',
+            'hotCorners':['bottom-left'],'focusAtStartup':True,
+            'preset-column-widths':[{'kind':'fixed','value':840},{'kind':'proportion','value':0.5}],
+            'default-column-width':[{'kind':'proportion','value':0.333333333333}],
+            'always-center-single-column':False})
+        state=self.run_config('save',feature='outputs',revision=before['revision'],outputs=[patch])
+        self.assertFalse(state['diagnostics']['invalid'])
+        output=state['outputs'][0]
+        self.assertEqual(output['settings']['mode'],'1920x1080@59.951')
+        self.assertEqual(output['settings']['vrr'],'on-demand')
+        self.assertIs(output['settings']['always-center-single-column'],False)
+        self.assertNotIn('gaps',output['settings'])
+        self.assertEqual(output['settings']['default-column-width'][0]['value'],0.333333333333)
+        self.assertIn('backdrop-color "#112233" // keep this',fragment.read_text())
+        self.assertIn('border { width 3; }',fragment.read_text())
+        self.run_config('setup',feature='outputs')
+        self.assertEqual(state['outputs'],self.run_config()['outputs'])
+
+    def test_external_output_conflict_and_revision_are_read_only(self):
+        self.main.write_text('output "DP-1" { scale 1; }\n')
+        self.run_config('setup',feature='outputs')
+        before=self.fragment('outputs').read_bytes()
+        with self.assertRaises(ValueError):
+            self.run_config('save',feature='outputs',outputs=[dict(identifier='DP-1',settings={'scale':2})])
+        self.assertEqual(before,self.fragment('outputs').read_bytes())
+        state=self.run_config()
+        self.main.write_text(self.main.read_text()+'// external edit\n')
+        with self.assertRaises(ValueError):
+            self.run_config('save',feature='outputs',revision=state['revision'],outputs=[])
+
+    def test_disconnected_output_is_retained_and_explicitly_deleted(self):
+        self.run_config('setup',feature='outputs')
+        self.run_config('save',feature='outputs',outputs=[dict(identifier='Absent Screen S1',settings={'enabled':False,'mode':'1920x1080@60.000'})])
+        state=self.run_config('save',feature='outputs',outputs=[])
+        self.assertEqual(len(state['outputs']),1)
+        self.assertFalse(state['outputs'][0]['settings']['enabled'])
+        state=self.run_config('save',feature='outputs',outputs=[dict(identifier='Absent Screen S1',delete=True)])
+        self.assertEqual(state['outputs'],[])
+
+
 if __name__ == '__main__':
     if not shutil.which('niri'):
         raise SystemExit('niri is required for real isolated validation')

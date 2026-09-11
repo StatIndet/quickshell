@@ -10,7 +10,8 @@ Rectangle {
     readonly property real gammaCutoff: 0.3
     property var screen: null
     readonly property var brightnessMonitor: Brightness.getMonitorForScreen(screen)
-    readonly property real brightnessValue: brightnessMonitor ? brightnessMonitor.brightness : Brightness.brightnessValue
+    readonly property real brightnessValue: brightnessMonitor ? brightnessMonitor.brightness :
+                                                                Brightness.brightnessValue
     property real verticalPadding: 4
     property real horizontalPadding: 12
 
@@ -36,19 +37,32 @@ Rectangle {
             materialSymbol: "light_mode"
             secondaryMaterialSymbol: "wb_twilight"
             secondaryIconLocation: root.gammaCutoff
-            stopIndicatorValues: Wlsunset.gamma !== 100 && root.brightnessValue > 0 ? [root.gammaCutoff + root.brightnessValue * (1 - root.gammaCutoff)] : []
-            value: Wlsunset.gamma === 100 ? root.gammaCutoff + root.brightnessValue * (1 - root.gammaCutoff) : (Wlsunset.gamma - Wlsunset.gammaLowerLimit) / (100 - Wlsunset.gammaLowerLimit) * root.gammaCutoff
-            percentText: Wlsunset.gamma === 100 ? `${Math.round(root.brightnessValue * 100)}%` : `${Wlsunset.gamma}%`
-            tooltipContent: Wlsunset.gamma === 100 ? `${Math.round(root.brightnessValue * 100)}%` : `Gamma ${Wlsunset.gamma}%`
+            stopIndicatorValues: (DisplayColor.dimming * 100) !== 100 && root.brightnessValue > 0 ? [root.gammaCutoff
+                                                                                                     + root.brightnessValue
+                                                                                                     * (1 - root.gammaCutoff)] :
+                                                                                                    []
+            value: (DisplayColor.dimming * 100) === 100 ? root.gammaCutoff + root.brightnessValue * (1
+                                                                                                     - root.gammaCutoff) :
+                                                          ((DisplayColor.dimming * 100) - (
+                                                               DisplayColor.dimmingLowerLimit * 100)) / (100
+                                                                                                         - (DisplayColor.dimmingLowerLimit
+                                                                                                            * 100)) * root.gammaCutoff
+            percentText: (DisplayColor.dimming * 100) === 100 ? `${Math.round(root.brightnessValue * 100)}%` :
+                                                                `${Math.round(DisplayColor.dimming * 100)}%`
+            tooltipContent: (DisplayColor.dimming * 100) === 100 ? `${Math.round(root.brightnessValue * 100)}%` :
+                                                                   qsTr("Software dimming: %1%").arg(
+                                                                       Math.round(DisplayColor.dimming * 100))
             onMoved: {
                 if (value >= root.gammaCutoff) {
-                    Brightness.setBrightnessForScreen(root.screen, (value - root.gammaCutoff) / (1 - root.gammaCutoff));
-                    if (Wlsunset.gamma !== 100)
-                        Wlsunset.setGamma(100);
+                    Brightness.setBrightnessForScreen(root.screen, (value - root.gammaCutoff) / (1
+                                                                                                 - root.gammaCutoff));
+                    if ((DisplayColor.dimming * 100) !== 100)
+                        DisplayColor.setDimming(1);
                 } else {
                     if (root.brightnessValue > 0)
                         Brightness.setBrightnessForScreen(root.screen, 0, true);
-                    Wlsunset.setGamma(value / root.gammaCutoff * (100 - Wlsunset.gammaLowerLimit) + Wlsunset.gammaLowerLimit);
+                    DisplayColor.setDimming(value / root.gammaCutoff * (1 - DisplayColor.dimmingLowerLimit)
+                                            + DisplayColor.dimmingLowerLimit);
                 }
             }
         }

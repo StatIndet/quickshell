@@ -3391,6 +3391,471 @@ Scroll to adjust</source>
     </message>
 </context>
 <context>
+    <name>DisplayAdvancedSettings</name>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="18"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="22"/>
+        <source>Focus at Startup</source>
+        <translation>启动时聚焦</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="19"/>
+        <source>Takes effect when Niri starts</source>
+        <translation>在 Niri 启动时生效</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="28"/>
+        <source>Hot corners</source>
+        <translation>热角</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="32"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="94"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="109"/>
+        <source>Inherit</source>
+        <translation>继承</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="36"/>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="117"/>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="40"/>
+        <source>Select corners</source>
+        <translation>选择角落</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="58"/>
+        <source>Top left</source>
+        <translation>左上角</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="62"/>
+        <source>Top right</source>
+        <translation>右上角</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="66"/>
+        <source>Bottom left</source>
+        <translation>左下角</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="70"/>
+        <source>Bottom right</source>
+        <translation>右下角</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="93"/>
+        <source>Window gaps</source>
+        <translation>窗口间距</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="105"/>
+        <source>Always center single column</source>
+        <translation>始终居中单列</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="113"/>
+        <source>On</source>
+        <translation>开启</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="129"/>
+        <source>Default column width</source>
+        <translation>默认列宽</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayAdvancedSettings.qml" line="136"/>
+        <source>Preset column widths</source>
+        <translation>预设列宽</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayColor</name>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="31"/>
+        <source>Set a location. Using the fixed night temperature.</source>
+        <translation>请设置位置。当前使用固定夜间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="33"/>
+        <source>Midnight sun: using the day temperature.</source>
+        <translation>极昼：使用日间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="35"/>
+        <source>Polar night: using the night temperature.</source>
+        <translation>极夜：使用夜间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="37"/>
+        <source>Choose different start and end times. Using the fixed night temperature.</source>
+        <translation>请选择不同的起止时间。当前使用固定夜间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="98"/>
+        <source>Location lookup failed. Using the manual location or fixed night temperature.</source>
+        <translation>定位失败。使用手动位置或固定夜间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="137"/>
+        <source>Location lookup timed out. Using the manual location or fixed night temperature.</source>
+        <translation>定位超时。使用手动位置或固定夜间色温。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="155"/>
+        <source>Unable to open display preferences</source>
+        <translation>无法打开显示偏好设置</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="174"/>
+        <source>Invalid display preferences: %1</source>
+        <translation>显示偏好设置无效：%1</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="182"/>
+        <source>Unable to read display preferences</source>
+        <translation>无法读取显示偏好设置</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayColor.qml" line="184"/>
+        <source>Unable to save display preferences</source>
+        <translation>无法保存显示偏好设置</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayColumnWidths</name>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="32"/>
+        <source>Proportion</source>
+        <translation>比例</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="36"/>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="53"/>
+        <source>Pixels</source>
+        <translation>像素</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="53"/>
+        <source>Proportion (1 = full width)</source>
+        <translation>比例（1 = 全宽）</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="72"/>
+        <source>Remove column width</source>
+        <translation>移除列宽</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="79"/>
+        <source>Set custom width</source>
+        <translation>设置自定义宽度</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="79"/>
+        <source>Add column width</source>
+        <translation>添加列宽</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayConfigService</name>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="37"/>
+        <source>At least one connected display must remain enabled</source>
+        <translation>必须保留至少一台已连接的显示器启用</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="38"/>
+        <source>Display rectangles overlap</source>
+        <translation>显示器布局重叠</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="39"/>
+        <source>Select an available display mode</source>
+        <translation>请选择可用的显示模式</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="168"/>
+        <source>This preset does not safely match the connected displays</source>
+        <translation>此预设无法安全匹配已连接的显示器</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="203"/>
+        <source>Connected displays changed. Reload before applying.</source>
+        <translation>连接的显示器已变更。请重新加载后再应用。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="221"/>
+        <source>Configuration changed externally. Reload before applying.</source>
+        <translation>配置已被外部修改。请重新加载后再应用。</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="299"/>
+        <source>Unable to read display presets</source>
+        <translation>无法读取显示器预设</translation>
+    </message>
+    <message>
+        <location filename="../Services/DisplayConfigService.qml" line="306"/>
+        <source>Unable to save display presets</source>
+        <translation>无法保存显示器预设</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayConfigurationPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="30"/>
+        <source>Display configuration</source>
+        <translation>显示器配置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="31"/>
+        <source>Create or connect the Clavis output configuration.</source>
+        <translation>创建或接入 Clavis 输出配置。</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="46"/>
+        <source>Layout</source>
+        <translation>布局</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="60"/>
+        <source>Identify displays</source>
+        <translation>识别显示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="64"/>
+        <source>Reload</source>
+        <translation>重新加载</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="69"/>
+        <source>Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="83"/>
+        <source>Display</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="87"/>
+        <source>%1 (disconnected)</source>
+        <translation>%1（已断开）</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="94"/>
+        <source>This output is read-only. Resolve conflicting or unsupported settings in %1.</source>
+        <translation>此输出为只读。请在 %1 中解决冲突或不支持的设置。</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="101"/>
+        <source>Output settings</source>
+        <translation>输出设置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="105"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="111"/>
+        <source>Enabled</source>
+        <translation>启用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="118"/>
+        <source>Resolution and refresh rate</source>
+        <translation>分辨率与刷新率</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="122"/>
+        <source>%1 × %2 · %3 Hz</source>
+        <translation>%1 × %2 · %3 Hz</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="132"/>
+        <source>Scale</source>
+        <translation>缩放</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="139"/>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="152"/>
+        <source>Custom scale</source>
+        <translation>自定义缩放</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="165"/>
+        <source>Logical X</source>
+        <translation>逻辑 X 坐标</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="169"/>
+        <source>Logical Y</source>
+        <translation>逻辑 Y 坐标</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="187"/>
+        <source>Rotation and reflection</source>
+        <translation>旋转与翻转</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="191"/>
+        <source>Normal</source>
+        <translation>正常</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="207"/>
+        <source>Flipped</source>
+        <translation>翻转</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="211"/>
+        <source>Flipped · 90°</source>
+        <translation>翻转 · 90°</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="215"/>
+        <source>Flipped · 180°</source>
+        <translation>翻转 · 180°</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="219"/>
+        <source>Flipped · 270°</source>
+        <translation>翻转 · 270°</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="227"/>
+        <source>Variable refresh rate</source>
+        <translation>可变刷新率</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="232"/>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
+        <source>On</source>
+        <translation>开启</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="240"/>
+        <source>On-Demand</source>
+        <translation>按需</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="249"/>
+        <source>VRR capability and activity</source>
+        <translation>VRR 能力与当前状态</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="251"/>
+        <source>Not supported</source>
+        <translation>不支持</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="252"/>
+        <source>Supported · Currently active</source>
+        <translation>支持 · 当前已启用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="254"/>
+        <source>Supported · Currently inactive</source>
+        <translation>支持 · 当前未启用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="257"/>
+        <source>Hide advanced settings</source>
+        <translation>收起高级设置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="257"/>
+        <source>Advanced settings</source>
+        <translation>高级设置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="267"/>
+        <source>Delete saved display</source>
+        <translation>删除已保存的显示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="273"/>
+        <source>Presets</source>
+        <translation>预设</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="277"/>
+        <source>Saved preset</source>
+        <translation>已保存的预设</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="287"/>
+        <source>Preset name</source>
+        <translation>预设名称</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="296"/>
+        <source>Save preset</source>
+        <translation>保存预设</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="301"/>
+        <source>Rename</source>
+        <translation>重命名</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="307"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="314"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="317"/>
+        <source>Match presets when displays change</source>
+        <translation>显示器连接变化时匹配预设</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayOverlays</name>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="86"/>
+        <source>Keep display changes?</source>
+        <translation>保留显示器更改？</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="94"/>
+        <source>Reverting in %n second(s)</source>
+        <translation>
+                <numerusform>%n 秒后恢复</numerusform>
+            </translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="103"/>
+        <source>Revert</source>
+        <translation>撤销</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="107"/>
+        <source>Keep Changes</source>
+        <translation>保留更改</translation>
+    </message>
+</context>
+<context>
+    <name>DisplaysPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="18"/>
+        <source>Configuration</source>
+        <translation>配置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="22"/>
+        <source>Gamma Control</source>
+        <translation>Gamma 控制</translation>
+    </message>
+</context>
+<context>
     <name>DrawerView</name>
     <message>
         <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="388"/>
@@ -3556,6 +4021,172 @@ Scroll to adjust</source>
     </message>
 </context>
 <context>
+    <name>GammaControlPage</name>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="31"/>
+        <source>The compositor does not provide Gamma control</source>
+        <translation>合成器未提供 Gamma 控制</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="41"/>
+        <source>Color</source>
+        <translation>色彩</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="45"/>
+        <source>Gamma</source>
+        <translation>Gamma</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="54"/>
+        <source>Contrast</source>
+        <translation>对比度</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="63"/>
+        <source>Software dimming</source>
+        <translation>软件变暗</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="74"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="78"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="81"/>
+        <source>Night Mode</source>
+        <translation>夜间模式</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="86"/>
+        <source>Night temperature</source>
+        <translation>夜间色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="96"/>
+        <source>Automatic control</source>
+        <translation>自动控制</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="100"/>
+        <source>Fixed temperature</source>
+        <translation>固定色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="104"/>
+        <source>Time</source>
+        <translation>时间</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="108"/>
+        <source>Sunrise and sunset</source>
+        <translation>日出与日落</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="116"/>
+        <source>Day temperature</source>
+        <translation>日间色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="130"/>
+        <source>Night starts (HH:MM)</source>
+        <translation>夜间开始（HH:MM）</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="139"/>
+        <source>Day starts (HH:MM)</source>
+        <translation>日间开始（HH:MM）</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="149"/>
+        <source>Transition duration</source>
+        <translation>过渡时长</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="153"/>
+        <source> min</source>
+        <translation> 分钟</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="165"/>
+        <source>Latitude</source>
+        <translation>纬度</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="170"/>
+        <source>Longitude</source>
+        <translation>经度</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="193"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="197"/>
+        <source>Automatic IP location</source>
+        <translation>自动 IP 定位</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="194"/>
+        <source>Uses ipwho.is only when enabled; weather location stays unchanged</source>
+        <translation>仅在启用后使用 ipwho.is，天气位置保持不变</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="212"/>
+        <source>Refresh location</source>
+        <translation>刷新位置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="219"/>
+        <source>Use weather location</source>
+        <translation>使用天气位置</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="229"/>
+        <source>Scheduled temperature</source>
+        <translation>调度色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="230"/>
+        <source>%1 K · Target %2 K</source>
+        <translation>%1 K · 目标 %2 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="236"/>
+        <source>Next transition</source>
+        <translation>下次转换</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="242"/>
+        <source>Outputs</source>
+        <translation>输出</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="253"/>
+        <source>Gamma control failed; the compositor did not provide a reason</source>
+        <translation>Gamma 控制失败，合成器未提供原因</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="255"/>
+        <source>Curve submitted; actual Gamma cannot be read back</source>
+        <translation>曲线已提交，无法读取实际 Gamma</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="257"/>
+        <source>Waiting for output capability</source>
+        <translation>等待输出能力信息</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="259"/>
+        <source>Gamma control unavailable</source>
+        <translation>Gamma 控制不可用</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="261"/>
+        <source>Control released</source>
+        <translation>控制权已释放</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="267"/>
+        <source>Retry output control</source>
+        <translation>重试输出控制</translation>
+    </message>
+</context>
+<context>
     <name>GeneralBarPage</name>
     <message>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="28"/>
@@ -3677,56 +4308,61 @@ Scroll to adjust</source>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="70"/>
+        <source>Displays</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="78"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="78"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="86"/>
         <source>Language &amp; region</source>
         <translation>语言与地区</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="94"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="96"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="104"/>
         <source>Connected devices</source>
         <translation>连接的设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="99"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="107"/>
         <source>Bluetooth unavailable</source>
         <translation>蓝牙不可用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="102"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="110"/>
         <source>Bluetooth is off</source>
         <translation>蓝牙已关闭</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="108"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="116"/>
         <source>%1 devices connected</source>
         <translation>%1 台设备已连接</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="119"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="127"/>
         <source>Applications</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="125"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="133"/>
         <source>Autostart</source>
         <translation>开机启动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="133"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="141"/>
         <source>Default applications</source>
         <translation>默认应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/GeneralOverviewPage.qml" line="95"/>
         <source>Network unavailable</source>
         <translation>网络不可用</translation>
     </message>
@@ -3735,61 +4371,66 @@ Scroll to adjust</source>
     <name>GeneralPage</name>
     <message>
         <location filename="../Modules/ControlCenter/GeneralPage.qml" line="71"/>
+        <source>Displays</source>
+        <translation>显示器</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
         <source>Bar</source>
         <translation>条栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="73"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="75"/>
         <source>Sidebars</source>
         <translation>侧边栏</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="77"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
         <source>Transparency and blur</source>
         <translation>透明与模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="79"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
         <source>Keyboard shortcuts</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="81"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="83"/>
         <source>Language &amp; region</source>
         <translation>语言与地区</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="83"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
         <source>Autostart</source>
         <translation>开机启动</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="85"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="87"/>
         <source>Default applications</source>
         <translation>默认应用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="87"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="89"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="89"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="91"/>
         <source>Connected devices</source>
         <translation>连接的设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="91"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="93"/>
         <source>Pair new device</source>
         <translation>配对新设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="97"/>
         <source>Bluetooth device</source>
         <translation>蓝牙设备</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="98"/>
+        <location filename="../Modules/ControlCenter/GeneralPage.qml" line="100"/>
         <source>General</source>
         <translation>通用</translation>
     </message>
@@ -7920,6 +8561,14 @@ Right-click to change shape; scroll to reorder</source>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="274"/>
         <source>Power menu</source>
         <translation>电源菜单</translation>
+    </message>
+</context>
+<context>
+    <name>QuickSliders</name>
+    <message>
+        <location filename="../Modules/QuickSettings/QuickSliders.qml" line="53"/>
+        <source>Software dimming: %1%</source>
+        <translation>软件变暗：%1%</translation>
     </message>
 </context>
 <context>

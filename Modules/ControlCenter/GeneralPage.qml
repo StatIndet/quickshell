@@ -67,6 +67,8 @@ Item {
             anchors.right: parent.right
             title: {
                 switch (section) {
+                case "displays":
+                    return qsTr("Displays");
                 case "bar":
                     return qsTr("Bar");
                 case "sidebar":
@@ -100,6 +102,8 @@ Item {
             }
             iconName: {
                 switch (section) {
+                case "displays":
+                    return "monitor";
                 case "bar":
                     return "dock_to_bottom";
                 case "sidebar":
@@ -146,6 +150,8 @@ Item {
         headerComponent: root.currentSection === "overview" ? null : subpageHeader
         source: {
             switch (root.currentSection) {
+            case "displays":
+                return Qt.resolvedUrl("DisplaysPage.qml");
             case "bar":
                 return Qt.resolvedUrl("GeneralBarPage.qml");
             case "sidebar":

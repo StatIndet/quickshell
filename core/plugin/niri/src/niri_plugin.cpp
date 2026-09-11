@@ -338,6 +338,7 @@ void NiriPlugin::handleEvent(const QJsonObject &event)
         }
         windowChanged = true;
     } else if (type == QStringLiteral("OutputsChanged")) {
+        ++m_outputRefreshGeneration;
         const QJsonObject outputs = event.value(type).toObject().value(QStringLiteral("outputs")).toObject();
         m_outputs.clear();
         for (auto it = outputs.begin(); it != outputs.end(); ++it)
@@ -435,6 +436,7 @@ NiriOutput NiriPlugin::parseOutput(const QString &name, const QJsonObject &objec
         output.modes.append(QVariantMap{
             {QStringLiteral("width"), mode.value(QStringLiteral("width")).toInt()},
             {QStringLiteral("height"), mode.value(QStringLiteral("height")).toInt()},
+            {QStringLiteral("refreshMilliHz"), mode.value(QStringLiteral("refresh_rate")).toInt()},
             {QStringLiteral("refreshRate"), mode.value(QStringLiteral("refresh_rate")).toDouble() / 1000.0},
             {QStringLiteral("preferred"), mode.value(QStringLiteral("is_preferred")).toBool()},
         });
@@ -471,18 +473,54 @@ void NiriPlugin::loadInitialState()
     publishState(true, true, true);
 }
 
-void NiriPlugin::fetchOutputs()
-{
-    bool ok = false;
-    const QJsonValue outputs = m_client.sendRequest(QStringLiteral("Outputs"), &ok);
-    if (!ok || !outputs.isObject())
-        return;
+void NiriPlugin::fetchOutputs() { refreshOutputs(); }
 
-    m_outputs.clear();
-    const QJsonObject object = outputs.toObject();
-    for (auto it = object.begin(); it != object.end(); ++it)
-        m_outputs.append(parseOutput(it.key(), it.value().toObject()));
-    publishState(false, true, true);
+QVariantList NiriPlugin::outputSnapshot() const
+{
+    QVariantList result;
+    for (const auto &output : m_outputs)
+        result.append(m_outputModel.outputByName(output.name));
+    return result;
+}
+
+void NiriPlugin::refreshOutputs()
+{
+    const auto generation = ++m_outputRefreshGeneration;
+    m_client.requestAsync(QStringLiteral("Outputs"), this,
+                          [this, generation](const QJsonValue &value, const QString &error) {
+                              if (generation != m_outputRefreshGeneration)
+                                  return;
+                              if (!error.isEmpty()) {
+                                  setError(error);
+                                  return;
+                              }
+                              if (!value.isObject()) {
+                                  setError(QStringLiteral("Invalid output snapshot"));
+                                  return;
+                              }
+                              m_outputs.clear();
+                              const auto object = value.toObject();
+                              for (auto it = object.begin(); it != object.end(); ++it)
+                                  m_outputs.append(parseOutput(it.key(), it.value().toObject()));
+                              publishState(false, true, true);
+                          });
+}
+
+void NiriPlugin::configureOutput(const QString &requestId, const QString &name, const QVariant &action)
+{
+    if (m_outputModel.outputByName(name).isEmpty()) {
+        QTimer::singleShot(0, this, [this, requestId] {
+            emit outputRequestFinished(requestId, false, QStringLiteral("Output is no longer connected"));
+        });
+        return;
+    }
+    const QJsonObject request{
+        {QStringLiteral("Output"), QJsonObject{{QStringLiteral("output"), name},
+                                               {QStringLiteral("action"), QJsonValue::fromVariant(action)}}}};
+    m_client.requestAsync(request, this, [this, requestId](const QJsonValue &, const QString &error) {
+        emit outputRequestFinished(requestId, error.isEmpty(), error);
+        refreshOutputs();
+    });
 }
 
 void NiriPlugin::setError(const QString &message)

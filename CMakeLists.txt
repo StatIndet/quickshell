@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(ClavisShell VERSION 0.2.0 LANGUAGES CXX)
+project(ClavisShell VERSION 0.2.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 include(CTest)
