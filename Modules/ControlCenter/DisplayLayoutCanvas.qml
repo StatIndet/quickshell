@@ -9,11 +9,22 @@ Rectangle {
     property var outputKeys: []
     onRowsChanged: {
         const next = rows.map(row => row.key);
+        if (dragging && next.indexOf(draggedKey) < 0)
+            dragging = false;
         if (JSON.stringify(next) !== JSON.stringify(outputKeys))
             outputKeys = next;
     }
     Component.onCompleted: outputKeys = rows.map(row => row.key)
+    property string draggedKey: ""
+    property point dragPosition
+    property var snapPreview: null
     property bool dragging: false
+    onDraggingChanged: {
+        if (!dragging) {
+            draggedKey = "";
+            snapPreview = null;
+        }
+    }
     property var heldBounds: null
     readonly property var bounds: {
         if (dragging && heldBounds)
@@ -65,10 +76,30 @@ Rectangle {
                 }
             }
         }
+        dragPosition = Qt.point(x, y);
+        snapPreview = bestX < distance || bestY < distance ? {
+                                                                 x: Math.round(sx),
+                                                                 y: Math.round(sy),
+                                                                 width: size.width,
+                                                                 height: size.height
+                                                             } : null;
         DisplayConfigService.edit(row.key, "position", {
                                       x: Math.round(sx),
                                       y: Math.round(sy)
                                   });
+    }
+    // The outline marks the snapped draft position while the dragged object follows the pointer.
+    Rectangle {
+        visible: root.dragging && root.snapPreview !== null
+        x: root.offsetX + (root.snapPreview ? root.snapPreview.x : 0) * root.canvasScale
+        y: root.offsetY + (root.snapPreview ? root.snapPreview.y : 0) * root.canvasScale
+        width: root.snapPreview ? root.snapPreview.width * root.canvasScale : 0
+        height: root.snapPreview ? root.snapPreview.height * root.canvasScale : 0
+        radius: Appearance.rounding.small
+        color: "transparent"
+        border.width: 2
+        border.color: Appearance.colors.colPrimary
+        opacity: 0.6
     }
     Repeater {
         model: root.outputKeys
@@ -88,8 +119,14 @@ Rectangle {
                                                                                         live: null
                                                                                     })
             readonly property var logical: Config.size(row)
-            x: root.offsetX + (row.settings.position?.x || 0) * root.canvasScale
-            y: root.offsetY + (row.settings.position?.y || 0) * root.canvasScale
+            readonly property bool beingDragged: root.dragging && root.draggedKey === row.key
+            z: beingDragged ? 2 : 1
+            x: root.offsetX + (beingDragged ? root.dragPosition.x : (row.settings.position?.x || 0))
+               * root.canvasScale
+
+            y: root.offsetY + (beingDragged ? root.dragPosition.y : (row.settings.position?.y || 0))
+               * root.canvasScale
+
             width: logical.width * root.canvasScale
             height: logical.height * root.canvasScale
             radius: Appearance.rounding.small
@@ -160,10 +197,13 @@ Rectangle {
                     if (!monitor.row.editable || DisplayConfigService.busy)
                         return;
                     root.heldBounds = root.bounds;
-                    root.dragging = true;
                     startPointer = mapToItem(root, mouse.x, mouse.y);
                     const p = monitor.row.settings.position;
                     startPosition = Qt.point(p.x, p.y);
+                    root.dragPosition = startPosition;
+                    root.draggedKey = monitor.row.key;
+                    root.snapPreview = null;
+                    root.dragging = true;
                 }
                 onPositionChanged: mouse => {
                     if (!pressed || !root.dragging || !monitor.row.editable || DisplayConfigService.busy)

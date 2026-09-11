@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import qs.Components
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -29,22 +30,36 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 color: "transparent"
-                border.width: Metrics.spacingXS
+                border.width: Metrics.spacingXXS
                 border.color: Appearance.colors.colPrimary
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: label.implicitWidth + Metrics.spacingXL * 2
-                    height: label.implicitHeight + Metrics.spacingL * 2
-                    radius: Appearance.rounding.normal
-                    color: Appearance.colors.colPrimary
+            }
+            Rectangle {
+                anchors.top: parent.top
+                anchors.topMargin: Metrics.spacingXL
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: Math.min(marker.width - Metrics.spacingXL * 2, labelContent.implicitWidth
+                                + Metrics.spacingL * 2)
+                height: labelContent.implicitHeight + Metrics.spacingM * 2
+                radius: Appearance.rounding.full
+                color: Appearance.m3colors.m3secondaryContainer
+                RowLayout {
+                    id: labelContent
+                    anchors.centerIn: parent
+                    width: parent.width - Metrics.spacingL * 2
+                    spacing: Metrics.spacingS
+                    MaterialSymbol {
+                        text: "monitor"
+                        iconSize: Metrics.iconM
+                        color: Appearance.colors.colOnSecondaryContainer
+                    }
                     Text {
-                        id: label
-                        anchors.centerIn: parent
-                        text: marker.screen.name
-                        font.family: Fonts.ui
-                        font.pixelSize: Typography.headlineSmall.pixelSize
-                        color: Appearance.colors.colOnPrimary
+                        Layout.fillWidth: true
+                        text: marker.screen ? marker.screen.name : ""
+                        elide: Text.ElideRight
+                        font.family: Typography.titleMedium.family
+                        font.pixelSize: Typography.titleMedium.pixelSize
+                        font.weight: Typography.titleMedium.weight
+                        color: Appearance.colors.colOnSecondaryContainer
                     }
                 }
             }
@@ -56,15 +71,21 @@ Item {
         visible: DisplayConfigService.confirming
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.namespace: "clavis-display-confirmation"
+        WlrLayershell.namespace: "clavis-shell-display-confirmation"
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
         implicitWidth: Math.min(440, screen ? screen.width : 440)
         implicitHeight: content.implicitHeight + Metrics.spacingXL * 2
+        CompositorBlurRegion {
+            targetWindow: confirmation
+            backgroundItem: confirmationBackground
+            radius: confirmationBackground.radius
+        }
         Rectangle {
+            id: confirmationBackground
             anchors.fill: parent
             radius: Appearance.rounding.large
-            color: Appearance.colors.colSurfaceContainer
+            color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
             border.width: Metrics.dividerWidth
             border.color: Appearance.colors.colOutline
             FocusScope {

@@ -53,29 +53,21 @@ StyledFlickable {
             DisplayLayoutCanvas {
                 id: layoutCanvas
                 Layout.fillWidth: true
+                IconButton {
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.margins: Metrics.spacingS
+                    z: 3
+                    variant: "standard"
+                    iconName: "id_card"
+                    accessibleName: qsTr("Identify displays")
+                    onClicked: DisplayConfigService.identifyDisplays()
+                }
             }
             InlineStatusBanner {
                 Layout.fillWidth: true
                 visible: DisplayConfigService.validation !== ""
                 message: DisplayConfigService.validation
-            }
-            Flow {
-                Layout.fillWidth: true
-                spacing: Metrics.spacingS
-                ActionButton {
-                    text: qsTr("Identify displays")
-                    iconName: "id_card"
-                    onClicked: DisplayConfigService.identifyDisplays()
-                }
-                IconButton {
-                    iconName: "refresh"
-                    accessibleName: qsTr("Reload")
-                    enabled: !DisplayConfigService.busy
-                    onClicked: {
-                        DisplayConfigService.reload();
-                        DisplayConfigService.refresh();
-                    }
-                }
             }
         }
         InlineStatusBanner {

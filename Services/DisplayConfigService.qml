@@ -16,6 +16,7 @@ Singleton {
     property string revision: ""
     property string selection: ""
     property string error: ""
+    property string completionNotice: ""
     property string token: ""
     property string phase: "idle"
     property int remaining: 0
@@ -40,6 +41,11 @@ Singleton {
                                                                        "";
     }
 
+    function clearCompletionNotice() {
+        if (completionNotice !== "" && error === completionNotice)
+            error = "";
+        completionNotice = "";
+    }
     function refresh() {
         Niri.refreshOutputs();
         NiriConfigService.refresh();
@@ -213,6 +219,9 @@ Singleton {
                     root.error = result.error || "";
                     if (result.restoreErrors && result.restoreErrors.length)
                         root.error += "\n" + result.restoreErrors.join("\n");
+                    root.completionNotice = result.phase === "reverted" && result.error
+                            === "Changes reverted" && !(result.restoreErrors && result.restoreErrors.length)
+                            ? root.error : "";
                     root.refresh();
                     Qt.callLater(function () {
                         root.invoke({
