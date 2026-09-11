@@ -75,6 +75,7 @@ ColumnLayout {
         }
     }
     ActionButton {
+        Layout.alignment: Qt.AlignRight
         visible: !root.single || root.widths.length === 0
         text: root.single ? qsTr("Set custom width") : qsTr("Add column width")
         onClicked: root.edited(root.widths.concat([

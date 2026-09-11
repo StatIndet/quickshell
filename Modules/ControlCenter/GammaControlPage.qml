@@ -127,6 +127,9 @@ StyledFlickable {
                 iconName: "nightlight"
                 trailing: OutlinedTextField {
                     Layout.preferredWidth: 140
+                    Layout.minimumWidth: 140
+                    Layout.maximumWidth: 140
+                    Layout.fillWidth: false
                     Accessible.name: qsTr("Night starts")
                     text: root.timeText(root.preferences.start)
                     validator: RegularExpressionValidator {
@@ -142,6 +145,9 @@ StyledFlickable {
                 iconName: "light_mode"
                 trailing: OutlinedTextField {
                     Layout.preferredWidth: 140
+                    Layout.minimumWidth: 140
+                    Layout.maximumWidth: 140
+                    Layout.fillWidth: false
                     Accessible.name: qsTr("Day starts")
                     text: root.timeText(root.preferences.end)
                     validator: RegularExpressionValidator {
@@ -212,6 +218,7 @@ StyledFlickable {
             ActionButton {
                 visible: root.preferences.mode === "location"
                 enabled: DisplayColor.ready
+                Layout.alignment: Qt.AlignRight
                 text: qsTr("Use weather location")
                 onClicked: DisplayColor.useWeatherLocation()
             }

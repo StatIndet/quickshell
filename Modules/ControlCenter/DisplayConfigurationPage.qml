@@ -277,25 +277,25 @@ StyledFlickable {
             spacing: Metrics.spacingS
             Item {
                 Layout.fillWidth: true
+                Layout.minimumWidth: Metrics.iconM + Metrics.spacingXS
             }
             ActionButton {
                 text: qsTr("Discard")
                 enabled: DisplayConfigService.dirty && !DisplayConfigService.busy
                 onClicked: DisplayConfigService.reload()
+                InlineBusyIndicator {
+                    anchors.right: parent.left
+                    anchors.rightMargin: Metrics.spacingXS
+                    anchors.verticalCenter: parent.verticalCenter
+                    busy: DisplayConfigService.busy
+                }
             }
             ActionButton {
                 text: qsTr("Apply")
                 filled: true
-                Layout.rightMargin: Metrics.spacingL
                 enabled: DisplayConfigService.dirty && !DisplayConfigService.busy &&
                          !DisplayConfigService.validation && NiriConfigService.ready("outputs")
                 onClicked: DisplayConfigService.apply()
-                InlineBusyIndicator {
-                    anchors.left: parent.right
-                    anchors.leftMargin: Metrics.spacingXS
-                    anchors.verticalCenter: parent.verticalCenter
-                    busy: DisplayConfigService.busy
-                }
             }
         }
     }
