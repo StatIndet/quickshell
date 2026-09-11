@@ -118,9 +118,6 @@ Singleton {
         deadline.interval = Math.max(100, Math.min(2147483647, schedule.wake - Date.now()));
         deadline.restart();
     }
-    function retry() {
-        backend.retry();
-    }
 
     GammaBackend {
         id: backend

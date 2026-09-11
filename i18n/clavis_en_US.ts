@@ -4015,105 +4015,107 @@ Scroll to adjust</translation>
         <translation>Sunrise and sunset</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="125"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="126"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="130"/>
+        <source>Night starts</source>
+        <translation>Night starts</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="141"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="145"/>
+        <source>Day starts</source>
+        <translation>Day starts</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="220"/>
         <source>Day temperature</source>
         <translation>Day temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="139"/>
-        <source>Night starts (HH:MM)</source>
-        <translation>Night starts (HH:MM)</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="148"/>
-        <source>Day starts (HH:MM)</source>
-        <translation>Day starts (HH:MM)</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="158"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="230"/>
         <source>Transition duration</source>
         <translation>Transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="162"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="234"/>
         <source> min</source>
         <translation> min</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="174"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="161"/>
         <source>Latitude</source>
         <translation>Latitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="166"/>
         <source>Longitude</source>
         <translation>Longitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="202"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="206"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="189"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="193"/>
         <source>Automatic IP location</source>
         <translation>Automatic IP location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="266"/>
-        <source>Gamma control failed (reason unavailable)</source>
-        <translation>Gamma control failed (reason unavailable)</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="267"/>
+        <source>Period</source>
+        <translation>Period</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="268"/>
-        <source>Curve submitted</source>
-        <translation>Curve submitted</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <source>Daytime</source>
+        <translation>Daytime</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="270"/>
-        <source>Waiting for display</source>
-        <translation>Waiting for display</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <source>Nighttime</source>
+        <translation>Nighttime</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="221"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="269"/>
+        <source>Transitioning</source>
+        <translation>Transitioning</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
+        <source>Transition ends</source>
+        <translation>Transition ends</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="299"/>
+        <source>Gamma control unavailable: %1</source>
+        <translation>Gamma control unavailable: %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="208"/>
         <source>Refresh location</source>
         <translation>Refresh location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="228"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="215"/>
         <source>Use weather location</source>
         <translation>Use weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="238"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="248"/>
+        <source>Current status</source>
+        <translation>Current status</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="258"/>
+        <source>%1 K</source>
+        <translation>%1 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="254"/>
         <source>Scheduled temperature</source>
         <translation>Scheduled temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="240"/>
-        <source>%1 K · Target %2 K</source>
-        <translation>%1 K · Target %2 K</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="246"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
         <source>Next transition</source>
         <translation>Next transition</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="253"/>
-        <source>Outputs</source>
-        <translation>Outputs</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="272"/>
-        <source>Gamma control unavailable</source>
-        <translation>Gamma control unavailable</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="274"/>
-        <source>Control released</source>
-        <translation>Control released</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
-        <source>Retry output control</source>
-        <translation>Retry output control</translation>
     </message>
 </context>
 <context>

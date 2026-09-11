@@ -120,48 +120,35 @@ StyledFlickable {
                 value: root.preferences.mode
                 onSelected: value => DisplayColor.setPreference("mode", value)
             }
-            GeneralSliderSetting {
-                visible: root.preferences.mode !== "fixed"
-                title: qsTr("Day temperature")
-                from: 1000
-                to: 10000
-                stepSize: 100
-                suffix: " K"
-                value: root.preferences.dayTemperature
-                onMoved: value => DisplayColor.setPreference("dayTemperature", value)
-            }
-            GridLayout {
+            SettingsRow {
                 Layout.fillWidth: true
-                columns: width > 400 ? 2 : 1
                 visible: root.preferences.mode === "time"
-                OutlinedTextField {
-                    Layout.fillWidth: true
-                    labelText: qsTr("Night starts (HH:MM)")
+                title: qsTr("Night starts")
+                iconName: "nightlight"
+                trailing: OutlinedTextField {
+                    Layout.preferredWidth: 140
+                    Accessible.name: qsTr("Night starts")
                     text: root.timeText(root.preferences.start)
                     validator: RegularExpressionValidator {
                         regularExpression: /([01][0-9]|2[0-3]):[0-5][0-9]/
                     }
                     onEditingFinished: root.setTime("start", text)
                 }
-                OutlinedTextField {
-                    Layout.fillWidth: true
-                    labelText: qsTr("Day starts (HH:MM)")
+            }
+            SettingsRow {
+                Layout.fillWidth: true
+                visible: root.preferences.mode === "time"
+                title: qsTr("Day starts")
+                iconName: "light_mode"
+                trailing: OutlinedTextField {
+                    Layout.preferredWidth: 140
+                    Accessible.name: qsTr("Day starts")
                     text: root.timeText(root.preferences.end)
                     validator: RegularExpressionValidator {
                         regularExpression: /([01][0-9]|2[0-3]):[0-5][0-9]/
                     }
                     onEditingFinished: root.setTime("end", text)
                 }
-            }
-            GeneralSliderSetting {
-                visible: root.preferences.mode !== "fixed"
-                title: qsTr("Transition duration")
-                from: 0
-                to: 180
-                stepSize: 1
-                suffix: qsTr(" min")
-                value: root.preferences.transition
-                onMoved: value => DisplayColor.setPreference("transition", value)
             }
             GridLayout {
                 Layout.fillWidth: true
@@ -228,59 +215,88 @@ StyledFlickable {
                 text: qsTr("Use weather location")
                 onClicked: DisplayColor.useWeatherLocation()
             }
+            GeneralSliderSetting {
+                visible: root.preferences.mode !== "fixed"
+                title: qsTr("Day temperature")
+                from: 1000
+                to: 10000
+                stepSize: 100
+                suffix: " K"
+                value: root.preferences.dayTemperature
+                onMoved: value => DisplayColor.setPreference("dayTemperature", value)
+            }
+            GeneralSliderSetting {
+                visible: root.preferences.mode !== "fixed"
+                title: qsTr("Transition duration")
+                from: 0
+                to: 180
+                stepSize: 1
+                suffix: qsTr(" min")
+                value: root.preferences.transition
+                onMoved: value => DisplayColor.setPreference("transition", value)
+            }
             InlineStatusBanner {
                 Layout.fillWidth: true
                 visible: DisplayColor.scheduleWarning !== ""
                 message: DisplayColor.scheduleWarning
             }
+        }
+
+        SettingsSection {
+            Layout.fillWidth: true
+            visible: root.preferences.nightEnabled && root.preferences.mode !== "fixed"
+            title: qsTr("Current status")
+            iconName: DisplayColor.schedule.period === "day" ? "light_mode" : "nightlight"
+            flat: true
             SettingsRow {
                 Layout.fillWidth: true
+                visible: true
                 title: qsTr("Scheduled temperature")
                 iconName: "thermostat"
-                supportingText: qsTr("%1 K · Target %2 K").arg(DisplayColor.schedule.temperature).arg(
-                                    DisplayColor.schedule.target)
+                supportingText: ""
+                trailing: Text {
+                    text: qsTr("%1 K").arg(DisplayColor.schedule.temperature)
+                    color: Appearance.colors.colOnSurfaceVariant
+                    font.family: Typography.bodyLarge.family
+                    font.pixelSize: Typography.bodyLarge.pixelSize
+                }
+            }
+            SettingsRow {
+                Layout.fillWidth: true
+                visible: true
+                title: qsTr("Period")
+                iconName: DisplayColor.schedule.period === "day" ? "light_mode" : "nightlight"
+                supportingText: DisplayColor.schedule.transitioning ? qsTr("Transitioning") : ""
+                trailing: Text {
+                    text: DisplayColor.schedule.period === "day" ? qsTr("Daytime") : qsTr("Nighttime")
+                    color: Appearance.colors.colOnSurfaceVariant
+                    font.family: Typography.bodyLarge.family
+                    font.pixelSize: Typography.bodyLarge.pixelSize
+                }
             }
             SettingsRow {
                 Layout.fillWidth: true
                 visible: DisplayColor.schedule.next > 0
-                title: qsTr("Next transition")
+                title: DisplayColor.schedule.transitioning ? qsTr("Transition ends") : qsTr("Next transition")
                 iconName: "schedule"
-                supportingText: Qt.formatDateTime(new Date(DisplayColor.schedule.next), "ddd hh:mm")
-            }
-        }
-        SettingsSection {
-            Layout.fillWidth: true
-            title: qsTr("Outputs")
-            iconName: "monitor"
-            flat: true
-            Repeater {
-                model: DisplayColor.outputs
-                SettingsRow {
-                    required property var modelData
-                    Layout.fillWidth: true
-                    title: modelData.name
-                    iconName: "monitor"
-                    supportingText: {
-                        switch (modelData.state) {
-                        case "failed":
-                            return qsTr("Gamma control failed (reason unavailable)");
-                        case "submitted":
-                            return qsTr("Curve submitted");
-                        case "pending":
-                            return qsTr("Waiting for display");
-                        case "unavailable":
-                            return qsTr("Gamma control unavailable");
-                        default:
-                            return qsTr("Control released");
-                        }
-                    }
+                supportingText: ""
+                trailing: Text {
+                    text: Qt.formatDateTime(new Date(DisplayColor.schedule.next), "ddd hh:mm")
+                    color: Appearance.colors.colOnSurfaceVariant
+                    font.family: Typography.bodyLarge.family
+                    font.pixelSize: Typography.bodyLarge.pixelSize
                 }
             }
-            ActionButton {
-                text: qsTr("Retry output control")
-                enabled: DisplayColor.available
-                onClicked: DisplayColor.retry()
-            }
+        }
+
+        InlineStatusBanner {
+            Layout.fillWidth: true
+            readonly property var failedOutputs: DisplayColor.outputs.filter(o => o.state === "failed"
+                                                                                  || o.state
+                                                                                  === "unavailable")
+            visible: DisplayColor.available && failedOutputs.length > 0
+            tone: "error"
+            message: qsTr("Gamma control unavailable: %1").arg(failedOutputs.map(o => o.name).join(", "))
         }
     }
 }

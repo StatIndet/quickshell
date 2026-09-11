@@ -45,8 +45,9 @@ function solar(date, latitude, longitude) {
 function evaluate(preferences, nowValue) {
     const p = normalize(preferences), now = new Date(nowValue), epoch = now.getTime();
     const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1).getTime();
-    const result = {temperature: 6500, target: 6500, next: 0, wake: tomorrow, condition: "normal", sunrise: 0, sunset: 0};
+    const result = {temperature: 6500, target: 6500, next: 0, wake: tomorrow, condition: "normal", sunrise: 0, sunset: 0, period: "day", transitioning: false};
     if (!p.nightEnabled) return result;
+    result.period = "night";
     result.temperature = result.target = p.nightTemperature;
     if (p.mode === "fixed") return result;
     if (p.mode === "location" && (p.latitude === null || p.longitude === null)) {
@@ -62,8 +63,8 @@ function evaluate(preferences, nowValue) {
         const date = new Date(now.getFullYear(), now.getMonth(), now.getDate()+offset);
         if (p.mode === "time") {
             const eventTime = minutes => new Date(date.getFullYear(),date.getMonth(),date.getDate(),Math.floor(minutes/60),minutes%60).getTime();
-            events.push({at:eventTime(p.start), target:p.nightTemperature});
-            events.push({at:eventTime(p.end), target:p.dayTemperature});
+            events.push({at:eventTime(p.start), target:p.nightTemperature,period:"night"});
+            events.push({at:eventTime(p.end), target:p.dayTemperature,period:"day"});
         } else {
             const sun = solar(date,p.latitude,p.longitude);
             if (offset === 0) {
@@ -71,13 +72,14 @@ function evaluate(preferences, nowValue) {
                 result.sunrise = sun.rise || 0;
                 result.sunset = sun.set || 0;
                 if (sun.condition !== "normal") {
+                    result.period = sun.condition === "polar-day" ? "day" : "night";
                     result.temperature = result.target = sun.condition === "polar-day" ? p.dayTemperature : p.nightTemperature;
                     return result;
                 }
             }
             if (sun.condition === "normal") {
-                events.push({at:sun.rise,target:p.dayTemperature});
-                events.push({at:sun.set,target:p.nightTemperature});
+                events.push({at:sun.rise,target:p.dayTemperature,period:"day"});
+                events.push({at:sun.set,target:p.nightTemperature,period:"night"});
             }
         }
     }
@@ -89,6 +91,8 @@ function evaluate(preferences, nowValue) {
     const previous=index>0 ? events[index-1] : {target:p.nightTemperature};
     const duration=Math.min(p.transition*60000, next.at-current.at);
     const fraction=duration===0 ? 1 : Math.min(1,(epoch-current.at)/duration);
+    result.period=current.period;
+    result.transitioning=fraction<1;
     result.target=current.target;
     result.temperature=Math.round(previous.target+(current.target-previous.target)*fraction);
     result.next=fraction<1 ? current.at+duration : next.at;

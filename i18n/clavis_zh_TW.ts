@@ -4014,105 +4014,107 @@ Scroll to adjust</source>
         <translation>日出與日落</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="125"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="126"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="130"/>
+        <source>Night starts</source>
+        <translation>夜間開始</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="141"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="145"/>
+        <source>Day starts</source>
+        <translation>日間開始</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="220"/>
         <source>Day temperature</source>
         <translation>日間色溫</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="139"/>
-        <source>Night starts (HH:MM)</source>
-        <translation>夜間開始（HH:MM）</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="148"/>
-        <source>Day starts (HH:MM)</source>
-        <translation>日間開始（HH:MM）</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="158"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="230"/>
         <source>Transition duration</source>
         <translation>轉換時間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="162"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="234"/>
         <source> min</source>
         <translation> 分鐘</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="174"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="161"/>
         <source>Latitude</source>
         <translation>緯度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="166"/>
         <source>Longitude</source>
         <translation>經度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="202"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="206"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="189"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="193"/>
         <source>Automatic IP location</source>
         <translation>自動 IP 定位</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="266"/>
-        <source>Gamma control failed (reason unavailable)</source>
-        <translation>Gamma 控制失敗（原因不明）</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="267"/>
+        <source>Period</source>
+        <translation>時段</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="268"/>
-        <source>Curve submitted</source>
-        <translation>已提交色彩曲線</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <source>Daytime</source>
+        <translation>日間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="270"/>
-        <source>Waiting for display</source>
-        <translation>等待顯示器</translation>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <source>Nighttime</source>
+        <translation>夜間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="221"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="269"/>
+        <source>Transitioning</source>
+        <translation>過渡中</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
+        <source>Transition ends</source>
+        <translation>過渡結束</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="299"/>
+        <source>Gamma control unavailable: %1</source>
+        <translation>Gamma 控制無法使用：%1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="208"/>
         <source>Refresh location</source>
         <translation>重新取得位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="228"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="215"/>
         <source>Use weather location</source>
         <translation>使用天氣位置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="238"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="248"/>
+        <source>Current status</source>
+        <translation>目前狀態</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="258"/>
+        <source>%1 K</source>
+        <translation>%1 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="254"/>
         <source>Scheduled temperature</source>
         <translation>排程色溫</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="240"/>
-        <source>%1 K · Target %2 K</source>
-        <translation>%1 K · 目標 %2 K</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="246"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
         <source>Next transition</source>
         <translation>下次轉換</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="253"/>
-        <source>Outputs</source>
-        <translation>輸出</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="272"/>
-        <source>Gamma control unavailable</source>
-        <translation>Gamma 控制無法使用</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="274"/>
-        <source>Control released</source>
-        <translation>控制權已釋放</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
-        <source>Retry output control</source>
-        <translation>重試輸出控制</translation>
     </message>
 </context>
 <context>

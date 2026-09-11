@@ -46,7 +46,6 @@ ColumnLayout {
                 font.pixelSize: Typography.bodySmall.pixelSize
                 wrapMode: Text.Wrap
             }
-
         }
 
         Text {
@@ -58,22 +57,21 @@ ColumnLayout {
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
         }
-
     }
 
     MaterialSlider {
         Layout.fillWidth: true
-        Layout.preferredHeight: 64
+        Layout.minimumHeight: implicitHeight
+        Layout.preferredHeight: implicitHeight
         from: root.from
         to: root.to
         stepSize: root.stepSize
         value: root.value
         enabled: root.enabled
         accessibleName: root.title
-        valueFormatter: (sliderValue) => {
+        valueFormatter: sliderValue => {
             return Math.round(sliderValue).toString() + root.suffix;
         }
         onMoved: root.moved(Math.round(value))
     }
-
 }

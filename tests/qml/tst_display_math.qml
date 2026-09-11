@@ -46,6 +46,29 @@ TestCase {
         p.latitude = null;
         compare(Schedule.evaluate(p, Date.now()).condition, "missing-location");
     }
+    function test_schedulePeriodWithEqualTemperatures() {
+        const p = Schedule.normalize({
+                                         nightEnabled: true,
+                                         mode: "time",
+                                         start: 1200,
+                                         end: 420,
+                                         transition: 30,
+                                         nightTemperature: 6500,
+                                         dayTemperature: 6500
+                                     });
+        const night = Schedule.evaluate(p, new Date(2026, 8, 11, 20, 15).getTime());
+        compare(night.period, "night");
+        compare(night.transitioning, true);
+        compare(Schedule.evaluate(p, new Date(2026, 8, 12, 1).getTime()).period, "night");
+        const day = Schedule.evaluate(p, new Date(2026, 8, 12, 8).getTime());
+        compare(day.period, "day");
+        compare(day.transitioning, false);
+        p.mode = "location";
+        p.latitude = 89;
+        p.longitude = 0;
+        compare(Schedule.evaluate(p, new Date(2026, 5, 21, 12).getTime()).period, "day");
+        compare(Schedule.evaluate(p, new Date(2026, 11, 21, 12).getTime()).period, "night");
+    }
     function test_identityAndGeometry() {
         const a = {
             name: "DP-1",
