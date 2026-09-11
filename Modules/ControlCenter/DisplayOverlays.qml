@@ -30,8 +30,8 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 color: "transparent"
-                border.width: Metrics.spacingXXS
-                border.color: Appearance.colors.colPrimary
+                border.width: Metrics.spacingXS
+                border.color: Appearance.m3colors.m3primary
             }
             Rectangle {
                 anchors.top: parent.top
@@ -41,7 +41,7 @@ Item {
                                 + Metrics.spacingL * 2)
                 height: labelContent.implicitHeight + Metrics.spacingM * 2
                 radius: Appearance.rounding.full
-                color: Appearance.m3colors.m3secondaryContainer
+                color: Appearance.m3colors.m3primary
                 RowLayout {
                     id: labelContent
                     anchors.centerIn: parent
@@ -50,7 +50,7 @@ Item {
                     MaterialSymbol {
                         text: "monitor"
                         iconSize: Metrics.iconM
-                        color: Appearance.colors.colOnSecondaryContainer
+                        color: Appearance.colors.colOnPrimary
                     }
                     Text {
                         Layout.fillWidth: true
@@ -59,7 +59,7 @@ Item {
                         font.family: Typography.titleMedium.family
                         font.pixelSize: Typography.titleMedium.pixelSize
                         font.weight: Typography.titleMedium.weight
-                        color: Appearance.colors.colOnSecondaryContainer
+                        color: Appearance.colors.colOnPrimary
                     }
                 }
             }
