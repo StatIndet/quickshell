@@ -9,10 +9,15 @@ MouseArea {
     property real mouseStep: 120
     property real pixelMultiplier: 3
 
-    // Stay on the viewport and behind its contents so nested views and controls
-    // get first refusal. Do not scroll this input area with the contentItem.
-    parent: flickable
-    anchors.fill: parent
+    // Keep wheel input behind content, but inside the contentItem subtree so
+    // it is visited before Flickable's own wheel handler. A negative-z sibling
+    // of contentItem sits behind Flickable and never receives accepted events.
+    // Offset with the scroll position to keep this area on the viewport.
+    parent: flickable.contentItem
+    x: flickable.contentX
+    y: flickable.contentY
+    width: flickable.width
+    height: flickable.height
     z: -1
     acceptedButtons: Qt.NoButton
     scrollGestureEnabled: true
