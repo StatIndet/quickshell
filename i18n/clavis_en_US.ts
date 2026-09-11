@@ -3557,249 +3557,198 @@ Scroll to adjust</translation>
 <context>
     <name>DisplayConfigService</name>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="37"/>
+        <location filename="../Services/DisplayConfigService.qml" line="36"/>
         <source>At least one connected display must remain enabled</source>
         <translation>At least one connected display must remain enabled</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="38"/>
+        <location filename="../Services/DisplayConfigService.qml" line="37"/>
         <source>Display rectangles overlap</source>
         <translation>Display rectangles overlap</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="39"/>
+        <location filename="../Services/DisplayConfigService.qml" line="38"/>
         <source>Select an available display mode</source>
         <translation>Select an available display mode</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="168"/>
-        <source>This preset does not safely match the connected displays</source>
-        <translation>This preset does not safely match the connected displays</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="203"/>
+        <location filename="../Services/DisplayConfigService.qml" line="154"/>
         <source>Connected displays changed. Reload before applying.</source>
         <translation>Connected displays changed. Reload before applying.</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="221"/>
+        <location filename="../Services/DisplayConfigService.qml" line="166"/>
         <source>Configuration changed externally. Reload before applying.</source>
         <translation>Configuration changed externally. Reload before applying.</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="299"/>
-        <source>Unable to read display presets</source>
-        <translation>Unable to read display presets</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="306"/>
-        <source>Unable to save display presets</source>
-        <translation>Unable to save display presets</translation>
     </message>
 </context>
 <context>
     <name>DisplayConfigurationPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="33"/>
         <source>Display configuration</source>
         <translation>Display configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="51"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="49"/>
         <source>Layout</source>
         <translation>Layout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="66"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="64"/>
         <source>Identify displays</source>
         <translation>Identify displays</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="72"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="70"/>
         <source>Reload</source>
         <translation>Reload</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="258"/>
         <source>VRR unavailable</source>
         <translation>VRR unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="261"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="259"/>
         <source>VRR active</source>
         <translation>VRR active</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="263"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="261"/>
         <source>VRR inactive</source>
         <translation>VRR inactive</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="349"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="289"/>
         <source>Discard</source>
         <translation>Discard</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="354"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="294"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="93"/>
         <source>Display</source>
         <translation>Display</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="99"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="97"/>
         <source>%1 (disconnected)</source>
         <translation>%1 (disconnected)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="82"/>
         <source>This output is read-only. Resolve conflicting or unsupported settings in %1.</source>
         <translation>This output is read-only. Resolve conflicting or unsupported settings in %1.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="91"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="89"/>
         <source>Output settings</source>
         <translation>Output settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="110"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="117"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="108"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="115"/>
         <source>Enabled</source>
         <translation>Enabled</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="122"/>
         <source>Resolution and refresh rate</source>
         <translation>Resolution and refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="129"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="127"/>
         <source>%1 × %2 · %3 Hz</source>
         <translation>%1 × %2 · %3 Hz</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="134"/>
         <source>Scale</source>
         <translation>Scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="141"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="160"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="158"/>
         <source>Custom scale</source>
         <translation>Custom scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="173"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="171"/>
         <source>Logical X</source>
         <translation>Logical X</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="175"/>
         <source>Logical Y</source>
         <translation>Logical Y</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="196"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="194"/>
         <source>Rotation and reflection</source>
         <translation>Rotation and reflection</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="198"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="216"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="214"/>
         <source>Flipped</source>
         <translation>Flipped</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="220"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="218"/>
         <source>Flipped · 90°</source>
         <translation>Flipped · 90°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="224"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="222"/>
         <source>Flipped · 180°</source>
         <translation>Flipped · 180°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="228"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="226"/>
         <source>Flipped · 270°</source>
         <translation>Flipped · 270°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="234"/>
         <source>Variable refresh rate</source>
         <translation>Variable refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="242"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="240"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="246"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="244"/>
         <source>On</source>
         <translation>On</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="248"/>
         <source>On-Demand</source>
         <translation>On-Demand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="267"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="265"/>
         <source>Advanced settings</source>
         <translation>Advanced settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="277"/>
         <source>Delete saved display</source>
         <translation>Delete saved display</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="286"/>
-        <source>Presets</source>
-        <translation>Presets</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="297"/>
-        <source>Saved preset</source>
-        <translation>Saved preset</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="307"/>
-        <source>Preset name</source>
-        <translation>Preset name</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="316"/>
-        <source>Save preset</source>
-        <translation>Save preset</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="321"/>
-        <source>Rename</source>
-        <translation>Rename</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="327"/>
-        <source>Delete</source>
-        <translation>Delete</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="334"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="337"/>
-        <source>Match presets when displays change</source>
-        <translation>Match presets when displays change</translation>
     </message>
 </context>
 <context>

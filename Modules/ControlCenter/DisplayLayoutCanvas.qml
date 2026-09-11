@@ -148,11 +148,17 @@ Rectangle {
             }
             MouseArea {
                 anchors.fill: parent
+                acceptedButtons: Qt.LeftButton
+                // Own the gesture before the surrounding Flickable reaches its drag threshold.
+                preventStealing: true
+                cursorShape: pressed && root.dragging ? Qt.ClosedHandCursor : Qt.OpenHandCursor
                 property point startPointer
                 property point startPosition
                 onPressed: mouse => {
                     DisplayConfigService.selection = monitor.row.key;
                     monitor.forceActiveFocus();
+                    if (!monitor.row.editable || DisplayConfigService.busy)
+                        return;
                     root.heldBounds = root.bounds;
                     root.dragging = true;
                     startPointer = mapToItem(root, mouse.x, mouse.y);
@@ -160,7 +166,7 @@ Rectangle {
                     startPosition = Qt.point(p.x, p.y);
                 }
                 onPositionChanged: mouse => {
-                    if (!pressed || !monitor.row.editable || DisplayConfigService.busy)
+                    if (!pressed || !root.dragging || !monitor.row.editable || DisplayConfigService.busy)
                         return;
                     const pointer = mapToItem(root, mouse.x, mouse.y);
                     root.move(monitor.row, startPosition.x + (pointer.x - startPointer.x) / root.canvasScale,

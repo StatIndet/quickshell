@@ -20,14 +20,11 @@ Singleton {
     property string phase: "idle"
     property int remaining: 0
     property bool identify: false
-    property var presets: []
+    // Keep ambiguous identities connector-bound for the current editing session.
     property var identityCollisions: []
-    property bool autoMatch: false
-    property bool storeReady: false
     property string previousCombination: ""
     property string operationKind: ""
     property string commandPending: ""
-    property string selectedPreset: ""
     readonly property bool busy: token !== "" || operation.running
     readonly property bool confirming: phase === "confirming" && commandPending === "" && operationKind
                                        !== "keep"
@@ -134,71 +131,8 @@ Singleton {
                                                                                         === index);
         if (JSON.stringify(merged) !== JSON.stringify(identityCollisions)) {
             identityCollisions = merged;
-            savePresets();
         }
     }
-    function savePresets() {
-        if (storeReady)
-            presetFile.setText(JSON.stringify({
-                                                  presets: presets,
-                                                  autoMatch: autoMatch,
-                                                  identityCollisions: identityCollisions
-                                              }, null, 2));
-    }
-    function savePreset(name) {
-        if (!name.trim() || busy)
-            return;
-        const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
-        presets = presets.concat([
-                                     {
-                                         id: id,
-                                         name: name.trim(),
-                                         combination: Config.combination(live, identityCollisions),
-                                         rows: Config.clone(draft.filter(r => !r.deleted))
-                                     }
-                                 ]);
-        selectedPreset = id;
-        savePresets();
-    }
-    function renamePreset(id, name) {
-        if (!name.trim())
-            return;
-        presets = presets.map(p => p.id === id ? Object.assign({}, p, {
-                                                                   name: name.trim()
-                                                               }) : p);
-        savePresets();
-    }
-    function deletePreset(id) {
-        presets = presets.filter(p => p.id !== id);
-        selectedPreset = "";
-        savePresets();
-    }
-    function loadPreset(id, automatic) {
-        if (busy)
-            return;
-        const preset = presets.find(p => p.id === id);
-        if (!preset)
-            return;
-        if (preset.combination !== Config.combination(live, identityCollisions)) {
-            error = qsTr("This preset does not safely match the connected displays");
-            return;
-        }
-        reload();
-        draft = draft.map(row => {
-            const stored = preset.rows.find(r => r.key === row.key);
-            return stored && row.editable ? Object.assign({}, row, {
-                                                              settings: Config.clone(stored.settings)
-                                                          }) : row;
-        });
-        selectedPreset = id;
-        if (automatic)
-            apply();
-    }
-    function setAutoMatch(value) {
-        autoMatch = value;
-        savePresets();
-    }
-
     Connections {
         target: Niri
         function onOutputsChanged() {
@@ -221,12 +155,6 @@ Singleton {
             }
             if (!root.busy && !root.dirty)
                 root.reload(false);
-            if (changed && !root.busy && !root.dirty && root.autoMatch && NiriConfigService.ready(
-                        "outputs")) {
-                const matches = root.presets.filter(p => p.combination === combination);
-                if (matches.length === 1)
-                    root.loadPreset(matches[0].id, true);
-            }
         }
     }
     Connections {
@@ -299,51 +227,6 @@ Singleton {
                     root.phase = "idle";
             }
         }
-    }
-    Process {
-        command: ["mkdir", "-p", Paths.configHome]
-        running: true
-        onExited: code => {
-            if (code === 0)
-                presetFile.reload();
-        }
-    }
-    FileView {
-        id: presetFile
-        path: Paths.configHome + "/display-presets.json"
-        atomicWrites: true
-        onLoaded: {
-            try {
-                const data = JSON.parse(text());
-                root.presets = Array.isArray(data.presets) ? data.presets.filter(p => p && typeof p.id
-                                                                                      === "string"
-                                                                                      && typeof p.name
-                                                                                      === "string"
-                                                                                      && typeof p.combination
-                                                                                      === "string"
-                                                                                      && Array.isArray(
-                                                                                          p.rows)) : [];
-                root.autoMatch = data.autoMatch === true;
-                root.identityCollisions = (Array.isArray(data.identityCollisions)
-                                           ? data.identityCollisions.filter(id => typeof id === "string") :
-                                             []).concat(root.identityCollisions).filter((id, index, all)
-                                                                                        => all.indexOf(id)
-                                                                                           === index);
-                root.previousCombination = Config.combination(root.live, root.identityCollisions);
-                if (!root.busy && !root.dirty)
-                    root.reload(false);
-                root.storeReady = true;
-                if (JSON.stringify(data.identityCollisions || []) !== JSON.stringify(root.identityCollisions))
-                    root.savePresets();
-            } catch (e) {
-                root.error = qsTr("Unable to read display presets");
-            }
-        }
-        onLoadFailed: error => {
-            if (error === FileViewError.FileNotFound)
-                root.storeReady = true;
-        }
-        onSaveFailed: root.error = qsTr("Unable to save display presets")
     }
     Component.onCompleted: {
         recordCollisions(live);

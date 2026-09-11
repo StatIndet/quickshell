@@ -3557,249 +3557,198 @@ Scroll to adjust</source>
 <context>
     <name>DisplayConfigService</name>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="37"/>
+        <location filename="../Services/DisplayConfigService.qml" line="36"/>
         <source>At least one connected display must remain enabled</source>
         <translation>必須保留至少一台已連接的顯示器啟用</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="38"/>
+        <location filename="../Services/DisplayConfigService.qml" line="37"/>
         <source>Display rectangles overlap</source>
         <translation>顯示器配置重疊</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="39"/>
+        <location filename="../Services/DisplayConfigService.qml" line="38"/>
         <source>Select an available display mode</source>
         <translation>請選擇可用的顯示模式</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="168"/>
-        <source>This preset does not safely match the connected displays</source>
-        <translation>此預設無法安全比對已連接的顯示器</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="203"/>
+        <location filename="../Services/DisplayConfigService.qml" line="154"/>
         <source>Connected displays changed. Reload before applying.</source>
         <translation>連接的顯示器已變更。請重新載入後再套用。</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="221"/>
+        <location filename="../Services/DisplayConfigService.qml" line="166"/>
         <source>Configuration changed externally. Reload before applying.</source>
         <translation>設定已被外部修改。請重新載入後再套用。</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="299"/>
-        <source>Unable to read display presets</source>
-        <translation>無法讀取顯示器預設</translation>
-    </message>
-    <message>
-        <location filename="../Services/DisplayConfigService.qml" line="306"/>
-        <source>Unable to save display presets</source>
-        <translation>無法儲存顯示器預設</translation>
     </message>
 </context>
 <context>
     <name>DisplayConfigurationPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="35"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="33"/>
         <source>Display configuration</source>
         <translation>顯示器設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="51"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="49"/>
         <source>Layout</source>
         <translation>配置</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="66"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="64"/>
         <source>Identify displays</source>
         <translation>識別顯示器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="72"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="70"/>
         <source>Reload</source>
         <translation>重新載入</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="260"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="258"/>
         <source>VRR unavailable</source>
         <translation>VRR 無法使用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="261"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="259"/>
         <source>VRR active</source>
         <translation>VRR 目前運作中</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="263"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="261"/>
         <source>VRR inactive</source>
         <translation>VRR 目前未運作</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="349"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="289"/>
         <source>Discard</source>
         <translation>捨棄變更</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="354"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="294"/>
         <source>Apply</source>
         <translation>套用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="95"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="93"/>
         <source>Display</source>
         <translation>顯示器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="99"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="97"/>
         <source>%1 (disconnected)</source>
         <translation>%1（已中斷連線）</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="84"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="82"/>
         <source>This output is read-only. Resolve conflicting or unsupported settings in %1.</source>
         <translation>此輸出為唯讀。請在 %1 中解決衝突或不支援的設定。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="91"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="89"/>
         <source>Output settings</source>
         <translation>輸出設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="110"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="117"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="108"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="115"/>
         <source>Enabled</source>
         <translation>啟用</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="122"/>
         <source>Resolution and refresh rate</source>
         <translation>解析度與更新率</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="129"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="127"/>
         <source>%1 × %2 · %3 Hz</source>
         <translation>%1 × %2 · %3 Hz</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="134"/>
         <source>Scale</source>
         <translation>縮放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="141"/>
         <source>Custom</source>
         <translation>自訂</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="160"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="158"/>
         <source>Custom scale</source>
         <translation>自訂縮放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="173"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="171"/>
         <source>Logical X</source>
         <translation>邏輯 X 座標</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="175"/>
         <source>Logical Y</source>
         <translation>邏輯 Y 座標</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="196"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="194"/>
         <source>Rotation and reflection</source>
         <translation>旋轉與翻轉</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="198"/>
         <source>Normal</source>
         <translation>正常</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="216"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="214"/>
         <source>Flipped</source>
         <translation>翻轉</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="220"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="218"/>
         <source>Flipped · 90°</source>
         <translation>翻轉 · 90°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="224"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="222"/>
         <source>Flipped · 180°</source>
         <translation>翻轉 · 180°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="228"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="226"/>
         <source>Flipped · 270°</source>
         <translation>翻轉 · 270°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="234"/>
         <source>Variable refresh rate</source>
         <translation>可變更新率</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="242"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="240"/>
         <source>Off</source>
         <translation>關閉</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="246"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="244"/>
         <source>On</source>
         <translation>開啟</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="248"/>
         <source>On-Demand</source>
         <translation>視需要</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="267"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="265"/>
         <source>Advanced settings</source>
         <translation>進階設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="279"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="277"/>
         <source>Delete saved display</source>
         <translation>刪除已儲存的顯示器</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="286"/>
-        <source>Presets</source>
-        <translation>預設</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="297"/>
-        <source>Saved preset</source>
-        <translation>已儲存的預設</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="307"/>
-        <source>Preset name</source>
-        <translation>預設名稱</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="316"/>
-        <source>Save preset</source>
-        <translation>儲存預設</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="321"/>
-        <source>Rename</source>
-        <translation>重新命名</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="327"/>
-        <source>Delete</source>
-        <translation>刪除</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="334"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="337"/>
-        <source>Match presets when displays change</source>
-        <translation>顯示器連線變更時比對預設</translation>
     </message>
 </context>
 <context>

@@ -10,8 +10,6 @@ StyledFlickable {
     readonly property var selected: DisplayConfigService.selected
     readonly property var settings: selected ? selected.settings : ({})
     property bool advanced: false
-    property string presetName: ""
-    property bool presetsExpanded: false
     property bool customScale: false
     readonly property string selectedKey: selected ? selected.key : ""
     onSelectedKeyChanged: customScale = selected !== null && [1, 1.25, 1.5, 1.75, 2, 2.5, 3].indexOf(
@@ -22,6 +20,7 @@ StyledFlickable {
             DisplayConfigService.edit(selected.key, key, value);
     }
     clip: true
+    interactive: !layoutCanvas.dragging
     contentWidth: width
     contentHeight: content.implicitHeight + Metrics.pageMargin * 2
     ColumnLayout {
@@ -52,6 +51,7 @@ StyledFlickable {
             iconName: "monitor"
             flat: true
             DisplayLayoutCanvas {
+                id: layoutCanvas
                 Layout.fillWidth: true
             }
             InlineStatusBanner {
@@ -278,64 +278,6 @@ StyledFlickable {
                     visible: root.selected && !root.selected.connected
                     text: qsTr("Delete saved display")
                     onClicked: DisplayConfigService.forget(root.selected.key)
-                }
-            }
-        }
-        SettingsActionRow {
-            Layout.fillWidth: true
-            text: qsTr("Presets")
-            iconName: "save"
-            trailingIconName: root.presetsExpanded ? "expand_less" : "expand_more"
-            onClicked: root.presetsExpanded = !root.presetsExpanded
-        }
-        SettingsSection {
-            Layout.fillWidth: true
-            visible: root.presetsExpanded
-            flat: true
-            DisplayChoice {
-                Layout.fillWidth: true
-                title: qsTr("Saved preset")
-                value: DisplayConfigService.selectedPreset
-                options: DisplayConfigService.presets.map(p => ({
-                    value: p.id,
-                    label: p.name
-                }))
-                onSelected: value => DisplayConfigService.loadPreset(value, false)
-            }
-            OutlinedTextField {
-                Layout.fillWidth: true
-                labelText: qsTr("Preset name")
-                text: root.presetName
-                onTextChanged: root.presetName = text
-            }
-            Flow {
-                Layout.fillWidth: true
-                spacing: Metrics.spacingS
-                enabled: !DisplayConfigService.busy
-                ActionButton {
-                    text: qsTr("Save preset")
-                    enabled: root.presetName.trim() !== ""
-                    onClicked: DisplayConfigService.savePreset(root.presetName)
-                }
-                ActionButton {
-                    text: qsTr("Rename")
-                    enabled: DisplayConfigService.selectedPreset !== "" && root.presetName.trim() !== ""
-                    onClicked: DisplayConfigService.renamePreset(DisplayConfigService.selectedPreset,
-                                                                 root.presetName)
-                }
-                ActionButton {
-                    text: qsTr("Delete")
-                    enabled: DisplayConfigService.selectedPreset !== ""
-                    onClicked: DisplayConfigService.deletePreset(DisplayConfigService.selectedPreset)
-                }
-            }
-            SettingsRow {
-                Layout.fillWidth: true
-                title: qsTr("Match presets when displays change")
-                trailing: StyledSwitch {
-                    checked: DisplayConfigService.autoMatch
-                    Accessible.name: qsTr("Match presets when displays change")
-                    onToggled: DisplayConfigService.setAutoMatch(checked)
                 }
             }
         }
