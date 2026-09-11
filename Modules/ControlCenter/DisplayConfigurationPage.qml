@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -10,10 +11,16 @@ StyledFlickable {
     readonly property var selected: DisplayConfigService.selected
     readonly property var settings: selected ? selected.settings : ({})
     property bool advanced: false
-    property bool customScale: false
+    property var parentModal: null
+    function closeChildWindows() {
+        scaleDialog.dismiss();
+    }
     readonly property string selectedKey: selected ? selected.key : ""
-    onSelectedKeyChanged: customScale = selected !== null && [1, 1.25, 1.5, 1.75, 2, 2.5, 3].indexOf(
-                              settings.scale) < 0
+    onSelectedKeyChanged: scaleDialog.dismiss()
+    onVisibleChanged: {
+        if (!visible)
+            scaleDialog.dismiss();
+    }
     Component.onCompleted: DisplayConfigService.refresh()
     function edit(key, value) {
         if (selected)
@@ -126,38 +133,39 @@ StyledFlickable {
                 DisplayChoice {
                     Layout.fillWidth: true
                     title: qsTr("Scale")
-                    options: [1, 1.25, 1.5, 1.75, 2, 2.5, 3].map(v => ({
-                        value: String(v),
-                        label: Math.round(v * 100) + "%"
-                    })).concat([
-                    {
-                        value: "custom",
-                        label: qsTr("Custom")
+                    value: String(root.settings.scale || 1)
+                    options: {
+                        const values = [1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+                        const result = values.map(v => ({
+                            value: String(v),
+                            label: Math.round(v * 100) + "%"
+                        }));
+                        const current = root.settings.scale || 1;
+                        if (values.indexOf(current) < 0)
+                            result.push({
+                                            value: String(current),
+                                            label: qsTr("%1% (Custom)").arg(Math.round(current * 1000000)
+                                                                            / 10000)
+                                        });
+                        result.push({
+                                        value: "custom",
+                                        label: qsTr("Custom")
+                                    });
+                        return result;
                     }
-                    ])
-                    value: !root.customScale && [1, 1.25, 1.5, 1.75, 2, 2.5, 3].indexOf(root.settings.scale)
-                    >= 0 ? String(root.settings.scale) : "custom"
                     onSelected: value => {
-                        root.customScale = value === "custom";
-                        if (value !== "custom")
+                        if (value === "custom") {
+                            scaleDialog.inputText = String(Math.round((root.settings.scale || 1) * 1000000)
+                                                           / 10000);
+                            scaleDialog.showWindow();
+                        } else {
                             root.edit("scale", Number(value));
+                        }
                     }
                 }
                 GridLayout {
                     Layout.fillWidth: true
                     columns: width > 440 ? 2 : 1
-                    OutlinedTextField {
-                        Layout.fillWidth: true
-                        visible: root.customScale
-                        labelText: qsTr("Custom scale")
-                        text: String(root.settings.scale || 1)
-                        validator: DoubleValidator {
-                            bottom: 0.1
-                            top: 10
-                            locale: "C"
-                        }
-                        onEditingFinished: root.edit("scale", Number(text))
-                    }
                     Repeater {
                         model: [
                             {
@@ -287,6 +295,103 @@ StyledFlickable {
                     anchors.leftMargin: Metrics.spacingXS
                     anchors.verticalCenter: parent.verticalCenter
                     busy: DisplayConfigService.busy
+                }
+            }
+        }
+    }
+    FloatingWindow {
+        id: scaleDialog
+        property string inputText: ""
+        readonly property bool acceptable: percentInput.fieldItem.acceptableInput
+        parentWindow: root.parentModal
+        title: "clavis-control-center-display-scale"
+        visible: false
+        color: "transparent"
+        implicitWidth: 380
+        implicitHeight: dialogContent.implicitHeight + Metrics.spacingXL * 2
+        onClosed: dismiss()
+        function showWindow() {
+            visible = true;
+            Qt.callLater(() => {
+                percentInput.fieldItem.forceActiveFocus();
+                percentInput.fieldItem.selectAll();
+            });
+        }
+        function dismiss() {
+            visible = false;
+        }
+        function applyScale() {
+            if (!acceptable || DisplayConfigService.busy)
+                return;
+            root.edit("scale", Number(inputText) / 100);
+            dismiss();
+        }
+        Rectangle {
+            id: scaleBackground
+            anchors.fill: parent
+            radius: Appearance.rounding.extraLarge
+            color: BlurService.backgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
+            border.width: Metrics.dividerWidth
+            border.color: Appearance.colors.colOutlineVariant
+        }
+        CompositorBlurRegion {
+            targetWindow: scaleDialog
+            backgroundItem: scaleBackground
+            radius: scaleBackground.radius
+        }
+        FocusScope {
+            anchors.fill: parent
+            focus: scaleDialog.visible
+            Keys.onEscapePressed: scaleDialog.dismiss()
+            ColumnLayout {
+                id: dialogContent
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    margins: Metrics.spacingXL
+                }
+                spacing: Metrics.spacingM
+                Text {
+                    Layout.fillWidth: true
+                    text: qsTr("Custom scale")
+                    font.family: Typography.headlineSmall.family
+                    font.pixelSize: Typography.headlineSmall.pixelSize
+                    font.weight: Typography.headlineSmall.weight
+                    color: Appearance.colors.colOnSurface
+                    wrapMode: Text.Wrap
+                }
+                OutlinedTextField {
+                    id: percentInput
+                    Layout.fillWidth: true
+                    labelText: qsTr("Scale (%)")
+                    text: scaleDialog.inputText
+                    validator: DoubleValidator {
+                        bottom: 10
+                        top: 1000
+                        decimals: 4
+                        notation: DoubleValidator.StandardNotation
+                        locale: "C"
+                    }
+                    onTextChanged: scaleDialog.inputText = text
+                    onAccepted: scaleDialog.applyScale()
+                }
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Metrics.spacingS
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    ActionButton {
+                        text: qsTr("Cancel")
+                        onClicked: scaleDialog.dismiss()
+                    }
+                    ActionButton {
+                        text: qsTr("Apply")
+                        filled: true
+                        enabled: scaleDialog.acceptable && !DisplayConfigService.busy
+                        onClicked: scaleDialog.applyScale()
+                    }
                 }
             }
         }

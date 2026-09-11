@@ -8,10 +8,20 @@ ColumnLayout {
     id: root
     property string section: "configuration"
     property bool presentationActive: false
-    onSectionChanged: DisplayConfigService.clearCompletionNotice()
+    property var parentModal: null
+    function closeChildWindows() {
+        if (pageLoader.item && typeof pageLoader.item.closeChildWindows === "function")
+            pageLoader.item.closeChildWindows();
+    }
+    onSectionChanged: {
+        closeChildWindows();
+        DisplayConfigService.clearCompletionNotice();
+    }
     onPresentationActiveChanged: {
-        if (!presentationActive)
+        if (!presentationActive) {
+            closeChildWindows();
             DisplayConfigService.clearCompletionNotice();
+        }
     }
     onVisibleChanged: {
         if (!visible)
@@ -36,6 +46,11 @@ ColumnLayout {
         onValueSelected: value => root.section = value
     }
     Loader {
+        id: pageLoader
+        onLoaded: {
+            if (item && "parentModal" in item)
+                item.parentModal = Qt.binding(() => root.parentModal);
+        }
         Layout.fillWidth: true
         Layout.fillHeight: true
         source: root.section === "configuration" ? "DisplayConfigurationPage.qml" : "GammaControlPage.qml"
