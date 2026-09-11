@@ -117,23 +117,28 @@ MouseArea {
         easing.bezierCurve: Appearance.animation.scroll.bezierCurve
     }
 
-    Connections {
-        target: root.flickable
-        function onContentXChanged() {
-            if (root.horizontal && !root.writingPosition)
-                root.stop();
-        }
-        function onContentYChanged() {
-            if (!root.horizontal && !root.writingPosition)
-                root.stop();
-        }
-        function onDraggingChanged() {
-            if (root.flickable.dragging)
-                root.stop();
-        }
-        function onInteractiveChanged() {
-            if (!root.flickable.interactive)
-                root.stop();
-        }
+    // Observe Flickable state through bindings. In Qt 6.11.2, asynchronous page
+    // creation crashed in connectSignalsToMethods() with a null JavaScript method.
+    // Property handlers avoid that Connections initialization path.
+    readonly property real observedContentX: flickable ? flickable.contentX : 0
+    readonly property real observedContentY: flickable ? flickable.contentY : 0
+    readonly property bool observedDragging: flickable ? flickable.dragging : false
+    readonly property bool observedInteractive: flickable ? flickable.interactive : false
+
+    onObservedContentXChanged: {
+        if (horizontal && !writingPosition)
+            stop();
+    }
+    onObservedContentYChanged: {
+        if (!horizontal && !writingPosition)
+            stop();
+    }
+    onObservedDraggingChanged: {
+        if (observedDragging)
+            stop();
+    }
+    onObservedInteractiveChanged: {
+        if (!observedInteractive)
+            stop();
     }
 }
