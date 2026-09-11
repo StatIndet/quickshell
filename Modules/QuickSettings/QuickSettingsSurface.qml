@@ -63,11 +63,13 @@ WidgetPanel {
 
     function hasAltActionForType(type) {
         return type === "network" || type === "bluetooth" || type === "caffeine" || type === "audio" || type
-                === "mic";
+                === "mic" || type === "night";
     }
 
     function titleForType(type) {
         switch (type) {
+        case "night":
+            return qsTr("Night Mode");
         case "network":
             return qsTr("Network");
         case "bluetooth":
@@ -89,6 +91,9 @@ WidgetPanel {
 
     function subtitleForType(type) {
         switch (type) {
+        case "night":
+            return !DisplayColor.available ? qsTr("Unavailable") : DisplayColor.preferences.nightEnabled
+                                             ? qsTr("%1 K").arg(DisplayColor.schedule.temperature) : "";
         case "network":
             if (!NetworkService.available)
                 return qsTr("Unavailable");
@@ -119,6 +124,8 @@ WidgetPanel {
 
     function iconForType(type) {
         switch (type) {
+        case "night":
+            return "nightlight";
         case "network":
             return NetworkService.wifiEnabled ? "wifi" : "wifi_off";
         case "bluetooth":
@@ -141,6 +148,8 @@ WidgetPanel {
 
     function toggledForType(type) {
         switch (type) {
+        case "night":
+            return DisplayColor.preferences.nightEnabled;
         case "network":
             return NetworkService.wifiEnabled;
         case "bluetooth":
@@ -162,6 +171,8 @@ WidgetPanel {
 
     function availableForType(type) {
         switch (type) {
+        case "night":
+            return DisplayColor.ready && DisplayColor.available;
         case "network":
             return NetworkService.available && NetworkService.wifiAvailable;
         case "bluetooth":
@@ -173,6 +184,9 @@ WidgetPanel {
 
     function triggerType(type) {
         switch (type) {
+        case "night":
+            DisplayColor.setPreference("nightEnabled", !DisplayColor.preferences.nightEnabled);
+            break;
         case "network":
             NetworkService.toggleWifi();
             break;
@@ -209,6 +223,8 @@ WidgetPanel {
             view = "audio";
         else if (type === "mic")
             view = "microphone";
+        else if (type === "night")
+            view = "night";
 
         if (view.length === 0)
             return;
@@ -217,7 +233,8 @@ WidgetPanel {
     }
 
     function tooltipForType(type) {
-        const base = titleForType(type) + " | " + subtitleForType(type);
+        const subtitle = subtitleForType(type);
+        const base = titleForType(type) + (subtitle ? " | " + subtitle : "");
         if (root.editMode)
             return base + qsTr("\nRight-click to change shape; scroll to reorder");
         if (root.hasAltActionForType(type))

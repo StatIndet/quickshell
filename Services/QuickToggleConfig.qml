@@ -16,14 +16,39 @@ Singleton {
 
     function defaultToggles() {
         return [
-            { "type": "network", "size": 2 },
-            { "type": "bluetooth", "size": 2 },
-            { "type": "caffeine", "size": 1 },
-            { "type": "mic", "size": 1 },
-            { "type": "audio", "size": 2 },
-            { "type": "theme", "size": 2 },
-            { "type": "dnd", "size": 1 }
-        ];
+                    {
+                        "type": "network",
+                        "size": 2
+                    },
+                    {
+                        "type": "bluetooth",
+                        "size": 2
+                    },
+                    {
+                        "type": "caffeine",
+                        "size": 1
+                    },
+                    {
+                        "type": "mic",
+                        "size": 1
+                    },
+                    {
+                        "type": "audio",
+                        "size": 2
+                    },
+                    {
+                        "type": "theme",
+                        "size": 2
+                    },
+                    {
+                        "type": "dnd",
+                        "size": 1
+                    },
+                    {
+                        "type": "night",
+                        "size": 2
+                    }
+                ];
     }
 
     function normalizeToggles(rawToggles) {
@@ -40,10 +65,16 @@ Singleton {
 
             seen[type] = true;
             normalized.push({
-                "type": type,
-                "size": Number(item.size) === 2 ? 2 : 1
-            });
+                                "type": type,
+                                "size": Number(item.size) === 2 ? 2 : 1
+                            });
         }
+        // Existing saved layouts also receive the new action without reordering their buttons.
+        if (!seen.night)
+            normalized.push({
+                                "type": "night",
+                                "size": 2
+                            });
         return normalized;
     }
 
@@ -86,8 +117,8 @@ Singleton {
             return;
 
         configFile.setText(JSON.stringify({
-            "toggles": root.toggles
-        }, null, 2));
+                                              "toggles": root.toggles
+                                          }, null, 2));
     }
 
     Process {

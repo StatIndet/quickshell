@@ -15,32 +15,35 @@ Item {
         case "idle":
         case "audio":
         case "microphone":
+        case "night":
         case "settings":
             return WidgetState.qsView;
         default:
             return "settings";
         }
     }
-    readonly property var activeViewLoader: activeView === "network"
-        ? networkLoader
-        : activeView === "bluetooth"
-            ? bluetoothLoader
-            : activeView === "idle"
-                ? idleLoader
-                : activeView === "audio"
-                    ? audioLoader
-                    : activeView === "microphone"
-                        ? microphoneLoader : settingsLoader
-    readonly property bool readyForPresentation:
-        activeViewLoader.active
-            && activeViewLoader.status === Loader.Ready
-            && activeViewLoader.item !== null
-            && displayedView === activeView
+    readonly property var activeViewLoader: activeView === "network" ? networkLoader : activeView
+                                                                       === "bluetooth" ? bluetoothLoader :
+                                                                                         activeView
+                                                                                         === "idle"
+                                                                                         ? idleLoader :
+                                                                                           activeView
+                                                                                           === "audio"
+                                                                                           ? audioLoader :
+                                                                                             activeView
+                                                                                             === "microphone"
+                                                                                             ? microphoneLoader :
+                                                                                               activeView
+                                                                                               === "night"
+                                                                                               ? nightLoader :
+                                                                                                 settingsLoader
+    readonly property bool readyForPresentation: activeViewLoader.active && activeViewLoader.status
+                                                 === Loader.Ready && activeViewLoader.item !== null
+                                                 && displayedView === activeView
 
     function syncDisplayedView() {
-        if (activeViewLoader.active
-                && activeViewLoader.status === Loader.Ready
-                && activeViewLoader.item !== null) {
+        if (activeViewLoader.active && activeViewLoader.status === Loader.Ready && activeViewLoader.item
+                !== null) {
             displayedView = activeView;
         }
     }
@@ -155,6 +158,27 @@ Item {
 
     PageTransitionLayer {
         anchors.fill: parent
+        active: root.displayedView === "night"
+        transitionsEnabled: root.foreground
+
+        Loader {
+            id: nightLoader
+
+            property bool loadedOnce: false
+
+            anchors.fill: parent
+            active: root.activeView === "night" || loadedOnce
+            asynchronous: true
+            sourceComponent: nightComponent
+            onLoaded: {
+                loadedOnce = true;
+                root.syncDisplayedView();
+            }
+        }
+    }
+
+    PageTransitionLayer {
+        anchors.fill: parent
         active: root.displayedView === "settings"
         hubPage: true
         transitionsEnabled: root.foreground
@@ -213,6 +237,12 @@ Item {
         MicrophoneContent {
             foreground: root.foreground && root.activeView === "microphone"
         }
+    }
+
+    Component {
+        id: nightComponent
+
+        NightModeContent {}
     }
 
     Component {

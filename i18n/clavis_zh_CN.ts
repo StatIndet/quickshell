@@ -8363,133 +8363,144 @@ Click to open network settings</source>
     <name>QuickSettingsSurface</name>
     <message>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="72"/>
+        <source>Night Mode</source>
+        <translation>夜间模式</translation>
+    </message>
+    <message>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="74"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="74"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="76"/>
         <source>Bluetooth</source>
         <translation>蓝牙</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="76"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="78"/>
         <source>Caffeine</source>
         <translation>咖啡因</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="78"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="80"/>
         <source>Microphone</source>
         <translation>麦克风</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="80"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="82"/>
         <source>Sound</source>
         <translation>声音</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="82"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="84"/>
         <source>Appearance</source>
         <translation>外观</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="84"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="86"/>
         <source>Do not disturb</source>
         <translation>免打扰</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="94"/>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="100"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="95"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="99"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="105"/>
         <source>Unavailable</source>
         <translation>不可用</translation>
     </message>
     <message>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="96"/>
+        <source>%1 K</source>
+        <translation>%1 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="101"/>
         <source>No Wi-Fi device</source>
         <translation>无 Wi-Fi 设备</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="97"/>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="102"/>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="114"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="107"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="119"/>
         <source>Off</source>
         <translation>已关闭</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="103"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="108"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="103"/>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="108"/>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="114"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="113"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="119"/>
         <source>On</source>
         <translation>已开启</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="106"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="111"/>
         <source>Keep awake</source>
         <translation>保持唤醒</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="106"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="111"/>
         <source>Normal sleep</source>
         <translation>正常休眠</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="108"/>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="110"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="113"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="115"/>
         <source>Muted</source>
         <translation>已静音</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="112"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="117"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="112"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="117"/>
         <source>Light</source>
         <translation>浅色</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="222"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="239"/>
         <source>
 Right-click to change shape; scroll to reorder</source>
         <translation>
 右键切换形状，滚轮调整顺序</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="224"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="241"/>
         <source>
 Right-click to open the details panel</source>
         <translation>
 右键打开详情面板</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="245"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="262"/>
         <source>Edit quick actions
 Right-click to change shape; scroll to reorder</source>
         <translation>编辑快捷按钮
 右键切换形状，滚轮调整顺序</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="247"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="264"/>
         <source>Edit quick actions</source>
         <translation>编辑快捷按钮</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="256"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="273"/>
         <source>Restart Quickshell</source>
         <translation>重启 Quickshell</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="265"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="282"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="274"/>
+        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="291"/>
         <source>Power menu</source>
         <translation>电源菜单</translation>
     </message>
@@ -12258,6 +12269,51 @@ Windows: </source>
         <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
         <source>Grain: %1%</source>
         <translation>颗粒：%1%</translation>
+    </message>
+</context>
+<context>
+    <name>NightModeContent</name>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="11"/>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="47"/>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="51"/>
+        <source>Night Mode</source>
+        <translation>夜间模式</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="32"/>
+        <source>The compositor does not provide Gamma control</source>
+        <translation>合成器未提供 Gamma 控制</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="56"/>
+        <source>Night temperature</source>
+        <translation>夜间色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="68"/>
+        <source>Scheduled temperature</source>
+        <translation>调度色温</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="71"/>
+        <source>%1 K</source>
+        <translation>%1 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="84"/>
+        <source>Gamma</source>
+        <translation>Gamma</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="93"/>
+        <source>Contrast</source>
+        <translation>对比度</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="115"/>
+        <source>Gamma control unavailable: %1</source>
+        <translation>Gamma 控制不可用：%1</translation>
     </message>
 </context>
 </TS>
