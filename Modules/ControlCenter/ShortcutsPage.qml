@@ -800,6 +800,7 @@ Item {
             Flow {
                 Layout.fillWidth: true
                 spacing: Metrics.spacingS
+                layoutDirection: Qt.RightToLeft
                 ActionButton {
                     text: qsTr("Save")
                     filled: true
@@ -822,6 +823,10 @@ Item {
                     }
                 }
                 ActionButton {
+                    text: qsTr("Cancel")
+                    onClicked: root.cancel()
+                }
+                ActionButton {
                     text: editorContent.bindingDraft.override ? qsTr("Remove override") : qsTr("Delete")
                     visible: !!editorContent.bindingDraft.id && editorContent.bindingDraft.managed
                     enabled: root.draftRevision === NiriConfigService.revision
@@ -830,10 +835,6 @@ Item {
                                                           id: editorContent.bindingDraft.id,
                                                           revision: root.draftRevision
                                                       })
-                }
-                ActionButton {
-                    text: qsTr("Cancel")
-                    onClicked: root.cancel()
                 }
             }
         }
