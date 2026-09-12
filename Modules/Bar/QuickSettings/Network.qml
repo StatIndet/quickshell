@@ -9,7 +9,8 @@ Item {
 
     property var screen: null
     property bool vertical: false
-    readonly property bool active: WidgetState.qsOpen && WidgetState.qsView === "network"
+    readonly property bool active: WidgetState.quickSettingsOpen && WidgetState.quickSettingsView
+                                   === "network"
     readonly property real baseSize: Sizes.barControlCircleSize
     readonly property bool hasSsid: NetworkService.activeConnection.length > 0
     readonly property real expandedWidth: Math.max(root.baseSize, 18 + 6 + ssidMetrics.width + 20)
@@ -43,13 +44,13 @@ Item {
 
     function toggleNetworkView() {
         if (root.screen && root.screen.name)
-            WidgetState.qsScreenName = root.screen.name;
+            WidgetState.quickSettingsScreenName = root.screen.name;
 
         if (root.active) {
-            WidgetState.qsOpen = false;
+            WidgetState.quickSettingsOpen = false;
         } else {
-            WidgetState.qsView = "network";
-            WidgetState.qsOpen = true;
+            WidgetState.quickSettingsView = "network";
+            WidgetState.quickSettingsOpen = true;
         }
     }
 

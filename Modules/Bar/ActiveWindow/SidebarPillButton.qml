@@ -9,16 +9,16 @@ BarCircularButton {
     property string sidebarIconName: "notifications"
     property color activeColor: Appearance.colors.colSecondaryContainer
     property color activeContentColor: Appearance.colors.colOnSecondaryContainer
-    readonly property bool isActive: WidgetState.leftSidebarOpen && WidgetState.leftSidebarView
+    readonly property bool isActive: WidgetState.dashboardSidebarOpen && WidgetState.dashboardSidebarView
                                      === root.viewName
 
     function toggleView() {
         if (root.isActive) {
-            WidgetState.leftSidebarOpen = false;
+            WidgetState.dashboardSidebarOpen = false;
             return;
         }
-        WidgetState.leftSidebarView = root.viewName;
-        WidgetState.leftSidebarOpen = true;
+        WidgetState.dashboardSidebarView = root.viewName;
+        WidgetState.dashboardSidebarOpen = true;
     }
 
     selected: root.isActive

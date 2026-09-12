@@ -43,12 +43,12 @@ Item {
         }
         onClicked: {
             if (root.screen && root.screen.name)
-                WidgetState.qsScreenName = root.screen.name;
-            if (WidgetState.qsOpen && WidgetState.qsView === "microphone") {
-                WidgetState.qsOpen = false;
+                WidgetState.quickSettingsScreenName = root.screen.name;
+            if (WidgetState.quickSettingsOpen && WidgetState.quickSettingsView === "microphone") {
+                WidgetState.quickSettingsOpen = false;
             } else {
-                WidgetState.qsView = "microphone";
-                WidgetState.qsOpen = true;
+                WidgetState.quickSettingsView = "microphone";
+                WidgetState.quickSettingsOpen = true;
             }
         }
     }

@@ -5,7 +5,7 @@ import qs.Services
 import "../Modules/SystemCards/SystemCardCatalog.js" as Catalog
 import "../Modules/SystemCards/SystemCardGeometry.js" as Geometry
 import "../Modules/SystemCards/SystemCardState.js" as CardState
-import "../Modules/Sidebars/Left/drawer/DrawerGridLayout.js" as DrawerLayout
+import "../Modules/Sidebars/Dashboard/drawer/DrawerGridLayout.js" as DrawerLayout
 
 Singleton {
     id: root

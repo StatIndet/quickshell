@@ -7,7 +7,8 @@ BarCircularButton {
     id: root
 
     property var screen: null
-    readonly property bool active: WidgetState.qsOpen && WidgetState.qsView === "bluetooth"
+    readonly property bool active: WidgetState.quickSettingsOpen && WidgetState.quickSettingsView
+                                   === "bluetooth"
 
     iconName: BluetoothService.connected ? "bluetooth_connected" : BluetoothService.enabled ? "bluetooth" :
                                                                                               "bluetooth_disabled"
@@ -21,13 +22,13 @@ BarCircularButton {
                                                                              "Bluetooth off")
     onClicked: {
         if (root.screen && root.screen.name)
-            WidgetState.qsScreenName = root.screen.name;
+            WidgetState.quickSettingsScreenName = root.screen.name;
 
         if (root.active) {
-            WidgetState.qsOpen = false;
+            WidgetState.quickSettingsOpen = false;
         } else {
-            WidgetState.qsView = "bluetooth";
-            WidgetState.qsOpen = true;
+            WidgetState.quickSettingsView = "bluetooth";
+            WidgetState.quickSettingsOpen = true;
         }
     }
 }

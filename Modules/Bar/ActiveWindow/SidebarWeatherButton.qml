@@ -21,15 +21,16 @@ Item {
     readonly property real buttonWidth: root.iconSlotWidth + root.contentSpacing + root.temperatureSlotWidth
                                         + 20
     readonly property int buttonHeight: Sizes.barControlCircleSize
-    readonly property bool active: WidgetState.leftSidebarOpen && WidgetState.leftSidebarView === "weather"
+    readonly property bool active: WidgetState.dashboardSidebarOpen && WidgetState.dashboardSidebarView
+                                   === "weather"
 
     function toggleView() {
         if (root.active) {
-            WidgetState.leftSidebarOpen = false;
+            WidgetState.dashboardSidebarOpen = false;
             return;
         }
-        WidgetState.leftSidebarView = "weather";
-        WidgetState.leftSidebarOpen = true;
+        WidgetState.dashboardSidebarView = "weather";
+        WidgetState.dashboardSidebarOpen = true;
     }
 
     implicitWidth: root.vertical ? root.buttonHeight : root.buttonWidth

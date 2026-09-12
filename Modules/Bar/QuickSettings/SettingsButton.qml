@@ -7,7 +7,8 @@ BarCircularButton {
     id: root
 
     property var screen: null
-    readonly property bool active: WidgetState.qsOpen && WidgetState.qsView === "settings"
+    readonly property bool active: WidgetState.quickSettingsOpen && WidgetState.quickSettingsView
+                                   === "settings"
 
     iconName: "settings"
     selected: root.active
@@ -17,13 +18,13 @@ BarCircularButton {
     tooltipText: qsTr("Left click: Quick Settings\nRight click: Control Center")
     onClicked: {
         if (root.screen && root.screen.name)
-            WidgetState.qsScreenName = root.screen.name;
+            WidgetState.quickSettingsScreenName = root.screen.name;
 
         if (root.active) {
-            WidgetState.qsOpen = false;
+            WidgetState.quickSettingsOpen = false;
         } else {
-            WidgetState.qsView = "settings";
-            WidgetState.qsOpen = true;
+            WidgetState.quickSettingsView = "settings";
+            WidgetState.quickSettingsOpen = true;
         }
     }
     onAltClicked: ControlCenterService.openOrFocus()

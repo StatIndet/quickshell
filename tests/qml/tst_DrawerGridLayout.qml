@@ -1,6 +1,6 @@
 import QtQuick
 import QtTest
-import "../../Modules/Sidebars/Left/drawer/DrawerGridLayout.js" as GridLayout
+import "../../Modules/Sidebars/Dashboard/drawer/DrawerGridLayout.js" as GridLayout
 import "../../Modules/SystemCards/SystemCardCatalog.js" as Catalog
 
 TestCase {

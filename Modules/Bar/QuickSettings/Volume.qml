@@ -51,12 +51,12 @@ Item {
         }
         onClicked: {
             if (root.screen && root.screen.name)
-                WidgetState.qsScreenName = root.screen.name;
-            if (WidgetState.qsOpen && WidgetState.qsView === "audio") {
-                WidgetState.qsOpen = false;
+                WidgetState.quickSettingsScreenName = root.screen.name;
+            if (WidgetState.quickSettingsOpen && WidgetState.quickSettingsView === "audio") {
+                WidgetState.quickSettingsOpen = false;
             } else {
-                WidgetState.qsView = "audio";
-                WidgetState.qsOpen = true;
+                WidgetState.quickSettingsView = "audio";
+                WidgetState.quickSettingsOpen = true;
             }
         }
     }

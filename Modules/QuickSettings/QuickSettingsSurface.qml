@@ -26,7 +26,7 @@ WidgetPanel {
     readonly property var toggleRowKeys: toggleRows.map((row, index) => index)
 
     function openControlCenter() {
-        WidgetState.qsOpen = false;
+        WidgetState.quickSettingsOpen = false;
         ControlCenterService.open();
     }
 
@@ -228,8 +228,8 @@ WidgetPanel {
 
         if (view.length === 0)
             return;
-        WidgetState.qsView = view;
-        WidgetState.qsOpen = true;
+        WidgetState.quickSettingsView = view;
+        WidgetState.quickSettingsOpen = true;
     }
 
     function tooltipForType(type) {

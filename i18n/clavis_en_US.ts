@@ -287,7 +287,7 @@
     </message>
     <message>
         <location filename="../Modules/ControlCenter/AccountPage.qml" line="772"/>
-        <location filename="../Modules/Sidebars/Left/ProfileHeaderCard.qml" line="49"/>
+        <location filename="../Modules/Sidebars/Dashboard/ProfileHeaderCard.qml" line="49"/>
         <source>Choose avatar</source>
         <translation>Choose avatar</translation>
     </message>
@@ -592,57 +592,57 @@
 <context>
     <name>AudioContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="14"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="14"/>
         <source>Sound</source>
         <translation>Sound</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="27"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="27"/>
         <source>Connecting to the PipeWire audio service</source>
         <translation>Connecting to the PipeWire audio service</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="29"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="29"/>
         <source>No audio output devices detected</source>
         <translation>No audio output devices detected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="43"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="43"/>
         <source>Open advanced sound settings</source>
         <translation>Open advanced sound settings</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="92"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="92"/>
         <source>Output</source>
         <translation>Output</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="97"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="97"/>
         <source>Default output</source>
         <translation>Default output</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="113"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="113"/>
         <source>Output devices</source>
         <translation>Output devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="130"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="130"/>
         <source>Collapse output devices</source>
         <translation>Collapse output devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="131"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="131"/>
         <source>Expand output devices</source>
         <translation>Expand output devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="188"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="188"/>
         <source>Application volume</source>
         <translation>Application volume</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/AudioContent.qml" line="227"/>
+        <location filename="../Modules/Sidebars/QuickSettings/AudioContent.qml" line="227"/>
         <source>No active application audio</source>
         <translation>No active application audio</translation>
     </message>
@@ -650,42 +650,31 @@
 <context>
     <name>AudioRecordingService</name>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="46"/>
+        <location filename="../Services/AudioRecordingService.qml" line="53"/>
+        <location filename="../Services/AudioRecordingService.qml" line="87"/>
+        <location filename="../Services/AudioRecordingService.qml" line="109"/>
+        <location filename="../Services/AudioRecordingService.qml" line="193"/>
+        <location filename="../Services/AudioRecordingService.qml" line="217"/>
         <source>Recording command failed</source>
         <translation>Recording command failed</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="53"/>
+        <location filename="../Services/AudioRecordingService.qml" line="60"/>
         <source>Recording failed</source>
         <translation>Recording failed</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="67"/>
-        <source>key audio returned an unsupported JSON schema</source>
-        <translation>key audio returned an unsupported JSON schema</translation>
-    </message>
-    <message>
-        <location filename="../Services/AudioRecordingService.qml" line="104"/>
+        <location filename="../Services/AudioRecordingService.qml" line="144"/>
         <source>System audio recording saved</source>
         <translation>System audio recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="104"/>
+        <location filename="../Services/AudioRecordingService.qml" line="145"/>
         <source>Microphone recording saved</source>
         <translation>Microphone recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/AudioRecordingService.qml" line="105"/>
-        <source>Saved to %1</source>
-        <translation>Saved to %1</translation>
-    </message>
-    <message>
-        <location filename="../Services/AudioRecordingService.qml" line="113"/>
-        <source>Could not parse JSON returned by key audio: </source>
-        <translation>Could not parse JSON returned by key audio: </translation>
-    </message>
-    <message>
-        <location filename="../Services/AudioRecordingService.qml" line="206"/>
+        <location filename="../Services/AudioRecordingService.qml" line="242"/>
         <source>Could not query recording status through key</source>
         <translation>Could not query recording status through key</translation>
     </message>
@@ -1426,17 +1415,17 @@
 <context>
     <name>BluetoothButton</name>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="19"/>
+        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="20"/>
         <source>Bluetooth connected</source>
         <translation>Bluetooth connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="20"/>
+        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="21"/>
         <source>Bluetooth on</source>
         <translation>Bluetooth on</translation>
     </message>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="20"/>
+        <location filename="../Modules/Bar/QuickSettings/BluetoothButton.qml" line="21"/>
         <source>Bluetooth off</source>
         <translation>Bluetooth off</translation>
     </message>
@@ -1444,196 +1433,196 @@
 <context>
     <name>BluetoothContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="26"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="26"/>
         <source>No Bluetooth adapter detected or BlueZ is unavailable</source>
         <translation>No Bluetooth adapter detected or BlueZ is unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="29"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="29"/>
         <source>Bluetooth is off</source>
         <translation>Bluetooth is off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="32"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="32"/>
         <source>No Bluetooth devices discovered yet</source>
         <translation>No Bluetooth devices discovered yet</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="86"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="86"/>
         <source>Blocked</source>
         <translation>Blocked</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="88"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="88"/>
         <source>Pairing</source>
         <translation>Pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="90"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="199"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="90"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="199"/>
         <source>Connected</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="92"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="207"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="92"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="207"/>
         <source>Paired</source>
         <translation>Paired</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="94"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="215"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="94"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="215"/>
         <source>Available devices</source>
         <translation>Available devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="96"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="96"/>
         <source>Trusted</source>
         <translation>Trusted</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="99"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="99"/>
         <source>Battery </source>
         <translation>Battery </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="104"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="104"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="231"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="231"/>
         <source>Searching for available Bluetooth devices</source>
         <translation>Searching for available Bluetooth devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="236"/>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="293"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="236"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="293"/>
         <source>Searching for nearby devices</source>
         <translation>Searching for nearby devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="286"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="286"/>
         <source>No available devices found</source>
         <translation>No available devices found</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="292"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="292"/>
         <source>Adapters</source>
         <translation>Adapters</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="294"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="294"/>
         <source>Device discovery is paused</source>
         <translation>Device discovery is paused</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="296"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="296"/>
         <source>Turn on Bluetooth to start discovery</source>
         <translation>Turn on Bluetooth to start discovery</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="306"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="306"/>
         <source>Bluetooth adapter</source>
         <translation>Bluetooth adapter</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="307"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="307"/>
         <source>Blocked by rfkill</source>
         <translation>Blocked by rfkill</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="308"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="308"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="315"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="315"/>
         <source>Toggle adapter </source>
         <translation>Toggle adapter </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="325"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="325"/>
         <source>Allow discovery</source>
         <translation>Allow discovery</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="326"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="326"/>
         <source>Let nearby devices find this computer</source>
         <translation>Let nearby devices find this computer</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="333"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="333"/>
         <source>Bluetooth discoverability</source>
         <translation>Bluetooth discoverability</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="342"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="342"/>
         <source>Allow pairing</source>
         <translation>Allow pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="343"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="343"/>
         <source>Accept pairing requests supported by the official module</source>
         <translation>Accept pairing requests supported by the official module</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="350"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="350"/>
         <source>Bluetooth pairing</source>
         <translation>Bluetooth pairing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="370"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="370"/>
         <source>Forget Bluetooth device</source>
         <translation>Forget Bluetooth device</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="383"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="383"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="391"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="391"/>
         <source>Forget</source>
         <translation>Forget</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="413"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="413"/>
         <source>Scan for Bluetooth devices again</source>
         <translation>Scan for Bluetooth devices again</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="431"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="431"/>
         <source>Bluetooth switch</source>
         <translation>Bluetooth switch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="485"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="485"/>
         <source>Disconnect</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="486"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="486"/>
         <source>Connect</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="488"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="488"/>
         <source>Pair</source>
         <translation>Pair</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="508"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="508"/>
         <source>Bluetooth device action</source>
         <translation>Bluetooth device action</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="519"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="519"/>
         <source>Forget device</source>
         <translation>Forget device</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/BluetoothContent.qml" line="371"/>
+        <location filename="../Modules/Sidebars/QuickSettings/BluetoothContent.qml" line="371"/>
         <source>This will delete the pairing information for “%1”.</source>
         <translation>This will delete the pairing information for “%1”.</translation>
     </message>
@@ -1933,17 +1922,17 @@ Scroll to adjust</translation>
 <context>
     <name>CalendarWidget</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/CalendarWidget.qml" line="65"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/CalendarWidget.qml" line="65"/>
         <source>Jump to current month</source>
         <translation>Jump to current month</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/CalendarWidget.qml" line="76"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/CalendarWidget.qml" line="76"/>
         <source>Previous month</source>
         <translation>Previous month</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/CalendarWidget.qml" line="83"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/CalendarWidget.qml" line="83"/>
         <source>Next month</source>
         <translation>Next month</translation>
     </message>
@@ -2650,89 +2639,89 @@ Scroll to adjust</translation>
 <context>
     <name>DailyAirQualityTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="40"/>
         <source>Excellent</source>
         <translation>Excellent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="40"/>
         <source>Good</source>
         <translation>Good</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="40"/>
         <source>Poor</source>
         <translation>Poor</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="40"/>
         <source>Unhealthy</source>
         <translation>Unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="40"/>
         <source>Very unhealthy</source>
         <translation>Very unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="41"/>
         <source>Hazardous</source>
         <translation>Hazardous</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="86"/>
         <source>Yesterday</source>
         <translation>Yesterday</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="88"/>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="288"/>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="318"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="88"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="288"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="318"/>
         <source>Today</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="90"/>
         <source>Tomorrow</source>
         <translation>Tomorrow</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Sun</source>
         <translation>Sun</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Mon</source>
         <translation>Mon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Tue</source>
         <translation>Tue</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Wed</source>
         <translation>Wed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Thu</source>
         <translation>Thu</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Fri</source>
         <translation>Fri</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="93"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="93"/>
         <source>Sat</source>
         <translation>Sat</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyAirQualityTrendPane.qml" line="326"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyAirQualityTrendPane.qml" line="326"/>
         <source>Air quality data is unavailable</source>
         <translation>Air quality data is unavailable</translation>
     </message>
@@ -2740,101 +2729,101 @@ Scroll to adjust</translation>
 <context>
     <name>DailyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="282"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="282"/>
         <source>UV index</source>
         <translation>UV index</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="287"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="287"/>
         <source>Precipitation</source>
         <translation>Precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="292"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="292"/>
         <source>Sunshine</source>
         <translation>Sunshine</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="297"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="297"/>
         <source>Feels like</source>
         <translation>Feels like</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="115"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="115"/>
         <source>Yesterday</source>
         <translation>Yesterday</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="118"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="118"/>
         <source>Today</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="121"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="121"/>
         <source>Tomorrow</source>
         <translation>Tomorrow</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Sun</source>
         <translation>Sun</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Mon</source>
         <translation>Mon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Tue</source>
         <translation>Tue</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Wed</source>
         <translation>Wed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Thu</source>
         <translation>Thu</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Fri</source>
         <translation>Fri</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="126"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="126"/>
         <source>Sat</source>
         <translation>Sat</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="209"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="209"/>
         <source>Daily forecast</source>
         <translation>Daily forecast</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="230"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="230"/>
         <source>Conditions</source>
         <translation>Conditions</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="233"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="233"/>
         <source>Air quality</source>
         <translation>Air quality</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="236"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="236"/>
         <source>Wind</source>
         <translation>Wind</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyForecastTrendCard.qml" line="267"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyForecastTrendCard.qml" line="267"/>
         <source>More daily forecast options</source>
         <translation>More daily forecast options</translation>
     </message>
@@ -2842,58 +2831,58 @@ Scroll to adjust</translation>
 <context>
     <name>DailyWindTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="28"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="28"/>
         <source>Yesterday</source>
         <translation>Yesterday</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="30"/>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="240"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="30"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="240"/>
         <source>Today</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="32"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="32"/>
         <source>Tomorrow</source>
         <translation>Tomorrow</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Sun</source>
         <translation>Sun</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Mon</source>
         <translation>Mon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Tue</source>
         <translation>Tue</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Wed</source>
         <translation>Wed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Thu</source>
         <translation>Thu</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Fri</source>
         <translation>Fri</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="35"/>
         <source>Sat</source>
         <translation>Sat</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DailyWindTrendPane.qml" line="348"/>
+        <location filename="../Modules/Sidebars/Dashboard/DailyWindTrendPane.qml" line="348"/>
         <source>Wind data is unavailable</source>
         <translation>Wind data is unavailable</translation>
     </message>
@@ -2959,6 +2948,24 @@ Scroll to adjust</translation>
         <location filename="../Modules/Keystone/DashboardContent/DashboardPomodoroCard.qml" line="215"/>
         <source>Reset</source>
         <translation>Reset</translation>
+    </message>
+</context>
+<context>
+    <name>DashboardSidebarContent</name>
+    <message>
+        <location filename="../Modules/Sidebars/Dashboard/DashboardSidebarContent.qml" line="37"/>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Dashboard/DashboardSidebarContent.qml" line="42"/>
+        <source>Drawer</source>
+        <translation>Drawer</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/Dashboard/DashboardSidebarContent.qml" line="47"/>
+        <source>Weather</source>
+        <translation>Weather</translation>
     </message>
 </context>
 <context>
@@ -3297,47 +3304,47 @@ Scroll to adjust</translation>
 <context>
     <name>DefaultLockStatus</name>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="13"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="12"/>
         <source>No media</source>
         <translation>No media</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="79"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="78"/>
         <source>Previous track</source>
         <translation>Previous track</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="85"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="84"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="85"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="84"/>
         <source>Play</source>
         <translation>Play</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="91"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="90"/>
         <source>Next track</source>
         <translation>Next track</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="157"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="156"/>
         <source>Weather unavailable</source>
         <translation>Weather unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="175"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="174"/>
         <source>Network unavailable</source>
         <translation>Network unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="176"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="175"/>
         <source>Connected</source>
         <translation>Connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="177"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="176"/>
         <source>Disconnected</source>
         <translation>Disconnected</translation>
     </message>
@@ -3352,32 +3359,32 @@ Scroll to adjust</translation>
         <translation>Caps Lock off</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="187"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="188"/>
         <source>Num Lock on</source>
         <translation>Num Lock on</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="187"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="188"/>
         <source>Num Lock off</source>
         <translation>Num Lock off</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="200"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="201"/>
         <source>Fully charged</source>
         <translation>Fully charged</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="200"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="201"/>
         <source>Charging</source>
         <translation>Charging</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="203"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="204"/>
         <source>Plugged in</source>
         <translation>Plugged in</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="204"/>
+        <location filename="../Modules/Lock/DefaultLockStatus.qml" line="205"/>
         <source>On battery</source>
         <translation>On battery</translation>
     </message>
@@ -3385,7 +3392,7 @@ Scroll to adjust</translation>
 <context>
     <name>DesktopCard</name>
     <message>
-        <location filename="../Modules/DesktopCards/DesktopCard.qml" line="163"/>
+        <location filename="../Modules/DesktopCards/DesktopCard.qml" line="156"/>
         <source>Return to sidebar</source>
         <translation>Return to sidebar</translation>
     </message>
@@ -3490,32 +3497,32 @@ Scroll to adjust</translation>
         <translation>Choose different start and end times. Using the fixed night temperature.</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="98"/>
+        <location filename="../Services/DisplayColor.qml" line="99"/>
         <source>Location lookup failed. Using the manual location or fixed night temperature.</source>
         <translation>Location lookup failed. Using the manual location or fixed night temperature.</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="137"/>
+        <location filename="../Services/DisplayColor.qml" line="135"/>
         <source>Location lookup timed out. Using the manual location or fixed night temperature.</source>
         <translation>Location lookup timed out. Using the manual location or fixed night temperature.</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="155"/>
+        <location filename="../Services/DisplayColor.qml" line="153"/>
         <source>Unable to open display preferences</source>
         <translation>Unable to open display preferences</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="174"/>
+        <location filename="../Services/DisplayColor.qml" line="172"/>
         <source>Invalid display preferences: %1</source>
         <translation>Invalid display preferences: %1</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="182"/>
+        <location filename="../Services/DisplayColor.qml" line="180"/>
         <source>Unable to read display preferences</source>
         <translation>Unable to read display preferences</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayColor.qml" line="184"/>
+        <location filename="../Services/DisplayColor.qml" line="182"/>
         <source>Unable to save display preferences</source>
         <translation>Unable to save display preferences</translation>
     </message>
@@ -3544,12 +3551,12 @@ Scroll to adjust</translation>
         <translation>Remove column width</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="79"/>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="80"/>
         <source>Set custom width</source>
         <translation>Set custom width</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="79"/>
+        <location filename="../Modules/ControlCenter/DisplayColumnWidths.qml" line="80"/>
         <source>Add column width</source>
         <translation>Add column width</translation>
     </message>
@@ -3557,27 +3564,27 @@ Scroll to adjust</translation>
 <context>
     <name>DisplayConfigService</name>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="36"/>
+        <location filename="../Services/DisplayConfigService.qml" line="37"/>
         <source>At least one connected display must remain enabled</source>
         <translation>At least one connected display must remain enabled</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="37"/>
+        <location filename="../Services/DisplayConfigService.qml" line="38"/>
         <source>Display rectangles overlap</source>
         <translation>Display rectangles overlap</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="38"/>
+        <location filename="../Services/DisplayConfigService.qml" line="39"/>
         <source>Select an available display mode</source>
         <translation>Select an available display mode</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="154"/>
+        <location filename="../Services/DisplayConfigService.qml" line="160"/>
         <source>Connected displays changed. Reload before applying.</source>
         <translation>Connected displays changed. Reload before applying.</translation>
     </message>
     <message>
-        <location filename="../Services/DisplayConfigService.qml" line="166"/>
+        <location filename="../Services/DisplayConfigService.qml" line="172"/>
         <source>Configuration changed externally. Reload before applying.</source>
         <translation>Configuration changed externally. Reload before applying.</translation>
     </message>
@@ -3585,164 +3592,164 @@ Scroll to adjust</translation>
 <context>
     <name>DisplayConfigurationPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="41"/>
         <source>Display configuration</source>
         <translation>Display configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="53"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="57"/>
         <source>Layout</source>
         <translation>Layout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="66"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="70"/>
         <source>Identify displays</source>
         <translation>Identify displays</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="278"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="283"/>
         <source>Discard</source>
         <translation>Discard</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="283"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="344"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="294"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="390"/>
         <source>Apply</source>
         <translation>Apply</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="90"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="94"/>
         <source>Display</source>
         <translation>Display</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="94"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="98"/>
         <source>%1 (disconnected)</source>
         <translation>%1 (disconnected)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="79"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="83"/>
         <source>This output is read-only. Resolve conflicting or unsupported settings in %1.</source>
         <translation>This output is read-only. Resolve conflicting or unsupported settings in %1.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="90"/>
         <source>Output settings</source>
         <translation>Output settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="105"/>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="112"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="109"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="116"/>
         <source>Enabled</source>
         <translation>Enabled</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="119"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="123"/>
         <source>Resolution and refresh rate</source>
         <translation>Resolution and refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="124"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="128"/>
         <source>%1 × %2 · %3 Hz</source>
         <translation>%1 × %2 · %3 Hz</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="131"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="135"/>
         <source>Scale</source>
         <translation>Scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="148"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="152"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="304"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="357"/>
         <source>Custom scale</source>
         <translation>Custom scale</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="169"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="173"/>
         <source>Logical X</source>
         <translation>Logical X</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="147"/>
         <source>%1% (Custom)</source>
         <translation>%1% (Custom)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="173"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="177"/>
         <source>Logical Y</source>
         <translation>Logical Y</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="192"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="196"/>
         <source>Rotation and reflection</source>
         <translation>Rotation and reflection</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="196"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="200"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="212"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="216"/>
         <source>Flipped</source>
         <translation>Flipped</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="216"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="220"/>
         <source>Flipped · 90°</source>
         <translation>Flipped · 90°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="220"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="224"/>
         <source>Flipped · 180°</source>
         <translation>Flipped · 180°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="224"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="228"/>
         <source>Flipped · 270°</source>
         <translation>Flipped · 270°</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="232"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="236"/>
         <source>Variable refresh rate</source>
         <translation>Variable refresh rate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="238"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="242"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="242"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="246"/>
         <source>On</source>
         <translation>On</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="246"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="250"/>
         <source>On-Demand</source>
         <translation>On-Demand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="254"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="258"/>
         <source>Advanced settings</source>
         <translation>Advanced settings</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="266"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="270"/>
         <source>Delete saved display</source>
         <translation>Delete saved display</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="314"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="367"/>
         <source>Scale (%)</source>
         <translation>Scale (%)</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="340"/>
+        <location filename="../Modules/ControlCenter/DisplayConfigurationPage.qml" line="386"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -3750,25 +3757,25 @@ Scroll to adjust</translation>
 <context>
     <name>DisplayOverlays</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="86"/>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="107"/>
         <source>Keep display changes?</source>
         <translation>Keep display changes?</translation>
     </message>
     <message numerus="yes">
-        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="94"/>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="115"/>
         <source>Reverting in %n second(s)</source>
         <translation>
-                <numerusform>Reverting in %n second</numerusform>
-                <numerusform>Reverting in %n seconds</numerusform>
-            </translation>
+            <numerusform>Reverting in %n second</numerusform>
+            <numerusform>Reverting in %n seconds</numerusform>
+        </translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="103"/>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="124"/>
         <source>Revert</source>
         <translation>Revert</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="107"/>
+        <location filename="../Modules/ControlCenter/DisplayOverlays.qml" line="128"/>
         <source>Keep Changes</source>
         <translation>Keep Changes</translation>
     </message>
@@ -3776,12 +3783,12 @@ Scroll to adjust</translation>
 <context>
     <name>DisplaysPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="18"/>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="39"/>
         <source>Display configuration</source>
         <translation>Display configuration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="22"/>
+        <location filename="../Modules/ControlCenter/DisplaysPage.qml" line="43"/>
         <source>Gamma Control</source>
         <translation>Gamma Control</translation>
     </message>
@@ -3789,37 +3796,37 @@ Scroll to adjust</translation>
 <context>
     <name>DrawerView</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="388"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="388"/>
         <source>Connecting to keytop</source>
         <translation>Connecting to keytop</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="394"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="394"/>
         <source>Reconnecting</source>
         <translation>Reconnecting</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="394"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="394"/>
         <source>System monitoring is temporarily unavailable</source>
         <translation>System monitoring is temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="396"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="396"/>
         <source>Data is temporarily unavailable; the page will retry in the background with backoff.</source>
         <translation>Data is temporarily unavailable; the page will retry in the background with backoff.</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="398"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="398"/>
         <source>The connection recovers automatically; existing data is never presented as current.</source>
         <translation>The connection recovers automatically; existing data is never presented as current.</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="429"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="432"/>
         <source>Drawer grid; scrollable with draggable cards</source>
         <translation>Drawer grid; scrollable with draggable cards</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/DrawerView.qml" line="431"/>
+        <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="434"/>
         <source>Drawer grid with draggable cards</source>
         <translation>Drawer grid with draggable cards</translation>
     </message>
@@ -4016,104 +4023,104 @@ Scroll to adjust</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="126"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="133"/>
         <source>Night starts</source>
         <translation>Night starts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="141"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="145"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="144"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="151"/>
         <source>Day starts</source>
         <translation>Day starts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="220"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="227"/>
         <source>Day temperature</source>
         <translation>Day temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="230"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="237"/>
         <source>Transition duration</source>
         <translation>Transition duration</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="234"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="241"/>
         <source> min</source>
         <translation> min</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="161"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="167"/>
         <source>Latitude</source>
         <translation>Latitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="166"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="172"/>
         <source>Longitude</source>
         <translation>Longitude</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="189"/>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="193"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="195"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="199"/>
         <source>Automatic IP location</source>
         <translation>Automatic IP location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="267"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="274"/>
         <source>Period</source>
         <translation>Period</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="278"/>
         <source>Daytime</source>
         <translation>Daytime</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="271"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="278"/>
         <source>Nighttime</source>
         <translation>Nighttime</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="269"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="276"/>
         <source>Transitioning</source>
         <translation>Transitioning</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="287"/>
         <source>Transition ends</source>
         <translation>Transition ends</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="299"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="306"/>
         <source>Gamma control unavailable: %1</source>
         <translation>Gamma control unavailable: %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="208"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="214"/>
         <source>Refresh location</source>
         <translation>Refresh location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="215"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="222"/>
         <source>Use weather location</source>
         <translation>Use weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="248"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="255"/>
         <source>Current status</source>
         <translation>Current status</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="258"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="265"/>
         <source>%1 K</source>
         <translation>%1 K</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="254"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="261"/>
         <source>Scheduled temperature</source>
         <translation>Scheduled temperature</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/GammaControlPage.qml" line="287"/>
         <source>Next transition</source>
         <translation>Next transition</translation>
     </message>
@@ -4371,7 +4378,7 @@ Scroll to adjust</translation>
     <name>GeneralSidebarPage</name>
     <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="29"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="591"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="631"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
@@ -4389,281 +4396,303 @@ Scroll to adjust</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="72"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="647"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="687"/>
         <source>Follow Disk I/O card</source>
         <translation>Follow Disk I/O card</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="123"/>
-        <source>Desktop cards</source>
-        <translation>Desktop cards</translation>
+        <source>Sidebars</source>
+        <translation type="unfinished">Sidebars</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="129"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="128"/>
+        <source>Dashboard sidebar position</source>
+        <translation>Dashboard sidebar position</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="134"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="154"/>
+        <source>Left</source>
+        <translation type="unfinished">Left</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="138"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="158"/>
+        <source>Right</source>
+        <translation type="unfinished">Right</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="148"/>
+        <source>Quick settings sidebar position</source>
+        <translation>Quick settings sidebar position</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="169"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="174"/>
         <source>Keep sidebar loaded</source>
         <translation>Keep sidebar loaded</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="170"/>
         <source>Opens faster next time, but uses more memory</source>
         <translation>Opens faster next time, but uses more memory</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="183"/>
         <source>Desktop card layout</source>
         <translation>Desktop card layout</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="151"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="191"/>
         <source>Free drag</source>
         <translation>Free drag</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="155"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="195"/>
         <source>Least busy</source>
         <translation>Least busy</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="159"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="199"/>
         <source>Most busy</source>
         <translation>Most busy</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="173"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="213"/>
         <source>Top left</source>
         <translation>Top left</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="217"/>
         <source>Top right</source>
         <translation>Top right</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="221"/>
         <source>Bottom left</source>
         <translation>Bottom left</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="185"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="225"/>
         <source>Bottom right</source>
         <translation>Bottom right</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="189"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="229"/>
         <source>Center</source>
         <translation>Center</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="202"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="206"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="242"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="246"/>
         <source>Snap desktop cards to grid</source>
         <translation>Snap desktop cards to grid</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="214"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="218"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="254"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="258"/>
         <source>Show desktop grid while dragging</source>
         <translation>Show desktop grid while dragging</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="227"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="267"/>
         <source>Clock style</source>
         <translation>Clock style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="235"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="353"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="275"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="393"/>
         <source>Digital</source>
         <translation>Digital</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="280"/>
         <source>Cookie</source>
         <translation>Cookie</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="264"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="304"/>
         <source>Sides</source>
         <translation>Sides</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="265"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="305"/>
         <source>0 or 1 produces a circle; up to 40 sides</source>
         <translation>0 or 1 produces a circle; up to 40 sides</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="283"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="288"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="323"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="328"/>
         <source>Constantly rotate</source>
         <translation>Constantly rotate</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="298"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="303"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="338"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="343"/>
         <source>Hour marks</source>
         <translation>Hour marks</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="299"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="339"/>
         <source>Available with Dots or Full dials</source>
         <translation>Available with Dots or Full dials</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="312"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="317"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="352"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="357"/>
         <source>Digits in the middle</source>
         <translation>Digits in the middle</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="313"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="353"/>
         <source>Unavailable with the Numbers dial</source>
         <translation>Unavailable with the Numbers dial</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="325"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="365"/>
         <source>Dial style</source>
         <translation>Dial style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="338"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="380"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="422"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="470"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="512"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="378"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="420"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="462"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="510"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="552"/>
         <source>None</source>
         <translation>None</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="343"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="485"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="383"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="525"/>
         <source>Dots</source>
         <translation>Dots</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="348"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="388"/>
         <source>Full</source>
         <translation>Full</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="367"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="407"/>
         <source>Hour hand</source>
         <translation>Hour hand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="385"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="427"/>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="475"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="425"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="467"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="515"/>
         <source>Classic</source>
         <translation>Classic</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="390"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="430"/>
         <source>Hollow</source>
         <translation>Hollow</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="395"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="435"/>
         <source>Fill</source>
         <translation>Fill</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="409"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="449"/>
         <source>Minute hand</source>
         <translation>Minute hand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="432"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="472"/>
         <source>Thin</source>
         <translation>Thin</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="437"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="477"/>
         <source>Medium</source>
         <translation>Medium</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="442"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="482"/>
         <source>Bold</source>
         <translation>Bold</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="457"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="497"/>
         <source>Second hand</source>
         <translation>Second hand</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="480"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="520"/>
         <source>Line</source>
         <translation>Line</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="499"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="539"/>
         <source>Date style</source>
         <translation>Date style</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="517"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="557"/>
         <source>Bubble</source>
         <translation>Bubble</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="522"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="562"/>
         <source>Border</source>
         <translation>Border</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="527"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="567"/>
         <source>Rect</source>
         <translation>Rect</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="543"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="583"/>
         <source>System cards</source>
         <translation>System cards</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="565"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="605"/>
         <source>Desktop</source>
         <translation>Desktop</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="565"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="605"/>
         <source>Sidebar</source>
         <translation>Sidebar</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="584"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="624"/>
         <source>GPU</source>
         <translation>GPU</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="585"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="625"/>
         <source>Select the graphics device shown by the GPU card</source>
         <translation>Select the graphics device shown by the GPU card</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="602"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="642"/>
         <source>System monitor snapshot interval</source>
         <translation>System monitor snapshot interval</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="608"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="648"/>
         <source>Interval</source>
         <translation>Interval</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="626"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="666"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="640"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="680"/>
         <source>Disk capacity</source>
         <translation>Disk capacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="641"/>
+        <location filename="../Modules/ControlCenter/GeneralSidebarPage.qml" line="681"/>
         <source>Select the physical disk shown by the capacity card</source>
         <translation>Select the physical disk shown by the capacity card</translation>
     </message>
@@ -4819,37 +4848,37 @@ Scroll to adjust</translation>
 <context>
     <name>HourlyAirQualityTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="41"/>
         <source>Excellent</source>
         <translation>Excellent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="41"/>
         <source>Good</source>
         <translation>Good</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="41"/>
         <source>Poor</source>
         <translation>Poor</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="41"/>
         <source>Unhealthy</source>
         <translation>Unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="41"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="41"/>
         <source>Very unhealthy</source>
         <translation>Very unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="42"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="42"/>
         <source>Hazardous</source>
         <translation>Hazardous</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyAirQualityTrendPane.qml" line="358"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyAirQualityTrendPane.qml" line="358"/>
         <source>Air quality data is unavailable</source>
         <translation>Air quality data is unavailable</translation>
     </message>
@@ -4857,69 +4886,69 @@ Scroll to adjust</translation>
 <context>
     <name>HourlyForecastTrendCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="231"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="231"/>
         <source>UV index</source>
         <translation>UV index</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="236"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="236"/>
         <source>Precipitation</source>
         <translation>Precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="241"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="241"/>
         <source>Feels like</source>
         <translation>Feels like</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="89"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="246"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="246"/>
         <source>Relative humidity / Dew point</source>
         <translation>Relative humidity / Dew point</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="90"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="251"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="251"/>
         <source>Pressure</source>
         <translation>Pressure</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="90"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="256"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="256"/>
         <source>Cloud cover</source>
         <translation>Cloud cover</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="90"/>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="261"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="261"/>
         <source>Visibility</source>
         <translation>Visibility</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="157"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="157"/>
         <source>Hourly forecast</source>
         <translation>Hourly forecast</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="178"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="178"/>
         <source>Conditions</source>
         <translation>Conditions</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="181"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="181"/>
         <source>Air quality</source>
         <translation>Air quality</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="184"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="184"/>
         <source>Wind</source>
         <translation>Wind</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyForecastTrendCard.qml" line="215"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyForecastTrendCard.qml" line="215"/>
         <source>More hourly forecast options</source>
         <translation>More hourly forecast options</translation>
     </message>
@@ -4927,7 +4956,7 @@ Scroll to adjust</translation>
 <context>
     <name>HourlyWindTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/HourlyWindTrendPane.qml" line="313"/>
+        <location filename="../Modules/Sidebars/Dashboard/HourlyWindTrendPane.qml" line="313"/>
         <source>Wind data is unavailable</source>
         <translation>Wind data is unavailable</translation>
     </message>
@@ -4958,104 +4987,104 @@ Scroll to adjust</translation>
 <context>
     <name>IdleContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="13"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="13"/>
         <source>Idle management</source>
         <translation>Idle management</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="27"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="27"/>
         <source> seconds</source>
         <translation> seconds</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="29"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="29"/>
         <source> minutes</source>
         <translation> minutes</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="52"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="52"/>
         <source>Paused</source>
         <translation>Paused</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="54"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="54"/>
         <source> enabled</source>
         <translation> enabled</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="114"/>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="121"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="114"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="121"/>
         <source>Keep awake</source>
         <translation>Keep awake</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="129"/>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="137"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="129"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="137"/>
         <source>Automatic idle</source>
         <translation>Automatic idle</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="145"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="145"/>
         <source>Idle actions</source>
         <translation>Idle actions</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="150"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="150"/>
         <source>Dim screen</source>
         <translation>Dim screen</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="158"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="158"/>
         <source>Lock session</source>
         <translation>Lock session</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="165"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="165"/>
         <source>Turn off displays</source>
         <translation>Turn off displays</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="172"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="172"/>
         <source>Suspend system</source>
         <translation>Suspend system</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="209"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="209"/>
         <source>Off</source>
         <translation>Off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="210"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="210"/>
         <source> · Triggered</source>
         <translation> · Triggered</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="274"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="274"/>
         <source>Wait time</source>
         <translation>Wait time</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="302"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="302"/>
         <source>Dim percentage</source>
         <translation>Dim percentage</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="321"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="321"/>
         <source>Skip while keeping awake</source>
         <translation>Skip while keeping awake</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="351"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="351"/>
         <source>Screen dim percentage</source>
         <translation>Screen dim percentage</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="290"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="290"/>
         <source>%1 wait time</source>
         <translation>%1 wait time</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/IdleContent.qml" line="327"/>
+        <location filename="../Modules/Sidebars/QuickSettings/IdleContent.qml" line="327"/>
         <source>%1: respect keep-awake</source>
         <translation>%1: respect keep-awake</translation>
     </message>
@@ -5086,34 +5115,34 @@ Scroll to adjust</translation>
 <context>
     <name>InfoToolDrawer</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="24"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="24"/>
         <source>Calendar</source>
         <translation>Calendar</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="28"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="28"/>
         <source>To-do</source>
         <translation>To-do</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="32"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="32"/>
         <source>Timer</source>
         <translation>Timer</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="166"/>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="176"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="166"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="176"/>
         <source>Expand tools</source>
         <translation>Expand tools</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="189"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="189"/>
         <source>   •   %1 tasks</source>
         <translation>   •   %1 tasks</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="222"/>
-        <location filename="../Modules/Sidebars/Left/infoTools/InfoToolDrawer.qml" line="232"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="222"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/InfoToolDrawer.qml" line="232"/>
         <source>Collapse tools</source>
         <translation>Collapse tools</translation>
     </message>
@@ -5163,7 +5192,7 @@ Scroll to adjust</translation>
     <name>KeystonePage</name>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="54"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="211"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
         <source>Horizontal clock style</source>
         <translation>Horizontal clock style</translation>
     </message>
@@ -5193,93 +5222,93 @@ Scroll to adjust</translation>
         <translation>Screen edge</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="130"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="131"/>
         <source>Keyboard indicators</source>
         <translation>Keyboard indicators</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="135"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="138"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="136"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="139"/>
         <source>Caps Lock changes</source>
         <translation>Caps Lock changes</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="145"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="148"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="146"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="149"/>
         <source>Num Lock changes</source>
         <translation>Num Lock changes</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="155"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="156"/>
         <source>Keyhole</source>
         <translation>Keyhole</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="178"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="179"/>
         <source>Horizontal clock</source>
         <translation>Horizontal clock</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="199"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="203"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="204"/>
         <source>Hide date</source>
         <translation>Hide date</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="213"/>
         <source>Font, digit positions, and colors</source>
         <translation>Font, digit positions, and colors</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="219"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="220"/>
         <source>Recording</source>
         <translation>Recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="223"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="224"/>
         <source>Video recording</source>
         <translation>Video recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="229"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="230"/>
         <source>GIF recording</source>
         <translation>GIF recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="235"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="236"/>
         <source>Microphone recording</source>
         <translation>Microphone recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="241"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="242"/>
         <source>System audio recording</source>
         <translation>System audio recording</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="284"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="331"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="285"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="332"/>
         <source>Save location</source>
         <translation>Save location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="288"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="289"/>
         <source>This folder is empty</source>
         <translation>This folder is empty</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="289"/>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="341"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="290"/>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="342"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="343"/>
         <source>Choose folder</source>
         <translation>Choose folder</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="291"/>
         <source>Choose</source>
         <translation>Choose</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="291"/>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="292"/>
         <source>Choose the current folder or a selected subfolder</source>
         <translation>Choose the current folder or a selected subfolder</translation>
     </message>
@@ -5402,24 +5431,6 @@ Scroll to adjust</translation>
     </message>
 </context>
 <context>
-    <name>LeftSidebarContent</name>
-    <message>
-        <location filename="../Modules/Sidebars/Left/LeftSidebarContent.qml" line="37"/>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Left/LeftSidebarContent.qml" line="42"/>
-        <source>Drawer</source>
-        <translation>Drawer</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Left/LeftSidebarContent.qml" line="47"/>
-        <source>Weather</source>
-        <translation>Weather</translation>
-    </message>
-</context>
-<context>
     <name>LocationPicker</name>
     <message>
         <location filename="../Modules/ControlCenter/LocationPicker.qml" line="41"/>
@@ -5493,22 +5504,22 @@ Scroll to adjust</translation>
 <context>
     <name>LockContent</name>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="199"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="198"/>
         <source>Incorrect password. Try again.</source>
         <translation>Incorrect password. Try again.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="381"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="384"/>
         <source>Caps Lock and Num Lock are on.</source>
         <translation>Caps Lock and Num Lock are on.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="384"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="387"/>
         <source>Caps Lock is on.</source>
         <translation>Caps Lock is on.</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/LockContent.qml" line="387"/>
+        <location filename="../Modules/Lock/LockContent.qml" line="390"/>
         <source>Num Lock is on.</source>
         <translation>Num Lock is on.</translation>
     </message>
@@ -5780,18 +5791,18 @@ Scroll to adjust</translation>
 <context>
     <name>MatugenTemplateService</name>
     <message>
-        <location filename="../Services/MatugenTemplateService.qml" line="148"/>
+        <location filename="../Services/MatugenTemplateService.qml" line="121"/>
         <source>Unable to read template</source>
         <translation>Unable to read template</translation>
     </message>
     <message>
-        <location filename="../Services/MatugenTemplateService.qml" line="151"/>
-        <location filename="../Services/MatugenTemplateService.qml" line="183"/>
+        <location filename="../Services/MatugenTemplateService.qml" line="124"/>
+        <location filename="../Services/MatugenTemplateService.qml" line="156"/>
         <source>Invalid template data</source>
         <translation>Invalid template data</translation>
     </message>
     <message>
-        <location filename="../Services/MatugenTemplateService.qml" line="185"/>
+        <location filename="../Services/MatugenTemplateService.qml" line="158"/>
         <source>Template operation failed</source>
         <translation>Template operation failed</translation>
     </message>
@@ -5901,47 +5912,47 @@ Scroll to adjust; click to open microphone controls</translation>
 <context>
     <name>MicrophoneContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="14"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="14"/>
         <source>Microphone</source>
         <translation>Microphone</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="27"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="27"/>
         <source>Connecting to the PipeWire audio service</source>
         <translation>Connecting to the PipeWire audio service</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="29"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="29"/>
         <source>No microphone devices detected</source>
         <translation>No microphone devices detected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="43"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="43"/>
         <source>Open advanced sound settings</source>
         <translation>Open advanced sound settings</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="92"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="92"/>
         <source>Input</source>
         <translation>Input</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="97"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="97"/>
         <source>Default input</source>
         <translation>Default input</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="113"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="113"/>
         <source>Input devices</source>
         <translation>Input devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="130"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="130"/>
         <source>Collapse input devices</source>
         <translation>Collapse input devices</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/MicrophoneContent.qml" line="130"/>
+        <location filename="../Modules/Sidebars/QuickSettings/MicrophoneContent.qml" line="130"/>
         <source>Expand input devices</source>
         <translation>Expand input devices</translation>
     </message>
@@ -5959,19 +5970,19 @@ we’ll be right back.</translation>
 <context>
     <name>Network</name>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="17"/>
+        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="18"/>
         <source>Network connected</source>
         <translation>Network connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="18"/>
+        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="19"/>
         <source>
 Click to open network settings</source>
         <translation>
 Click to open network settings</translation>
     </message>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="20"/>
+        <location filename="../Modules/Bar/QuickSettings/Network.qml" line="21"/>
         <source>Network disconnected
 Click to open network settings</source>
         <translation>Network disconnected
@@ -5999,192 +6010,192 @@ Click to open network settings</translation>
 <context>
     <name>NetworkContent</name>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="30"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="30"/>
         <source>NetworkManager is currently unavailable</source>
         <translation>NetworkManager is currently unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="33"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="33"/>
         <source>No Wi-Fi device detected</source>
         <translation>No Wi-Fi device detected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="36"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="36"/>
         <source>Wi-Fi is blocked by a hardware switch or rfkill</source>
         <translation>Wi-Fi is blocked by a hardware switch or rfkill</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="39"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="39"/>
         <source>Wi-Fi is off</source>
         <translation>Wi-Fi is off</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="88"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="88"/>
         <source>Network sign-in required</source>
         <translation>Network sign-in required</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="91"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="91"/>
         <source>Network connectivity is limited</source>
         <translation>Network connectivity is limited</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="94"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="94"/>
         <source>Internet is available</source>
         <translation>Internet is available</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="97"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="97"/>
         <source>Connected; internet access could not be confirmed</source>
         <translation>Connected; internet access could not be confirmed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="99"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="99"/>
         <source>No active connection</source>
         <translation>No active connection</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="110"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="110"/>
         <source>Manual IPv4</source>
         <translation>Manual IPv4</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="112"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="112"/>
         <source>DHCP + custom DNS</source>
         <translation>DHCP + custom DNS</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="114"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="114"/>
         <source>Automatic (DHCP)</source>
         <translation>Automatic (DHCP)</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="116"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="116"/>
         <source>Connect automatically</source>
         <translation>Connect automatically</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="133"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="133"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="215"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="215"/>
         <source>Not connected</source>
         <translation>Not connected</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="243"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="243"/>
         <source>Open network portal</source>
         <translation>Open network portal</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="272"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="272"/>
         <source>Saved networks</source>
         <translation>Saved networks</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="288"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="288"/>
         <source>Available networks</source>
         <translation>Available networks</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="289"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="289"/>
         <source>Getting scan results</source>
         <translation>Getting scan results</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="290"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="290"/>
         <source> networks</source>
         <translation> networks</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="307"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="312"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="307"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="312"/>
         <source>Searching for available networks</source>
         <translation>Searching for available networks</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="361"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="361"/>
         <source>No available networks found</source>
         <translation>No available networks found</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="379"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="505"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="627"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="379"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="505"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="627"/>
         <source>Forget network</source>
         <translation>Forget network</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="392"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="699"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="392"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="699"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="400"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="400"/>
         <source>Forget</source>
         <translation>Forget</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="425"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="425"/>
         <source>Refresh network list</source>
         <translation>Refresh network list</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="444"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="444"/>
         <source>Wi-Fi switch</source>
         <translation>Wi-Fi switch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="494"/>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="609"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="494"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="609"/>
         <source>Network action</source>
         <translation>Network action</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="561"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="561"/>
         <source>Connected · </source>
         <translation>Connected · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="562"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="562"/>
         <source>Saved · </source>
         <translation>Saved · </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="565"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="565"/>
         <source>Open network</source>
         <translation>Open network</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="620"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="620"/>
         <source>Disconnect</source>
         <translation>Disconnect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="668"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="668"/>
         <source>Network password</source>
         <translation>Network password</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="681"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="681"/>
         <source>Hide password</source>
         <translation>Hide password</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="681"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="681"/>
         <source>Show password</source>
         <translation>Show password</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="704"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="704"/>
         <source>Connect</source>
         <translation>Connect</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Right/NetworkContent.qml" line="380"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NetworkContent.qml" line="380"/>
         <source>This will delete the saved connection for “%1”.</source>
         <translation>This will delete the saved connection for “%1”.</translation>
     </message>
@@ -6538,165 +6549,210 @@ Click to open network settings</translation>
 <context>
     <name>NetworkService</name>
     <message>
-        <location filename="../Services/NetworkService.qml" line="191"/>
+        <location filename="../Services/NetworkService.qml" line="192"/>
         <source>Disconnected</source>
         <translation>Disconnected</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="192"/>
+        <location filename="../Services/NetworkService.qml" line="193"/>
         <source>Wired</source>
         <translation>Wired</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="299"/>
+        <location filename="../Services/NetworkService.qml" line="300"/>
         <source>Wired network</source>
         <translation>Wired network</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="341"/>
+        <location filename="../Services/NetworkService.qml" line="342"/>
         <source>Another network operation is already in progress</source>
         <translation>Another network operation is already in progress</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="370"/>
+        <location filename="../Services/NetworkService.qml" line="371"/>
         <source>Network operation failed</source>
         <translation>Network operation failed</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="397"/>
-        <location filename="../Services/NetworkService.qml" line="452"/>
+        <location filename="../Services/NetworkService.qml" line="398"/>
+        <location filename="../Services/NetworkService.qml" line="453"/>
         <source>NetworkManager is unavailable</source>
         <translation>NetworkManager is unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="402"/>
+        <location filename="../Services/NetworkService.qml" line="403"/>
         <source>Wi-Fi is blocked by hardware or rfkill</source>
         <translation>Wi-Fi is blocked by hardware or rfkill</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="457"/>
+        <location filename="../Services/NetworkService.qml" line="458"/>
         <source>No Wi-Fi device detected</source>
         <translation>No Wi-Fi device detected</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="462"/>
+        <location filename="../Services/NetworkService.qml" line="463"/>
         <source>Wi-Fi is off</source>
         <translation>Wi-Fi is off</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="486"/>
+        <location filename="../Services/NetworkService.qml" line="487"/>
         <source>The target network is no longer available</source>
         <translation>The target network is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="501"/>
+        <location filename="../Services/NetworkService.qml" line="502"/>
         <source>This authentication type requires the second-phase Secret Agent/Extras backend</source>
         <translation>This authentication type requires the second-phase Secret Agent/Extras backend</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="518"/>
+        <location filename="../Services/NetworkService.qml" line="519"/>
         <source>The current Quickshell API only supports WPA/WPA2-PSK and SAE password connections</source>
         <translation>The current Quickshell API only supports WPA/WPA2-PSK and SAE password connections</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="576"/>
+        <location filename="../Services/NetworkService.qml" line="577"/>
         <source>No active network to disconnect</source>
         <translation>No active network to disconnect</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="593"/>
+        <location filename="../Services/NetworkService.qml" line="594"/>
         <source>No saved network configuration found</source>
         <translation>No saved network configuration found</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="691"/>
+        <location filename="../Services/NetworkService.qml" line="692"/>
         <source>The network profile cannot currently be written</source>
         <translation>The network profile cannot currently be written</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="710"/>
+        <location filename="../Services/NetworkService.qml" line="711"/>
         <source>Invalid IPv4 configuration format</source>
         <translation>Invalid IPv4 configuration format</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="724"/>
+        <location filename="../Services/NetworkService.qml" line="725"/>
         <source>The current IPv4 mode cannot be edited on this page</source>
         <translation>The current IPv4 mode cannot be edited on this page</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="778"/>
+        <location filename="../Services/NetworkService.qml" line="779"/>
         <source>The network profile cannot currently be deleted</source>
         <translation>The network profile cannot currently be deleted</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="853"/>
+        <location filename="../Services/NetworkService.qml" line="854"/>
         <source>Another add operation is already in progress</source>
         <translation>Another add operation is already in progress</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="858"/>
+        <location filename="../Services/NetworkService.qml" line="859"/>
         <source>SSID must be 1–32 UTF-8 bytes</source>
         <translation>SSID must be 1–32 UTF-8 bytes</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="862"/>
+        <location filename="../Services/NetworkService.qml" line="863"/>
         <source>Invalid Wi-Fi password format</source>
         <translation>Invalid Wi-Fi password format</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="869"/>
+        <location filename="../Services/NetworkService.qml" line="870"/>
         <source>Multiple Wi-Fi devices found networks with the same name; select a specific device from the nearby networks list</source>
         <translation>Multiple Wi-Fi devices found networks with the same name; select a specific device from the nearby networks list</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="879"/>
+        <location filename="../Services/NetworkService.qml" line="880"/>
         <source>This network requires a valid Wi-Fi password</source>
         <translation>This network requires a valid Wi-Fi password</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="897"/>
+        <location filename="../Services/NetworkService.qml" line="898"/>
         <source>Unable to create Wi-Fi profile</source>
         <translation>Unable to create Wi-Fi profile</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="905"/>
+        <location filename="../Services/NetworkService.qml" line="906"/>
         <source>This NetworkManager profile cannot currently be connected</source>
         <translation>This NetworkManager profile cannot currently be connected</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="939"/>
+        <location filename="../Services/NetworkService.qml" line="940"/>
         <source>NetworkManager connectivity checking is unavailable or disabled</source>
         <translation>NetworkManager connectivity checking is unavailable or disabled</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1025"/>
+        <location filename="../Services/NetworkService.qml" line="1026"/>
         <source>Incorrect password or authentication timed out</source>
         <translation>Incorrect password or authentication timed out</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1025"/>
+        <location filename="../Services/NetworkService.qml" line="1026"/>
         <source>Network password required</source>
         <translation>Network password required</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1070"/>
+        <location filename="../Services/NetworkService.qml" line="1071"/>
         <source>Connection did not complete</source>
         <translation>Connection did not complete</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1104"/>
+        <location filename="../Services/NetworkService.qml" line="1105"/>
         <source>NetworkManager did not confirm the profile update</source>
         <translation>NetworkManager did not confirm the profile update</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1117"/>
+        <location filename="../Services/NetworkService.qml" line="1118"/>
         <source>NetworkManager did not confirm profile deletion</source>
         <translation>NetworkManager did not confirm profile deletion</translation>
     </message>
     <message>
-        <location filename="../Services/NetworkService.qml" line="1137"/>
+        <location filename="../Services/NetworkService.qml" line="1138"/>
         <source>Network operation timed out</source>
         <translation>Network operation timed out</translation>
+    </message>
+</context>
+<context>
+    <name>NightModeContent</name>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="11"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="47"/>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="51"/>
+        <source>Night Mode</source>
+        <translation>Night Mode</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="32"/>
+        <source>The compositor does not provide Gamma control</source>
+        <translation>The compositor does not provide Gamma control</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="56"/>
+        <source>Night temperature</source>
+        <translation>Night temperature</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="68"/>
+        <source>Scheduled temperature</source>
+        <translation>Scheduled temperature</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="71"/>
+        <source>%1 K</source>
+        <translation>%1 K</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="84"/>
+        <source>Gamma</source>
+        <translation>Gamma</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="93"/>
+        <source>Contrast</source>
+        <translation>Contrast</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Sidebars/QuickSettings/NightModeContent.qml" line="115"/>
+        <source>Gamma control unavailable: %1</source>
+        <translation>Gamma control unavailable: %1</translation>
     </message>
 </context>
 <context>
@@ -7744,7 +7800,7 @@ Click to open network settings</translation>
     </message>
     <message>
         <location filename="../Services/NiriConfigService.qml" line="28"/>
-        <location filename="../Services/NiriConfigService.qml" line="145"/>
+        <location filename="../Services/NiriConfigService.qml" line="146"/>
         <source>Unable to save changes</source>
         <translation>Unable to save changes</translation>
     </message>
@@ -7793,7 +7849,7 @@ Click to open network settings</translation>
 <context>
     <name>NotificationList</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationList.qml" line="78"/>
+        <location filename="../Modules/Sidebars/Dashboard/notifications/NotificationList.qml" line="78"/>
         <source>No notifications</source>
         <translation>No notifications</translation>
     </message>
@@ -7801,39 +7857,46 @@ Click to open network settings</translation>
 <context>
     <name>NotificationManager</name>
     <message>
-        <location filename="../Services/NotificationManager.qml" line="141"/>
-        <location filename="../Services/NotificationManager.qml" line="199"/>
-        <location filename="../Services/NotificationManager.qml" line="299"/>
+        <location filename="../Services/NotificationManager.qml" line="209"/>
+        <location filename="../Services/NotificationManager.qml" line="274"/>
+        <location filename="../Services/NotificationManager.qml" line="396"/>
         <source>System</source>
         <translation>System</translation>
     </message>
     <message>
-        <location filename="../Services/NotificationManager.qml" line="148"/>
-        <location filename="../Services/NotificationManager.qml" line="203"/>
+        <location filename="../Services/NotificationManager.qml" line="216"/>
+        <location filename="../Services/NotificationManager.qml" line="278"/>
         <source>Notification</source>
         <translation>Notification</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="110"/>
         <source>File action failed</source>
         <translation>File action failed</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="110"/>
         <source>Could not open the saved file or its location: %1</source>
         <translation>Could not open the saved file or its location: %1</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="113"/>
         <source>File no longer exists</source>
         <translation>File no longer exists</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="113"/>
         <source>Opened the containing folder: %1</source>
         <translation>Opened the containing folder: %1</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="327"/>
+        <location filename="../Services/NotificationManager.qml" line="332"/>
         <source>Show in folder</source>
         <translation>Show in folder</translation>
     </message>
     <message>
+        <location filename="../Services/NotificationManager.qml" line="337"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
@@ -7841,12 +7904,12 @@ Click to open network settings</translation>
 <context>
     <name>NotificationUtils</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="12"/>
+        <location filename="../Modules/Sidebars/Dashboard/notifications/NotificationUtils.qml" line="12"/>
         <source>Just now</source>
         <translation>Just now</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/notifications/NotificationUtils.qml" line="20"/>
+        <location filename="../Modules/Sidebars/Dashboard/notifications/NotificationUtils.qml" line="20"/>
         <source>Yesterday</source>
         <translation>Yesterday</translation>
     </message>
@@ -7885,383 +7948,383 @@ Click to open network settings</translation>
 <context>
     <name>PersonalizationConfig</name>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="22"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="23"/>
         <source>Stretch</source>
         <translation>Stretch</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="25"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="26"/>
         <source>Fit</source>
         <translation>Fit</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="28"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="29"/>
         <source>Fill</source>
         <translation>Fill</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="31"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="32"/>
         <source>Tile</source>
         <translation>Tile</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="34"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="35"/>
         <source>Tile vertically</source>
         <translation>Tile vertically</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="37"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="38"/>
         <source>Tile horizontally</source>
         <translation>Tile horizontally</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="40"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="41"/>
         <source>Cover</source>
         <translation>Cover</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="44"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="45"/>
         <source>Panorama</source>
         <translation>Panorama</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="48"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="122"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="49"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="123"/>
         <source>Random</source>
         <translation>Random</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="51"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="77"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="52"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="78"/>
         <source>None</source>
         <translation>None</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="54"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="83"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="55"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="84"/>
         <source>Crossfade</source>
         <translation>Crossfade</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="57"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="99"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="58"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="100"/>
         <source>Wipe</source>
         <translation>Wipe</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="60"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="61"/>
         <source>Disc</source>
         <translation>Disc</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="63"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="64"/>
         <source>Stripes</source>
         <translation>Stripes</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="66"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="67"/>
         <source>Iris bloom</source>
         <translation>Iris bloom</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="69"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="70"/>
         <source>Pixelate</source>
         <translation>Pixelate</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="72"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="73"/>
         <source>Portal</source>
         <translation>Portal</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="80"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="81"/>
         <source>Simple</source>
         <translation>Simple</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="86"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="87"/>
         <source>From left</source>
         <translation>From left</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="89"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="90"/>
         <source>From right</source>
         <translation>From right</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="92"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="93"/>
         <source>From top</source>
         <translation>From top</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="95"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="96"/>
         <source>From bottom</source>
         <translation>From bottom</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="102"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="103"/>
         <source>Wave</source>
         <translation>Wave</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="106"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="107"/>
         <source>Grow</source>
         <translation>Grow</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="110"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="111"/>
         <source>Grow from center</source>
         <translation>Grow from center</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="114"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="115"/>
         <source>Grow from random position</source>
         <translation>Grow from random position</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="118"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="119"/>
         <source>Shrink inward</source>
         <translation>Shrink inward</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="127"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="128"/>
         <source>Linear</source>
         <translation>Linear</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="130"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="131"/>
         <source>Quadratic</source>
         <translation>Quadratic</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="133"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="134"/>
         <source>Cubic</source>
         <translation>Cubic</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="136"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="137"/>
         <source>Quartic</source>
         <translation>Quartic</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="139"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="140"/>
         <source>Quintic</source>
         <translation>Quintic</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="142"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="143"/>
         <source>Sine</source>
         <translation>Sine</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="145"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="146"/>
         <source>Exponential</source>
         <translation>Exponential</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="149"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="150"/>
         <source>Circular</source>
         <translation>Circular</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="153"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="154"/>
         <source>Custom Bézier</source>
         <translation>Custom Bézier</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="160"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="161"/>
         <source>Tonal spot</source>
         <translation>Tonal spot</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="163"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="164"/>
         <source>Vibrant</source>
         <translation>Vibrant</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="166"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="167"/>
         <source>Content</source>
         <translation>Content</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="169"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="170"/>
         <source>Expressive</source>
         <translation>Expressive</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="172"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="173"/>
         <source>Fidelity</source>
         <translation>Fidelity</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="175"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="176"/>
         <source>Fruit salad</source>
         <translation>Fruit salad</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="178"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="179"/>
         <source>Monochrome</source>
         <translation>Monochrome</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="181"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="182"/>
         <source>Neutral</source>
         <translation>Neutral</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="184"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="185"/>
         <source>Rainbow</source>
         <translation>Rainbow</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="189"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="190"/>
         <source>Bangs</source>
         <translation>Bangs</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="192"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="193"/>
         <source>Pill</source>
         <translation>Pill</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="196"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="197"/>
         <source>Top</source>
         <translation>Top</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="200"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="201"/>
         <source>Left</source>
         <translation>Left</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="204"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="205"/>
         <source>Bottom</source>
         <translation>Bottom</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="208"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="209"/>
         <source>Right</source>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="342"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="458"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="344"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="462"/>
         <source>Weather</source>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="346"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="381"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="348"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="383"/>
         <source>Quick Settings</source>
         <translation>Quick Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="350"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="352"/>
         <source>Pomodoro</source>
         <translation>Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="361"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="363"/>
         <source>Workspaces</source>
         <translation>Workspaces</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="365"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="367"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="369"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="371"/>
         <source>Active Window</source>
         <translation>Active Window</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="373"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="375"/>
         <source>Tray</source>
         <translation>Tray</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="377"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="379"/>
         <source>System Monitor</source>
         <translation>System Monitor</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="389"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="391"/>
         <source>Network</source>
         <translation>Network</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="393"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="395"/>
         <source>Bluetooth</source>
         <translation>Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="397"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="399"/>
         <source>Brightness</source>
         <translation>Brightness</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="401"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="403"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="405"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="407"/>
         <source>Microphone</source>
         <translation>Microphone</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="409"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="411"/>
         <source>Battery</source>
         <translation>Battery</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="414"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="416"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="419"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="421"/>
         <source>Power</source>
         <translation>Power</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="434"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="438"/>
         <source>Do not open</source>
         <translation>Do not open</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="438"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="442"/>
         <source>Media controls</source>
         <translation>Media controls</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="442"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="446"/>
         <source>Lyrics</source>
         <translation>Lyrics</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="446"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="450"/>
         <source>Dashboard</source>
         <translation>Dashboard</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="450"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="454"/>
         <source>Media library</source>
         <translation>Media library</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="454"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="458"/>
         <source>Upload</source>
         <translation>Upload</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="462"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="466"/>
         <source>Tools</source>
         <translation>Tools</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="469"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="473"/>
         <source>Peak</source>
         <translation>Peak</translation>
     </message>
@@ -8269,52 +8332,52 @@ Click to open network settings</translation>
 <context>
     <name>PomodoroTimer</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="42"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="42"/>
         <source>Long break</source>
         <translation>Long break</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="43"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="43"/>
         <source>Break</source>
         <translation>Break</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="43"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="43"/>
         <source>Focus</source>
         <translation>Focus</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="85"/>
         <source>Pause Pomodoro</source>
         <translation>Pause Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="85"/>
         <source>Start Pomodoro</source>
         <translation>Start Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="90"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="90"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="91"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="91"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="92"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="92"/>
         <source>Resume</source>
         <translation>Resume</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="113"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="113"/>
         <source>Reset Pomodoro</source>
         <translation>Reset Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/PomodoroTimer.qml" line="117"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/PomodoroTimer.qml" line="117"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
@@ -8666,31 +8729,33 @@ Right-click to change shape; scroll to reorder</translation>
     </message>
     <message>
         <location filename="../Services/RecordingCoordinator.qml" line="25"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="26"/>
         <source>Recording</source>
         <translation>Recording</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingCoordinator.qml" line="26"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="27"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="28"/>
         <source>Processing recording</source>
         <translation>Processing recording</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingCoordinator.qml" line="29"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="31"/>
         <source>Starting audio recording</source>
         <translation>Starting audio recording</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingCoordinator.qml" line="30"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="32"/>
         <source>Recording audio</source>
         <translation>Recording audio</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingCoordinator.qml" line="31"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="33"/>
         <source>Stopping audio recording</source>
         <translation>Stopping audio recording</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingCoordinator.qml" line="32"/>
+        <location filename="../Services/RecordingCoordinator.qml" line="34"/>
         <source>Finishing audio recording</source>
         <translation>Finishing audio recording</translation>
     </message>
@@ -8698,42 +8763,30 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>RecordingService</name>
     <message>
-        <location filename="../Services/RecordingService.qml" line="51"/>
-        <source>key returned an unsupported JSON schema</source>
-        <translation>key returned an unsupported JSON schema</translation>
-    </message>
-    <message>
-        <location filename="../Services/RecordingService.qml" line="78"/>
+        <location filename="../Services/RecordingService.qml" line="73"/>
+        <location filename="../Services/RecordingService.qml" line="97"/>
+        <location filename="../Services/RecordingService.qml" line="228"/>
+        <location filename="../Services/RecordingService.qml" line="247"/>
         <source>key command failed</source>
         <translation>key command failed</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="84"/>
+        <location filename="../Services/RecordingService.qml" line="128"/>
         <source>GIF saved</source>
         <translation>GIF saved</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="84"/>
+        <location filename="../Services/RecordingService.qml" line="128"/>
         <source>Screen recording saved</source>
         <translation>Screen recording saved</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="84"/>
-        <source>Saved to %1</source>
-        <translation>Saved to %1</translation>
-    </message>
-    <message>
-        <location filename="../Services/RecordingService.qml" line="92"/>
-        <source>Could not parse JSON returned by key: </source>
-        <translation>Could not parse JSON returned by key: </translation>
-    </message>
-    <message>
-        <location filename="../Services/RecordingService.qml" line="170"/>
+        <location filename="../Services/RecordingService.qml" line="202"/>
         <source>Could not start the recording command</source>
         <translation>Could not start the recording command</translation>
     </message>
     <message>
-        <location filename="../Services/RecordingService.qml" line="223"/>
+        <location filename="../Services/RecordingService.qml" line="266"/>
         <source>Could not query recording status through key</source>
         <translation>Could not query recording status through key</translation>
     </message>
@@ -8770,7 +8823,7 @@ Right-click to change shape; scroll to reorder</translation>
 <context>
     <name>SettingsButton</name>
     <message>
-        <location filename="../Modules/Bar/QuickSettings/SettingsButton.qml" line="17"/>
+        <location filename="../Modules/Bar/QuickSettings/SettingsButton.qml" line="18"/>
         <source>Left click: Quick Settings
 Right click: Control Center</source>
         <translation>Left click: Quick Settings
@@ -8831,17 +8884,17 @@ Right click: Control Center</translation>
         <translation>Run %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="147"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="148"/>
         <source>Shortcut map</source>
         <translation>Shortcut map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="158"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="159"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="170"/>
+        <location filename="../Modules/ControlCenter/ShortcutMap.qml" line="171"/>
         <source>No shortcuts assigned</source>
         <translation>No shortcuts assigned</translation>
     </message>
@@ -9004,25 +9057,25 @@ Right click: Control Center</translation>
         <translation>Keep working when apps inhibit shortcuts</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="804"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="805"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="563"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="825"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="830"/>
         <source>Remove override</source>
         <translation>Remove override</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="55"/>
         <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="563"/>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="825"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="830"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="835"/>
+        <location filename="../Modules/ControlCenter/ShortcutsPage.qml" line="826"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -9057,7 +9110,7 @@ Right click: Control Center</translation>
 <context>
     <name>SidebarWeatherButton</name>
     <message>
-        <location filename="../Modules/Bar/ActiveWindow/SidebarWeatherButton.qml" line="96"/>
+        <location filename="../Modules/Bar/ActiveWindow/SidebarWeatherButton.qml" line="97"/>
         <source>Weather</source>
         <translation>Weather</translation>
     </message>
@@ -9285,47 +9338,47 @@ Right click: Control Center</translation>
 <context>
     <name>Stopwatch</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="182"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="182"/>
         <source>Pause stopwatch</source>
         <translation>Pause stopwatch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="182"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="182"/>
         <source>Start stopwatch</source>
         <translation>Start stopwatch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="187"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="187"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="187"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="187"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="189"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="189"/>
         <source>Resume</source>
         <translation>Resume</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="213"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="213"/>
         <source>Record lap</source>
         <translation>Record lap</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="213"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="213"/>
         <source>Reset stopwatch</source>
         <translation>Reset stopwatch</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="222"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="222"/>
         <source>Lap</source>
         <translation>Lap</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/Stopwatch.qml" line="222"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/Stopwatch.qml" line="222"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
@@ -9945,12 +9998,12 @@ detected</translation>
 <context>
     <name>SystemLoadingState</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemLoadingState.qml" line="11"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemLoadingState.qml" line="11"/>
         <source>Connecting to the system monitor service</source>
         <translation>Connecting to the system monitor service</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemLoadingState.qml" line="35"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemLoadingState.qml" line="35"/>
         <source>Live metrics appear after the first valid snapshot arrives</source>
         <translation>Live metrics appear after the first valid snapshot arrives</translation>
     </message>
@@ -9958,211 +10011,211 @@ detected</translation>
 <context>
     <name>SystemMonitorService</name>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="97"/>
+        <location filename="../Services/SystemMonitorService.qml" line="101"/>
         <source>Connecting</source>
         <translation>Connecting</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="99"/>
+        <location filename="../Services/SystemMonitorService.qml" line="103"/>
         <source>Some sensors cannot be read</source>
         <translation>Some sensors cannot be read</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="99"/>
+        <location filename="../Services/SystemMonitorService.qml" line="103"/>
         <source>Live</source>
         <translation>Live</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="101"/>
+        <location filename="../Services/SystemMonitorService.qml" line="105"/>
         <source>Data is stale</source>
         <translation>Data is stale</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="103"/>
+        <location filename="../Services/SystemMonitorService.qml" line="107"/>
         <source>Reconnecting</source>
         <translation>Reconnecting</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="105"/>
+        <location filename="../Services/SystemMonitorService.qml" line="109"/>
         <source>Service unavailable</source>
         <translation>Service unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="107"/>
+        <location filename="../Services/SystemMonitorService.qml" line="111"/>
         <source>Paused</source>
         <translation>Paused</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="249"/>
+        <location filename="../Services/SystemMonitorService.qml" line="312"/>
         <source>System monitor service unavailable</source>
         <translation>System monitor service unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="250"/>
+        <location filename="../Services/SystemMonitorService.qml" line="313"/>
         <source>The automatic reconnect limit was reached. Check the keytop backend and try again.</source>
         <translation>The automatic reconnect limit was reached. Check the keytop backend and try again.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="259"/>
+        <location filename="../Services/SystemMonitorService.qml" line="322"/>
         <source>Could not start the keytop system monitoring service</source>
         <translation>Could not start the keytop system monitoring service</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="261"/>
+        <location filename="../Services/SystemMonitorService.qml" line="324"/>
         <source>The system monitor data stream was interrupted</source>
         <translation>The system monitor data stream was interrupted</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="292"/>
+        <location filename="../Services/SystemMonitorService.qml" line="355"/>
         <source>keytop was not found or could not be started</source>
         <translation>keytop was not found or could not be started</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="293"/>
+        <location filename="../Services/SystemMonitorService.qml" line="356"/>
         <source>Install the standalone keytop package and try again.</source>
         <translation>Install the standalone keytop package and try again.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="295"/>
-        <location filename="../Services/SystemMonitorService.qml" line="736"/>
+        <location filename="../Services/SystemMonitorService.qml" line="358"/>
+        <location filename="../Services/SystemMonitorService.qml" line="828"/>
         <source>System monitor data has not updated for a long time</source>
         <translation>System monitor data has not updated for a long time</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="296"/>
+        <location filename="../Services/SystemMonitorService.qml" line="359"/>
         <source>The data stream is not producing new snapshots at the expected interval.</source>
         <translation>The data stream is not producing new snapshots at the expected interval.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="299"/>
-        <location filename="../Services/SystemMonitorService.qml" line="722"/>
+        <location filename="../Services/SystemMonitorService.qml" line="362"/>
+        <location filename="../Services/SystemMonitorService.qml" line="814"/>
         <source>The system monitor service did not return its first snapshot</source>
         <translation>The system monitor service did not return its first snapshot</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="300"/>
+        <location filename="../Services/SystemMonitorService.qml" line="363"/>
         <source>keytop started but did not produce JSONL data in time.</source>
         <translation>keytop started but did not produce JSONL data in time.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="302"/>
-        <location filename="../Services/SystemMonitorService.qml" line="520"/>
+        <location filename="../Services/SystemMonitorService.qml" line="365"/>
+        <location filename="../Services/SystemMonitorService.qml" line="598"/>
         <source>keytop keeps producing invalid JSONL</source>
         <translation>keytop keeps producing invalid JSONL</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="303"/>
+        <location filename="../Services/SystemMonitorService.qml" line="366"/>
         <source>Several consecutive lines failed JSON v1 validation.</source>
         <translation>Several consecutive lines failed JSON v1 validation.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="305"/>
+        <location filename="../Services/SystemMonitorService.qml" line="368"/>
         <source>The system monitor data stream exited unexpectedly</source>
         <translation>The system monitor data stream exited unexpectedly</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="306"/>
+        <location filename="../Services/SystemMonitorService.qml" line="369"/>
         <source>keytop exit code: </source>
         <translation>keytop exit code: </translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="306"/>
+        <location filename="../Services/SystemMonitorService.qml" line="369"/>
         <source>keytop did not report an exit code</source>
         <translation>keytop did not report an exit code</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="324"/>
+        <location filename="../Services/SystemMonitorService.qml" line="387"/>
         <source>The top-level JSON value must be an object</source>
         <translation>The top-level JSON value must be an object</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="329"/>
+        <location filename="../Services/SystemMonitorService.qml" line="392"/>
         <source>The timestamp, sequence number, or sampling interval is invalid</source>
         <translation>The timestamp, sequence number, or sampling interval is invalid</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="331"/>
+        <location filename="../Services/SystemMonitorService.qml" line="394"/>
         <source>Missing or invalid CPU data fields</source>
         <translation>Missing or invalid CPU data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="333"/>
+        <location filename="../Services/SystemMonitorService.qml" line="396"/>
         <source>Missing or invalid memory data fields</source>
         <translation>Missing or invalid memory data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="335"/>
+        <location filename="../Services/SystemMonitorService.qml" line="398"/>
         <source>Missing or invalid network data fields</source>
         <translation>Missing or invalid network data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="337"/>
+        <location filename="../Services/SystemMonitorService.qml" line="400"/>
         <source>Missing or invalid GPU data fields</source>
         <translation>Missing or invalid GPU data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="339"/>
+        <location filename="../Services/SystemMonitorService.qml" line="402"/>
         <source>Missing or invalid disk data fields</source>
         <translation>Missing or invalid disk data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="341"/>
+        <location filename="../Services/SystemMonitorService.qml" line="404"/>
         <source>The devices and errors fields must be arrays</source>
         <translation>The devices and errors fields must be arrays</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="504"/>
-        <location filename="../Services/SystemMonitorService.qml" line="556"/>
+        <location filename="../Services/SystemMonitorService.qml" line="582"/>
+        <location filename="../Services/SystemMonitorService.qml" line="648"/>
         <source>keytop does not support the current system monitoring interface</source>
         <translation>keytop does not support the current system monitoring interface</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="516"/>
+        <location filename="../Services/SystemMonitorService.qml" line="594"/>
         <source>Received a corrupt JSONL line</source>
         <translation>Received a corrupt JSONL line</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="518"/>
+        <location filename="../Services/SystemMonitorService.qml" line="596"/>
         <source>Could not parse keytop system monitor data</source>
         <translation>Could not parse keytop system monitor data</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="530"/>
+        <location filename="../Services/SystemMonitorService.qml" line="608"/>
         <source>System monitoring data schema is incompatible</source>
         <translation>System monitoring data schema is incompatible</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="531"/>
+        <location filename="../Services/SystemMonitorService.qml" line="609"/>
         <source>Rebuild keytop (schema v</source>
         <translation>Rebuild keytop (schema v</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="539"/>
+        <location filename="../Services/SystemMonitorService.qml" line="617"/>
         <source>System monitor data returned by keytop is incomplete</source>
         <translation>System monitor data returned by keytop is incomplete</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="618"/>
+        <location filename="../Services/SystemMonitorService.qml" line="710"/>
         <source>keytop is unavailable; install the independent keytop command</source>
         <translation>keytop is unavailable; install the independent keytop command</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="631"/>
+        <location filename="../Services/SystemMonitorService.qml" line="723"/>
         <source>No usable terminal was found, so keytop could not be opened</source>
         <translation>No usable terminal was found, so keytop could not be opened</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="681"/>
+        <location filename="../Services/SystemMonitorService.qml" line="773"/>
         <source>Could not start terminal:</source>
         <translation>Could not start terminal:</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="723"/>
+        <location filename="../Services/SystemMonitorService.qml" line="815"/>
         <source>Restarting the keytop data stream.</source>
         <translation>Restarting the keytop data stream.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="737"/>
+        <location filename="../Services/SystemMonitorService.qml" line="829"/>
         <source>Reconnecting to the keytop data stream.</source>
         <translation>Reconnecting to the keytop data stream.</translation>
     </message>
@@ -10271,27 +10324,27 @@ detected</translation>
 <context>
     <name>SystemUnavailableState</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemUnavailableState.qml" line="12"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemUnavailableState.qml" line="12"/>
         <source>System monitor service unavailable</source>
         <translation>System monitor service unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemUnavailableState.qml" line="13"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemUnavailableState.qml" line="13"/>
         <source>Confirm that key is built and can run in the current environment.</source>
         <translation>Confirm that key is built and can run in the current environment.</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemUnavailableState.qml" line="65"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemUnavailableState.qml" line="65"/>
         <source>Reconnecting to the system monitor service</source>
         <translation>Reconnecting to the system monitor service</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemUnavailableState.qml" line="72"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemUnavailableState.qml" line="72"/>
         <source>Retry</source>
         <translation>Retry</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/drawer/SystemUnavailableState.qml" line="75"/>
+        <location filename="../Modules/Sidebars/Dashboard/drawer/SystemUnavailableState.qml" line="75"/>
         <source>Retry the system monitor connection</source>
         <translation>Retry the system monitor connection</translation>
     </message>
@@ -10312,22 +10365,22 @@ detected</translation>
 <context>
     <name>TaskList</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TaskList.qml" line="16"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TaskList.qml" line="16"/>
         <source>Nothing here yet</source>
         <translation>Nothing here yet</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TaskList.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TaskList.qml" line="85"/>
         <source>Mark unfinished</source>
         <translation>Mark unfinished</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TaskList.qml" line="85"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TaskList.qml" line="85"/>
         <source>Mark complete</source>
         <translation>Mark complete</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TaskList.qml" line="97"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TaskList.qml" line="97"/>
         <source>Delete task</source>
         <translation>Delete task</translation>
     </message>
@@ -10558,12 +10611,12 @@ detected</translation>
 <context>
     <name>TimerWidget</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TimerWidget.qml" line="15"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TimerWidget.qml" line="15"/>
         <source>Pomodoro</source>
         <translation>Pomodoro</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TimerWidget.qml" line="19"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TimerWidget.qml" line="19"/>
         <source>Stopwatch</source>
         <translation>Stopwatch</translation>
     </message>
@@ -10571,43 +10624,43 @@ detected</translation>
 <context>
     <name>TodoWidget</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="22"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="22"/>
         <source>Unfinished</source>
         <translation>Unfinished</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="26"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="26"/>
         <source>Completed</source>
         <translation>Completed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="111"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="111"/>
         <source>Nothing here yet</source>
         <translation>Nothing here yet</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="120"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="120"/>
         <source>Completed tasks will appear here</source>
         <translation>Completed tasks will appear here</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="150"/>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="208"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="150"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="208"/>
         <source>Add task</source>
         <translation>Add task</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="223"/>
         <source>Task description</source>
         <translation>Task description</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="238"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="238"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/infoTools/TodoWidget.qml" line="243"/>
+        <location filename="../Modules/Sidebars/Dashboard/infoTools/TodoWidget.qml" line="243"/>
         <source>Add</source>
         <translation>Add</translation>
     </message>
@@ -10659,7 +10712,7 @@ detected</translation>
 <context>
     <name>UiPreferences</name>
     <message>
-        <location filename="../Services/UiPreferences.qml" line="688"/>
+        <location filename="../Services/UiPreferences.qml" line="687"/>
         <source>Unable to sync the system color scheme</source>
         <translation>Unable to sync the system color scheme</translation>
     </message>
@@ -10723,54 +10776,54 @@ Scroll to adjust; click to open sound</source>
 Scroll to adjust; click to open sound</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="99"/>
+        <location filename="../Services/Volume.qml" line="100"/>
         <source>Unknown audio device</source>
         <translation>Unknown audio device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="105"/>
-        <location filename="../Services/Volume.qml" line="109"/>
+        <location filename="../Services/Volume.qml" line="106"/>
+        <location filename="../Services/Volume.qml" line="110"/>
         <source>Unknown application</source>
         <translation>Unknown application</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="129"/>
+        <location filename="../Services/Volume.qml" line="130"/>
         <source>Audio output device</source>
         <translation>Audio output device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="129"/>
+        <location filename="../Services/Volume.qml" line="130"/>
         <source>Audio input device</source>
         <translation>Audio input device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="142"/>
+        <location filename="../Services/Volume.qml" line="143"/>
         <source>Headphones</source>
         <translation>Headphones</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="150"/>
+        <location filename="../Services/Volume.qml" line="151"/>
         <source>Speakers</source>
         <translation>Speakers</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="204"/>
+        <location filename="../Services/Volume.qml" line="205"/>
         <source>The selected output device is no longer available</source>
         <translation>The selected output device is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="214"/>
+        <location filename="../Services/Volume.qml" line="215"/>
         <source>The selected input device is no longer available</source>
         <translation>The selected input device is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="223"/>
-        <location filename="../Services/Volume.qml" line="238"/>
+        <location filename="../Services/Volume.qml" line="224"/>
+        <location filename="../Services/Volume.qml" line="239"/>
         <source>The audio object is no longer available</source>
         <translation>The audio object is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="227"/>
+        <location filename="../Services/Volume.qml" line="228"/>
         <source>Invalid volume value</source>
         <translation>Invalid volume value</translation>
     </message>
@@ -11181,7 +11234,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WallpaperPaletteSession</name>
     <message>
-        <location filename="../Services/WallpaperPaletteSession.qml" line="105"/>
+        <location filename="../Services/WallpaperPaletteSession.qml" line="112"/>
         <source>Could not save the wallpaper. Try again.</source>
         <translation>Could not save the wallpaper. Try again.</translation>
     </message>
@@ -11254,7 +11307,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherAqiCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAqiCard.qml" line="82"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAqiCard.qml" line="82"/>
         <source>Air quality</source>
         <translation>Air quality</translation>
     </message>
@@ -11262,52 +11315,52 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherAstroCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="95"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="95"/>
         <source>New moon</source>
         <translation>New moon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="97"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="97"/>
         <source>Waxing crescent</source>
         <translation>Waxing crescent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="99"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="99"/>
         <source>First quarter</source>
         <translation>First quarter</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="101"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="101"/>
         <source>Waxing gibbous</source>
         <translation>Waxing gibbous</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="103"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="103"/>
         <source>Full moon</source>
         <translation>Full moon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="105"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="105"/>
         <source>Waning gibbous</source>
         <translation>Waning gibbous</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="107"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="107"/>
         <source>Last quarter</source>
         <translation>Last quarter</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="108"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="108"/>
         <source>Waning crescent</source>
         <translation>Waning crescent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="303"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="312"/>
         <source>Moon</source>
         <translation>Moon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherAstroCard.qml" line="303"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherAstroCard.qml" line="312"/>
         <source>Sun</source>
         <translation>Sun</translation>
     </message>
@@ -11315,7 +11368,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherBlob</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherBlob.qml" line="13"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherBlob.qml" line="13"/>
         <source>UV index</source>
         <translation>UV index</translation>
     </message>
@@ -11496,12 +11549,12 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherHumidityCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherHumidityCard.qml" line="116"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherHumidityCard.qml" line="116"/>
         <source>Relative humidity</source>
         <translation>Relative humidity</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherHumidityCard.qml" line="191"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherHumidityCard.qml" line="191"/>
         <source>Dew point</source>
         <translation>Dew point</translation>
     </message>
@@ -11598,62 +11651,62 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherMetricTrendPane</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="40"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="40"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="40"/>
         <source>Alert level</source>
         <translation>Alert level</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="53"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="53"/>
         <source>Yesterday</source>
         <translation>Yesterday</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="56"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="56"/>
         <source>Today</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="59"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="59"/>
         <source>Tomorrow</source>
         <translation>Tomorrow</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Sun</source>
         <translation>Sun</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Mon</source>
         <translation>Mon</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Tue</source>
         <translation>Tue</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Wed</source>
         <translation>Wed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Thu</source>
         <translation>Thu</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Fri</source>
         <translation>Fri</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherMetricTrendPane.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherMetricTrendPane.qml" line="64"/>
         <source>Sat</source>
         <translation>Sat</translation>
     </message>
@@ -11743,38 +11796,38 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherPrecipitationCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="53"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="53"/>
         <source>millimeters</source>
         <translation>millimeters</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="55"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="55"/>
         <source>centimeters</source>
         <translation>centimeters</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="63"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="63"/>
         <source>Total rainfall</source>
         <translation>Total rainfall</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="63"/>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="63"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="64"/>
         <source>Precipitation</source>
         <translation>Precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="64"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="64"/>
         <source>Total precipitation</source>
         <translation>Total precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="65"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="65"/>
         <source>Total</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPrecipitationCard.qml" line="113"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPrecipitationCard.qml" line="122"/>
         <source>Precipitation amount</source>
         <translation>Precipitation amount</translation>
     </message>
@@ -11782,7 +11835,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherPressureCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherPressureCard.qml" line="100"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherPressureCard.qml" line="100"/>
         <source>Pressure</source>
         <translation>Pressure</translation>
     </message>
@@ -11876,12 +11929,12 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherTemperatureNormalLine</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="14"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherTemperatureNormalLine.qml" line="14"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherTemperatureNormalLine.qml" line="24"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherTemperatureNormalLine.qml" line="24"/>
         <source>1991–2020 climate normal</source>
         <translation>1991–2020 climate normal</translation>
     </message>
@@ -11889,7 +11942,7 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherUvCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherUvCard.qml" line="17"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherUvCard.qml" line="17"/>
         <source>UV index</source>
         <translation>UV index</translation>
     </message>
@@ -11897,194 +11950,194 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherView</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="79"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="79"/>
         <source>Refreshing</source>
         <translation>Refreshing</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="83"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="83"/>
         <source>Updated </source>
         <translation>Updated </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="86"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="86"/>
         <source>Data is old</source>
         <translation>Data is old</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="89"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="89"/>
         <source>Update failed</source>
         <translation>Update failed</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="91"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="91"/>
         <source>Update pending</source>
         <translation>Update pending</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="96"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="96"/>
         <source>Today</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="99"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="99"/>
         <source>Tomorrow</source>
         <translation>Tomorrow</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="109"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="109"/>
         <source>Low</source>
         <translation>Low</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="112"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="112"/>
         <source>Moderate</source>
         <translation>Moderate</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="115"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="115"/>
         <source>High</source>
         <translation>High</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="118"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="118"/>
         <source>Very high</source>
         <translation>Very high</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="120"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="120"/>
         <source>Extreme</source>
         <translation>Extreme</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="223"/>
         <source>Total daytime snowfall</source>
         <translation>Total daytime snowfall</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="223"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="223"/>
         <source>Total nighttime snowfall</source>
         <translation>Total nighttime snowfall</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="226"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="226"/>
         <source>Total daytime rainfall</source>
         <translation>Total daytime rainfall</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="226"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="226"/>
         <source>Total nighttime rainfall</source>
         <translation>Total nighttime rainfall</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="229"/>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="231"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="229"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="231"/>
         <source>Total daytime precipitation</source>
         <translation>Total daytime precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="229"/>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="231"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="229"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="231"/>
         <source>Total nighttime precipitation</source>
         <translation>Total nighttime precipitation</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="244"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="244"/>
         <source>Crystal clear</source>
         <translation>Crystal clear</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="247"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="247"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="250"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="250"/>
         <source>Good visibility</source>
         <translation>Good visibility</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="253"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="253"/>
         <source>Hazy</source>
         <translation>Hazy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="256"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="256"/>
         <source>Low visibility</source>
         <translation>Low visibility</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="258"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="258"/>
         <source>Dense fog</source>
         <translation>Dense fog</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="307"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="307"/>
         <source>Excellent</source>
         <translation>Excellent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="307"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="307"/>
         <source>Good</source>
         <translation>Good</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="307"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="307"/>
         <source>Poor</source>
         <translation>Poor</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="307"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="307"/>
         <source>Unhealthy</source>
         <translation>Unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="307"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="307"/>
         <source>Very unhealthy</source>
         <translation>Very unhealthy</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="308"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="308"/>
         <source>Hazardous</source>
         <translation>Hazardous</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="466"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="466"/>
         <source>Weather</source>
         <translation>Weather</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="482"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="482"/>
         <source>Edit weather location</source>
         <translation>Edit weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="497"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="497"/>
         <source>Refresh weather</source>
         <translation>Refresh weather</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="571"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="571"/>
         <source>Unknown</source>
         <translation>Unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="618"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="618"/>
         <source>Feels like: </source>
         <translation>Feels like: </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="628"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="628"/>
         <source>High </source>
         <translation>High </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="628"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="628"/>
         <source> · Low </source>
         <translation> · Low </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherView.qml" line="702"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherView.qml" line="702"/>
         <source>Gusts </source>
         <translation>Gusts </translation>
     </message>
@@ -12092,47 +12145,47 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherVisibilityCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="38"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="38"/>
         <source>kilometers</source>
         <translation>kilometers</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="38"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="38"/>
         <source>meters</source>
         <translation>meters</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="45"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="45"/>
         <source>Very poor</source>
         <translation>Very poor</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="47"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="47"/>
         <source>Poor</source>
         <translation>Poor</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="49"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="49"/>
         <source>Moderate</source>
         <translation>Moderate</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="51"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="51"/>
         <source>Good</source>
         <translation>Good</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="53"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="53"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="54"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="54"/>
         <source>Excellent</source>
         <translation>Excellent</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherVisibilityCard.qml" line="113"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherVisibilityCard.qml" line="113"/>
         <source>Visibility</source>
         <translation>Visibility</translation>
     </message>
@@ -12140,19 +12193,19 @@ Scroll to adjust; click to open sound</translation>
 <context>
     <name>WeatherWindCard</name>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherWindCard.qml" line="72"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherWindCard.qml" line="72"/>
         <source>Gusts </source>
         <translation>Gusts </translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherWindCard.qml" line="73"/>
-        <location filename="../Modules/Sidebars/Left/WeatherWindCard.qml" line="74"/>
-        <location filename="../Modules/Sidebars/Left/WeatherWindCard.qml" line="75"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherWindCard.qml" line="73"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherWindCard.qml" line="74"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherWindCard.qml" line="75"/>
         <source>Gusts:</source>
         <translation>Gusts:</translation>
     </message>
     <message>
-        <location filename="../Modules/Sidebars/Left/WeatherWindCard.qml" line="162"/>
+        <location filename="../Modules/Sidebars/Dashboard/WeatherWindCard.qml" line="162"/>
         <source>Wind</source>
         <translation>Wind</translation>
     </message>
@@ -12196,130 +12249,85 @@ Windows: </translation>
 <context>
     <name>ZenPaletteEditor</name>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="33"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
         <source>Single color</source>
         <translation>Single color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="34"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="35"/>
         <source>Complementary</source>
         <translation>Complementary</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="35"/>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
         <source>Analogous</source>
         <translation>Analogous</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="36"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="37"/>
         <source>Split complementary</source>
         <translation>Split complementary</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="38"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="39"/>
         <source>Triadic</source>
         <translation>Triadic</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="144"/>
         <source>Primary color</source>
         <translation>Primary color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="143"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="144"/>
         <source>Color %1</source>
         <translation>Color %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="194"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="195"/>
         <source>Add color</source>
         <translation>Add color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="201"/>
         <source>Remove color</source>
         <translation>Remove color</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="221"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="222"/>
         <source>Previous presets</source>
         <translation>Previous presets</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="290"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="322"/>
         <source>Next presets</source>
         <translation>Next presets</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="285"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="313"/>
         <source>Preset %1</source>
         <translation>Preset %1</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="305"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="337"/>
         <source>Opacity</source>
         <translation>Opacity</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="357"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="428"/>
         <source>Opacity: %1%</source>
         <translation>Opacity: %1%</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="365"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="436"/>
         <source>Grain</source>
         <translation>Grain</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="440"/>
+        <location filename="../Modules/ControlCenter/ZenPaletteEditor.qml" line="540"/>
         <source>Grain: %1%</source>
         <translation>Grain: %1%</translation>
-    </message>
-</context>
-<context>
-    <name>NightModeContent</name>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="11"/>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="47"/>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="51"/>
-        <source>Night Mode</source>
-        <translation>Night Mode</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="32"/>
-        <source>The compositor does not provide Gamma control</source>
-        <translation>The compositor does not provide Gamma control</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="56"/>
-        <source>Night temperature</source>
-        <translation>Night temperature</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="68"/>
-        <source>Scheduled temperature</source>
-        <translation>Scheduled temperature</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="71"/>
-        <source>%1 K</source>
-        <translation>%1 K</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="84"/>
-        <source>Gamma</source>
-        <translation>Gamma</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="93"/>
-        <source>Contrast</source>
-        <translation>Contrast</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Sidebars/Right/NightModeContent.qml" line="115"/>
-        <source>Gamma control unavailable: %1</source>
-        <translation>Gamma control unavailable: %1</translation>
     </message>
 </context>
 </TS>

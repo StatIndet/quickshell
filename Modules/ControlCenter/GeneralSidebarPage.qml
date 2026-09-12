@@ -120,8 +120,48 @@ StyledFlickable {
         SettingsSection {
             Layout.fillWidth: true
             flat: true
-            title: qsTr("Desktop cards")
-            iconName: "dashboard_customize"
+            title: qsTr("Sidebars")
+            iconName: "side_navigation"
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("Dashboard sidebar position")
+                iconName: "dashboard"
+                trailing: StyledButtonGroup {
+                    model: [
+                        {
+                            value: "left",
+                            label: qsTr("Left")
+                        },
+                        {
+                            value: "right",
+                            label: qsTr("Right")
+                        }
+                    ]
+                    currentValue: PersonalizationConfig.dashboardSidebarSide
+                    onValueSelected: value => PersonalizationConfig.setDashboardSidebarSide(value)
+                }
+            }
+
+            SettingsRow {
+                Layout.fillWidth: true
+                title: qsTr("Quick settings sidebar position")
+                iconName: "tune"
+                trailing: StyledButtonGroup {
+                    model: [
+                        {
+                            value: "left",
+                            label: qsTr("Left")
+                        },
+                        {
+                            value: "right",
+                            label: qsTr("Right")
+                        }
+                    ]
+                    currentValue: PersonalizationConfig.quickSettingsSidebarSide
+                    onValueSelected: value => PersonalizationConfig.setQuickSettingsSidebarSide(value)
+                }
+            }
 
             SettingsRow {
                 Layout.fillWidth: true

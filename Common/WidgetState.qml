@@ -1,26 +1,28 @@
-import QtQuick
 pragma Singleton
+import QtQuick
 
 QtObject {
     id: root
 
-    property bool qsOpen: false
-    property string qsView: "settings"
-    property string qsScreenName: ""
-    property bool leftSidebarOpen: false
-    property string leftSidebarView: "info"
+    property bool quickSettingsOpen: false
+    property string quickSettingsView: "settings"
+    property string quickSettingsScreenName: ""
+    property bool dashboardSidebarOpen: false
+    property string dashboardSidebarView: "info"
 
-    signal transientSurfacesDismissRequested()
+    // The shared host owns both panels on the same retained output.
+    property string sidebarScreenName: ""
+
+    signal transientSurfacesDismissRequested
 
     function closeAllPopups() {
-        qsOpen = false;
-        leftSidebarOpen = false;
+        quickSettingsOpen = false;
+        dashboardSidebarOpen = false;
         transientSurfacesDismissRequested();
     }
 
-    onQsOpenChanged: {
-        if (!qsOpen)
-            qsScreenName = "";
-
+    onQuickSettingsOpenChanged: {
+        if (!quickSettingsOpen)
+            quickSettingsScreenName = "";
     }
 }

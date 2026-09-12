@@ -31,8 +31,8 @@ DEFAULT_BINDINGS = (
     ('Mod+Shift+Space', 'spotlight', 'web'),
     ('Mod+Alt+V', 'spotlight', 'openMode', 'clipboard'),
     ('Mod+Alt+W', 'spotlight', 'openMode', 'wallpapers'),
-    ('Mod+N', 'sidebar', 'toggle', 'left'),
-    ('Mod+A', 'sidebar', 'toggle', 'right'),
+    ('Mod+N', 'sidebar', 'toggle', 'dashboard'),
+    ('Mod+A', 'sidebar', 'toggle', 'quicksettings'),
     ('Mod+Ctrl+Comma', 'control-center', 'toggle', 'general'),
     ('Mod+Shift+W', 'keystone', 'hub'),
     ('Mod+Shift+T', 'keystone', 'tools'),
@@ -303,6 +303,10 @@ def action_identity(action):
         entries = json.loads((Path(__file__).parent / 'niri-actions.json').read_text())
         if any(e.get('target') == action.args[3] and e.get('method') == action.args[4] for e in entries) if len(action.args) >= 5 else False:
             action.args = ['qs', '-c', 'clavis', 'ipc', 'call'] + action.args[3:]
+    if (action.name == 'spawn' and len(action.args) == 8
+            and action.args[:6] == ['qs', '-c', 'clavis', 'ipc', 'call', 'sidebar']
+            and action.args[6] in ('open', 'close', 'toggle')):
+        action.args[7] = {'left': 'dashboard', 'right': 'quicksettings'}.get(action.args[7], action.args[7])
     return canonical(action)
 
 

@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Clavis.Niri
 import qs.Common
+import "../Common/SidebarPolicy.js" as SidebarPolicy
 import qs.Services
 import "../Common/functions/WallpaperMath.js" as WallpaperMath
 
@@ -156,23 +157,28 @@ Singleton {
                 return WallpaperMath.focusedColumnProgress(horizontalColumns, focusedHorizontalColumn,
                                                            PersonalizationConfig.parallaxTiledColumnSpan);
             }
-            readonly property bool leftSidebarOnThisScreen: WidgetState.leftSidebarOpen
-                                                            && Brightness.activeScreen
-                                                            && Brightness.activeScreen.name === screenName
-            readonly property string rightSidebarScreenName: WidgetState.qsScreenName !== ""
-                                                             ? WidgetState.qsScreenName : (
-                                                                   Brightness.activeScreen
-                                                                   ? Brightness.activeScreen.name : "")
-            readonly property bool rightSidebarOnThisScreen: WidgetState.qsOpen && rightSidebarScreenName
-                                                             === screenName
+            readonly property bool dashboardSidebarOnThisScreen: WidgetState.dashboardSidebarOpen
+                                                                 && WidgetState.sidebarScreenName
+                                                                 === screenName
+            readonly property bool quickSettingsSidebarOnThisScreen: WidgetState.quickSettingsOpen
+                                                                     && WidgetState.sidebarScreenName
+                                                                     === screenName
+            readonly property bool leftEdgeOpen: SidebarPolicy.edgeOpen("left", dashboardSidebarOnThisScreen,
+                                                                        quickSettingsSidebarOnThisScreen,
+                                                                        PersonalizationConfig.dashboardSidebarSide,
+                                                                        PersonalizationConfig.quickSettingsSidebarSide)
+            readonly property bool rightEdgeOpen: SidebarPolicy.edgeOpen("right", dashboardSidebarOnThisScreen,
+                                                                         quickSettingsSidebarOnThisScreen,
+                                                                         PersonalizationConfig.dashboardSidebarSide,
+                                                                         PersonalizationConfig.quickSettingsSidebarSide)
             readonly property real sidebarStep: PersonalizationConfig.parallaxPreferredScale / Math.max(2,
                                                                                                         PersonalizationConfig.parallaxTiledColumnSpan)
                                                 / 2
             readonly property real horizontalProgress: WallpaperMath.horizontalProgress(tiledProgress,
                                                                                         PersonalizationConfig.parallaxFollowSidebars
-                                                                                        && leftSidebarOnThisScreen,
+                                                                                        && leftEdgeOpen,
                                                                                         PersonalizationConfig.parallaxFollowSidebars
-                                                                                        && rightSidebarOnThisScreen,
+                                                                                        && rightEdgeOpen,
                                                                                         sidebarStep)
             property real panoramaHorizontalProgress: horizontalProgress
             readonly property real verticalProgress: {

@@ -3,7 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Common
 import qs.Components
-import qs.Modules.Sidebars.Left.notifications as NotificationComponents
+import qs.Modules.Sidebars.Dashboard.notifications as NotificationComponents
 import qs.Services
 import qs.Widgets.common
 

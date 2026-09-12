@@ -145,6 +145,18 @@ class ConfigurationContracts(unittest.TestCase):
         self.assertEqual(config.key_identity('Control+Mod5+F1'), config.key_identity('ctrl+ISO_Level3_Shift+F1'))
         self.assertNotEqual(config.action_identity(config.parse('focus-workspace 1').nodes[0]), config.action_identity(config.parse('focus-workspace "1"').nodes[0]))
 
+    def test_sidebar_content_targets_preserve_legacy_shortcuts(self):
+        for old, role in [('left', 'dashboard'), ('right', 'quicksettings')]:
+            for method in ['open', 'close', 'toggle']:
+                modern = f'spawn "qs" "-c" "clavis" "ipc" "call" "sidebar" "{method}" "{role}"'
+                expected = config.action_identity(config.parse(modern).nodes[0])
+                for prefix in ['"qs" "-c" "clavis" "ipc" "call"', '"key" "ipc" "call"']:
+                    legacy = f'spawn {prefix} "sidebar" "{method}" "{old}"'
+                    self.assertEqual(config.action_identity(config.parse(legacy).nodes[0]), expected)
+        self.assertNotEqual(
+            config.action_identity(config.parse('spawn "qs" "-c" "clavis" "ipc" "call" "sidebar" "toggle" "dashboard"').nodes[0]),
+            config.action_identity(config.parse('spawn "qs" "-c" "clavis" "ipc" "call" "sidebar" "toggle" "quicksettings"').nodes[0]))
+
     def test_setup_preserves_crlf_and_unrelated_missing_include(self):
         original = b'// user formatting\r\ninput { }\r\n'
         self.main.write_bytes(original)

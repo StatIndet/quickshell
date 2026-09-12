@@ -14,8 +14,8 @@ Singleton {
     readonly property string notificationsDir: Paths.stateHome + "/notifications"
     readonly property string filePath: notificationsDir + "/notifications.json"
     readonly property bool silent: UiPreferences.dndEnabled
-    readonly property bool popupInhibited: silent || (WidgetState.leftSidebarOpen
-                                                      && WidgetState.leftSidebarView === "info")
+    readonly property bool popupInhibited: silent || (WidgetState.dashboardSidebarOpen
+                                                      && WidgetState.dashboardSidebarView === "info")
     readonly property bool hasNotifs: popupList.length > 0
 
     property bool historyReady: false

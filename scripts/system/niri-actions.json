@@ -1335,25 +1335,25 @@
     "id": "clavis:sidebar:open",
     "category": "clavis",
     "name": "Sidebar: open",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"<side>\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"<target>\"",
     "parameters": true,
     "target": "sidebar",
     "method": "open"
   },
   {
-    "id": "clavis:sidebar:open:left",
+    "id": "clavis:sidebar:open:dashboard",
     "category": "clavis",
     "name": "Notifications: open",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"left\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"dashboard\"",
     "parameters": false,
     "target": "sidebar",
     "method": "open"
   },
   {
-    "id": "clavis:sidebar:open:right",
+    "id": "clavis:sidebar:open:quicksettings",
     "category": "clavis",
     "name": "Quick settings: open",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"right\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"open\" \"quicksettings\"",
     "parameters": false,
     "target": "sidebar",
     "method": "open"
@@ -1362,25 +1362,25 @@
     "id": "clavis:sidebar:close",
     "category": "clavis",
     "name": "Sidebar: close",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"<side>\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"<target>\"",
     "parameters": true,
     "target": "sidebar",
     "method": "close"
   },
   {
-    "id": "clavis:sidebar:close:left",
+    "id": "clavis:sidebar:close:dashboard",
     "category": "clavis",
     "name": "Notifications: close",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"left\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"dashboard\"",
     "parameters": false,
     "target": "sidebar",
     "method": "close"
   },
   {
-    "id": "clavis:sidebar:close:right",
+    "id": "clavis:sidebar:close:quicksettings",
     "category": "clavis",
     "name": "Quick settings: close",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"right\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"close\" \"quicksettings\"",
     "parameters": false,
     "target": "sidebar",
     "method": "close"
@@ -1389,25 +1389,25 @@
     "id": "clavis:sidebar:toggle",
     "category": "clavis",
     "name": "Sidebar: toggle",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"<side>\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"<target>\"",
     "parameters": true,
     "target": "sidebar",
     "method": "toggle"
   },
   {
-    "id": "clavis:sidebar:toggle:left",
+    "id": "clavis:sidebar:toggle:dashboard",
     "category": "clavis",
     "name": "Notifications: toggle",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"left\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"dashboard\"",
     "parameters": false,
     "target": "sidebar",
     "method": "toggle"
   },
   {
-    "id": "clavis:sidebar:toggle:right",
+    "id": "clavis:sidebar:toggle:quicksettings",
     "category": "clavis",
     "name": "Quick settings: toggle",
-    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"right\"",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"sidebar\" \"toggle\" \"quicksettings\"",
     "parameters": false,
     "target": "sidebar",
     "method": "toggle"
