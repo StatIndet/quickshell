@@ -1,0 +1,98 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit, branch or tag to release (ignored for AUR retry)
+        default: main
+        required: true
+      retry_tag:
+        description: Existing published date tag; retry AUR only, without rebuilding
+        required: false
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  build:
+    if: inputs.retry_tag == ''
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    timeout-minutes: 60
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    env:
+      CLAVIS_CI_CONTAINER: '1'
+    steps:
+      - name: Bootstrap disposable Arch container
+        run: pacman -Syu --needed --noconfirm git python sudo
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Create the local release commit
+        id: version
+        run: |
+          version=$(python3 scripts/release.py next-version)
+          python3 scripts/release.py stamp "$version"
+          version_file=$(python3 -c 'import json; print(json.load(open("packaging/dependencies.json"))["versionFile"])')
+          git add -- "$version_file"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit --allow-empty -m "Release v$version"
+          git tag "v$version"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+      - name: Independent checks and package build
+        run: scripts/ci/arch.sh
+      - name: Export the tested release commit
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: git bundle create .packaging/release.bundle "refs/tags/$RELEASE_TAG"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release
+          include-hidden-files: true
+          path: |
+            .packaging/release.bundle
+            .packaging/release/*.tar.gz
+            .packaging/release/*.whl
+            .packaging/release/PKGBUILD
+            .packaging/release/.SRCINFO
+            .packaging/release/*.install
+            .packaging/release/*.hook
+            .packaging/release/install-arch.sh
+            .packaging/release/SHA256SUMS
+      - name: Keep failed check logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-logs
+          path: |
+            /tmp/clavis-check.*/*.log
+            build/Testing/Temporary/LastTest.log
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (needs.build.result == 'success' || inputs.retry_tag != '') }}
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        if: inputs.retry_tag == ''
+        with:
+          name: release
+          path: .packaging
+      - name: Publish assets and synchronize AUR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.retry_tag || needs.build.outputs.tag }}
+          RETRY_AUR: ${{ inputs.retry_tag != '' }}
+          AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          AUR_KNOWN_HOSTS: ${{ vars.AUR_KNOWN_HOSTS }}
+          AUR_GIT_NAME: ${{ vars.AUR_GIT_NAME }}
+          AUR_GIT_EMAIL: ${{ vars.AUR_GIT_EMAIL }}
+        run: scripts/ci/publish.sh

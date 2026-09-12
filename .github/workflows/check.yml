@@ -1,0 +1,38 @@
+name: Check
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  arch:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    timeout-minutes: 60
+    env:
+      CLAVIS_CI_CONTAINER: '1'
+    steps:
+      - name: Bootstrap disposable Arch container
+        run: pacman -Syu --needed --noconfirm git python sudo
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Independent checks and package build
+        run: scripts/ci/arch.sh
+      - name: Keep package metadata and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: arch-check
+          include-hidden-files: true
+          path: |
+            .packaging/release/PKGBUILD
+            .packaging/release/.SRCINFO
+            .packaging/release/SHA256SUMS
+            /tmp/clavis-check.*/*.log
+            build/Testing/Temporary/LastTest.log

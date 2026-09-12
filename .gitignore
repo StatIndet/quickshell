@@ -49,3 +49,6 @@ core/**/meta_types/
 *.tmp
 *.bak
 *~
+
+# Local packaging and CI artifacts
+.packaging/

@@ -1,6 +1,6 @@
 [Unit]
 Description=Clavis Shell
-Documentation=https://github.com/archirithm/Clavis
+Documentation=https://github.com/StatIndet/quickshell
 Requisite=niri.service
 PartOf=niri.service
 After=niri.service

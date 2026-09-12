@@ -146,3 +146,6 @@ add_test(NAME display_preview_contracts COMMAND ${Python3_EXECUTABLE} ${CLAVIS_S
 qt_add_executable(niri_ipc_async_tests niri_ipc_async_test.cpp)
 target_link_libraries(niri_ipc_async_tests PRIVATE ClavisNiriCore Qt6::Core Qt6::Network Qt6::Test)
 add_test(NAME niri_ipc_async_tests COMMAND niri_ipc_async_tests)
+
+add_test(NAME release_contracts COMMAND ${Python3_EXECUTABLE} ${CLAVIS_SOURCE_ROOT}/tests/test_release.py)
+add_test(NAME installer_contracts COMMAND ${Python3_EXECUTABLE} ${CLAVIS_SOURCE_ROOT}/tests/test_installer.py)

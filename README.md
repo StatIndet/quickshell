@@ -199,6 +199,17 @@ Clavis takes inspiration from and integrates ideas or components from projects i
 
 Third-party license notices are kept in [`licenses/`](licenses/).
 
+
+## Arch packages and date releases
+
+Arch x86_64 packaging and GitHub Actions release workflows are included. Versions use
+`2026.9.12` (tag `v2026.9.12`), with `.1`, `.2` for further releases on the same day.
+See [release setup and AUR publishing](docs/releasing.md) and the
+[dependency inventory](docs/dependencies.md). Each repository remains independently buildable.
+
+The [Arch one-command installer](docs/installation.md) installs the full dependency profile
+and asks separately about keyboard access, keytop capabilities and Niri user services.
+
 ## License
 
 See [LICENSE](LICENSE).

@@ -4,7 +4,7 @@ Clavis Shell 使用标准 CMake 安装，不维护应用内版本管理器：
 
 ```text
 /etc/xdg/quickshell/clavis/       QML 源码、assets、scripts、matugen
-/lib/qt6/qml/Clavis/              Clavis 原生 QML modules
+/usr/lib/qt6/qml/Clavis/              Clavis 原生 QML modules
 /usr/lib/systemd/user/            Clavis 自己的 clavis-shell.service
 ```
 
@@ -28,3 +28,7 @@ Matugen 内置 registry 与模板继续由 `core/CMakeLists.txt` 安装至
 路径。用户 registry 是独立的 `$CLAVIS_CONFIG_HOME/matugen/`；安装不会创建或写入
 任何用户 HOME，也不会复制内置模板作为用户 defaults。新增脚本与 jq 解析文件由现有
 scripts 目录安装规则自动包含，无需新的原生 plugin 或 Python 运行时。
+
+Arch 打包显式使用 `/usr` prefix 和 `/etc/xdg/quickshell/clavis` 配置目的地。
+天气 SVG/Lottie 来自固定校验值的完整 release source；不依赖开发机的 ignored assets。
+发布、CI、开发检查和安装器工具不安装到 shell 的运行 scripts 目录。

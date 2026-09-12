@@ -1,0 +1,619 @@
+{
+  "name": "clavis-shell",
+  "repository": "StatIndet/quickshell",
+  "versionFile": "VERSION",
+  "arch": "x86_64",
+  "sourceRoots": [
+    "VERSION",
+    "CMakeLists.txt",
+    "core",
+    "Common",
+    "Components",
+    "Modules",
+    "Services",
+    "Widgets",
+    "AppShell.qml",
+    "shell.qml",
+    "assets",
+    "i18n",
+    "matugen",
+    "scripts",
+    "tests",
+    "packaging",
+    "docs",
+    "licenses",
+    "LICENSE",
+    "README.md",
+    "AGENTS.md",
+    ".clang-format",
+    ".qmlformat.ini",
+    "install.sh"
+  ],
+  "build": [
+    {
+      "package": "cmake",
+      "purpose": "Native configuration",
+      "defaultInstall": true
+    },
+    {
+      "package": "ninja",
+      "purpose": "Native build",
+      "defaultInstall": true
+    },
+    {
+      "package": "pkgconf",
+      "purpose": "Native dependency discovery",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-base>=6.8",
+      "purpose": "Native Qt Core, GUI and DBus",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-declarative",
+      "purpose": "Native QML modules",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-wayland",
+      "purpose": "Gamma protocol client",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-shadertools",
+      "purpose": "Shader compiler",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-tools",
+      "purpose": "LinguistTools",
+      "defaultInstall": true
+    },
+    {
+      "package": "qtkeychain-qt6",
+      "purpose": "Keychain headers",
+      "defaultInstall": true
+    },
+    {
+      "package": "libpipewire",
+      "purpose": "PipeWire headers",
+      "defaultInstall": true
+    },
+    {
+      "package": "libcava",
+      "purpose": "Cava headers and shared library",
+      "defaultInstall": true,
+      "aur": "libcava"
+    },
+    {
+      "package": "systemd-libs",
+      "purpose": "libudev headers",
+      "defaultInstall": true
+    },
+    {
+      "package": "libxkbcommon",
+      "purpose": "Keyboard headers",
+      "defaultInstall": true
+    }
+  ],
+  "check": [
+    {
+      "package": "python",
+      "purpose": "Script contract tests",
+      "defaultInstall": true
+    },
+    {
+      "package": "jq",
+      "purpose": "Matugen tests",
+      "defaultInstall": true
+    },
+    {
+      "package": "matugen",
+      "purpose": "Matugen tests",
+      "defaultInstall": true
+    },
+    {
+      "package": "git",
+      "purpose": "Isolated source archive contract fixtures",
+      "defaultInstall": true
+    }
+  ],
+  "ci": [
+    {
+      "package": "clang",
+      "purpose": "C++ formatting",
+      "defaultInstall": true
+    },
+    {
+      "package": "shellcheck",
+      "purpose": "Shell quality checks",
+      "defaultInstall": true
+    },
+    {
+      "package": "python",
+      "purpose": "Release tooling",
+      "defaultInstall": true
+    },
+    {
+      "package": "git",
+      "purpose": "Source version and diff checks",
+      "defaultInstall": true
+    },
+    {
+      "package": "quickshell",
+      "purpose": "QML shell runtime; validated baseline 0.3.1",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-base>=6.8",
+      "purpose": "Core, GUI, network and DBus",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-declarative",
+      "purpose": "Qt Quick and QML",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-svg",
+      "purpose": "SVG icons",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-wayland",
+      "purpose": "Wayland client and gamma control",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-5compat",
+      "purpose": "GraphicalEffects",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-lottie",
+      "purpose": "Qt.labs.lottieqt weather animation",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-location",
+      "purpose": "QtLocation maps",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-positioning",
+      "purpose": "Geographic coordinates",
+      "defaultInstall": true
+    },
+    {
+      "package": "maplibre-native-qt",
+      "purpose": "MapLibre 3.0 and maplibre location plugin",
+      "defaultInstall": true
+    },
+    {
+      "package": "qtkeychain-qt6",
+      "purpose": "Weather map credential storage",
+      "defaultInstall": true
+    },
+    {
+      "package": "libpipewire",
+      "purpose": "Live audio capture",
+      "defaultInstall": true
+    },
+    {
+      "package": "libcava",
+      "purpose": "Cava shared library, not the cava executable",
+      "defaultInstall": true,
+      "aur": "libcava"
+    },
+    {
+      "package": "systemd-libs",
+      "purpose": "libudev device notifications",
+      "defaultInstall": true
+    },
+    {
+      "package": "libxkbcommon",
+      "purpose": "Shortcut key names",
+      "defaultInstall": true
+    },
+    {
+      "package": "qt6-m3shapes-git",
+      "purpose": "External M3Shapes QML plugin",
+      "defaultInstall": true,
+      "aur": "qt6-m3shapes-git"
+    },
+    {
+      "package": "ttf-material-symbols-variable",
+      "purpose": "Material Symbols Rounded and Outlined",
+      "defaultInstall": true
+    },
+    {
+      "package": "bash",
+      "purpose": "Runtime shell scripts",
+      "defaultInstall": true
+    },
+    {
+      "package": "python",
+      "purpose": "Niri configuration tools; vendored kdl parser",
+      "defaultInstall": true
+    },
+    {
+      "package": "coreutils",
+      "purpose": "File operations and timeout",
+      "defaultInstall": true
+    },
+    {
+      "package": "findutils",
+      "purpose": "Wallpaper discovery",
+      "defaultInstall": true
+    },
+    {
+      "package": "util-linux",
+      "purpose": "flock for Matugen registry",
+      "defaultInstall": true
+    },
+    {
+      "package": "which",
+      "purpose": "External program discovery",
+      "defaultInstall": true
+    },
+    {
+      "package": "jq",
+      "purpose": "Matugen registry JSON",
+      "defaultInstall": true
+    },
+    {
+      "package": "matugen",
+      "purpose": "Material theme generation",
+      "defaultInstall": true
+    },
+    {
+      "package": "xdg-utils",
+      "purpose": "Application defaults and opening URLs",
+      "defaultInstall": true
+    },
+    {
+      "package": "glib2",
+      "purpose": "GSettings and gio",
+      "defaultInstall": true
+    },
+    {
+      "package": "libnotify",
+      "purpose": "Desktop notifications",
+      "defaultInstall": true
+    },
+    {
+      "package": "actionlint",
+      "purpose": "GitHub Actions workflow validation",
+      "defaultInstall": false
+    }
+  ],
+  "packages": {
+    "clavis-shell": {
+      "runtime": [
+        {
+          "package": "quickshell",
+          "purpose": "QML shell runtime; validated baseline 0.3.1",
+          "defaultInstall": true
+        },
+        {
+          "package": "niri",
+          "purpose": "Wayland compositor and session lifecycle",
+          "defaultInstall": true
+        },
+        {
+          "package": "key-cli>=2026.9.12",
+          "purpose": "Shell lifecycle, recording, clipboard and keyboard protocol v1",
+          "defaultInstall": true,
+          "aur": "key-cli"
+        },
+        {
+          "package": "keytop>=2026.9.12",
+          "purpose": "JSONL system metrics protocol v1",
+          "defaultInstall": true,
+          "aur": "keytop"
+        },
+        {
+          "package": "qt6-base>=6.8",
+          "purpose": "Core, GUI, network and DBus",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-declarative",
+          "purpose": "Qt Quick and QML",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-svg",
+          "purpose": "SVG icons",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-wayland",
+          "purpose": "Wayland client and gamma control",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-5compat",
+          "purpose": "GraphicalEffects",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-lottie",
+          "purpose": "Qt.labs.lottieqt weather animation",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-location",
+          "purpose": "QtLocation maps",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-positioning",
+          "purpose": "Geographic coordinates",
+          "defaultInstall": true
+        },
+        {
+          "package": "maplibre-native-qt",
+          "purpose": "MapLibre 3.0 and maplibre location plugin",
+          "defaultInstall": true
+        },
+        {
+          "package": "qtkeychain-qt6",
+          "purpose": "Weather map credential storage",
+          "defaultInstall": true
+        },
+        {
+          "package": "libpipewire",
+          "purpose": "Live audio capture",
+          "defaultInstall": true
+        },
+        {
+          "package": "libcava",
+          "purpose": "Cava shared library, not the cava executable",
+          "defaultInstall": true,
+          "aur": "libcava"
+        },
+        {
+          "package": "systemd-libs",
+          "purpose": "libudev device notifications",
+          "defaultInstall": true
+        },
+        {
+          "package": "libxkbcommon",
+          "purpose": "Shortcut key names",
+          "defaultInstall": true
+        },
+        {
+          "package": "qt6-m3shapes-git",
+          "purpose": "External M3Shapes QML plugin",
+          "defaultInstall": true,
+          "aur": "qt6-m3shapes-git"
+        },
+        {
+          "package": "ttf-material-symbols-variable",
+          "purpose": "Material Symbols Rounded and Outlined",
+          "defaultInstall": true
+        },
+        {
+          "package": "bash",
+          "purpose": "Runtime shell scripts",
+          "defaultInstall": true
+        },
+        {
+          "package": "python",
+          "purpose": "Niri configuration tools; vendored kdl parser",
+          "defaultInstall": true
+        },
+        {
+          "package": "coreutils",
+          "purpose": "File operations and timeout",
+          "defaultInstall": true
+        },
+        {
+          "package": "findutils",
+          "purpose": "Wallpaper discovery",
+          "defaultInstall": true
+        },
+        {
+          "package": "util-linux",
+          "purpose": "flock for Matugen registry",
+          "defaultInstall": true
+        },
+        {
+          "package": "which",
+          "purpose": "External program discovery",
+          "defaultInstall": true
+        },
+        {
+          "package": "jq",
+          "purpose": "Matugen registry JSON",
+          "defaultInstall": true
+        },
+        {
+          "package": "matugen",
+          "purpose": "Material theme generation",
+          "defaultInstall": true
+        },
+        {
+          "package": "xdg-utils",
+          "purpose": "Application defaults and opening URLs",
+          "defaultInstall": true
+        },
+        {
+          "package": "glib2",
+          "purpose": "GSettings and gio",
+          "defaultInstall": true
+        },
+        {
+          "package": "libnotify",
+          "purpose": "Desktop notifications",
+          "defaultInstall": true
+        },
+        {
+          "package": "systemd",
+          "purpose": "User service and application scopes",
+          "defaultInstall": true
+        },
+        {
+          "package": "pam",
+          "purpose": "Lock screen authentication",
+          "defaultInstall": true
+        },
+        {
+          "package": "sed",
+          "purpose": "Theme name normalization",
+          "defaultInstall": true
+        },
+        {
+          "package": "grep",
+          "purpose": "Theme filtering",
+          "defaultInstall": true
+        },
+        {
+          "package": "wl-clipboard",
+          "purpose": "Copy editor curves and clipboard integration",
+          "defaultInstall": true
+        }
+      ],
+      "optional": [
+        {
+          "package": "gpu-screen-recorder",
+          "purpose": "Screen recording through key-cli",
+          "defaultInstall": true
+        },
+        {
+          "package": "ffmpeg",
+          "purpose": "Audio recording, ffprobe and GIF conversion",
+          "defaultInstall": true
+        },
+        {
+          "package": "libpulse",
+          "purpose": "pactl audio source discovery",
+          "defaultInstall": true
+        },
+        {
+          "package": "slurp",
+          "purpose": "Recording region selection",
+          "defaultInstall": true
+        },
+        {
+          "package": "grim",
+          "purpose": "Screenshot capture",
+          "defaultInstall": true
+        },
+        {
+          "package": "hyprpicker",
+          "purpose": "Color picker",
+          "defaultInstall": true
+        },
+        {
+          "package": "awww",
+          "purpose": "Optional wallpaper backend",
+          "defaultInstall": true
+        },
+        {
+          "package": "rclone",
+          "purpose": "Cloud upload and backup",
+          "defaultInstall": true
+        },
+        {
+          "package": "brightnessctl",
+          "purpose": "Backlight control",
+          "defaultInstall": true
+        },
+        {
+          "package": "ddcutil",
+          "purpose": "External display brightness",
+          "defaultInstall": true
+        },
+        {
+          "package": "imagemagick",
+          "purpose": "Overview wallpaper cache tool",
+          "defaultInstall": true
+        },
+        {
+          "package": "xdg-terminal-exec",
+          "purpose": "Terminal file manager launch",
+          "defaultInstall": true
+        },
+        {
+          "package": "ttf-lxgw-wenkai-screen",
+          "purpose": "Default UI font",
+          "defaultInstall": true,
+          "aur": "ttf-lxgw-wenkai-screen"
+        },
+        {
+          "package": "ttf-jetbrains-mono-nerd",
+          "purpose": "Default monospace and numeric font",
+          "defaultInstall": true
+        },
+        {
+          "package": "networkmanager",
+          "purpose": "Network controls and nmcli",
+          "defaultInstall": true
+        },
+        {
+          "package": "bluez",
+          "purpose": "Bluetooth service",
+          "defaultInstall": true
+        },
+        {
+          "package": "upower",
+          "purpose": "Power and battery service",
+          "defaultInstall": true
+        },
+        {
+          "package": "pipewire",
+          "purpose": "Audio server",
+          "defaultInstall": true
+        },
+        {
+          "package": "wireplumber",
+          "purpose": "Audio session manager when none is installed",
+          "defaultInstall": true,
+          "satisfiedBy": [
+            "wireplumber",
+            "pipewire-media-session"
+          ]
+        },
+        {
+          "package": "gsettings-desktop-schemas",
+          "purpose": "Desktop color scheme schema",
+          "defaultInstall": true
+        },
+        {
+          "package": "paru",
+          "purpose": "Unused PackageService package counters; not needed by the installer",
+          "defaultInstall": false,
+          "aur": "paru"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "name": "@meteocons/svg",
+      "version": "0.1.0",
+      "url": "https://registry.npmjs.org/@meteocons/svg/-/svg-0.1.0.tgz",
+      "sha256": "91b48d1f8497d9e8f4ed1d5bcc32d306aaa5050de99c38467c2a58f7add5a501",
+      "destination": "assets/icons/weather/meteocons/svg",
+      "directories": [
+        "fill",
+        "flat",
+        "line",
+        "monochrome"
+      ]
+    },
+    {
+      "name": "@meteocons/lottie",
+      "version": "0.1.0",
+      "url": "https://registry.npmjs.org/@meteocons/lottie/-/lottie-0.1.0.tgz",
+      "sha256": "43ea2732abde8e429c4fc56a27bb2cefd853f8c34a904b57f86a4b5a2bf1a13d",
+      "destination": "assets/icons/weather/meteocons/lottie",
+      "directories": [
+        "fill"
+      ]
+    }
+  ]
+}

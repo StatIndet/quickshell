@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Generated release installer. Builds run as the desktop user.
+set -euo pipefail
+
+bootstrap_python() {
+    local argument dry_run=false noninteractive=false key=false power=false shell=false clipboard=false start=false
+    for argument in "$@"; do
+        case $argument in
+            --dry-run) dry_run=true ;;
+            --non-interactive) noninteractive=true ;;
+            --keyboard-access=yes|--keyboard-access=no) key=true ;;
+            --power-access=yes|--power-access=no) power=true ;;
+            --enable-shell=yes|--enable-shell=no) shell=true ;;
+            --enable-clipboard=yes|--enable-clipboard=no) clipboard=true ;;
+            --start-now=yes|--start-now=no) start=true ;;
+            -h|--help)
+                printf '%s\n' 'Clavis Arch installer: --dry-run, --non-interactive,' \
+                    '--keyboard-access=yes|no --power-access=yes|no --enable-shell=yes|no' \
+                    '--enable-clipboard=yes|no --start-now=yes|no'
+                return 2 ;;
+            *) printf 'Unknown argument: %s\n' "$argument" >&2; return 1 ;;
+        esac
+    done
+    if command -v python3 >/dev/null; then return 0; fi
+    if $dry_run; then
+        printf '%s\n' 'Dry run: Python is required to resolve the installation. Bootstrap would install python using pacman.' \
+            'Default package requests: @DEFAULT_PACKAGES@'
+        return 2
+    fi
+    [[ $(id -u) != 0 && $(uname -m) == x86_64 ]] || {
+        printf 'Run as a regular user on Arch x86_64.\n' >&2; return 1;
+    }
+    [[ -f /etc/arch-release ]] || { printf 'This installer requires an Arch-compatible system.\n' >&2; return 1; }
+    if $noninteractive; then
+        if ! $key || ! $power || ! $shell || ! $clipboard || ! $start; then
+            printf 'Non-interactive installation requires all five explicit choices.\n' >&2; return 1;
+        fi
+    elif ! (exec 3<>/dev/tty) 2>/dev/null; then
+        printf 'No terminal: supply --non-interactive and all five explicit choices.\n' >&2
+        return 1
+    fi
+    command -v sudo >/dev/null || { printf 'sudo is required.\n' >&2; return 1; }
+    local -a options=()
+    $noninteractive && options+=(--noconfirm)
+    if $noninteractive; then
+        sudo pacman -Syu --needed "${options[@]}" python </dev/null
+    else
+        # The desktop user's tty is intentionally opened before sudo.
+        # shellcheck disable=SC2024
+        sudo pacman -Syu --needed python </dev/tty
+    fi
+}
+
+bootstrap_status=0
+bootstrap_python "$@" || bootstrap_status=$?
+if (( bootstrap_status == 2 )); then exit 0; fi
+if (( bootstrap_status != 0 )); then exit "$bootstrap_status"; fi
+exec python3 - "$@" <<'CLAVIS_INSTALLER_PYTHON'
+@INSTALLER_PYTHON@
+CLAVIS_INSTALLER_PYTHON

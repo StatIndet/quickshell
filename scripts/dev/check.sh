@@ -62,7 +62,7 @@ qml=false
 for file in "${files[@]}"; do
     # Include deletions when deciding whether native build/tests are affected.
     case ${file} in
-        core/*|CMakeLists.txt|*.cmake|tests/qml/*) native=true ;;
+        core/*|CMakeLists.txt|VERSION|*.cmake|tests/qml/*|scripts/release.py|scripts/install/*|install.sh|tests/test_release.py|tests/test_installer.py|packaging/*) native=true ;;
     esac
     [[ -f ${file} ]] || continue
     case ${file} in
@@ -71,7 +71,7 @@ for file in "${files[@]}"; do
     case ${file} in
         *.qml) qml=true ;;
         *.cpp|*.h|*.hpp) cpp_files+=("${file}") ;;
-        *.sh) shell_files+=("${file}") ;;
+        *.sh|*.sh.in|*/PKGBUILD.in|*.install) shell_files+=("${file}") ;;
         *.py) python_files+=("${file}") ;;
     esac
 done
@@ -86,7 +86,7 @@ fi
 if (( ${#shell_files[@]} )); then
     require shellcheck shellcheck
     for file in "${shell_files[@]}"; do bash -n "${file}"; done
-    step shell-lint shellcheck -x "${shell_files[@]}"
+    step shell-lint shellcheck -s bash -x "${shell_files[@]}"
 fi
 if (( ${#python_files[@]} )); then
     require python3 python
