@@ -78,6 +78,8 @@ Singleton {
             anchors[id] = state.cards[id].sidebar;
         });
         const layout = DrawerLayout.hydrateSaved(savedLayout, active, anchors);
+        // Ownership changes and legacy gaps both compact the active drawer.
+        // Persist every resulting position, including cards the user did not drag.
         state = CardState.setSidebarLayout(state, layout);
         return {
             state: state,

@@ -29,11 +29,18 @@ Item {
     }
     readonly property var tileDefinitions: GridLayout.definitions(root.activeSidebarIds)
     readonly property int gridContentWidth: GridLayout.canvasWidth
-    readonly property int gridContentHeight: GridLayout.contentHeight(root.dragTargetValid &&
-                                                                      !root.desktopExtraction
-                                                                      ? root.previewLayout :
-                                                                        root.committedLayout,
-                                                                      root.activeSidebarIds)
+    readonly property int gridContentHeight: {
+        const committedHeight = GridLayout.contentHeight(root.committedLayout, root.activeSidebarIds);
+        // Keep the source and scroll position stable until the gesture commits.
+        return root.dragTargetValid && !root.desktopExtraction ? Math.max(committedHeight,
+                                                                          GridLayout.contentHeight(
+                                                                              root.previewLayout,
+                                                                              root.activeSidebarIds)) :
+                                                                 committedHeight;
+    }
+    readonly property var dropPlacement: root.dragTargetValid ? root.layoutPlacement(root.previewLayout,
+                                                                                     root.draggingTileId) :
+                                                                null
     readonly property var sidebarAnchors: {
         const result = {};
         root.activeSidebarIds.forEach(function (id) {
@@ -415,6 +422,7 @@ Item {
             visible: SystemMonitorService.hasData
             contentWidth: width
             contentHeight: Math.max(height, root.gridContentHeight * dashboard.scale)
+            onContentHeightChanged: Qt.callLater(dashboardScroll.scrollBy, 0)
             // Keep wheel/touchpad scrolling enabled without letting Flickable
             // take the mouse gesture used to drag a card.
             acceptedButtons: Qt.NoButton
@@ -480,8 +488,8 @@ Item {
                 Rectangle {
                     id: targetPreview
 
-                    x: root.targetX
-                    y: root.targetY
+                    x: root.dropPlacement ? root.dropPlacement.x : root.targetX
+                    y: root.dropPlacement ? root.dropPlacement.y : root.targetY
                     width: {
                         const definition = GridLayout.tileDefinitionFor(root.draggingTileId);
                         return definition ? CardGeometry.widthForSpan(definition.columnSpan) : 0;

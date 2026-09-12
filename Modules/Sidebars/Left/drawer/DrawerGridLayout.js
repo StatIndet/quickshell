@@ -54,6 +54,28 @@ function contentHeight(layout, activeIds) {
         return allowed.indexOf(tile.id) === -1 ? bottom : Math.max(bottom, tile.y + tile.height);
     }, baseCellHeight);
 }
+// Preserve horizontal placement and the vertical order of intersecting cards.
+// Recorded y values express that order; actual y is always the compacted value.
+function compactLayout(layout, activeIds) {
+    var expected = idsFor(activeIds || (layout || []).map(function(tile) { return tile.id; }));
+    if (!validateLayout(layout, expected))
+        return null;
+    var ordered = layout.slice().sort(function(a, b) {
+        return a.y - b.y || a.x - b.x || expected.indexOf(a.id) - expected.indexOf(b.id);
+    });
+    var placed = [];
+    ordered.forEach(function(tile) {
+        var y = 0;
+        placed.forEach(function(above) {
+            if (tile.x < above.x + above.width + cellGap
+                    && tile.x + tile.width + cellGap > above.x)
+                y = Math.max(y, above.y + above.height + cellGap);
+        });
+        placed.push(tileAt(tile.id, {x: tile.x, y: y}));
+    });
+    return expected.map(function(id) { return placementFor(placed, id); });
+}
+
 function place(id, anchor, occupied) {
     var fallback = defaultAnchorFor(id);
     var point = clampAnchor(tileDefinitionFor(id),
@@ -79,7 +101,7 @@ function buildLayout(activeIds, savedAnchors, preferredAnchors) {
     }).forEach(function(id) {
         occupied.push(place(id, preferredAnchors && preferredAnchors[id], occupied));
     });
-    return expected.map(function(id) { return placementFor(occupied, id); });
+    return compactLayout(expected.map(function(id) { return placementFor(occupied, id); }), expected);
 }
 function defaultLayout(activeIds, preferredAnchors) {
     return buildLayout(activeIds, {}, preferredAnchors);
@@ -115,7 +137,7 @@ function hydrateSaved(savedLayout, activeIds, preferredAnchors) {
 }
 function serializeLayout(layout, activeIds) {
     var expected = idsFor(activeIds);
-    var source = validateLayout(layout, expected) ? layout : defaultLayout(expected);
+    var source = validateLayout(layout, expected) ? compactLayout(layout, expected) : defaultLayout(expected);
     return {version: schemaVersion, tiles: expected.map(function(id) {
         var tile = placementFor(source, id);
         return {id: id, x: tile.x, y: tile.y};
@@ -128,7 +150,7 @@ function moveLayout(layout, tileId, targetX, targetY, activeIds) {
     var moving = tileAt(tileId, clampAnchor(tileDefinitionFor(tileId), targetX, targetY));
     var occupied = [moving];
     var remaining = layout.filter(function(tile) { return tile.id !== tileId; });
-    // Unaffected cards keep their positions. Only colliding cards need a slot.
+    // Resolve collisions first, then compact all cards into the final preview.
     var displaced = [];
     remaining.forEach(function(tile) {
         if (gridOverlaps(tile, moving, cellGap))
@@ -138,5 +160,5 @@ function moveLayout(layout, tileId, targetX, targetY, activeIds) {
     });
     displaced.sort(function(a, b) { return b.width * b.height - a.width * a.height || expected.indexOf(a.id) - expected.indexOf(b.id); });
     displaced.forEach(function(tile) { occupied.push(place(tile.id, tile, occupied)); });
-    return expected.map(function(id) { return placementFor(occupied, id); });
+    return compactLayout(expected.map(function(id) { return placementFor(occupied, id); }), expected);
 }
