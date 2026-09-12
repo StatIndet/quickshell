@@ -27,6 +27,10 @@ Singleton {
     property var effectiveModules: []
     property var _streamModules: []
     property bool _reconcilePending: false
+    property var _streamProcess: firstStream
+    property var _replacementProcess: null
+    property int _replacementSnapshots: 0
+    property double _replacementTimestampMs: -1
     property string state: "idle"
     property string errorMessage: ""
     property string errorDetails: ""
@@ -63,7 +67,7 @@ Singleton {
     property bool _terminationPending: false
     property string _forcedRestartReason: ""
     property double _streamStartedAtMs: 0
-    property int _consecutiveMalformedLines: 0
+    property int _generationCounter: 0
     property int _streamGeneration: 0
     property int _startedGeneration: -1
     property int _handledGeneration: -1
@@ -88,7 +92,7 @@ Singleton {
     readonly property bool error: state === "error"
     readonly property bool reconnecting: state === "reconnecting"
     readonly property bool partial: errors.length > 0
-    readonly property bool processRunning: streamProcess.running
+    readonly property bool processRunning: root._streamProcess.running
     readonly property string selectedGpuId: _effectiveGpuId
     readonly property var selectedGpu: _gpuById(root.gpus, root.selectedGpuId)
     readonly property string statusText: {
@@ -159,13 +163,66 @@ Singleton {
                                                                                                         module) < 0));
         changed.forEach(root._clearModuleHistory);
         root.effectiveModules = union;
-        root.sourceIntervalMs = 0;
-        if (streamProcess.running)
+        if (!root.active)
             root._stopStream();
-        else if (root.active)
-            root._startStream();
+        else if (root._streamProcess.running)
+            root._prepareReplacement();
         else
-            root.state = root.hasData ? "stale" : "idle";
+            root._startStream();
+    }
+
+    // Module changes must not reset the counter baselines of visible cards.
+    // Keep the current stream alive until the replacement has a full interval
+    // of samples, then retire it. Only one process remains in steady state.
+    function _cancelReplacement() {
+        const pending = root._replacementProcess;
+        root._replacementProcess = null;
+        if (pending)
+            pending.terminate();
+    }
+
+    function _prepareReplacement() {
+        if (!root.active || !root._streamProcess.running || root._terminationPending || root._fatalError)
+            return;
+        const wanted = JSON.stringify(root.effectiveModules);
+        if (wanted === JSON.stringify(root._streamModules)) {
+            root._cancelReplacement();
+            return;
+        }
+        if (root._replacementProcess && wanted === JSON.stringify(root._replacementProcess.modules))
+            return;
+        root._cancelReplacement();
+        const next = root._streamProcess === firstStream ? secondStream : firstStream;
+        // A retired process may still be exiting after a rapid toggle.
+        if (next.running)
+            return;
+        next.generation = ++root._generationCounter;
+        next.modules = root.effectiveModules.slice();
+        next.startedAtMs = Date.now();
+        next.didStart = false;
+        next.malformedLines = 0;
+        next.command = root._streamCommand(next.modules);
+        root._replacementSnapshots = 0;
+        root._replacementTimestampMs = -1;
+        root._replacementProcess = next;
+        next.running = true;
+        Qt.callLater(function () {
+            if (root._replacementProcess === next && !next.running && !next.didStart)
+                root._terminateStream("failed_to_start");
+        });
+    }
+
+    function _adoptReplacement() {
+        const previous = root._streamProcess;
+        const next = root._replacementProcess;
+        root._replacementProcess = null;
+        root._streamProcess = next;
+        root._streamModules = next.modules.slice();
+        root._streamGeneration = next.generation;
+        root._startedGeneration = root._streamGeneration;
+        root._handledGeneration = -1;
+        root._streamStartedAtMs = next.startedAtMs;
+        previous.terminate();
     }
 
     function retry() {
@@ -175,17 +232,17 @@ Singleton {
         root.errorMessage = "";
         root.errorDetails = "";
         reconnectTimer.stop();
-        if (root.active && !streamProcess.running)
+        if (root.active && !root._streamProcess.running)
             root._startStream();
     }
 
-    function _streamCommand() {
+    function _streamCommand(modules) {
         return [root.commandName, "value", "stream", "--format", "jsonl", "--interval", String(
-                    root.configuredIntervalMs), "--modules", root._streamModules.join(",")];
+                    root.configuredIntervalMs), "--modules", modules.join(",")];
     }
 
     function _startStream() {
-        if (!root.active || streamProcess.running || root._fatalError)
+        if (!root.active || root._streamProcess.running || root._fatalError)
             return;
         reconnectTimer.stop();
         forceStopTimer.stop();
@@ -194,29 +251,34 @@ Singleton {
         root._terminationPending = false;
         root._forceStopProbeCount = 0;
         root._forcedRestartReason = "";
-        root._streamGeneration += 1;
+        root._streamGeneration = ++root._generationCounter;
         root._startedGeneration = -1;
         root._handledGeneration = -1;
-        root._consecutiveMalformedLines = 0;
+        root._streamProcess.malformedLines = 0;
         root._streamStartedAtMs = Date.now();
         root._streamModules = root.effectiveModules.slice();
         root.state = root.hasData || root.reconnectAttempt > 0 ? "reconnecting" : "loading";
-        streamProcess.command = root._streamCommand();
-        streamProcess.running = true;
+        root._streamProcess.modules = root._streamModules.slice();
+        root._streamProcess.generation = root._streamGeneration;
+        root._streamProcess.didStart = false;
+        root._streamProcess.startedAtMs = root._streamStartedAtMs;
+        root._streamProcess.command = root._streamCommand(root._streamModules);
+        root._streamProcess.running = true;
 
         const generation = root._streamGeneration;
         Qt.callLater(function () {
-            if (generation === root._streamGeneration && !streamProcess.running && root._startedGeneration
-                    !== generation) {
+            if (generation === root._streamGeneration && !root._streamProcess.running
+                    && root._startedGeneration !== generation) {
                 root._handleStreamStopped(generation, "failed_to_start", -1);
             }
         });
     }
 
     function _stopStream() {
+        root._cancelReplacement();
         reconnectTimer.stop();
         root._stopRequested = true;
-        if (streamProcess.running)
+        if (root._streamProcess.running)
             root._terminateStream("");
         else {
             forceStopTimer.stop();
@@ -226,16 +288,17 @@ Singleton {
     }
 
     function _terminateStream(reason) {
+        root._cancelReplacement();
         if (reason && root._forcedRestartReason === "")
             root._forcedRestartReason = reason;
-        if (!streamProcess.running)
+        if (!root._streamProcess.running)
             return;
         if (root._terminationPending)
             return;
         root._terminationPending = true;
         root._forceStopProbeCount = 0;
         forceStopTimer.interval = 2000;
-        streamProcess.running = false;
+        root._streamProcess.running = false;
         forceStopTimer.start();
     }
 
@@ -319,7 +382,7 @@ Singleton {
         return typeof value === "number" && isFinite(value);
     }
 
-    function _validateSnapshot(snapshot) {
+    function _validateSnapshot(snapshot, modules) {
         if (!root._isObject(snapshot))
             return qsTr("The top-level JSON value must be an object");
         if (snapshot.schemaVersion !== root.supportedSchemaVersion)
@@ -327,15 +390,15 @@ Singleton {
         if (!root._isFiniteNumber(snapshot.timestampMs) || !root._isFiniteNumber(snapshot.sequence) || !root._isFiniteNumber(
                     snapshot.intervalMs) || snapshot.intervalMs < 0)
             return qsTr("The timestamp, sequence number, or sampling interval is invalid");
-        if (root._streamModules.indexOf("cpu") >= 0 && !root._isObject(snapshot.cpu))
+        if (modules.indexOf("cpu") >= 0 && !root._isObject(snapshot.cpu))
             return qsTr("Missing or invalid CPU data fields");
-        if (root._streamModules.indexOf("memory") >= 0 && !root._isObject(snapshot.memory))
+        if (modules.indexOf("memory") >= 0 && !root._isObject(snapshot.memory))
             return qsTr("Missing or invalid memory data fields");
-        if (root._streamModules.indexOf("network") >= 0 && !root._isObject(snapshot.network))
+        if (modules.indexOf("network") >= 0 && !root._isObject(snapshot.network))
             return qsTr("Missing or invalid network data fields");
-        if (root._streamModules.indexOf("gpu") >= 0 && !Array.isArray(snapshot.gpus))
+        if (modules.indexOf("gpu") >= 0 && !Array.isArray(snapshot.gpus))
             return qsTr("Missing or invalid GPU data fields");
-        if (root._streamModules.indexOf("disk") >= 0 && !Array.isArray(snapshot.disks))
+        if (modules.indexOf("disk") >= 0 && !Array.isArray(snapshot.disks))
             return qsTr("Missing or invalid disk data fields");
         if (!Array.isArray(snapshot.errors))
             return qsTr("The devices and errors fields must be arrays");
@@ -441,11 +504,24 @@ Singleton {
     function _applyConfiguredInterval() {
         root._clearMonitorHistories();
         root.sourceIntervalMs = 0;
-        if (root.active && streamProcess.running)
+        if (root.active && root._streamProcess.running)
             root._stopStream();
     }
 
     function _commitSnapshot(snapshot) {
+        const requested = root.effectiveModules;
+        snapshot = Object.assign({}, snapshot);
+        const fields = {
+            cpu: "cpu",
+            memory: "memory",
+            gpu: "gpus",
+            disk: "disks",
+            network: "network"
+        };
+        Object.keys(fields).forEach(function (module) {
+            if (requested.indexOf(module) < 0)
+                delete snapshot[fields[module]];
+        });
         const snapshotGpus = Array.isArray(snapshot.gpus) ? snapshot.gpus : root.gpus;
         const nextSelectedGpuId = root._resolveSelectedGpuId(snapshotGpus);
         if (nextSelectedGpuId !== root._effectiveGpuId)
@@ -463,7 +539,9 @@ Singleton {
         }
         if (snapshot.network)
             root.network = snapshot.network;
-        root.errors = snapshot.errors.slice(0, 32);
+        root.errors = snapshot.errors.filter(function (error) {
+            return !error || !fields[error.module] || requested.indexOf(error.module) >= 0;
+        }).slice(0, 32);
 
         const cpuUsage = snapshot.cpu ? snapshot.cpu.usagePercent : undefined;
         root.cpuHistory = root._appendHistory(root.cpuHistory, cpuUsage);
@@ -486,7 +564,6 @@ Singleton {
         root.sourceIntervalMs = snapshot.intervalMs;
         root._hasData = true;
         root._timeoutRestartIssued = false;
-        root._consecutiveMalformedLines = 0;
         root.reconnectAttempt = 0;
         root._retryDelayMs = 1000;
         root.errorMessage = "";
@@ -494,8 +571,9 @@ Singleton {
         root.state = "ready";
     }
 
-    function _consumeLine(line) {
-        if (root._terminationPending)
+    function _consumeLine(line, process) {
+        if (root._terminationPending || (process !== root._streamProcess && process
+                                         !== root._replacementProcess))
             return;
         const text = String(line || "").trim();
         if (text.length === 0)
@@ -512,18 +590,18 @@ Singleton {
             snapshot = JSON.parse(text);
         } catch (exception) {
             root.malformedLineCount += 1;
-            root._consecutiveMalformedLines += 1;
+            process.malformedLines += 1;
             root.errorDetails = qsTr("Received a corrupt JSONL line");
             if (!root.hasData)
                 root.errorMessage = qsTr("Could not parse keytop system monitor data");
-            if (root._consecutiveMalformedLines >= 3 && streamProcess.running) {
+            if (process.malformedLines >= 3 && root._streamProcess.running) {
                 root.errorMessage = qsTr("keytop keeps producing invalid JSONL");
                 root._terminateStream("invalid_json");
             }
             return;
         }
 
-        const validationError = root._validateSnapshot(snapshot);
+        const validationError = root._validateSnapshot(snapshot, process.modules);
         if (validationError === "schemaVersion") {
             root.schemaMismatchCount += 1;
             root._fatalError = true;
@@ -535,20 +613,34 @@ Singleton {
         }
         if (validationError !== "") {
             root.malformedLineCount += 1;
-            root._consecutiveMalformedLines += 1;
+            process.malformedLines += 1;
             root.errorMessage = root.hasData ? root.errorMessage : qsTr(
                                                    "System monitor data returned by keytop is incomplete");
             root.errorDetails = validationError;
-            if (root._consecutiveMalformedLines >= 3 && streamProcess.running) {
+            if (process.malformedLines >= 3 && root._streamProcess.running) {
                 root._terminateStream("invalid_json");
             }
             return;
         }
 
+        process.malformedLines = 0;
+        if (process === root._replacementProcess) {
+            if (snapshot.timestampMs <= root._replacementTimestampMs)
+                return;
+            root._replacementTimestampMs = snapshot.timestampMs;
+            root._replacementSnapshots += 1;
+            // The first sample establishes CPU/disk/network delta baselines.
+            // Never replace live values with that warm-up snapshot.
+            if (root._replacementSnapshots < 2 || snapshot.timestampMs <= root.sourceTimestampMs)
+                return;
+            root._adoptReplacement();
+        }
         root._commitSnapshot(snapshot);
     }
 
-    function _consumeDiagnostic(line) {
+    function _consumeDiagnostic(line, process) {
+        if (process !== root._streamProcess && process !== root._replacementProcess)
+            return;
         const text = String(line || "").trim();
         if (text.length === 0)
             return;
@@ -712,7 +804,7 @@ Singleton {
         running: root.active
 
         onTriggered: {
-            if (!streamProcess.running)
+            if (!root._streamProcess.running)
                 return;
 
             const now = Date.now();
@@ -731,7 +823,7 @@ Singleton {
             const restartAfter = Math.max(10000, root.configuredIntervalMs * 8);
             if (age > staleAfter && root.state === "ready")
                 root.state = "stale";
-            if (age > restartAfter && streamProcess.running && !root._timeoutRestartIssued) {
+            if (age > restartAfter && root._streamProcess.running && !root._timeoutRestartIssued) {
                 root._timeoutRestartIssued = true;
                 root.errorMessage = qsTr("System monitor data has not updated for a long time");
                 root.errorDetails = qsTr("Reconnecting to the keytop data stream.");
@@ -746,13 +838,13 @@ Singleton {
         interval: 2000
         repeat: false
         onTriggered: {
-            const processId = Number(streamProcess.processId);
-            if (streamProcess.running && root._startedGeneration === root._streamGeneration && isFinite(
+            const processId = Number(root._streamProcess.processId);
+            if (root._streamProcess.running && root._startedGeneration === root._streamGeneration && isFinite(
                         processId) && processId > 0) {
-                streamProcess.signal(9);
+                root._streamProcess.signal(9);
                 return;
             }
-            if (streamProcess.running && root._terminationPending && root._forceStopProbeCount < 8) {
+            if (root._streamProcess.running && root._terminationPending && root._forceStopProbeCount < 8) {
                 root._forceStopProbeCount += 1;
                 forceStopTimer.interval = 250;
                 forceStopTimer.restart();
@@ -760,49 +852,100 @@ Singleton {
         }
     }
 
-    Process {
-        id: streamProcess
+    Timer {
+        interval: 1000
+        repeat: true
+        running: root._replacementProcess !== null
+        onTriggered: {
+            if (Date.now() - root._replacementProcess.startedAtMs > Math.max(6000, root.configuredIntervalMs
+                                                                             * 6))
+                root._terminateStream("first_snapshot_timeout");
+        }
+    }
+
+    component MonitorStream: Process {
+        id: collector
+
+        property var modules: []
+        property int generation: -1
+        property bool didStart: false
+        property int malformedLines: 0
+        property double startedAtMs: 0
+        property Timer terminationTimer: Timer {
+            interval: 2000
+            onTriggered: {
+                if (collector.running)
+                    collector.signal(9);
+            }
+        }
+
+        function terminate() {
+            if (!collector.running)
+                return;
+            collector.running = false;
+            collector.terminationTimer.restart();
+        }
+
+        function stopped(reason, exitCode) {
+            if (collector === root._streamProcess) {
+                root._handleStreamStopped(collector.generation, reason, exitCode);
+            } else if (collector === root._replacementProcess) {
+                root._terminateStream(reason);
+            } else {
+                Qt.callLater(root._prepareReplacement);
+            }
+        }
 
         stdout: SplitParser {
             splitMarker: "\n"
-            onRead: line => root._consumeLine(line)
+            onRead: line => root._consumeLine(line, collector)
         }
         stderr: SplitParser {
             splitMarker: "\n"
-            onRead: line => root._consumeDiagnostic(line)
+            onRead: line => root._consumeDiagnostic(line, collector)
         }
 
         onStarted: {
-            root._startedGeneration = root._streamGeneration;
-            root._streamStartedAtMs = Date.now();
+            collector.didStart = true;
+            collector.startedAtMs = Date.now();
+            if (collector === root._replacementProcess)
+                return;
+            if (collector !== root._streamProcess) {
+                collector.terminate();
+                return;
+            }
+            root._startedGeneration = collector.generation;
+            root._streamStartedAtMs = collector.startedAtMs;
             if (root._terminationPending || !root.active) {
                 root._terminationPending = true;
                 root._forceStopProbeCount = 0;
-                streamProcess.running = false;
+                collector.running = false;
                 forceStopTimer.interval = 2000;
                 forceStopTimer.restart();
             }
         }
         onExited: (exitCode, exitStatus) => {
-            const reason = root._timeoutRestartIssued ? "data_timeout" : (root._forcedRestartReason
-                                                                          || "unexpected_exit");
-            root._handleStreamStopped(root._streamGeneration, reason, exitCode);
+            collector.terminationTimer.stop();
+            collector.stopped(root._forcedRestartReason || "unexpected_exit", exitCode);
         }
         onRunningChanged: {
             if (running)
                 return;
-            const generation = root._streamGeneration;
+            const generation = collector.generation;
             Qt.callLater(function () {
-                if (generation !== root._streamGeneration || streamProcess.running)
+                if (generation !== collector.generation || collector.running)
                     return;
-                const reason = root._startedGeneration === generation ? (root._timeoutRestartIssued
-                                                                         ? "data_timeout" : (
-                                                                               root._forcedRestartReason
-                                                                               || "unexpected_exit")) :
-                                                                        "failed_to_start";
-                root._handleStreamStopped(generation, reason, -1);
+                collector.stopped(collector.didStart ? (root._forcedRestartReason || "unexpected_exit") :
+                                                       "failed_to_start", -1);
             });
         }
+    }
+
+    MonitorStream {
+        id: firstStream
+    }
+    MonitorStream {
+        id: secondStream
     }
 
     Process {
