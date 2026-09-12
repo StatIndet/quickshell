@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+from datetime import date
+import hashlib
 import json
 import io
 import os
@@ -71,7 +73,7 @@ def srcinfo(text, package):
             target = common if section is None else section
             target.setdefault(key, []).append(value)
     if package not in packages:
-        raise ValueError(f"AUR metadata does not contain {package}")
+        raise ValueError(f"Package metadata does not contain {package}")
     merged = {**common, **packages[package]}
     dependencies = []
     for key in (
@@ -135,13 +137,11 @@ class Installer:
             for entry in values["runtime"] + values["optional"]:
                 if "aur" in entry:
                     self.aur_bases[package_name(entry["package"])] = entry["aur"]
-        self.aur_bases.update(
-            {
-                "clavis-shell": "clavis-shell",
-                "key-cli-keyboard-access": "key-cli",
-                "keytop-privileged-access": "keytop",
-            }
-        )
+        self.release_sources = {
+            name: (base, source)
+            for base, source in data["releaseSources"].items()
+            for name in source["packages"]
+        }
         self.checkouts, self.artifacts, self.visiting = {}, {}, set()
         self.pacman_options = ["--noconfirm"] if args.non_interactive else []
         self.conflicts = []
@@ -220,7 +220,89 @@ class Installer:
             result.append("keytop-privileged-access")
         return list(dict.fromkeys(result))
 
+    def release_checkout(self, name):
+        base, source = self.release_sources[name]
+        if base in self.checkouts:
+            return base, self.checkouts[base]
+        repository = source["repository"]
+        tag = self.data.get("installerRelease") if base == "clavis-shell" else None
+        endpoint = "tags/" + tag if tag else "latest"
+        self.stage = f"GitHub release download {repository} ({tag or 'latest'})"
+        with urllib.request.urlopen(
+            f"https://api.github.com/repos/{repository}/releases/{endpoint}", timeout=30
+        ) as response:
+            release = json.load(response)
+        actual = release.get("tag_name", "")
+        match = re.fullmatch(r"v(\d{4})\.([1-9]\d?)\.([1-9]\d?)(?:\.([1-9]\d*))?", actual)
+        if (
+            not match
+            or (tag and actual != tag)
+            or release.get("draft")
+            or release.get("prerelease")
+        ):
+            raise ValueError(f"Invalid or non-final release for {repository}: {actual}")
+        date(*map(int, match.group(1, 2, 3)))
+        version = actual[1:]
+        url = f"https://github.com/{repository}/releases/download/{actual}/"
+        with urllib.request.urlopen(url + "SHA256SUMS", timeout=30) as response:
+            checksum_text = response.read().decode("utf-8")
+        checksums = {}
+        for line in checksum_text.splitlines():
+            record = re.fullmatch(r"([0-9a-fA-F]{64})  ([A-Za-z0-9_.+-]+)", line)
+            if not record:
+                raise ValueError(f"Invalid checksum record in {repository}")
+            digest, filename = record.groups()
+            if filename in checksums or filename in (".", "..", "SHA256SUMS"):
+                raise ValueError(f"Duplicate or unsafe release asset: {filename}")
+            checksums[filename] = digest.lower()
+        archive = f"{base}-{version}.tar.gz"
+        required = {"PKGBUILD", ".SRCINFO", archive}
+        if not required <= checksums.keys():
+            raise ValueError(f"Incomplete release for {repository}: missing build assets")
+        path = self.work / base
+        path.mkdir()
+        # Fetch only build inputs, including split-package install scripts and hooks.
+        selected = required | {n for n in checksums if n.endswith((".install", ".hook"))}
+        for filename in sorted(selected):
+            digest = hashlib.sha256()
+            with urllib.request.urlopen(url + filename, timeout=30) as response:
+                with (path / filename).open("wb") as output:
+                    while chunk := response.read(1024 * 1024):
+                        digest.update(chunk)
+                        output.write(chunk)
+            if digest.hexdigest() != checksums[filename]:
+                raise ValueError(f"SHA-256 mismatch: {repository}/{actual}/{filename}")
+        metadata = (path / ".SRCINFO").read_text()
+        fields = {}
+        for line in metadata.splitlines():
+            if " = " in line:
+                key, value = line.strip().split(" = ", 1)
+                fields.setdefault(key, []).append(value)
+        if fields.get("pkgbase") != [base] or fields.get("pkgver") != [version]:
+            raise ValueError(f"Release tag and package metadata disagree: {repository}")
+        if (
+            len(fields.get("pkgrel", [])) != 1
+            or not re.fullmatch(r"[1-9]\d*(?:\.\d+)?", fields["pkgrel"][0])
+            or fields.get("epoch", ["0"]) != ["0"]
+        ):
+            raise ValueError(f"Invalid date package revision in {repository}")
+        if set(fields.get("pkgname", [])) != set(source["packages"]):
+            raise ValueError(f"Unexpected split packages in {repository}")
+        for filename in fields.get("install", []):
+            if filename not in selected:
+                raise ValueError(f"Missing checksummed install script: {filename}")
+        expected_source = f"{archive}::{url}{archive}"
+        if fields.get("source") != [expected_source] or fields.get("sha256sums") != [
+            checksums[archive]
+        ]:
+            raise ValueError(f"Release source and package metadata disagree: {repository}")
+        self.checkouts[base] = path
+        print(f"GitHub source: {repository} {actual}", flush=True)
+        return base, path
+
     def checkout(self, name):
+        if name in self.release_sources:
+            return self.release_checkout(name)
         base = self.aur_bases.get(name)
         if base is None:
             url = "https://aur.archlinux.org/rpc/v5/info?" + urllib.parse.urlencode({"arg[]": name})
@@ -260,12 +342,28 @@ class Installer:
             raise ValueError(f"Dependency cycle at {name}")
         self.visiting.add(name)
         try:
-            official = run(["pacman", "-Si", name], capture=True, check=False)
-            if official.returncode == 0:
+            if (
+                name not in self.release_sources
+                and run(["pacman", "-Si", name], capture=True, check=False).returncode == 0
+            ):
                 run(["sudo", "pacman", "-S", "--needed", *self.pacman_options, name])
             else:
                 base, path = self.checkout(name)
                 dependencies, remote_version = srcinfo((path / ".SRCINFO").read_text(), name)
+                constraint = re.fullmatch(r"[^<>=]+(>=|<=|=|>|<)(.+)", requirement)
+                if constraint and name in self.release_sources:
+                    operator, wanted = constraint.groups()
+                    comparison = int(run(["vercmp", remote_version, wanted], capture=True).stdout)
+                    if not {
+                        ">=": comparison >= 0,
+                        "<=": comparison <= 0,
+                        "=": comparison == 0,
+                        ">": comparison > 0,
+                        "<": comparison < 0,
+                    }[operator]:
+                        raise ValueError(
+                            f"Available {name} {remote_version} does not satisfy {requirement}"
+                        )
                 local = run(["pacman", "-Q", name], capture=True, check=False)
                 if local.returncode == 0 and self.satisfied(requirement):
                     comparison = run(
@@ -276,8 +374,8 @@ class Installer:
                 for dependency in dependencies:
                     self.resolve(dependency)
                 if base not in self.artifacts:
-                    self.stage = f"AUR build {base}"
-                    print(f"Building AUR source package {base} as uid {os.geteuid()}", flush=True)
+                    self.stage = f"source build {base}"
+                    print(f"Building source package {base} as uid {os.geteuid()}", flush=True)
                     run(["makepkg", "--cleanbuild", "--force", *self.pacman_options], cwd=path)
                     paths = run(
                         ["makepkg", "--packagelist"], capture=True, cwd=path
@@ -293,7 +391,7 @@ class Installer:
                         packages[meta] = artifact
                     self.artifacts[base] = packages
                 if name not in self.artifacts[base]:
-                    raise ValueError(f"AUR build did not produce {name}")
+                    raise ValueError(f"Source build did not produce {name}")
                 self.stage = f"package installation {name}"
                 # Never install all outputs of a split build: access packages require opt-in.
                 run(
@@ -494,6 +592,11 @@ class Installer:
             print(
                 f"{choice}: {self.choices[choice] if self.choices[choice] is not None else 'ask [Y/n]'}"
             )
+        print(
+            "First-party sources: GitHub Releases; Clavis "
+            + self.data.get("installerRelease", "latest")
+            + "; backends latest formal release (minimum version required)."
+        )
         if self.args.dry_run:
             print("Dry run: no package, permission, state or service changes.")
             return 0
@@ -514,13 +617,14 @@ class Installer:
         official = [
             package_name(request)
             for request in requested
-            if not self.satisfied(request)
+            if package_name(request) not in self.release_sources
+            and not self.satisfied(request)
             and run(["pacman", "-Si", package_name(request)], capture=True, check=False).returncode
             == 0
         ]
         if official:
             run(["sudo", "pacman", "-S", "--needed", *self.pacman_options, *official])
-        with tempfile.TemporaryDirectory(prefix="clavis-aur-") as directory:
+        with tempfile.TemporaryDirectory(prefix="clavis-build-") as directory:
             self.work = Path(directory)
             for requirement in requested:
                 name = package_name(requirement)

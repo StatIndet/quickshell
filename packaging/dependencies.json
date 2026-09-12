@@ -309,14 +309,12 @@
         {
           "package": "key-cli>=2026.9.12",
           "purpose": "Shell lifecycle, recording, clipboard and keyboard protocol v1",
-          "defaultInstall": true,
-          "aur": "key-cli"
+          "defaultInstall": true
         },
         {
           "package": "keytop>=2026.9.12",
           "purpose": "JSONL system metrics protocol v1",
-          "defaultInstall": true,
-          "aur": "keytop"
+          "defaultInstall": true
         },
         {
           "package": "qt6-base>=6.8",
@@ -620,5 +618,27 @@
         "fill"
       ]
     }
-  ]
+  ],
+  "releaseSources": {
+    "clavis-shell": {
+      "repository": "StatIndet/quickshell",
+      "packages": [
+        "clavis-shell"
+      ]
+    },
+    "key-cli": {
+      "repository": "StatIndet/key-cli",
+      "packages": [
+        "key-cli",
+        "key-cli-keyboard-access"
+      ]
+    },
+    "keytop": {
+      "repository": "StatIndet/keytop",
+      "packages": [
+        "keytop",
+        "keytop-privileged-access"
+      ]
+    }
+  }
 }

@@ -130,6 +130,171 @@ class InstallerContracts(unittest.TestCase):
         self.assertEqual(transactions, ["key-cli"])
         self.assertNotIn("key-cli-keyboard-access", installed)
 
+    def release_fixture(self, base="key-cli", version="2026.9.12"):
+        repository = DATA["releaseSources"][base]["repository"]
+        tag = "v" + version
+        url = f"https://github.com/{repository}/releases/download/{tag}/"
+        archive = f"{base}-{version}.tar.gz"
+        files = {archive: b"release source", "PKGBUILD": b"# fixture"}
+        digest = hashlib.sha256(files[archive]).hexdigest()
+        metadata = (
+            f"pkgbase = {base}\npkgver = {version}\npkgrel = 1\n"
+            f"source = {archive}::{url}{archive}\nsha256sums = {digest}\n"
+        )
+        for package in DATA["releaseSources"][base]["packages"]:
+            metadata += f"pkgname = {package}\n"
+        if base == "keytop":
+            metadata += "install = keytop-privileged-access.install\n"
+            files["keytop-privileged-access.install"] = b"# install fixture"
+            files["keytop-privileged-access.hook"] = b"# hook fixture"
+        files[".SRCINFO"] = metadata.encode()
+        sums = "".join(
+            f"{hashlib.sha256(content).hexdigest()}  {name}\n" for name, content in files.items()
+        )
+        responses = {url + name: value for name, value in files.items()}
+        responses[url + "SHA256SUMS"] = sums.encode()
+        payload = json.dumps({"tag_name": tag, "draft": False, "prerelease": False}).encode()
+        for endpoint in ("latest", "tags/" + tag):
+            responses[f"https://api.github.com/repos/{repository}/releases/{endpoint}"] = payload
+        return responses, url
+
+    def test_release_downloads_verified_inputs_and_reuses_split_build_source(self):
+        operation = installer.Installer(args(), DATA)
+        operation.work = self.root
+        responses, url = self.release_fixture("keytop")
+        calls = []
+
+        def download(address, **kwargs):
+            calls.append(address)
+            return io.BytesIO(responses[address])
+
+        with patch.object(installer.urllib.request, "urlopen", side_effect=download):
+            base, path = operation.checkout("keytop")
+            self.assertEqual(operation.checkout("keytop-privileged-access"), (base, path))
+        self.assertEqual(len(calls), len(set(calls)))
+        self.assertEqual(
+            (path / "keytop-privileged-access.install").read_bytes(), b"# install fixture"
+        )
+        self.assertEqual((path / "keytop-2026.9.12.tar.gz").read_bytes(), b"release source")
+        self.assertIn(url + "keytop-privileged-access.hook", calls)
+
+    def test_release_failures_stop_before_build_and_never_fall_back_to_aur(self):
+        for failure in (
+            "download",
+            "checksum",
+            "missing",
+            "unsafe",
+            "version",
+            "prerelease",
+            "install",
+        ):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory(dir=self.root) as work:
+                operation = installer.Installer(args(), DATA)
+                operation.work = Path(work)
+                responses, url = self.release_fixture()
+                if failure == "checksum":
+                    responses[url + "PKGBUILD"] += b"corrupt"
+                elif failure == "missing":
+                    responses[url + "SHA256SUMS"] = b""
+                elif failure == "unsafe":
+                    responses[url + "SHA256SUMS"] += ("0" * 64 + "  ../escape\n").encode()
+                elif failure in ("version", "install"):
+                    metadata = responses[url + ".SRCINFO"]
+                    changed = (
+                        metadata.replace(b"pkgver = 2026.9.12", b"pkgver = 2026.9.13")
+                        if failure == "version"
+                        else metadata + b"install = missing.install\n"
+                    )
+                    responses[url + ".SRCINFO"] = changed
+                    responses[url + "SHA256SUMS"] = responses[url + "SHA256SUMS"].replace(
+                        hashlib.sha256(metadata).hexdigest().encode(),
+                        hashlib.sha256(changed).hexdigest().encode(),
+                    )
+                elif failure == "prerelease":
+                    api = "https://api.github.com/repos/StatIndet/key-cli/releases/latest"
+                    responses[api] = json.dumps(
+                        {"tag_name": "v2026.9.12", "prerelease": True}
+                    ).encode()
+
+                def download(address, **kwargs):
+                    self.assertNotIn("aur.archlinux.org", address)
+                    if failure == "download" or address not in responses:
+                        raise OSError("download failed")
+                    return io.BytesIO(responses[address])
+
+                with (
+                    patch.object(operation, "satisfied", return_value=False),
+                    patch.object(installer.urllib.request, "urlopen", side_effect=download),
+                    patch.object(installer, "run") as command,
+                ):
+                    with self.assertRaises((ValueError, OSError)):
+                        operation.resolve("key-cli")
+                    command.assert_not_called()
+                self.assertNotIn("key-cli", operation.checkouts)
+
+    def test_release_minimum_version_checked_before_build(self):
+        operation = installer.Installer(args(), DATA)
+        operation.work = self.root
+        responses, _ = self.release_fixture()
+        with (
+            patch.object(operation, "satisfied", return_value=False),
+            patch.object(
+                installer.urllib.request,
+                "urlopen",
+                side_effect=lambda url, **kw: io.BytesIO(responses[url]),
+            ),
+            patch.object(
+                installer, "run", return_value=subprocess.CompletedProcess([], 0, "-1", "")
+            ) as command,
+        ):
+            with self.assertRaisesRegex(ValueError, "does not satisfy"):
+                operation.resolve("key-cli>=2026.9.13")
+            command.assert_called_once_with(["vercmp", "2026.9.12-1", "2026.9.13"], capture=True)
+
+    def test_clavis_release_is_pinned_and_third_party_still_uses_aur(self):
+        operation = installer.Installer(args(), {**DATA, "installerRelease": "v2026.9.12"})
+        operation.work = self.root
+        responses, _ = self.release_fixture("clavis-shell")
+        del responses["https://api.github.com/repos/StatIndet/quickshell/releases/latest"]
+        with patch.object(
+            installer.urllib.request,
+            "urlopen",
+            side_effect=lambda url, **kw: io.BytesIO(responses[url]),
+        ):
+            operation.checkout("clavis-shell")
+        aur_path = self.root / "libcava"
+        aur_path.mkdir()
+        (aur_path / ".SRCINFO").write_text("pkgbase = libcava\n")
+        with patch.object(installer, "run") as command:
+            self.assertEqual(operation.checkout("libcava"), ("libcava", aur_path))
+        self.assertIn("https://aur.archlinux.org/libcava.git", command.call_args.args[0])
+
+    def test_generated_installer_embeds_its_release_version(self):
+        target = self.root / "install-arch.sh"
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts/release.py"),
+                "installer",
+                "--output",
+                str(target),
+            ],
+            check=True,
+        )
+        result = subprocess.run(
+            [
+                "bash",
+                str(target),
+                "--dry-run",
+                "--non-interactive",
+                *["--" + choice.replace("_", "-") + "=no" for choice in installer.CHOICES],
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        self.assertIn("Clavis v" + (ROOT / "VERSION").read_text().strip(), result.stdout)
+
     def test_services_never_restart_and_require_niri(self):
         operation = installer.Installer(args(), DATA)
         operation.choices = {

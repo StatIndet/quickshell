@@ -81,8 +81,8 @@ This phase is used only in CI; these tools are not installer runtime requests.
 | --- | --- | --- |
 | `quickshell` | QML shell runtime; validated baseline 0.3.1 | Yes |
 | `niri` | Wayland compositor and session lifecycle | Yes |
-| `key-cli>=2026.9.12` (AUR) | Shell lifecycle, recording, clipboard and keyboard protocol v1 | Yes |
-| `keytop>=2026.9.12` (AUR) | JSONL system metrics protocol v1 | Yes |
+| `key-cli>=2026.9.12` (GitHub Release) | Shell lifecycle, recording, clipboard and keyboard protocol v1 | Yes |
+| `keytop>=2026.9.12` (GitHub Release) | JSONL system metrics protocol v1 | Yes |
 | `qt6-base>=6.8` | Core, GUI, network and DBus | Yes |
 | `qt6-declarative` | Qt Quick and QML | Yes |
 | `qt6-svg` | SVG icons | Yes |
@@ -179,3 +179,7 @@ attribution. Larger deployments must use a suitable provider or their own instan
 Set `CLAVIS_GEOCODING_URL` to a compatible reverse endpoint to change providers
 without updating Clavis. The endpoint receives the saved coordinates; cached results
 are scoped to the endpoint. IP-based automatic location continues to use ipwho.is.
+
+The installer maps first-party package bases and split permission packages through
+`releaseSources` in the manifest. Generated installers pin Clavis to their release version;
+backend releases are resolved independently and checked against the runtime requirements.

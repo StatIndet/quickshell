@@ -403,6 +403,7 @@ def main():
         bundle_resources(args.directory, args.cache, data)
         verify_resources(args.directory, data)
     elif args.command == "installer":
+        data["installerRelease"] = "v" + version()
         code = (
             (ROOT / "scripts/install/arch.py")
             .read_text()

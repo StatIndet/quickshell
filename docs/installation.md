@@ -2,11 +2,9 @@
 
 The first release targets Arch-compatible x86_64 systems. The three independent projects
 are distributed as `clavis-shell`, `key-cli` and `keytop`. `clavis` is an unrelated AUR package.
-No public release or AUR package is implied merely by this documentation being present;
-the one-command installer requires the project packages to be available in AUR as well as a
-[GitHub release](releasing.md). Release workflows currently publish GitHub assets only; while
-the project packages are unavailable in AUR, build the release PKGBUILD/source assets manually,
-starting with key-cli and keytop.
+The one-command installer requires complete [GitHub Releases](releasing.md) for all three
+projects. First-party packages do not require AUR registration. Third-party dependencies
+such as `libcava` and `qt6-m3shapes-git` still require access to AUR.
 
 ## One command
 
@@ -19,7 +17,13 @@ The raw entry point selects the latest completed date release, downloads its ins
 and verifies its SHA-256 against that release's checksum list. HTTPS and the repository
 are the trust boundary; the checksum detects corruption, not compromise of that repository.
 The complete verified installer runs only after the download succeeds. It bootstraps Python
-if absent, then installs official dependencies and builds AUR sources as your user.
+if absent, then installs official dependencies and builds source packages as your user.
+Clavis uses the exact release that generated the installer. key-cli and keytop each resolve
+GitHub's latest formal release once per run, which must satisfy the required minimum version.
+An unavailable, incomplete or incompatible release stops installation without falling back to AUR.
+The installer verifies `PKGBUILD`, `.SRCINFO`, the source archive and accompanying install/hook
+files against that release's `SHA256SUMS` before resolving build dependencies or running makepkg.
+Split permission packages reuse their backend's release and build; only selected outputs are installed.
 No AUR helper is required. Pacman owns installed files and handles removal and upgrades.
 The initial `pacman -Syu` keeps Arch synchronized; review its normal transaction prompt.
 
@@ -94,7 +98,10 @@ specific features unavailable while ordinary metrics continue working.
 
 A failed step returns nonzero and identifies the stage. Successfully installed packages
 remain pacman-owned; fix the reported cause and rerun. There is no application rollback
-manager. For direct AUR installation, build `libcava` and `qt6-m3shapes-git` as needed,
-then `key-cli`, `keytop`, and `clavis-shell`; an existing AUR helper can resolve this graph.
+manager. For manual installation, build third-party dependencies as needed, then download and
+verify the GitHub Release build assets for `key-cli`, `keytop`, and `clavis-shell` in that order.
+Run makepkg as an ordinary user and install the selected packages with pacman.
 Installing only the base packages never grants the two optional access policies or enables
-user services. Standard pacman/AUR tooling remains the normal upgrade and removal path.
+user services. Rerun the one-command installer to discover new first-party releases; installed
+versions at least as new as the selected release are retained. Pacman handles removal, and
+pacman/AUR tooling handles third-party updates. No application updater or background polling is added.

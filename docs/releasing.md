@@ -69,10 +69,12 @@ For a packaging-only fix, download the existing release source asset and render 
 with `--pkgrel 2` (or the next revision), then review it for local builds or later manual AUR
 publication. Keep the source version/hash unchanged and do not replace published assets.
 
-The Clavis one-command installer still resolves project packages from AUR. A GitHub release
-alone does not make those packages available to it. Until they are published to AUR, use the
-release PKGBUILD/source assets to build and install the projects manually, starting with key-cli
-and keytop. Source development and installation entry points remain available in each repository.
+The Clavis one-command installer resolves first-party packages from GitHub Releases, including
+both optional permission packages. Publish key-cli and keytop first, then Clavis with the updated
+installer. Clavis is pinned to the installer's release; each backend uses its latest formal
+release and must meet the declared minimum version. Missing assets or failed checksum/version
+checks stop installation; first-party resolution does not fall back to AUR. Third-party AUR
+dependencies remain unchanged. Source development entry points remain available in each repository.
 
 ## Local preparation without deployment
 
