@@ -99,6 +99,11 @@
   ],
   "check": [
     {
+      "package": "niri",
+      "purpose": "Configuration validation and display preview contract tests",
+      "defaultInstall": true
+    },
+    {
       "package": "python",
       "purpose": "Script contract tests",
       "defaultInstall": true

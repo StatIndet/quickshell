@@ -29,6 +29,7 @@ tests independently of other Clavis repositories. CI installs only build, check 
 
 | Arch package | Purpose | Full install |
 | --- | --- | --- |
+| `niri` | Configuration validation and display preview contract tests | Yes |
 | `python` | Script contract tests | Yes |
 | `jq` | Matugen tests | Yes |
 | `matugen` | Matugen tests | Yes |
