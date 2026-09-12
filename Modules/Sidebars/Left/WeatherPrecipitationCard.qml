@@ -83,15 +83,17 @@ WeatherInsightCard {
     }
 
     Row {
-        anchors.left: parent.left
+        id: cardHeader
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.leftMargin: 16
-        anchors.topMargin: 16
+        anchors.topMargin: 24
+        width: Math.min(headerLabel.implicitWidth + 32, Math.max(0, parent.width - 64))
+        height: 24
         spacing: 8
 
         Item {
-            width: 30
-            height: 30
+            width: 24
+            height: 24
 
             Shape {
                 anchors.fill: parent
@@ -110,6 +112,13 @@ WeatherInsightCard {
         }
 
         Text {
+            id: headerLabel
+            width: Math.max(0, cardHeader.width - 32)
+            height: cardHeader.height
+            verticalAlignment: Text.AlignVCenter
+            fontSizeMode: Text.HorizontalFit
+            minimumPixelSize: 14
+            elide: Text.ElideRight
             text: qsTr("Precipitation amount")
             color: root.mutedInk
             font.family: Fonts.expressive

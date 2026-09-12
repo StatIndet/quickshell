@@ -272,10 +272,12 @@ Rectangle {
     }
 
     Row {
-        anchors.left: parent.left
+        id: cardHeader
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.leftMargin: 16
-        anchors.topMargin: 16
+        anchors.topMargin: 24
+        width: Math.min(headerLabel.implicitWidth + 32, Math.max(0, parent.width - 64))
+        height: 24
         spacing: 8
         z: 3
 
@@ -300,6 +302,13 @@ Rectangle {
         }
 
         Text {
+            id: headerLabel
+            width: Math.max(0, cardHeader.width - 32)
+            height: cardHeader.height
+            verticalAlignment: Text.AlignVCenter
+            fontSizeMode: Text.HorizontalFit
+            minimumPixelSize: 14
+            elide: Text.ElideRight
             text: root.moon ? qsTr("Moon") : qsTr("Sun")
             color: root.titleInk
             font.family: Fonts.expressive
