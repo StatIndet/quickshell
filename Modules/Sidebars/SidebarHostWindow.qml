@@ -12,6 +12,21 @@ import qs.Widgets.common
 PanelWindow {
     id: root
 
+    property string lastOpenedSidebar: "dashboard"
+    readonly property bool sameEdge: PersonalizationConfig.sidebarPositions.dashboard
+                                     === PersonalizationConfig.sidebarPositions.quickSettings
+
+    function reconcileSidebars() {
+        const positions = PersonalizationConfig.sidebarPositions;
+        const state = SidebarPolicy.resolveOpenState(WidgetState.dashboardSidebarOpen,
+                                                     WidgetState.quickSettingsOpen, lastOpenedSidebar,
+                                                     positions.dashboard, positions.quickSettings);
+        if (WidgetState.dashboardSidebarOpen && !state.dashboard && SystemCardDragSession.active)
+            SystemCardDragSession.requestCancel();
+        WidgetState.dashboardSidebarOpen = state.dashboard;
+        WidgetState.quickSettingsOpen = state.quickSettings;
+    }
+
     function sidebarOpen(target) {
         const role = SidebarPolicy.normalizeTarget(target);
         if (role === "dashboard")
@@ -35,6 +50,8 @@ PanelWindow {
     }
 
     function opened(role) {
+        lastOpenedSidebar = role;
+        reconcileSidebars();
         const requested = role === "quicksettings" ? Brightness.getScreenByName(
                                                          WidgetState.quickSettingsScreenName) : null;
         const nextScreen = requested || Brightness.activeScreen;
@@ -94,6 +111,7 @@ PanelWindow {
         if (root.fallbackScreen)
             root.retainedScreenName = root.fallbackScreen.name;
         WidgetState.sidebarScreenName = root.screen ? root.screen.name : "";
+        root.reconcileSidebars();
     }
 
     Connections {
@@ -118,9 +136,18 @@ PanelWindow {
 
     Connections {
         target: PersonalizationConfig
-        function onDashboardSidebarSideChanged() {
+        function onSidebarPositionsChanged() {
             if (SystemCardDragSession.active)
                 SystemCardDragSession.requestCancel();
+            root.reconcileSidebars();
+            // A settings change can move already visible panels onto the same
+            // edge. Retire the losing surface immediately instead of overlapping.
+            if (root.sameEdge) {
+                if (!WidgetState.dashboardSidebarOpen)
+                    dashboardSidebar.finishClosing();
+                if (!WidgetState.quickSettingsOpen)
+                    quickSettingsSidebar.finishClosing();
+            }
         }
     }
 
@@ -146,6 +173,7 @@ PanelWindow {
 
     DashboardSidebar {
         id: dashboardSidebar
+        presentationAllowed: !root.sameEdge || !quickSettingsSidebar.panelPresented
 
         anchors.fill: parent
         panelScreen: root.screen
@@ -153,6 +181,7 @@ PanelWindow {
 
     QuickSettingsSidebar {
         id: quickSettingsSidebar
+        presentationAllowed: !root.sameEdge || !dashboardSidebar.panelPresented
 
         anchors.fill: parent
         panelScreen: root.screen

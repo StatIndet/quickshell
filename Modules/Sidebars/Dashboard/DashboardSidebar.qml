@@ -20,6 +20,7 @@ Item {
     readonly property int exitDuration: Animations.durations.sidebarExit
     readonly property int panelTargetHeight: Math.max(0, height - sidebarY - gap)
     readonly property bool requestedOpen: WidgetState.dashboardSidebarOpen
+    property bool presentationAllowed: true
     property bool panelPresented: false
     property bool contentRetained: false
     property bool presentationOpen: false
@@ -43,7 +44,7 @@ Item {
     }
 
     function startPresentation() {
-        if (!requestedOpen || !contentReady)
+        if (!requestedOpen || !contentReady || !presentationAllowed)
             return;
         panelPresented = true;
         presentationOpen = true;
@@ -81,6 +82,11 @@ Item {
             preparePresentation();
         else
             beginClosing();
+    }
+
+    onPresentationAllowedChanged: {
+        if (presentationAllowed)
+            startPresentation();
     }
 
     onContentReadyChanged: {

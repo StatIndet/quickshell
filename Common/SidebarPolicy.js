@@ -14,16 +14,20 @@ function normalizeTarget(value) {
     return "";
 }
 
-function oppositeSide(side) {
-    return side === "left" ? "right" : "left";
+function restoredPositions(config) {
+    const sidebar = config || {};
+    return {
+        dashboard: normalizeSide(sidebar.dashboardSide, "left"),
+        quickSettings: normalizeSide(sidebar.quickSettingsSide, "right")
+    };
 }
 
-function restoredDashboardSide(config) {
-    const sidebar = config || {};
-    const dashboard = normalizeSide(sidebar.dashboardSide, "");
-    if (dashboard !== "")
-        return dashboard;
-    return oppositeSide(normalizeSide(sidebar.quickSettingsSide, "right"));
+function resolveOpenState(dashboard, quickSettings, preferred, dashboardSide, quickSettingsSide) {
+    if (dashboard && quickSettings && dashboardSide === quickSettingsSide) {
+        dashboard = preferred !== "quicksettings";
+        quickSettings = !dashboard;
+    }
+    return { dashboard: dashboard, quickSettings: quickSettings };
 }
 
 function edgeOpen(side, dashboard, quickSettings, dashboardSide, quickSettingsSide) {

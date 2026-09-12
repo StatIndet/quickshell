@@ -18,6 +18,7 @@ Item {
     readonly property int enterDuration: Animations.durations.sidebarEnter
     readonly property int exitDuration: Animations.durations.sidebarExit
     readonly property bool requestedOpen: WidgetState.quickSettingsOpen
+    property bool presentationAllowed: true
     property bool panelPresented: false
     property bool contentRetained: false
     property bool presentationOpen: false
@@ -35,7 +36,7 @@ Item {
     }
 
     function startPresentation() {
-        if (!requestedOpen || !contentReady)
+        if (!requestedOpen || !contentReady || !presentationAllowed)
             return;
         panelPresented = true;
         presentationOpen = true;
@@ -71,6 +72,11 @@ Item {
             preparePresentation();
         else
             beginClosing();
+    }
+
+    onPresentationAllowedChanged: {
+        if (presentationAllowed)
+            startPresentation();
     }
 
     onContentReadyChanged: {

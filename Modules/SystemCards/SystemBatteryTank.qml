@@ -136,27 +136,15 @@ Item {
     }
 
     Rectangle {
-        id: batteryTerminalOuter
-
         width: Math.max(34, Math.min(54, parent.width * 0.3))
         height: 12
         radius: 6
-        color: Appearance.colors.colOutline
+        // Match the body at its top edge, including the filled state.
+        color: root.animatedLevel >= 1 ? root.levelColor : root.containerColor
 
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-        }
-
-        Rectangle {
-            radius: Math.max(1, parent.radius - 2)
-            color: root.containerColor
-
-            anchors {
-                fill: parent
-                margins: 2
-                bottomMargin: 0
-            }
         }
     }
 
@@ -165,8 +153,6 @@ Item {
 
         radius: root.bodyRadius
         color: root.containerColor
-        border.width: 2
-        border.color: Appearance.applyAlpha(Appearance.colors.colOutline, 0.82)
 
         anchors {
             left: parent.left
@@ -177,20 +163,6 @@ Item {
             rightMargin: 3
             topMargin: 8
             bottomMargin: 2
-        }
-    }
-
-    Rectangle {
-        parent: batteryBody
-        z: 3
-        radius: Math.max(1, batteryBody.radius - 5)
-        color: "transparent"
-        border.width: 1
-        border.color: Appearance.applyAlpha(Appearance.colors.colOnSecondaryContainer, 0.2)
-
-        anchors {
-            fill: parent
-            margins: 5
         }
     }
 

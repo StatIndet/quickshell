@@ -616,8 +616,12 @@ Singleton {
     property bool shellBlurEnabled: false
     property bool shellBlurXray: true
     property bool keepSidebarsLoaded: true
-    property string dashboardSidebarSide: "left"
-    readonly property string quickSettingsSidebarSide: SidebarPolicy.oppositeSide(dashboardSidebarSide)
+    property var sidebarPositions: ({
+                                        dashboard: "left",
+                                        quickSettings: "right"
+                                    })
+    readonly property string dashboardSidebarSide: sidebarPositions.dashboard
+    readonly property string quickSettingsSidebarSide: sidebarPositions.quickSettings
     property bool desktopCardGridSnapEnabled: true
     property bool desktopCardGridVisibleWhileDragging: true
 
@@ -1244,12 +1248,21 @@ Singleton {
     }
 
     function setDashboardSidebarSide(value) {
-        setValue("dashboardSidebarSide", SidebarPolicy.normalizeSide(value, "left"));
+        const side = SidebarPolicy.normalizeSide(value, "left");
+        if (side !== root.dashboardSidebarSide)
+            setValue("sidebarPositions", {
+                         dashboard: side,
+                         quickSettings: root.quickSettingsSidebarSide
+                     });
     }
 
     function setQuickSettingsSidebarSide(value) {
-        setValue("dashboardSidebarSide", SidebarPolicy.oppositeSide(SidebarPolicy.normalizeSide(value,
-                                                                                                "right")));
+        const side = SidebarPolicy.normalizeSide(value, "right");
+        if (side !== root.quickSettingsSidebarSide)
+            setValue("sidebarPositions", {
+                         dashboard: root.dashboardSidebarSide,
+                         quickSettings: side
+                     });
     }
 
     function setKeepSidebarsLoaded(value) {
@@ -1782,7 +1795,7 @@ Singleton {
         root.barTrailingComponents = barLayout.trailing;
         root.quickSettingsComponents = root.normalizedQuickSettingsComponents(bar.quickSettingsComponents);
         root.keepSidebarsLoaded = sidebar.keepLoaded === undefined ? true : !!sidebar.keepLoaded;
-        root.dashboardSidebarSide = SidebarPolicy.restoredDashboardSide(sidebar);
+        root.sidebarPositions = SidebarPolicy.restoredPositions(sidebar);
         root.desktopCardGridSnapEnabled = desktopCards.gridSnapEnabled === undefined ? true : !
                                                                                        !desktopCards.gridSnapEnabled;
         root.desktopCardGridVisibleWhileDragging = desktopCards.gridVisibleWhileDragging === undefined ? true :

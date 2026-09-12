@@ -6,41 +6,63 @@ TestCase {
     name: "SidebarPolicy"
 
     function test_restorePositions() {
-        compare(SidebarPolicy.restoredDashboardSide(null), "left");
-        compare(SidebarPolicy.restoredDashboardSide({
-                                                        keepLoaded: false
-                                                    }), "left");
-        compare(SidebarPolicy.restoredDashboardSide({
-                                                        dashboardSide: "right",
-                                                        quickSettingsSide: "left"
-                                                    }), "right");
-        compare(SidebarPolicy.restoredDashboardSide({
-                                                        dashboardSide: "right",
-                                                        quickSettingsSide: "right"
-                                                    }), "right");
-        compare(SidebarPolicy.restoredDashboardSide({
-                                                        dashboardSide: "invalid",
-                                                        quickSettingsSide: "left"
-                                                    }), "right");
-        compare(SidebarPolicy.restoredDashboardSide({
-                                                        dashboardSide: 123,
-                                                        quickSettingsSide: "invalid"
-                                                    }), "left");
+        compare(SidebarPolicy.restoredPositions(null), {
+                    dashboard: "left",
+                    quickSettings: "right"
+                });
+        compare(SidebarPolicy.restoredPositions({
+                                                    keepLoaded: false
+                                                }), {
+                    dashboard: "left",
+                    quickSettings: "right"
+                });
+        compare(SidebarPolicy.restoredPositions({
+                                                    dashboardSide: "invalid",
+                                                    quickSettingsSide: "left"
+                                                }), {
+                    dashboard: "left",
+                    quickSettings: "left"
+                });
+        ["left", "right"].forEach(function (dashboard) {
+            ["left", "right"].forEach(function (quickSettings) {
+                compare(SidebarPolicy.restoredPositions({
+                                                            dashboardSide: dashboard,
+                                                            quickSettingsSide: quickSettings
+                                                        }), {
+                            dashboard: dashboard,
+                            quickSettings: quickSettings
+                        });
+            });
+        });
     }
 
-    function test_swapRoundTrip() {
+    function test_sameEdgeLastRequestWins() {
         ["left", "right"].forEach(function (side) {
-            const other = SidebarPolicy.oppositeSide(side);
-            verify(other !== side);
-            compare(SidebarPolicy.oppositeSide(other), side);
-            compare(SidebarPolicy.restoredDashboardSide({
-                                                            dashboardSide: side,
-                                                            quickSettingsSide: other
-                                                        }), side);
-            compare(SidebarPolicy.restoredDashboardSide({
-                                                            quickSettingsSide: other
-                                                        }), side);
+            compare(SidebarPolicy.resolveOpenState(true, true, "dashboard", side, side), {
+                        dashboard: true,
+                        quickSettings: false
+                    });
+            compare(SidebarPolicy.resolveOpenState(true, true, "quicksettings", side, side), {
+                        dashboard: false,
+                        quickSettings: true
+                    });
+            compare(SidebarPolicy.resolveOpenState(false, false, "quicksettings", side, side), {
+                        dashboard: false,
+                        quickSettings: false
+                    });
+            compare(SidebarPolicy.resolveOpenState(true, false, "quicksettings", side, side), {
+                        dashboard: true,
+                        quickSettings: false
+                    });
         });
+        compare(SidebarPolicy.resolveOpenState(true, true, "dashboard", "left", "right"), {
+                    dashboard: true,
+                    quickSettings: true
+                });
+        compare(SidebarPolicy.resolveOpenState(true, true, "quicksettings", "right", "left"), {
+                    dashboard: true,
+                    quickSettings: true
+                });
     }
 
     function test_targetAliases() {
