@@ -106,7 +106,6 @@ Item {
                 root.updateDragPosition(visibleTopLeft.x, visibleTopLeft.y);
             } else if (started) {
                 started = false;
-                const bounds = dragHandler.screenBounds();
                 let positions = [];
                 if (root.placementController && typeof root.placementController.finishCardDrag === "function")
                     positions = root.placementController.finishCardDrag(root.dragX, root.dragY);
@@ -114,12 +113,6 @@ Item {
                 if (Array.isArray(positions) && positions.length > 0) {
                     SystemCardService.setDesktopScreenPositions(positions, !SystemCardService.isFreeLayoutMode(
                                                                     SystemCardService.globalDesktopLayoutMode));
-                } else {
-                    const xNorm = root.dragX / bounds.width;
-                    const yNorm = root.dragY / bounds.height;
-                    SystemCardService.setDesktopScreenPosition(root.tileId, xNorm, yNorm,
-                                                               !SystemCardService.isFreeLayoutMode(
-                                                                   SystemCardService.globalDesktopLayoutMode));
                 }
                 root.dragging = false;
                 if (root.placementController && typeof root.placementController.completeCardDrag

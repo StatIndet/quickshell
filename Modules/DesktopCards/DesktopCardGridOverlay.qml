@@ -1,35 +1,22 @@
 import QtQuick
 import qs.Common
-import "./DesktopCardLayout.js" as DesktopCardLayout
+import qs.Modules.SystemCards
 
 Item {
     id: root
 
     property bool active: false
     property var highlightRect: null
-    readonly property var metrics: DesktopCardLayout.gridMetrics(width, height)
+    property bool validDrop: true
+    property bool showGuides: true
 
     visible: opacity > 0
     opacity: active ? 1 : 0
 
-    Repeater {
-        model: root.active ? root.metrics.columns * root.metrics.rows : 0
-
-        delegate: Rectangle {
-            required property int index
-            readonly property int column: index % root.metrics.columns
-            readonly property int row: Math.floor(index / root.metrics.columns)
-
-            x: root.metrics.originX + column * root.metrics.columnPitch
-            y: root.metrics.originY + row * root.metrics.rowPitch
-            width: root.metrics.cellWidth
-            height: root.metrics.cellHeight
-            radius: Metrics.cornerS
-            color: "transparent"
-            border.width: Metrics.dividerWidth
-            border.color: Appearance.applyAlpha(Appearance.colors.colOutlineVariant, 0.42)
-        }
-
+    Loader {
+        anchors.fill: parent
+        active: root.active && root.showGuides
+        sourceComponent: SystemCardGridGuides {}
     }
 
     Rectangle {
@@ -39,9 +26,11 @@ Item {
         width: root.highlightRect ? Number(root.highlightRect.width) : 0
         height: root.highlightRect ? Number(root.highlightRect.height) : 0
         radius: Appearance.rounding.extraLarge
-        color: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.14)
+        color: Appearance.applyAlpha((root.validDrop ? Appearance.colors.colPrimary :
+                                                       Appearance.colors.colError), 0.14)
         border.width: 2
-        border.color: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.82)
+        border.color: Appearance.applyAlpha((root.validDrop ? Appearance.colors.colPrimary :
+                                                              Appearance.colors.colError), 0.82)
     }
 
     Behavior on opacity {
@@ -50,7 +39,5 @@ Item {
             easing.type: Appearance.animation.expressiveFastEffects.type
             easing.bezierCurve: Appearance.animation.expressiveFastEffects.bezierCurve
         }
-
     }
-
 }

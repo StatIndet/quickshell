@@ -28,15 +28,12 @@ Item {
         return ids;
     }
     readonly property var tileDefinitions: GridLayout.definitions(root.activeSidebarIds)
-    readonly property int gridColumns: GridLayout.columnCount
-    readonly property int gridRows: GridLayout.contentRowCount(root.committedLayout, root.activeSidebarIds)
-    readonly property real gridGap: CardGeometry.cellGap
-    readonly property int gridCellWidth: CardGeometry.baseCellWidth
-    readonly property int gridCellHeight: CardGeometry.baseCellHeight
-    readonly property int gridContentWidth: root.gridColumns * root.gridCellWidth + (root.gridColumns - 1)
-                                            * root.gridGap
-    readonly property int gridContentHeight: root.gridRows * root.gridCellHeight + (root.gridRows - 1)
-                                             * root.gridGap
+    readonly property int gridContentWidth: GridLayout.canvasWidth
+    readonly property int gridContentHeight: GridLayout.contentHeight(root.dragTargetValid &&
+                                                                      !root.desktopExtraction
+                                                                      ? root.previewLayout :
+                                                                        root.committedLayout,
+                                                                      root.activeSidebarIds)
     readonly property var sidebarAnchors: {
         const result = {};
         root.activeSidebarIds.forEach(function (id) {
@@ -50,8 +47,8 @@ Item {
     property var previewLayout: []
     property string draggingTileId: ""
     property Item dragSourceItem: null
-    property int targetColumn: -1
-    property int targetRow: -1
+    property int targetX: -1
+    property int targetY: -1
     property bool dragTargetValid: false
     property bool desktopExtraction: false
 
@@ -85,17 +82,14 @@ Item {
     }
 
     function applyStoredLayout(forceRefresh) {
-        if ((!forceRefresh && root.preferencesApplied) || !UiPreferences.preferencesReady
-                || root.draggingTileId.length > 0)
+        if ((!forceRefresh && root.preferencesApplied) || !UiPreferences.preferencesReady ||
+                !SystemCardService.preferencesLoaded || root.draggingTileId.length > 0)
             return;
 
         const hydrated = GridLayout.hydrateSaved(UiPreferences.drawerGridLayout, root.activeSidebarIds,
                                                  root.sidebarAnchors);
-        const normalized = GridLayout.serializeLayout(hydrated, root.activeSidebarIds);
         root.committedLayout = hydrated;
         root.preferencesApplied = true;
-        if (JSON.stringify(normalized) !== JSON.stringify(UiPreferences.drawerGridLayout || {}))
-            UiPreferences.setDrawerGridLayout(normalized);
     }
 
     function beginDrag(tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX, pointerLocalY) {
@@ -107,8 +101,8 @@ Item {
 
         root.draggingTileId = tileId;
         root.dragSourceItem = sourceItem;
-        root.targetColumn = -1;
-        root.targetRow = -1;
+        root.targetX = -1;
+        root.targetY = -1;
         root.dragTargetValid = false;
         root.desktopExtraction = false;
         dashboard.forceActiveFocus();
@@ -127,11 +121,14 @@ Item {
             console.warn("[SystemCards] presentation host unavailable", root.screenName, tileId);
             return false;
         }
+        // The drawer may be scaled down, but the desktop uses canonical
+        // card dimensions. Preserve the relative grab point while promoting.
+        const size = root.cardSize(tileId);
+        const grabX = (mappedGrabPoint.x - sourceRect.x) * size.width / Math.max(1, sourceRect.width);
+        const grabY = (mappedGrabPoint.y - sourceRect.y) * size.height / Math.max(1, sourceRect.height);
         return SystemCardDragSession.promoteToPresentation(root.screenName, presentationPointer.x,
-                                                           presentationPointer.y, mappedGrabPoint.x
-                                                           - sourceRect.x, mappedGrabPoint.y - sourceRect.y,
-                                                           sourceRect.width, sourceRect.height, geometry.width,
-                                                           geometry.height);
+                                                           presentationPointer.y, grabX, grabY, size.width,
+                                                           size.height, geometry.width, geometry.height);
     }
 
     function updateDrag(tileId, pointerLocalX, pointerLocalY) {
@@ -156,8 +153,8 @@ Item {
             root.desktopExtraction = true;
             root.previewLayout = [];
             root.dragTargetValid = false;
-            root.targetColumn = -1;
-            root.targetRow = -1;
+            root.targetX = -1;
+            root.targetY = -1;
             return;
         }
         const localPoint = dashboard.mapFromItem(root.dragSourceItem, pointerLocalX, pointerLocalY);
@@ -170,15 +167,13 @@ Item {
         if (!definition)
             return;
 
-        const rawColumn = Math.round((localPoint.x - grabVectorX) / dashboard.columnStride);
-        const rawRow = Math.round((localPoint.y - grabVectorY) / dashboard.rowStride);
-        const anchor = GridLayout.clampAnchor(definition, rawColumn, rawRow);
-        if (anchor.column === root.targetColumn && anchor.row === root.targetRow)
+        const anchor = GridLayout.clampAnchor(definition, localPoint.x - grabVectorX, localPoint.y
+                                              - grabVectorY);
+        if (anchor.x === root.targetX && anchor.y === root.targetY)
             return;
-
-        root.targetColumn = anchor.column;
-        root.targetRow = anchor.row;
-        const solved = GridLayout.moveLayout(root.committedLayout, tileId, anchor.column, anchor.row,
+        root.targetX = anchor.x;
+        root.targetY = anchor.y;
+        const solved = GridLayout.moveLayout(root.committedLayout, tileId, anchor.x, anchor.y,
                                              root.activeSidebarIds);
         root.previewLayout = solved || [];
         root.dragTargetValid = solved !== null;
@@ -240,12 +235,10 @@ Item {
                                             });
                 });
 
-            if (collisionPositions.length === 0)
-                collisionPositions.push({
-                                            "id": tileId,
-                                            "xNorm": normalized.xNorm,
-                                            "yNorm": normalized.yNorm
-                                        });
+            if (collisionPositions.length === 0) {
+                root.cancelDrag(tileId);
+                return;
+            }
 
             const committed = SystemCardService.transferToDesktop(tileId, root.screenName, normalized.xNorm,
                                                                   normalized.yNorm, collisionPositions,
@@ -272,8 +265,6 @@ Item {
         }
         if (root.dragTargetValid) {
             root.committedLayout = root.previewLayout;
-            UiPreferences.setDrawerGridLayout(GridLayout.serializeLayout(root.committedLayout,
-                                                                         root.activeSidebarIds));
             SystemCardService.setSidebarLayout(root.committedLayout);
         }
         root.resetDragState(false);
@@ -297,8 +288,8 @@ Item {
         root.dragSourceItem = null;
         root.previewLayout = [];
         root.dragTargetValid = false;
-        root.targetColumn = -1;
-        root.targetRow = -1;
+        root.targetX = -1;
+        root.targetY = -1;
         root.desktopExtraction = false;
     }
 
@@ -354,6 +345,9 @@ Item {
             root.applyStoredLayout(true);
         }
 
+        function onPreferencesLoadedChanged() {
+            root.applyStoredLayout();
+        }
         target: SystemCardService
     }
 
@@ -410,20 +404,22 @@ Item {
             id: dashboardScroll
 
             function scrollBy(delta) {
-                const next = dashboardScroll.clampContentY(dashboardScroll.contentY + delta);
-                dashboardScroll.scrollTargetY = next;
-                dashboardScroll.contentY = next;
+                const minimum = dashboardScroll.originY - dashboardScroll.topMargin;
+                const maximum = Math.max(minimum, dashboardScroll.originY + dashboardScroll.contentHeight
+                                         - dashboardScroll.height + dashboardScroll.bottomMargin);
+                dashboardScroll.cancelFlick();
+                dashboardScroll.contentY = Math.max(minimum, Math.min(maximum, dashboardScroll.contentY
+                                                                      + delta));
             }
 
             anchors.fill: parent
             visible: SystemMonitorService.hasData
             contentWidth: width
             contentHeight: Math.max(height, root.gridContentHeight * dashboard.scale)
-            // This page scrolls through wheel/touchpad and keyboard input.
-            // Flickable's direct mouse drag otherwise competes with the
-            // DrawerGridTile DragHandler and interactive card controls.
-            interactive: false
-            fasterTouchpadScroll: true
+            // Keep wheel/touchpad scrolling enabled without letting Flickable
+            // take the mouse gesture used to drag a card.
+            acceptedButtons: Qt.NoButton
+            interactive: root.isForeground && root.draggingTileId.length === 0
             showVerticalScrollBar: contentHeight > height + 1
             activeFocusOnTab: contentHeight > height + 1
             Accessible.name: contentHeight > height + 1 ? qsTr(
@@ -458,11 +454,6 @@ Item {
             Item {
                 id: dashboard
 
-                readonly property int cellWidth: root.gridCellWidth
-                readonly property int cellHeight: root.gridCellHeight
-                readonly property real columnStride: cellWidth + root.gridGap
-                readonly property real rowStride: cellHeight + root.gridGap
-
                 // Preserve the shared card geometry and drag coordinates. Only a
                 // constrained viewport shrinks the grid as a single surface.
                 scale: Math.min(1, Math.max(0.01, dashboardScroll.width / root.gridContentWidth))
@@ -479,11 +470,19 @@ Item {
                     event.accepted = true;
                 }
 
+                Loader {
+                    width: dashboard.width
+                    height: dashboardScroll.height / dashboard.scale
+                    y: Math.floor(dashboardScroll.contentY / dashboard.scale / 24) * 24
+                    active: root.draggingTileId !== "" && !root.desktopExtraction
+                    sourceComponent: SystemCardGridGuides {}
+                }
+
                 Rectangle {
                     id: targetPreview
 
-                    x: root.targetColumn * dashboard.columnStride
-                    y: root.targetRow * dashboard.rowStride
+                    x: root.targetX
+                    y: root.targetY
                     width: {
                         const definition = GridLayout.tileDefinitionFor(root.draggingTileId);
                         return definition ? CardGeometry.widthForSpan(definition.columnSpan) : 0;
@@ -492,8 +491,8 @@ Item {
                         const definition = GridLayout.tileDefinitionFor(root.draggingTileId);
                         return definition ? CardGeometry.heightForSpan(definition.rowSpan) : 0;
                     }
-                    visible: root.draggingTileId.length > 0 && !root.desktopExtraction && root.targetColumn
-                             >= 0 && root.targetRow >= 0
+                    visible: root.draggingTileId.length > 0 && !root.desktopExtraction && root.targetX >= 0
+                             && root.targetY >= 0
                     radius: Appearance.rounding.extraLarge
                     color: Appearance.applyAlpha(root.dragTargetValid ? Appearance.colors.colPrimary :
                                                                         Appearance.colors.colError, 0.14)
@@ -520,8 +519,6 @@ Item {
                 }
 
                 Repeater {
-                    id: tileRepeater
-
                     model: root.tileDefinitions
 
                     delegate: DrawerGridTile {
@@ -532,11 +529,12 @@ Item {
                         readonly property var placement: root.displayPlacement(tile.tileId)
 
                         tileId: definition.id
-                        x: placement ? placement.column * dashboard.columnStride : 0
-                        y: placement ? placement.row * dashboard.rowStride : 0
+                        x: placement ? placement.x : 0
+                        y: placement ? placement.y : 0
                         width: root.cardSize(tile.tileId).width
                         height: root.cardSize(tile.tileId).height
                         active: root.isForeground
+                        motionEnabled: root.isForeground
                         dragging: root.draggingTileId === tile.tileId
                         z: dragging ? 30 : 1
                         onDragStarted: (tileId, sourceItem, grabLocalX, grabLocalY, pointerLocalX,

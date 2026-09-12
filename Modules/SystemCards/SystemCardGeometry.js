@@ -1,6 +1,6 @@
 .pragma library
 
-// The sidebar grid is the canonical geometry for every SystemCard surface.
+// The catalog size presets are shared by every SystemCard surface.
 // Desktop cards deliberately use these same dimensions; wallpaper placement
 // changes the coordinate system, not the card's visual scale.
 Qt.include("SystemCardCatalog.js");

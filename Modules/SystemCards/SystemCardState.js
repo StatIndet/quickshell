@@ -6,7 +6,7 @@
 Qt.include("SystemCardCatalog.js");
 Qt.include("SystemCardPlacement.js");
 
-var schemaVersion = 3;
+var schemaVersion = 4;
 var placementSpaces = ["screen", "wallpaper"];
 
 function isObject(value) {
@@ -30,11 +30,6 @@ function clamp01(value, fallback) {
     return Math.max(0, Math.min(1, number));
 }
 
-function integerOr(value, fallback) {
-    var number = Number(value);
-    return isFinite(number) ? Math.round(number) : fallback;
-}
-
 function coordinate(raw, fallback) {
     var source = isObject(raw) ? raw : {};
     return {
@@ -44,15 +39,11 @@ function coordinate(raw, fallback) {
 }
 
 function defaultCard(definition) {
-    var anchor = defaultAnchorFor(definition.id);
     return {
         enabled: true,
         container: "sidebar",
         screenName: "",
-        sidebar: {
-            column: anchor.column,
-            row: anchor.row
-        },
+        sidebar: null,
         desktop: {
             placementSpace: "screen",
             screen: {
@@ -105,7 +96,7 @@ function normalize(raw) {
 
         // Versions 1/2 stored desktop.xNorm/yNorm in wallpaper space. Keep
         // that meaning during migration instead of silently interpreting old
-        // values as screen coordinates. A current v3 document with missing
+        // values as screen coordinates. A current document with missing
         // nested coordinates is treated the same way as a malformed legacy
         // desktop record and safely falls back to wallpaper space.
         var legacyWallpaper = {
@@ -134,12 +125,7 @@ function normalize(raw) {
                 ? "desktop" : "sidebar",
             screenName: typeof rawCard.screenName === "string"
                 ? rawCard.screenName : "",
-            sidebar: {
-                column: Math.max(0, integerOr(
-                    rawSidebar.column, fallback.sidebar.column)),
-                row: Math.max(0, integerOr(
-                    rawSidebar.row, fallback.sidebar.row))
-            },
+            sidebar: sidebarPosition(rawSidebar, Number(source.version)),
             desktop: {
                 placementSpace: space,
                 screen: rawScreen,
@@ -261,14 +247,30 @@ function setPlacementSpace(state, id, placementSpace) {
     });
 }
 
-function setSidebarAnchor(state, id, column, row) {
+function sidebarPosition(raw, version) {
+    if (!isObject(raw))
+        return null;
+    var x = version >= 4 ? raw.x : raw.column * 160;
+    var y = version >= 4 ? raw.y : raw.row * 168;
+    if (typeof x !== "number" || typeof y !== "number" || !isFinite(x) || !isFinite(y))
+        return null;
+    return {x: Math.max(0, Math.round(x / 8) * 8), y: Math.max(0, Math.round(y / 8) * 8)};
+}
+
+function setSidebarAnchor(state, id, x, y) {
     return updateCard(state, id, function(next) {
-        next.sidebar.column = Math.max(0, integerOr(
-            column, next.sidebar.column));
-        next.sidebar.row = Math.max(0, integerOr(
-            row, next.sidebar.row));
+        next.sidebar = sidebarPosition({x: Number(x), y: Number(y)}, schemaVersion);
         return next;
     });
+}
+
+function setSidebarLayout(state, layout) {
+    var next = normalize(state);
+    (Array.isArray(layout) ? layout : []).forEach(function(tile) {
+        if (tile && next.cards[tile.id])
+            next.cards[tile.id].sidebar = sidebarPosition(tile, schemaVersion);
+    });
+    return next;
 }
 
 function setGlobalMode(state, mode) {

@@ -354,13 +354,12 @@ Singleton {
         systemThemeWriter.running = true;
     }
 
-    function setDrawerGridLayout(layout) {
-        try {
-            root.drawerGridLayout = JSON.parse(JSON.stringify(layout || {}));
-        } catch (error) {
-            console.warn("UiPreferences rejected drawer grid layout:", error);
-            return;
-        }
+    // Publish both documents before scheduling their single durable write.
+    function setCardLayouts(cards, layout) {
+        const nextCards = JSON.parse(JSON.stringify(cards));
+        const nextLayout = JSON.parse(JSON.stringify(layout));
+        root.systemCards = nextCards;
+        root.drawerGridLayout = nextLayout;
         root.save();
     }
 

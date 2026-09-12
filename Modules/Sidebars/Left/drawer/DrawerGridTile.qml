@@ -10,24 +10,13 @@ Item {
     property bool active: true
     property bool dragging: false
     property bool motionEnabled: true
-    readonly property bool presentationOwned:
-        SystemCardDragSession.presentationActive
-        && SystemCardDragSession.tileId === root.tileId
+    readonly property bool presentationOwned: SystemCardDragSession.presentationActive
+                                              && SystemCardDragSession.tileId === root.tileId
     readonly property Item contentItem: cardContent
 
-    signal dragStarted(
-        string tileId,
-        Item sourceItem,
-        real grabLocalX,
-        real grabLocalY,
-        real pointerLocalX,
-        real pointerLocalY
-    )
-    signal dragMoved(
-        string tileId,
-        real pointerLocalX,
-        real pointerLocalY
-    )
+    signal dragStarted(string tileId, Item sourceItem, real grabLocalX, real grabLocalY, real pointerLocalX,
+                       real pointerLocalY)
+    signal dragMoved(string tileId, real pointerLocalX, real pointerLocalY)
     signal dragFinished(string tileId)
     signal dragCanceled(string tileId)
 
@@ -38,8 +27,7 @@ Item {
         NumberAnimation {
             duration: Appearance.animation.expressiveSlowSpatial.duration
             easing.type: Appearance.animation.expressiveSlowSpatial.type
-            easing.bezierCurve:
-                Appearance.animation.expressiveSlowSpatial.bezierCurve
+            easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
         }
     }
 
@@ -48,8 +36,7 @@ Item {
         NumberAnimation {
             duration: Appearance.animation.expressiveSlowSpatial.duration
             easing.type: Appearance.animation.expressiveSlowSpatial.type
-            easing.bezierCurve:
-                Appearance.animation.expressiveSlowSpatial.bezierCurve
+            easing.bezierCurve: Appearance.animation.expressiveSlowSpatial.bezierCurve
         }
     }
 
@@ -58,8 +45,7 @@ Item {
         NumberAnimation {
             duration: Appearance.animation.expressiveEffects.duration
             easing.type: Appearance.animation.expressiveEffects.type
-            easing.bezierCurve:
-                Appearance.animation.expressiveEffects.bezierCurve
+            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
         }
     }
 
@@ -68,8 +54,7 @@ Item {
         NumberAnimation {
             duration: Appearance.animation.expressiveEffects.duration
             easing.type: Appearance.animation.expressiveEffects.type
-            easing.bezierCurve:
-                Appearance.animation.expressiveEffects.bezierCurve
+            easing.bezierCurve: Appearance.animation.expressiveEffects.bezierCurve
         }
     }
 
@@ -79,8 +64,7 @@ Item {
         anchors.fill: parent
         visible: !root.presentationOwned && cardContent.shellManagedSurface
         radius: Appearance.rounding.extraLarge
-        color: BlurService.solidBackgroundColor(
-            Appearance.m3colors.m3surfaceContainerHigh)
+        color: BlurService.solidBackgroundColor(Appearance.m3colors.m3surfaceContainerHigh)
     }
 
     SystemCardContent {
@@ -97,9 +81,7 @@ Item {
     }
 
     HoverHandler {
-        cursorShape: dragHandler.active
-            ? Qt.ClosedHandCursor
-            : Qt.OpenHandCursor
+        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
     }
 
     DragHandler {
@@ -108,23 +90,15 @@ Item {
         target: null
         enabled: root.active
         acceptedButtons: Qt.LeftButton
-        grabPermissions:
-            PointerHandler.CanTakeOverFromAnything
-            | PointerHandler.ApprovesTakeOverByAnything
+        grabPermissions: PointerHandler.CanTakeOverFromAnything | PointerHandler.ApprovesTakeOverByAnything
 
         property bool started: false
 
         onActiveChanged: {
             if (active) {
                 started = true;
-                root.dragStarted(
-                    root.tileId,
-                    root,
-                    centroid.pressPosition.x,
-                    centroid.pressPosition.y,
-                    centroid.position.x,
-                    centroid.position.y
-                );
+                root.dragStarted(root.tileId, root, centroid.pressPosition.x, centroid.pressPosition.y,
+                                 centroid.position.x, centroid.position.y);
             } else if (started) {
                 started = false;
                 root.dragFinished(root.tileId);
@@ -134,11 +108,7 @@ Item {
         onCentroidChanged: {
             if (!active)
                 return;
-            root.dragMoved(
-                root.tileId,
-                centroid.position.x,
-                centroid.position.y
-            );
+            root.dragMoved(root.tileId, centroid.position.x, centroid.position.y);
         }
 
         onCanceled: {

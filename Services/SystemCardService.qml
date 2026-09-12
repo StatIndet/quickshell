@@ -5,6 +5,7 @@ import qs.Services
 import "../Modules/SystemCards/SystemCardCatalog.js" as Catalog
 import "../Modules/SystemCards/SystemCardGeometry.js" as Geometry
 import "../Modules/SystemCards/SystemCardState.js" as CardState
+import "../Modules/Sidebars/Left/drawer/DrawerGridLayout.js" as DrawerLayout
 
 Singleton {
     id: root
@@ -23,7 +24,7 @@ Singleton {
     property var internalState: CardState.defaultState()
 
     signal cardStateChanged(string cardId)
-    signal desktopLayoutRequested()
+    signal desktopLayoutRequested
 
     function card(cardId) {
         return root.cards[String(cardId)] || null;
@@ -69,25 +70,35 @@ Singleton {
         return Geometry.sizeFor(String(cardId));
     }
 
-    function persist(nextState) {
-        UiPreferences.setSystemCards(CardState.serialize(nextState));
+    function reconciledLayouts(nextState, savedLayout) {
+        let state = CardState.normalize(nextState);
+        const active = CardState.activeSidebarIds(state);
+        const anchors = {};
+        root.cardIds.forEach(function (id) {
+            anchors[id] = state.cards[id].sidebar;
+        });
+        const layout = DrawerLayout.hydrateSaved(savedLayout, active, anchors);
+        state = CardState.setSidebarLayout(state, layout);
+        return {
+            state: state,
+            layout: DrawerLayout.serializeLayout(layout, active)
+        };
     }
 
-    function commit(nextState, changedId, requestLayout) {
-        const normalized = CardState.normalize(nextState);
-        if (JSON.stringify(normalized) === JSON.stringify(root.internalState))
+    function commit(nextState, changedId, requestLayout, savedLayout) {
+        const next = root.reconciledLayouts(nextState, savedLayout === undefined
+                                            ? UiPreferences.drawerGridLayout : savedLayout);
+        if (JSON.stringify(next.state) === JSON.stringify(root.internalState) && JSON.stringify(next.layout)
+                === JSON.stringify(UiPreferences.drawerGridLayout))
             return false;
-
-        root.internalState = normalized;
+        root.internalState = next.state;
         root.desktopLayoutRevision += 1;
-        root.persist(normalized);
+        UiPreferences.setCardLayouts(CardState.serialize(next.state), next.layout);
         if (changedId)
             root.cardStateChanged(String(changedId));
-
         root.syncMonitorOwnership();
         if (requestLayout)
             root.desktopLayoutRequested();
-
         return true;
     }
 
@@ -97,21 +108,25 @@ Singleton {
 
     function setContainer(cardId, container, screenName, xNorm, yNorm, placementSpace) {
         const id = String(cardId);
-        const next = CardState.setContainer(root.internalState, id, container, screenName, xNorm, yNorm, placementSpace);
+        const next = CardState.setContainer(root.internalState, id, container, screenName, xNorm, yNorm,
+                                            placementSpace);
         const committed = root.commit(next, id, container === "desktop");
         return committed;
     }
 
     function setDesktopScreenPosition(cardId, xNorm, yNorm, requestLayout) {
-        return root.commit(CardState.setDesktopScreenPosition(root.internalState, String(cardId), xNorm, yNorm), cardId, !!requestLayout);
+        return root.commit(CardState.setDesktopScreenPosition(root.internalState, String(cardId), xNorm,
+                                                              yNorm), cardId, !!requestLayout);
     }
 
     function setDesktopWallpaperPosition(cardId, xNorm, yNorm) {
-        return root.commit(CardState.setDesktopWallpaperPosition(root.internalState, String(cardId), xNorm, yNorm), cardId, false);
+        return root.commit(CardState.setDesktopWallpaperPosition(root.internalState, String(cardId), xNorm,
+                                                                 yNorm), cardId, false);
     }
 
     function setPlacementSpace(cardId, placementSpace) {
-        return root.commit(CardState.setPlacementSpace(root.internalState, String(cardId), placementSpace), cardId, false);
+        return root.commit(CardState.setPlacementSpace(root.internalState, String(cardId), placementSpace),
+                           cardId, false);
     }
 
     function setDesktopScreenPositions(positions, requestLayout) {
@@ -127,20 +142,20 @@ Singleton {
     // drop point; collision resolution only moves the other cards.
     function transferToDesktop(cardId, screenName, xNorm, yNorm, positions, requestLayout) {
         const id = String(cardId);
-        let next = CardState.setContainer(root.internalState, id, "desktop", String(screenName || ""), xNorm, yNorm, "screen");
+        let next = CardState.setContainer(root.internalState, id, "desktop", String(screenName || ""), xNorm, yNorm,
+                                          "screen");
         const batch = Array.isArray(positions) ? positions.slice() : [];
         let hasTransferredPosition = false;
-        batch.forEach(function(position) {
+        batch.forEach(function (position) {
             if (position && String(position.id) === id)
                 hasTransferredPosition = true;
-
         });
         if (!hasTransferredPosition)
             batch.push({
-            "id": id,
-            "xNorm": xNorm,
-            "yNorm": yNorm
-        });
+                           "id": id,
+                           "xNorm": xNorm,
+                           "yNorm": yNorm
+                       });
 
         next = CardState.setDesktopScreenPositions(next, batch);
         const committed = root.commit(next, id, !!requestLayout);
@@ -150,32 +165,14 @@ Singleton {
     function requestDesktopLayout() {
         if (CardState.isAutomaticMode(root.globalDesktopLayoutMode))
             root.desktopLayoutRequested();
-
-    }
-
-    function setSidebarAnchor(cardId, column, row) {
-        return root.commit(CardState.setSidebarAnchor(root.internalState, String(cardId), column, row), cardId, false);
     }
 
     function setSidebarLayout(layout) {
-        if (!Array.isArray(layout))
+        const active = root.sidebarCardIds;
+        if (!DrawerLayout.validateLayout(layout, active))
             return false;
-
-        let next = CardState.normalize(root.internalState);
-        let changed = false;
-        layout.forEach(function(tile) {
-            if (!tile || typeof tile.id !== "string" || !next.cards[tile.id])
-                return ;
-
-            const current = next.cards[tile.id].sidebar;
-            const column = Math.max(0, Math.round(Number(tile.column) || 0));
-            const row = Math.max(0, Math.round(Number(tile.row) || 0));
-            if (current.column !== column || current.row !== row) {
-                next = CardState.setSidebarAnchor(next, tile.id, column, row);
-                changed = true;
-            }
-        });
-        return changed && root.commit(next, "", false);
+        return root.commit(CardState.setSidebarLayout(root.internalState, layout), "", false, DrawerLayout.serializeLayout(
+                               layout, active));
     }
 
     function setGlobalDesktopLayoutMode(mode) {
@@ -193,20 +190,21 @@ Singleton {
 
         let next = CardState.normalize(root.internalState);
         let changed = false;
-        placements.forEach(function(placement) {
+        placements.forEach(function (placement) {
             if (!placement || typeof placement.id !== "string")
-                return ;
+                return;
 
             const current = next.cards[placement.id];
             if (!current || current.container !== "desktop")
-                return ;
+                return;
 
             const x = Math.max(0, Math.min(1, Number(placement.xNorm)));
             const y = Math.max(0, Math.min(1, Number(placement.yNorm)));
             if (!isFinite(x) || !isFinite(y))
-                return ;
+                return;
 
-            if (Math.abs(current.desktop.wallpaper.xNorm - x) > 1e-05 || Math.abs(current.desktop.wallpaper.yNorm - y) > 1e-05) {
+            if (Math.abs(current.desktop.wallpaper.xNorm - x) > 1e-05 || Math.abs(
+                        current.desktop.wallpaper.yNorm - y) > 1e-05) {
                 next = CardState.setDesktopWallpaperPosition(next, placement.id, x, y);
                 changed = true;
             }
@@ -224,10 +222,7 @@ Singleton {
 
     function sidebarAnchor(cardId) {
         const current = root.card(cardId);
-        return current && current.sidebar ? {
-            "column": current.sidebar.column,
-            "row": current.sidebar.row
-        } : Catalog.defaultAnchorFor(String(cardId));
+        return current ? current.sidebar : null;
     }
 
     function setSidebarForeground(owner, active) {
@@ -243,8 +238,8 @@ Singleton {
 
     function syncMonitorOwnership() {
         const desktopModules = [];
-        root.desktopCardIds.forEach(function(id) {
-            root.monitorModules(id).forEach(function(module) {
+        root.desktopCardIds.forEach(function (id) {
+            root.monitorModules(id).forEach(function (module) {
                 if (desktopModules.indexOf(module) < 0)
                     desktopModules.push(module);
             });
@@ -253,8 +248,8 @@ Singleton {
 
         const sidebarModules = [];
         if (Object.keys(root.sidebarForegroundOwners).length > 0) {
-            root.sidebarCardIds.forEach(function(id) {
-                root.monitorModules(id).forEach(function(module) {
+            root.sidebarCardIds.forEach(function (id) {
+                root.monitorModules(id).forEach(function (module) {
                     if (sidebarModules.indexOf(module) < 0)
                         sidebarModules.push(module);
                 });
@@ -265,16 +260,14 @@ Singleton {
 
     function loadPreferences() {
         if (!UiPreferences.preferencesReady || root.preferencesLoaded)
-            return ;
+            return;
 
-        const raw = UiPreferences.systemCards;
-        root.internalState = CardState.normalize(raw);
+        const next = root.reconciledLayouts(UiPreferences.systemCards, UiPreferences.drawerGridLayout);
+        root.internalState = next.state;
         root.preferencesLoaded = true;
-        // Missing systemCards is the legacy state: all cards remain in
-        // the sidebar and are written as a new, independently versioned
-        // document without touching drawerGridLayout.
-        if (!raw || !raw.cards || JSON.stringify(raw) !== JSON.stringify(CardState.serialize(raw)))
-            root.persist(root.internalState);
+        if (JSON.stringify(next.state) !== JSON.stringify(UiPreferences.systemCards) || JSON.stringify(
+                    next.layout) !== JSON.stringify(UiPreferences.drawerGridLayout))
+            UiPreferences.setCardLayouts(CardState.serialize(next.state), next.layout);
 
         root.syncMonitorOwnership();
     }
@@ -293,10 +286,8 @@ Singleton {
         function onSystemCardsChanged() {
             if (!root.preferencesLoaded)
                 root.loadPreferences();
-
         }
 
         target: UiPreferences
     }
-
 }
