@@ -259,7 +259,6 @@ Item {
             }
             SystemCardDragSession.requestVisualHandoffCheck(tileId);
             root.resetDragState(true);
-            WidgetState.leftSidebarOpen = false;
             SystemCardDragSession.finishTransfer();
             return;
         }
