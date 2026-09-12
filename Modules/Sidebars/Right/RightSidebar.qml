@@ -59,8 +59,8 @@ Item {
     }
 
     Component.onCompleted: {
-        if (PersonalizationConfig.keepSidebarsLoaded)
-            contentRetained = true;
+        // Retain after the first open, without preloading QuickSettings
+        // and its services during shell startup.
         if (requestedOpen)
             preparePresentation();
     }
@@ -81,9 +81,7 @@ Item {
         target: PersonalizationConfig
 
         function onKeepSidebarsLoadedChanged() {
-            if (PersonalizationConfig.keepSidebarsLoaded) {
-                root.contentRetained = true;
-            } else if (!requestedOpen && !root.panelPresented) {
+            if (!PersonalizationConfig.keepSidebarsLoaded && !root.requestedOpen && !root.panelPresented) {
                 root.contentRetained = false;
             }
         }

@@ -69,8 +69,8 @@ Item {
     }
 
     Component.onCompleted: {
-        if (root.keepLoaded)
-            contentRetained = true;
+        // Retain after the first open; keeping content warm must not
+        // instantiate the entire sidebar during shell startup.
         if (requestedOpen)
             preparePresentation();
     }
@@ -88,9 +88,7 @@ Item {
     }
 
     onKeepLoadedChanged: {
-        if (root.keepLoaded) {
-            root.contentRetained = true;
-        } else if (!requestedOpen && !root.panelPresented) {
+        if (!root.keepLoaded && !requestedOpen && !root.panelPresented) {
             root.contentRetained = false;
         }
     }

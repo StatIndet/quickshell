@@ -9,6 +9,9 @@ StartLimitBurst=5
 
 [Service]
 Type=simple
+# Apply before qs starts: QML Env pragmas run after allocator initialization.
+# Ignored by Quickshell builds that do not use jemalloc.
+Environment="MALLOC_CONF=thp:never,narenas:4,dirty_decay_ms:3000"
 ExecStart=key shell --foreground --no-duplicate
 Restart=on-failure
 RestartSec=2

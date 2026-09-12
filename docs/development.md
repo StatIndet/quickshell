@@ -14,12 +14,21 @@ ln -sfn ~/Projects/clavis ~/.config/quickshell/clavis
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
 cmake --build build
 
+MALLOC_CONF="${MALLOC_CONF-thp:never,narenas:4,dirty_decay_ms:3000}" \
 QML_IMPORT_PATH="$PWD/build/qml${QML_IMPORT_PATH:+:$QML_IMPORT_PATH}" key shell
 ```
 
 源码目录优先于 `/etc/xdg/quickshell/clavis`。QML 保存后可热重载；C++ plugin 需要
 重新构建并重新加载 Shell。Shell/CLI 日志由各自工具负责，不在文档或脚本中使用
 `nohup`、`disown` 或丢弃到 `/dev/null`。
+
+`clavis-shell.service` 在启动前设置 jemalloc 的内存策略：禁用分配器的透明大页、
+限制自动 arena 数量为 4，并将空闲脏页回收时间设为 3 秒。直接运行 `key shell` 或
+`qs -c clavis` 时也应像上面一样传入 `MALLOC_CONF`；此写法保留已显式设置的值
+（包括空值）。不使用 jemalloc 的 Quickshell 构建会忽略它，不需要预加载分配器。
+该变量不能放进 `shell.qml` 的 Env pragma，解析 QML 时分配器已经初始化；更改策略
+需要重新启动进程，热重载不生效。服务的自定义策略可通过用户 drop-in 的
+`Environment="MALLOC_CONF=..."` 覆盖。
 
 正式安装由发行版打包流程负责；本仓库默认只构建和测试源码，不创建运行时版本快照。
 
