@@ -3,12 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Commit, branch or tag to release (ignored for AUR retry)
+        description: Commit, branch or tag to release
         default: main
         required: true
-      retry_tag:
-        description: Existing published date tag; retry AUR only, without rebuilding
-        required: false
 permissions:
   contents: read
 concurrency:
@@ -16,7 +13,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: inputs.retry_tag == ''
     runs-on: ubuntu-latest
     container: archlinux:base-devel
     timeout-minutes: 60
@@ -72,7 +68,6 @@ jobs:
             build/Testing/Temporary/LastTest.log
   publish:
     needs: build
-    if: ${{ !cancelled() && (needs.build.result == 'success' || inputs.retry_tag != '') }}
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -82,17 +77,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
-        if: inputs.retry_tag == ''
         with:
           name: release
           path: .packaging
-      - name: Publish assets and synchronize AUR
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ inputs.retry_tag || needs.build.outputs.tag }}
-          RETRY_AUR: ${{ inputs.retry_tag != '' }}
-          AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          AUR_KNOWN_HOSTS: ${{ vars.AUR_KNOWN_HOSTS }}
-          AUR_GIT_NAME: ${{ vars.AUR_GIT_NAME }}
-          AUR_GIT_EMAIL: ${{ vars.AUR_GIT_EMAIL }}
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
         run: scripts/ci/publish.sh

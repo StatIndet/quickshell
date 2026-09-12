@@ -1,29 +1,23 @@
-# Date releases and AUR publishing
+# Date releases on GitHub
 
 Each repository builds and tests independently. Release tooling reads `packaging/dependencies.json`,
 the version file named there, and `packaging/arch/PKGBUILD.in`. Generated `PKGBUILD` and `.SRCINFO`
-are release artifacts and AUR contents; they are not committed back into the source being hashed.
+are release artifacts suitable for manual Arch packaging; they are not committed back into the source being hashed.
 Python 3.10+ and Arch makepkg are needed for release metadata; wheel builds use the declared
 Python build dependencies. Native packaging uses CMake/Ninja and ordinary DESTDIR staging.
 
-## First-time GitHub/AUR configuration
+## GitHub configuration
 
-Create the AUR maintainer account and register a dedicated SSH public key. In each GitHub
-repository's `release` environment configure:
+The publishing job uses the automatic `GITHUB_TOKEN` with `contents: write`. No AUR account,
+SSH key, AUR secrets or AUR variables are required. Existing AUR settings are unused.
+The `release` environment can retain normal GitHub reviewer/branch protections if configured.
+PR and build jobs keep read-only repository access and receive no publishing credentials.
 
-| Setting | Type | Value |
-| --- | --- | --- |
-| `AUR_SSH_PRIVATE_KEY` | Secret | Private key whose public key is registered with AUR |
-| `AUR_KNOWN_HOSTS` | Variable | Verified `aur.archlinux.org` SSH host-key lines |
-| `AUR_GIT_NAME` | Variable | Maintainer commit author |
-| `AUR_GIT_EMAIL` | Variable | Maintainer commit email |
-
-Verify host keys against Arch's published fingerprints before saving them; do not blindly
-trust a keyscan. The workflow uses strict host-key checking. The environment can use GitHub's
-normal reviewer/branch protections if desired. The publishing job alone receives write access
-and the AUR secret; PR builds use read-only repository access and no publishing secrets.
-AUR repositories must be unclaimed or maintained by this account. The package bases are
-`key-cli`, `keytop` and `clavis-shell`; the optional packages are split outputs of the first two.
+The workflows publish GitHub Releases and Arch packaging files. They do not upload packages
+to AUR or require this project's packages to be registered there. Package bases remain
+`key-cli`, `keytop` and `clavis-shell`; the optional access packages remain split outputs.
+Clavis's build still downloads external AUR build dependencies such as `libcava` and
+`qt6-m3shapes-git` anonymously, so availability of those sources can still affect its build.
 
 For the initial rollout publish key-cli, then keytop, then Clavis. Clavis records minimum backend
 versions in its runtime dependencies. Publishing one project does not build, test or release a
@@ -32,8 +26,8 @@ when its public backend requirements change. Machine `schemaVersion` is unrelate
 
 ## Normal release
 
-Open Actions → Release → Run workflow. Select the source commit/branch/tag in `ref`, leave
-`retry_tag` empty. The workflow:
+Open Actions → Release → Run workflow on the branch containing the updated workflow.
+Select the source commit/branch/tag in `ref`. The workflow:
 
 1. Allocates the next version using the Asia/Shanghai date: `2026.9.12`, then `.1`, `.2`, etc.
    Invalid dates and versions older than existing date tags are rejected. Releases are serialized.
@@ -41,10 +35,10 @@ Open Actions → Release → Run workflow. Select the source commit/branch/tag i
    It does not commit version bumps to the default branch.
 3. Runs repository checks and builds the actual source archive with makepkg in a disposable
    Arch container. Runtime-only sibling dependencies are not build prerequisites.
-4. Transfers the tested commit as a Git bundle to the publishing job, pushes its tag, creates
-   a draft, uploads all assets, and publishes it without marking it latest.
-5. Pushes generated PKGBUILD, `.SRCINFO` and any install metadata to AUR; only after success
-   does it mark the GitHub release latest.
+4. Transfers the tested commit as a Git bundle to the publishing job and verifies the assets
+   against their checksums, version and source commit before pushing the tag.
+5. Creates a draft and uploads all assets, then publishes the GitHub release and marks it
+   latest. AUR registration and package availability do not gate this publishing step.
 
 Source archives use a whitelist of tracked roots, normalized ownership/modes and commit timestamps.
 They exclude local profiles, caches and uncommitted files. `RELEASE.json` records the exact release
@@ -61,16 +55,24 @@ recording, clipboard and opt-in service activation before announcing the first r
 
 ## Failed publishing and package-only changes
 
-If AUR synchronization fails after the public assets exist, run the workflow again with
-`retry_tag=v2026.9.12`. It downloads and checks the existing assets, updates AUR, and marks that
-same release latest. It does not rebuild, allocate a new version, or overwrite assets. A retry
-refuses to downgrade a newer AUR package. Incomplete drafts/tag-push failures require inspecting
-the failed publishing job; the AUR-only retry deliberately does not claim to repair partial assets.
+Inspect a failed publishing job before retrying: a pushed tag or partially uploaded draft may
+already exist. The workflow does not overwrite public assets. Starting a new release allocates
+the next date version; it does not resume an older draft. The old AUR-only `retry_tag` input has
+been removed.
+
+If an earlier workflow already published a complete GitHub release and then failed at AUR
+synchronization, verify its assets against its tag before marking that existing release latest
+in GitHub. No AUR synchronization is needed. If no release was published, dispatch the updated
+workflow normally.
 
 For a packaging-only fix, download the existing release source asset and render updated metadata
-with `--pkgrel 2` (or the next revision), then review/push it to AUR. Keep the source version/hash
-unchanged and do not replace published assets. The `retry_tag` path replays the original metadata,
-so use it only for a failed synchronization, not for a packaging edit.
+with `--pkgrel 2` (or the next revision), then review it for local builds or later manual AUR
+publication. Keep the source version/hash unchanged and do not replace published assets.
+
+The Clavis one-command installer still resolves project packages from AUR. A GitHub release
+alone does not make those packages available to it. Until they are published to AUR, use the
+release PKGBUILD/source assets to build and install the projects manually, starting with key-cli
+and keytop. Source development and installation entry points remain available in each repository.
 
 ## Local preparation without deployment
 

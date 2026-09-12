@@ -3,7 +3,10 @@
 The first release targets Arch-compatible x86_64 systems. The three independent projects
 are distributed as `clavis-shell`, `key-cli` and `keytop`. `clavis` is an unrelated AUR package.
 No public release or AUR package is implied merely by this documentation being present;
-the commands become usable after the first [release](releasing.md) is published.
+the one-command installer requires the project packages to be available in AUR as well as a
+[GitHub release](releasing.md). Release workflows currently publish GitHub assets only; while
+the project packages are unavailable in AUR, build the release PKGBUILD/source assets manually,
+starting with key-cli and keytop.
 
 ## One command
 
