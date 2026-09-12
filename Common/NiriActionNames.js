@@ -157,6 +157,7 @@ function translated(name) {
     case "Keystone: current style": return qsTranslate("NiriActions", "Keystone: current style");
     case "Keystone: dashboard": return qsTranslate("NiriActions", "Keystone: dashboard");
     case "Keystone: hub": return qsTranslate("NiriActions", "Keystone: hub");
+    case "Keystone: lyrics": return qsTranslate("NiriActions", "Keystone: lyrics");
     case "Keystone: tools": return qsTranslate("NiriActions", "Keystone: tools");
     case "Sidebar: open": return qsTranslate("NiriActions", "Sidebar: open");
     case "Sidebar: close": return qsTranslate("NiriActions", "Sidebar: close");

@@ -7539,186 +7539,191 @@ Click to open network settings</translation>
     </message>
     <message>
         <location filename="../Common/NiriActionNames.js" line="160"/>
+        <source>Keystone: lyrics</source>
+        <translation>Keystone: lyrics</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="161"/>
         <source>Keystone: tools</source>
         <translation>Keystone: tools</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="161"/>
+        <location filename="../Common/NiriActionNames.js" line="162"/>
         <source>Sidebar: open</source>
         <translation>Sidebar: open</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="162"/>
+        <location filename="../Common/NiriActionNames.js" line="163"/>
         <source>Sidebar: close</source>
         <translation>Sidebar: close</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="163"/>
+        <location filename="../Common/NiriActionNames.js" line="164"/>
         <source>Sidebar: toggle</source>
         <translation>Sidebar: toggle</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="164"/>
+        <location filename="../Common/NiriActionNames.js" line="165"/>
         <source>Run program</source>
         <translation>Run program</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="165"/>
+        <location filename="../Common/NiriActionNames.js" line="166"/>
         <source>Run shell command</source>
         <translation>Run shell command</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="166"/>
+        <location filename="../Common/NiriActionNames.js" line="167"/>
         <source>Spotlight: open applications</source>
         <translation>Spotlight: open applications</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="167"/>
+        <location filename="../Common/NiriActionNames.js" line="168"/>
         <source>Spotlight: open clipboard</source>
         <translation>Spotlight: open clipboard</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="168"/>
+        <location filename="../Common/NiriActionNames.js" line="169"/>
         <source>Spotlight: open wallpaper picker</source>
         <translation>Spotlight: open wallpaper picker</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="169"/>
+        <location filename="../Common/NiriActionNames.js" line="170"/>
         <source>Control center: open Account</source>
         <translation>Control center: open Account</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="170"/>
+        <location filename="../Common/NiriActionNames.js" line="171"/>
         <source>Control center: open General</source>
         <translation>Control center: open General</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="171"/>
+        <location filename="../Common/NiriActionNames.js" line="172"/>
         <source>Control center: open Wallpaper</source>
         <translation>Control center: open Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="172"/>
+        <location filename="../Common/NiriActionNames.js" line="173"/>
         <source>Control center: open Theme</source>
         <translation>Control center: open Theme</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="173"/>
+        <location filename="../Common/NiriActionNames.js" line="174"/>
         <source>Control center: open Keystone</source>
         <translation>Control center: open Keystone</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="174"/>
+        <location filename="../Common/NiriActionNames.js" line="175"/>
         <source>Control center: open Advanced</source>
         <translation>Control center: open Advanced</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="175"/>
+        <location filename="../Common/NiriActionNames.js" line="176"/>
         <source>Control center: open Language &amp; region</source>
         <translation>Control center: open Language &amp; region</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="176"/>
+        <location filename="../Common/NiriActionNames.js" line="177"/>
         <source>Control center: open current page</source>
         <translation>Control center: open current page</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="177"/>
+        <location filename="../Common/NiriActionNames.js" line="178"/>
         <source>Control center: toggle Account</source>
         <translation>Control center: toggle Account</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="178"/>
+        <location filename="../Common/NiriActionNames.js" line="179"/>
         <source>Control center: toggle General</source>
         <translation>Control center: toggle General</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="179"/>
+        <location filename="../Common/NiriActionNames.js" line="180"/>
         <source>Control center: toggle Wallpaper</source>
         <translation>Control center: toggle Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="180"/>
+        <location filename="../Common/NiriActionNames.js" line="181"/>
         <source>Control center: toggle Theme</source>
         <translation>Control center: toggle Theme</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="181"/>
+        <location filename="../Common/NiriActionNames.js" line="182"/>
         <source>Control center: toggle Keystone</source>
         <translation>Control center: toggle Keystone</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="182"/>
+        <location filename="../Common/NiriActionNames.js" line="183"/>
         <source>Control center: toggle Advanced</source>
         <translation>Control center: toggle Advanced</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="183"/>
+        <location filename="../Common/NiriActionNames.js" line="184"/>
         <source>Control center: toggle Language &amp; region</source>
         <translation>Control center: toggle Language &amp; region</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="184"/>
+        <location filename="../Common/NiriActionNames.js" line="185"/>
         <source>Control center: toggle current page</source>
         <translation>Control center: toggle current page</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="185"/>
+        <location filename="../Common/NiriActionNames.js" line="186"/>
         <source>Notifications: open</source>
         <translation>Notifications: open</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="186"/>
+        <location filename="../Common/NiriActionNames.js" line="187"/>
         <source>Quick settings: open</source>
         <translation>Quick settings: open</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="187"/>
+        <location filename="../Common/NiriActionNames.js" line="188"/>
         <source>Notifications: close</source>
         <translation>Notifications: close</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="188"/>
+        <location filename="../Common/NiriActionNames.js" line="189"/>
         <source>Quick settings: close</source>
         <translation>Quick settings: close</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="189"/>
+        <location filename="../Common/NiriActionNames.js" line="190"/>
         <source>Notifications: toggle</source>
         <translation>Notifications: toggle</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="190"/>
+        <location filename="../Common/NiriActionNames.js" line="191"/>
         <source>Quick settings: toggle</source>
         <translation>Quick settings: toggle</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="194"/>
+        <location filename="../Common/NiriActionNames.js" line="195"/>
         <source>Shortcut map: open</source>
         <translation>Shortcut map: open</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="195"/>
+        <location filename="../Common/NiriActionNames.js" line="196"/>
         <source>Shortcut map: close</source>
         <translation>Shortcut map: close</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="196"/>
+        <location filename="../Common/NiriActionNames.js" line="197"/>
         <source>Shortcut map: toggle</source>
         <translation>Shortcut map: toggle</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="191"/>
+        <location filename="../Common/NiriActionNames.js" line="192"/>
         <source>Power menu: open</source>
         <translation>Power menu: open</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="192"/>
+        <location filename="../Common/NiriActionNames.js" line="193"/>
         <source>Power menu: close</source>
         <translation>Power menu: close</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="193"/>
+        <location filename="../Common/NiriActionNames.js" line="194"/>
         <source>Power menu: toggle</source>
         <translation>Power menu: toggle</translation>
     </message>
@@ -7726,57 +7731,57 @@ Click to open network settings</translation>
 <context>
     <name>NiriCommands</name>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="214"/>
+        <location filename="../Common/NiriActionNames.js" line="215"/>
         <source>Toggle screen reader</source>
         <translation>Toggle screen reader</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="215"/>
+        <location filename="../Common/NiriActionNames.js" line="216"/>
         <source>Increase volume</source>
         <translation>Increase volume</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="216"/>
+        <location filename="../Common/NiriActionNames.js" line="217"/>
         <source>Decrease volume</source>
         <translation>Decrease volume</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="217"/>
+        <location filename="../Common/NiriActionNames.js" line="218"/>
         <source>Toggle audio mute</source>
         <translation>Toggle audio mute</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="218"/>
+        <location filename="../Common/NiriActionNames.js" line="219"/>
         <source>Toggle microphone mute</source>
         <translation>Toggle microphone mute</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="219"/>
+        <location filename="../Common/NiriActionNames.js" line="220"/>
         <source>Play/pause media</source>
         <translation>Play/pause media</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="220"/>
+        <location filename="../Common/NiriActionNames.js" line="221"/>
         <source>Stop media</source>
         <translation>Stop media</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="221"/>
+        <location filename="../Common/NiriActionNames.js" line="222"/>
         <source>Previous track</source>
         <translation>Previous track</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="222"/>
+        <location filename="../Common/NiriActionNames.js" line="223"/>
         <source>Next track</source>
         <translation>Next track</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="223"/>
+        <location filename="../Common/NiriActionNames.js" line="224"/>
         <source>Increase screen brightness</source>
         <translation>Increase screen brightness</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="224"/>
+        <location filename="../Common/NiriActionNames.js" line="225"/>
         <source>Decrease screen brightness</source>
         <translation>Decrease screen brightness</translation>
     </message>
@@ -9435,7 +9440,7 @@ Right click: Control Center</translation>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="101"/>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="422"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="394"/>
         <source>Unavailable</source>
         <translation>Unavailable</translation>
     </message>
@@ -9481,37 +9486,37 @@ Right click: Control Center</translation>
         <translation>No battery detected</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="305"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="277"/>
         <source>Battery</source>
         <translation>Battery</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="361"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="333"/>
         <source>Charging </source>
         <translation>Charging </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="363"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="335"/>
         <source>Power </source>
         <translation>Power </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="364"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="336"/>
         <source>Discharging </source>
         <translation>Discharging </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="367"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="339"/>
         <source>Power unknown</source>
         <translation>Power unknown</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="389"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="361"/>
         <source>Health </source>
         <translation>Health </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="402"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="374"/>
         <source>No battery
 detected</source>
         <translation>No battery

@@ -74,3 +74,7 @@ spawn "qs" "-c" "clavis" "ipc" "call" "keystone" "hub"
 `QUICKSETTINGS_OPEN/CLOSED`。旧参数 `left`、`right` 继续分别指向信息和快捷设置内容，
 返回值保持 `LEFT_OPEN/CLOSED`、`RIGHT_OPEN/CLOSED`；它们不随实际位置重新解释。
 已有用户绑定无需改写，快捷键页面会将旧参数识别为对应的内容动作。
+
+灵动岛歌词界面通过 `qs -c clavis ipc call keystone lyrics` 切换展开与收起，返回
+`LYRICS_OPENED` / `LYRICS_CLOSED`。两种样式均作用于当前输出（无匹配时使用首个屏幕），
+展开时收起其他灵动岛面板。快捷键设置提供歌词动作占位，不绑定默认快捷键。

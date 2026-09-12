@@ -1323,6 +1323,15 @@
     "method": "hub"
   },
   {
+    "id": "clavis:keystone:lyrics",
+    "category": "clavis",
+    "name": "Keystone: lyrics",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"keystone\" \"lyrics\"",
+    "parameters": false,
+    "target": "keystone",
+    "method": "lyrics"
+  },
+  {
     "id": "clavis:keystone:tools",
     "category": "clavis",
     "name": "Keystone: tools",

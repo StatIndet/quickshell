@@ -7538,186 +7538,191 @@ Click to open network settings</source>
     </message>
     <message>
         <location filename="../Common/NiriActionNames.js" line="160"/>
+        <source>Keystone: lyrics</source>
+        <translation>Keystone：歌词</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="161"/>
         <source>Keystone: tools</source>
         <translation>Keystone：工具</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="161"/>
+        <location filename="../Common/NiriActionNames.js" line="162"/>
         <source>Sidebar: open</source>
         <translation>侧边栏：打开</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="162"/>
+        <location filename="../Common/NiriActionNames.js" line="163"/>
         <source>Sidebar: close</source>
         <translation>侧边栏：关闭</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="163"/>
+        <location filename="../Common/NiriActionNames.js" line="164"/>
         <source>Sidebar: toggle</source>
         <translation>侧边栏：切换</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="164"/>
+        <location filename="../Common/NiriActionNames.js" line="165"/>
         <source>Run program</source>
         <translation>运行程序</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="165"/>
+        <location filename="../Common/NiriActionNames.js" line="166"/>
         <source>Run shell command</source>
         <translation>运行 Shell 命令</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="166"/>
+        <location filename="../Common/NiriActionNames.js" line="167"/>
         <source>Spotlight: open applications</source>
         <translation>Spotlight：打开应用</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="167"/>
+        <location filename="../Common/NiriActionNames.js" line="168"/>
         <source>Spotlight: open clipboard</source>
         <translation>Spotlight：打开剪贴板</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="168"/>
+        <location filename="../Common/NiriActionNames.js" line="169"/>
         <source>Spotlight: open wallpaper picker</source>
         <translation>Spotlight：打开壁纸选择</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="169"/>
+        <location filename="../Common/NiriActionNames.js" line="170"/>
         <source>Control center: open Account</source>
         <translation>设置中心：打开账户页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="170"/>
+        <location filename="../Common/NiriActionNames.js" line="171"/>
         <source>Control center: open General</source>
         <translation>设置中心：打开通用页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="171"/>
+        <location filename="../Common/NiriActionNames.js" line="172"/>
         <source>Control center: open Wallpaper</source>
         <translation>设置中心：打开壁纸页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="172"/>
+        <location filename="../Common/NiriActionNames.js" line="173"/>
         <source>Control center: open Theme</source>
         <translation>设置中心：打开主题页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="173"/>
+        <location filename="../Common/NiriActionNames.js" line="174"/>
         <source>Control center: open Keystone</source>
         <translation>设置中心：打开拱心石页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="174"/>
+        <location filename="../Common/NiriActionNames.js" line="175"/>
         <source>Control center: open Advanced</source>
         <translation>设置中心：打开高级页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="175"/>
+        <location filename="../Common/NiriActionNames.js" line="176"/>
         <source>Control center: open Language &amp; region</source>
         <translation>设置中心：打开语言与地区页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="176"/>
+        <location filename="../Common/NiriActionNames.js" line="177"/>
         <source>Control center: open current page</source>
         <translation>设置中心：打开当前页面</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="177"/>
+        <location filename="../Common/NiriActionNames.js" line="178"/>
         <source>Control center: toggle Account</source>
         <translation>设置中心：切换账户页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="178"/>
+        <location filename="../Common/NiriActionNames.js" line="179"/>
         <source>Control center: toggle General</source>
         <translation>设置中心：切换通用页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="179"/>
+        <location filename="../Common/NiriActionNames.js" line="180"/>
         <source>Control center: toggle Wallpaper</source>
         <translation>设置中心：切换壁纸页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="180"/>
+        <location filename="../Common/NiriActionNames.js" line="181"/>
         <source>Control center: toggle Theme</source>
         <translation>设置中心：切换主题页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="181"/>
+        <location filename="../Common/NiriActionNames.js" line="182"/>
         <source>Control center: toggle Keystone</source>
         <translation>设置中心：切换拱心石页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="182"/>
+        <location filename="../Common/NiriActionNames.js" line="183"/>
         <source>Control center: toggle Advanced</source>
         <translation>设置中心：切换高级页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="183"/>
+        <location filename="../Common/NiriActionNames.js" line="184"/>
         <source>Control center: toggle Language &amp; region</source>
         <translation>设置中心：切换语言与地区页</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="184"/>
+        <location filename="../Common/NiriActionNames.js" line="185"/>
         <source>Control center: toggle current page</source>
         <translation>设置中心：切换当前页面</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="185"/>
+        <location filename="../Common/NiriActionNames.js" line="186"/>
         <source>Notifications: open</source>
         <translation>通知侧栏：打开</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="186"/>
+        <location filename="../Common/NiriActionNames.js" line="187"/>
         <source>Quick settings: open</source>
         <translation>快捷设置：打开</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="187"/>
+        <location filename="../Common/NiriActionNames.js" line="188"/>
         <source>Notifications: close</source>
         <translation>通知侧栏：关闭</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="188"/>
+        <location filename="../Common/NiriActionNames.js" line="189"/>
         <source>Quick settings: close</source>
         <translation>快捷设置：关闭</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="189"/>
+        <location filename="../Common/NiriActionNames.js" line="190"/>
         <source>Notifications: toggle</source>
         <translation>通知侧栏：切换</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="190"/>
+        <location filename="../Common/NiriActionNames.js" line="191"/>
         <source>Quick settings: toggle</source>
         <translation>快捷设置：切换</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="194"/>
+        <location filename="../Common/NiriActionNames.js" line="195"/>
         <source>Shortcut map: open</source>
         <translation>快捷键配置图：打开</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="195"/>
+        <location filename="../Common/NiriActionNames.js" line="196"/>
         <source>Shortcut map: close</source>
         <translation>快捷键配置图：关闭</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="196"/>
+        <location filename="../Common/NiriActionNames.js" line="197"/>
         <source>Shortcut map: toggle</source>
         <translation>快捷键配置图：切换</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="191"/>
+        <location filename="../Common/NiriActionNames.js" line="192"/>
         <source>Power menu: open</source>
         <translation>电源菜单：打开</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="192"/>
+        <location filename="../Common/NiriActionNames.js" line="193"/>
         <source>Power menu: close</source>
         <translation>电源菜单：关闭</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="193"/>
+        <location filename="../Common/NiriActionNames.js" line="194"/>
         <source>Power menu: toggle</source>
         <translation>电源菜单：切换</translation>
     </message>
@@ -7725,57 +7730,57 @@ Click to open network settings</source>
 <context>
     <name>NiriCommands</name>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="214"/>
+        <location filename="../Common/NiriActionNames.js" line="215"/>
         <source>Toggle screen reader</source>
         <translation>切换屏幕阅读器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="215"/>
+        <location filename="../Common/NiriActionNames.js" line="216"/>
         <source>Increase volume</source>
         <translation>提高音量</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="216"/>
+        <location filename="../Common/NiriActionNames.js" line="217"/>
         <source>Decrease volume</source>
         <translation>降低音量</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="217"/>
+        <location filename="../Common/NiriActionNames.js" line="218"/>
         <source>Toggle audio mute</source>
         <translation>切换静音</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="218"/>
+        <location filename="../Common/NiriActionNames.js" line="219"/>
         <source>Toggle microphone mute</source>
         <translation>切换麦克风静音</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="219"/>
+        <location filename="../Common/NiriActionNames.js" line="220"/>
         <source>Play/pause media</source>
         <translation>播放/暂停</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="220"/>
+        <location filename="../Common/NiriActionNames.js" line="221"/>
         <source>Stop media</source>
         <translation>停止播放</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="221"/>
+        <location filename="../Common/NiriActionNames.js" line="222"/>
         <source>Previous track</source>
         <translation>上一曲</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="222"/>
+        <location filename="../Common/NiriActionNames.js" line="223"/>
         <source>Next track</source>
         <translation>下一曲</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="223"/>
+        <location filename="../Common/NiriActionNames.js" line="224"/>
         <source>Increase screen brightness</source>
         <translation>提高屏幕亮度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="224"/>
+        <location filename="../Common/NiriActionNames.js" line="225"/>
         <source>Decrease screen brightness</source>
         <translation>降低屏幕亮度</translation>
     </message>
@@ -9433,7 +9438,7 @@ Right click: Control Center</source>
     </message>
     <message>
         <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="101"/>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="422"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="394"/>
         <source>Unavailable</source>
         <translation>不可用</translation>
     </message>
@@ -9479,37 +9484,37 @@ Right click: Control Center</source>
         <translation>未检测到电池</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="305"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="277"/>
         <source>Battery</source>
         <translation>电池</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="361"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="333"/>
         <source>Charging </source>
         <translation>充电 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="363"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="335"/>
         <source>Power </source>
         <translation>功率 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="364"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="336"/>
         <source>Discharging </source>
         <translation>放电 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="367"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="339"/>
         <source>Power unknown</source>
         <translation>功率未知</translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="389"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="361"/>
         <source>Health </source>
         <translation>健康 </translation>
     </message>
     <message>
-        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="402"/>
+        <location filename="../Modules/SystemCards/SystemBatteryTank.qml" line="374"/>
         <source>No battery
 detected</source>
         <translation>未检测到

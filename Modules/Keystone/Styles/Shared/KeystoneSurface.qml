@@ -68,6 +68,10 @@ Variants {
         return invoke("dashboard");
     }
 
+    function lyrics(): string {
+        return invoke("lyrics");
+    }
+
     function tools(): string {
         return invoke("tools");
     }
@@ -121,6 +125,16 @@ Variants {
             root.hubTabIndex = 0;
             root.showHub = true;
             return "DASHBOARD_OPENED";
+        }
+
+        function lyrics(): string {
+            if (root.showLyrics) {
+                root.showLyrics = false;
+                return "LYRICS_CLOSED";
+            }
+            closeAllOthers();
+            root.showLyrics = true;
+            return "LYRICS_OPENED";
         }
 
         function tools(): string {

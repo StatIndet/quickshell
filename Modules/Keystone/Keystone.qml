@@ -53,6 +53,9 @@ Item {
         function hub(): string {
             return root.invoke("hub");
         }
+        function lyrics(): string {
+            return root.invoke("lyrics");
+        }
         function tools(): string {
             return root.invoke("tools");
         }
