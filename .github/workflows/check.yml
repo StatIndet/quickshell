@@ -22,6 +22,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      # Share workspace trust across root/builder and checkout HOME changes.
+      - name: Trust checked-out workspace
+        run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
       - name: Independent checks and package build
         run: scripts/ci/arch.sh
       - name: Keep package metadata and diagnostics

@@ -28,6 +28,9 @@ jobs:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
           persist-credentials: false
+      # Share workspace trust across root/builder and checkout HOME changes.
+      - name: Trust checked-out workspace
+        run: git config --system --add safe.directory "$GITHUB_WORKSPACE"
       - name: Create the local release commit
         id: version
         run: |
