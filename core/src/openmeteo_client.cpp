@@ -1,11 +1,82 @@
 #include "openmeteo_client.h"
 
 #include <QJsonDocument>
+#include <QCryptographicHash>
+#include <QDateTime>
+#include <QSettings>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrlQuery>
 
-OpenMeteoClient::OpenMeteoClient(QObject *parent) : QObject(parent) {}
+OpenMeteoClient::OpenMeteoClient(QObject *parent) : QObject(parent)
+{
+    m_nameTimer.setSingleShot(true);
+    connect(&m_nameTimer, &QTimer::timeout, this, &OpenMeteoClient::processNameRequest);
+}
+
+QString OpenMeteoClient::locationNameFromAddress(const QJsonObject &response)
+{
+    if (response.contains("error"))
+        return {};
+    const auto address = response.value("address").toObject();
+    for (const auto *key : {"city", "town", "village", "municipality", "county", "state"}) {
+        const QString name = address.value(QLatin1String(key)).toString().trimmed();
+        if (!name.isEmpty())
+            return name;
+    }
+    return {};
+}
+
+void OpenMeteoClient::requestLocationName(const WeatherLocation &location, LocationCallback callback)
+{
+    m_nameRequests.enqueue({location, std::move(callback)});
+    if (!m_nameRequestActive && !m_nameTimer.isActive())
+        m_nameTimer.start(0);
+}
+
+void OpenMeteoClient::processNameRequest()
+{
+    if (m_nameRequests.isEmpty())
+        return;
+    const auto request = m_nameRequests.dequeue();
+    QUrl url(qEnvironmentVariable("CLAVIS_GEOCODING_URL", "https://nominatim.openstreetmap.org/reverse"));
+    QUrlQuery query(url);
+    query.addQueryItem("lat", QString::number(request.location.latitude, 'f', 6));
+    query.addQueryItem("lon", QString::number(request.location.longitude, 'f', 6));
+    query.addQueryItem("format", "jsonv2");
+    query.addQueryItem("zoom", "10");
+    query.addQueryItem("addressdetails", "1");
+    url.setQuery(query);
+    const QString key =
+        "geocoding/" +
+        QString::fromLatin1(QCryptographicHash::hash(url.toEncoded(), QCryptographicHash::Sha256).toHex());
+    QSettings settings("Clavis", "Weather");
+    const QString cachedName = settings.value(key + "/name").toString();
+    const qint64 retryAfter = settings.value(key + "/retryAfter").toLongLong();
+    if (!cachedName.isEmpty() || retryAfter > QDateTime::currentSecsSinceEpoch()) {
+        auto location = request.location;
+        if (!cachedName.isEmpty())
+            location.name = cachedName;
+        request.callback(!cachedName.isEmpty(), location, {});
+        m_nameTimer.start(0);
+        return;
+    }
+    m_nameRequestActive = true;
+    getJson(url, [this, request, key](bool ok, const QJsonObject &response, const QString &error) {
+        const QString name = ok ? locationNameFromAddress(response) : QString();
+        QSettings settings("Clavis", "Weather");
+        settings.setValue(key + "/name", name);
+        // Failed/empty lookups back off for a day; successful names persist across restarts.
+        settings.setValue(key + "/retryAfter", QDateTime::currentSecsSinceEpoch() + 86400);
+        auto location = request.location;
+        if (!name.isEmpty())
+            location.name = name;
+        m_nameRequestActive = false;
+        // Serial requests with a cooldown also cover rapid repeated saves.
+        m_nameTimer.start(1100);
+        request.callback(!name.isEmpty(), location, error);
+    });
+}
 
 void OpenMeteoClient::requestIpLocation(LocationCallback callback)
 {
@@ -100,7 +171,12 @@ void OpenMeteoClient::getJson(const QUrl &url, JsonCallback callback)
 {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::UserAgentHeader, "ClavisWeather/1.0");
+    request.setTransferTimeout(15000);
     auto *reply = m_manager.get(request);
+    QTimer::singleShot(20000, reply, [reply]() {
+        if (!reply->isFinished())
+            reply->abort();
+    });
     QObject::connect(reply, &QNetworkReply::finished, this, [reply, callback]() {
         const QByteArray body = reply->readAll();
         const int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();

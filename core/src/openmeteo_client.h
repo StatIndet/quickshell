@@ -3,6 +3,8 @@
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QObject>
+#include <QQueue>
+#include <QTimer>
 #include <functional>
 
 struct WeatherLocation {
@@ -20,14 +22,25 @@ class OpenMeteoClient : public QObject {
     using LocationCallback = std::function<void(bool, const WeatherLocation &, const QString &)>;
     using JsonCallback = std::function<void(bool, const QJsonObject &, const QString &)>;
 
-    void requestIpLocation(LocationCallback callback);
-    void requestForecast(double latitude, double longitude, JsonCallback callback);
-    void requestAirQuality(double latitude, double longitude, JsonCallback callback);
-    void requestClimateNormals(double latitude, double longitude, JsonCallback callback);
+    virtual void requestIpLocation(LocationCallback callback);
+    virtual void requestForecast(double latitude, double longitude, JsonCallback callback);
+    virtual void requestAirQuality(double latitude, double longitude, JsonCallback callback);
+    virtual void requestClimateNormals(double latitude, double longitude, JsonCallback callback);
+
+    virtual void requestLocationName(const WeatherLocation &location, LocationCallback callback);
+    static QString locationNameFromAddress(const QJsonObject &response);
 
     static QUrl climateNormalsUrl(double latitude, double longitude);
 
   private:
+    struct NameRequest {
+        WeatherLocation location;
+        LocationCallback callback;
+    };
     QNetworkAccessManager m_manager;
+    QQueue<NameRequest> m_nameRequests;
+    QTimer m_nameTimer;
+    bool m_nameRequestActive = false;
+    void processNameRequest();
     void getJson(const QUrl &url, JsonCallback callback);
 };

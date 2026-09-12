@@ -59,7 +59,7 @@ Item {
 
         anchors.fill: parent
         columns: 3
-        rowSpacing: 40
+        rowSpacing: 12
         columnSpacing: 24
 
         Repeater {

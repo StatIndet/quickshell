@@ -160,3 +160,21 @@ NetworkManager, BlueZ, UPower and PipeWire must be usable in the session. Instal
 not switch audio servers, replace GPU drivers, enable system daemons, add device groups or
 configure a credential store. DDC/backlight access uses distribution udev/logind policy.
 Map-provider credentials and Rclone authentication are supplied by the user in the existing UI.
+
+### Weather place names
+
+Saved weather coordinates are reverse-geocoded through Nominatim. Forecasts always
+use the original coordinates; the returned city/town/region is only a display name.
+Successful names are cached in Clavis Weather settings; failed lookups back off for
+24 hours and retain the coordinate label. Names use the service's local-language
+response. Requests are serialized with at least 1.1 seconds between network lookups,
+with an identifying User-Agent and a compact map-corner attribution for OpenFreeMap, OpenMapTiles, and OpenStreetMap
+in both location picker views.
+Map dragging does not perform lookups.
+
+The [public Nominatim usage policy](https://operations.osmfoundation.org/policies/nominatim/)
+limits aggregate application traffic to 1 request/second and requires caching and
+attribution. Larger deployments must use a suitable provider or their own instance.
+Set `CLAVIS_GEOCODING_URL` to a compatible reverse endpoint to change providers
+without updating Clavis. The endpoint receives the saved coordinates; cached results
+are scoped to the endpoint. IP-based automatic location continues to use ipwho.is.

@@ -12,6 +12,7 @@ Item {
     property real zoomLevel: 10
     property real bearing: 0
     property real tilt: 0
+    property bool copyrightsVisible: true
     property bool markerVisible: true
     property bool markerDraggable: false
     property string overlayTileUrl: ""
@@ -60,6 +61,7 @@ Item {
                 "bearing": root.bearing,
                 "tilt": root.tilt,
                 "markerVisible": root.markerVisible,
+                "copyrightsVisible": root.copyrightsVisible,
                 "markerDraggable": root.markerDraggable
             };
             let renderer = "MapLibreMap.qml";

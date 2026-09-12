@@ -5448,32 +5448,32 @@ Scroll to adjust</translation>
         <translation>Longitude must be between -180 and 180</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="139"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="140"/>
         <source>Center current marker</source>
         <translation>Center current marker</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="157"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="158"/>
         <source>Expand map</source>
         <translation>Expand map</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="179"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="187"/>
         <source>Coordinates</source>
         <translation>Coordinates</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="201"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="209"/>
         <source>Save location</source>
         <translation>Save location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="207"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="215"/>
         <source>Use automatic location</source>
         <translation>Use automatic location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="148"/>
+        <location filename="../Modules/ControlCenter/LocationPicker.qml" line="149"/>
         <source>Return to saved location and initial view</source>
         <translation>Return to saved location and initial view</translation>
     </message>
@@ -5481,22 +5481,22 @@ Scroll to adjust</translation>
 <context>
     <name>LocationPickerWindow</name>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="96"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="97"/>
         <source>Center current marker</source>
         <translation>Center current marker</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="114"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="115"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="126"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="127"/>
         <source>Save location</source>
         <translation>Save location</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="105"/>
+        <location filename="../Modules/ControlCenter/LocationPickerWindow.qml" line="106"/>
         <source>Return to saved location and initial view</source>
         <translation>Return to saved location and initial view</translation>
     </message>
@@ -5551,133 +5551,25 @@ Scroll to adjust</translation>
     </message>
 </context>
 <context>
-    <name>MapLegend</name>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="49"/>
-        <source>Radar</source>
-        <translation>Radar</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="52"/>
-        <source>Temperature</source>
-        <translation>Temperature</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="55"/>
-        <source>Precipitation</source>
-        <translation>Precipitation</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="58"/>
-        <source>Cloud cover</source>
-        <translation>Cloud cover</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="61"/>
-        <source>Wind speed</source>
-        <translation>Wind speed</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="64"/>
-        <source>Pressure</source>
-        <translation>Pressure</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="66"/>
-        <source>Weather</source>
-        <translation>Weather</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="71"/>
-        <source>Light rain</source>
-        <translation>Light rain</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="74"/>
-        <source>Cold</source>
-        <translation>Cold</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="77"/>
-        <source>Light</source>
-        <translation>Light</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="80"/>
-        <source>Clear</source>
-        <translation>Clear</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="83"/>
-        <source>Calm</source>
-        <translation>Calm</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="86"/>
-        <source>Low</source>
-        <translation>Low</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="93"/>
-        <source>Heavy precipitation</source>
-        <translation>Heavy precipitation</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="96"/>
-        <source>Hot</source>
-        <translation>Hot</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="99"/>
-        <source>Heavy</source>
-        <translation>Heavy</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="102"/>
-        <source>Overcast</source>
-        <translation>Overcast</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="105"/>
-        <source>Strong</source>
-        <translation>Strong</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="108"/>
-        <source>High</source>
-        <translation>High</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="119"/>
-        <source>Cached</source>
-        <translation>Cached</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Keystone/WeatherContent/MapLegend.qml" line="119"/>
-        <source> · Cached</source>
-        <translation> · Cached</translation>
-    </message>
-</context>
-<context>
     <name>MapLibreView</name>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="44"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="45"/>
         <source>Map style temporarily unavailable</source>
         <translation>Map style temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="50"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="51"/>
         <source>Invalid map style</source>
         <translation>Invalid map style</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="92"/>
-        <location filename="../Modules/Map/MapLibreView.qml" line="216"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="94"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="218"/>
         <source>Map temporarily unavailable</source>
         <translation>Map temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Map/MapLibreView.qml" line="132"/>
+        <location filename="../Modules/Map/MapLibreView.qml" line="134"/>
         <source>Unable to create map</source>
         <translation>Unable to create map</translation>
     </message>
@@ -11592,12 +11484,12 @@ Scroll to adjust; click to open sound</translation>
         <translation>Weather layer temporarily unavailable</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="177"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="176"/>
         <source>Return to weather location</source>
         <translation>Return to weather location</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="222"/>
+        <location filename="../Modules/Keystone/WeatherContent/WeatherMapCard.qml" line="224"/>
         <source>Weather location temporarily unavailable</source>
         <translation>Weather location temporarily unavailable</translation>
     </message>

@@ -15,6 +15,7 @@ Item {
     property real zoomLevel: 10
     property real bearing: 0
     property real tilt: 0
+    property bool copyrightsVisible: true
     property bool markerVisible: true
     property bool markerDraggable: false
     readonly property bool ready: mapView.map.mapReady
@@ -75,7 +76,7 @@ Item {
         map.zoomLevel: root.zoomLevel
         map.bearing: root.bearing
         map.tilt: root.tilt
-        map.copyrightsVisible: true
+        map.copyrightsVisible: root.copyrightsVisible
         map.color: Appearance.colors.colSurfaceContainerHigh
 
         TapHandler {

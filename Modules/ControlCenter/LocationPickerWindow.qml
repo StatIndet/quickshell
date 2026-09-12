@@ -69,6 +69,7 @@ FloatingWindow {
             anchors.fill: parent
             active: root.visible
             styleUrl: "https://tiles.openfreemap.org/styles/liberty"
+            copyrightsVisible: false
             centerLatitude: root.centerLatitude
             centerLongitude: root.centerLongitude
             markerLatitude: root.markerLatitude
@@ -144,6 +145,14 @@ FloatingWindow {
             font.family: Typography.labelMedium.family
             font.pixelSize: Typography.labelMedium.pixelSize
             font.weight: Typography.labelMedium.weight
+        }
+
+        LocationMapAttribution {
+            anchors.left: parent.left
+            anchors.bottom: coordinateLabel.top
+            anchors.leftMargin: Metrics.spacingL
+            anchors.bottomMargin: Metrics.spacingS
+            width: Math.min(implicitWidth, parent.width - 2 * Metrics.spacingL)
         }
 
         FocusScope {

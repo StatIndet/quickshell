@@ -29,7 +29,7 @@ Item {
                                                                                               === 3 ? 960 :
                                                                                                       760
     implicitHeight: 80 + 20 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : currentIndex === 2 ? 480 :
-                                                                                                          570)
+                                                                                                          weatherContent.height)
 
     Shortcut {
         sequence: "Tab"
@@ -208,6 +208,8 @@ Item {
         }
 
         WeatherContent {
+            id: weatherContent
+
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             active: root.currentIndex === 3 && root.visible

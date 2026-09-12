@@ -11,7 +11,7 @@ class WeatherBackend : public QObject {
     Q_OBJECT
 
   public:
-    explicit WeatherBackend(QObject *parent = nullptr);
+    explicit WeatherBackend(QObject *parent = nullptr, OpenMeteoClient *client = nullptr);
 
     const WeatherSnapshot &snapshot() const { return m_snapshot; }
     bool loading() const { return m_loading; }
@@ -30,7 +30,9 @@ class WeatherBackend : public QObject {
     void normalsLoadingChanged();
 
   private:
-    OpenMeteoClient m_client;
+    OpenMeteoClient *m_client;
+    quint64 m_requestGeneration = 0;
+    WeatherLocation m_activeLocation;
     WeatherSnapshot m_snapshot;
     WeatherClimateNormals m_climateNormals;
     QTimer m_forecastTimer;
@@ -48,6 +50,7 @@ class WeatherBackend : public QObject {
     void setNormalsLoading(bool loading);
     void ensureClimateNormals(const WeatherLocation &location);
     void startFetch(const WeatherLocation &location);
+    void selectLocation(const WeatherLocation &location);
     void applyForecast(const WeatherLocation &location, const QJsonObject &forecast,
                        const QJsonObject &airQuality, const QString &partialError);
     void scheduleTimers();

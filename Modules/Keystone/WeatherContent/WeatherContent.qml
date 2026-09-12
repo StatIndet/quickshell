@@ -302,16 +302,16 @@ Item {
         // Right Column (Stack 1, 2, 3)
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 12
+            Layout.alignment: Qt.AlignTop
+            spacing: 20
 
             // Map Area (Stack 1)
             Rectangle {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 500
                 Layout.preferredWidth: 500
-                Layout.minimumHeight: 292
-                Layout.preferredHeight: 292
+                Layout.minimumHeight: 352
+                Layout.preferredHeight: 352
                 radius: Appearance.rounding.large
                 color: Appearance.colors.colSurfaceContainerHigh
                 clip: true
@@ -352,10 +352,6 @@ Item {
                     value: root.active && root.visible
                     when: weatherMapLoader.status === Loader.Ready
                 }
-            }
-
-            Item {
-                Layout.fillHeight: true
             }
 
             // Parameters (Stack 2)

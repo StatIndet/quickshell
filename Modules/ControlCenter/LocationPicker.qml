@@ -108,6 +108,7 @@ ColumnLayout {
             anchors.fill: parent
             active: root.active && !root.expanded
             styleUrl: "https://tiles.openfreemap.org/styles/liberty"
+            copyrightsVisible: false
             centerLatitude: root.cameraLatitude
             centerLongitude: root.cameraLongitude
             markerLatitude: root.candidateLatitude
@@ -131,7 +132,7 @@ ColumnLayout {
 
         RowLayout {
             anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.top: parent.top
             anchors.margins: Metrics.spacingM
 
             IconButton {
@@ -160,6 +161,13 @@ ColumnLayout {
                 normalPressedStateLayerColor: "#1F111111"
                 onClicked: expandedWindow.showWindow()
             }
+        }
+
+        LocationMapAttribution {
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.margins: Metrics.spacingM
+            width: Math.min(implicitWidth, parent.width - 2 * Metrics.spacingM)
         }
 
         layer.effect: OpacityMask {
@@ -206,14 +214,14 @@ ColumnLayout {
         ActionButton {
             text: qsTr("Use automatic location")
             iconName: "my_location"
-            enabled: WeatherPlugin.hasManualLocation && !WeatherPlugin.loading
+            enabled: !WeatherPlugin.loading
             onClicked: root.useAutomaticLocation()
         }
     }
 
     Connections {
         function onDataChanged() {
-            if (WeatherPlugin.hasManualLocation)
+            if (WeatherPlugin.hasManualLocation || WeatherPlugin.locationName === "")
                 return;
 
             root.candidateLatitude = Number(WeatherPlugin.latitude);

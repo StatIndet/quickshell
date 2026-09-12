@@ -122,6 +122,7 @@ Rectangle {
         anchors.fill: parent
         active: root.active && root.locationAvailable
         styleUrl: root.baseStyleUrl
+        copyrightsVisible: false
         centerLatitude: root.latitude
         centerLongitude: root.longitude
         markerLatitude: root.latitude
@@ -142,6 +143,8 @@ Rectangle {
     }
 
     WeatherMapLayerSelector {
+        id: layerSelector
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: Metrics.spacingM
@@ -155,22 +158,18 @@ Rectangle {
 
     MapLegend {
         anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.margins: Metrics.spacingM
+        anchors.top: layerSelector.visible ? layerSelector.bottom : parent.top
+        anchors.leftMargin: Metrics.spacingM
+        anchors.topMargin: Metrics.spacingM
         visible: root.locationAvailable && root.overlayTileUrl !== "" && !root.rainViewerOutOfRange
-        providerId: root.effectiveOverlay
         mode: root.selectedLayer
-        updatedAt: root.effectiveOverlay === "rainviewer" && WeatherMapPlugin.radarFrameTime > 0 ? new Date(
-                                                                                                       WeatherMapPlugin.radarFrameTime
-                                                                                                       * 1000) : new Date(
-                                                                                                       NaN)
-        stale: root.overlayFailed
-        backdropSource: map
     }
 
     IconButton {
+        id: recenterButton
+
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.top: parent.top
         anchors.margins: Metrics.spacingM
         visible: root.locationAvailable
         iconName: "my_location"
@@ -184,9 +183,12 @@ Rectangle {
     Text {
         id: overlayStatus
 
-        anchors.top: parent.top
+        anchors.top: recenterButton.bottom
         anchors.right: parent.right
         anchors.margins: Metrics.spacingM
+        width: Math.max(0, root.width - 208)
+        horizontalAlignment: Text.AlignRight
+        wrapMode: Text.Wrap
         visible: root.rainViewerOutOfRange || root.overlayLoading || root.overlayFailed || root.preferredBase
                  !== root.effectiveBase || root.preferredOverlay !== root.effectiveOverlay
         text: root.rainViewerOutOfRange ? root.radarMaximumZoomText : root.preferredBase
@@ -203,16 +205,16 @@ Rectangle {
         font.weight: Typography.labelMedium.weight
     }
 
-    Text {
-        anchors.right: parent.right
+    MapAttribution {
+        id: attribution
+
+        anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.rightMargin: Metrics.spacingM
-        anchors.bottomMargin: Metrics.spacingM + Metrics.controlHeightM + 4
-        visible: root.effectiveOverlay === "rainviewer"
-        text: "Weather data by RainViewer"
-        color: "#B3111111"
-        font.family: Typography.labelSmall.family
-        font.pixelSize: 9
+        anchors.margins: Metrics.spacingM
+        width: Math.min(implicitWidth, parent.width - 2 * Metrics.spacingM)
+        visible: root.locationAvailable
+        baseProvider: root.effectiveBase
+        overlayProvider: root.overlayTileUrl !== "" ? root.effectiveOverlay : ""
     }
 
     MapFallback {

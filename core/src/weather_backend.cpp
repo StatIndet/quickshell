@@ -54,9 +54,9 @@ QVariantMap airAt(const QJsonObject &hourly, int index)
 }
 } // namespace
 
-WeatherBackend::WeatherBackend(QObject *parent)
-    : QObject(parent), m_cachePath(WeatherCache::defaultPath()),
-      m_normalsCachePath(WeatherNormalsCache::defaultPath())
+WeatherBackend::WeatherBackend(QObject *parent, OpenMeteoClient *client)
+    : QObject(parent), m_client(client ? client : new OpenMeteoClient(this)),
+      m_cachePath(WeatherCache::defaultPath()), m_normalsCachePath(WeatherNormalsCache::defaultPath())
 {
     loadSettings();
     m_snapshot = WeatherCache::load(m_cachePath);
@@ -73,21 +73,25 @@ void WeatherBackend::refresh()
 {
     if (m_loading)
         return;
+    const quint64 generation = ++m_requestGeneration;
     setLoading(true);
     if (m_hasManualLocation) {
         startFetch(m_manualLocation);
         return;
     }
-    m_client.requestIpLocation([this](bool ok, const WeatherLocation &location, const QString &error) {
-        if (!ok) {
-            m_snapshot.status = m_snapshot.valid ? "stale" : "error";
-            m_snapshot.errorMessage = error;
-            setLoading(false);
-            emit snapshotChanged();
-            return;
-        }
-        startFetch(location);
-    });
+    m_client->requestIpLocation(
+        [this, generation](bool ok, const WeatherLocation &location, const QString &error) {
+            if (generation != m_requestGeneration)
+                return;
+            if (!ok) {
+                m_snapshot.status = m_snapshot.valid ? "stale" : "error";
+                m_snapshot.errorMessage = error;
+                setLoading(false);
+                emit snapshotChanged();
+                return;
+            }
+            startFetch(location);
+        });
 }
 
 void WeatherBackend::setManualLocation(double latitude, double longitude, const QString &name)
@@ -97,6 +101,8 @@ void WeatherBackend::setManualLocation(double latitude, double longitude, const 
     m_manualLocation.name = name.isEmpty() ? QStringLiteral("Manual location") : name;
     m_hasManualLocation = true;
     saveSettings();
+    ++m_requestGeneration;
+    setLoading(false);
     refresh();
 }
 
@@ -104,7 +110,19 @@ void WeatherBackend::clearManualLocation()
 {
     m_hasManualLocation = false;
     saveSettings();
+    ++m_requestGeneration;
+    // Old manual data must not masquerade as the newly selected automatic location,
+    // including when IP lookup fails. Retrying automatic location remains possible.
+    m_snapshot = {};
+    m_activeNormalsKey.clear();
+    m_climateNormals = {};
+    setNormalsLoading(false);
+    emit normalsChanged();
+    m_snapshot.status = "loading";
+    WeatherCache::save(m_cachePath, m_snapshot);
+    setLoading(false);
     refresh();
+    emit snapshotChanged();
 }
 
 void WeatherBackend::setLoading(bool loading)
@@ -161,7 +179,7 @@ void WeatherBackend::ensureClimateNormals(const WeatherLocation &location)
         emit normalsChanged();
     }
     setNormalsLoading(true);
-    m_client.requestClimateNormals(
+    m_client->requestClimateNormals(
         location.latitude, location.longitude,
         [this, location, requestKey](bool ok, const QJsonObject &response, const QString &) {
             WeatherClimateNormals normals;
@@ -181,12 +199,43 @@ void WeatherBackend::ensureClimateNormals(const WeatherLocation &location)
         });
 }
 
+void WeatherBackend::selectLocation(const WeatherLocation &location)
+{
+    if (m_snapshot.latitude != location.latitude || m_snapshot.longitude != location.longitude)
+        m_snapshot = {};
+    m_activeLocation = location;
+    m_snapshot.latitude = location.latitude;
+    m_snapshot.longitude = location.longitude;
+    m_snapshot.locationName = location.name;
+    m_snapshot.status = "loading";
+    m_snapshot.errorMessage.clear();
+    emit snapshotChanged();
+}
+
 void WeatherBackend::startFetch(const WeatherLocation &location)
 {
+    const quint64 generation = m_requestGeneration;
+    selectLocation(location);
+    if (m_hasManualLocation) {
+        m_client->requestLocationName(
+            location, [this, generation](bool ok, const WeatherLocation &resolved, const QString &) {
+                if (!ok || generation != m_requestGeneration)
+                    return;
+                m_manualLocation.name = resolved.name;
+                m_activeLocation.name = resolved.name;
+                m_snapshot.locationName = resolved.name;
+                saveSettings();
+                WeatherCache::save(m_cachePath, m_snapshot);
+                emit snapshotChanged();
+            });
+    }
     ensureClimateNormals(location);
-    m_client.requestForecast(
+    m_client->requestForecast(
         location.latitude, location.longitude,
-        [this, location](bool forecastOk, const QJsonObject &forecast, const QString &forecastError) {
+        [this, location, generation](bool forecastOk, const QJsonObject &forecast,
+                                     const QString &forecastError) {
+            if (generation != m_requestGeneration)
+                return;
             if (!forecastOk) {
                 m_snapshot.status = m_snapshot.valid ? "stale" : "error";
                 m_snapshot.errorMessage = forecastError;
@@ -194,10 +243,12 @@ void WeatherBackend::startFetch(const WeatherLocation &location)
                 emit snapshotChanged();
                 return;
             }
-            m_client.requestAirQuality(
+            m_client->requestAirQuality(
                 location.latitude, location.longitude,
-                [this, location, forecast](bool airOk, const QJsonObject &air, const QString &airError) {
-                    applyForecast(location, forecast, airOk ? air : QJsonObject(),
+                [this, generation, forecast](bool airOk, const QJsonObject &air, const QString &airError) {
+                    if (generation != m_requestGeneration)
+                        return;
+                    applyForecast(m_activeLocation, forecast, airOk ? air : QJsonObject(),
                                   airOk ? QString() : airError);
                     setLoading(false);
                 });
