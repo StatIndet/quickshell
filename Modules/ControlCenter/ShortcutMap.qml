@@ -120,8 +120,9 @@ PanelWindow {
     }
 
         Rectangle {
-        anchors.fill: parent
-        anchors.margins: Math.max(16, Math.min(root.width, root.height) * 0.045)
+        anchors.centerIn: parent
+        width: Math.max(0, Math.min(1600, root.width * 0.94, root.width - 32))
+        height: Math.max(0, Math.min(900, root.height * 0.88, root.height - 32))
         radius: Appearance.rounding.large
         color: Appearance.m3colors.m3surfaceContainerLow
         border.width: 1
@@ -132,11 +133,11 @@ PanelWindow {
 
         ColumnLayout {
         anchors.fill: parent
-        anchors.leftMargin: 48
-        anchors.rightMargin: 48
-        anchors.topMargin: 32
-        anchors.bottomMargin: 40
-        spacing: 32
+        anchors.leftMargin: 32
+        anchors.rightMargin: 32
+        anchors.topMargin: 24
+        anchors.bottomMargin: 24
+        spacing: 20
         Item {
         Layout.fillWidth: true
         Layout.preferredHeight: 56
@@ -212,9 +213,9 @@ PanelWindow {
         columns.push(blocks);
         return columns;
     }
-        readonly property int columnWidth: 620
+        readonly property int columnWidth: Math.max(0, Math.min(560, width))
         model: sectionColumns
-        spacing: 88
+        spacing: 40
         ScrollBar.horizontal: StyledScrollBar {
         policy: ScrollBar.AsNeeded
     }
