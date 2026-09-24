@@ -1,6 +1,9 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import qs.Components
 import qs.Common
 import qs.Services
 import qs.Widgets.common
@@ -47,6 +50,8 @@ Item {
     readonly property string entryName: entry ? String(entry.name || "") : ""
     readonly property bool canLaunch: !!entry && entry.kind === "app" && entry.available && String(
                                           entry.desktopId || "").length > 0
+    readonly property var desktopActions: contextMenu && canLaunch ? ApplicationService.actionsForApplication(
+                                                                         entry.desktopId) : []
     readonly property bool canChangePin: !!entry && (entry.pinned || (DockService.contextPinning
                                                                       && canLaunch))
 
@@ -58,8 +63,9 @@ Item {
     readonly property real tailSize: contextMenu ? 10 : 0
     readonly property real bodyX: contextMenu && edge === "left" ? tailSize : 0
     readonly property real bodyWidth: width - (edge === "bottom" ? 0 : tailSize)
-    readonly property real bodyHeight: (contextMenu ? menuContent.height : windowRow.height) + contentMargin
-                                       * 2
+    readonly property real bodyHeight: contextMenu ? Math.min(menuContent.height + contentMargin * 2, Math.max(
+                                                                  0, maximumHeight - tailSize)) :
+                                                     windowRow.height + contentMargin * 2
 
     readonly property color surfaceColor: BlurService.backgroundColor(Appearance.colors.colSurfaceContainer)
     readonly property color outlineColor: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.18)
@@ -163,118 +169,183 @@ Item {
         }
     }
 
-    Column {
-        id: menuContent
+    Flickable {
+        id: menuViewport
         visible: root.contextMenu
         x: root.bodyX + root.contentMargin
         y: root.contentMargin
         width: Math.max(0, root.bodyWidth - root.contentMargin * 2)
-        spacing: 4
-
-        Text {
-            width: parent.width - 16
-            x: 8
-            height: 32
-            visible: root.windows.length === 0
-            text: root.entryName
-            textFormat: Text.PlainText
-            font.family: Fonts.ui
-            font.pixelSize: 12
-            color: Appearance.colors.colOnSurfaceVariant
-            elide: Text.ElideRight
-            verticalAlignment: Text.AlignVCenter
+        height: Math.max(0, root.bodyHeight - root.contentMargin * 2)
+        contentHeight: menuContent.height
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
+        ScrollBar.vertical: StyledScrollBar {}
+        onVisibleChanged: contentY = 0
+        Connections {
+            target: root
+            function onEntryKeyChanged() {
+                menuViewport.contentY = 0;
+            }
         }
-        Flickable {
-            width: parent.width
-            height: Math.min(contentHeight, Math.max(32, root.maximumHeight - actions.height - 40))
-            visible: root.windows.length > 0
-            contentHeight: windowMenu.height
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: StyledScrollBar {}
-            Column {
-                id: windowMenu
+        Column {
+            id: menuContent
+            width: menuViewport.width
+            spacing: 4
+
+            Text {
+                width: parent.width - 16
+                x: 8
+                height: 32
+                visible: root.windows.length === 0
+                text: root.entryName
+                textFormat: Text.PlainText
+                font.family: Fonts.ui
+                font.pixelSize: 12
+                color: Appearance.colors.colOnSurfaceVariant
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+            }
+            Item {
                 width: parent.width
-                Repeater {
-                    model: root.contextMenu ? root.windows : []
-                    delegate: StyledMenuItem {
-                        required property var modelData
-                        width: windowMenu.width
-                        implicitHeight: 32
-                        leftPadding: 8
-                        rightPadding: 8
-                        text: String(modelData.title || root.entryName)
-                        checkable: true
-                        checked: !!modelData.isFocused
-                        onTriggered: {
-                            DockService.focusWindow(modelData.id, root.outputName);
-                            root.dismissed();
+                height: windowMenu.height
+                visible: root.windows.length > 0
+                Column {
+                    id: windowMenu
+                    width: parent.width
+                    Repeater {
+                        model: root.contextMenu ? root.windows : []
+                        delegate: StyledMenuItem {
+                            required property var modelData
+                            width: windowMenu.width
+                            implicitHeight: 32
+                            leftPadding: 8
+                            rightPadding: 8
+                            text: String(modelData.title || root.entryName)
+                            checkable: true
+                            checked: !!modelData.isFocused
+                            onTriggered: {
+                                DockService.focusWindow(modelData.id, root.outputName);
+                                root.dismissed();
+                            }
                         }
                     }
                 }
             }
-        }
-        Rectangle {
-            x: 8
-            width: Math.max(0, parent.width - 16)
-            height: 1
-            color: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.16)
-        }
-        Text {
-            width: parent.width - 16
-            x: 8
-            visible: !!root.entry && root.entry.kind === "app" && !root.entry.available
-                     && root.windows.length === 0
-            text: qsTr("Application is unavailable")
-            font.family: Fonts.ui
-            font.pixelSize: 12
-            color: Appearance.colors.colOnSurfaceVariant
-            wrapMode: Text.Wrap
-        }
-        Column {
-            id: actions
-            width: parent.width
-            StyledMenuItem {
+            Rectangle {
+                x: 8
+                width: Math.max(0, parent.width - 16)
+                height: 1
+                color: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.16)
+            }
+            Column {
                 width: parent.width
-                implicitHeight: 32
-                leftPadding: 8
-                rightPadding: 8
-                visible: root.canLaunch
-                text: qsTr("Open application")
-                onTriggered: {
-                    if (!root.canLaunch)
-                        return;
-                    DockService.launch(root.entryKey);
-                    root.dismissed();
+                visible: root.desktopActions.length > 0
+                Repeater {
+                    model: root.desktopActions
+                    delegate: StyledMenuItem {
+                        id: desktopActionItem
+                        required property DesktopAction modelData
+                        width: menuContent.width
+                        implicitHeight: 32
+                        leftPadding: 8
+                        rightPadding: 8
+                        text: modelData.name
+                        contentItem: RowLayout {
+                            spacing: 8
+                            ThemeIcon {
+                                Layout.preferredWidth: 20
+                                Layout.preferredHeight: 20
+                                visible: desktopActionItem.modelData.icon !== ""
+                                iconSource: visible ? ApplicationService.iconSource(
+                                                          desktopActionItem.modelData.icon) : ""
+                                sourceSize: Qt.size(32, 32)
+                                fillMode: Image.PreserveAspectFit
+                                asynchronous: true
+                            }
+                            Text {
+                                Layout.fillWidth: true
+                                text: desktopActionItem.text
+                                textFormat: Text.PlainText
+                                font.family: Fonts.ui
+                                font.pixelSize: Typography.labelLarge.pixelSize
+                                font.weight: Typography.labelLarge.weight
+                                color: desktopActionItem.foreground
+                                elide: Text.ElideRight
+                            }
+                        }
+                        onTriggered: {
+                            if (!root.canLaunch)
+                                return;
+                            if (ApplicationService.launchApplicationAction(root.entry.desktopId,
+                                                                           modelData.id))
+                                root.dismissed();
+                        }
+                    }
                 }
             }
-            StyledMenuItem {
-                width: parent.width
-                implicitHeight: 32
-                leftPadding: 8
-                rightPadding: 8
-                visible: root.canChangePin
-                text: root.entry && root.entry.pinned ? qsTr("Remove from Dock") : qsTr("Pin to Dock")
-                onTriggered: {
-                    const entry = DockService.entryFor(root.entryKey);
-                    if (!entry)
-                        return;
-                    if (entry.pinned)
-                        DockService.unpin(root.entryKey);
-                    else if (root.canChangePin)
-                        DockService.pin(entry.desktopId);
-                    root.dismissed();
-                }
+            Rectangle {
+                visible: root.desktopActions.length > 0
+                x: 8
+                width: Math.max(0, parent.width - 16)
+                height: 1
+                color: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.16)
             }
-            StyledMenuItem {
+            Text {
+                width: parent.width - 16
+                x: 8
+                visible: !!root.entry && root.entry.kind === "app" && !root.entry.available
+                         && root.windows.length === 0
+                text: qsTr("Application is unavailable")
+                font.family: Fonts.ui
+                font.pixelSize: 12
+                color: Appearance.colors.colOnSurfaceVariant
+                wrapMode: Text.Wrap
+            }
+            Column {
+                id: actions
                 width: parent.width
-                implicitHeight: 32
-                leftPadding: 8
-                rightPadding: 8
-                text: qsTr("Dock settings")
-                onTriggered: {
-                    ControlCenterService.openSearch("general.dock");
-                    root.dismissed();
+                StyledMenuItem {
+                    width: parent.width
+                    implicitHeight: 32
+                    leftPadding: 8
+                    rightPadding: 8
+                    visible: root.canLaunch
+                    text: qsTr("Open application")
+                    onTriggered: {
+                        if (!root.canLaunch)
+                            return;
+                        DockService.launch(root.entryKey);
+                        root.dismissed();
+                    }
+                }
+                StyledMenuItem {
+                    width: parent.width
+                    implicitHeight: 32
+                    leftPadding: 8
+                    rightPadding: 8
+                    visible: root.canChangePin
+                    text: root.entry && root.entry.pinned ? qsTr("Remove from Dock") : qsTr("Pin to Dock")
+                    onTriggered: {
+                        const entry = DockService.entryFor(root.entryKey);
+                        if (!entry)
+                            return;
+                        if (entry.pinned)
+                            DockService.unpin(root.entryKey);
+                        else if (root.canChangePin)
+                            DockService.pin(entry.desktopId);
+                        root.dismissed();
+                    }
+                }
+                StyledMenuItem {
+                    width: parent.width
+                    implicitHeight: 32
+                    leftPadding: 8
+                    rightPadding: 8
+                    text: qsTr("Dock settings")
+                    onTriggered: {
+                        ControlCenterService.openSearch("general.dock");
+                        root.dismissed();
+                    }
                 }
             }
         }

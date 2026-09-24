@@ -72,7 +72,31 @@ Singleton {
             return false;
         if (application.id === root.settingsApplication.id)
             return ControlCenterService.openOrFocus();
-        const command = Array.from(application.command || []);
+        return root.launchApplicationCommand(application, application.command);
+    }
+
+    function actionsForApplication(identifier) {
+        const application = root.findById(identifier);
+        // Preserve the native list's order, labels and DesktopAction objects.
+        const actions = Array.from(application ? application.actions || [] : []);
+        return actions.filter(action => {
+            if (!action || !String(action.id || "").trim() || !String(action.name || "").trim())
+                return false;
+            return action.command.length > 0 && String(action.command[0]).trim() !== "";
+        });
+    }
+
+    function launchApplicationAction(identifier, actionId) {
+        const application = root.findById(identifier);
+        if (!application || application.dragOnly)
+            return false;
+        // Resolve again on activation: an open menu may outlive an entry refresh.
+        const action = root.actionsForApplication(identifier).find(candidate => candidate.id === actionId);
+        return !!action && root.launchApplicationCommand(application, action.command);
+    }
+
+    function launchApplicationCommand(application, argumentsList) {
+        const command = Array.from(argumentsList || []);
         if (command.length === 0 || !String(command[0]).trim())
             return false;
         if (application.runInTerminal) {
