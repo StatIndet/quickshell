@@ -24,6 +24,7 @@ Item {
     required property string edge
     required property real iconSize
     required property real restingIconSize
+    property bool directMagnification: false
     readonly property bool spacer: kind === "spacer" || kind === "small-spacer"
     property bool dragged: false
     property bool contextActive: false
@@ -65,6 +66,7 @@ Item {
     }
 
     Behavior on iconSize {
+        enabled: !root.directMagnification
         NumberAnimation {
             duration: 100
             easing.type: Easing.OutCubic

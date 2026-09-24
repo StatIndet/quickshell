@@ -124,8 +124,9 @@ PanelWindow {
                                             && surfaceHover.point.position.y < band.y + band.height
     onPointerOverDockChanged: {
         if (pointerOverDock) {
-            pointerAxis = horizontal ? surfaceHover.point.scenePosition.x :
-                                       surfaceHover.point.scenePosition.y;
+            if (!trackingFileDrag)
+                pointerAxis = horizontal ? surfaceHover.point.scenePosition.x :
+                                           surfaceHover.point.scenePosition.y;
             magnificationExit.stop();
             magnificationActive = true;
         } else {
@@ -162,6 +163,23 @@ PanelWindow {
     property var externalEntries: []
     readonly property bool externalFiles: externalEntries.some(entry => entry.kind === "file" || entry.kind
                                                                         === "folder")
+    readonly property bool trackingFileDrag: externalOver && externalFiles && DockService.magnification
+    property bool fileDragPositionPending: false
+    onTrackingFileDragChanged: {
+        if (!trackingFileDrag)
+            fileDragPositionPending = false;
+    }
+    // Native drag motion can arrive more often than frames. Keep only its
+    // newest surface position and apply the whole wave in one frame, without
+    // restarting independent size/slot animations for every motion event.
+    FrameAnimation {
+        running: root.trackingFileDrag && root.fileDragPositionPending
+        onTriggered: {
+            root.fileDragPositionPending = false;
+            root.pointerAxis = root.horizontal ? root.dropPoint.x : root.dropPoint.y;
+            root.updateDropTarget();
+        }
+    }
     readonly property bool filePopupActive: {
         const revision = DockService.revision;
         const entry = DockService.entryFor(popupKey);
@@ -640,7 +658,7 @@ PanelWindow {
         HoverHandler {
             id: surfaceHover
             onPointChanged: {
-                if (root.pointerOverDock)
+                if (root.pointerOverDock && !root.trackingFileDrag)
                     root.pointerAxis = root.horizontal ? point.scenePosition.x : point.scenePosition.y;
             }
         }
@@ -702,14 +720,14 @@ PanelWindow {
             // Animate the centered tray with its slots, including app arrival
             // and removal; otherwise its origin would jump by half an icon.
             Behavior on width {
-                enabled: root.horizontal
+                enabled: root.horizontal && !root.trackingFileDrag
                 NumberAnimation {
                     duration: DockMotion.reflowDuration
                     easing.type: Easing.OutCubic
                 }
             }
             Behavior on height {
-                enabled: !root.horizontal
+                enabled: !root.horizontal && !root.trackingFileDrag
                 NumberAnimation {
                     duration: DockMotion.reflowDuration
                     easing.type: Easing.OutCubic
@@ -788,12 +806,14 @@ PanelWindow {
                         radius: 1
                         color: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.4)
                         Behavior on x {
+                            enabled: !root.trackingFileDrag
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on y {
+                            enabled: !root.trackingFileDrag
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
@@ -849,6 +869,7 @@ PanelWindow {
                         width: root.horizontal ? retiring ? retirementSpan : slot.span : icons.width
                         height: root.horizontal ? icons.height : retiring ? retirementSpan : slot.span
                         iconSize: retiring ? retirementSize : slot.size
+                        directMagnification: root.trackingFileDrag
                         restingIconSize: root.baseLayout.size
                         contextActive: root.popupKey === key && (root.contextMenu || kind === "folder"
                                                                  && filePopup.list)
@@ -907,28 +928,31 @@ PanelWindow {
                             easing.type: Easing.OutCubic
                         }
                         Behavior on x {
-                            enabled: dockItem.appeared && !dockItem.retiring
+                            enabled: dockItem.appeared && !dockItem.retiring && !root.trackingFileDrag
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on y {
-                            enabled: dockItem.appeared && !dockItem.retiring
+                            enabled: dockItem.appeared && !dockItem.retiring && !root.trackingFileDrag
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on width {
-                            enabled: dockItem.appeared && !dockItem.retiring && root.horizontal
+                            enabled: dockItem.appeared && !dockItem.retiring && root.horizontal &&
+                                     !root.trackingFileDrag
+
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on height {
-                            enabled: dockItem.appeared && !dockItem.retiring && !root.horizontal
+                            enabled: dockItem.appeared && !dockItem.retiring && !root.horizontal &&
+                                     !root.trackingFileDrag
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
@@ -1007,16 +1031,20 @@ PanelWindow {
                                                                                       + root.externalEntries[0].url :
                                                                                       "") : "";
                     root.dropPoint = band.mapToItem(content, drag.x, drag.y);
+                    root.externalOver = true;
                     root.pointerAxis = root.horizontal ? root.dropPoint.x : root.dropPoint.y;
                     root.updateDropTarget();
-                    root.externalOver = true;
                     root.dismissPopup();
                     root.revealed = true;
                 }
                 onPositionChanged: drag => {
                     root.dropPoint = band.mapToItem(content, drag.x, drag.y);
-                    root.pointerAxis = root.horizontal ? root.dropPoint.x : root.dropPoint.y;
-                    root.updateDropTarget();
+                    if (root.trackingFileDrag) {
+                        root.fileDragPositionPending = true;
+                    } else {
+                        root.pointerAxis = root.horizontal ? root.dropPoint.x : root.dropPoint.y;
+                        root.updateDropTarget();
+                    }
                 }
                 onExited: {
                     root.dropTargetKey = "";

@@ -66,10 +66,14 @@ Item {
         width: root.tileIconSize - 14
         height: width
         radius: width / 2
+        antialiasing: root.fan
         color: BlurService.backgroundColor(Appearance.colors.colSurfaceContainer)
         MaterialSymbol {
             anchors.centerIn: parent
+            anchors.alignWhenCentered: false
             text: root.actionIcon
+            // Native glyph bitmaps become jagged when the fan rotates them.
+            renderType: root.fan ? Text.QtRendering : Text.NativeRendering
             iconSize: Math.max(22, actionBackground.width * 0.55)
             color: Appearance.colors.colOnSurface
         }
