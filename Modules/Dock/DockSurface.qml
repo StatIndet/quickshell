@@ -133,9 +133,11 @@ PanelWindow {
     // Track the pointer above the popup/delegate hierarchy. Disabling a closing
     // fan must not look like leaving the Dock when the pointer hasn't moved.
     readonly property bool pointerOverDock: shown && surfaceHover.hovered && surfaceHover.point.position.x
-                                            >= band.x && surfaceHover.point.position.x < band.x + band.width
-                                            && surfaceHover.point.position.y >= band.y
-                                            && surfaceHover.point.position.y < band.y + band.height
+                                            >= dockInputArea.x && surfaceHover.point.position.x
+                                            < dockInputArea.x + dockInputArea.width
+                                            && surfaceHover.point.position.y >= dockInputArea.y
+                                            && surfaceHover.point.position.y < dockInputArea.y
+                                            + dockInputArea.height
     onPointerOverDockChanged: {
         if (pointerOverDock) {
             if (!trackingFileDrag)
@@ -582,8 +584,8 @@ PanelWindow {
     }
     Component.onCompleted: root.syncVisualEntries()
 
-    // The surface supplies animation/drag space; only the visible interaction
-    // regions accept input. Its exclusive zone is always the resting dock.
+    // The surface supplies animation/drag space. Input stays in the revealed
+    // dock's footprint and edge corridor; hidden docks keep only the trigger.
     implicitWidth: screen ? screen.width : 1280
     implicitHeight: screen ? screen.height : 720
     color: "transparent"
@@ -721,6 +723,18 @@ PanelWindow {
         }
 
         Item {
+            id: dockInputArea
+            // Region.item observes item geometry, not Translate animations.
+            // Publish the destination footprint immediately and bridge the
+            // edge gap, so entering/leaving the animated tray cannot unmap
+            // its input or strand the pointer on the desktop underneath.
+            x: root.horizontal ? band.x : root.edge === "left" ? 0 : band.x
+            y: band.y
+            width: band.width + (root.horizontal ? 0 : root.edgeOffset)
+            height: band.height + (root.horizontal ? root.edgeOffset : 0)
+        }
+
+        Item {
             id: band
             width: root.horizontal ? root.bandLength : root.bandThickness
             height: root.horizontal ? root.bandThickness : root.bandLength
@@ -729,7 +743,9 @@ PanelWindow {
                                                                                      - root.edgeOffset
             y: root.horizontal ? parent.height - height - root.edgeOffset : (parent.height - height) / 2
             opacity: root.shown ? 1 : 0
-            visible: opacity > 0
+            // Keep effective visibility (and image sources/folder loaders)
+            // alive while hidden. Opacity/translation hide the visuals; the
+            // input mask and enabled state make them non-interactive.
             enabled: root.shown
             // Animate the centered tray with its slots, including app arrival
             // and removal; otherwise its origin would jump by half an icon.
@@ -1210,7 +1226,7 @@ PanelWindow {
             item: root.filePopupActive && !DockService.fileDragActive ? content : null
         }
         Region {
-            item: root.shown ? band : null
+            item: root.shown ? dockInputArea : null
         }
         Region {
             item: edgeTrigger
