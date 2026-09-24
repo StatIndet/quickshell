@@ -88,12 +88,26 @@ PanelWindow {
                                                                                   && !externalFiles) &&
                                                            !dropTargetKey ? insertion : -1, draggedEntry
                                                            ? draggedEntry.kind : externalKind)
+    readonly property bool magnificationRequested: magnification > 1 && (dragInside || externalOver
+                                                                         || handoffKey !== "" || (!dragKey
+                                                                                                  && magnificationActive
+                                                                                                  && !DockService.externalDragActive))
+    // One continuous envelope for hover and drag, including an interrupted
+    // entrance/exit. Never ease the moving centre or each derived icon slot.
+    property real magnificationProgress: magnificationRequested ? 1 : 0
+    Behavior on magnificationProgress {
+        NumberAnimation {
+            duration: DockMotion.reflowDuration
+            easing.type: Easing.OutCubic
+        }
+    }
+    readonly property bool directMagnification: magnificationRequested || magnificationProgress > 0
     readonly property var layout: DockLayout.layout(preview.kinds, baseLayout.size, availableLength,
-                                                    magnification, 16, dragInside || externalOver
-                                                    || handoffKey !== "" || (!dragKey && magnificationActive)
-                                                    ? pointerInBase : NaN, DockLayout.sectionBoundaries(
-                                                        preview.kinds, DockService.pinnedAppCount,
-                                                        preview.order))
+                                                    magnification, 16, pointerInBase,
+                                                    DockLayout.sectionBoundaries(preview.kinds,
+                                                                                 DockService.pinnedAppCount,
+                                                                                 preview.order),
+                                                    magnificationProgress)
     readonly property var slotsByIndex: {
         const result = [];
         for (let i = 0; i < preview.order.length; ++i) {
@@ -720,14 +734,14 @@ PanelWindow {
             // Animate the centered tray with its slots, including app arrival
             // and removal; otherwise its origin would jump by half an icon.
             Behavior on width {
-                enabled: root.horizontal && !root.trackingFileDrag
+                enabled: root.horizontal && !root.directMagnification
                 NumberAnimation {
                     duration: DockMotion.reflowDuration
                     easing.type: Easing.OutCubic
                 }
             }
             Behavior on height {
-                enabled: !root.horizontal && !root.trackingFileDrag
+                enabled: !root.horizontal && !root.directMagnification
                 NumberAnimation {
                     duration: DockMotion.reflowDuration
                     easing.type: Easing.OutCubic
@@ -806,14 +820,14 @@ PanelWindow {
                         radius: 1
                         color: Appearance.applyAlpha(Appearance.colors.colOnSurface, 0.4)
                         Behavior on x {
-                            enabled: !root.trackingFileDrag
+                            enabled: !root.directMagnification
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on y {
-                            enabled: !root.trackingFileDrag
+                            enabled: !root.directMagnification
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
@@ -869,7 +883,7 @@ PanelWindow {
                         width: root.horizontal ? retiring ? retirementSpan : slot.span : icons.width
                         height: root.horizontal ? icons.height : retiring ? retirementSpan : slot.span
                         iconSize: retiring ? retirementSize : slot.size
-                        directMagnification: root.trackingFileDrag
+                        directMagnification: root.directMagnification
                         restingIconSize: root.baseLayout.size
                         contextActive: root.popupKey === key && (root.contextMenu || kind === "folder"
                                                                  && filePopup.list)
@@ -928,14 +942,14 @@ PanelWindow {
                             easing.type: Easing.OutCubic
                         }
                         Behavior on x {
-                            enabled: dockItem.appeared && !dockItem.retiring && !root.trackingFileDrag
+                            enabled: dockItem.appeared && !dockItem.retiring && !root.directMagnification
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
                             }
                         }
                         Behavior on y {
-                            enabled: dockItem.appeared && !dockItem.retiring && !root.trackingFileDrag
+                            enabled: dockItem.appeared && !dockItem.retiring && !root.directMagnification
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic
@@ -943,7 +957,7 @@ PanelWindow {
                         }
                         Behavior on width {
                             enabled: dockItem.appeared && !dockItem.retiring && root.horizontal &&
-                                     !root.trackingFileDrag
+                                     !root.directMagnification
 
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
@@ -952,7 +966,7 @@ PanelWindow {
                         }
                         Behavior on height {
                             enabled: dockItem.appeared && !dockItem.retiring && !root.horizontal &&
-                                     !root.trackingFileDrag
+                                     !root.directMagnification
                             NumberAnimation {
                                 duration: DockMotion.reflowDuration
                                 easing.type: Easing.OutCubic

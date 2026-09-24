@@ -348,6 +348,37 @@ TestCase {
         verifyOrdered(crowded);
     }
 
+    function test_waveStrengthPreservesCapacityAndInterpolatesGeometry() {
+        const kinds = ["app", "small-spacer", "app", "app", "folder", "trash"];
+        const boundaries = [3, 4];
+        for (const available of [240, 600, 1200]) {
+            const resting = DockLayout.layout(kinds, 80, available, 2, 16, NaN, boundaries);
+            for (const target of resting.slots) {
+                const full = DockLayout.layout(kinds, 80, available, 2, 16, target.center, boundaries);
+                for (const strength of [0, 0.1, 0.5, 0.9, 1]) {
+                    const wave = DockLayout.layout(kinds, 80, available, 2, 16, target.center, boundaries,
+                                                   strength);
+                    compare(wave.size, resting.size);
+                    compare(wave.baseLength, resting.baseLength);
+                    compare(wave.overflow, resting.overflow);
+                    verifyOrdered(wave);
+                    fuzzyCompare(wave.length, resting.length + strength * (full.length - resting.length),
+                                 0.000001);
+                    for (let i = 0; i < wave.slots.length; ++i) {
+                        compare(wave.slots[i].center, resting.slots[i].center);
+                        for (const field of ["size", "span", "start"])
+                            fuzzyCompare(wave.slots[i][field], resting.slots[i][field] + strength * (
+                                             full.slots[i][field] - resting.slots[i][field]), 0.000001);
+                    }
+                    for (let i = 0; i < wave.dividers.length; ++i)
+                        fuzzyCompare(wave.dividers[i], resting.dividers[i] + strength * (full.dividers[i]
+                                                                                         - resting.dividers[i]),
+                                     0.000001);
+                }
+            }
+        }
+    }
+
     function test_overflowAccountsForHoverSpace() {
         const kinds = Array(6).fill("app");
         const resting = DockLayout.layout(kinds, 32, 300, 2, 16, NaN);

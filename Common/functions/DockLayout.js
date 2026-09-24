@@ -15,13 +15,16 @@ function windowPreviewRow(count, preferredWidth, availableWidth) {
 
 // Work only in the unscaled coordinate system. Animated icon positions must
 // never feed back into magnification, otherwise the dock chases the pointer.
-function layout(kinds, preferredSize, available, magnification, sectionSpacing, pointer, sectionBoundary) {
+function layout(kinds, preferredSize, available, magnification, sectionSpacing, pointer, sectionBoundary, strength = 1) {
     const gap = 8;
     const padding = 12;
     const count = kinds.length;
     const weights = kinds.map(kind => kind === "small-spacer" ? 0.5 : 1);
     const apps = weights.reduce((sum, weight) => sum + weight, 0);
     const maximum = Math.max(1, Math.min(2, magnification));
+    // Fade the wave without changing the space reserved for its full size.
+    // Its centre follows input directly; only its amplitude is animated.
+    const amplitude = Math.max(0, Math.min(1, strength));
     const boundaries = (Array.isArray(sectionBoundary) ? sectionBoundary : [sectionBoundary])
         .filter((v, i, list) => v > 0 && v < count && list.indexOf(v) === i);
     const sectionGap = sectionSpacing + gap;
@@ -44,7 +47,7 @@ function layout(kinds, preferredSize, available, magnification, sectionSpacing, 
         const baseSpan = size * weights[index] + gap;
         const center = baseCursor + baseSpan / 2;
         const distance = (pointer - center) / (size + gap);
-        const scale = !isFinite(pointer) ? 1 : 1 + (maximum - 1) * Math.exp(-distance * distance / 2);
+        const scale = !isFinite(pointer) ? 1 : 1 + amplitude * (maximum - 1) * Math.exp(-distance * distance / 2);
         const span = size * weights[index] * scale + gap;
         slots.push({ center: center, start: cursor, span: span, size: size * scale });
         baseCursor += baseSpan;
