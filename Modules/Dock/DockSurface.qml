@@ -885,7 +885,43 @@ PanelWindow {
                                                     span: 0,
                                                     size: root.baseLayout.size
                                                 })
-                        readonly property var slot: root.slotForKey(key) || lastSlot
+                        readonly property int slotIndex: {
+                            const revision = DockService.revision;
+                            const index = DockService.rowIndex(key);
+                            return index < 0 ? -1 : root.preview.order.indexOf(index);
+                        }
+                        // Ease only discrete reordering. Sample the live wave at
+                        // that fractional position so pointer motion never
+                        // restarts a coordinate animation or trails the cursor.
+                        property real visualSlotIndex: Math.max(0, slotIndex)
+                        Behavior on visualSlotIndex {
+                            enabled: dockItem.appeared && !dockItem.retiring && dockItem.slotIndex >= 0
+                                     && root.directMagnification
+                            NumberAnimation {
+                                id: reorderAnimation
+                                duration: DockMotion.reflowDuration
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                        readonly property var slot: {
+                            const target = root.slotForKey(key);
+                            if (!target)
+                                return lastSlot;
+                            if (!root.directMagnification && !reorderAnimation.running)
+                                return target;
+                            const slots = root.layout.slots;
+                            const position = Math.max(0, Math.min(slots.length - 1, visualSlotIndex));
+                            const lower = slots[Math.floor(position)];
+                            const upper = slots[Math.ceil(position)];
+                            if (!lower || !upper)
+                                return target;
+                            const fraction = position - Math.floor(position);
+                            return {
+                                start: lower.start + (upper.start - lower.start) * fraction,
+                                span: lower.span + (upper.span - lower.span) * fraction,
+                                size: lower.size + (upper.size - lower.size) * fraction
+                            };
+                        }
                         onSlotChanged: {
                             if (!retiring && root.slotForKey(key))
                                 lastSlot = slot;
