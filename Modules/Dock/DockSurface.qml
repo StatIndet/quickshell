@@ -138,8 +138,20 @@ PanelWindow {
                                             && surfaceHover.point.position.y >= dockInputArea.y
                                             && surfaceHover.point.position.y < dockInputArea.y
                                             + dockInputArea.height
-    onPointerOverDockChanged: {
-        if (pointerOverDock) {
+    readonly property bool pointerOverInteractiveArea: {
+        if (!shown)
+            return false;
+        if (glassHover.hovered)
+            return true;
+        for (let i = 0; i < iconItems.count; ++i) {
+            const item = iconItems.itemAt(i);
+            if (item && item.enabled && !item.dragged && item.pointerHovered)
+                return true;
+        }
+        return false;
+    }
+    onPointerOverInteractiveAreaChanged: {
+        if (pointerOverInteractiveArea) {
             if (!trackingFileDrag)
                 pointerAxis = horizontal ? surfaceHover.point.scenePosition.x :
                                            surfaceHover.point.scenePosition.y;
@@ -613,7 +625,7 @@ PanelWindow {
         id: magnificationExit
         interval: 80
         onTriggered: {
-            if (!root.pointerOverDock)
+            if (!root.pointerOverInteractiveArea)
                 root.magnificationActive = false;
         }
     }
@@ -790,6 +802,9 @@ PanelWindow {
 
             Rectangle {
                 id: glass
+                HoverHandler {
+                    id: glassHover
+                }
                 x: root.horizontal ? 0 : root.edge === "left" ? 0 : parent.width - width
                 y: root.horizontal ? parent.height - height : 0
                 width: root.horizontal ? parent.width : root.restingThickness

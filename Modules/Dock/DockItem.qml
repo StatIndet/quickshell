@@ -26,6 +26,7 @@ Item {
     required property real restingIconSize
     property bool directMagnification: false
     readonly property bool spacer: kind === "spacer" || kind === "small-spacer"
+    readonly property bool pointerHovered: pointer.containsMouse
     property bool dragged: false
     property bool contextActive: false
     property bool folderExpanded: false
@@ -187,7 +188,14 @@ Item {
     }
     MouseArea {
         id: pointer
-        anchors.fill: parent
+        // Keep the tray clickable, but exclude the empty magnification headroom.
+        x: root.horizontal || root.edge === "left" ? 0 : Math.min(artwork.x, root.width - root.restingIconSize
+                                                                  - 22)
+        y: root.horizontal ? Math.min(artwork.y, root.height - root.restingIconSize - 22) : 0
+        width: root.horizontal ? root.width : root.edge === "left" ? Math.max(artwork.x + artwork.width,
+                                                                              root.restingIconSize + 22) :
+                                                                     root.width - x
+        height: root.horizontal ? root.height - y : root.height
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: root.spacer ? Qt.ArrowCursor : Qt.PointingHandCursor
@@ -199,14 +207,14 @@ Item {
         onPressed: mouse => {
             root.pressStarted();
             root.moved = false;
-            root.pressPoint = root.mapToItem(null, mouse.x, mouse.y);
+            root.pressPoint = pointer.mapToItem(null, mouse.x, mouse.y);
             const center = artwork.mapToItem(null, artwork.width / 2, artwork.height / 2);
             root.grabOffset = Qt.point(root.pressPoint.x - center.x, root.pressPoint.y - center.y);
         }
         onPositionChanged: mouse => {
             if (root.kind === "trash" || !(pressedButtons & Qt.LeftButton))
                 return;
-            const position = root.mapToItem(null, mouse.x, mouse.y);
+            const position = pointer.mapToItem(null, mouse.x, mouse.y);
             if (!root.moved && Math.hypot(position.x - root.pressPoint.x, position.y - root.pressPoint.y)
                     < 10)
 
@@ -216,7 +224,7 @@ Item {
         }
         onReleased: mouse => {
             if (root.moved)
-                root.dragReleased(root.entryKey, root.mapToItem(null, mouse.x, mouse.y));
+                root.dragReleased(root.entryKey, pointer.mapToItem(null, mouse.x, mouse.y));
         }
         onCanceled: {
             root.moved = true;
