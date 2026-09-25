@@ -12,13 +12,13 @@ plugin。
 - Clavis 负责 QML UI、Quickshell 生命周期、Niri IPC、窗口/工作区/输出、天气、
   WeatherMapProvider、MediaPalette、快捷键录制、实时 Cava、MPRIS 歌词和
   同步时间轴。
-- `key-cli` 负责 `key shell`、`key ipc`、录屏、音频文件录制、剪贴板与键盘锁状态 backend 以及
-  对外 machine JSON protocol。
-- `keytop` 唯一负责系统指标采集、解析、TUI 和 JSON/JSONL machine protocol；Clavis
-  直接消费 `keytop value stream --format jsonl`，不得在 Clavis 重新实现 keytop parser。
+- `key-cli` 负责 `key shell`、`key ipc`、录屏、音频文件录制、剪贴板、键盘锁状态与
+  原生系统指标采样 backend，以及对外 JSON/JSONL machine protocol。Clavis 直接消费
+  `key sysmon stream --format jsonl`，不得在 Clavis 重新实现系统指标 parser。
+- `keytop` 已结束维护；Clavis 不依赖其命令、构建产物或 TUI。
 
 Clavis 测试必须在单独 clone 后成立，不能依赖 `../keytop`、`../key-cli` 或它们的构建
-产物。不得恢复 `cast`、`key top`、`key sysmon`、Clavis.Sysmon、天气 CLI 中转、Python
+产物。不得恢复 `cast`、`key top`、Clavis 内嵌的 `key sysmon`、Clavis.Sysmon、天气 CLI 中转、Python
 歌词脚本、内嵌 C++ key CLI、release manager、rollback、`current` 软链接、`releases/`、
 `setup.sh`、`justfile` 或 Makefile。参考仓库只读，不能修改。
 

@@ -84,6 +84,8 @@ def main():
         elif name == "key-cli":
             required = {
                 "usr/bin/key",
+                "usr/bin/key-sysmon",
+                "usr/lib/key-cli/key-cpu-power",
                 "usr/lib/systemd/user/clavis-clipboard.service",
                 "usr/share/fish/vendor_completions.d/key.fish",
             }
@@ -96,25 +98,17 @@ def main():
             required = {"usr/lib/udev/rules.d/71-clavis-keyboard-leds.rules"}
             if "usr/bin/key" in files:
                 raise ValueError("Access package must not contain the CLI")
-        elif name == "keytop":
-            required = {
-                "usr/bin/keytop",
-                "usr/share/keytop/defaults/config.conf",
-                "usr/share/keytop/defaults/matugen.conf",
-            }
-            if any("libalpm/hooks/" in f for f in files):
-                raise ValueError("Base keytop package unexpectedly grants capabilities")
         else:
             required = {
-                "usr/lib/keytop/privileged-access",
-                "usr/share/libalpm/hooks/keytop-privileged-access.hook",
+                "usr/lib/key-cli/cpu-power-access",
+                "usr/share/libalpm/hooks/key-cli-cpu-power-access.hook",
                 ".INSTALL",
             }
-            if "usr/bin/keytop" in files:
-                raise ValueError("Access package must not contain the binary")
+            if "usr/lib/key-cli/key-cpu-power" in files:
+                raise ValueError("Access package must not contain the helper binary")
         if not required <= files:
             raise ValueError(f"Missing package resources: {sorted(required - files)}")
-        if name != "keytop-privileged-access" and ".INSTALL" in files:
+        if name != "key-cli-cpu-power-access" and ".INSTALL" in files:
             raise ValueError(f"Unexpected post-install actions in {name}")
         print(f"Package verified: {name} {info['pkgver'][0]}")
     if seen != set(manifest["packages"]):

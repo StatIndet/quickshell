@@ -143,15 +143,18 @@ class InstallerContracts(unittest.TestCase):
         )
         for package in DATA["releaseSources"][base]["packages"]:
             metadata += f"pkgname = {package}\n"
-        if base == "keytop":
-            metadata += "install = keytop-privileged-access.install\n"
-            files["keytop-privileged-access.install"] = b"# install fixture"
-            files["keytop-privileged-access.hook"] = b"# hook fixture"
+        if base == "key-cli":
+            metadata += "install = key-cli-cpu-power-access.install\n"
+            files["key-cli-cpu-power-access.install"] = b"# install fixture"
+            files["key-cli-cpu-power-access.hook"] = b"# hook fixture"
         files[".SRCINFO"] = metadata.encode()
         sums = "".join(
             f"{hashlib.sha256(content).hexdigest()}  {name}\n" for name, content in files.items()
         )
-        responses = {url + name: value for name, value in files.items()}
+        responses = {
+            url + ("default.SRCINFO" if name == ".SRCINFO" else name): value
+            for name, value in files.items()
+        }
         responses[url + "SHA256SUMS"] = sums.encode()
         payload = json.dumps({"tag_name": tag, "draft": False, "prerelease": False}).encode()
         for endpoint in ("latest", "tags/" + tag):
@@ -161,7 +164,7 @@ class InstallerContracts(unittest.TestCase):
     def test_release_downloads_verified_inputs_and_reuses_split_build_source(self):
         operation = installer.Installer(args(), DATA)
         operation.work = self.root
-        responses, url = self.release_fixture("keytop")
+        responses, url = self.release_fixture("key-cli")
         calls = []
 
         def download(address, **kwargs):
@@ -169,14 +172,15 @@ class InstallerContracts(unittest.TestCase):
             return io.BytesIO(responses[address])
 
         with patch.object(installer.urllib.request, "urlopen", side_effect=download):
-            base, path = operation.checkout("keytop")
-            self.assertEqual(operation.checkout("keytop-privileged-access"), (base, path))
+            base, path = operation.checkout("key-cli")
+            self.assertEqual(operation.checkout("key-cli-cpu-power-access"), (base, path))
         self.assertEqual(len(calls), len(set(calls)))
         self.assertEqual(
-            (path / "keytop-privileged-access.install").read_bytes(), b"# install fixture"
+            (path / "key-cli-cpu-power-access.install").read_bytes(), b"# install fixture"
         )
-        self.assertEqual((path / "keytop-2026.9.12.tar.gz").read_bytes(), b"release source")
-        self.assertIn(url + "keytop-privileged-access.hook", calls)
+        self.assertEqual((path / "key-cli-2026.9.12.tar.gz").read_bytes(), b"release source")
+        self.assertIn(url + "default.SRCINFO", calls)
+        self.assertIn(url + "key-cli-cpu-power-access.hook", calls)
 
     def test_release_failures_stop_before_build_and_never_fall_back_to_aur(self):
         for failure in (
@@ -199,13 +203,13 @@ class InstallerContracts(unittest.TestCase):
                 elif failure == "unsafe":
                     responses[url + "SHA256SUMS"] += ("0" * 64 + "  ../escape\n").encode()
                 elif failure in ("version", "install"):
-                    metadata = responses[url + ".SRCINFO"]
+                    metadata = responses[url + "default.SRCINFO"]
                     changed = (
                         metadata.replace(b"pkgver = 2026.9.12", b"pkgver = 2026.9.13")
                         if failure == "version"
                         else metadata + b"install = missing.install\n"
                     )
-                    responses[url + ".SRCINFO"] = changed
+                    responses[url + "default.SRCINFO"] = changed
                     responses[url + "SHA256SUMS"] = responses[url + "SHA256SUMS"].replace(
                         hashlib.sha256(metadata).hexdigest().encode(),
                         hashlib.sha256(changed).hexdigest().encode(),
@@ -350,9 +354,9 @@ class InstallerContracts(unittest.TestCase):
                 raise subprocess.TimeoutExpired(argv, options["timeout"])
             self.assertIn(
                 argv[0],
-                ("systemctl", "/usr/bin/key", "/usr/bin/keytop", "brightnessctl", "gsettings"),
+                ("systemctl", "/usr/bin/key", "brightnessctl", "gsettings"),
             )
-            output = "[]" if argv[0] in ("/usr/bin/key", "/usr/bin/keytop") else ""
+            output = "[]" if argv[0] in ("/usr/bin/key") else ""
             return subprocess.CompletedProcess(argv, 0, output, "")
 
         with (
@@ -364,7 +368,7 @@ class InstallerContracts(unittest.TestCase):
         self.assertEqual(existing.read_text(), "user configuration")
         self.assertTrue(any("overrides preserved" in error for error in operation.conflicts))
         self.assertTrue(any("key doctor" in error for error in operation.conflicts))
-        self.assertTrue(any("keytop metrics" in error for error in operation.conflicts))
+        self.assertTrue(any("key sysmon metrics" in error for error in operation.conflicts))
         self.assertIn("DDC access: unavailable", output.getvalue())
         self.assertIn("Desktop GSettings schema: missing", output.getvalue())
 

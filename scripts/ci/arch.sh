@@ -41,7 +41,6 @@ runuser -u builder -- python3 scripts/release.py bundle-resources --cache .packa
 case $name in
     clavis-shell) runuser -u builder -- scripts/dev/check.sh --full ;;
     key-cli) runuser -u builder -- scripts/check.sh --build ;;
-    keytop) runuser -u builder -- make check ;;
     *) exit 2 ;;
 esac
 # This archive is built and tested independently of the checkout and sibling repos.

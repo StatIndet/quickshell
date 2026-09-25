@@ -1,8 +1,8 @@
 # Arch installation
 
-The first release targets Arch-compatible x86_64 systems. The three independent projects
-are distributed as `clavis-shell`, `key-cli` and `keytop`. `clavis` is an unrelated AUR package.
-The one-command installer requires complete [GitHub Releases](releasing.md) for all three
+The first release targets Arch-compatible x86_64 systems. The two active projects
+are distributed as `clavis-shell` and `key-cli`. `clavis` is an unrelated AUR package.
+The one-command installer requires complete [GitHub Releases](releasing.md) for both
 projects. First-party packages do not require AUR registration. Third-party dependencies
 such as `libcava` and `qt6-m3shapes-git` still require access to AUR.
 
@@ -18,11 +18,13 @@ and verifies its SHA-256 against that release's checksum list. HTTPS and the rep
 are the trust boundary; the checksum detects corruption, not compromise of that repository.
 The complete verified installer runs only after the download succeeds. It bootstraps Python
 if absent, then installs official dependencies and builds source packages as your user.
-Clavis uses the exact release that generated the installer. key-cli and keytop each resolve
+Clavis uses the exact release that generated the installer. key-cli resolves
 GitHub's latest formal release once per run, which must satisfy the required minimum version.
 An unavailable, incomplete or incompatible release stops installation without falling back to AUR.
 The installer verifies `PKGBUILD`, `.SRCINFO`, the source archive and accompanying install/hook
 files against that release's `SHA256SUMS` before resolving build dependencies or running makepkg.
+GitHub serves the hidden `.SRCINFO` asset as `default.SRCINFO`; the installer verifies it
+against the `.SRCINFO` checksum and stores it under its Arch filename.
 Split permission packages reuse their backend's release and build; only selected outputs are installed.
 No AUR helper is required. Pacman owns installed files and handles removal and upgrades.
 The initial `pacman -Syu` keeps Arch synchronized; review its normal transaction prompt.
@@ -46,8 +48,8 @@ All five prompts default to `[Y/n]`:
 
 - Keyboard access: grants access to whole matching evdev keyboard nodes, including raw
   keystrokes, to active local users. This is broader than reading lock LEDs.
-- keytop access: grants `cap_perfmon` and `cap_dac_read_search`, including broad read-permission
-  bypass. Ordinary CPU usage does not need them; supported RAPL power sensors may.
+- CPU power access: grants `cap_dac_read_search` to the narrow `key-cpu-power` helper only.
+  Ordinary CPU usage does not need it; protected RAPL energy sensors may.
 - Enable Clavis Shell with the Niri user service.
 - Enable the separate clipboard-history watcher with the Niri user service.
 - Start both services now, if `niri.service` is active, independently of the autostart choices.
@@ -74,8 +76,8 @@ Authorization is separate from the base packages:
 - `key-cli-keyboard-access` supplies the udev rule. Removing it removes the persistent rule;
   existing ACLs/descriptors and other rules may still grant access. Reconnect the device and
   log in again before checking actual access.
-- `keytop-privileged-access` applies capabilities using a pacman transaction hook, reapplies
-  them when keytop is upgraded, and removes matching capabilities before its own removal.
+- `key-cli-cpu-power-access` applies capabilities using a pacman transaction hook, reapplies
+  them when key-cli is upgraded, and removes matching capabilities before its own removal.
   Unexpected capabilities, non-package-owned files, symlinks and writable installation paths
   are preserved/rejected for manual review. Already running processes may retain access.
 
@@ -99,7 +101,7 @@ specific features unavailable while ordinary metrics continue working.
 A failed step returns nonzero and identifies the stage. Successfully installed packages
 remain pacman-owned; fix the reported cause and rerun. There is no application rollback
 manager. For manual installation, build third-party dependencies as needed, then download and
-verify the GitHub Release build assets for `key-cli`, `keytop`, and `clavis-shell` in that order.
+verify the GitHub Release build assets for `key-cli` and `clavis-shell` in that order.
 Run makepkg as an ordinary user and install the selected packages with pacman.
 Installing only the base packages never grants the two optional access policies or enables
 user services. Rerun the one-command installer to discover new first-party releases; installed

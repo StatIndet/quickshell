@@ -385,7 +385,7 @@ Item {
             active: root.isForeground && !SystemMonitorService.error
             visible: !SystemMonitorService.hasData && !SystemMonitorService.error &&
                      !SystemMonitorService.reconnecting
-            message: qsTr("Connecting to keytop")
+            message: qsTr("Connecting to system monitor")
         }
 
         SystemUnavailableState {

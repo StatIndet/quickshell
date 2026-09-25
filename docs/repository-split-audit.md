@@ -14,21 +14,18 @@
 
 ## key-cli
 
-Python wheel 只提供 `shell`、`ipc`、`record`、`audio`、`clipboard`、`doctor` 和
-`version`。它编排 `qs`、gpu-screen-recorder、slurp、FFmpeg、PulseAudio/PipeWire
-兼容的 `pactl`、cliphist 和 wl-clipboard；不会读取 `/proc` 实现系统监测，也不会拥有
-QML 状态或天气/歌词模型。
-
-## keytop
-
-`keytop` 独立拥有系统采样、TUI、JSON snapshot 和 JSONL stream。Clavis 直接启动
-`keytop value stream`，不经过 `key-cli`。
+Python 命令负责 `shell`、`ipc`、`record`、`audio`、`clipboard`、`keyboard`、`sysmon`、
+`doctor` 和 `version`。`key sysmon` 使用 `exec` 切换到独立 C++ 采样进程，直接输出
+JSON/JSONL。可选功耗 helper 只读取固定的 RAPL 计数文件；键盘 uaccess 授权仍属于
+用户级设备权限，不能视作 Shell 与后端之间的权限隔离。
 
 Clavis 对系统信息采用四种独立生命周期：静态 identity 在 Quickshell 进程启动时通过
-`keytop value system` 读取一次；uptime 在可见 consumer 存在时从 `/proc/uptime` 校准
+`key sysmon system` 读取一次；uptime 在可见 consumer 存在时从 `/proc/uptime` 校准
 一次并用本地单调时钟更新；电池直接使用 `Quickshell.Services.UPower`；CPU、GPU、
-Memory、Disk、Network 则按可见 owner 的 module union 维持单个 keytop JSONL stream，
+Memory、Disk、Network 则按可见 owner 的 module union 维持单个 JSONL stream，
 所有 active module 共用用户配置的采样间隔。
+
+`keytop` 已停止维护，其 TUI 不再是产品入口。
 
 ## 明确删除
 

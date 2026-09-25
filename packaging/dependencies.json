@@ -323,13 +323,8 @@
           "defaultInstall": true
         },
         {
-          "package": "key-cli>=2026.9.12",
-          "purpose": "Shell lifecycle, recording, clipboard and keyboard protocol v1",
-          "defaultInstall": true
-        },
-        {
-          "package": "keytop>=2026.9.12",
-          "purpose": "JSONL system metrics protocol v1",
+          "package": "key-cli>=2026.9.25",
+          "purpose": "Shell lifecycle and JSON/JSONL system metrics protocol v1",
           "defaultInstall": true
         },
         {
@@ -661,14 +656,8 @@
       "repository": "StatIndet/key-cli",
       "packages": [
         "key-cli",
-        "key-cli-keyboard-access"
-      ]
-    },
-    "keytop": {
-      "repository": "StatIndet/keytop",
-      "packages": [
-        "keytop",
-        "keytop-privileged-access"
+        "key-cli-keyboard-access",
+        "key-cli-cpu-power-access"
       ]
     }
   }

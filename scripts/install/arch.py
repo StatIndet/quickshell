@@ -24,7 +24,7 @@ DATA = None
 CHOICES = ("keyboard_access", "power_access", "enable_shell", "enable_clipboard", "start_now")
 MESSAGES = {
     "keyboard_access": "Allow active local users to read whole keyboard event devices, including raw keystrokes?",
-    "power_access": "Grant keytop CAP_PERFMON and CAP_DAC_READ_SEARCH (performance access and broad file-read bypass, beyond RAPL)? Ordinary CPU usage needs neither.",
+    "power_access": "Grant the narrow key-cli CPU energy helper CAP_DAC_READ_SEARCH? This bypasses file read permissions inside that helper.",
     "enable_shell": "Enable Clavis Shell with the Niri user service?",
     "enable_clipboard": "Enable clipboard history capture with the Niri user service?",
     "start_now": "Start Clavis Shell and clipboard history capture in the current Niri session now? Active services will not be restarted.",
@@ -167,7 +167,7 @@ class Installer:
                 explicit = getattr(self.args, name)
                 package = {
                     "keyboard_access": "key-cli-keyboard-access",
-                    "power_access": "keytop-privileged-access",
+                    "power_access": "key-cli-cpu-power-access",
                 }.get(name)
                 if explicit is not None:
                     self.choices[name] = explicit == "yes"
@@ -217,7 +217,7 @@ class Installer:
         if self.choices["keyboard_access"]:
             result.append("key-cli-keyboard-access")
         if self.choices["power_access"]:
-            result.append("keytop-privileged-access")
+            result.append("key-cli-cpu-power-access")
         return list(dict.fromkeys(result))
 
     def release_checkout(self, name):
@@ -265,7 +265,9 @@ class Installer:
         selected = required | {n for n in checksums if n.endswith((".install", ".hook"))}
         for filename in sorted(selected):
             digest = hashlib.sha256()
-            with urllib.request.urlopen(url + filename, timeout=30) as response:
+            # GitHub normalizes the hidden .SRCINFO release asset to default.SRCINFO.
+            asset_name = "default.SRCINFO" if filename == ".SRCINFO" else filename
+            with urllib.request.urlopen(url + asset_name, timeout=30) as response:
                 with (path / filename).open("wb") as output:
                     while chunk := response.read(1024 * 1024):
                         digest.update(chunk)
@@ -489,7 +491,7 @@ class Installer:
         probes = [
             (
                 "CPU metrics",
-                ["/usr/bin/keytop", "value", "snapshot", "--format", "json", "--modules", "cpu"],
+                ["/usr/bin/key", "sysmon", "snapshot", "--format", "json", "--modules", "cpu"],
             ),
             ("Backlight access", ["brightnessctl", "--class", "backlight", "--list"]),
             ("DDC access", ["ddcutil", "detect", "--brief"]),
@@ -507,21 +509,21 @@ class Installer:
                         or not isinstance(report, dict)
                         or report.get("schemaVersion") != 1
                     ):
-                        raise ValueError("Unsupported keytop metrics response")
+                        raise ValueError("Unsupported key sysmon metrics response")
             except (OSError, ValueError, subprocess.TimeoutExpired) as error:
                 print(f"{label}: unavailable ({error})")
                 if label == "CPU metrics":
                     self.conflicts.append(
-                        "Could not validate keytop metrics protocol; run /usr/bin/keytop value cpu --format json"
+                        "Could not validate key sysmon metrics protocol; run /usr/bin/key sysmon cpu --format json"
                     )
-        if self.installed("keytop-privileged-access"):
-            result = run(["getcap", "-n", "/usr/bin/keytop"], capture=True, check=False)
+        if self.installed("key-cli-cpu-power-access"):
+            result = run(["getcap", "-n", "/usr/lib/key-cli/key-cpu-power"], capture=True, check=False)
             if (
                 result.returncode != 0
-                or result.stdout.strip() != "/usr/bin/keytop cap_dac_read_search,cap_perfmon=ep"
+                or result.stdout.strip() != "/usr/lib/key-cli/key-cpu-power cap_dac_read_search=ep"
             ):
                 self.conflicts.append(
-                    "keytop access package is installed but its capabilities need administrator review"
+                    "CPU power access package is installed but its capabilities need administrator review"
                 )
         print(
             "i2c-dev module: "
@@ -636,9 +638,8 @@ class Installer:
                     in (
                         "clavis-shell",
                         "key-cli",
-                        "keytop",
                         "key-cli-keyboard-access",
-                        "keytop-privileged-access",
+                        "key-cli-cpu-power-access",
                     ),
                 )
         self.stage = "post-install diagnostics"

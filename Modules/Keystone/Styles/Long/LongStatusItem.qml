@@ -158,9 +158,7 @@ Item {
                                            ? SystemMonitorService.cpu.packageTemperatureCelsius :
                                              SystemMonitorService.cpu.temperatureCelsius,
                                            UiPreferences.systemTemperatureUnit === "fahrenheit")),
-                    SystemMonitorService.errorMessage, SystemMonitorService.actionError].filter(value => !
-                                                                                                         !value).join(
-                        "\n");
+                    SystemMonitorService.errorMessage].filter(value => !!value).join("\n");
         }
     }
 
@@ -183,7 +181,8 @@ Item {
             return;
         }
         if (itemId === "systemMonitor") {
-            SystemMonitorService.openFullMonitor();
+            WidgetState.dashboardSidebarView = "info";
+            WidgetState.dashboardSidebarOpen = true;
             return;
         }
         const view = itemId === "volume" ? "audio" : itemId;

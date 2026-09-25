@@ -8,8 +8,8 @@ Singleton {
 
     readonly property int supportedSchemaVersion: 1
     property string commandName: {
-        const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim();
-        return configured !== "" ? configured : "keytop";
+        const configured = String(Quickshell.env("CLAVIS_KEY") || "").trim();
+        return configured !== "" ? configured : "key";
     }
     property var system: ({})
     property bool ready: false
@@ -99,7 +99,7 @@ Singleton {
             return;
 
         root._initializationStarted = true;
-        identityProcess.command = [root.commandName, "value", "system", "--format", "json"];
+        identityProcess.command = [root.commandName, "sysmon", "system", "--format", "json"];
         identityProcess.running = true;
     }
 

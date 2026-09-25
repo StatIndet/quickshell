@@ -81,8 +81,7 @@ This phase is used only in CI; these tools are not installer runtime requests.
 | --- | --- | --- |
 | `quickshell` | QML shell runtime; validated baseline 0.3.1 | Yes |
 | `niri` | Wayland compositor and session lifecycle | Yes |
-| `key-cli>=2026.9.12` (GitHub Release) | Shell lifecycle, recording, clipboard and keyboard protocol v1 | Yes |
-| `keytop>=2026.9.12` (GitHub Release) | JSONL system metrics protocol v1 | Yes |
+| `key-cli>=2026.9.25` (GitHub Release) | Shell lifecycle and JSON/JSONL system metrics protocol v1 | Yes |
 | `qt6-base>=6.8` | Core, GUI, network and DBus | Yes |
 | `qt6-declarative` | Qt Quick and QML | Yes |
 | `qt6-svg` | SVG icons | Yes |

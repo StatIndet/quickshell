@@ -4049,8 +4049,8 @@ Scroll to adjust</translation>
     <name>DrawerView</name>
     <message>
         <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="388"/>
-        <source>Connecting to keytop</source>
-        <translation>Connecting to keytop</translation>
+        <source>Connecting to system monitor</source>
+        <translation>Connecting to system monitor</translation>
     </message>
     <message>
         <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="394"/>
@@ -11510,213 +11510,198 @@ detected</translation>
 <context>
     <name>SystemMonitorService</name>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="101"/>
+        <location filename="../Services/SystemMonitorService.qml" line="89"/>
         <source>Connecting</source>
         <translation>Connecting</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="103"/>
+        <location filename="../Services/SystemMonitorService.qml" line="91"/>
         <source>Some sensors cannot be read</source>
         <translation>Some sensors cannot be read</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="103"/>
+        <location filename="../Services/SystemMonitorService.qml" line="91"/>
         <source>Live</source>
         <translation>Live</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="105"/>
+        <location filename="../Services/SystemMonitorService.qml" line="93"/>
         <source>Data is stale</source>
         <translation>Data is stale</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="107"/>
+        <location filename="../Services/SystemMonitorService.qml" line="95"/>
         <source>Reconnecting</source>
         <translation>Reconnecting</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="109"/>
+        <location filename="../Services/SystemMonitorService.qml" line="97"/>
         <source>Service unavailable</source>
         <translation>Service unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="111"/>
+        <location filename="../Services/SystemMonitorService.qml" line="99"/>
         <source>Paused</source>
         <translation>Paused</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="312"/>
+        <location filename="../Services/SystemMonitorService.qml" line="300"/>
         <source>System monitor service unavailable</source>
         <translation>System monitor service unavailable</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="313"/>
-        <source>The automatic reconnect limit was reached. Check the keytop backend and try again.</source>
-        <translation>The automatic reconnect limit was reached. Check the keytop backend and try again.</translation>
+        <location filename="../Services/SystemMonitorService.qml" line="301"/>
+        <source>The automatic reconnect limit was reached. Check the system monitor backend and try again.</source>
+        <translation>The automatic reconnect limit was reached. Check the system monitor backend and try again.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="322"/>
-        <source>Could not start the keytop system monitoring service</source>
-        <translation>Could not start the keytop system monitoring service</translation>
+        <location filename="../Services/SystemMonitorService.qml" line="310"/>
+        <source>Could not start the system monitoring service</source>
+        <translation>Could not start the system monitoring service</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="324"/>
+        <location filename="../Services/SystemMonitorService.qml" line="343"/>
+        <source>The system monitor backend could not be started</source>
+        <translation>The system monitor backend could not be started</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="344"/>
+        <source>Install key-cli with its native system monitor and try again.</source>
+        <translation>Install key-cli with its native system monitor and try again.</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="351"/>
+        <source>The system monitor started but did not produce JSONL data in time.</source>
+        <translation>The system monitor started but did not produce JSONL data in time.</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="353"/>
+        <location filename="../Services/SystemMonitorService.qml" line="586"/>
+        <source>The system monitor keeps producing invalid JSONL</source>
+        <translation>The system monitor keeps producing invalid JSONL</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="357"/>
+        <source>System monitor exit code: %1</source>
+        <translation>System monitor exit code: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="357"/>
+        <source>The system monitor did not report an exit code</source>
+        <translation>The system monitor did not report an exit code</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="570"/>
+        <location filename="../Services/SystemMonitorService.qml" line="636"/>
+        <source>The backend does not support the current system monitoring interface</source>
+        <translation>The backend does not support the current system monitoring interface</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="584"/>
+        <source>Could not parse system monitor data</source>
+        <translation>Could not parse system monitor data</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="597"/>
+        <source>Rebuild key-cli (schema v%1).</source>
+        <translation>Rebuild key-cli (schema v%1).</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="605"/>
+        <source>System monitor data returned by the backend is incomplete</source>
+        <translation>System monitor data returned by the backend is incomplete</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="683"/>
+        <source>Restarting the system monitor data stream.</source>
+        <translation>Restarting the system monitor data stream.</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="697"/>
+        <source>Reconnecting to the system monitor data stream.</source>
+        <translation>Reconnecting to the system monitor data stream.</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="312"/>
         <source>The system monitor data stream was interrupted</source>
         <translation>The system monitor data stream was interrupted</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="355"/>
-        <source>keytop was not found or could not be started</source>
-        <translation>keytop was not found or could not be started</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="356"/>
-        <source>Install the standalone keytop package and try again.</source>
-        <translation>Install the standalone keytop package and try again.</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="358"/>
-        <location filename="../Services/SystemMonitorService.qml" line="828"/>
+        <location filename="../Services/SystemMonitorService.qml" line="346"/>
+        <location filename="../Services/SystemMonitorService.qml" line="696"/>
         <source>System monitor data has not updated for a long time</source>
         <translation>System monitor data has not updated for a long time</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="359"/>
+        <location filename="../Services/SystemMonitorService.qml" line="347"/>
         <source>The data stream is not producing new snapshots at the expected interval.</source>
         <translation>The data stream is not producing new snapshots at the expected interval.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="362"/>
-        <location filename="../Services/SystemMonitorService.qml" line="814"/>
+        <location filename="../Services/SystemMonitorService.qml" line="350"/>
+        <location filename="../Services/SystemMonitorService.qml" line="682"/>
         <source>The system monitor service did not return its first snapshot</source>
         <translation>The system monitor service did not return its first snapshot</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="363"/>
-        <source>keytop started but did not produce JSONL data in time.</source>
-        <translation>keytop started but did not produce JSONL data in time.</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="365"/>
-        <location filename="../Services/SystemMonitorService.qml" line="598"/>
-        <source>keytop keeps producing invalid JSONL</source>
-        <translation>keytop keeps producing invalid JSONL</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="366"/>
+        <location filename="../Services/SystemMonitorService.qml" line="354"/>
         <source>Several consecutive lines failed JSON v1 validation.</source>
         <translation>Several consecutive lines failed JSON v1 validation.</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="368"/>
+        <location filename="../Services/SystemMonitorService.qml" line="356"/>
         <source>The system monitor data stream exited unexpectedly</source>
         <translation>The system monitor data stream exited unexpectedly</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="369"/>
-        <source>keytop exit code: </source>
-        <translation>keytop exit code: </translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="369"/>
-        <source>keytop did not report an exit code</source>
-        <translation>keytop did not report an exit code</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="387"/>
+        <location filename="../Services/SystemMonitorService.qml" line="375"/>
         <source>The top-level JSON value must be an object</source>
         <translation>The top-level JSON value must be an object</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="392"/>
+        <location filename="../Services/SystemMonitorService.qml" line="380"/>
         <source>The timestamp, sequence number, or sampling interval is invalid</source>
         <translation>The timestamp, sequence number, or sampling interval is invalid</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="394"/>
+        <location filename="../Services/SystemMonitorService.qml" line="382"/>
         <source>Missing or invalid CPU data fields</source>
         <translation>Missing or invalid CPU data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="396"/>
+        <location filename="../Services/SystemMonitorService.qml" line="384"/>
         <source>Missing or invalid memory data fields</source>
         <translation>Missing or invalid memory data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="398"/>
+        <location filename="../Services/SystemMonitorService.qml" line="386"/>
         <source>Missing or invalid network data fields</source>
         <translation>Missing or invalid network data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="400"/>
+        <location filename="../Services/SystemMonitorService.qml" line="388"/>
         <source>Missing or invalid GPU data fields</source>
         <translation>Missing or invalid GPU data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="402"/>
+        <location filename="../Services/SystemMonitorService.qml" line="390"/>
         <source>Missing or invalid disk data fields</source>
         <translation>Missing or invalid disk data fields</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="404"/>
+        <location filename="../Services/SystemMonitorService.qml" line="392"/>
         <source>The devices and errors fields must be arrays</source>
         <translation>The devices and errors fields must be arrays</translation>
     </message>
     <message>
         <location filename="../Services/SystemMonitorService.qml" line="582"/>
-        <location filename="../Services/SystemMonitorService.qml" line="648"/>
-        <source>keytop does not support the current system monitoring interface</source>
-        <translation>keytop does not support the current system monitoring interface</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="594"/>
         <source>Received a corrupt JSONL line</source>
         <translation>Received a corrupt JSONL line</translation>
     </message>
     <message>
         <location filename="../Services/SystemMonitorService.qml" line="596"/>
-        <source>Could not parse keytop system monitor data</source>
-        <translation>Could not parse keytop system monitor data</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="608"/>
         <source>System monitoring data schema is incompatible</source>
         <translation>System monitoring data schema is incompatible</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="609"/>
-        <source>Rebuild keytop (schema v</source>
-        <translation>Rebuild keytop (schema v</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="617"/>
-        <source>System monitor data returned by keytop is incomplete</source>
-        <translation>System monitor data returned by keytop is incomplete</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="710"/>
-        <source>keytop is unavailable; install the independent keytop command</source>
-        <translation>keytop is unavailable; install the independent keytop command</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="723"/>
-        <source>No usable terminal was found, so keytop could not be opened</source>
-        <translation>No usable terminal was found, so keytop could not be opened</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="773"/>
-        <source>Could not start terminal:</source>
-        <translation>Could not start terminal:</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="815"/>
-        <source>Restarting the keytop data stream.</source>
-        <translation>Restarting the keytop data stream.</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="829"/>
-        <source>Reconnecting to the keytop data stream.</source>
-        <translation>Reconnecting to the keytop data stream.</translation>
     </message>
 </context>
 <context>

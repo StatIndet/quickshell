@@ -14,11 +14,9 @@ Singleton {
     readonly property int maximumDiagnosticLines: 20
     readonly property int maximumDiagnosticCharacters: 2048
 
-    // keytop is an independent CLI.  CLAVIS_KEYTOP is useful for local
-    // fixtures; production resolves the executable through PATH.
     property string commandName: {
-        const configured = String(Quickshell.env("CLAVIS_KEYTOP") || "").trim();
-        return configured !== "" ? configured : "keytop";
+        const configured = String(Quickshell.env("CLAVIS_KEY") || "").trim();
+        return configured !== "" ? configured : "key";
     }
     property int configuredIntervalMs: UiPreferences.systemMonitorIntervalMs
     property double sourceIntervalMs: 0
@@ -34,8 +32,6 @@ Singleton {
     property string state: "idle"
     property string errorMessage: ""
     property string errorDetails: ""
-    property string actionError: ""
-    property bool actionBusy: false
 
     property var cpu: ({})
     property var memory: ({})
@@ -75,14 +71,6 @@ Singleton {
     property int _forceStopProbeCount: 0
     property string _autoGpuId: ""
     property string _effectiveGpuId: ""
-
-    property var _terminalCandidates: []
-    property int _terminalCandidateIndex: -1
-    property int _terminalProbeGeneration: 0
-    property int _terminalProbeHandledGeneration: -1
-    property var _terminalCandidate: null
-    property int _keyTopProbeGeneration: 0
-    property int _keyTopProbeHandledGeneration: -1
 
     readonly property bool active: effectiveModules.length > 0
     readonly property bool hasData: _hasData
@@ -237,7 +225,7 @@ Singleton {
     }
 
     function _streamCommand(modules) {
-        return [root.commandName, "value", "stream", "--format", "jsonl", "--interval", String(
+        return [root.commandName, "sysmon", "stream", "--format", "jsonl", "--interval", String(
                     root.configuredIntervalMs), "--modules", modules.join(",")];
     }
 
@@ -311,7 +299,7 @@ Singleton {
             if (!root.errorMessage)
                 root.errorMessage = qsTr("System monitor service unavailable");
             root.errorDetails = root.errorDetails || qsTr(
-                        "The automatic reconnect limit was reached. Check the keytop backend and try again.");
+                        "The automatic reconnect limit was reached. Check the system monitor backend and try again.");
             return;
         }
 
@@ -320,7 +308,7 @@ Singleton {
         root.state = "reconnecting";
         if (!root.errorMessage) {
             root.errorMessage = reason === "failed_to_start" ? qsTr(
-                                                                   "Could not start the keytop system monitoring service") :
+                                                                   "Could not start the system monitoring service") :
                                                                qsTr("The system monitor data stream was interrupted");
         }
         reconnectTimer.interval = root._retryDelayMs;
@@ -351,23 +339,23 @@ Singleton {
             return;
         }
 
-        if (reason === "failed_to_start") {
-            root.errorMessage = qsTr("keytop was not found or could not be started");
-            root.errorDetails = qsTr("Install the standalone keytop package and try again.");
+        if (reason === "failed_to_start" || exitCode === 127) {
+            root.errorMessage = qsTr("The system monitor backend could not be started");
+            root.errorDetails = qsTr("Install key-cli with its native system monitor and try again.");
         } else if (reason === "data_timeout") {
             root.errorMessage = qsTr("System monitor data has not updated for a long time");
             root.errorDetails = qsTr(
                         "The data stream is not producing new snapshots at the expected interval.");
         } else if (reason === "first_snapshot_timeout") {
             root.errorMessage = qsTr("The system monitor service did not return its first snapshot");
-            root.errorDetails = qsTr("keytop started but did not produce JSONL data in time.");
+            root.errorDetails = qsTr("The system monitor started but did not produce JSONL data in time.");
         } else if (reason === "invalid_json") {
-            root.errorMessage = qsTr("keytop keeps producing invalid JSONL");
+            root.errorMessage = qsTr("The system monitor keeps producing invalid JSONL");
             root.errorDetails = qsTr("Several consecutive lines failed JSON v1 validation.");
         } else {
             root.errorMessage = qsTr("The system monitor data stream exited unexpectedly");
-            root.errorDetails = exitCode >= 0 ? qsTr("keytop exit code: ") + exitCode : qsTr(
-                                                    "keytop did not report an exit code");
+            root.errorDetails = exitCode >= 0 ? qsTr("System monitor exit code: %1").arg(exitCode) : qsTr(
+                                                    "The system monitor did not report an exit code");
 
         }
 
@@ -579,7 +567,7 @@ Singleton {
         if (text.length === 0)
             return;
         if (text.indexOf("Unknown command") >= 0 || text.indexOf("Unknown subcommand") >= 0) {
-            root.errorMessage = qsTr("keytop does not support the current system monitoring interface");
+            root.errorMessage = qsTr("The backend does not support the current system monitoring interface");
             root.errorDetails = text;
             root._terminateStream("invalid_json");
             return;
@@ -593,9 +581,9 @@ Singleton {
             process.malformedLines += 1;
             root.errorDetails = qsTr("Received a corrupt JSONL line");
             if (!root.hasData)
-                root.errorMessage = qsTr("Could not parse keytop system monitor data");
+                root.errorMessage = qsTr("Could not parse system monitor data");
             if (process.malformedLines >= 3 && root._streamProcess.running) {
-                root.errorMessage = qsTr("keytop keeps producing invalid JSONL");
+                root.errorMessage = qsTr("The system monitor keeps producing invalid JSONL");
                 root._terminateStream("invalid_json");
             }
             return;
@@ -606,7 +594,7 @@ Singleton {
             root.schemaMismatchCount += 1;
             root._fatalError = true;
             root.errorMessage = qsTr("System monitoring data schema is incompatible");
-            root.errorDetails = qsTr("Rebuild keytop (schema v") + root.supportedSchemaVersion + "）。";
+            root.errorDetails = qsTr("Rebuild key-cli (schema v%1).").arg(root.supportedSchemaVersion);
             root.state = "error";
             root._terminateStream("schema_mismatch");
             return;
@@ -615,7 +603,7 @@ Singleton {
             root.malformedLineCount += 1;
             process.malformedLines += 1;
             root.errorMessage = root.hasData ? root.errorMessage : qsTr(
-                                                   "System monitor data returned by keytop is incomplete");
+                                                   "System monitor data returned by the backend is incomplete");
             root.errorDetails = validationError;
             if (process.malformedLines >= 3 && root._streamProcess.running) {
                 root._terminateStream("invalid_json");
@@ -645,7 +633,7 @@ Singleton {
         if (text.length === 0)
             return;
         if (text.indexOf("Unknown command") >= 0 || text.indexOf("Unknown subcommand") >= 0) {
-            root.errorMessage = qsTr("keytop does not support the current system monitoring interface");
+            root.errorMessage = qsTr("The backend does not support the current system monitoring interface");
             root.errorDetails = text;
             root._terminateStream("invalid_json");
             return;
@@ -656,126 +644,6 @@ Singleton {
         next.push(text.slice(0, 256));
         root.diagnostics = next;
         root.errorDetails = next.join("\n").slice(-root.maximumDiagnosticCharacters);
-    }
-
-    function _safeTerminalEnvironmentValue() {
-        const value = String(Quickshell.env("TERMINAL") || "").trim();
-        if (value.length === 0 || /\s/.test(value))
-            return "";
-        return value;
-    }
-
-    function _buildTerminalCandidates() {
-        const candidates = [];
-        const seen = ({});
-        const configured = root._safeTerminalEnvironmentValue();
-        const programs = [configured, "kitty", "foot", "alacritty", "wezterm", "konsole", "gnome-terminal"];
-        for (let index = 0; index < programs.length; index += 1) {
-            const program = programs[index];
-            if (!program || seen[program])
-                continue;
-            seen[program] = true;
-            candidates.push({
-                                "program": program
-                            });
-        }
-        return candidates;
-    }
-
-    function openFullMonitor() {
-        if (root.actionBusy)
-            return;
-        root.actionError = "";
-        root.actionBusy = true;
-        root._keyTopProbeGeneration += 1;
-        root._keyTopProbeHandledGeneration = -1;
-        const generation = root._keyTopProbeGeneration;
-        keyTopProbe.command = [root.commandName, "--help"];
-        keyTopProbe.running = true;
-
-        Qt.callLater(function () {
-            if (generation === root._keyTopProbeGeneration && !keyTopProbe.running) {
-                root._handleKeyTopProbe(generation, 127);
-            }
-        });
-    }
-
-    function _handleKeyTopProbe(generation, exitCode) {
-        if (generation !== root._keyTopProbeGeneration || root._keyTopProbeHandledGeneration === generation)
-            return;
-        root._keyTopProbeHandledGeneration = generation;
-
-        if (exitCode !== 0) {
-            root.actionBusy = false;
-            root.actionError = qsTr("keytop is unavailable; install the independent keytop command");
-            return;
-        }
-
-        root._terminalCandidates = root._buildTerminalCandidates();
-        root._terminalCandidateIndex = -1;
-        root._probeNextTerminal();
-    }
-
-    function _probeNextTerminal() {
-        root._terminalCandidateIndex += 1;
-        if (root._terminalCandidateIndex >= root._terminalCandidates.length) {
-            root.actionBusy = false;
-            root.actionError = qsTr("No usable terminal was found, so keytop could not be opened");
-            return;
-        }
-
-        root._terminalCandidate = root._terminalCandidates[root._terminalCandidateIndex];
-        const program = root._terminalCandidate.program;
-        root._terminalProbeGeneration += 1;
-        root._terminalProbeHandledGeneration = -1;
-        const generation = root._terminalProbeGeneration;
-        terminalProbe.command = program.indexOf("/") >= 0 ? ["test", "-x", program] : ["which", program];
-        terminalProbe.running = true;
-
-        Qt.callLater(function () {
-            if (generation === root._terminalProbeGeneration && !terminalProbe.running) {
-                root._handleTerminalProbe(generation, 127);
-            }
-        });
-    }
-
-    function _terminalCommand(program) {
-        const parts = program.split("/");
-        const executable = parts[parts.length - 1];
-        switch (executable) {
-        case "kitty":
-        case "foot":
-            return [program, root.commandName];
-        case "wezterm":
-            return [program, "start", "--", root.commandName];
-        case "gnome-terminal":
-            return [program, "--", root.commandName];
-        case "alacritty":
-        case "konsole":
-        default:
-            return [program, "-e", root.commandName];
-        }
-    }
-
-    function _handleTerminalProbe(generation, exitCode) {
-        if (generation !== root._terminalProbeGeneration || root._terminalProbeHandledGeneration
-                === generation)
-            return;
-        root._terminalProbeHandledGeneration = generation;
-
-        if (exitCode === 0 && root._terminalCandidate) {
-            try {
-                ApplicationService.launchCommand(root._terminalCommand(root._terminalCandidate.program));
-                root.actionBusy = false;
-                root.actionError = "";
-            } catch (exception) {
-                root.actionBusy = false;
-                root.actionError = qsTr("Could not start terminal:") + exception;
-            }
-            return;
-        }
-
-        Qt.callLater(root._probeNextTerminal);
     }
 
     onConfiguredIntervalMsChanged: root._applyConfiguredInterval()
@@ -812,7 +680,7 @@ Singleton {
                 const firstSnapshotAfter = Math.max(6000, root.configuredIntervalMs * 6);
                 if (now - root._streamStartedAtMs > firstSnapshotAfter && !root._terminationPending) {
                     root.errorMessage = qsTr("The system monitor service did not return its first snapshot");
-                    root.errorDetails = qsTr("Restarting the keytop data stream.");
+                    root.errorDetails = qsTr("Restarting the system monitor data stream.");
                     root._terminateStream("first_snapshot_timeout");
                 }
                 return;
@@ -826,7 +694,7 @@ Singleton {
             if (age > restartAfter && root._streamProcess.running && !root._timeoutRestartIssued) {
                 root._timeoutRestartIssued = true;
                 root.errorMessage = qsTr("System monitor data has not updated for a long time");
-                root.errorDetails = qsTr("Reconnecting to the keytop data stream.");
+                root.errorDetails = qsTr("Reconnecting to the system monitor data stream.");
                 root._terminateStream("data_timeout");
             }
         }
@@ -946,41 +814,5 @@ Singleton {
     }
     MonitorStream {
         id: secondStream
-    }
-
-    Process {
-        id: keyTopProbe
-
-        onExited: (exitCode, exitStatus) => {
-            root._handleKeyTopProbe(root._keyTopProbeGeneration, exitCode);
-        }
-        onRunningChanged: {
-            if (running)
-                return;
-            const generation = root._keyTopProbeGeneration;
-            Qt.callLater(function () {
-                if (generation === root._keyTopProbeGeneration && !keyTopProbe.running) {
-                    root._handleKeyTopProbe(generation, 127);
-                }
-            });
-        }
-    }
-
-    Process {
-        id: terminalProbe
-
-        onExited: (exitCode, exitStatus) => {
-            root._handleTerminalProbe(root._terminalProbeGeneration, exitCode);
-        }
-        onRunningChanged: {
-            if (running)
-                return;
-            const generation = root._terminalProbeGeneration;
-            Qt.callLater(function () {
-                if (generation === root._terminalProbeGeneration && !terminalProbe.running) {
-                    root._handleTerminalProbe(generation, 127);
-                }
-            });
-        }
     }
 }

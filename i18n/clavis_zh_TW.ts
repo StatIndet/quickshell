@@ -4048,8 +4048,8 @@ Scroll to adjust</source>
     <name>DrawerView</name>
     <message>
         <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="388"/>
-        <source>Connecting to keytop</source>
-        <translation>正在連線 keytop</translation>
+        <source>Connecting to system monitor</source>
+        <translation>正在連線系統監測服務</translation>
     </message>
     <message>
         <location filename="../Modules/Sidebars/Dashboard/DrawerView.qml" line="394"/>
@@ -11504,213 +11504,198 @@ detected</source>
 <context>
     <name>SystemMonitorService</name>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="101"/>
+        <location filename="../Services/SystemMonitorService.qml" line="89"/>
         <source>Connecting</source>
         <translation>正在連線</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="103"/>
+        <location filename="../Services/SystemMonitorService.qml" line="91"/>
         <source>Some sensors cannot be read</source>
         <translation>部分感測器不可讀取</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="103"/>
+        <location filename="../Services/SystemMonitorService.qml" line="91"/>
         <source>Live</source>
         <translation>即時</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="105"/>
+        <location filename="../Services/SystemMonitorService.qml" line="93"/>
         <source>Data is stale</source>
         <translation>資料已過期</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="107"/>
+        <location filename="../Services/SystemMonitorService.qml" line="95"/>
         <source>Reconnecting</source>
         <translation>正在重新連線</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="109"/>
+        <location filename="../Services/SystemMonitorService.qml" line="97"/>
         <source>Service unavailable</source>
         <translation>服務不可用</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="111"/>
+        <location filename="../Services/SystemMonitorService.qml" line="99"/>
         <source>Paused</source>
         <translation>已暫停</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="312"/>
+        <location filename="../Services/SystemMonitorService.qml" line="300"/>
         <source>System monitor service unavailable</source>
         <translation>系統監測服務不可用</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="313"/>
-        <source>The automatic reconnect limit was reached. Check the keytop backend and try again.</source>
-        <translation>已達到自動重連次數上限，可檢查 keytop 後端後重試。</translation>
+        <location filename="../Services/SystemMonitorService.qml" line="301"/>
+        <source>The automatic reconnect limit was reached. Check the system monitor backend and try again.</source>
+        <translation>已達到自動重連次數上限。請檢查系統監測後端後重試。</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="322"/>
-        <source>Could not start the keytop system monitoring service</source>
-        <translation>無法啟動 keytop 系統監測服務</translation>
+        <location filename="../Services/SystemMonitorService.qml" line="310"/>
+        <source>Could not start the system monitoring service</source>
+        <translation>無法啟動系統監測服務</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="324"/>
+        <location filename="../Services/SystemMonitorService.qml" line="343"/>
+        <source>The system monitor backend could not be started</source>
+        <translation>無法啟動系統監測後端</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="344"/>
+        <source>Install key-cli with its native system monitor and try again.</source>
+        <translation>請安裝包含原生系統監測程式的 key-cli 後重試。</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="351"/>
+        <source>The system monitor started but did not produce JSONL data in time.</source>
+        <translation>系統監測程式已啟動，但未及時輸出 JSONL 資料。</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="353"/>
+        <location filename="../Services/SystemMonitorService.qml" line="586"/>
+        <source>The system monitor keeps producing invalid JSONL</source>
+        <translation>系統監測程式持續輸出無效的 JSONL</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="357"/>
+        <source>System monitor exit code: %1</source>
+        <translation>系統監測退出碼：%1</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="357"/>
+        <source>The system monitor did not report an exit code</source>
+        <translation>系統監測程式未報告退出碼</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="570"/>
+        <location filename="../Services/SystemMonitorService.qml" line="636"/>
+        <source>The backend does not support the current system monitoring interface</source>
+        <translation>後端不支援目前的系統監測介面</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="584"/>
+        <source>Could not parse system monitor data</source>
+        <translation>無法解析系統監測資料</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="597"/>
+        <source>Rebuild key-cli (schema v%1).</source>
+        <translation>請重新建置 key-cli（schema v%1）。</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="605"/>
+        <source>System monitor data returned by the backend is incomplete</source>
+        <translation>後端傳回的系統監測資料不完整</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="683"/>
+        <source>Restarting the system monitor data stream.</source>
+        <translation>正在重新啟動系統監測資料流。</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="697"/>
+        <source>Reconnecting to the system monitor data stream.</source>
+        <translation>正在重新連線系統監測資料流。</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemMonitorService.qml" line="312"/>
         <source>The system monitor data stream was interrupted</source>
         <translation>系統監測資料流已中斷</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="355"/>
-        <source>keytop was not found or could not be started</source>
-        <translation>找不到或無法啟動 keytop</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="356"/>
-        <source>Install the standalone keytop package and try again.</source>
-        <translation>請安裝獨立 keytop 後重試。</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="358"/>
-        <location filename="../Services/SystemMonitorService.qml" line="828"/>
+        <location filename="../Services/SystemMonitorService.qml" line="346"/>
+        <location filename="../Services/SystemMonitorService.qml" line="696"/>
         <source>System monitor data has not updated for a long time</source>
         <translation>系統監測資料長時間未更新</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="359"/>
+        <location filename="../Services/SystemMonitorService.qml" line="347"/>
         <source>The data stream is not producing new snapshots at the expected interval.</source>
         <translation>資料流沒有按預期間隔產生新快照。</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="362"/>
-        <location filename="../Services/SystemMonitorService.qml" line="814"/>
+        <location filename="../Services/SystemMonitorService.qml" line="350"/>
+        <location filename="../Services/SystemMonitorService.qml" line="682"/>
         <source>The system monitor service did not return its first snapshot</source>
         <translation>系統監測服務未返回首個快照</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="363"/>
-        <source>keytop started but did not produce JSONL data in time.</source>
-        <translation>keytop 已啟動，但沒有按時輸出 JSONL 資料。</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="365"/>
-        <location filename="../Services/SystemMonitorService.qml" line="598"/>
-        <source>keytop keeps producing invalid JSONL</source>
-        <translation>keytop 持續輸出無效的 JSONL</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="366"/>
+        <location filename="../Services/SystemMonitorService.qml" line="354"/>
         <source>Several consecutive lines failed JSON v1 validation.</source>
         <translation>連續多行資料無法通過 JSON v1 校驗。</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="368"/>
+        <location filename="../Services/SystemMonitorService.qml" line="356"/>
         <source>The system monitor data stream exited unexpectedly</source>
         <translation>系統監測資料流意外退出</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="369"/>
-        <source>keytop exit code: </source>
-        <translation>keytop 退出碼：</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="369"/>
-        <source>keytop did not report an exit code</source>
-        <translation>keytop 未報告退出碼</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="387"/>
+        <location filename="../Services/SystemMonitorService.qml" line="375"/>
         <source>The top-level JSON value must be an object</source>
         <translation>JSON 頂層必須是物件</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="392"/>
+        <location filename="../Services/SystemMonitorService.qml" line="380"/>
         <source>The timestamp, sequence number, or sampling interval is invalid</source>
         <translation>時間戳、序列號或採樣間隔無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="394"/>
+        <location filename="../Services/SystemMonitorService.qml" line="382"/>
         <source>Missing or invalid CPU data fields</source>
         <translation>CPU 模組欄位缺失或類型無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="396"/>
+        <location filename="../Services/SystemMonitorService.qml" line="384"/>
         <source>Missing or invalid memory data fields</source>
         <translation>記憶體模組欄位缺失或類型無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="398"/>
+        <location filename="../Services/SystemMonitorService.qml" line="386"/>
         <source>Missing or invalid network data fields</source>
         <translation>網路模組欄位缺失或類型無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="400"/>
+        <location filename="../Services/SystemMonitorService.qml" line="388"/>
         <source>Missing or invalid GPU data fields</source>
         <translation>GPU 模組欄位缺失或類型無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="402"/>
+        <location filename="../Services/SystemMonitorService.qml" line="390"/>
         <source>Missing or invalid disk data fields</source>
         <translation>磁碟模組欄位缺失或類型無效</translation>
     </message>
     <message>
-        <location filename="../Services/SystemMonitorService.qml" line="404"/>
+        <location filename="../Services/SystemMonitorService.qml" line="392"/>
         <source>The devices and errors fields must be arrays</source>
         <translation>裝置或錯誤欄位必須是陣列</translation>
     </message>
     <message>
         <location filename="../Services/SystemMonitorService.qml" line="582"/>
-        <location filename="../Services/SystemMonitorService.qml" line="648"/>
-        <source>keytop does not support the current system monitoring interface</source>
-        <translation>keytop 不支援當前系統監測介面</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="594"/>
         <source>Received a corrupt JSONL line</source>
         <translation>收到損壞的 JSONL 資料行</translation>
     </message>
     <message>
         <location filename="../Services/SystemMonitorService.qml" line="596"/>
-        <source>Could not parse keytop system monitor data</source>
-        <translation>無法解析 keytop 系統監測資料</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="608"/>
         <source>System monitoring data schema is incompatible</source>
         <translation>系統監測資料 schema 不相容</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="609"/>
-        <source>Rebuild keytop (schema v</source>
-        <translation>需要重新構建 keytop（需要 schema v</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="617"/>
-        <source>System monitor data returned by keytop is incomplete</source>
-        <translation>keytop 返回的系統監測資料不完整</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="710"/>
-        <source>keytop is unavailable; install the independent keytop command</source>
-        <translation>keytop 不可用，請安裝獨立 keytop</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="723"/>
-        <source>No usable terminal was found, so keytop could not be opened</source>
-        <translation>未找到可用終端，無法開啟 keytop</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="773"/>
-        <source>Could not start terminal:</source>
-        <translation>啟動終端失敗：</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="815"/>
-        <source>Restarting the keytop data stream.</source>
-        <translation>正在重新啟動 keytop 資料流。</translation>
-    </message>
-    <message>
-        <location filename="../Services/SystemMonitorService.qml" line="829"/>
-        <source>Reconnecting to the keytop data stream.</source>
-        <translation>正在重新連線 keytop 資料流。</translation>
     </message>
 </context>
 <context>

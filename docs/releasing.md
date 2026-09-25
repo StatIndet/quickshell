@@ -3,6 +3,8 @@
 Each repository builds and tests independently. Release tooling reads `packaging/dependencies.json`,
 the version file named there, and `packaging/arch/PKGBUILD.in`. Generated `PKGBUILD` and `.SRCINFO`
 are release artifacts suitable for manual Arch packaging; they are not committed back into the source being hashed.
+GitHub exposes the hidden `.SRCINFO` asset as `default.SRCINFO`; `SHA256SUMS` retains the
+original `.SRCINFO` name and the installer maps the download back to that name.
 Python 3.10+ and Arch makepkg are needed for release metadata; wheel builds use the declared
 Python build dependencies. Native packaging uses CMake/Ninja and ordinary DESTDIR staging.
 
@@ -15,11 +17,11 @@ PR and build jobs keep read-only repository access and receive no publishing cre
 
 The workflows publish GitHub Releases and Arch packaging files. They do not upload packages
 to AUR or require this project's packages to be registered there. Package bases remain
-`key-cli`, `keytop` and `clavis-shell`; the optional access packages remain split outputs.
+`key-cli` and `clavis-shell`; the optional access packages remain split outputs.
 Clavis's build still downloads external AUR build dependencies such as `libcava` and
 `qt6-m3shapes-git` anonymously, so availability of those sources can still affect its build.
 
-For the initial rollout publish key-cli, then keytop, then Clavis. Clavis records minimum backend
+For the initial rollout publish key-cli, then Clavis. Clavis records minimum backend
 versions in its runtime dependencies. Publishing one project does not build, test or release a
 sibling repository. Later updates remain independent; change Clavis's minimum dependency only
 when its public backend requirements change. Machine `schemaVersion` is unrelated to the date version.
@@ -70,7 +72,7 @@ with `--pkgrel 2` (or the next revision), then review it for local builds or lat
 publication. Keep the source version/hash unchanged and do not replace published assets.
 
 The Clavis one-command installer resolves first-party packages from GitHub Releases, including
-both optional permission packages. Publish key-cli and keytop first, then Clavis with the updated
+both optional permission packages. Publish key-cli first, then Clavis with the updated
 installer. Clavis is pinned to the installer's release; each backend uses its latest formal
 release and must meet the declared minimum version. Missing assets or failed checksum/version
 checks stop installation; first-party resolution does not fall back to AUR. Third-party AUR
