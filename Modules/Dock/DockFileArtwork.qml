@@ -49,6 +49,7 @@ Item {
                 DockFileIcon {
                     required property int index
                     info: folder.get(index)
+                    transformed: true
                     width: parent.width * 0.85
                     height: width
                     x: (parent.width - width) / 2 + index * 2
