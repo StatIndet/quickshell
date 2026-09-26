@@ -193,13 +193,13 @@ Variants {
                 Shortcut {
                     enabled: root.isHubMode
                     sequence: "Tab"
-                    onActivated: hub.currentIndex = (hub.currentIndex + 1) % 4
+                    onActivated: hub.cycleTab(1)
                 }
 
                 Shortcut {
                     enabled: root.isHubMode
                     sequence: "Shift+Tab"
-                    onActivated: hub.currentIndex = (hub.currentIndex + 3) % 4
+                    onActivated: hub.cycleTab(-1)
                 }
             }
         }

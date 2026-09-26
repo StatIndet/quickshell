@@ -19,6 +19,12 @@ Item {
     signal closeRequested
     signal avatarEditRequested
 
+    function cycleTab(step) {
+        const count = tabBar.children.length;
+        if (count > 0)
+            root.currentIndex = ((root.currentIndex + step) % count + count) % count;
+    }
+
     function finishCloudUploadDrop(addedCount) {
         cloudUploadContent.finishDrop(addedCount);
     }
@@ -27,13 +33,15 @@ Item {
     implicitHeight: 100 + (currentIndex === 0 ? 520 : currentIndex === 1 ? 480 : weatherContent.height)
 
     Shortcut {
+        enabled: root.visible
         sequence: "Tab"
-        onActivated: root.currentIndex = (root.currentIndex + 1) % 3
+        onActivated: root.cycleTab(1)
     }
 
     Shortcut {
+        enabled: root.visible
         sequence: "Shift+Tab"
-        onActivated: root.currentIndex = (root.currentIndex + 2) % 3
+        onActivated: root.cycleTab(-1)
     }
 
     RowLayout {
