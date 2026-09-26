@@ -26,6 +26,7 @@ Item {
     required property real restingIconSize
     property bool directMagnification: false
     readonly property bool spacer: kind === "spacer" || kind === "small-spacer"
+    readonly property alias pointerArea: pointer
     readonly property bool pointerHovered: pointer.containsMouse
     property bool dragged: false
     property bool contextActive: false

@@ -132,12 +132,12 @@ PanelWindow {
     property bool magnificationActive: false
     // Track the pointer above the popup/delegate hierarchy. Disabling a closing
     // fan must not look like leaving the Dock when the pointer hasn't moved.
-    readonly property bool pointerOverDock: shown && surfaceHover.hovered && surfaceHover.point.position.x
-                                            >= dockInputArea.x && surfaceHover.point.position.x
-                                            < dockInputArea.x + dockInputArea.width
-                                            && surfaceHover.point.position.y >= dockInputArea.y
-                                            && surfaceHover.point.position.y < dockInputArea.y
-                                            + dockInputArea.height
+    readonly property bool pointerOverDock: shown && (pointerOverInteractiveArea || surfaceHover.hovered
+                                                      && surfaceHover.point.position.x >= dockInputArea.x
+                                                      && surfaceHover.point.position.x < dockInputArea.x
+                                                      + dockInputArea.width && surfaceHover.point.position.y
+                                                      >= dockInputArea.y && surfaceHover.point.position.y
+                                                      < dockInputArea.y + dockInputArea.height)
     readonly property bool pointerOverInteractiveArea: {
         if (!shown)
             return false;
@@ -740,10 +740,10 @@ PanelWindow {
             // Publish the destination footprint immediately and bridge the
             // edge gap, so entering/leaving the animated tray cannot unmap
             // its input or strand the pointer on the desktop underneath.
-            x: root.horizontal ? band.x : root.edge === "left" ? 0 : band.x
-            y: band.y
-            width: band.width + (root.horizontal ? 0 : root.edgeOffset)
-            height: band.height + (root.horizontal ? root.edgeOffset : 0)
+            x: root.horizontal ? band.x : root.edge === "left" ? 0 : band.x + glass.x
+            y: band.y + glass.y
+            width: glass.width + (root.horizontal ? 0 : root.edgeOffset)
+            height: glass.height + (root.horizontal ? root.edgeOffset : 0)
         }
 
         Item {
@@ -869,10 +869,17 @@ PanelWindow {
 
                 Repeater {
                     id: iconItems
+                    property var inputRegions: []
+                    onItemAdded: (index, item) => inputRegions = inputRegions.concat([item.inputRegion])
+                    onItemRemoved: (index, item) => inputRegions = inputRegions.filter(region => region
+                                                                                                 !== item.inputRegion)
                     model: visualEntries
                     onCountChanged: root.scheduleAnimationTargets()
                     delegate: DockItem {
                         id: dockItem
+                        readonly property Region inputRegion: Region {
+                            item: !dockItem.retiring && !dockItem.dragged ? dockItem.pointerArea : null
+                        }
                         required property string key
                         required property bool retiring
                         property bool appeared: false
@@ -1278,6 +1285,9 @@ PanelWindow {
         }
         Region {
             item: root.shown ? dockInputArea : null
+        }
+        Region {
+            regions: root.shown ? iconItems.inputRegions : []
         }
         Region {
             item: edgeTrigger
