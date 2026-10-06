@@ -70,7 +70,7 @@ Item {
 
         const action = pendingSecurePowerAction;
         pendingSecurePowerAction = "";
-        Quickshell.execDetached(["loginctl", action]);
+        Quickshell.execDetached(["systemctl", action]);
     }
 
     function requestSecurePowerAction(action) {

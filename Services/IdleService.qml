@@ -305,7 +305,7 @@ Singleton {
             return;
         root.lastError = "";
         root.operationStarted("suspend");
-        suspendProcess.exec(["loginctl", "suspend"]);
+        suspendProcess.exec(["systemctl", "suspend"]);
     }
 
     IdleInhibitorSurface {

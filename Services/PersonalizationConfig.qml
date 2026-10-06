@@ -259,6 +259,7 @@ Singleton {
     property bool parallaxFollowWorkspaces: true
     property bool parallaxFollowSidebars: false
     property bool parallaxFollowTiledColumns: false
+    property bool parallaxFloatingWindowsEnabled: true
     property real parallaxPreferredScale: 1.1
     property int parallaxTiledColumnSpan: 6
     property string matugenScheme: "scheme-tonal-spot"
@@ -1401,6 +1402,10 @@ Singleton {
         setValue("parallaxFollowTiledColumns", !!value);
     }
 
+    function setParallaxFloatingWindowsEnabled(value) {
+        setValue("parallaxFloatingWindowsEnabled", !!value);
+    }
+
     function setParallaxPreferredScale(value) {
         setValue("parallaxPreferredScale", normalizedBoundedReal(value, 1.1, 1, 1.35));
     }
@@ -1906,6 +1911,7 @@ Singleton {
                     "followWorkspaces": root.parallaxFollowWorkspaces,
                     "followSidebars": root.parallaxFollowSidebars,
                     "followTiledColumns": root.parallaxFollowTiledColumns,
+                    "floatingWindowsEnabled": root.parallaxFloatingWindowsEnabled,
                     "preferredScale": root.parallaxPreferredScale,
                     "tiledColumnSpan": root.parallaxTiledColumnSpan
                 }
@@ -2056,6 +2062,8 @@ Singleton {
                                                                                   !parallax.followWorkspaces;
         root.parallaxFollowSidebars = !!parallax.followSidebars;
         root.parallaxFollowTiledColumns = !!parallax.followTiledColumns;
+        root.parallaxFloatingWindowsEnabled = parallax.floatingWindowsEnabled === undefined ? true : !
+                                                                                              !parallax.floatingWindowsEnabled;
         root.parallaxPreferredScale = normalizedBoundedReal(parallax.preferredScale, 1.1, 1, 1.35);
         root.parallaxTiledColumnSpan = normalizedBoundedInt(parallax.tiledColumnSpan, 6, 2, 12);
         root.matugenScheme = normalizedOption(root.matugenSchemes, theme.matugenScheme, "scheme-tonal-spot");

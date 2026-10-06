@@ -2652,12 +2652,12 @@ Scroll to adjust</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="303"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="301"/>
         <source>Path copied</source>
         <translation>路徑已複製</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="303"/>
+        <location filename="../Modules/ControlCenter/ControlCenterWindow.qml" line="301"/>
         <source>config file</source>
         <translation>配置檔案</translation>
     </message>
@@ -7684,896 +7684,906 @@ Click to open network settings</source>
     </message>
     <message>
         <location filename="../Common/NiriActionNames.js" line="31"/>
+        <source>Minimize window</source>
+        <translation>最小化視窗</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="32"/>
+        <source>Restore last minimized window</source>
+        <translation>還原最後一個最小化的視窗</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="33"/>
         <source>Fullscreen window</source>
         <translation>全屏視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="32"/>
+        <location filename="../Common/NiriActionNames.js" line="34"/>
         <source>Toggle windowed fullscreen</source>
         <translation>切換視窗化全屏</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="33"/>
+        <location filename="../Common/NiriActionNames.js" line="35"/>
         <source>Focus window in column</source>
         <translation>聚焦列中的視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="34"/>
+        <location filename="../Common/NiriActionNames.js" line="36"/>
         <source>Focus window previous</source>
         <translation>聚焦上一個視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="35"/>
+        <location filename="../Common/NiriActionNames.js" line="37"/>
         <source>Focus column left</source>
         <translation>聚焦左側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="36"/>
+        <location filename="../Common/NiriActionNames.js" line="38"/>
         <source>Focus column right</source>
         <translation>聚焦右側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="37"/>
+        <location filename="../Common/NiriActionNames.js" line="39"/>
         <source>Focus column first</source>
         <translation>聚焦第一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="38"/>
+        <location filename="../Common/NiriActionNames.js" line="40"/>
         <source>Focus column last</source>
         <translation>聚焦最後一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="39"/>
+        <location filename="../Common/NiriActionNames.js" line="41"/>
         <source>Focus column right or first</source>
         <translation>聚焦右側列或第一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="40"/>
+        <location filename="../Common/NiriActionNames.js" line="42"/>
         <source>Focus column left or last</source>
         <translation>聚焦左側列或最後一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="41"/>
+        <location filename="../Common/NiriActionNames.js" line="43"/>
         <source>Focus column</source>
         <translation>聚焦指定列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="42"/>
+        <location filename="../Common/NiriActionNames.js" line="44"/>
         <source>Focus window or monitor up</source>
         <translation>聚焦上方視窗或顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="43"/>
+        <location filename="../Common/NiriActionNames.js" line="45"/>
         <source>Focus window or monitor down</source>
         <translation>聚焦下方視窗或顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="44"/>
+        <location filename="../Common/NiriActionNames.js" line="46"/>
         <source>Focus column or monitor left</source>
         <translation>聚焦左側列或顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="45"/>
+        <location filename="../Common/NiriActionNames.js" line="47"/>
         <source>Focus column or monitor right</source>
         <translation>聚焦右側列或顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="46"/>
+        <location filename="../Common/NiriActionNames.js" line="48"/>
         <source>Focus window down</source>
         <translation>聚焦下方視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="47"/>
+        <location filename="../Common/NiriActionNames.js" line="49"/>
         <source>Focus window up</source>
         <translation>聚焦上方視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="48"/>
+        <location filename="../Common/NiriActionNames.js" line="50"/>
         <source>Focus window down or column left</source>
         <translation>聚焦下方視窗或左側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="49"/>
+        <location filename="../Common/NiriActionNames.js" line="51"/>
         <source>Focus window down or column right</source>
         <translation>聚焦下方視窗或右側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="50"/>
+        <location filename="../Common/NiriActionNames.js" line="52"/>
         <source>Focus window up or column left</source>
         <translation>聚焦上方視窗或左側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="51"/>
+        <location filename="../Common/NiriActionNames.js" line="53"/>
         <source>Focus window up or column right</source>
         <translation>聚焦上方視窗或右側列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="52"/>
+        <location filename="../Common/NiriActionNames.js" line="54"/>
         <source>Focus window or workspace down</source>
         <translation>聚焦下方視窗或工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="53"/>
+        <location filename="../Common/NiriActionNames.js" line="55"/>
         <source>Focus window or workspace up</source>
         <translation>聚焦上方視窗或工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="54"/>
+        <location filename="../Common/NiriActionNames.js" line="56"/>
         <source>Focus window top</source>
         <translation>聚焦頂部視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="55"/>
+        <location filename="../Common/NiriActionNames.js" line="57"/>
         <source>Focus window bottom</source>
         <translation>聚焦底部視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="56"/>
+        <location filename="../Common/NiriActionNames.js" line="58"/>
         <source>Focus window down or top</source>
         <translation>聚焦下方或頂部視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="57"/>
+        <location filename="../Common/NiriActionNames.js" line="59"/>
         <source>Focus window up or bottom</source>
         <translation>聚焦上方或底部視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="58"/>
+        <location filename="../Common/NiriActionNames.js" line="60"/>
         <source>Move column left</source>
         <translation>向左移動列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="59"/>
+        <location filename="../Common/NiriActionNames.js" line="61"/>
         <source>Move column right</source>
         <translation>向右移動列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="60"/>
+        <location filename="../Common/NiriActionNames.js" line="62"/>
         <source>Move column to first</source>
         <translation>移至第一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="61"/>
+        <location filename="../Common/NiriActionNames.js" line="63"/>
         <source>Move column to last</source>
         <translation>移至最後一列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="62"/>
+        <location filename="../Common/NiriActionNames.js" line="64"/>
         <source>Move column left or to monitor left</source>
         <translation>向左移動列或移至左側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="63"/>
+        <location filename="../Common/NiriActionNames.js" line="65"/>
         <source>Move column right or to monitor right</source>
         <translation>向右移動列或移至右側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="64"/>
+        <location filename="../Common/NiriActionNames.js" line="66"/>
         <source>Move column to index</source>
         <translation>將列移至指定位置</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="65"/>
+        <location filename="../Common/NiriActionNames.js" line="67"/>
         <source>Move window down</source>
         <translation>向下移動視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="66"/>
+        <location filename="../Common/NiriActionNames.js" line="68"/>
         <source>Move window up</source>
         <translation>向上移動視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="67"/>
+        <location filename="../Common/NiriActionNames.js" line="69"/>
         <source>Move window down or to workspace down</source>
         <translation>向下移動視窗或移至下方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="68"/>
+        <location filename="../Common/NiriActionNames.js" line="70"/>
         <source>Move window up or to workspace up</source>
         <translation>向上移動視窗或移至上方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="69"/>
+        <location filename="../Common/NiriActionNames.js" line="71"/>
         <source>Consume or expel window left</source>
         <translation>向左合併或移出視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="70"/>
+        <location filename="../Common/NiriActionNames.js" line="72"/>
         <source>Consume or expel window right</source>
         <translation>向右合併或移出視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="71"/>
+        <location filename="../Common/NiriActionNames.js" line="73"/>
         <source>Consume window into column</source>
         <translation>將視窗合併到列中</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="72"/>
+        <location filename="../Common/NiriActionNames.js" line="74"/>
         <source>Expel window from column</source>
         <translation>將視窗移出列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="73"/>
+        <location filename="../Common/NiriActionNames.js" line="75"/>
         <source>Swap window left</source>
         <translation>向左交換視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="74"/>
+        <location filename="../Common/NiriActionNames.js" line="76"/>
         <source>Swap window right</source>
         <translation>向右交換視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="75"/>
+        <location filename="../Common/NiriActionNames.js" line="77"/>
         <source>Toggle column tabbed display</source>
         <translation>切換列標籤頁顯示</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="76"/>
+        <location filename="../Common/NiriActionNames.js" line="78"/>
         <source>Set column display</source>
         <translation>設定列顯示方式</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="77"/>
+        <location filename="../Common/NiriActionNames.js" line="79"/>
         <source>Center column</source>
         <translation>居中列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="78"/>
+        <location filename="../Common/NiriActionNames.js" line="80"/>
         <source>Center window</source>
         <translation>居中視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="79"/>
+        <location filename="../Common/NiriActionNames.js" line="81"/>
         <source>Center visible columns</source>
         <translation>居中可見列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="80"/>
+        <location filename="../Common/NiriActionNames.js" line="82"/>
         <source>Focus workspace down</source>
         <translation>聚焦下方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="81"/>
+        <location filename="../Common/NiriActionNames.js" line="83"/>
         <source>Focus workspace up</source>
         <translation>聚焦上方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="82"/>
+        <location filename="../Common/NiriActionNames.js" line="84"/>
         <source>Focus workspace</source>
         <translation>聚焦指定工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="83"/>
+        <location filename="../Common/NiriActionNames.js" line="85"/>
         <source>Focus workspace previous</source>
         <translation>聚焦上一個工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="84"/>
+        <location filename="../Common/NiriActionNames.js" line="86"/>
         <source>Move window to workspace down</source>
         <translation>將視窗移至下方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="85"/>
+        <location filename="../Common/NiriActionNames.js" line="87"/>
         <source>Move window to workspace up</source>
         <translation>將視窗移至上方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="86"/>
+        <location filename="../Common/NiriActionNames.js" line="88"/>
         <source>Move window to workspace</source>
         <translation>將視窗移至指定工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="87"/>
+        <location filename="../Common/NiriActionNames.js" line="89"/>
         <source>Move column to workspace down</source>
         <translation>將列移至下方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="88"/>
+        <location filename="../Common/NiriActionNames.js" line="90"/>
         <source>Move column to workspace up</source>
         <translation>將列移至上方工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="89"/>
+        <location filename="../Common/NiriActionNames.js" line="91"/>
         <source>Move column to workspace</source>
         <translation>將列移至指定工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="90"/>
+        <location filename="../Common/NiriActionNames.js" line="92"/>
         <source>Move workspace down</source>
         <translation>向下移動工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="91"/>
+        <location filename="../Common/NiriActionNames.js" line="93"/>
         <source>Move workspace up</source>
         <translation>向上移動工作區</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="92"/>
+        <location filename="../Common/NiriActionNames.js" line="94"/>
         <source>Move workspace to index</source>
         <translation>將工作區移至指定位置</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="93"/>
+        <location filename="../Common/NiriActionNames.js" line="95"/>
         <source>Move workspace to monitor</source>
         <translation>將工作區移至指定顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="94"/>
+        <location filename="../Common/NiriActionNames.js" line="96"/>
         <source>Set workspace name</source>
         <translation>設定工作區名稱</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="95"/>
+        <location filename="../Common/NiriActionNames.js" line="97"/>
         <source>Unset workspace name</source>
         <translation>清除工作區名稱</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="96"/>
+        <location filename="../Common/NiriActionNames.js" line="98"/>
         <source>Focus monitor left</source>
         <translation>聚焦左側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="97"/>
+        <location filename="../Common/NiriActionNames.js" line="99"/>
         <source>Focus monitor right</source>
         <translation>聚焦右側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="98"/>
+        <location filename="../Common/NiriActionNames.js" line="100"/>
         <source>Focus monitor down</source>
         <translation>聚焦下方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="99"/>
+        <location filename="../Common/NiriActionNames.js" line="101"/>
         <source>Focus monitor up</source>
         <translation>聚焦上方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="100"/>
+        <location filename="../Common/NiriActionNames.js" line="102"/>
         <source>Focus monitor previous</source>
         <translation>聚焦上一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="101"/>
+        <location filename="../Common/NiriActionNames.js" line="103"/>
         <source>Focus monitor next</source>
         <translation>聚焦下一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="102"/>
+        <location filename="../Common/NiriActionNames.js" line="104"/>
         <source>Focus monitor</source>
         <translation>聚焦指定顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="103"/>
+        <location filename="../Common/NiriActionNames.js" line="105"/>
         <source>Move window to monitor left</source>
         <translation>將視窗移至左側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="104"/>
+        <location filename="../Common/NiriActionNames.js" line="106"/>
         <source>Move window to monitor right</source>
         <translation>將視窗移至右側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="105"/>
+        <location filename="../Common/NiriActionNames.js" line="107"/>
         <source>Move window to monitor down</source>
         <translation>將視窗移至下方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="106"/>
+        <location filename="../Common/NiriActionNames.js" line="108"/>
         <source>Move window to monitor up</source>
         <translation>將視窗移至上方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="107"/>
+        <location filename="../Common/NiriActionNames.js" line="109"/>
         <source>Move window to monitor previous</source>
         <translation>將視窗移至上一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="108"/>
+        <location filename="../Common/NiriActionNames.js" line="110"/>
         <source>Move window to monitor next</source>
         <translation>將視窗移至下一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="109"/>
+        <location filename="../Common/NiriActionNames.js" line="111"/>
         <source>Move window to monitor</source>
         <translation>將視窗移至指定顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="110"/>
+        <location filename="../Common/NiriActionNames.js" line="112"/>
         <source>Move column to monitor left</source>
         <translation>將列移至左側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="111"/>
+        <location filename="../Common/NiriActionNames.js" line="113"/>
         <source>Move column to monitor right</source>
         <translation>將列移至右側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="112"/>
+        <location filename="../Common/NiriActionNames.js" line="114"/>
         <source>Move column to monitor down</source>
         <translation>將列移至下方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="113"/>
+        <location filename="../Common/NiriActionNames.js" line="115"/>
         <source>Move column to monitor up</source>
         <translation>將列移至上方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="114"/>
+        <location filename="../Common/NiriActionNames.js" line="116"/>
         <source>Move column to monitor previous</source>
         <translation>將列移至上一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="115"/>
+        <location filename="../Common/NiriActionNames.js" line="117"/>
         <source>Move column to monitor next</source>
         <translation>將列移至下一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="116"/>
+        <location filename="../Common/NiriActionNames.js" line="118"/>
         <source>Move column to monitor</source>
         <translation>將列移至指定顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="117"/>
+        <location filename="../Common/NiriActionNames.js" line="119"/>
         <source>Set window width</source>
         <translation>設定視窗寬度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="118"/>
+        <location filename="../Common/NiriActionNames.js" line="120"/>
         <source>Set window height</source>
         <translation>設定視窗高度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="119"/>
+        <location filename="../Common/NiriActionNames.js" line="121"/>
         <source>Reset window height</source>
         <translation>重置視窗高度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="120"/>
+        <location filename="../Common/NiriActionNames.js" line="122"/>
         <source>Switch preset column width</source>
         <translation>切換預設列寬</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="121"/>
+        <location filename="../Common/NiriActionNames.js" line="123"/>
         <source>Switch preset column width back</source>
         <translation>反向切換預設列寬</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="122"/>
+        <location filename="../Common/NiriActionNames.js" line="124"/>
         <source>Switch preset window width</source>
         <translation>切換預設視窗寬度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="123"/>
+        <location filename="../Common/NiriActionNames.js" line="125"/>
         <source>Switch preset window width back</source>
         <translation>反向切換預設視窗寬度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="124"/>
+        <location filename="../Common/NiriActionNames.js" line="126"/>
         <source>Switch preset window height</source>
         <translation>切換預設視窗高度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="125"/>
+        <location filename="../Common/NiriActionNames.js" line="127"/>
         <source>Switch preset window height back</source>
         <translation>反向切換預設視窗高度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="126"/>
+        <location filename="../Common/NiriActionNames.js" line="128"/>
         <source>Maximize column</source>
         <translation>最大化列</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="127"/>
+        <location filename="../Common/NiriActionNames.js" line="129"/>
         <source>Maximize window to edges</source>
         <translation>將視窗最大化至邊緣</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="128"/>
+        <location filename="../Common/NiriActionNames.js" line="130"/>
         <source>Set column width</source>
         <translation>設定列寬</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="129"/>
+        <location filename="../Common/NiriActionNames.js" line="131"/>
         <source>Expand column to available width</source>
         <translation>將列擴充套件至可用寬度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="130"/>
+        <location filename="../Common/NiriActionNames.js" line="132"/>
         <source>Switch layout</source>
         <translation>切換鍵盤佈局</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="131"/>
+        <location filename="../Common/NiriActionNames.js" line="133"/>
         <source>Show hotkey overlay</source>
         <translation>顯示快捷鍵提示</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="132"/>
+        <location filename="../Common/NiriActionNames.js" line="134"/>
         <source>Move workspace to monitor left</source>
         <translation>將工作區移至左側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="133"/>
+        <location filename="../Common/NiriActionNames.js" line="135"/>
         <source>Move workspace to monitor right</source>
         <translation>將工作區移至右側顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="134"/>
+        <location filename="../Common/NiriActionNames.js" line="136"/>
         <source>Move workspace to monitor down</source>
         <translation>將工作區移至下方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="135"/>
+        <location filename="../Common/NiriActionNames.js" line="137"/>
         <source>Move workspace to monitor up</source>
         <translation>將工作區移至上方顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="136"/>
+        <location filename="../Common/NiriActionNames.js" line="138"/>
         <source>Move workspace to monitor previous</source>
         <translation>將工作區移至上一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="137"/>
+        <location filename="../Common/NiriActionNames.js" line="139"/>
         <source>Move workspace to monitor next</source>
         <translation>將工作區移至下一個顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="138"/>
+        <location filename="../Common/NiriActionNames.js" line="140"/>
         <source>Toggle window floating</source>
         <translation>切換視窗浮動狀態</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="139"/>
+        <location filename="../Common/NiriActionNames.js" line="141"/>
         <source>Move window to floating</source>
         <translation>將視窗設為浮動</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="140"/>
+        <location filename="../Common/NiriActionNames.js" line="142"/>
         <source>Move window to tiling</source>
         <translation>將視窗設為平鋪</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="141"/>
+        <location filename="../Common/NiriActionNames.js" line="143"/>
         <source>Focus floating</source>
         <translation>聚焦浮動視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="142"/>
+        <location filename="../Common/NiriActionNames.js" line="144"/>
         <source>Focus tiling</source>
         <translation>聚焦平鋪視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="143"/>
+        <location filename="../Common/NiriActionNames.js" line="145"/>
         <source>Switch focus between floating and tiling</source>
         <translation>在浮動與平鋪視窗間切換焦點</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="144"/>
+        <location filename="../Common/NiriActionNames.js" line="146"/>
         <source>Toggle window rule opacity</source>
         <translation>切換視窗規則不透明度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="145"/>
+        <location filename="../Common/NiriActionNames.js" line="147"/>
         <source>Set dynamic cast window</source>
         <translation>設定動態投屏視窗</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="146"/>
+        <location filename="../Common/NiriActionNames.js" line="148"/>
         <source>Set dynamic cast monitor</source>
         <translation>設定動態投屏顯示器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="147"/>
+        <location filename="../Common/NiriActionNames.js" line="149"/>
         <source>Clear dynamic cast target</source>
         <translation>清除動態投屏目標</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="148"/>
+        <location filename="../Common/NiriActionNames.js" line="150"/>
         <source>Toggle overview</source>
         <translation>切換概覽</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="149"/>
+        <location filename="../Common/NiriActionNames.js" line="151"/>
         <source>Open overview</source>
         <translation>開啟概覽</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="150"/>
+        <location filename="../Common/NiriActionNames.js" line="152"/>
         <source>Close overview</source>
         <translation>關閉概覽</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="151"/>
+        <location filename="../Common/NiriActionNames.js" line="153"/>
         <source>Lock: open</source>
         <translation>鎖屏：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="152"/>
+        <location filename="../Common/NiriActionNames.js" line="154"/>
         <source>Lock: is locked</source>
         <translation>鎖屏：查詢鎖定狀態</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="153"/>
+        <location filename="../Common/NiriActionNames.js" line="155"/>
         <source>Spotlight: toggle</source>
         <translation>Spotlight：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="154"/>
+        <location filename="../Common/NiriActionNames.js" line="156"/>
         <source>Spotlight: open</source>
         <translation>Spotlight：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="155"/>
+        <location filename="../Common/NiriActionNames.js" line="157"/>
         <source>Spotlight: close</source>
         <translation>Spotlight：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="156"/>
+        <location filename="../Common/NiriActionNames.js" line="158"/>
         <source>Spotlight: web</source>
         <translation>Spotlight：網頁搜尋</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="157"/>
+        <location filename="../Common/NiriActionNames.js" line="159"/>
         <source>Spotlight: open mode</source>
         <translation>Spotlight：開啟指定模式</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="158"/>
+        <location filename="../Common/NiriActionNames.js" line="160"/>
         <source>Wallpaper: set</source>
         <translation>桌布：設定</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="159"/>
+        <location filename="../Common/NiriActionNames.js" line="161"/>
         <source>Wallpaper: set for screen</source>
         <translation>桌布：為螢幕設定</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="160"/>
+        <location filename="../Common/NiriActionNames.js" line="162"/>
         <source>Wallpaper: clear</source>
         <translation>桌布：清除</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="161"/>
+        <location filename="../Common/NiriActionNames.js" line="163"/>
         <source>Wallpaper: clear for screen</source>
         <translation>桌布：清除螢幕桌布</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="162"/>
+        <location filename="../Common/NiriActionNames.js" line="164"/>
         <source>Wallpaper: previous</source>
         <translation>桌布：上一張</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="163"/>
+        <location filename="../Common/NiriActionNames.js" line="165"/>
         <source>Wallpaper: next</source>
         <translation>桌布：下一張</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="164"/>
+        <location filename="../Common/NiriActionNames.js" line="166"/>
         <source>Wallpaper: random</source>
         <translation>桌布：隨機</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="165"/>
+        <location filename="../Common/NiriActionNames.js" line="167"/>
         <source>Wallpaper: set folder</source>
         <translation>桌布：設定資料夾</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="166"/>
+        <location filename="../Common/NiriActionNames.js" line="168"/>
         <source>Control center: open</source>
         <translation>設定中心：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="167"/>
+        <location filename="../Common/NiriActionNames.js" line="169"/>
         <source>Control center: close</source>
         <translation>設定中心：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="168"/>
+        <location filename="../Common/NiriActionNames.js" line="170"/>
         <source>Control center: toggle</source>
         <translation>設定中心：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="169"/>
+        <location filename="../Common/NiriActionNames.js" line="171"/>
         <source>Keystone: cancel record</source>
         <translation>Keystone：取消錄製</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="170"/>
+        <location filename="../Common/NiriActionNames.js" line="172"/>
         <source>Keystone: close all others</source>
         <translation>Keystone：關閉其他面板</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="171"/>
+        <location filename="../Common/NiriActionNames.js" line="173"/>
         <source>Keystone: current style</source>
         <translation>Keystone：查詢當前樣式</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="172"/>
+        <location filename="../Common/NiriActionNames.js" line="174"/>
         <source>Keystone: dashboard</source>
         <translation>Keystone：儀表盤</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="173"/>
+        <location filename="../Common/NiriActionNames.js" line="175"/>
         <source>Keystone: hub</source>
         <translation>Keystone：控制面板</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="174"/>
+        <location filename="../Common/NiriActionNames.js" line="176"/>
         <source>Keystone: lyrics</source>
         <translation>Keystone：歌詞</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="175"/>
+        <location filename="../Common/NiriActionNames.js" line="177"/>
         <source>Keystone: tools</source>
         <translation>Keystone：工具</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="176"/>
+        <location filename="../Common/NiriActionNames.js" line="178"/>
         <source>Sidebar: open</source>
         <translation>側邊欄：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="177"/>
+        <location filename="../Common/NiriActionNames.js" line="179"/>
         <source>Sidebar: close</source>
         <translation>側邊欄：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="178"/>
+        <location filename="../Common/NiriActionNames.js" line="180"/>
         <source>Sidebar: toggle</source>
         <translation>側邊欄：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="179"/>
+        <location filename="../Common/NiriActionNames.js" line="181"/>
         <source>Run program</source>
         <translation>執行程式</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="180"/>
+        <location filename="../Common/NiriActionNames.js" line="182"/>
         <source>Run shell command</source>
         <translation>執行 Shell 命令</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="181"/>
+        <location filename="../Common/NiriActionNames.js" line="183"/>
         <source>Spotlight: open applications</source>
         <translation>Spotlight：開啟應用</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="182"/>
+        <location filename="../Common/NiriActionNames.js" line="184"/>
         <source>Spotlight: open clipboard</source>
         <translation>Spotlight：開啟剪貼簿</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="183"/>
+        <location filename="../Common/NiriActionNames.js" line="185"/>
         <source>Spotlight: open wallpaper picker</source>
         <translation>Spotlight：開啟桌布選擇</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="184"/>
+        <location filename="../Common/NiriActionNames.js" line="186"/>
         <source>Control center: open Account</source>
         <translation>設定中心：開啟賬戶頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="185"/>
+        <location filename="../Common/NiriActionNames.js" line="187"/>
         <source>Control center: open General</source>
         <translation>設定中心：開啟通用頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="186"/>
+        <location filename="../Common/NiriActionNames.js" line="188"/>
         <source>Control center: open Wallpaper</source>
         <translation>設定中心：開啟桌布頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="187"/>
+        <location filename="../Common/NiriActionNames.js" line="189"/>
         <source>Control center: open Theme</source>
         <translation>設定中心：開啟主題頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="188"/>
+        <location filename="../Common/NiriActionNames.js" line="190"/>
         <source>Control center: open Keystone</source>
         <translation>設定中心：開啟拱心石頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="189"/>
+        <location filename="../Common/NiriActionNames.js" line="191"/>
         <source>Control center: open Advanced</source>
         <translation>設定中心：開啟進階頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="190"/>
+        <location filename="../Common/NiriActionNames.js" line="192"/>
         <source>Control center: open Language &amp; region</source>
         <translation>設定中心：開啟語言與地區頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="191"/>
+        <location filename="../Common/NiriActionNames.js" line="193"/>
         <source>Control center: open current page</source>
         <translation>設定中心：開啟目前頁面</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="192"/>
+        <location filename="../Common/NiriActionNames.js" line="194"/>
         <source>Control center: toggle Account</source>
         <translation>設定中心：切換賬戶頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="193"/>
+        <location filename="../Common/NiriActionNames.js" line="195"/>
         <source>Control center: toggle General</source>
         <translation>設定中心：切換通用頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="194"/>
+        <location filename="../Common/NiriActionNames.js" line="196"/>
         <source>Control center: toggle Wallpaper</source>
         <translation>設定中心：切換桌布頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="195"/>
+        <location filename="../Common/NiriActionNames.js" line="197"/>
         <source>Control center: toggle Theme</source>
         <translation>設定中心：切換主題頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="196"/>
+        <location filename="../Common/NiriActionNames.js" line="198"/>
         <source>Control center: toggle Keystone</source>
         <translation>設定中心：切換拱心石頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="197"/>
+        <location filename="../Common/NiriActionNames.js" line="199"/>
         <source>Control center: toggle Advanced</source>
         <translation>設定中心：切換進階頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="198"/>
+        <location filename="../Common/NiriActionNames.js" line="200"/>
         <source>Control center: toggle Language &amp; region</source>
         <translation>設定中心：切換語言與地區頁</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="199"/>
+        <location filename="../Common/NiriActionNames.js" line="201"/>
         <source>Control center: toggle current page</source>
         <translation>設定中心：切換目前頁面</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="200"/>
+        <location filename="../Common/NiriActionNames.js" line="202"/>
         <source>Notifications: open</source>
         <translation>通知側欄：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="201"/>
+        <location filename="../Common/NiriActionNames.js" line="203"/>
         <source>Quick settings: open</source>
         <translation>快速設定：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="202"/>
+        <location filename="../Common/NiriActionNames.js" line="204"/>
         <source>Notifications: close</source>
         <translation>通知側欄：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="203"/>
+        <location filename="../Common/NiriActionNames.js" line="205"/>
         <source>Quick settings: close</source>
         <translation>快速設定：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="204"/>
+        <location filename="../Common/NiriActionNames.js" line="206"/>
         <source>Notifications: toggle</source>
         <translation>通知側欄：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="205"/>
+        <location filename="../Common/NiriActionNames.js" line="207"/>
         <source>Quick settings: toggle</source>
         <translation>快速設定：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="209"/>
+        <location filename="../Common/NiriActionNames.js" line="211"/>
         <source>Shortcut map: open</source>
         <translation>快捷鍵配置圖：開啟</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="210"/>
+        <location filename="../Common/NiriActionNames.js" line="212"/>
         <source>Shortcut map: close</source>
         <translation>快捷鍵配置圖：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="211"/>
+        <location filename="../Common/NiriActionNames.js" line="213"/>
         <source>Shortcut map: toggle</source>
         <translation>快捷鍵配置圖：切換</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="206"/>
+        <location filename="../Common/NiriActionNames.js" line="208"/>
         <source>Power menu: open</source>
         <translation>電源選單：開啟</translation>
     </message>
@@ -8588,12 +8598,12 @@ Click to open network settings</source>
         <translation>Spotlight：尋找檔案</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="207"/>
+        <location filename="../Common/NiriActionNames.js" line="209"/>
         <source>Power menu: close</source>
         <translation>電源選單：關閉</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="208"/>
+        <location filename="../Common/NiriActionNames.js" line="210"/>
         <source>Power menu: toggle</source>
         <translation>電源選單：切換</translation>
     </message>
@@ -8656,57 +8666,57 @@ Click to open network settings</source>
 <context>
     <name>NiriCommands</name>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="229"/>
+        <location filename="../Common/NiriActionNames.js" line="231"/>
         <source>Toggle screen reader</source>
         <translation>切換螢幕閱讀器</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="230"/>
+        <location filename="../Common/NiriActionNames.js" line="232"/>
         <source>Increase volume</source>
         <translation>提高音量</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="231"/>
+        <location filename="../Common/NiriActionNames.js" line="233"/>
         <source>Decrease volume</source>
         <translation>降低音量</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="232"/>
+        <location filename="../Common/NiriActionNames.js" line="234"/>
         <source>Toggle audio mute</source>
         <translation>切換靜音</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="233"/>
+        <location filename="../Common/NiriActionNames.js" line="235"/>
         <source>Toggle microphone mute</source>
         <translation>切換麥克風靜音</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="234"/>
+        <location filename="../Common/NiriActionNames.js" line="236"/>
         <source>Play/pause media</source>
         <translation>播放／暫停</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="235"/>
+        <location filename="../Common/NiriActionNames.js" line="237"/>
         <source>Stop media</source>
         <translation>停止播放</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="236"/>
+        <location filename="../Common/NiriActionNames.js" line="238"/>
         <source>Previous track</source>
         <translation>上一首</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="237"/>
+        <location filename="../Common/NiriActionNames.js" line="239"/>
         <source>Next track</source>
         <translation>下一首</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="238"/>
+        <location filename="../Common/NiriActionNames.js" line="240"/>
         <source>Increase screen brightness</source>
         <translation>提高螢幕亮度</translation>
     </message>
     <message>
-        <location filename="../Common/NiriActionNames.js" line="239"/>
+        <location filename="../Common/NiriActionNames.js" line="241"/>
         <source>Decrease screen brightness</source>
         <translation>降低螢幕亮度</translation>
     </message>
@@ -9142,177 +9152,177 @@ Click to open network settings</source>
         <translation>右側</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="367"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="568"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="672"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="368"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="569"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="673"/>
         <source>Weather</source>
         <translation>天氣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="426"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="427"/>
         <source>Quick Settings</source>
         <translation>快速設定</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="504"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="505"/>
         <source>Caelestia</source>
         <translation>Caelestia</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="372"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="373"/>
         <source>Pomodoro</source>
         <translation>番茄鐘</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="402"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="558"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="403"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="559"/>
         <source>Media</source>
         <translation>媒體</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="406"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="553"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="407"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="554"/>
         <source>Workspaces</source>
         <translation>工作區</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="410"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="411"/>
         <source>Information</source>
         <translation>資訊</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="414"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="415"/>
         <source>Active Window</source>
         <translation>聚焦視窗</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="418"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="419"/>
         <source>Tray</source>
         <translation>系統匣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="422"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="423"/>
         <source>System Monitor</source>
         <translation>系統監視器</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="435"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="573"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="436"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="574"/>
         <source>Network</source>
         <translation>網路</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="439"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="578"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="440"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="579"/>
         <source>Bluetooth</source>
         <translation>藍牙</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="443"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="583"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="444"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="584"/>
         <source>Brightness</source>
         <translation>亮度</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="447"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="588"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="448"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="589"/>
         <source>Volume</source>
         <translation>音量</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="451"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="593"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="452"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="594"/>
         <source>Microphone</source>
         <translation>麥克風</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="455"/>
-        <location filename="../Services/PersonalizationConfig.qml" line="598"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="456"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="599"/>
         <source>Battery</source>
         <translation>電池</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="460"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="461"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="465"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="466"/>
         <source>Power</source>
         <translation>電源</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="490"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="491"/>
         <source>Sine wave</source>
         <translation>正弦波浪</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="494"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="495"/>
         <source>Material wave</source>
         <translation>Material 波浪</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="500"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="501"/>
         <source>Rounded cover</source>
         <translation>圓角封面</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="508"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="509"/>
         <source>Cover background</source>
         <translation>封面背景</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="514"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="515"/>
         <source>Theme colors</source>
         <translation>主題配色</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="518"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="519"/>
         <source>Cover colors</source>
         <translation>封面配色</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="548"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="549"/>
         <source>System tray</source>
         <translation>系統匣</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="563"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="564"/>
         <source>System monitor</source>
         <translation>系統監測</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="652"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="653"/>
         <source>Do not open</source>
         <translation>不開啟</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="656"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="657"/>
         <source>Media controls</source>
         <translation>媒體控制</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="660"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="661"/>
         <source>Lyrics</source>
         <translation>歌詞</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="664"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="665"/>
         <source>Dashboard</source>
         <translation>儀表板</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="668"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="669"/>
         <source>Upload</source>
         <translation>上傳</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="676"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="677"/>
         <source>Tools</source>
         <translation>工具</translation>
     </message>
     <message>
-        <location filename="../Services/PersonalizationConfig.qml" line="683"/>
+        <location filename="../Services/PersonalizationConfig.qml" line="684"/>
         <source>Peak</source>
         <translation>Peak</translation>
     </message>
@@ -13018,12 +13028,12 @@ Scroll to adjust; click to open sound</source>
 <context>
     <name>WallpaperPage</name>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="552"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="587"/>
         <source>%1 FPS</source>
         <translation>%1 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="601"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="636"/>
         <source>Step %1</source>
         <translation>步長 %1</translation>
     </message>
@@ -13053,43 +13063,43 @@ Scroll to adjust; click to open sound</source>
         <translation>清除桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="196"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="246"/>
         <source>Pause</source>
         <translation>暫停</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="196"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="246"/>
         <source>Play</source>
         <translation>播放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="200"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="250"/>
         <source>Reverse</source>
         <translation>倒放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="204"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="254"/>
         <source>Flip</source>
         <translation>翻轉</translation>
     </message>
     <message>
         <location filename="../Common/generated/SearchCatalog.js" line="2049"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="280"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="330"/>
         <source>Desktop wallpaper manager</source>
         <translation>桌面壁紙管理器</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="273"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="323"/>
         <source>Select an image wallpaper before switching to awww</source>
         <translation>請先選擇圖片桌布，再切換到 awww</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="276"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="326"/>
         <source>The awww or awww-daemon command is missing</source>
         <translation>缺少 awww 或 awww-daemon 命令</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="277"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="327"/>
         <source>Detecting awww…</source>
         <translation>正在檢測 awww…</translation>
     </message>
@@ -13099,41 +13109,41 @@ Scroll to adjust; click to open sound</source>
         <translation>當前桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="337"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="383"/>
         <source>No wallpaper selected</source>
         <translation>未選擇桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="364"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="410"/>
         <source>Previous</source>
         <translation>上一張</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="367"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="413"/>
         <source>Random</source>
         <translation>隨機</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="370"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="416"/>
         <source>Next</source>
         <translation>下一張</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="414"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="418"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1012"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1016"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="447"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="451"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1040"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1044"/>
         <source>Per-monitor wallpapers</source>
         <translation>每個顯示器獨立桌布</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="428"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1026"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="461"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1054"/>
         <source>Select output</source>
         <translation>選擇輸出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="429"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="462"/>
         <source>Desktop wallpaper output</source>
         <translation>桌面壁紙輸出</translation>
     </message>
@@ -13143,69 +13153,69 @@ Scroll to adjust; click to open sound</source>
         <translation>過渡效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="463"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1034"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="496"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1062"/>
         <source>Transition type</source>
         <translation>轉場類型</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="544"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="579"/>
         <source>awww FPS</source>
         <translation>awww FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="568"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="603"/>
         <source>awww transition FPS</source>
         <translation>awww 轉場 FPS</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="576"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="611"/>
         <source>The none transition does not use FPS.</source>
         <translation>none 轉場不會使用 FPS。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="576"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="611"/>
         <source>Independent FPS is available only with awww.</source>
         <translation>獨立 FPS 僅適用於 awww。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="593"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="628"/>
         <source>Transition step</source>
         <translation>過渡步長</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="617"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="652"/>
         <source>awww transition step</source>
         <translation>awww 過渡步長</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="640"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="675"/>
         <source>Transition duration</source>
         <translation>過渡時間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="666"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="701"/>
         <source>Wallpaper transition duration</source>
         <translation>桌布過渡時間</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="673"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="708"/>
         <source>The current transition does not use duration.</source>
         <translation>目前轉場不使用持續時間。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="691"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="726"/>
         <source>Easing curve</source>
         <translation>緩動曲線</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="750"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="755"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="785"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="790"/>
         <source>Edit Bézier curve</source>
         <translation>編輯貝塞爾</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="778"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="813"/>
         <source>The current transition does not use an easing curve.</source>
         <translation>目前轉場不使用緩動曲線。</translation>
     </message>
@@ -13215,48 +13225,48 @@ Scroll to adjust; click to open sound</source>
         <translation>視差效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="807"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="812"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="842"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="847"/>
         <source>Vertical parallax</source>
         <translation>垂直視差</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="819"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="836"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="854"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="871"/>
         <source>Follow workspaces</source>
         <translation>隨工作區移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="843"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="878"/>
         <source>Enable vertical parallax first.</source>
         <translation>需要先啟用垂直視差。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="850"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="855"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="885"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="890"/>
         <source>Follow sidebars</source>
         <translation>隨側邊欄移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="862"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="867"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="897"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="902"/>
         <source>Follow tiled-window focus</source>
         <translation>隨平鋪視窗焦點移動</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="878"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="892"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="925"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="939"/>
         <source>Wallpaper scale</source>
         <translation>桌布縮放</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="904"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="918"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="951"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="965"/>
         <source>Horizontal travel columns</source>
         <translation>橫向行程欄數</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="926"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="973"/>
         <source>Desktop parallax is available only with Quickshell.</source>
         <translation>桌面視差僅適用於 Quickshell。</translation>
     </message>
@@ -13266,79 +13276,85 @@ Scroll to adjust; click to open sound</source>
         <translation>Overview 背景</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="226"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="276"/>
         <source>Overview integration</source>
         <translation>概覽配置接入</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="227"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="277"/>
         <source>Create or connect backdrop rules and make the global workspace background transparent.</source>
         <translation>建立或接入背景規則，並將全域性工作區背景設為透明。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="240"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="290"/>
         <source>Overview is already configured outside Clavis</source>
         <translation>概覽已由外部配置滿足</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="990"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="994"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="909"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="914"/>
+        <source>Floating window parallax</source>
+        <translation>浮動視窗視差</translation>
+    </message>
+    <message>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1018"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1022"/>
         <source>Enable background</source>
         <translation>啟用背景</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1001"/>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1005"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1029"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1033"/>
         <source>Use desktop wallpaper</source>
         <translation>使用桌面壁紙</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1027"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1055"/>
         <source>Overview wallpaper output</source>
         <translation>overview 壁紙輸出</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1053"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1081"/>
         <source>Image effects</source>
         <translation>影像效果</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1061"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1089"/>
         <source>Blur</source>
         <translation>模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1074"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1102"/>
         <source>Overview blur</source>
         <translation>overview 模糊</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1085"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1113"/>
         <source>Dim</source>
         <translation>暗化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1098"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1126"/>
         <source>Overview dimming</source>
         <translation>overview 暗化</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1109"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1137"/>
         <source>Saturation</source>
         <translation>飽和度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1122"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1150"/>
         <source>Overview saturation</source>
         <translation>overview 飽和度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1133"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1161"/>
         <source>Contrast</source>
         <translation>對比度</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1146"/>
+        <location filename="../Modules/ControlCenter/WallpaperPage.qml" line="1174"/>
         <source>Overview contrast</source>
         <translation>overview 對比度</translation>
     </message>

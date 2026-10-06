@@ -163,7 +163,10 @@ PanelWindow {
         }
         return false;
     }
-    onPointerOverInteractiveAreaChanged: {
+    // Hit testing reads the animated geometry. Do not change that geometry
+    // while its binding is evaluating; coalesce enter/leave in the next turn.
+    onPointerOverInteractiveAreaChanged: Qt.callLater(root.updatePointerInteraction)
+    function updatePointerInteraction() {
         if (pointerOverInteractiveArea) {
             if (!trackingFileDrag)
                 pointerAxis = horizontal ? surfaceHover.point.scenePosition.x :

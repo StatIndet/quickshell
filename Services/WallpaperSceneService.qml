@@ -202,7 +202,8 @@ Singleton {
                                                                                         PersonalizationConfig.parallaxFollowSidebars
                                                                                         && rightEdgeOpen,
                                                                                         sidebarStep)
-            readonly property real floatingOffsetX: screenWidth > 1 && screenHeight > 1 && (
+            readonly property real floatingOffsetX: PersonalizationConfig.parallaxFloatingWindowsEnabled
+                                                    && screenWidth > 1 && screenHeight > 1 && (
                                                         manualParallaxActive || panoramaGeometry.active)
                                                     ? WallpaperMath.floatingParallaxOffset(tiledProgress,
                                                                                            leftEdgeOpen,

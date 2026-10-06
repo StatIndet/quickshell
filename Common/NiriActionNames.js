@@ -28,6 +28,8 @@ function translated(name) {
     case "Screenshot window": return qsTranslate("NiriActions", "Screenshot window");
     case "Toggle keyboard shortcuts inhibit": return qsTranslate("NiriActions", "Toggle keyboard shortcuts inhibit");
     case "Close window": return qsTranslate("NiriActions", "Close window");
+    case "Minimize window": return qsTranslate("NiriActions", "Minimize window");
+    case "Restore last minimized window": return qsTranslate("NiriActions", "Restore last minimized window");
     case "Fullscreen window": return qsTranslate("NiriActions", "Fullscreen window");
     case "Toggle windowed fullscreen": return qsTranslate("NiriActions", "Toggle windowed fullscreen");
     case "Focus window in column": return qsTranslate("NiriActions", "Focus window in column");

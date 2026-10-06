@@ -91,6 +91,20 @@
     "parameters": false
   },
   {
+    "id": "niri:minimize-window",
+    "category": "niri",
+    "name": "Minimize window",
+    "expression": "minimize-window",
+    "parameters": false
+  },
+  {
+    "id": "niri:restore-window",
+    "category": "niri",
+    "name": "Restore last minimized window",
+    "expression": "restore-window",
+    "parameters": false
+  },
+  {
     "id": "niri:fullscreen-window",
     "category": "niri",
     "name": "Fullscreen window",

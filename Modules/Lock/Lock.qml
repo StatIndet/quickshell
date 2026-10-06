@@ -8,8 +8,9 @@ import qs.Services
 Scope {
     id: root
 
-    readonly property bool active: sessionLock.locked || capturePending
+    readonly property bool active: sessionLocked || capturePending
     readonly property bool secure: sessionLock.secure
+    property bool sessionLocked: false
     property bool capturePending: false
     property int activeCaptureRequestId: 0
     property string sessionStyle: "default"
@@ -22,6 +23,13 @@ Scope {
 
     signal unlocked
     signal secured
+
+    function syncSessionLock() {
+        // Quickshell 0.3.1 can omit lockStateChanged after unlocking. Sample
+        // the native state after our operations, not only its notifications.
+        sessionLocked = sessionLock.locked;
+    }
+    Component.onCompleted: Qt.callLater(root.syncSessionLock)
 
     function open() {
         if (sessionLock.locked || capturePending)
@@ -46,6 +54,7 @@ Scope {
             return;
 
         sessionLock.locked = true;
+        root.syncSessionLock();
         capturePending = false;
     }
 
@@ -90,6 +99,7 @@ Scope {
             if (!sessionLock.locked)
                 return;
             sessionLock.locked = false;
+            root.syncSessionLock();
             root.unlocked();
             Qt.callLater(preLockCapture.clear);
         }
@@ -123,7 +133,11 @@ Scope {
 
         signal unlock
 
+        onLockStateChanged: root.syncSessionLock()
         onSecureStateChanged: {
+            // The secure notification may arrive before the native manager
+            // clears its lock object. Re-read after that call has returned.
+            Qt.callLater(root.syncSessionLock);
             if (secure)
                 root.secured();
         }
