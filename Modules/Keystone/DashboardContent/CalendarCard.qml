@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell
 import qs.Common
 import qs.Components
 import qs.Widgets.common
@@ -9,6 +10,7 @@ import qs.Widgets.common
 Rectangle {
     id: root
 
+    property date currentDate: new Date()
     property date displayedDate: new Date()
     property date pendingDate: displayedDate
     property int transitionDirection: -1
@@ -17,6 +19,33 @@ Rectangle {
 
     readonly property int displayYear: displayedDate.getFullYear()
     readonly property int displayMonth: displayedDate.getMonth()
+
+    function refreshDate(now) {
+        if (now.getFullYear() === currentDate.getFullYear() && now.getMonth() === currentDate.getMonth()
+                && now.getDate() === currentDate.getDate())
+            return;
+
+        if (monthTransition.running)
+            monthTransition.complete();
+        const followingCurrentMonth = displayYear === currentDate.getFullYear() && displayMonth
+              === currentDate.getMonth();
+        currentDate = now;
+        if (followingCurrentMonth) {
+            displayedDate = now;
+            pendingDate = now;
+        }
+    }
+
+    SystemClock {
+        id: clock
+        precision: SystemClock.Minutes
+        onDateChanged: root.refreshDate(clock.date)
+    }
+
+    onVisibleChanged: {
+        if (visible)
+            refreshDate(new Date());
+    }
 
     function navigateMonth(delta) {
         if (monthTransition.running)
@@ -28,14 +57,15 @@ Rectangle {
     }
 
     function returnToToday() {
-        const now = new Date();
+        refreshDate(new Date());
+        if (monthTransition.running)
+            monthTransition.complete();
+        const now = currentDate;
         const currentIndex = displayYear * 12 + displayMonth;
         const nextIndex = now.getFullYear() * 12 + now.getMonth();
         if (currentIndex === nextIndex)
             return;
 
-        if (monthTransition.running)
-            monthTransition.complete();
         transitionDirection = nextIndex > currentIndex ? -1 : 1;
         pendingDate = now;
         monthTransition.restart();
@@ -208,6 +238,10 @@ Rectangle {
                     id: dayItem
 
                     required property var model
+                    // MonthGrid's today role is cached until its model is repopulated.
+                    readonly property bool isToday: model.year === root.currentDate.getFullYear()
+                                                    && model.month === root.currentDate.getMonth()
+                                                    && model.day === root.currentDate.getDate()
 
                     implicitWidth: 38
                     implicitHeight: 32
@@ -217,23 +251,23 @@ Rectangle {
                         width: Math.min(parent.width, parent.height) - 3
                         height: width
                         radius: width / 2
-                        color: dayItem.model.today ? Appearance.colors.colPrimary : "transparent"
+                        color: dayItem.isToday ? Appearance.colors.colPrimary : "transparent"
                     }
 
                     Text {
                         anchors.centerIn: parent
                         text: calendarGrid.locale.toString(dayItem.model.day)
                         color: {
-                            if (dayItem.model.today)
+                            if (dayItem.isToday)
                                 return Appearance.colors.colOnPrimary;
                             const dayOfWeek = dayItem.model.date.getDay();
                             return dayOfWeek === 0 || dayOfWeek === 6 ? Appearance.colors.colTertiary :
                                                                         Appearance.colors.colOnSurfaceVariant;
                         }
-                        opacity: dayItem.model.today || dayItem.model.month === calendarGrid.month ? 1 : 0.38
+                        opacity: dayItem.isToday || dayItem.model.month === calendarGrid.month ? 1 : 0.38
                         font.family: Fonts.numeric
                         font.pixelSize: 12
-                        font.weight: dayItem.model.today ? Font.DemiBold : Font.Normal
+                        font.weight: dayItem.isToday ? Font.DemiBold : Font.Normal
                     }
                 }
             }
