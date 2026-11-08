@@ -258,17 +258,30 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('delete', id=forward['id'])
         self.assertEqual({row['key'] for row in self.run_config()['bindings']}, set(keys[:-1]))
 
-    def test_first_setup_defaults_are_unique_direct_ipc_and_not_restored(self):
+    def test_first_setup_defaults_are_unique_and_not_restored(self):
         state = self.run_config('setup')
         rows = state['bindings']
-        self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS))
+        self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS) + len(config.DEFAULT_SYSTEM_BINDINGS))
         self.assertEqual(len({row['identity'] for row in rows}), len(rows))
         self.assertTrue(all(not row.get('collision') for row in rows))
         for row in rows:
             action = config.parse(row['action']).nodes[0]
             self.assertEqual(action.name, 'spawn')
-            self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
-            self.assertIs(row['props']['repeat'], False)
+            if row['key'] in {key for key, _ in config.DEFAULT_SYSTEM_BINDINGS}:
+                self.assertIn(action.args, [command for _, command in config.DEFAULT_SYSTEM_BINDINGS])
+                self.assertIs(row['props']['allow-when-locked'], True)
+            else:
+                self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
+                self.assertIs(row['props']['repeat'], False)
+        raise_volume = next(row for row in rows if row['key'] == 'XF86AudioRaiseVolume')
+        self.assertEqual(config.parse(raise_volume['action']).nodes[0].args,
+                         ['wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '10%+', '--limit', '1.0'])
+        brightness_bindings = {row['key']: config.parse(row['action']).nodes[0].args
+                               for row in rows if row['key'] in ('XF86MonBrightnessDown', 'XF86MonBrightnessUp')}
+        self.assertEqual(brightness_bindings, {
+            'XF86MonBrightnessDown': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'decrease'],
+            'XF86MonBrightnessUp': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'increase'],
+        })
         self.run_config('delete', id=rows[0]['id'])
         remaining = self.fragment().read_bytes()
         self.run_config('setup')
