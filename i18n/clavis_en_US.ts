@@ -8667,6 +8667,31 @@ Click to open network settings</translation>
         <source>Sidebar drawer: toggle</source>
         <translation>Sidebar drawer: toggle</translation>
     </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="214"/>
+        <source>Increase volume</source>
+        <translation>Increase volume</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="215"/>
+        <source>Decrease volume</source>
+        <translation>Decrease volume</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="216"/>
+        <source>Toggle audio mute</source>
+        <translation>Toggle audio mute</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="217"/>
+        <source>Increase screen brightness</source>
+        <translation>Increase screen brightness</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="218"/>
+        <source>Decrease screen brightness</source>
+        <translation>Decrease screen brightness</translation>
+    </message>
 </context>
 <context>
     <name>NiriCommands</name>
