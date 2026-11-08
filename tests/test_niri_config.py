@@ -220,6 +220,25 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('delete', id=saved['id'])
         self.assertFalse(any(row['key'] == 'Mod+F12' for row in self.run_config()['bindings']))
 
+    def test_media_actions_are_available_before_binding(self):
+        catalog = self.run_config('catalog')['catalog']
+        actions = {entry['id']: entry for entry in catalog}
+        expected = {
+            'clavis:volume:increase': 'volume increase',
+            'clavis:volume:decrease': 'volume decrease',
+            'clavis:volume:mute': 'volume mute',
+            'clavis:brightness:increase': 'brightness increase',
+            'clavis:brightness:decrease': 'brightness decrease',
+        }
+        for identifier, label in expected.items():
+            self.assertIn(identifier, actions)
+            self.assertTrue(actions[identifier]['supported'], label)
+            self.assertFalse(actions[identifier]['parameters'], label)
+
+        state = self.run_config('setup')
+        configured = {row['action'].rstrip(';') for row in state['bindings']}
+        self.assertTrue(all(actions[identifier]['expression'] in configured for identifier in expected))
+
     def test_palette_shortcuts_remain_available_without_default_bindings(self):
         with mock.patch.object(config.subprocess, 'run', return_value=mock.Mock(returncode=0, stderr='')):
             catalog = self.run_config('catalog')['catalog']

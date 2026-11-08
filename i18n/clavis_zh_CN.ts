@@ -8662,6 +8662,31 @@ Click to open network settings</source>
         <source>Sidebar drawer: toggle</source>
         <translation>侧边栏抽屉：切换</translation>
     </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="214"/>
+        <source>Increase volume</source>
+        <translation>增加音量</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="215"/>
+        <source>Decrease volume</source>
+        <translation>降低音量</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="216"/>
+        <source>Toggle audio mute</source>
+        <translation>切换静音</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="217"/>
+        <source>Increase screen brightness</source>
+        <translation>增加屏幕亮度</translation>
+    </message>
+    <message>
+        <location filename="../Common/NiriActionNames.js" line="218"/>
+        <source>Decrease screen brightness</source>
+        <translation>降低屏幕亮度</translation>
+    </message>
 </context>
 <context>
     <name>NiriCommands</name>

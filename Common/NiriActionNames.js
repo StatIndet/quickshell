@@ -208,6 +208,11 @@ function translated(name) {
     case "Power menu: open": return qsTranslate("NiriActions", "Power menu: open");
     case "Power menu: close": return qsTranslate("NiriActions", "Power menu: close");
     case "Power menu: toggle": return qsTranslate("NiriActions", "Power menu: toggle");
+    case "Increase volume": return qsTranslate("NiriActions", "Increase volume");
+    case "Decrease volume": return qsTranslate("NiriActions", "Decrease volume");
+    case "Toggle audio mute": return qsTranslate("NiriActions", "Toggle audio mute");
+    case "Increase screen brightness": return qsTranslate("NiriActions", "Increase screen brightness");
+    case "Decrease screen brightness": return qsTranslate("NiriActions", "Decrease screen brightness");
     case "Shortcut map: open": return qsTranslate("NiriActions", "Shortcut map: open");
     case "Shortcut map: close": return qsTranslate("NiriActions", "Shortcut map: close");
     case "Shortcut map: toggle": return qsTranslate("NiriActions", "Shortcut map: toggle");
