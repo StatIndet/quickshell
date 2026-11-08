@@ -1642,8 +1642,6 @@ Variants {
 
                     MediaContent {
                         id: mediaWidget
-                        surfaceTopRightRadius: styleSurface.fullDisplay && fullFrame.item
-                                               ? fullFrame.item.childRadius : rootSurface.topRightRadius
 
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter

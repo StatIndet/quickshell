@@ -9,8 +9,6 @@ import qs.Widgets.common
 Item {
     id: root
 
-    // Content is inset 20px from the surrounding Keystone surface.
-    property real surfaceTopRightRadius: 24
     readonly property real sourceBadgeInset: 10
     // Names describe curve geometry, not the perceived direction of rebound.
     // Preserve the state-dependent selection and timings below with these values.
@@ -261,7 +259,6 @@ Item {
         width: menuExpanded ? Math.max(150, pillText.implicitWidth + 28) : pillText.implicitWidth + 28
         height: menuExpanded ? Math.max(30, 30 * MediaManager.list.length + 12) : 30
         radius: 8
-        topRightRadius: Math.max(0, root.surfaceTopRightRadius - root.sourceBadgeInset)
 
         Behavior on width {
             NumberAnimation {
