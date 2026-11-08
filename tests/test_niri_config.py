@@ -273,14 +273,14 @@ class ConfigurationContracts(unittest.TestCase):
             else:
                 self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
                 self.assertIs(row['props']['repeat'], False)
-        raise_volume = next(row for row in rows if row['key'] == 'XF86AudioRaiseVolume')
-        self.assertEqual(config.parse(raise_volume['action']).nodes[0].args,
-                         ['wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '10%+', '--limit', '1.0'])
-        brightness_bindings = {row['key']: config.parse(row['action']).nodes[0].args
-                               for row in rows if row['key'] in ('XF86MonBrightnessDown', 'XF86MonBrightnessUp')}
-        self.assertEqual(brightness_bindings, {
+        system_bindings = {row['key']: config.parse(row['action']).nodes[0].args
+                           for row in rows if row['key'].startswith('XF86')}
+        self.assertEqual(system_bindings, {
             'XF86MonBrightnessDown': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'decrease'],
             'XF86MonBrightnessUp': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'increase'],
+            'XF86AudioMute': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'mute'],
+            'XF86AudioLowerVolume': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'decrease'],
+            'XF86AudioRaiseVolume': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'increase'],
         })
         self.run_config('delete', id=rows[0]['id'])
         remaining = self.fragment().read_bytes()

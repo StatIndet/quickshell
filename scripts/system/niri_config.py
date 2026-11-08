@@ -39,14 +39,14 @@ DEFAULT_BINDINGS = (
     ('Alt+Shift+L', 'lock', 'open'),
 )
 
-# Hardware media keys are kept in the same managed fragment as Clavis bindings,
-# but call the system controls directly so they do not depend on an OSD daemon.
+# Hardware media keys are kept in the same managed fragment as Clavis bindings
+# and route through Clavis services so state changes can update the OSD.
 DEFAULT_SYSTEM_BINDINGS = (
     ('XF86MonBrightnessDown', ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'decrease']),
     ('XF86MonBrightnessUp', ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'increase']),
-    ('XF86AudioMute', ['wpctl', 'set-mute', '@DEFAULT_AUDIO_SINK@', 'toggle']),
-    ('XF86AudioLowerVolume', ['wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '10%-']),
-    ('XF86AudioRaiseVolume', ['wpctl', 'set-volume', '@DEFAULT_AUDIO_SINK@', '10%+', '--limit', '1.0']),
+    ('XF86AudioMute', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'mute']),
+    ('XF86AudioLowerVolume', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'decrease']),
+    ('XF86AudioRaiseVolume', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'increase']),
 )
 
 
