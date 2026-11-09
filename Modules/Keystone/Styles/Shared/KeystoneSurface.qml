@@ -830,7 +830,15 @@ Variants {
                                                                                                       112) : activeLayout.targetWidth
                 property real targetH: isVolumeMode && keyboardOsd ? (keystoneWindow.horizontalEdge ? 64 :
                                                                                                       144) : activeLayout.targetHeight
-                property int targetR: isMediaMode ? 44 : styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) : 12
+                // The resting detached island has semicircular ends at every thickness.
+                property real targetR: styleSurface.detached && isCollapsedMode ? Math.min(targetW, targetH)
+                                                                                  / 2 : isMediaMode ? 44 :
+                                                                                                      styleSurface.detached
+                                                                                                      ? Math.min(
+                                                                                                            Math.min(targetW,
+                                                                                                                     targetH)
+                                                                                                            / 2, styleSurface.maxPillRadius) :
+                                                                                                        12
                 property int wDuration: KeystoneMotion.expandingDuration
                 property int hDuration: KeystoneMotion.expandingDuration
                 property int rDuration: KeystoneMotion.radiusDuration
