@@ -93,60 +93,13 @@ Item {
             }
         }
 
-        Item {
-            id: titleViewport
+        ScrollingLabel {
             width: Math.max(40, Math.min(220, root.parent.width - 530))
             height: 40
-            clip: true
-            readonly property real overflow: Math.max(0, titleText.implicitWidth - width)
-            onOverflowChanged: restartScroll()
-            function restartScroll() {
-                titleScroll.stop();
-                titleText.x = 0;
-                if (overflow > 0 && root.visible)
-                    titleScroll.start();
-            }
-            Text {
-                id: titleText
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.title
-                font.family: Fonts.ui
-                font.pixelSize: 16
-                color: "#F5F7FA"
-                onTextChanged: Qt.callLater(titleViewport.restartScroll)
-            }
-            Connections {
-                target: root
-                function onVisibleChanged() {
-                    titleViewport.restartScroll();
-                }
-            }
-            SequentialAnimation {
-                id: titleScroll
-                loops: Animation.Infinite
-                PauseAnimation {
-                    duration: 1800
-                }
-                NumberAnimation {
-                    target: titleText
-                    property: "x"
-                    to: -titleViewport.overflow
-                    duration: Math.max(1800, titleViewport.overflow * 35)
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: [0.25, 0.1, 0.25, 1, 1, 1]
-                }
-                PauseAnimation {
-                    duration: 1800
-                }
-                NumberAnimation {
-                    target: titleText
-                    property: "x"
-                    to: 0
-                    duration: Math.max(1800, titleViewport.overflow * 35)
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: [0.25, 0.1, 0.25, 1, 1, 1]
-                }
-            }
+            text: root.title
+            font.family: Fonts.ui
+            font.pixelSize: 16
+            color: "#F5F7FA"
         }
 
         Row {

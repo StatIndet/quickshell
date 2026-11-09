@@ -124,7 +124,7 @@ Item {
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: 10
-                    Text {
+                    ScrollingLabel {
                         Layout.fillWidth: true
                         Layout.minimumWidth: 0
                         text: root.title
@@ -132,7 +132,6 @@ Item {
                         font.family: Fonts.ui
                         font.pixelSize: 18
                         font.weight: Font.Bold
-                        elide: Text.ElideRight
                     }
                     MediaSpectrum {
                         Layout.preferredWidth: 26
@@ -142,13 +141,13 @@ Item {
                     }
                 }
 
-                Text {
+                ScrollingLabel {
                     Layout.fillWidth: true
+                    Layout.minimumWidth: 0
                     text: root.artist
                     color: Appearance.colors.colOnSurfaceVariant
                     font.family: Fonts.ui
                     font.pixelSize: 13
-                    elide: Text.ElideRight
                 }
             }
         }
