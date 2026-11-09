@@ -103,7 +103,10 @@ Item {
             Layout.fillHeight: true
             spacing: 14
 
-            MediaCover {
+            FlippingMediaCover {
+                id: cover
+                trackKey: root.isActive ? MediaManager.active.dbusName + ":" + MediaManager.active.uniqueId :
+                                          ""
                 Layout.preferredWidth: 80
                 Layout.preferredHeight: 80
                 Layout.alignment: Qt.AlignVCenter
@@ -239,12 +242,20 @@ Item {
 
                 onShuffleClicked: if (MediaManager.active && MediaManager.active.shuffleSupported)
                                       MediaManager.active.shuffle = !MediaManager.active.shuffle
-                onPreviousClicked: if (MediaManager.active)
-                                       MediaManager.active.previous()
+                onPreviousClicked: {
+                    if (MediaManager.active) {
+                        cover.expectDirection(-1);
+                        MediaManager.active.previous();
+                    }
+                }
                 onPlayPauseClicked: if (MediaManager.active)
                                         MediaManager.active.togglePlaying()
-                onNextClicked: if (MediaManager.active)
-                                   MediaManager.active.next()
+                onNextClicked: {
+                    if (MediaManager.active) {
+                        cover.expectDirection(1);
+                        MediaManager.active.next();
+                    }
+                }
                 onLoopClicked: {
                     if (!MediaManager.active || !MediaManager.active.loopSupported)
                         return;
