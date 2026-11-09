@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import QtQuick
 import qs.Services
+import "../Common/functions/AudioDeviceIcon.js" as AudioDeviceIcon
 
 Singleton {
     id: root
@@ -23,7 +24,9 @@ Singleton {
     readonly property bool inputAvailable: root.source !== null && root.source !== undefined
     readonly property bool busy: false
 
-    readonly property bool isHeadphone: root.nodeIconName(root.sink) === "headphones"
+    readonly property string sinkIconName: root.ready ? root.nodeIconName(root.sink) : "volume_off"
+    readonly property bool isHeadphone: ["headphones", "headset_mic", "earbuds", "earbuds_2"].indexOf(
+        root.sinkIconName) >= 0
     readonly property bool sinkMuted: root.nodeMuted(root.sink)
     readonly property real sinkVolume: root.nodeVolume(root.sink)
     readonly property bool sourceMuted: root.nodeMuted(root.source)
@@ -134,23 +137,11 @@ Singleton {
         if (!node)
             return "volume_off";
 
-        const properties = root.nodeProperties(node);
-        const descriptor = [properties["device.icon-name"] || "", properties["media.icon-name"] || "",
-                            node.description || "", node.name || ""].join(" ").toLowerCase();
-
         if (node.isStream)
             return "music_note";
-        if (descriptor.indexOf("headphone") >= 0 || descriptor.indexOf("headset") >= 0 || descriptor.indexOf(qsTr(
-                                                                                                                 "Headphones"))
-                >= 0)
-            return "headphones";
-        if (descriptor.indexOf("bluetooth") >= 0 || descriptor.indexOf("bluez") >= 0)
-            return node.isSink ? "headphones" : "mic";
-        if (descriptor.indexOf("hdmi") >= 0 || descriptor.indexOf("displayport") >= 0)
-            return "tv";
-        if (descriptor.indexOf("speaker") >= 0 || descriptor.indexOf(qsTr("Speakers")) >= 0)
-            return "speaker";
-        return node.isSink ? "volume_up" : "mic";
+        if (!node.isSink)
+            return "mic";
+        return AudioDeviceIcon.outputIcon(root.nodeProperties(node), node.description, node.name);
     }
 
     function applicationIconSource(node) {

@@ -12898,54 +12898,44 @@ Scroll to adjust; click to open sound</source>
 滾輪調節，點選開啟聲音</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="100"/>
+        <location filename="../Services/Volume.qml" line="103"/>
         <source>Unknown audio device</source>
         <translation>未知音訊裝置</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="106"/>
-        <location filename="../Services/Volume.qml" line="110"/>
+        <location filename="../Services/Volume.qml" line="109"/>
+        <location filename="../Services/Volume.qml" line="113"/>
         <source>Unknown application</source>
         <translation>未知應用</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="130"/>
+        <location filename="../Services/Volume.qml" line="133"/>
         <source>Audio output device</source>
         <translation>音訊輸出裝置</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="130"/>
+        <location filename="../Services/Volume.qml" line="133"/>
         <source>Audio input device</source>
         <translation>音訊輸入裝置</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="143"/>
-        <source>Headphones</source>
-        <translation>耳機</translation>
-    </message>
-    <message>
-        <location filename="../Services/Volume.qml" line="151"/>
-        <source>Speakers</source>
-        <translation>揚聲器</translation>
-    </message>
-    <message>
-        <location filename="../Services/Volume.qml" line="205"/>
+        <location filename="../Services/Volume.qml" line="196"/>
         <source>The selected output device is no longer available</source>
         <translation>所選輸出裝置已不可用</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="215"/>
+        <location filename="../Services/Volume.qml" line="206"/>
         <source>The selected input device is no longer available</source>
         <translation>所選輸入裝置已不可用</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="224"/>
-        <location filename="../Services/Volume.qml" line="239"/>
+        <location filename="../Services/Volume.qml" line="215"/>
+        <location filename="../Services/Volume.qml" line="230"/>
         <source>The audio object is no longer available</source>
         <translation>音訊物件已不可用</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="228"/>
+        <location filename="../Services/Volume.qml" line="219"/>
         <source>Invalid volume value</source>
         <translation>音量數值無效</translation>
     </message>

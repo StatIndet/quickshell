@@ -12909,54 +12909,44 @@ Scroll to adjust; click to open sound</source>
 Scroll to adjust; click to open sound</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="100"/>
+        <location filename="../Services/Volume.qml" line="103"/>
         <source>Unknown audio device</source>
         <translation>Unknown audio device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="106"/>
-        <location filename="../Services/Volume.qml" line="110"/>
+        <location filename="../Services/Volume.qml" line="109"/>
+        <location filename="../Services/Volume.qml" line="113"/>
         <source>Unknown application</source>
         <translation>Unknown application</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="130"/>
+        <location filename="../Services/Volume.qml" line="133"/>
         <source>Audio output device</source>
         <translation>Audio output device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="130"/>
+        <location filename="../Services/Volume.qml" line="133"/>
         <source>Audio input device</source>
         <translation>Audio input device</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="143"/>
-        <source>Headphones</source>
-        <translation>Headphones</translation>
-    </message>
-    <message>
-        <location filename="../Services/Volume.qml" line="151"/>
-        <source>Speakers</source>
-        <translation>Speakers</translation>
-    </message>
-    <message>
-        <location filename="../Services/Volume.qml" line="205"/>
+        <location filename="../Services/Volume.qml" line="196"/>
         <source>The selected output device is no longer available</source>
         <translation>The selected output device is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="215"/>
+        <location filename="../Services/Volume.qml" line="206"/>
         <source>The selected input device is no longer available</source>
         <translation>The selected input device is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="224"/>
-        <location filename="../Services/Volume.qml" line="239"/>
+        <location filename="../Services/Volume.qml" line="215"/>
+        <location filename="../Services/Volume.qml" line="230"/>
         <source>The audio object is no longer available</source>
         <translation>The audio object is no longer available</translation>
     </message>
     <message>
-        <location filename="../Services/Volume.qml" line="228"/>
+        <location filename="../Services/Volume.qml" line="219"/>
         <source>Invalid volume value</source>
         <translation>Invalid volume value</translation>
     </message>
