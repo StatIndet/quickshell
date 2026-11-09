@@ -591,6 +591,7 @@ Variants {
                 active: styleSurface.fullDisplay
                 sourceComponent: FullIslandFrame {
                     attached: !styleSurface.detached
+                    compactLength: clockContent.restingLength
                     screen: keystoneWindow.screen
                     edge: keystoneWindow.edge
                     expanded: !root.isCollapsedMode
@@ -1184,6 +1185,7 @@ Variants {
 
                 HorizontalKeystoneLayout {
                     id: horizontalLayout
+                    clockLength: clockContent.restingLength
 
                     recordingActive: root.recordingPresentationActive
                     audioActive: root.audioGeometryActive
@@ -1210,6 +1212,7 @@ Variants {
 
                 VerticalKeystoneLayout {
                     id: verticalLayout
+                    clockLength: clockContent.restingLength
 
                     recordingActive: root.recordingPresentationActive
                     audioActive: root.audioGeometryActive

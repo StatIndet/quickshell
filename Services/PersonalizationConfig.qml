@@ -345,7 +345,7 @@ Singleton {
     property int keystoneEdgeSpacing: 8
     property int keystoneExclusiveZoneOffset: 0
     property int keystoneThickness: 42
-    property int keystoneCompactLength: 220
+    property int keystoneClockPadding: 20
     property int keystoneInsetPadding: 16
     property int keystoneItemSpacing: 8
     property int keystonePopupGap: 24
@@ -353,13 +353,13 @@ Singleton {
                                                         "edgeSpacing": [8, 0, 48],
                                                         "exclusiveZoneOffset": [0, -50, 50],
                                                         "thickness": [42, 36, 72],
-                                                        "compactLength": [220, 180, 400],
+                                                        "clockPadding": [20, 8, 48],
                                                         "insetPadding": [16, 0, 48],
                                                         "itemSpacing": [8, 0, 24],
                                                         "popupGap": [24, 8, 64]
                                                     })
     property bool keystoneOverlay: false
-    property string keystoneStyle: "bangs"
+    property string keystoneStyle: "pill"
     property bool keystoneFullDisplay: false
     readonly property var keystoneKeyholeCardIds: ["weather", "pomodoro"]
     readonly property var keystoneKeyholeCardOptions: [
@@ -1498,7 +1498,7 @@ Singleton {
     }
 
     function setKeystoneStyle(value) {
-        setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "bangs"));
+        setValue("keystoneStyle", normalizedOption(root.keystoneStyles, value, "pill"));
     }
 
     function setFontFamily(role, family) {
@@ -2098,7 +2098,7 @@ Singleton {
         // Migrate the former standalone long style without losing its layout.
         root.keystoneStyle = normalizedOption(root.keystoneStyles, keystone.style === "long" ? "pill" :
                                                                                                keystone.style,
-                                              "bangs");
+                                              "pill");
         root.keystoneFullDisplay = typeof keystone.fullDisplay === "boolean" ? keystone.fullDisplay :
                                                                                keystone.style === "long";
         root.keystonePosition = normalizedEdgePosition(keystone.position);

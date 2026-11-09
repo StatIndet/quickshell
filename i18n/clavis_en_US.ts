@@ -6080,6 +6080,11 @@ Temperature: %4</translation>
         <translation>Recording</translation>
     </message>
     <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
+        <source>Clock padding</source>
+        <translation>Clock padding</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="345"/>
         <source>Status items</source>
         <translation>Status items</translation>
@@ -6257,11 +6262,6 @@ Temperature: %4</translation>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="203"/>
         <source>Size</source>
         <translation>Size</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
-        <source>Compact length</source>
-        <translation>Compact length</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="222"/>

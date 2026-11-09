@@ -6076,6 +6076,11 @@ Temperature: %4</source>
         <translation>录制</translation>
     </message>
     <message>
+        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
+        <source>Clock padding</source>
+        <translation>时钟两端留白</translation>
+    </message>
+    <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="345"/>
         <source>Status items</source>
         <translation>状态项</translation>
@@ -6253,11 +6258,6 @@ Temperature: %4</source>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="203"/>
         <source>Size</source>
         <translation>尺寸</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/KeystonePage.qml" line="212"/>
-        <source>Compact length</source>
-        <translation>收起长度</translation>
     </message>
     <message>
         <location filename="../Modules/ControlCenter/KeystonePage.qml" line="222"/>

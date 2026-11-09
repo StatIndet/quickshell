@@ -209,12 +209,12 @@ Item {
                 }
 
                 GeneralSliderSetting {
-                    title: qsTr("Compact length")
-                    value: PersonalizationConfig.keystoneCompactLength
-                    from: PersonalizationConfig.keystoneDimensionLimits.compactLength[1]
-                    to: PersonalizationConfig.keystoneDimensionLimits.compactLength[2]
+                    title: qsTr("Clock padding")
+                    value: PersonalizationConfig.keystoneClockPadding
+                    from: PersonalizationConfig.keystoneDimensionLimits.clockPadding[1]
+                    to: PersonalizationConfig.keystoneDimensionLimits.clockPadding[2]
                     suffix: qsTr(" px")
-                    onMoved: value => PersonalizationConfig.setPanelDimension("keystone", "compactLength",
+                    onMoved: value => PersonalizationConfig.setPanelDimension("keystone", "clockPadding",
                                                                               value)
                 }
 

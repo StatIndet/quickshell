@@ -16,6 +16,7 @@ Item {
     required property real targetHeight
     required property Item childItem
     required property Item cutoutItem
+    required property real compactLength
     property bool attached: false
     property bool cutoutVisible: false
     property color surfaceColor: Appearance.colors.colLayer0
@@ -31,8 +32,8 @@ Item {
     readonly property real gap: PersonalizationConfig.keystonePopupGap
     // Match the collapsed Pill surface. Only the child deforms; the status
     // bar and its clock remain fixed throughout the split and fusion.
-    readonly property real pillWidth: horizontal ? PersonalizationConfig.keystoneCompactLength : thickness
-    readonly property real pillHeight: horizontal ? thickness : PersonalizationConfig.keystoneCompactLength
+    readonly property real pillWidth: horizontal ? root.compactLength : thickness
+    readonly property real pillHeight: horizontal ? thickness : root.compactLength
     property real progress: 0
     property bool componentReady: false
     // Capture the visible pose when changing direction. Closing uses a single

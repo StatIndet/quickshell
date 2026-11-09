@@ -6,6 +6,13 @@ import "../../../Common/functions/DateFormat.js" as DateFormat
 Item {
     id: root
 
+    readonly property real contentLength: vertical ? verticalClockLayout.implicitHeight :
+                                                     horizontalClockLayout.implicitWidth
+
+    // Keep a pill-sized resting surface even with a short 24-hour clock.
+    readonly property real restingLength: Math.max(180, contentLength + 2
+                                                   * PersonalizationConfig.keystoneClockPadding)
+
     property var player
     property string edge: "top"
     readonly property bool vertical: edge === "left" || edge === "right"
@@ -123,6 +130,7 @@ Item {
     }
 
     Row {
+        id: horizontalClockLayout
         anchors.centerIn: parent
         spacing: root.hideDate ? 0 : 10
         visible: !root.vertical
@@ -348,7 +356,7 @@ Item {
         readonly property real digitRotation: root.horizontalDigitValue(digitId, "rotation")
         readonly property real lineHeight: Math.max(18, root.horizontalFontSize + 2)
 
-        width: digitText.implicitWidth
+        width: digitMetrics.advanceWidth
         height: lineHeight
         clip: true
         anchors.verticalCenter: parent.verticalCenter
@@ -364,8 +372,16 @@ Item {
             }
         ]
 
+        TextMetrics {
+            id: digitMetrics
+            font: digitText.font
+            text: String(digitContainer.targetDigit)
+        }
+
         Text {
             id: digitText
+            width: digitContainer.width
+            horizontalAlignment: Text.AlignHCenter
 
             // 一次性渲染 0-9，通过改变 y 坐标来实现滚动
             text: "0\n1\n2\n3\n4\n5\n6\n7\n8\n9"

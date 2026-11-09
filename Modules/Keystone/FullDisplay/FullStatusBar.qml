@@ -19,13 +19,13 @@ Item {
     readonly property bool clockHovered: clockHover.hovered
     readonly property bool hovered: mainHover.hovered
     readonly property alias clockItem: clock
+    readonly property real clockLength: clock.restingLength
     // Reserve equal space on both sides so changing module sizes never
     // pushes the clock away from the main island's geometric centre.
-    readonly property real contentLength: PersonalizationConfig.keystoneCompactLength + 2 * (Math.max(
-                                                                                                 leadingLane.contentExtent,
-                                                                                                 trailingLane.contentExtent)
-                                                                                             + PersonalizationConfig.keystoneInsetPadding
-                                                                                             + 12)
+    readonly property real contentLength: root.clockLength + 2 * (Math.max(leadingLane.contentExtent,
+                                                                           trailingLane.contentExtent)
+                                                                  + PersonalizationConfig.keystoneInsetPadding
+                                                                  + 12)
 
     signal clockClicked(int button)
     signal mediaRequested
@@ -37,10 +37,8 @@ Item {
     ClockContent {
         id: clock
         anchors.centerIn: parent
-        width: root.vertical ? PersonalizationConfig.keystoneThickness :
-                               PersonalizationConfig.keystoneCompactLength
-        height: root.vertical ? PersonalizationConfig.keystoneCompactLength :
-                                PersonalizationConfig.keystoneThickness
+        width: root.vertical ? PersonalizationConfig.keystoneThickness : root.clockLength
+        height: root.vertical ? root.clockLength : PersonalizationConfig.keystoneThickness
         edge: root.edge
         player: MediaManager.active
 

@@ -3,6 +3,7 @@ import qs.Common
 import qs.Services
 
 QtObject {
+    required property real clockLength
     required property bool recordingActive
     required property bool audioActive
     required property bool toolsActive
@@ -28,7 +29,7 @@ QtObject {
     property real expandedHeight: 210
     readonly property real volumeWidth: 320
     readonly property real volumeHeight: 64
-    readonly property real collapsedWidth: PersonalizationConfig.keystoneCompactLength
+    readonly property real collapsedWidth: clockLength
     readonly property real collapsedHeight: PersonalizationConfig.keystoneThickness
     readonly property real attachedRecordingWidth: collapsedWidth
     readonly property real attachedRecordingHeight: collapsedHeight
