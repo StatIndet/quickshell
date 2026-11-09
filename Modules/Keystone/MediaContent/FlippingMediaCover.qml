@@ -109,9 +109,10 @@ Item {
         property: "angle"
         from: 0
         to: root.flipDirection * 180
-        duration: 620
+        duration: 720
         easing.type: Easing.BezierSpline
-        easing.bezierCurve: [0.22, 0.65, 0.3, 1.12, 1, 1]
+        // About 29 degrees of overshoot; leave time for the return to be visible.
+        easing.bezierCurve: [0.22, 0.75, 0.4, 1.5, 1, 1]
         onFinished: {
             root.frontArt = root.backArt;
             root.angle = 0;
