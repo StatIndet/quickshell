@@ -5,6 +5,8 @@ import qs.Common
 RowLayout {
     id: root
 
+    readonly property real playPauseCenterX: playButton.x + playButton.width / 2
+
     property bool isPlaying: false
     property bool shuffleActive: false
     property int loopMode: 0                  // 0 none, 1 playlist, 2 track
@@ -47,24 +49,29 @@ RowLayout {
     property string playIconName: "play_arrow"
     property string pauseIconName: "pause"
 
-    signal shuffleClicked()
-    signal previousClicked()
-    signal playPauseClicked()
-    signal nextClicked()
-    signal loopClicked()
+    signal shuffleClicked
+    signal previousClicked
+    signal playPauseClicked
+    signal nextClicked
+    signal loopClicked
 
     spacing: 40
 
     // --- 内部控制按钮组件 ---
-    component CtrlBtn : Text {
+    component CtrlBtn: Text {
         property bool active: false
         font.family: root.iconFontFamily
         font.pixelSize: root.iconSize
         color: active ? root.activeColor : root.inactiveColor
         opacity: !enabled ? root.disabledOpacity : (active ? 1.0 : root.inactiveOpacity)
-        scale: enabled ? (ma.pressed ? root.controlPressedScale : (ma.containsMouse ? root.controlHoverScale : 1.0)) : 1.0
+        scale: enabled ? (ma.pressed ? root.controlPressedScale : (ma.containsMouse ? root.controlHoverScale :
+                                                                                      1.0)) : 1.0
 
-        Behavior on scale { NumberAnimation { duration: root.controlScaleDuration } }
+        Behavior on scale {
+            NumberAnimation {
+                duration: root.controlScaleDuration
+            }
+        }
 
         MouseArea {
             id: ma
@@ -75,7 +82,7 @@ RowLayout {
             enabled: parent.enabled
             onClicked: parent.triggered()
         }
-        signal triggered()
+        signal triggered
     }
 
     // Shuffle
@@ -96,6 +103,7 @@ RowLayout {
 
     // Play/Pause
     PlayPauseButton {
+        id: playButton
         enabled: root.playPauseEnabled
         isPlaying: root.isPlaying
         playingBg: root.playingBg

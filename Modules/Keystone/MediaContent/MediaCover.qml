@@ -29,43 +29,17 @@ Item {
     Component {
         id: roundedCover
         Item {
-            id: scaleWrapper
+            id: roundedWrapper
             anchors.centerIn: parent
             width: root.width
             height: width
-            scale: root.playing ? 1 : 0.8
-
-            Behavior on scale {
-                NumberAnimation {
-                    duration: 400
-                    easing.type: Easing.OutQuint
-                }
-            }
-
-            DropShadow {
-                anchors.fill: coverContainer
-                source: coverContainer
-                color: Appearance.applyAlpha(Appearance.colors.colScrim, 0.85)
-                radius: 24
-                samples: 49
-                verticalOffset: 8
-                opacity: root.playing ? 1 : 0
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 400
-                        easing.type: Easing.OutQuint
-                    }
-                }
-            }
-
             Item {
                 id: coverContainer
                 anchors.fill: parent
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: 16
+                    radius: 12
                     color: Appearance.colors.colLayer3
                     visible: rawImg.status !== Image.Ready
 
@@ -91,7 +65,7 @@ Item {
                 Rectangle {
                     id: maskRect
                     anchors.fill: parent
-                    radius: 16
+                    radius: 12
                     visible: false
                 }
 

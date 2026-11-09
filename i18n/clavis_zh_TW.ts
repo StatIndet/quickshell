@@ -6722,14 +6722,24 @@ Temperature: %4</source>
 <context>
     <name>MediaContent</name>
     <message>
-        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="27"/>
+        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="19"/>
         <source>No media</source>
         <translation>沒有媒體</translation>
     </message>
     <message>
-        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="30"/>
+        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="22"/>
         <source>Unknown artist</source>
         <translation>未知藝術家</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="201"/>
+        <source>System default playback device: %1</source>
+        <translation>系統預設播放裝置：%1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Keystone/MediaContent/MediaContent.qml" line="204"/>
+        <source>No default playback device</source>
+        <translation>無預設播放裝置</translation>
     </message>
 </context>
 <context>

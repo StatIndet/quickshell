@@ -20,8 +20,8 @@ Item {
     readonly property bool spectrumActive: active && playing
     readonly property string spectrumToken: "keystone-caelestia-cover-" + root
     readonly property int barCount: 36
-    readonly property real coverSize: Math.min(width, height) * 0.8
-    readonly property real maxMagnitude: 20
+    readonly property real coverSize: Math.min(width, height) * 0.7
+    readonly property real maxMagnitude: Math.min(20, Math.min(width, height) * 0.1)
     readonly property var values: {
         const source = root.spectrumActive && AudioSpectrum.available ? AudioSpectrum.values : [];
         const result = [];
@@ -68,13 +68,16 @@ Item {
             readonly property real angle: modelData * 2 * Math.PI / root.barCount
             readonly property real edge: {
                 cookie.rotation;
-                return cookie.distanceAtAngle(modelData * 360 / root.barCount + 90) + 6;
+                return cookie.distanceAtAngle(modelData * 360 / root.barCount + 90) + Math.min(6, Math.min(
+                                                                                                   root.width,
+                                                                                                   root.height)
+                                                                                               * 0.025);
             }
             readonly property real magnitude: 2 + root.values[modelData] * (root.maxMagnitude - 2)
             readonly property real cos: Math.cos(angle)
             readonly property real sin: Math.sin(angle)
             capStyle: ShapePath.RoundCap
-            strokeWidth: 4
+            strokeWidth: Math.min(4, Math.min(root.width, root.height) * 0.0375)
             strokeColor: root.accentColor
             fillColor: "transparent"
             startX: root.width / 2 + edge * cos

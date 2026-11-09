@@ -466,16 +466,18 @@ Variants {
                         width: root.width
                         height: root.height
                         surfaceColor: backgroundVisual.surfaceColor
-                        topLeftRadius: styleSurface.detached || (!keystoneWindow.topEdge &&
-                                                                 !keystoneWindow.leftEdge) ? root.radius : 0
-                        topRightRadius: styleSurface.detached || (!keystoneWindow.topEdge &&
-                                                                  !keystoneWindow.rightEdge) ? root.radius : 0
-                        bottomRightRadius: styleSurface.detached || (!keystoneWindow.bottomEdge &&
-                                                                     !keystoneWindow.rightEdge) ? root.radius :
-                                                                                                  0
-                        bottomLeftRadius: styleSurface.detached || (!keystoneWindow.bottomEdge &&
-                                                                    !keystoneWindow.leftEdge) ? root.radius :
-                                                                                                0
+                        topLeftRadius: styleSurface.detached || root.isMediaMode || (!keystoneWindow.topEdge
+                                                                                     && !keystoneWindow.leftEdge)
+                                       ? root.radius : 0
+                        topRightRadius: styleSurface.detached || root.isMediaMode || (!keystoneWindow.topEdge
+                                                                                      && !keystoneWindow.rightEdge)
+                                        ? root.radius : 0
+                        bottomRightRadius: styleSurface.detached || root.isMediaMode || (
+                                               !keystoneWindow.bottomEdge && !keystoneWindow.rightEdge)
+                                           ? root.radius : 0
+                        bottomLeftRadius: styleSurface.detached || root.isMediaMode || (
+                                              !keystoneWindow.bottomEdge && !keystoneWindow.leftEdge)
+                                          ? root.radius : 0
                         cutoutVisible: root.showDashboardKeyhole
                         cutoutX: dashboardKeyholeCutout.x
                         cutoutY: dashboardKeyholeCutout.y
@@ -592,6 +594,7 @@ Variants {
                 sourceComponent: FullIslandFrame {
                     attached: !styleSurface.detached
                     compactLength: clockContent.restingLength
+                    expandedRadius: mediaWidget.visible ? 44 : 24
                     screen: keystoneWindow.screen
                     edge: keystoneWindow.edge
                     expanded: !root.isCollapsedMode
@@ -769,6 +772,8 @@ Variants {
                 property bool isNotifMode: !contentPresentationActive && NotificationManager.hasNotifs &&
                                            !expanded && !showVolume && !isHubMode && !isToolsMode &&
                                            !isLyricsMode
+                readonly property bool isMediaMode: expanded && !contentPresentationActive && !isLyricsMode
+                                                    && !isHubMode && !isToolsMode
                 property bool isCollapsedMode: !contentPresentationActive && !expanded && !isNotifMode &&
                                                !isVolumeMode && !isLyricsMode && !isHubMode && !isToolsMode
                 property bool isCollapsedHovered: PersonalizationConfig.effectiveKeystoneHoverAction
@@ -825,8 +830,7 @@ Variants {
                                                                                                       112) : activeLayout.targetWidth
                 property real targetH: isVolumeMode && keyboardOsd ? (keystoneWindow.horizontalEdge ? 64 :
                                                                                                       144) : activeLayout.targetHeight
-                property int targetR: styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) :
-                                                              12
+                property int targetR: isMediaMode ? 44 : styleSurface.detached ? Math.min(Math.min(targetW, targetH) / 2, styleSurface.maxPillRadius) : 12
                 property int wDuration: KeystoneMotion.expandingDuration
                 property int hDuration: KeystoneMotion.expandingDuration
                 property int rDuration: KeystoneMotion.radiusDuration
@@ -1651,8 +1655,7 @@ Variants {
                         anchors.topMargin: 20
                         width: root.activeLayout.expandedWidth - 40
                         height: root.activeLayout.expandedHeight - 40
-                        opacity: (!root.contentPresentationActive && root.expanded && !root.isLyricsMode &&
-                                  !root.isHubMode) ? 1 : 0
+                        opacity: root.isMediaMode ? 1 : 0
                         visible: opacity > 0.01
 
                         Behavior on opacity {

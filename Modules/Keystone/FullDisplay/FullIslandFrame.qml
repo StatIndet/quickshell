@@ -17,6 +17,7 @@ Item {
     required property Item childItem
     required property Item cutoutItem
     required property real compactLength
+    property real expandedRadius: 24
     property bool attached: false
     property bool cutoutVisible: false
     property color surfaceColor: Appearance.colors.colLayer0
@@ -73,10 +74,9 @@ Item {
     readonly property real childHeight: pillHeight + (heldHeight - pillHeight) * (horizontal ? inwardGrowth :
                                                                                                alongGrowth)
     readonly property real childOffset: (thickness + gap) * travel
-    readonly property real childRadius: Math.min(childWidth / 2, childHeight / 2, thickness / 2 + (24
-                                                                                                   - thickness
-                                                                                                   / 2) * Math.min(
-                                                     1, inwardGrowth))
+    readonly property real childRadius: Math.min(childWidth / 2, childHeight / 2, thickness / 2 + (
+                                                     expandedRadius - thickness / 2) * Math.min(1,
+                                                                                                inwardGrowth))
     readonly property real contentOpacity: closing ? legPose.opacity * closingRemaining : stage(0.12, 0.50) + (
                                                          legPose.opacity - smoothStep((legStart - 0.12)
                                                                                       / 0.38))

@@ -25,8 +25,8 @@ QtObject {
     required property real notificationsHeight
     readonly property real audioWidth: KeystoneMotion.audioRecordingWidth
     readonly property real audioHeight: KeystoneMotion.audioRecordingHeight
-    property real expandedWidth: 540
-    property real expandedHeight: 210
+    property real expandedWidth: 440
+    property real expandedHeight: 228
     readonly property real volumeWidth: 320
     readonly property real volumeHeight: 64
     readonly property real collapsedWidth: clockLength
