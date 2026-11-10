@@ -9520,7 +9520,6 @@ Click to open network settings</translation>
     </message>
     <message>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="99"/>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="460"/>
         <source>%1 K</source>
         <translation>%1 K</translation>
     </message>
@@ -9614,16 +9613,6 @@ Right-click to change shape; scroll to reorder</translation>
         <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="294"/>
         <source>Power menu</source>
         <translation>Power menu</translation>
-    </message>
-    <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="437"/>
-        <source>Device settings</source>
-        <translation>Device settings</translation>
-    </message>
-    <message>
-        <location filename="../Modules/QuickSettings/QuickSettingsSurface.qml" line="446"/>
-        <source>Idle management</source>
-        <translation>Idle management</translation>
     </message>
 </context>
 <context>

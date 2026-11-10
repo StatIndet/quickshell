@@ -428,52 +428,6 @@ WidgetPanel {
                     }
                 }
             }
-
-            SettingsSection {
-                pullExpansion: sidebarScroll.detailExpansion
-                Layout.topMargin: sidebarScroll.gapFor(2, 1)
-
-                Layout.fillWidth: true
-                title: qsTr("Device settings")
-
-                Repeater {
-                    model: ["network", "bluetooth", "audio", "mic", "caffeine", "night"]
-
-                    SettingsRow {
-                        required property string modelData
-                        Layout.fillWidth: true
-                        Layout.minimumHeight: 64
-                        title: modelData === "caffeine" ? qsTr("Idle management") : root.titleForType(
-                                                              modelData)
-                        iconName: root.iconForType(modelData)
-                        supportingText: {
-                            switch (modelData) {
-                            case "network":
-                                return NetworkService.connected ? NetworkService.activeConnection : "";
-                            case "bluetooth":
-                                return BluetoothService.connectedName;
-                            case "audio":
-                                return Volume.sinkName;
-                            case "mic":
-                                return Volume.sourceName;
-                            case "night":
-                                return DisplayColor.preferences.nightEnabled ? qsTr("%1 K").arg(
-                                                                                   DisplayColor.schedule.temperature) :
-                                                                               "";
-                            default:
-                                return "";
-                            }
-                        }
-                        interactive: true
-                        onClicked: root.altType(modelData)
-                        trailing: MaterialSymbol {
-                            text: "chevron_right"
-                            iconSize: Metrics.iconM
-                            color: Appearance.colors.colOnSurfaceVariant
-                        }
-                    }
-                }
-            }
         }
     }
 }
