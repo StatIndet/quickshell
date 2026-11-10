@@ -8,9 +8,6 @@ import qs.Widgets.common
 Item {
     id: root
 
-    signal imageSelectionRequested(bool forAvatar)
-    signal bannerColorRequested
-
     property string screenName: ""
     property bool foreground: false
     property bool presentationActive: false
@@ -231,9 +228,6 @@ Item {
                 id: infoComponent
 
                 InfoView {
-                    onBannerColorRequested: root.bannerColorRequested()
-                    onImageSelectionRequested: forAvatar => root.imageSelectionRequested(forAvatar)
-                    screenName: root.screenName
                     foreground: root.foreground && root.activeView === "info"
                 }
             }
