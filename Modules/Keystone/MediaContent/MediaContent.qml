@@ -185,6 +185,7 @@ Item {
             Layout.preferredHeight: 54
 
             MediaSourceIcon {
+                fallbackIcon: "music_note_2"
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 width: 24

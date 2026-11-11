@@ -5,6 +5,7 @@ import qs.Components
 
 Item {
     id: root
+    property string fallbackIcon: "music_note"
     required property var player
     readonly property var desktopEntry: {
         if (!player)
@@ -27,7 +28,7 @@ Item {
     MaterialSymbol {
         anchors.centerIn: parent
         visible: appIcon.status !== Image.Ready
-        text: "music_note"
+        text: root.fallbackIcon
         iconSize: Math.min(root.width, root.height)
         color: Appearance.colors.colPrimary
     }
