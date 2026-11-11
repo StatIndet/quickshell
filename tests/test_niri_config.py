@@ -220,6 +220,25 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('delete', id=saved['id'])
         self.assertFalse(any(row['key'] == 'Mod+F12' for row in self.run_config()['bindings']))
 
+    def test_media_actions_are_available_before_binding(self):
+        catalog = self.run_config('catalog')['catalog']
+        actions = {entry['id']: entry for entry in catalog}
+        expected = {
+            'clavis:volume:increase': 'volume increase',
+            'clavis:volume:decrease': 'volume decrease',
+            'clavis:volume:mute': 'volume mute',
+            'clavis:brightness:increase': 'brightness increase',
+            'clavis:brightness:decrease': 'brightness decrease',
+        }
+        for identifier, label in expected.items():
+            self.assertIn(identifier, actions)
+            self.assertTrue(actions[identifier]['supported'], label)
+            self.assertFalse(actions[identifier]['parameters'], label)
+
+        state = self.run_config('setup')
+        configured = {row['action'].rstrip(';') for row in state['bindings']}
+        self.assertTrue(all(actions[identifier]['expression'] in configured for identifier in expected))
+
     def test_palette_shortcuts_remain_available_without_default_bindings(self):
         with mock.patch.object(config.subprocess, 'run', return_value=mock.Mock(returncode=0, stderr='')):
             catalog = self.run_config('catalog')['catalog']
@@ -258,17 +277,30 @@ class ConfigurationContracts(unittest.TestCase):
         self.run_config('delete', id=forward['id'])
         self.assertEqual({row['key'] for row in self.run_config()['bindings']}, set(keys[:-1]))
 
-    def test_first_setup_defaults_are_unique_direct_ipc_and_not_restored(self):
+    def test_first_setup_defaults_are_unique_and_not_restored(self):
         state = self.run_config('setup')
         rows = state['bindings']
-        self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS))
+        self.assertEqual(len(rows), len(config.DEFAULT_BINDINGS) + len(config.DEFAULT_SYSTEM_BINDINGS))
         self.assertEqual(len({row['identity'] for row in rows}), len(rows))
         self.assertTrue(all(not row.get('collision') for row in rows))
         for row in rows:
             action = config.parse(row['action']).nodes[0]
             self.assertEqual(action.name, 'spawn')
-            self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
-            self.assertIs(row['props']['repeat'], False)
+            if row['key'] in {key for key, _ in config.DEFAULT_SYSTEM_BINDINGS}:
+                self.assertIn(action.args, [command for _, command in config.DEFAULT_SYSTEM_BINDINGS])
+                self.assertIs(row['props']['allow-when-locked'], True)
+            else:
+                self.assertEqual(action.args[:5], ['qs', '-c', 'clavis', 'ipc', 'call'])
+                self.assertIs(row['props']['repeat'], False)
+        system_bindings = {row['key']: config.parse(row['action']).nodes[0].args
+                           for row in rows if row['key'].startswith('XF86')}
+        self.assertEqual(system_bindings, {
+            'XF86MonBrightnessDown': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'decrease'],
+            'XF86MonBrightnessUp': ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'increase'],
+            'XF86AudioMute': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'mute'],
+            'XF86AudioLowerVolume': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'decrease'],
+            'XF86AudioRaiseVolume': ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'increase'],
+        })
         self.run_config('delete', id=rows[0]['id'])
         remaining = self.fragment().read_bytes()
         self.run_config('setup')

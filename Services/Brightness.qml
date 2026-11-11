@@ -104,6 +104,11 @@ Singleton {
         root.setBrightnessForScreen(null, val, allowZero);
     }
 
+    function adjustBrightness(delta) {
+        const current = root.brightnessValue;
+        root.setBrightness(current + Number(delta));
+    }
+
     function setBrightnessForScreen(screen, val, allowZero) {
         const monitor = root.getMonitorForScreen(screen);
         if (monitor) {
@@ -116,6 +121,20 @@ Singleton {
         fallbackBrightnessValue = safeVal;
         fallbackSetProc.exec(root.backlightCommand(pct));
         root.brightnessChanged();
+    }
+
+    IpcHandler {
+        target: "brightness"
+
+        function decrease(): string {
+            root.adjustBrightness(-0.1);
+            return "BRIGHTNESS_DECREASED";
+        }
+
+        function increase(): string {
+            root.adjustBrightness(0.1);
+            return "BRIGHTNESS_INCREASED";
+        }
     }
 
     function rescanDdcMonitors() {
