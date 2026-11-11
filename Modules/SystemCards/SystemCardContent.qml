@@ -32,20 +32,8 @@ Item {
                                                                                                   root.diskForDevice(
                                                                                                       UiPreferences.storageCapacityDiskDevice,
                                                                                                       false)
-    readonly property bool usesRectangularShadow: ["cpu", "gpu", "network", "storage", "calendar"].indexOf(
-        root.tileId) >= 0
-    readonly property int shadowShape: {
-        switch (root.tileId) {
-        case "memoryUsed":
-            return MaterialShape.Slanted;
-        case "wifi":
-            return MaterialShape.Pentagon;
-        case "storageCapacity":
-            return MaterialShape.Cookie9Sided;
-        default:
-            return -1;
-        }
-    }
+    readonly property bool usesRectangularShadow: ["cpu", "gpu", "network", "storage", "calendar",
+        "memoryUsed", "wifi", "storageCapacity"].indexOf(root.tileId) >= 0
     readonly property color shadowSurfaceColor: {
         switch (root.tileId) {
         case "battery":
@@ -172,27 +160,6 @@ Item {
         }
     }
 
-    MaterialShape {
-        id: expressiveShadowShape
-
-        anchors.centerIn: parent
-        width: Math.max(72, Math.min(parent.width, parent.height) - Appearance.spacing.small)
-        height: width
-        visible: root.shadowShape >= 0
-        shape: root.shadowShape
-        color: root.shadowSurfaceColor
-        layer.enabled: visible
-
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: Appearance.applyAlpha(Appearance.colors.colShadow, 0.4)
-            shadowBlur: 0.8
-            shadowVerticalOffset: 4
-            shadowHorizontalOffset: 0
-            autoPaddingEnabled: true
-        }
-    }
-
     Loader {
         z: 1
         anchors.fill: parent
@@ -285,7 +252,6 @@ Item {
                                                                      0) + "，" + Format.bytes(
                                    SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(
                                    SystemMonitorService.memory.totalBytes)
-            shapeId: MaterialShape.Slanted
             shapeColor: root.surfaceColor(Appearance.m3colors.m3primaryContainer,
                                           Appearance.colors.colPrimaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colTertiary, 0.66)
@@ -305,7 +271,6 @@ Item {
             accessibilityName: NetworkService.wifiConnected ? qsTr("Wi-Fi signal strength ") + Format.percent(
                                                                   NetworkService.signalStrength, 0) : qsTr(
                                                                   "Wi-Fi is not connected")
-            shapeId: MaterialShape.Pentagon
             shapeColor: root.surfaceColor(Appearance.m3colors.m3tertiaryContainer,
                                           Appearance.colors.colTertiaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colTertiary, 0.64)
@@ -373,7 +338,6 @@ Item {
                                                                                                       root.capacityDisk.totalBytes)).arg(
                                                    Format.percent(root.capacityDisk.usagePercent, 0)) : qsTr(
                                                    "No disk detected")
-            shapeId: MaterialShape.Cookie9Sided
             shapeColor: root.surfaceColor(Appearance.m3colors.m3secondaryContainer,
                                           Appearance.colors.colSecondaryContainer)
             liquidColor: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.66)
