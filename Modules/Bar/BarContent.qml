@@ -10,26 +10,15 @@ Item {
     required property var axis
     property bool vertical: false
     property string popupEdge: axis.edge
-    property int itemRevision: 0
     // These implicit extents are independent of the shortened visual band.
     readonly property real minimumLength: (vertical ? leadingSection.implicitHeight
                                                       + trailingSection.implicitHeight :
                                                       leadingSection.implicitWidth
                                                       + trailingSection.implicitWidth) + 2
-                                          * PersonalizationConfig.barInsetPadding + 8
+                                          * PersonalizationConfig.barInsetPadding
+                                          + leadingSection.columnSpacing
     readonly property Item leadingInputRegionItem: leadingSection
     readonly property Item trailingInputRegionItem: trailingSection
-    readonly property var backgroundItems: {
-        const revision = root.itemRevision;
-        const items = [];
-        for (let index = 0; index < componentInstantiator.count; index += 1) {
-            const loader = componentInstantiator.objectAt(index);
-            if (loader && loader.item)
-                items.push(loader.item);
-        }
-        return items;
-    }
-
     BarSection {
         id: leadingSection
 
@@ -68,8 +57,6 @@ Item {
         id: componentInstantiator
 
         model: PersonalizationConfig.barComponentIds
-        onObjectAdded: root.itemRevision += 1
-        onObjectRemoved: root.itemRevision += 1
 
         delegate: BarComponentLoader {
             id: componentLoader
@@ -91,7 +78,6 @@ Item {
             Layout.row: root.vertical ? Math.max(0, zoneIndex) : 0
             Layout.column: root.vertical ? 0 : Math.max(0, zoneIndex)
             Layout.alignment: Qt.AlignCenter
-            onItemChanged: root.itemRevision += 1
         }
     }
 }

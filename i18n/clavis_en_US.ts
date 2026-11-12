@@ -4850,7 +4850,6 @@ Temperature: %4</translation>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="117"/>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="126"/>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="136"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="145"/>
         <source> px</source>
         <translation> px</translation>
     </message>
@@ -4885,49 +4884,44 @@ Temperature: %4</translation>
         <translation>Limited by the space required by visible modules.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="141"/>
-        <source>Module corner radius</source>
-        <translation>Module corner radius</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="165"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="157"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="160"/>
         <source>Show device names</source>
         <translation>Show device names</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="174"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="166"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="169"/>
         <source>Show numeric values</source>
         <translation>Show numeric values</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="173"/>
         <source>Drag components to reorder them or move them to the other side.</source>
         <translation>Drag components to reorder them or move them to the other side.</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="178"/>
         <source>Left</source>
         <translation>Left</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="178"/>
         <source>Top</source>
         <translation>Top</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="209"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="201"/>
         <source>Right</source>
         <translation>Right</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="209"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="201"/>
         <source>Bottom</source>
         <translation>Bottom</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="237"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="229"/>
         <source>Quick settings widgets</source>
         <translation>Quick settings widgets</translation>
     </message>

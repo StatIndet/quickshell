@@ -112,7 +112,7 @@ Item {
                         Workspaces {
                             screenName: root.screen ? root.screen.name : ""
                             vertical: root.vertical
-                            backgroundVisible: false
+                            useBarDimensions: false
                         }
                     }
 
@@ -123,7 +123,7 @@ Item {
                             edge: root.edge
                             vertical: root.vertical
                             barVisualItem: root
-                            backgroundVisible: false
+                            useBarDimensions: false
                         }
                     }
 
@@ -133,7 +133,7 @@ Item {
                             vertical: root.vertical
                             edge: root.edge
                             maximumTitleWidth: root.vertical ? 120 : 180
-                            backgroundVisible: false
+                            useBarDimensions: false
                         }
                     }
 
@@ -144,7 +144,7 @@ Item {
                             vertical: root.vertical
                             ownerId: "keystone-long:" + String(root.screen ? root.screen.name : "default") + (
                                          lane.trailing ? ":trailing" : ":leading")
-                            backgroundVisible: false
+                            useBarDimensions: false
                         }
                     }
 

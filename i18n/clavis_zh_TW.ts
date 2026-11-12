@@ -4848,7 +4848,6 @@ Temperature: %4</source>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="117"/>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="126"/>
         <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="136"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="145"/>
         <source> px</source>
         <translation> 像素</translation>
     </message>
@@ -4883,49 +4882,44 @@ Temperature: %4</source>
         <translation>受可見模組所需空間限制。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="141"/>
-        <source>Module corner radius</source>
-        <translation>模組圓角</translation>
-    </message>
-    <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="165"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="168"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="157"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="160"/>
         <source>Show device names</source>
         <translation>顯示裝置名稱</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="174"/>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="177"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="166"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="169"/>
         <source>Show numeric values</source>
         <translation>顯示數值</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="181"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="173"/>
         <source>Drag components to reorder them or move them to the other side.</source>
         <translation>拖曳元件調整順序，拖到另一側可移動位置。</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="178"/>
         <source>Left</source>
         <translation>左側</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="186"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="178"/>
         <source>Top</source>
         <translation>上方</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="209"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="201"/>
         <source>Right</source>
         <translation>右側</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="209"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="201"/>
         <source>Bottom</source>
         <translation>下方</translation>
     </message>
     <message>
-        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="237"/>
+        <location filename="../Modules/ControlCenter/GeneralBarPage.qml" line="229"/>
         <source>Quick settings widgets</source>
         <translation>快速設定元件</translation>
     </message>

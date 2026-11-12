@@ -6,10 +6,10 @@ ActionButton {
 
     property bool vertical: false
     property bool expandedContent: true
-    property real contentPadding: Metrics.spacingM - Metrics.spacingXXS
+    property real contentPadding: Sizes.barLabelSpacing
 
     // Compact icon controls keep a 28px slot. Text and grouped content use
-    // 10px of padding along the bar's main axis.
+    // 6px of padding along the bar's main axis.
     leftPadding: !vertical && expandedContent ? root.contentPadding : 0
     rightPadding: leftPadding
     topPadding: vertical && expandedContent ? root.contentPadding : 0

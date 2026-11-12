@@ -157,11 +157,13 @@ TopBarPill {
             implicitWidth: Sizes.barControlCircleSize
             implicitHeight: Sizes.barControlCircleSize
             buttonRadius: Appearance.rounding.full
-            containerColor: root.trayOverflowOpen ? Appearance.colors.colSecondaryContainer : "transparent"
-            stateLayerColor: root.trayOverflowOpen ? Appearance.colors.colSecondaryContainerHover :
-                                                     Appearance.colors.colSecondaryContainer
-            pressedStateLayerColor: Appearance.colors.colSecondaryContainerActive
-            rippleColor: Appearance.colors.colOnSecondaryContainer
+            containerColor: "transparent"
+            stateLayerOpacity: Appearance.interaction.hoverStateLayerOpacity
+            focusStateLayerOpacity: Appearance.interaction.focusStateLayerOpacity
+            pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
+            stateLayerColor: Appearance.colors.colOnSurface
+            pressedStateLayerColor: Appearance.colors.colOnSurface
+            rippleColor: Appearance.colors.colOnSurface
             Layout.alignment: Qt.AlignVCenter
             releaseAction: () => {
                 if (root.trayOverflowOpen) {
@@ -181,7 +183,7 @@ TopBarPill {
                 text: "expand_more"
                 iconSize: Sizes.barIconSize
                 color: root.trayOverflowOpen || trayOverflowButton.pointerHovered
-                       ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer0
+                       ? Appearance.colors.colPrimary : Appearance.colors.colOnSurface
                 rotation: (root.edge === "left" ? -90 : root.edge === "right" ? 90 : 0) + (
                               root.trayOverflowOpen ? 180 : 0)
 

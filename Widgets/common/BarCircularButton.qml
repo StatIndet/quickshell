@@ -13,9 +13,9 @@ Item {
     property real baseSize: Sizes.barControlCircleSize
     property real iconSize: 20
     property real iconFill: 0
-    property color containerColor: Appearance.colors.colPrimaryContainer
-    property color rippleColor: Appearance.colors.colOnPrimaryContainer
-    property color iconColor: Appearance.colors.colOnPrimaryContainer
+    property color containerColor: "transparent"
+    property color rippleColor: Appearance.colors.colOnSurface
+    property color iconColor: Appearance.colors.colOnSurface
     property var downAction
     property var doubleClickAction
     property var altAction

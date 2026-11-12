@@ -136,15 +136,6 @@ StyledFlickable {
                 suffix: qsTr(" px")
                 onMoved: value => PersonalizationConfig.setPanelDimension("bar", "lengthPadding", value)
             }
-
-            GeneralSliderSetting {
-                title: qsTr("Module corner radius")
-                value: PersonalizationConfig.barModuleRadius
-                from: PersonalizationConfig.barDimensionLimits.moduleRadius[1]
-                to: PersonalizationConfig.barDimensionLimits.moduleRadius[2]
-                suffix: qsTr(" px")
-                onMoved: value => PersonalizationConfig.setPanelDimension("bar", "moduleRadius", value)
-            }
         }
 
         SettingsSection {

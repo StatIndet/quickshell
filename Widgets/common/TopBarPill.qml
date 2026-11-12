@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import qs.Common
 import qs.Services
 
@@ -8,45 +7,22 @@ Item {
 
     default property alias contentData: contentViewport.data
     property bool animateResize: true
-    property bool backgroundVisible: true
-    readonly property real pillThickness: backgroundVisible ? PersonalizationConfig.barThickness :
-                                                              Sizes.barPillThickness
-    readonly property real pillPadding: backgroundVisible ? PersonalizationConfig.barInnerPadding :
-                                                            Sizes.barPillHorizontalPadding
-    readonly property real radius: Math.min(width / 2, height / 2, backgroundVisible
-                                            ? PersonalizationConfig.barModuleRadius : Math.min(width, height)
-                                              / 2)
+    // Keystone reuses these groups with its own fixed status-lane dimensions.
+    property bool useBarDimensions: true
+    readonly property real pillThickness: useBarDimensions ? PersonalizationConfig.barThickness :
+                                                             Sizes.barPillThickness
+    readonly property real pillPadding: useBarDimensions ? PersonalizationConfig.barInnerPadding :
+                                                           Sizes.barPillHorizontalPadding
 
-    // Animate the size consumed by the bar layout so the surface, shadow and
-    // neighbouring pills follow the same geometry throughout a resize.
+    // Animate the space consumed by the group and its neighbours together.
     property bool resizeAnimationReady: false
     Component.onCompleted: resizeAnimationReady = true
 
-    // Keep the shadow outside the clipped content subtree.
     data: [
-        TopBarPillBackground {
-            anchors.fill: parent
-            visible: root.backgroundVisible
-            cornerRadius: root.radius
-        },
-        Rectangle {
-            id: contentMask
-            width: root.width
-            height: root.height
-            radius: root.radius
-            color: "white"
-            visible: false
-            layer.enabled: true
-        },
         Item {
             id: contentViewport
             anchors.fill: parent
             clip: true
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                maskEnabled: true
-                maskSource: contentMask
-            }
         }
     ]
 
