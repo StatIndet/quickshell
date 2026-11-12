@@ -83,8 +83,6 @@ TopBarPill {
                                                                            delegateRoot.hasWindows
                                                                            ? BarColors.inactiveWorkspace :
                                                                              BarColors.emptyWorkspace
-                    border.width: 1
-                    border.color: BarColors.workspaceOutline
 
                     Behavior on color {
                         ColorAnimation {

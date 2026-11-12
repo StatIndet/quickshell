@@ -7,7 +7,6 @@ QtObject {
     readonly property color selected: "#ffffff"
     readonly property color inactiveWorkspace: "#d0d0d0"
     readonly property color emptyWorkspace: "#b8ffffff"
-    readonly property color workspaceOutline: "#66000000"
     readonly property color track: "#66ffffff"
     readonly property color indicatorTrack: "#b0b0b0"
     readonly property color onIndicator: "#242424"
