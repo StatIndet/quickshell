@@ -13,12 +13,18 @@ Item {
     required property string supportingText
     required property real level
     property bool valueAvailable: true
+    property bool active: true
     property string accessibilityName: ""
     property color shapeColor: Appearance.colors.colPrimaryContainer
     property color liquidColor: Appearance.applyAlpha(Appearance.colors.colPrimary, 0.62)
     property color contentColor: Appearance.colors.colOnPrimaryContainer
     readonly property real targetLevel: root.valueAvailable ? Math.max(0, Math.min(1, root.level)) : 0
     property real animatedLevel: targetLevel
+    // Taper at the endpoints so empty/full values have no residual crest or gap.
+    readonly property real waveAmplitude: Math.min(10, height * 0.06) * Math.max(0, Math.min(1, animatedLevel
+                                                                                             / 0.08, (1
+                                                                                                      - animatedLevel)
+                                                                                             / 0.08))
     readonly property string metricFontFamily: Fonts.expressive
     readonly property var metricFontAxes: Fonts.familyAvailable(Fonts.bundledFamilyName) && Fonts.expressive
                                           === Fonts.bundledFamilyName ? ({
@@ -64,45 +70,32 @@ Item {
                 maskSource: vesselMask
             }
 
-            Shape {
-                id: liquidFill
-
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                }
-                height: Math.min(parent.height + 8, parent.height * root.animatedLevel + 8)
+            // Two broad wave fronts drift at different speeds, inspired by
+            // https://codepen.io/stonelee/pen/ZEzqGNZ. Only their transforms
+            // animate; the periodic paths do not need rebuilding every frame.
+            OceanWave {
+                y: shapeFrame.height * (1 - root.animatedLevel) - amplitude
+                wavelength: Math.max(1, shapeFrame.width * 1.65)
+                amplitude: root.waveAmplitude
+                fillDepth: shapeFrame.height + amplitude * 2
+                waveColor: root.liquidColor
+                opacity: 0.45
+                phaseOffset: 0.35
+                cycleDuration: 10000
+                reverse: true
+                flowing: root.active && root.visible && root.valueAvailable
                 visible: root.animatedLevel > 0
-                preferredRendererType: Shape.CurveRenderer
+            }
 
-                ShapePath {
-                    id: liquidPath
-
-                    strokeWidth: 0
-                    fillColor: root.liquidColor
-                    startX: 0
-                    startY: 4
-
-                    PathSvg {
-                        path: {
-                            const width = shapeFrame.width;
-                            const height = Math.max(8, liquidFill.height);
-                            const amplitude = Math.min(3.5, shapeFrame.height * 0.035);
-                            const waveLength = width / 4;
-                            const half = waveLength / 2;
-                            let result = "M 0," + amplitude + " ";
-                            for (let index = 0; index < 4; index += 1) {
-                                const x = index * waveLength;
-                                result += "Q " + (x + half / 2) + ",0 " + (x + half) + "," + amplitude + " ";
-                                result += "Q " + (x + half + half / 2) + "," + (amplitude * 2) + " " + (x
-                                                                                                        + waveLength)
-                                        + "," + amplitude + " ";
-                            }
-                            return result + "L " + width + "," + height + " L 0," + height + " Z";
-                        }
-                    }
-                }
+            OceanWave {
+                y: shapeFrame.height * (1 - root.animatedLevel) - amplitude
+                wavelength: Math.max(1, shapeFrame.width * 1.35)
+                amplitude: root.waveAmplitude * 0.7
+                fillDepth: shapeFrame.height + amplitude * 2
+                waveColor: root.liquidColor
+                cycleDuration: 6000
+                flowing: root.active && root.visible && root.valueAvailable
+                visible: root.animatedLevel > 0
             }
         }
 
@@ -153,6 +146,60 @@ Item {
 
             Item {
                 Layout.fillHeight: true
+            }
+        }
+    }
+
+    component OceanWave: Shape {
+        id: wave
+
+        required property real wavelength
+        required property real amplitude
+        required property real fillDepth
+        required property color waveColor
+        required property int cycleDuration
+        property bool flowing: true
+        property bool reverse: false
+        property real phaseOffset: 0
+        property real phase: 0
+
+        x: -(phase + phaseOffset) * wavelength
+        width: wavelength * 3
+        height: fillDepth
+        preferredRendererType: Shape.CurveRenderer
+
+        NumberAnimation on phase {
+            from: wave.reverse ? 1 : 0
+            to: wave.reverse ? 0 : 1
+            duration: wave.cycleDuration
+            loops: Animation.Infinite
+            running: true
+            paused: !wave.flowing || !wave.visible || wave.amplitude <= 0
+            easing.type: Easing.Linear
+        }
+
+        ShapePath {
+            strokeWidth: 0
+            fillColor: wave.waveColor
+
+            PathSvg {
+                path: {
+                    const length = wave.wavelength;
+                    const amplitude = wave.amplitude;
+                    let result = "M 0," + amplitude + " ";
+                    // Three identical periods cover the card at every phase;
+                    // wrapping by one wavelength makes each loop seamless.
+                    for (let index = 0; index < 3; index += 1) {
+                        const x = index * length;
+                        result += "Q " + (x + length * 0.25) + "," + (-amplitude) + " " + (x + length * 0.5)
+                                + "," + amplitude + " ";
+                        result += "Q " + (x + length * 0.75) + "," + (amplitude * 3) + " " + (x + length)
+                                + "," + amplitude + " ";
+                    }
+                    return result + "L " + wave.width + "," + wave.fillDepth + " L 0," + wave.fillDepth
+                            + " Z";
+
+                }
             }
         }
     }

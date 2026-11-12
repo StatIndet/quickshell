@@ -242,6 +242,7 @@ Item {
         id: memoryUsedComponent
 
         SystemLiquidMetricCard {
+            active: root.active
             iconName: "memory_alt"
             valueText: Format.percent(SystemMonitorService.memory.usagePercent, 0)
             supportingText: Format.bytes(SystemMonitorService.memory.usedBytes) + " / " + Format.bytes(
@@ -263,6 +264,7 @@ Item {
         id: wifiComponent
 
         SystemLiquidMetricCard {
+            active: root.active
             iconName: NetworkService.wifiConnected ? "wifi" : "wifi_off"
             valueText: NetworkService.wifiConnected ? Format.percent(NetworkService.signalStrength, 0) : "—"
             supportingText: qsTr("Wi-Fi signal strength")
@@ -322,6 +324,7 @@ Item {
         id: storageCapacityComponent
 
         SystemLiquidMetricCard {
+            active: root.active
             readonly property bool diskAvailable: String(root.capacityDisk.device || "") !== ""
             readonly property bool capacityAvailable: diskAvailable && Format.isNumber(
                                                           root.capacityDisk.usagePercent)
