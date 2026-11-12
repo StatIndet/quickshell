@@ -30,6 +30,7 @@ TopBarPill {
             Layout.preferredWidth: Sizes.barControlCircleSize
             Layout.preferredHeight: Sizes.barControlCircleSize
             MediaSourceIcon {
+                fallbackIcon: "music_note_2"
                 anchors.centerIn: parent
                 width: Sizes.barIconSize
                 height: Sizes.barIconSize
