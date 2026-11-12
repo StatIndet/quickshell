@@ -36,12 +36,12 @@ Item {
                     Layout.alignment: Qt.AlignCenter
 
                     value: Volume.sourceMuted ? 0 : Volume.sourceVolume
-                    progressColor: (Volume.sourceMuted || Volume.sourceVolume <= 0)
-                                   ? Appearance.colors.colError : Appearance.colors.colPrimary
-                    trackColor: Appearance.colors.colLayer2Hover
-                    handleColor: Appearance.colors.colOnSurface
-                    iconColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? Appearance.colors.colError :
-                                                                                  Appearance.colors.colOnSurface
+                    progressColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? BarColors.error :
+                                                                                      BarColors.selected
+                    trackColor: BarColors.track
+                    handleColor: BarColors.foreground
+                    iconColor: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? BarColors.error :
+                                                                                  BarColors.foreground
                     icon: (Volume.sourceMuted || Volume.sourceVolume <= 0) ? "mic_off" : "mic"
                 }
 
@@ -51,7 +51,7 @@ Item {
                     text: Math.round(Volume.sourceVolume * 100) + "%"
                     font.family: Fonts.numeric
                     font.pixelSize: 12
-                    color: Appearance.colors.colOnSurface
+                    color: BarColors.foreground
                     Layout.alignment: Qt.AlignCenter
                 }
             }

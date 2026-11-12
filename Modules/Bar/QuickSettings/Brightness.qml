@@ -38,10 +38,10 @@ Item {
                     Layout.alignment: Qt.AlignCenter
 
                     value: root.brightnessValue
-                    progressColor: Appearance.colors.colPrimary
-                    trackColor: Appearance.colors.colLayer2Hover
-                    handleColor: Appearance.colors.colOnSurface
-                    iconColor: Appearance.colors.colOnSurface
+                    progressColor: BarColors.selected
+                    trackColor: BarColors.track
+                    handleColor: BarColors.foreground
+                    iconColor: BarColors.foreground
                     icon: "brightness_medium"
                 }
 
@@ -51,7 +51,7 @@ Item {
                     text: Math.round(root.brightnessValue * 100) + "%"
                     font.family: Fonts.numeric
                     font.pixelSize: 12
-                    color: Appearance.colors.colOnSurface
+                    color: BarColors.foreground
                     Layout.alignment: Qt.AlignCenter
                 }
             }

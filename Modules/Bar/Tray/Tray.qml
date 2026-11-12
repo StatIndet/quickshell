@@ -161,9 +161,9 @@ TopBarPill {
             stateLayerOpacity: Appearance.interaction.hoverStateLayerOpacity
             focusStateLayerOpacity: Appearance.interaction.focusStateLayerOpacity
             pressedStateLayerOpacity: Appearance.interaction.pressedStateLayerOpacity
-            stateLayerColor: Appearance.colors.colOnSurface
-            pressedStateLayerColor: Appearance.colors.colOnSurface
-            rippleColor: Appearance.colors.colOnSurface
+            stateLayerColor: BarColors.foreground
+            pressedStateLayerColor: BarColors.foreground
+            rippleColor: BarColors.foreground
             Layout.alignment: Qt.AlignVCenter
             releaseAction: () => {
                 if (root.trayOverflowOpen) {
@@ -182,8 +182,8 @@ TopBarPill {
                 anchors.centerIn: parent
                 text: "expand_more"
                 iconSize: Sizes.barIconSize
-                color: root.trayOverflowOpen || trayOverflowButton.pointerHovered
-                       ? Appearance.colors.colPrimary : Appearance.colors.colOnSurface
+                color: root.trayOverflowOpen || trayOverflowButton.pointerHovered ? BarColors.selected :
+                                                                                    BarColors.foreground
                 rotation: (root.edge === "left" ? -90 : root.edge === "right" ? 90 : 0) + (
                               root.trayOverflowOpen ? 180 : 0)
 

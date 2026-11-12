@@ -102,9 +102,9 @@ TopBarPill {
                     vertical: root.vertical
                     displayText: root.memoryDisplayText
                     icon: "memory_alt"
-                    fillColor: Appearance.colors.colPrimary
-                    trackColor: Appearance.colors.colPrimaryContainer
-                    iconColor: Appearance.colors.colOnPrimary
+                    fillColor: BarColors.selected
+                    trackColor: BarColors.indicatorTrack
+                    iconColor: BarColors.onIndicator
                 }
 
                 ResourcePie {
@@ -117,9 +117,9 @@ TopBarPill {
                     vertical: root.vertical
                     displayText: root.diskDisplayText
                     icon: "hard_drive"
-                    fillColor: Appearance.colors.colSecondary
-                    trackColor: Appearance.colors.colSecondaryContainer
-                    iconColor: Appearance.colors.colOnSecondary
+                    fillColor: BarColors.selected
+                    trackColor: BarColors.indicatorTrack
+                    iconColor: BarColors.onIndicator
                 }
 
                 ResourcePie {
@@ -132,9 +132,9 @@ TopBarPill {
                     vertical: root.vertical
                     displayText: root.temperatureDisplayText
                     icon: "thermostat"
-                    fillColor: Appearance.colors.colTertiary
-                    trackColor: Appearance.colors.colTertiaryContainer
-                    iconColor: Appearance.colors.colOnTertiary
+                    fillColor: BarColors.selected
+                    trackColor: BarColors.indicatorTrack
+                    iconColor: BarColors.onIndicator
                 }
 
                 ResourcePie {
@@ -147,9 +147,9 @@ TopBarPill {
                     vertical: root.vertical
                     displayText: root.cpuDisplayText
                     icon: "developer_board"
-                    fillColor: Appearance.colors.colTertiary
-                    trackColor: Appearance.colors.colTertiaryContainer
-                    iconColor: Appearance.colors.colOnTertiary
+                    fillColor: BarColors.selected
+                    trackColor: BarColors.indicatorTrack
+                    iconColor: BarColors.onIndicator
                 }
             }
         }

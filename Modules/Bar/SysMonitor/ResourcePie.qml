@@ -9,9 +9,9 @@ Item {
 
     property real value: 0
     property string icon: "monitoring"
-    property color fillColor: Appearance.colors.colPrimary
-    property color trackColor: Appearance.colors.colPrimaryContainer
-    property color iconColor: Appearance.colors.colOnPrimaryContainer
+    property color fillColor: BarColors.selected
+    property color trackColor: BarColors.indicatorTrack
+    property color iconColor: BarColors.onIndicator
     property real indicatorSize: 28
     property real iconSize: 15
     property bool showText: false
@@ -93,7 +93,7 @@ Item {
             anchors.centerIn: parent
             text: root.icon
             iconSize: root.flat ? Sizes.barIconSize : root.iconSize
-            color: root.flat ? Appearance.colors.colOnSurface : root.iconColor
+            color: root.flat ? BarColors.foreground : root.iconColor
             fill: 1
         }
     }
@@ -110,7 +110,7 @@ Item {
     Text {
         text: root.displayText
         visible: root.showText
-        color: Appearance.colors.colOnSurface
+        color: BarColors.foreground
         font.family: Fonts.numeric
         font.pixelSize: Typography.labelLarge.pixelSize
         font.weight: Typography.labelLarge.weight

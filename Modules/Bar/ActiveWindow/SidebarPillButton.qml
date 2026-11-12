@@ -22,8 +22,8 @@ BarCircularButton {
     selected: root.isActive
     iconName: root.sidebarIconName
     containerColor: "transparent"
-    rippleColor: Appearance.colors.colOnSurface
-    iconColor: Appearance.colors.colOnSurface
+    rippleColor: BarColors.foreground
+    iconColor: BarColors.foreground
     tooltipText: root.viewName === "drawer" ? qsTr("Drawer") : qsTr("Notification center")
     onClicked: root.toggleView()
 }

@@ -14,8 +14,8 @@ Item {
     property real iconSize: 20
     property real iconFill: 0
     property color containerColor: "transparent"
-    property color rippleColor: Appearance.colors.colOnSurface
-    property color iconColor: Appearance.colors.colOnSurface
+    property color rippleColor: BarColors.foreground
+    property color iconColor: BarColors.foreground
     property var downAction
     property var doubleClickAction
     property var altAction
@@ -46,6 +46,7 @@ Item {
         iconName: root.iconName
         iconSize: root.iconSize
         iconFill: root.iconFill
+        selectedIconColor: BarColors.selected
         iconColor: root.iconColor
         selected: root.selected
         showTooltip: false

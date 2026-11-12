@@ -10,8 +10,8 @@ BarCircularButton {
 
     iconName: "power_settings_new"
     containerColor: "transparent"
-    rippleColor: Appearance.colors.colOnSurface
-    iconColor: Appearance.colors.colOnSurface
+    rippleColor: BarColors.foreground
+    iconColor: BarColors.foreground
     tooltipText: qsTr("Power menu")
     onClicked: PowerMenuService.open(root.screen)
 }

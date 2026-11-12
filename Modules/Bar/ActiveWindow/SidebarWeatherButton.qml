@@ -40,7 +40,7 @@ Item {
         expandedContent: root.showValue
         buttonRadius: height / 2
         containerColor: "transparent"
-        rippleColor: Appearance.colors.colOnSurface
+        rippleColor: BarColors.foreground
         releaseAction: () => {
             return root.toggleView();
         }
@@ -63,7 +63,7 @@ Item {
                     text: WeatherPlugin.currentIconName || "cloud"
                     iconSize: root.iconSize
                     fill: 0
-                    color: Appearance.colors.colOnSurface
+                    color: BarColors.foreground
                 }
 
                 Text {
@@ -75,7 +75,7 @@ Item {
                     font.family: Fonts.numeric
                     font.pixelSize: root.temperatureSize
                     font.bold: true
-                    color: Appearance.colors.colOnSurface
+                    color: BarColors.foreground
                 }
             }
         }

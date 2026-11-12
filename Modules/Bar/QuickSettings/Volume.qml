@@ -36,12 +36,13 @@ Item {
                     Layout.alignment: Qt.AlignCenter
 
                     value: Volume.sinkVolume
-                    progressColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError :
-                                                                                  Appearance.colors.colPrimary
-                    trackColor: Appearance.colors.colLayer2Hover
-                    handleColor: Appearance.colors.colOnSurface
-                    iconColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? Appearance.colors.colError :
-                                                                              Appearance.colors.colOnSurface
+                    progressColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? BarColors.error :
+                                                                                  BarColors.selected
+
+                    trackColor: BarColors.track
+                    handleColor: BarColors.foreground
+                    iconColor: (Volume.sinkMuted || Volume.sinkVolume <= 0) ? BarColors.error :
+                                                                              BarColors.foreground
 
                     icon: {
                         if (Volume.isHeadphone)
@@ -60,7 +61,7 @@ Item {
                     text: Math.round(Volume.sinkVolume * 100) + "%"
                     font.family: Fonts.numeric
                     font.pixelSize: 12
-                    color: Appearance.colors.colOnSurface
+                    color: BarColors.foreground
                     Layout.alignment: Qt.AlignCenter
                 }
             }

@@ -43,7 +43,7 @@ Item {
                     text: root.iconName
                     iconSize: Sizes.barIconSize
                     color: root.selected || pointer.visualFocus || pointer.pointerHovered
-                           ? Appearance.colors.colPrimary : Appearance.colors.colOnSurface
+                           ? BarColors.selected : BarColors.foreground
                 }
                 Item {
                     visible: root.hasLabel
@@ -62,7 +62,7 @@ Item {
                         elide: Text.ElideRight
                         font.family: Fonts.ui
                         font.pixelSize: 12
-                        color: Appearance.colors.colOnSurface
+                        color: BarColors.foreground
                     }
                 }
             }
