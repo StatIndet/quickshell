@@ -39,6 +39,16 @@ DEFAULT_BINDINGS = (
     ('Alt+Shift+L', 'lock', 'open'),
 )
 
+# Hardware media keys are kept in the same managed fragment as Clavis bindings
+# and route through Clavis services so state changes can update the OSD.
+DEFAULT_SYSTEM_BINDINGS = (
+    ('XF86MonBrightnessDown', ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'decrease']),
+    ('XF86MonBrightnessUp', ['qs', '-c', 'clavis', 'ipc', 'call', 'brightness', 'increase']),
+    ('XF86AudioMute', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'mute']),
+    ('XF86AudioLowerVolume', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'decrease']),
+    ('XF86AudioRaiseVolume', ['qs', '-c', 'clavis', 'ipc', 'call', 'volume', 'increase']),
+)
+
 
 def read_text(path):
     # Preserve CRLF and every other untouched byte when appending/splicing.
@@ -252,6 +262,9 @@ def initial(feature, request):
         for key, *command in DEFAULT_BINDINGS:
             section.nodes.append(kdl.Node(key, props={'repeat': False}, nodes=[
                 kdl.Node('spawn', args=['qs', '-c', 'clavis', 'ipc', 'call', *command])]))
+        for key, command in DEFAULT_SYSTEM_BINDINGS:
+            section.nodes.append(kdl.Node(key, props={'allow-when-locked': True}, nodes=[
+                kdl.Node('spawn', args=command)]))
         return header + render(section)
     if feature == 'layer-rules':
         return header + 'layer-rule {\n    match namespace="^clavis-overview-wallpaper$";\n    place-within-backdrop true;\n}\nlayout {\n    background-color "transparent";\n}\n'

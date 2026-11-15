@@ -2065,5 +2065,65 @@
     "search": {
       "policy": "alias"
     }
+  },
+  {
+    "id": "clavis:volume:increase",
+    "category": "clavis",
+    "name": "Increase volume",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"volume\" \"increase\"",
+    "parameters": false,
+    "target": "volume",
+    "method": "increase",
+    "search": {
+      "policy": "settings"
+    }
+  },
+  {
+    "id": "clavis:volume:decrease",
+    "category": "clavis",
+    "name": "Decrease volume",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"volume\" \"decrease\"",
+    "parameters": false,
+    "target": "volume",
+    "method": "decrease",
+    "search": {
+      "policy": "settings"
+    }
+  },
+  {
+    "id": "clavis:volume:mute",
+    "category": "clavis",
+    "name": "Toggle audio mute",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"volume\" \"mute\"",
+    "parameters": false,
+    "target": "volume",
+    "method": "mute",
+    "search": {
+      "policy": "settings"
+    }
+  },
+  {
+    "id": "clavis:brightness:increase",
+    "category": "clavis",
+    "name": "Increase screen brightness",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"brightness\" \"increase\"",
+    "parameters": false,
+    "target": "brightness",
+    "method": "increase",
+    "search": {
+      "policy": "settings"
+    }
+  },
+  {
+    "id": "clavis:brightness:decrease",
+    "category": "clavis",
+    "name": "Decrease screen brightness",
+    "expression": "spawn \"qs\" \"-c\" \"clavis\" \"ipc\" \"call\" \"brightness\" \"decrease\"",
+    "parameters": false,
+    "target": "brightness",
+    "method": "decrease",
+    "search": {
+      "policy": "settings"
+    }
   }
 ]

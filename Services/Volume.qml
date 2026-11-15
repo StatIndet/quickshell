@@ -1,6 +1,7 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 import QtQuick
 import qs.Services
@@ -242,8 +243,28 @@ Singleton {
         return root.setNodeVolume(root.sink, volume);
     }
 
+    function adjustSinkVolume(delta) {
+        return root.setSinkVolume(root.sinkVolume + Number(delta));
+    }
+
     function toggleSourceMute() {
         return root.toggleNodeMute(root.source);
+    }
+
+    IpcHandler {
+        target: "volume"
+
+        function decrease(): string {
+            return root.adjustSinkVolume(-0.1) ? "VOLUME_DECREASED" : "VOLUME_UNAVAILABLE";
+        }
+
+        function increase(): string {
+            return root.adjustSinkVolume(0.1) ? "VOLUME_INCREASED" : "VOLUME_UNAVAILABLE";
+        }
+
+        function mute(): string {
+            return root.toggleSinkMute() ? "VOLUME_MUTE_TOGGLED" : "VOLUME_UNAVAILABLE";
+        }
     }
 
     function setSourceVolume(volume) {
