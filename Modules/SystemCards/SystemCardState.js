@@ -1,10 +1,7 @@
 .pragma library
 
-// QML JavaScript files cannot use ES-module imports from another JS file.
-// Include the catalog here so CardState and DrawerGridLayout still consume
-// the same metadata source when they are run directly by qmltestrunner.
-Qt.include("SystemCardCatalog.js");
-Qt.include("SystemCardPlacement.js");
+.import "SystemCardCatalog.js" as Catalog
+.import "SystemCardPlacement.js" as Placement
 
 var schemaVersion = 4;
 var placementSpaces = ["screen", "wallpaper"];
@@ -16,7 +13,23 @@ function isObject(value) {
 }
 
 function validDesktopLayoutMode(value) {
-    return desktopLayoutModes.indexOf(String(value || "")) !== -1;
+    return Placement.desktopLayoutModes.indexOf(String(value || "")) !== -1;
+}
+
+function isFreeMode(mode) {
+    return Placement.isFreeMode(mode);
+}
+
+function isScreenLayoutMode(mode) {
+    return Placement.isScreenLayoutMode(mode);
+}
+
+function isWallpaperLayoutMode(mode) {
+    return Placement.isWallpaperLayoutMode(mode);
+}
+
+function isAutomaticMode(mode) {
+    return Placement.isAutomaticMode(mode);
 }
 
 function validPlacementSpace(value) {
@@ -64,7 +77,7 @@ function defaultState() {
         globalDesktopLayoutMode: "free",
         cards: {}
     };
-    all().forEach(function(definition) {
+    Catalog.all().forEach(function(definition) {
         state.cards[definition.id] = defaultCard(definition);
     });
     return state;
@@ -85,7 +98,7 @@ function normalize(raw) {
         cards: {}
     };
 
-    all().forEach(function(definition) {
+    Catalog.all().forEach(function(definition) {
         var fallback = defaultCard(definition);
         var rawCard = isObject(sourceCards[definition.id])
             ? sourceCards[definition.id] : {};
@@ -284,7 +297,7 @@ function setGlobalMode(state, mode) {
 
 function activeSidebarIds(state) {
     var normalized = normalize(state);
-    return ids().filter(function(id) {
+    return Catalog.ids().filter(function(id) {
         var item = normalized.cards[id];
         return item.enabled && item.container === "sidebar";
     });
@@ -292,7 +305,7 @@ function activeSidebarIds(state) {
 
 function activeDesktopIds(state) {
     var normalized = normalize(state);
-    return ids().filter(function(id) {
+    return Catalog.ids().filter(function(id) {
         var item = normalized.cards[id];
         return item.enabled && item.container === "desktop";
     });
@@ -317,7 +330,7 @@ function desktopIdsForScreen(state, screenName, screenNames) {
 
 function requiresMonitor(state, id) {
     var item = card(state, id);
-    var definition = definitionFor(id);
+    var definition = Catalog.definitionFor(id);
     return !!item && item.enabled && item.container === "desktop"
         && !!definition && (definition.monitorModules || []).length > 0;
 }

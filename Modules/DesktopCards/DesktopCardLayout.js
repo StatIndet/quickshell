@@ -2,14 +2,14 @@
 
 // Keep layout mode classification in one place.  This file owns geometry and
 // collision solving; SystemCardPlacement.js owns the meaning of each mode.
-Qt.include("../SystemCards/SystemCardPlacement.js");
-Qt.include("../SystemCards/SystemCardGeometry.js");
-Qt.include("../SystemCards/SystemCardGrid.js");
+.import "../SystemCards/SystemCardPlacement.js" as Placement
+.import "../SystemCards/SystemCardGeometry.js" as Geometry
+.import "../SystemCards/SystemCardGrid.js" as Grid
 
-var desktopCardGap = cellGap;
+var desktopCardGap = Geometry.cellGap;
 var desktopCardEdgeInset = 24;
-var desktopGridColumnPitch = cardGridStep;
-var desktopGridRowPitch = cardGridStep;
+var desktopGridColumnPitch = Grid.cardGridStep;
+var desktopGridRowPitch = Grid.cardGridStep;
 
 function safeNumber(value, fallback) {
     const number = Number(value);
@@ -44,8 +44,8 @@ function safeInset(canvasWidth, canvasHeight, size, inset) {
 }
 
 function gridMetrics(canvasWidth, canvasHeight) {
-    return {originX: 0, originY: 0, columnPitch: cardGridStep, rowPitch: cardGridStep,
-        columns: Math.floor(canvasWidth / cardGridStep), rows: Math.floor(canvasHeight / cardGridStep)};
+    return {originX: 0, originY: 0, columnPitch: Grid.cardGridStep, rowPitch: Grid.cardGridStep,
+        columns: Math.floor(canvasWidth / Grid.cardGridStep), rows: Math.floor(canvasHeight / Grid.cardGridStep)};
 }
 
 // At most 33 x 33 coarse samples, including boundaries, on any output size.
@@ -53,18 +53,18 @@ function gridMetrics(canvasWidth, canvasHeight) {
 function gridCandidatePoints(card, canvasWidth, canvasHeight) {
     const maxX = Math.max(0, canvasWidth - card.width);
     const maxY = Math.max(0, canvasHeight - card.height);
-    const stepX = Math.max(cardGridStep, Math.ceil(maxX / 32 / cardGridStep) * cardGridStep);
-    const stepY = Math.max(cardGridStep, Math.ceil(maxY / 32 / cardGridStep) * cardGridStep);
+    const stepX = Math.max(Grid.cardGridStep, Math.ceil(maxX / 32 / Grid.cardGridStep) * Grid.cardGridStep);
+    const stepY = Math.max(Grid.cardGridStep, Math.ceil(maxY / 32 / Grid.cardGridStep) * Grid.cardGridStep);
     const points = [];
     for (let row = 0; row <= Math.ceil(maxY / stepY); row += 1) {
         for (let column = 0; column <= Math.ceil(maxX / stepX); column += 1)
-            points.push({x: gridSnap(column * stepX, maxX), y: gridSnap(row * stepY, maxY), rank: points.length});
+            points.push({x: Grid.gridSnap(column * stepX, maxX), y: Grid.gridSnap(row * stepY, maxY), rank: points.length});
     }
     return points;
 }
 
 function snapPoint(x, y, cardWidth, cardHeight, canvasWidth, canvasHeight) {
-    return {x: gridSnap(x, canvasWidth - cardWidth), y: gridSnap(y, canvasHeight - cardHeight)};
+    return {x: Grid.gridSnap(x, canvasWidth - cardWidth), y: Grid.gridSnap(y, canvasHeight - cardHeight)};
 }
 
 function rectAt(card, x, y, canvasWidth, canvasHeight, inset) {
@@ -82,7 +82,7 @@ function rectAt(card, x, y, canvasWidth, canvasHeight, inset) {
 }
 
 function rectsOverlap(first, second, gap) {
-    return !!first && !!second && gridOverlaps(first, second, Math.max(0, Number(gap) || 0));
+    return !!first && !!second && Grid.gridOverlaps(first, second, Math.max(0, Number(gap) || 0));
 }
 
 function overlapsAny(rect, occupied, gap) {
@@ -137,8 +137,8 @@ function candidateCost(card, point, rect, analysis, canvasWidth,
 function placeWallpaperCard(card, occupied, canvasWidth, canvasHeight,
                             analysis, gap, mode) {
     const candidates = candidatePoints(card, canvasWidth, canvasHeight).concat(
-        gridEdgeCandidates({id: card.id, x: card.xNorm * canvasWidth, y: card.yNorm * canvasHeight,
-            width: card.width, height: card.height}, occupied, canvasWidth, canvasHeight, gap, cardGridStep));
+        Grid.gridEdgeCandidates({id: card.id, x: card.xNorm * canvasWidth, y: card.yNorm * canvasHeight,
+            width: card.width, height: card.height}, occupied, canvasWidth, canvasHeight, gap, Grid.cardGridStep));
     const scored = [];
     function score(point) {
         const rect = rectAt(card, point.x, point.y, canvasWidth, canvasHeight, 0);
@@ -151,8 +151,8 @@ function placeWallpaperCard(card, occupied, canvasWidth, canvasHeight,
     scored.sort(function(a, b) { return a.cost - b.cost; });
     // Refine the four best coarse regions down to the actual snap step.
     let seeds = scored.slice(0, 4);
-    let step = Math.max(cardGridStep, Math.ceil(Math.max(canvasWidth, canvasHeight) / 32 / cardGridStep) * cardGridStep);
-    while (seeds.length > 0 && step >= cardGridStep) {
+    let step = Math.max(Grid.cardGridStep, Math.ceil(Math.max(canvasWidth, canvasHeight) / 32 / Grid.cardGridStep) * Grid.cardGridStep);
+    while (seeds.length > 0 && step >= Grid.cardGridStep) {
         seeds.forEach(function(seed) {
             for (let dy = -1; dy <= 1; dy += 1) {
                 for (let dx = -1; dx <= 1; dx += 1) {
@@ -165,9 +165,9 @@ function placeWallpaperCard(card, occupied, canvasWidth, canvasHeight,
         });
         scored.sort(function(a, b) { return a.cost - b.cost; });
         seeds = scored.slice(0, 4);
-        if (step === cardGridStep)
+        if (step === Grid.cardGridStep)
             break;
-        step = Math.max(cardGridStep, Math.floor(step / 2 / cardGridStep) * cardGridStep);
+        step = Math.max(Grid.cardGridStep, Math.floor(step / 2 / Grid.cardGridStep) * Grid.cardGridStep);
     }
     return scored.length > 0 ? scored[0] : null;
 }
@@ -210,7 +210,7 @@ function solve(cards, canvasWidth, canvasHeight, analysis, mode) {
     const safeWidth = Math.max(1, safeNumber(canvasWidth, 1));
     const safeHeight = Math.max(1, safeNumber(canvasHeight, 1));
     const selectedMode = String(mode || "");
-    if (!isWallpaperLayoutMode(selectedMode) || (cards || []).some(function(card) {
+    if (!Placement.isWallpaperLayoutMode(selectedMode) || (cards || []).some(function(card) {
         return card.width > safeWidth || card.height > safeHeight;
     }))
         return [];
@@ -275,11 +275,11 @@ function placeScreenCard(card, occupied, canvasWidth, canvasHeight, mode,
                          gap) {
     const anchor = anchorPoint(mode, card, canvasWidth, canvasHeight);
     const size = boundedSize(card, canvasWidth, canvasHeight);
-    const edge = Math.floor(safeInset(canvasWidth, canvasHeight, size, desktopCardEdgeInset) / cardGridStep) * cardGridStep;
-    const candidates = gridEdgeCandidates({id: card.id, x: anchor.x - edge, y: anchor.y - edge,
+    const edge = Math.floor(safeInset(canvasWidth, canvasHeight, size, desktopCardEdgeInset) / Grid.cardGridStep) * Grid.cardGridStep;
+    const candidates = Grid.gridEdgeCandidates({id: card.id, x: anchor.x - edge, y: anchor.y - edge,
         width: card.width, height: card.height}, occupied.map(function(rect) {
             return {x: rect.x - edge, y: rect.y - edge, width: rect.width, height: rect.height};
-        }), canvasWidth - edge * 2, canvasHeight - edge * 2, gap, cardGridStep)
+        }), canvasWidth - edge * 2, canvasHeight - edge * 2, gap, Grid.cardGridStep)
         .map(function(point) { return {x: point.x + edge, y: point.y + edge, rank: point.rank}; });
     const scored = [];
     candidates.forEach(function(point) {
@@ -328,7 +328,7 @@ function solveScreen(cards, canvasWidth, canvasHeight, mode) {
     const safeWidth = Math.max(1, safeNumber(canvasWidth, 1));
     const safeHeight = Math.max(1, safeNumber(canvasHeight, 1));
     const selectedMode = String(mode || "");
-    if (!isScreenLayoutMode(selectedMode) || (cards || []).some(function(card) {
+    if (!Placement.isScreenLayoutMode(selectedMode) || (cards || []).some(function(card) {
         return card.width > safeWidth || card.height > safeHeight;
     }))
         return [];
@@ -379,7 +379,7 @@ function resolveWithStep(cards, preferredId, canvasWidth, canvasHeight, gap, ste
     const result = [];
     for (let index = 0; index < source.length; index += 1) {
         const card = source[index];
-        const resolved = gridNearestFree(card, occupied, canvasWidth, canvasHeight, gap, step);
+        const resolved = Grid.gridNearestFree(card, occupied, canvasWidth, canvasHeight, gap, step);
         if (!resolved)
             return [];
         occupied.push(resolved);
@@ -396,12 +396,12 @@ function resolveAllContinuousCollisions(cards, preferredId, canvasWidth, canvasH
 
 function resolveAllGridCollisions(cards, preferredId, canvasWidth, canvasHeight, gap) {
     return resolveWithStep(cards, preferredId, canvasWidth, canvasHeight,
-        gap === undefined ? desktopCardGap : gap, cardGridStep);
+        gap === undefined ? desktopCardGap : gap, Grid.cardGridStep);
 }
 
 function resolveAllCollisions(cards, preferredId, canvasWidth, canvasHeight, gap, snapToGrid) {
     const collisionGap = gap === undefined ? desktopCardGap : Math.max(0, Number(gap) || 0);
-    const step = snapToGrid ? cardGridStep : 0;
+    const step = snapToGrid ? Grid.cardGridStep : 0;
     const resolved = resolveWithStep(cards, preferredId, canvasWidth, canvasHeight, collisionGap, step);
     if (resolved.length === (cards || []).length || collisionGap === 0)
         return resolved;

@@ -1,33 +1,35 @@
 .pragma library
 
-Qt.include("../../../SystemCards/SystemCardGeometry.js");
-Qt.include("../../../SystemCards/SystemCardGrid.js");
+.import "../../../SystemCards/SystemCardCatalog.js" as Catalog
+.import "../../../SystemCards/SystemCardGeometry.js" as Geometry
+.import "../../../SystemCards/SystemCardGrid.js" as Grid
 
 var canvasWidth = 472;
 var schemaVersion = 8;
 
 function idsFor(activeIds) {
-    var requested = Array.isArray(activeIds) ? activeIds : ids();
-    return ids().filter(function(id) { return requested.indexOf(id) !== -1; });
+    var requested = Array.isArray(activeIds) ? activeIds : Catalog.ids();
+    return Catalog.ids().filter(function(id) { return requested.indexOf(id) !== -1; });
 }
 
-function definitions(activeIds) { return sidebarDefinitions(idsFor(activeIds)); }
-function tileDefinitionFor(id) { return definitionFor(String(id)); }
+function definitions(activeIds) { return Catalog.sidebarDefinitions(idsFor(activeIds)); }
+function tileDefinitionFor(id) { return Catalog.definitionFor(String(id)); }
+function gridOverlaps(first, second, gap) { return Grid.gridOverlaps(first, second, gap); }
 function placementFor(layout, id) {
     return (Array.isArray(layout) ? layout : []).find(function(tile) { return tile.id === id; }) || null;
 }
 function tileAt(id, point) {
-    var size = sizeFor(id);
+    var size = Geometry.sizeFor(id);
     return {id: id, x: point.x, y: point.y, width: size.width, height: size.height};
 }
 function clampAnchor(definition, x, y) {
-    return {x: gridSnap(x, canvasWidth - widthFor(definition.id)),
-        y: gridSnap(y, Number.MAX_SAFE_INTEGER)};
+    return {x: Grid.gridSnap(x, canvasWidth - Geometry.widthFor(definition.id)),
+        y: Grid.gridSnap(y, Number.MAX_SAFE_INTEGER)};
 }
 function withinBounds(tile) {
     return Number.isFinite(tile.x) && Number.isFinite(tile.y)
-        && tile.x >= 0 && tile.y >= 0 && tile.x % cardGridStep === 0
-        && tile.y % cardGridStep === 0 && tile.x + tile.width <= canvasWidth;
+        && tile.x >= 0 && tile.y >= 0 && tile.x % Grid.cardGridStep === 0
+        && tile.y % Grid.cardGridStep === 0 && tile.x + tile.width <= canvasWidth;
 }
 function validateLayout(layout, activeIds) {
     var expected = idsFor(activeIds);
@@ -37,11 +39,11 @@ function validateLayout(layout, activeIds) {
     for (var i = 0; i < layout.length; i += 1) {
         var tile = layout[i];
         if (!tile || expected.indexOf(tile.id) === -1 || seen[tile.id]
-                || tile.width !== widthFor(tile.id) || tile.height !== heightFor(tile.id)
+                || tile.width !== Geometry.widthFor(tile.id) || tile.height !== Geometry.heightFor(tile.id)
                 || !withinBounds(tile))
             return false;
         for (var j = 0; j < i; j += 1) {
-            if (gridOverlaps(tile, layout[j], cellGap))
+            if (Grid.gridOverlaps(tile, layout[j], Geometry.cellGap))
                 return false;
         }
         seen[tile.id] = true;
@@ -52,7 +54,7 @@ function contentHeight(layout, activeIds) {
     var allowed = idsFor(activeIds);
     return (Array.isArray(layout) ? layout : []).reduce(function(bottom, tile) {
         return allowed.indexOf(tile.id) === -1 ? bottom : Math.max(bottom, tile.y + tile.height);
-    }, baseCellHeight);
+    }, Geometry.baseCellHeight);
 }
 // Preserve horizontal placement and the vertical order of intersecting cards.
 // Recorded y values express that order; actual y is always the compacted value.
@@ -67,9 +69,9 @@ function compactLayout(layout, activeIds) {
     ordered.forEach(function(tile) {
         var y = 0;
         placed.forEach(function(above) {
-            if (tile.x < above.x + above.width + cellGap
-                    && tile.x + tile.width + cellGap > above.x)
-                y = Math.max(y, above.y + above.height + cellGap);
+            if (tile.x < above.x + above.width + Geometry.cellGap
+                    && tile.x + tile.width + Geometry.cellGap > above.x)
+                y = Math.max(y, above.y + above.height + Geometry.cellGap);
         });
         placed.push(tileAt(tile.id, {x: tile.x, y: y}));
     });
@@ -77,14 +79,14 @@ function compactLayout(layout, activeIds) {
 }
 
 function place(id, anchor, occupied) {
-    var fallback = defaultAnchorFor(id);
+    var fallback = Catalog.defaultAnchorFor(id);
     var point = clampAnchor(tileDefinitionFor(id),
-        anchor ? anchor.x : fallback.column * (baseCellWidth + cellGap),
-        anchor ? anchor.y : fallback.row * (baseCellHeight + cellGap));
+        anchor ? anchor.x : fallback.column * (Geometry.baseCellWidth + Geometry.cellGap),
+        anchor ? anchor.y : fallback.row * (Geometry.baseCellHeight + Geometry.cellGap));
     var card = tileAt(id, point);
     var bottom = occupied.reduce(function(value, tile) { return Math.max(value, tile.y + tile.height); }, point.y);
-    return gridNearestFree(card, occupied, canvasWidth, bottom + cellGap + card.height,
-        cellGap, cardGridStep);
+    return Grid.gridNearestFree(card, occupied, canvasWidth, bottom + Geometry.cellGap + card.height,
+        Geometry.cellGap, Grid.cardGridStep);
 }
 function buildLayout(activeIds, savedAnchors, preferredAnchors) {
     var expected = idsFor(activeIds);
@@ -128,7 +130,7 @@ function hydrateSaved(savedLayout, activeIds, preferredAnchors) {
             return defaultLayout(expected, preferredAnchors);
         if (expected.indexOf(saved.id) === -1)
             continue;
-        if (occupied.some(function(other) { return gridOverlaps(tile, other, cellGap); }))
+        if (occupied.some(function(other) { return Grid.gridOverlaps(tile, other, Geometry.cellGap); }))
             return defaultLayout(expected, preferredAnchors);
         occupied.push(tile);
         anchors[saved.id] = point;
@@ -153,7 +155,7 @@ function moveLayout(layout, tileId, targetX, targetY, activeIds) {
     // Resolve collisions first, then compact all cards into the final preview.
     var displaced = [];
     remaining.forEach(function(tile) {
-        if (gridOverlaps(tile, moving, cellGap))
+        if (Grid.gridOverlaps(tile, moving, Geometry.cellGap))
             displaced.push(tile);
         else
             occupied.push(tileAt(tile.id, tile));
